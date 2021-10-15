@@ -8,9 +8,10 @@ INSTALLATION INSTRUCTIONS Windows: Open the file: "BrickFormers - A Fan-Made Gam
 
 SAVE FILE LOCATION Hosts must share their IP address, seed, and world file with other players before starting a multiplayer match. Windows: "C:\Users%userprofile%\AppData\LocalLow\tformers3\BrickFormers - A Fan-Made Game\saves" Mac: "~/Library/Application Support/tformers3/BrickFormers - A Fan-Made Game/saves/" UWP: "%userprofile%\AppData\Local\Packages\BrickFormers - A Fan-Made Game\LocalState\saves"
 
-CHANGELOG 0.27.0.0 21w30 10/11/21 10:30 AM Removed Bloom (was causing severe performance drags on older CPUs) Revised Cacti color
+CHANGELOG
+0.27.0.0 21w41 10/14/21 8:52 PM Removed Bloom (was causing severe performance drags on older CPUs) Revised Cacti color, started tracking revision history in Git.
 
-0.26.0.0 21w29 9/29/21 8:18 AM Revised Cloud Generation offset
+0.26.0.0 21w39 9/29/21 8:18 AM Revised Cloud Generation offset
 
 0.25.0.0 21w39 9/28/21 10:59 PM Revised Tree generation
 

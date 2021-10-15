@@ -3,20 +3,16 @@
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
 
-# Cannot upload, file is too large
-*.psd
-
+# Cannot upload source files and ldraw, file sizes are too large
 /[Aa]ssets/[Aa]ssetFiles/[Aa]sset Source Files
+/[Ll]draw/
+
 /[Bb]uild/
 /[Bb]uilds/
-/[Ll]draw/
 /[Ll]ibrary/
-#/[Ll]icenses
 /[Ll]ogs/
 /[Oo]bj/
-#/[Pp]ackages/
-#/[Pp]rojectSettings/
-/[Uu]ser[Ss]ettings/
+#/[Uu]ser[Ss]ettings/
 /[Tt]emp/
 
 # MemoryCaptures can get excessive in size.
