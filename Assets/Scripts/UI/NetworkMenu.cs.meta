@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fa70024938f3690409df8ad1c7a1d3e7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - world: {fileID: 5310156934980556734, guid: 2c138186b0263ea45a8eb9fad0660e99, type: 3}
+  - playerNameInputField: {instanceID: 0}
+  - playerManagerNetwork: {instanceID: 0}
+  - networkAddressInputField: {instanceID: 0}
+  - connectionStatus: {instanceID: 0}
+  - networkManagerHUDElements: {instanceID: 0}
+  - charSelect: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

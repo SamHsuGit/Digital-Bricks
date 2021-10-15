@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 189eb45db5f68064d8da851126f78eb6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - globalLighting: {instanceID: 0}
+  - loadingText: {instanceID: 0}
+  - loadingBackground: {instanceID: 0}
+  - worldPlayer: {instanceID: 0}
+  - blockMaterial: {instanceID: 0}
+  - blockMaterialTransparent: {instanceID: 0}
+  - physicMaterial: {instanceID: 0}
+  - chunkLoadSound: {fileID: 8300000, guid: f9e8fef4af330c4409aa5de697ba9c27, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
