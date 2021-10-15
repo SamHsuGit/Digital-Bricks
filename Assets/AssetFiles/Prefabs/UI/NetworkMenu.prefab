@@ -686,13 +686,12 @@ MonoBehaviour:
     **SAVE FILE LOCATION:
 
     Windows:
-    C:\Users%userprofile%\AppData\LocalLow\Sam Hsu\BrickFormers - A Fan-Made Game\saves\World"
+    C:\Users%userprofile%\AppData\LocalLow\Sam Hsu\BrickFormers\saves\World"
 
     MacOS:
-    "~/Library/Application Support/Sam Hsu/BrickFormers - A Fan-Made Game/saves/World"
+    "~/Library/Application Support/Sam Hsu/BrickFormers/saves/World"
 
-    UWP
-    = "%userprofile%\AppData\Local\Packages\BrickFormers - A Fan-Made Game\LocalState\saves\World"'
+    UWP = "%userprofile%\AppData\Local\Packages\BrickFormers\LocalState\saves\World"'
 --- !u!1 &2914596668590805168
 GameObject:
   m_ObjectHideFlags: 0

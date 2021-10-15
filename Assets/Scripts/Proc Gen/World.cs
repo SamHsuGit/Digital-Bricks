@@ -732,7 +732,7 @@ public class World : MonoBehaviour
                                 AddBoxColliderMaterialToChildren(VBO);
                                 if (Settings.OnlinePlay)
                                     VBO.AddComponent<NetworkIdentity>();
-                                VBO.AddComponent<Health>();
+                                //VBO.AddComponent<Health>();
                                 VBO.GetComponent<BoxCollider>().enabled = true; // VBO Box collider used to add placeholder voxels for world procGen
                             }
                             objectDictionary.Add(globalPosition, VBO);
