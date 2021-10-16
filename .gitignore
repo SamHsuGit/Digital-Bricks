@@ -5,7 +5,7 @@
 
 # Cannot upload source files and ldraw, file sizes are too large
 /[Aa]ssets/[Aa]ssetFiles/[Aa]sset Source Files
-/[Ll]draw/
+#/[Ll]draw/
 
 /[Bb]uild/
 /[Bb]uilds/

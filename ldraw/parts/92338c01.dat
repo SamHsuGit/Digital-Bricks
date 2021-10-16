@@ -1,0 +1,17 @@
+0 Minifig Chain  5L (Complete)
+0 Name: 92338c01.dat
+0 Author: J.C. Tchang [tchang]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !CATEGORY Minifig Accessory
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 208.dat
+1 16 0 2 27 0 0 1 -1 0 0 0 1 0 209.dat
+1 16 0 2 40.705 -1 0 0 0 0 -1 0 1 0 209.dat
+1 16 0 2 54.453 0 0 -1 1 0 0 0 1 0 209.dat
+1 16 0 2 68.202 1 0 0 0 0 1 0 1 0 209.dat
+1 16 0 2 81.954 0 0 1 -1 0 0 0 1 0 209.dat
+1 16 0 0 100 -1 0 0 0 1 0 0 0 -1 208.dat

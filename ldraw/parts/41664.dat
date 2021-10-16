@@ -1,0 +1,33 @@
+0 Technic Shield  5 x  5 with Fins (MOCKUP)
+0 Name: 41664.dat
+0 Author: Michael Heidemann [mikeheide]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC NOCERTIFY
+
+0 !KEYWORDS Bionicle
+
+0 // open for anybody to modify.
+
+1 16 0 0 20 10 0 0 0 1 0 0 0 10 4-4edge.dat
+1 16 0 -20 20 10 0 0 0 1 0 0 0 10 4-4edge.dat
+1 16 0 -20 20 2 0 0 0 1 0 0 0 2 4-4ring4.dat
+1 16 0 0 20 2 0 0 0 1 0 0 0 2 4-4ring4.dat
+1 16 0 -18 20 6 0 0 0 16 0 0 0 6 4-4cyli.dat
+1 16 0 -20 20 10 0 0 0 20 0 0 0 10 4-4cyli.dat
+1 16 0 -20 20 1 0 0 0 1 0 0 0 1 peghole.dat
+1 16 0 0 20 1 0 0 0 -1 0 0 0 -1 peghole.dat
+0 ab hier alle gleich
+1 16 0 -5 40 50 0 0 0 -15 0 0 0 -50 4-8SPHE.DAT
+1 16 0 -5 40 50 0 0 0 1 0 0 0 50 4-4edge.dat
+1 16 0 0 40 46 0 0 0 -16 0 0 0 -46 4-8SPHE.DAT
+1 16 0 -5 40 50 0 0 0 5 0 0 0 50 4-4cyli.dat
+1 16 0 0 40 2 0 0 0 1 0 0 0 2 4-4rin24.dat
+1 16 0 0 40 2 0 0 0 1 0 0 0 2 4-4rin23.dat
+1 16 0 0 40 46 0 0 0 1 0 0 0 46 4-4edge.dat
+1 16 0 0 0 1 0 0 0 20 0 0 0 1 axle.dat
+1 16 0 0 0 10 0 0 0 1 0 0 0 10 4-4disc.dat
+1 16 0 0 0 10 0 0 0 1 0 0 0 10 4-4edge.dat
+1 16 0 0 40 50 0 0 0 1 0 0 0 50 4-4edge.dat
+1 16 0 -3 0 10 0 0 0 3 0 0 0 10 4-4cyli.dat

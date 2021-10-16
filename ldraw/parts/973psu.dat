@@ -1,0 +1,20 @@
+0 Minifig Torso with SW Clone Stormtrooper Pattern
+0 Name: 973psu.dat
+0 Author: El'dar Ismagilov [Eldar]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Star Wars, Clone Wars, Republic Army
+0 !KEYWORDS trooper, soldier, armor, armour
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\973s01.dat
+0 // neck mark
+1 0 0 -4 0 4.243 0 -4.243 0 -8 0 -4.243 0 -4.243 1-4cyli.DAT
+0 // back pattern
+1 16 0 0 10 1 0 0 0 1 0 0 0 -1 s\973psub.dat
+1 16 0 0 10 -1 0 0 0 1 0 0 0 -1 s\973psub.dat
+0 // front pattern
+1 16 0 0 -10 1 0 0 0 1 0 0 0 1 s\973psua.dat
+1 16 0 0 -10 -1 0 0 0 1 0 0 0 1 s\973psua.dat

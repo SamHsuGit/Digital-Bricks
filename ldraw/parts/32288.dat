@@ -1,0 +1,35 @@
+0 ~Electric Technic Motor 4.5V  6 x 17 x  5 Top
+0 Name: 32288.dat
+0 Author: Guy Vivan [guyvivan]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\32288s01.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\32288s01.dat
+1 16 30 24 50 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 10 24 50 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -10 24 50 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -30 24 50 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 50 0 10 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -50 0 10 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -20 0 20 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 20 0 20 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 -40 0 -20 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 0 0 -20 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 40 0 -20 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 40 24 -80 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 40 24 -120 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 40 24 -160 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 -40 24 -80 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 -40 24 -120 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 -40 24 -160 1 0 0 0 1 0 0 0 1 stug2-2x2.dat
+1 16 50 24 -190 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 50 24 -210 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 50 24 -230 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 50 24 -250 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -50 24 -190 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -50 24 -210 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -50 24 -230 1 0 0 0 1 0 0 0 1 stud2.dat
+1 16 -50 24 -250 1 0 0 0 1 0 0 0 1 stud2.dat

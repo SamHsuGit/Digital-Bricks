@@ -1,0 +1,18 @@
+0 =Brick  2 x  8
+0 Name: 93888.dat
+0 Author: Michael Heidemann [mikeheide]
+0 !LDRAW_ORG Unofficial_Part Alias
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2013-12-14 [mikeheide] initial creation
+0 !HISTORY 2013-12-24 [MMR1988] made it an alias of 3007.dat
+
+0 !HELP Difference to real life part: Side walls at real parts are
+0 !HELP 1.2 mm thick with thickenings of 0.4 mm to get the required
+0 !HELP thickness of 1.6 mm for generating enough friction in combination
+0 !HELP with top studs. (Note: the thickenings have the same high
+0 !HELP as a sidewall and are 0.6 mm wide and 0.4 mm thick)
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 3007.dat

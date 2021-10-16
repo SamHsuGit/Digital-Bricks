@@ -1,0 +1,16 @@
+0 Animal Eagle Body (Complete)
+0 Name: 11467.dat
+0 Author: Christian Neumann [Wesley]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !HELP top stud base at y = -72
+0 !HELP  left clip centers at  30 -70 -10 and  30 -70 10
+0 !HELP right clip centers at -30 -70 -10 and -30 -70 10
+0 !HELP  left wing connects at  30 -70 -10
+0 !HELP right wing connects at -30 -70 -10
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 11435.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 u9300.dat

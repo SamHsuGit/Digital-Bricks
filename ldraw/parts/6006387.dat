@@ -1,0 +1,13 @@
+0 _Minifig Head with Uruk-Hai Scowl and White Hand Pattern [320]
+0 Name: 6006387.dat
+0 Author: Howard Lande [HowardLande]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 // This file is a "shortcut" with the correct number for the actual
+0 // colouring of the part (Dark Red).
+
+1 320 0 0 0 1 0 0 0 1 0 0 0 1 10756.dat
+0

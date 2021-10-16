@@ -1,0 +1,13 @@
+0 Arm Piece with Closed Grab Jaw Straight (Complete)
+0 Name: 4221c01.dat
+0 Author: Steffen [Steffen]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !CMDLINE -c7
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 4220a.dat
+1 16 0 0 0 1 0 0 0 0.9911 0.133121 0 -0.133121 0.9911 4221.dat
+1 16 0 0 0 -1 0 0 0 -0.9911 -0.133121 0 -0.133121 0.9911 4221.dat

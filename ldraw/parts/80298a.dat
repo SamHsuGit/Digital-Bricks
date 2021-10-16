@@ -1,0 +1,17 @@
+0 _Minifig Shield Triangular with Black Falcon Yellow Bdr Pattern
+0 Name: 80298a.dat
+0 Author: Chris Dee [cwdee]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !CATEGORY Minifig Accessory
+
+0 // This yellow-bordered part should be 80298, but that number was 
+0 // incorrectly released with a blue border.
+
+0 // This file is a "shortcut" with the correct number for the actual
+0 // colouring of the part (Light Grey).
+
+
+1 7 0 0 0 1 0 0 0 1 0 0 0 1 3846p46.dat
+0
