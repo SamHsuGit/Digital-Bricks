@@ -1,0 +1,6 @@
+0 Plate 1 x 1
+0 Name: 3024tex.dat
+0 Author: Philippe Hurbain [Philo]
+0 BFC CERTIFY CCW
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3024s01.dat
+1 16 0 4 -10 10 0 0 0 -0 -4 0 1 -0 recttex.dat

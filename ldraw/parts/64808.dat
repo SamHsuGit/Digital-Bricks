@@ -1,0 +1,20 @@
+0 Minifig Head Mon Calamari
+0 Name: 64808.dat
+0 Author: Stan Isachenko [angmarec]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Star Wars, Nahdar Vebb
+
+0 !HISTORY 2011-10-27 {LEGO Digital Designer} Original part shape
+0 !HISTORY 2011-10-28 [angmarec] File preparation for LDraw Parts Tracker
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\64808s01.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\64808s01.dat
+0 BFC INVERTNEXT
+1 16 0 -32.62 0 6 0 0 0 32.62 0 0 0 6 4-4cyli.dat
+1 16 0 -32.62 0 6 0 0 0 -1 0 0 0 6 4-4disc.dat
+1 16 0 -32.62 0 6 0 0 0 1 0 0 0 6 4-4edge.dat
+1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat

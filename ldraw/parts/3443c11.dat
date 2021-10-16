@@ -1,0 +1,18 @@
+0 ~Train Battery Box Car with Black Base and Black Wheels
+0 Name: 3443c11.dat
+0 Author: Alex Taylor [anathema]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 3443.dat
+1 0 0 96 0 1 0 0 0 1 0 0 0 1 x941.dat
+1 494 2 135 -70 1 0 0 0 0 -1 0 1 0 944.dat
+1 494 2 135 70 1 0 0 0 0 -1 0 1 0 944.dat
+1 0 51 135 70 0 0 -1 0 1 0 1 0 0 243.dat
+1 0 51 135 -70 0 0 -1 0 1 0 1 0 0 243.dat
+1 0 -51 135 -70 0 0 1 0 1 0 -1 0 0 243.dat
+1 0 -51 135 70 0 0 1 0 1 0 -1 0 0 243.dat
+1 4 0 131 -44 1 0 0 0 1 0 0 0 1 943.dat
+1 4 0 128 0 0 0 -1 0 1 0 1 0 0 942.dat

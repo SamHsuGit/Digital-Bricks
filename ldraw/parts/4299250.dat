@@ -1,0 +1,16 @@
+0 _Bar  1.5L with Clip [80]
+0 Name: 4299250.dat
+0 Author: [PTadmin]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2010-12-31 [PTadmin] Official Update 2010-03
+0 !HISTORY 2013-03-23 [MagFors] Changed colour 383 to 80 (printed silver)
+0 !HISTORY 2016-06-30 [MagFors] Updated description and part used
+
+0 // This file is a "shortcut" with the correct number for the actual
+0 // colouring of the part (Metallic Silver).
+
+1 80 0 0 0 1 0 0 0 1 0 0 0 1 48729a.dat

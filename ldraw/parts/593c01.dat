@@ -1,0 +1,17 @@
+0 Electric  4.5V Battery Box  7 x 11 x  3 Type 2 (Complete)
+0 Name: 593c01.dat
+0 Author: Guy Vivan [guyvivan]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2004-10-23 [mikeheide] Secondary author
+0 !HISTORY 2009-02-08 [mikeheide] made lid main-color
+0 !HISTORY 2010-06-08 [mikeheide] Adjusted for changed references
+
+1 7 0 64 0 1 0 0 0 1 0 0 0 1 593.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 u9023.dat
+1 16 0 2 -90 1 0 0 0 1 0 0 0 1 u9024.dat
+1 15 0 32 -96.5 1 0 0 0 1 0 0 0 1 563.dat
+1 494 0 66 36 1.06066 0 -1.06066 0 -1.5 0 1.06066 0 1.06066 u9020.dat

@@ -1,0 +1,13 @@
+0 _Brick  2 x  4 x  1.333 with Half Round  2 x  2 Plate [72]
+0 Name: 4611445.dat
+0 Author: [PTadmin]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 // This file is a "shortcut" with the correct number for the actual
+0 // colouring of the part (Dark Bluish Grey).
+
+1 72 0 0 0 1 0 0 0 1 0 0 0 1 90754.dat
+0

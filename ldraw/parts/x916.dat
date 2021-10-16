@@ -1,0 +1,11 @@
+0 ~Electric Technic Motor 4.5V  6 x 17 x  5 Switch
+0 Name: x916.dat
+0 Author: Guy Vivan [guyvivan]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 -4 90 -88 0 0 20 2 0 0 0 8 0 box.dat
+1 16 -4 92 -88 0 0 4 0 6 0 -4 0 0 box5.dat
+0

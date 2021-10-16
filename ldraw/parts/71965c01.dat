@@ -1,0 +1,48 @@
+0 Belt 28 Tooth (Formed for 2 Wheel Rim 14 x 18)
+0 Name: 71965c01.dat
+0 Author: Thomas Burger [grapeape]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !HELP Uncomment the first lines for hubs
+
+0 BFC CERTIFY CCW
+
+0 !CATEGORY Vehicle
+0 !KEYWORDS town, arctic, Alpha Team
+
+0 !HISTORY 2009-01-16 [Philo] Rewrite from scratch
+
+0 // 1 7 0 0 0 1 0 0 0 1 0 0 0 1 55981.dat
+0 // 1 7 -100 0 0 1 0 0 0 1 0 0 0 1 55982.dat
+0 // 1 7 100 0 0 1 0 0 0 1 0 0 0 1 30285.DAT
+
+1 16 -90 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 -70 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 -50 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 -30 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 -10 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 10 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 30 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 50 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 70 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 90 0 0 1 0 0 0 1 0 0 0 1 43903a.dat
+1 16 100 0 0 -1 0 0 0 1 0 0 0 1 43903b.dat
+1 16 100 0 0 0 -1 0 1 0 0 0 0 1 43903b.dat
+1 16 100 0 0 0 -1 0 -1 0 0 0 0 1 43903b.dat
+1 16 100 0 0 -1 0 0 0 -1 0 0 0 1 43903b.dat
+1 16 90 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 70 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 50 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 30 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 10 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 -10 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 -30 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 -50 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 -70 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 -90 0 0 -1 0 0 0 -1 0 0 0 1 43903a.dat
+1 16 -100 0 0 1 0 0 0 -1 0 0 0 1 43903b.dat
+1 16 -100 0 0 0 1 0 -1 0 0 0 0 1 43903b.dat
+1 16 -100 0 0 0 1 0 1 0 0 0 0 1 43903b.dat
+1 16 -100 0 0 1 0 0 0 1 0 0 0 1 43903b.dat
+0 //

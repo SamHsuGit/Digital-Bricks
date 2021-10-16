@@ -1,0 +1,11 @@
+0 Electric Plug (Type 1) Single with Hollow Pin (Complete)
+0 Name: 592c04.dat
+0 Author: Steffen [Steffen]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 22 1 0 0 0 1 0 0 0 1 592.dat
+1 494 0 0 0 1 0 0 0 1 0 0 0 1 u9238.dat
+1 494 0 -6 17 0.707107 0 -0.707107 0 1 0 0.707107 0 0.707107 u9021.dat

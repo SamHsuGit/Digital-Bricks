@@ -1,0 +1,13 @@
+0 _Windscreen  6 x  8 x  3 TransGrey with SW Canopy Pattern
+0 Name: 4142931.dat
+0 Author: Steve Bliss [sbliss]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 // Shortcut for Official TLG Color/Number
+0 // This file is "shortcut" with the correct TLC number
+0 // and has the actual coloring of the piece.
+
+1 40 0 0 0 1 0 0 0 1 0 0 0 1 32086ps1.dat

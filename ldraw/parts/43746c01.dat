@@ -1,0 +1,16 @@
+0 Animal Serpent Basilisk Head (Complete)
+0 Name: 43746c01.dat
+0 Author: Steffen [Steffen]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Harry Potter
+0 !CMDLINE -c378
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 43746.dat
+1 46 34.25 -23.82 -86 0 -1 0 1 0 0 0 0 1 6141.dat
+1 46 -34.25 -23.82 -86 0 1 0 1 0 0 0 0 -1 6141.dat
+1 21 -10 -34.9 -121 1 0 0 0 -1 0 0 0 -1 37.dat
+1 21 10 -34.9 -121 1 0 0 0 -1 0 0 0 -1 37.dat

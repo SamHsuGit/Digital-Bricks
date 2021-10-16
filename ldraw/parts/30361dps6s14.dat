@@ -1,0 +1,10 @@
+0 ~Cylinder  2 x  2 x  2 Robot Body with SW Astromech Pattern Lower Left Panels
+0 Name: s\30361dps6s14.dat
+0 Author: John Troxler [Gargan]
+0 !LDRAW_ORG Unofficial_Subpart
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+4 16 -14.777 20 -13.188 -14.777 24.6 -13.188 -14.14 24.6 -14.14 -14.14 20 -14.14
+4 16 -11.897 20 -15.639 -11.897 24.6 -15.639 -11.102 24.6 -16.17 -11.102 20 -16.17
+4 16 -12.663 24.6 -15.127 -12.663 20 -15.127 -13.4 20 -14.635 -13.4 24.6 -14.635

@@ -1,0 +1,17 @@
+0 Bike  2 Wheel Motorcycle w. TrClear Wheels and Police Windshield
+0 Name: 4480c05.dat
+0 Author: Magnus Forsberg [MagFors]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !CATEGORY Vehicle
+0 !KEYWORDS motorbike
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 4480c01.dat
+1 47 0 -13.638671 -93.126693 0 0 1 1 0 0 0 1 0 6141.dat
+1 47 0 -11.06 -76.24 1 0 0 0 0.924 0.383 0 -0.383 0.924 4483p01.dat
+1 36 0 10 28 0 0 -1 1 0 0 0 -1 0 3024.dat
+1 47 0 30 0 0 0 -1 0 1 0 1 0 0 3464c01.dat
+1 47 0 30 -90 0 0 -1 0 1 0 1 0 0 3464c01.dat

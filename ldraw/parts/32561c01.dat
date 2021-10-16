@@ -1,0 +1,18 @@
+0 Electric USB Camera with TransBlack Bottom and LtGrey Focus Ring
+0 Name: 32561c01.dat
+0 Author: William Wood [wjwood]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS set 9731
+
+0 !HISTORY 2006-09-16 [WilliamH] BFCed
+0 !HISTORY 2013-11-15 [Steffen]  used color 16, retitled, added back quad, changed origin
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 32561.dat
+1 40 0 0 0 1 0 0 0 1 0 0 0 1 32562.dat
+1 7 0 66 -48 -1 0 0 0 1 0 0 0 -1 x325.dat
+1 0 0 66 -48 28 0 0 0 0 -28 0 1 0 4-4disc.dat
+4 0 8 74 52 -8 74 52 -8 58 52 8 58 52

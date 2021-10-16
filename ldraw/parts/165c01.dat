@@ -1,0 +1,13 @@
+0 Technic Pneumatic Tube 6L (Shortcut)
+0 Name: 165c01.dat
+0 Author: Santeri Piippo [arezey]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 -40 0 0 0 -1 0 1 0 0 0 0 1 165.dat
+1 16 40 0 0 0 1 0 1 0 0 0 0 1 165.dat
+1 16 40 0 0 0 -80 0 1 0 0 0 0 1 166.dat
+0 //
+
