@@ -806,7 +806,7 @@ MonoBehaviour:
   spawnPosition: {x: 800, y: 60, z: 800}
   blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
   blockMaterialTransparent: {fileID: 0}
-  physicMaterial: {fileID: 13400000, guid: 04d44e408417cef468df57675176c53a, type: 2}
+  physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
   blocktypes:
   - blockName: 00 Air
     isDrawn: 0
@@ -1858,6 +1858,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 568286980617694250}
     m_Modifications:
+    - target: {fileID: 3807471475896243336, guid: 066f9bf58e3bbed49b9865a928812a7d, type: 3}
+      propertyPath: physicMaterial
+      value: 
+      objectReference: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
     - target: {fileID: 3807471475896243337, guid: 066f9bf58e3bbed49b9865a928812a7d, type: 3}
       propertyPath: m_RootOrder
       value: 3

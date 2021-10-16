@@ -6,7 +6,7 @@ PhysicMaterial:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LEGO Piece
+  m_Name: LEGO
   dynamicFriction: 0.46
   staticFriction: 0.46
   bounciness: 0

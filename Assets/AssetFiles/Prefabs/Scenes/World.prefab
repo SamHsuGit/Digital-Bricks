@@ -54,6 +54,8 @@ MonoBehaviour:
   saving: 0
   undrawVoxelBoundObjects: 0
   undrawVoxels: 0
+  mainCameraGameObject: {fileID: 0}
+  customNetworkManagerGameObject: {fileID: 0}
   globalLighting: {fileID: 0}
   loadingText: {fileID: 0}
   loadingBackground: {fileID: 0}
@@ -69,7 +71,7 @@ MonoBehaviour:
   spawnPosition: {x: 800, y: 60, z: 800}
   blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
   blockMaterialTransparent: {fileID: 0}
-  physicMaterial: {fileID: 13400000, guid: 04d44e408417cef468df57675176c53a, type: 2}
+  physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
   blocktypes:
   - blockName: 00 Air
     isDrawn: 0

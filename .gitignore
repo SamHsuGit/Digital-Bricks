@@ -4,7 +4,8 @@
 #
 /[Bb]uild/
 /[Bb]uilds/
-/[Ll]ibrary/
+/[Ll]ibrary/*
+!/[Ll]ibrary/LastSceneManagerSetup.txt
 /[Ll]ogs/
 /[Oo]bj/
 /[Uu]ser[Ss]ettings/

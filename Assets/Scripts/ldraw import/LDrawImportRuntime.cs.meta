@@ -3,7 +3,13 @@ guid: 0fe78359477dbc941929c7462171fb9b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ldrawConfigRuntime: {instanceID: 0}
+  - modelOb: {instanceID: 0}
+  - baseOb: {instanceID: 0}
+  - procGenOb: {instanceID: 0}
+  - summonOb: {instanceID: 0}
+  - physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

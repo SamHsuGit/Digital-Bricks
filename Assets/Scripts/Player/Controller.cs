@@ -14,9 +14,6 @@ public class Controller : NetworkBehaviour
     public GameObject[] ArmR;
     public GameObject[] LegL;
     public GameObject[] LegR;
-
-    private GameObject[][] playerLimbs = new GameObject[5][];
-
     public GameObject[] voxels;
 
     [SyncVar(hook = nameof(SetCharType))] public int charType = 0; // 0 = BrickFormer, 1 = Minifig
@@ -49,7 +46,7 @@ public class Controller : NetworkBehaviour
     [Header("GameObject References")]
     public GameObject modelPrefab;
     public GameObject gameMenu;
-    public PhysicMaterial physicMaterial;
+    
     public GameObject nametag;
     public GameObject backgroundMask;
     public AudioSource brickPickUp;
@@ -81,6 +78,7 @@ public class Controller : NetworkBehaviour
     private Transform shootPos;
     private Transform placePos;
     private Transform holdPos;
+    private GameObject[][] playerLimbs = new GameObject[5][];
     GameObject holdPosPrefabNetworkPlaceholder;
 
     //Components
@@ -97,6 +95,7 @@ public class Controller : NetworkBehaviour
     PlayerVoxelCollider playerCameraVoxelCollider;
     PPFXSetValues worldPPFXSetValues;
     CharacterController charController;
+    PhysicMaterial physicMaterial;
 
     //Initializers & Constants
     float clutchPower = 8000f;
@@ -131,6 +130,7 @@ public class Controller : NetworkBehaviour
         ToggleLights(lightsOn);
 
         world = World.Instance;
+        physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
         snowPlowcc = snowPlow.GetComponent<CapsuleCollider>();
         animator = modelPrefab.GetComponent<Animator>();
