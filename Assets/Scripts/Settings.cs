@@ -82,7 +82,7 @@ public class Settings
     public bool fullscreen;
 
     [Header("World Gen")]
-    public ulong seed;
+    public int seed; // int yields numbers from 0 to 2,147,483,647 inclusively
     public float timeOfDay;
 
     [Header("Player Customization")]

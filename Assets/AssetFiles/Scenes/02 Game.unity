@@ -783,6 +783,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldData:
     seed: 0
+    blockIDsubsurface: 0
+    blockIDcore: 0
+    blockIDForest: 0
+    blockIDGrasslands: 0
+    blockIDDesert: 0
+    blockIDDeadForest: 0
+    blockIDHugeTree: 0
+    blockIDMountain: 0
+    isAlive: 1
+    blockIDTreeLeavesWinter: 0
+    blockIDTreeLeavesSpring: 0
+    blockIDTreeLeavesSummer: 0
+    blockIDTreeLeavesFall1: 0
+    blockIDTreeLeavesFall2: 0
+    blockIDTreeTrunk: 0
+    blockIDCacti: 0
+    blockIDMushroomLargeCap: 0
+    blockIDMushroomLargeStem: 0
+    blockIDMonolith: 0
+    blockIDEvergreenLeaves: 0
+    blockIDEvergreenTrunk: 0
+    blockIDHoneyComb: 0
+    blockIDHugeTreeLeaves: 0
+    blockIDHugeTreeTrunk: 0
+    blockIDColumn: 0
   appPath: 
   worldLoaded: 0
   tick: 0
@@ -794,13 +819,24 @@ MonoBehaviour:
   globalLighting: {fileID: 2529205028307385180}
   loadingText: {fileID: 4378316389117323992}
   loadingBackground: {fileID: 4378316389117323991}
+  planets:
+  - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
+  - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}
+  - {fileID: 11400000, guid: 615afd6c849daee40aeec2f7e464ea48, type: 2}
+  - {fileID: 11400000, guid: ce5bf94516745e140ae79c79c921957a, type: 2}
+  - {fileID: 11400000, guid: 6c5d25dc7de6ea04db8dc7de8f6c7f7b, type: 2}
+  - {fileID: 11400000, guid: 7e5e7c06c77aa8948af1d031607a9897, type: 2}
+  - {fileID: 11400000, guid: f7b28ecebbcb45840819387e106a7215, type: 2}
+  - {fileID: 11400000, guid: 8775edaf3cb1bce45a9f080bbd30c214, type: 2}
+  - {fileID: 11400000, guid: 4dc9f5e6a92fce84886fa172944ef08b, type: 2}
   biomes:
   - {fileID: 11400000, guid: 8e73a1f6ca6be1a42b7b13b5c72e3536, type: 2}
   - {fileID: 11400000, guid: 4ef2e4af07c6f5740b4b4490bc4d4e61, type: 2}
   - {fileID: 11400000, guid: ded51579f62eb3649b111ae5893355f7, type: 2}
-  - {fileID: 11400000, guid: f7e9971761b16e441b2cb2465b306386, type: 2}
   - {fileID: 11400000, guid: ec4e646aa2a44e643a56e5d85af0dcfe, type: 2}
   - {fileID: 11400000, guid: 9f3801dea13a8f94988736dbed9d655c, type: 2}
+  - {fileID: 11400000, guid: 1f79fc23f66fa9c48b216cef8c3ef390, type: 2}
+  - {fileID: 11400000, guid: f7e9971761b16e441b2cb2465b306386, type: 2}
   solidGroundHeight: 2
   worldPlayer: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
   spawnPosition: {x: 800, y: 60, z: 800}

@@ -19,7 +19,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetCharType))] public int charType = 0; // 0 = BrickFormer, 1 = Minifig
     [SyncVar(hook = nameof(SetName))] public string playerName;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
-    [SyncVar] public ulong seed; // all clients can see server syncVar seed to check against
+    [SyncVar] public int seed; // all clients can see server syncVar seed to check against
     [SyncVar] public string version; // all clients can see server syncVar version to check against
     public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
     [SyncVar(hook = nameof(SetColorTorso))] public int colorTorso;

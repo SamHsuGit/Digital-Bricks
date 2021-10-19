@@ -10,46 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 01 Grassland
+  m_Name: 02 Desert
   m_EditorClassIdentifier: 
-  biomeName: 01 Grassland
-  offset: 2222
-  scale: 0.05
+  biomeName: 02 Desert
+  offset: 3333
+  scale: 0.1
   terrainHeight: 80
-  terrainScale: 0.1
-  surfaceBlock: 27
+  terrainScale: 0.05
+  surfaceBlock: 8
   placeFlora: 1
   flora:
-  - name: Grass
-    floraIndex: 6
-    floraZoneScale: 1.9
-    floraZoneThreshold: 0.5
-    floraPlacementScale: 10
-    floraPlacementThreshold: 0.73
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Flower
-    floraIndex: 9
-    floraZoneScale: 1.9
-    floraZoneThreshold: 0.5
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.7
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Tree
-    floraIndex: 2
+  - name: Cactus
+    floraIndex: 3
     floraZoneScale: 1.06
     floraZoneThreshold: 0.6
     floraPlacementScale: 8
     floraPlacementThreshold: 0.83
     minHeight: 7
     maxHeight: 13
-    minRadius: 4
-    maxRadius: 6
+    minRadius: 1
+    maxRadius: 1
+  - name: Column
+    floraIndex: 13
+    floraZoneScale: 1.1
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 5
+    floraPlacementThreshold: 0.8
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
   lodes:
   - nodeName: Crystals
     blockID: 30

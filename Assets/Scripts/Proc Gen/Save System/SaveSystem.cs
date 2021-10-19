@@ -168,7 +168,7 @@ public static class SaveSystem
         //Debug.Log(count + " chunks saved.");
     }
 
-    public static void SaveChunk(ChunkData chunk, ulong _seed)
+    public static void SaveChunk(ChunkData chunk, int _seed)
     {
         string chunkName = chunk.position.x + "-" + chunk.position.y;
 
@@ -185,7 +185,7 @@ public static class SaveSystem
         stream.Close();
     }
 
-    public static WorldData LoadWorld(ulong seed) // loads world upon game start in world script
+    public static WorldData LoadWorld(int seed) // loads world upon game start in world script
     {
         string loadPath = World.Instance.appPath + "/saves/" + seed + "/";
 
@@ -211,7 +211,7 @@ public static class SaveSystem
         }
     }
 
-    public static ChunkData LoadChunk(ulong _seed, Vector2Int position) // loads chunks from file (slow)
+    public static ChunkData LoadChunk(int _seed, Vector2Int position) // loads chunks from file (slow)
     {
         string chunkName = position.x + "-" + position.y;
 

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: 00 Forest
   offset: 111
-  scale: 0.04
+  scale: 0.1
   terrainHeight: 80
   terrainScale: 0.19
-  surfaceBlock: 27
+  surfaceBlock: 8
   placeFlora: 1
   flora:
   - name: Small Mushroom

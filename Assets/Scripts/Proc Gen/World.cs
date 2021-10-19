@@ -22,7 +22,8 @@ public class World : MonoBehaviour
     public GameObject loadingBackground;
 
     [Header("World Generation Values")]
-    public BiomeAttributes[] biomes;
+    public Planet[] planets;
+    public Biome[] biomes;
     public int solidGroundHeight = 20;
     public GameObject worldPlayer;
     public Vector3 spawnPosition;
@@ -59,7 +60,7 @@ public class World : MonoBehaviour
     private int loadDistance;
     private int LOD0threshold;
     private int studRenderDistanceInChunks; // acts as a radius like viewDistance
-    
+
     List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
     Dictionary<Player, Controller> controllers = new Dictionary<Player, Controller>();
@@ -76,6 +77,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        Random.InitState(SettingsStatic.LoadedSettings.seed);
         //if (Settings.OnlinePlay && isClientOnly && hasAuthority) // if client only, request worldData and seed from host
         //{
         //    // https://mirror-networking.gitbook.io/docs/guides/data-types
@@ -83,7 +85,7 @@ public class World : MonoBehaviour
         //    CmdRequestSeed();
         //}
 
-        if(SettingsStatic.LoadedSettings.graphicsQuality  == 2)
+        if (SettingsStatic.LoadedSettings.graphicsQuality  == 2)
         {
             undrawVoxelBoundObjects = false;
             undrawVoxels = false;
@@ -197,6 +199,7 @@ public class World : MonoBehaviour
     {
         worldLoaded = false;
         worldData = SaveSystem.LoadWorld(SettingsStatic.LoadedSettings.seed);
+        WorldDataOverrides(SettingsStatic.LoadedSettings.seed);
 
         blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
         blocktypes[26].voxelBoundObject = LDrawImportRuntime.Instance.procGenOb;
@@ -240,6 +243,133 @@ public class World : MonoBehaviour
         Settings.WorldLoaded = true;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         mainCamera.enabled = false;
+    }
+
+    public int GetGalaxy(int seed)
+    {
+        int galaxy = Mathf.CeilToInt(seed / 64.0f);
+        return galaxy;
+    }
+
+    public int GetSolarSystem(int seed)
+    {
+        int solarSystem = Mathf.CeilToInt(seed / 8.0f);
+        return solarSystem;
+    }
+
+    public int GetDistToStar(int seed)
+    {
+        int solarSystem = Mathf.CeilToInt(seed / 8.0f);
+        int distToStar = (int)(seed - 8.0f * (solarSystem - 1));
+        return distToStar;
+    }
+
+    public int GetSeedFromSpaceCoords (int galaxy, int solarSystem, int distToStar)
+    {
+        int seed = (int)((galaxy - 1) * 64.0f + (solarSystem - 1) * 8.0f + distToStar);
+        return seed;
+    }
+
+    public void WorldDataOverrides(int worldseed)
+    {
+        int minRandBlockID = 2;
+        int maxRandBlockID = 24;
+
+        worldData.solarSystem = GetSolarSystem(worldseed);
+        worldData.distToStar = GetDistToStar(worldseed);
+        worldData.galaxy = GetGalaxy(worldseed);
+        int distToStar = worldData.distToStar;
+        //Debug.Log("Compressed Coords:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.solarSystem, worldData.distToStar));
+        //Debug.Log("Universal Coords (galaxy, sol sys, planet)" + worldData.galaxy + "-" + worldData.solarSystem + "-" + distToStar);
+
+        if (worldseed < 9) // 8 planets
+        {
+            Planet planet = planets[worldseed];
+
+            worldData.blockIDsubsurface = planet.blockIDsubsurface;
+            worldData.blockIDcore = planet.blockIDcore;
+            worldData.blockIDForest = planet.blockIDForest;
+            worldData.blockIDGrasslands = planet.blockIDGrasslands;
+            worldData.blockIDDesert = planet.blockIDDesert;
+            worldData.blockIDDeadForest = planet.blockIDDeadForest;
+            worldData.blockIDHugeTree = planet.blockIDHugeTree;
+            worldData.blockIDMountain = planet.blockIDMountain;
+            worldData.isAlive = planet.isAlive; // controls if the world is hospitable to flora
+            worldData.biomes = planet.biomes; // controls which biomes the world has
+            worldData.blockIDTreeLeavesWinter = planet.blockIDTreeLeavesWinter;
+            worldData.blockIDTreeLeavesSpring = planet.blockIDTreeLeavesSpring;
+            worldData.blockIDTreeLeavesSummer = planet.blockIDTreeLeavesSummer;
+            worldData.blockIDTreeLeavesFall1 = planet.blockIDTreeLeavesFall1;
+            worldData.blockIDTreeLeavesFall2 = planet.blockIDTreeLeavesFall2;
+            worldData.blockIDTreeTrunk = planet.blockIDTreeTrunk;
+            worldData.blockIDCacti = planet.blockIDCacti;
+            worldData.blockIDMushroomLargeCap = planet.blockIDMushroomLargeCap;
+            worldData.blockIDMushroomLargeStem = planet.blockIDMushroomLargeStem;
+            worldData.blockIDMonolith = planet.blockIDMonolith;
+            worldData.blockIDEvergreenLeaves = planet.blockIDEvergreenLeaves;
+            worldData.blockIDEvergreenTrunk = planet.blockIDEvergreenTrunk;
+            worldData.blockIDHoneyComb = planet.blockIDHoneyComb;
+            worldData.blockIDHugeTreeLeaves = planet.blockIDHugeTreeLeaves;
+            worldData.blockIDHugeTreeTrunk = planet.blockIDHugeTreeTrunk;
+            worldData.blockIDColumn = planet.blockIDColumn;
+        }
+        if (worldseed >= 9)
+        {
+            if (distToStar >= 0 && distToStar <= 3) // hot, close to star
+            {
+                minRandBlockID = 3;
+                maxRandBlockID = 8;
+            }
+            else if (distToStar >= 4 && distToStar <= 6) // temperate, medium distance from star
+            {
+                minRandBlockID = 9;
+                maxRandBlockID = 15;
+            }
+            else if (distToStar >= 7 && distToStar <= 8) // cold, far from star
+            {
+                minRandBlockID = 16;
+                maxRandBlockID = 24;
+            }
+            //randomize blockIDs based on seed values
+            // Default ProcGen values based on seed
+            worldData.blockIDsubsurface = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDcore = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDForest = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDGrasslands = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDDesert = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDDeadForest = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHugeTree = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDMountain = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            int generateFlora = Random.Range(0, 1);
+            if (generateFlora == 0)
+                worldData.isAlive = false; // controls if the world is hospitable to flora
+            else
+                worldData.isAlive = true; // controls if the world is hospitable to flora
+            worldData.biomes = new int[] {0, 1, 2, 3, 4, 5, 6}; // controls which biomes the world has
+            worldData.blockIDTreeLeavesWinter = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesSpring = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesSummer = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesFall1 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesFall2 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeTrunk = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDCacti = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDMushroomLargeCap = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDMushroomLargeStem = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDMonolith = (byte)Random.Range(minRandBlockID, 24);
+            worldData.blockIDEvergreenLeaves = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDEvergreenTrunk = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHoneyComb = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHugeTreeLeaves = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHugeTreeTrunk = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDColumn = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+        }
+
+        biomes[0].surfaceBlock = worldData.blockIDForest;
+        biomes[1].surfaceBlock = worldData.blockIDGrasslands;
+        biomes[2].surfaceBlock = worldData.blockIDDesert;
+        biomes[3].surfaceBlock = worldData.blockIDDeadForest;
+        biomes[4].surfaceBlock = worldData.blockIDHugeTree;
+        biomes[5].surfaceBlock = worldData.blockIDMountain;
     }
 
     public void LoadWorld()
@@ -576,7 +706,7 @@ public class World : MonoBehaviour
             //if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.2f) > 0.2f) // determines if water or lava
             //    return 21; // water
             //else
-                return 5; // lava
+                return worldData.blockIDcore; // planet core block (e.g. lava)
         }
 
         // If between certain height range, return clouds.
@@ -605,15 +735,15 @@ public class World : MonoBehaviour
         float strongestWeight = 0f;
         int strongestBiomeIndex = 0;
 
-        for (int i = 0; i < biomes.Length; i++)
+        foreach (int biomeIndex in worldData.biomes)
         {
-            float weight = Noise.Get2DPerlin(xzCoords, biomes[i].offset, biomes[i].scale);
+            float weight = Noise.Get2DPerlin(xzCoords, biomes[biomeIndex].offset, biomes[biomeIndex].scale);
 
             // Keep track of which weight is strongest.
             if (weight > strongestWeight)
             {
                 strongestWeight = weight;
-                strongestBiomeIndex = i;
+                strongestBiomeIndex = biomeIndex;
             }
 
             //// Get the height of the terrain (for the current biome) and multiply it by its weight.
@@ -628,7 +758,7 @@ public class World : MonoBehaviour
         }
 
         // Set biome to the one with the strongest weight.
-        BiomeAttributes biome = biomes[strongestBiomeIndex];
+        Biome biome = biomes[strongestBiomeIndex];
 
         //// Get the average of the heights.
         //sumOfHeights /= count;
@@ -643,34 +773,36 @@ public class World : MonoBehaviour
         /* BASIC TERRAIN PASS */
 
         byte voxelValue = 0;
+        bool subsurfaceBlock = false;
 
         if (yGlobalPos > terrainHeight)
             return 0;
-        else if (yGlobalPos == terrainHeight)
+        else if (yGlobalPos == terrainHeight) // if surface block
         {
             if (Mathf.CeilToInt(System.DateTime.Now.Month / 3f) == 1)
                 voxelValue = 5; // snow for winter season
             else
                 voxelValue = biome.surfaceBlock;
-        }     
-        else
-            voxelValue = 3;
+        }
+        else // must be subsurface block
+        {
+            voxelValue = worldData.blockIDsubsurface;
+            subsurfaceBlock = true;
+        }
 
         /* LODE PASS */
-        if (voxelValue == 3 && yGlobalPos < terrainHeight - 2)
+        if (subsurfaceBlock && yGlobalPos < terrainHeight - 2)
         {
             foreach (Lode lode in biome.lodes)
             {
                 if (yGlobalPos > lode.minHeight && yGlobalPos < lode.maxHeight && yGlobalPos < terrainHeight)
                     if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold))
-                    {
                         voxelValue = lode.blockID;
-                    }
             }
         }
 
         /* MAJOR FLORA PASS */
-        if (biome.placeFlora)
+        if (worldData.isAlive && biome.placeFlora) // only place flora on worlds marked isAlive
         {
             for (int i = 0; i < biome.flora.Length; i++) // for all floras
             {

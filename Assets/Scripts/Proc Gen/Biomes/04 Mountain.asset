@@ -10,36 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 02 Desert
+  m_Name: 04 Mountain
   m_EditorClassIdentifier: 
-  biomeName: 02 Desert
-  offset: 3333
-  scale: 0.05
+  biomeName: 04 Mountain
+  offset: 6666
+  scale: 0.09
   terrainHeight: 80
-  terrainScale: 0.05
+  terrainScale: 0.7
   surfaceBlock: 4
   placeFlora: 1
-  flora:
-  - name: Cactus
-    floraIndex: 3
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
-    minHeight: 7
-    maxHeight: 13
-    minRadius: 1
-    maxRadius: 1
-  - name: Column
-    floraIndex: 13
-    floraZoneScale: 1.1
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 5
-    floraPlacementThreshold: 0.8
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
+  flora: []
   lodes:
   - nodeName: Crystals
     blockID: 30

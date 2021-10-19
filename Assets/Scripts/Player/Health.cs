@@ -277,7 +277,10 @@ public class Health : NetworkBehaviour
         hp = hpMax;
 
         for (int i = 0; i < modelPieces.Count; i++)
-            modelPieces[i].GetComponent<MeshRenderer>().enabled = true; // unhide all original objects
+        {
+            if(modelPieces[i].GetComponent<MeshRenderer>() != null)
+                modelPieces[i].GetComponent<MeshRenderer>().enabled = true; // unhide all original objects
+        }
     }
 
 }

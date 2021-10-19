@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BiomeAttributes", menuName = "MinecraftTutorial/Biome Attribute")]
-public class BiomeAttributes : ScriptableObject
+[CreateAssetMenu(fileName = "Biome", menuName = "ProcGen/Biome")]
+public class Biome : ScriptableObject
 {
     [Header("Biome Attributes")]
     public string biomeName;
@@ -9,7 +9,7 @@ public class BiomeAttributes : ScriptableObject
     public float scale;
     public int terrainHeight;
     public float terrainScale;
-    public byte surfaceBlock;
+    public byte surfaceBlock; // this value is changed by other scripts depending on planet
     public bool placeFlora = true;
     public Flora[] flora;
     public Lode[] lodes;

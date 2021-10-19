@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
+  m_Name: 01 Grassland
+  m_EditorClassIdentifier: 
+  biomeName: 01 Grassland
+  offset: 2222
+  scale: 0.1
+  terrainHeight: 80
+  terrainScale: 0.1
+  surfaceBlock: 8
+  placeFlora: 1
+  flora:
+  - name: Grass
+    floraIndex: 6
+    floraZoneScale: 1.9
+    floraZoneThreshold: 0.5
+    floraPlacementScale: 10
+    floraPlacementThreshold: 0.73
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Flower
+    floraIndex: 9
+    floraZoneScale: 1.9
+    floraZoneThreshold: 0.5
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.7
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Tree
+    floraIndex: 2
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 7
+    maxHeight: 13
+    minRadius: 4
+    maxRadius: 6
+  lodes:
+  - nodeName: Crystals
+    blockID: 30
+    minHeight: 1
+    maxHeight: 96
+    scale: 2
+    threshold: 0.65
+    noiseOffset: 1
+  - nodeName: Cave
+    blockID: 0
+    minHeight: 1
+    maxHeight: 96
+    scale: 0.01
+    threshold: 0.6
+    noiseOffset: 40
+  - nodeName: CaveSmall
+    blockID: 0
+    minHeight: 1
+    maxHeight: 96
+    scale: 0.06
+    threshold: 0.5
+    noiseOffset: 30
