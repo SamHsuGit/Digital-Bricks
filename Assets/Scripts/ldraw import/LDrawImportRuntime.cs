@@ -13,13 +13,13 @@ public class LDrawImportRuntime : MonoBehaviour
     public GameObject modelOb;
 
     public GameObject baseOb;
-    public GameObject procGenOb;
+    //public GameObject procGenOb;
     public GameObject summonOb;
     public PhysicMaterial physicMaterial;
 
-    public int procGenObSizeX;
-    public int procGenObSizeZ;
-    public int procGenObSizeY;
+    //public int procGenObSizeX;
+    //public int procGenObSizeZ;
+    //public int procGenObSizeY;
     public int baseObSizeX;
     public int baseObSizeZ;
     public int baseObSizeY;
@@ -46,16 +46,17 @@ public class LDrawImportRuntime : MonoBehaviour
 
         // imports models and hides upon world load to be instantiated later
         baseOb = ImportLDraw("base", new Vector3(0, 0, 0), true);
-        procGenOb = ImportLDraw("procGen", new Vector3(0, 0, 0), true); // spawn preloaded copy far below world so its not visible since cannot make prefab???
+        //procGenOb = ImportLDraw("procGen", new Vector3(0, 0, 0), true); // spawn preloaded copy far below world so its not visible since cannot make prefab???
         summonOb = ImportLDraw("summon", new Vector3(0, 0, 0), false);
+        summonOb.tag = "Vehicle";
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
         baseObSizeZ = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.z / 40) + 1;
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
-        procGenObSizeX = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.x / 40) + 1;
-        procGenObSizeZ = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.z / 40) + 1;
-        procGenObSizeY = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.y / 40) + 1;
+        //procGenObSizeX = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.x / 40) + 1;
+        //procGenObSizeZ = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.z / 40) + 1;
+        //procGenObSizeY = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.y / 40) + 1;
     }
 
     public void Summon(GameObject ldrawImportedOb, Vector3 pos)

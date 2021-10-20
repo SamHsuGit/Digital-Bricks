@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class PlayerVoxelCollider : MonoBehaviour
 {
-    public float walkSpeed = 15f;
-    public float sprintSpeed = 30f;
-    public float jumpForce = 15f;
+    public float baseWalkSpeed = 15f;
+    public float baseSprintSpeed = 30f;
+    public float baseJumpForce = 15f;
     public bool isGrounded;
     public int maxJumps;
     public int currentJumps;
@@ -123,7 +123,7 @@ public class PlayerVoxelCollider : MonoBehaviour
         // apply jump force
         if (jumpRequest && currentJumps < maxJumps)
         {
-            verticalMomentum = jumpForce;
+            verticalMomentum = baseJumpForce;
             currentJumps++;
         }
 
@@ -140,45 +140,45 @@ public class PlayerVoxelCollider : MonoBehaviour
 
         // if we're sprinting, use the sprint multiplier
         if (isSprinting)
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * sprintSpeed * roadMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadMultiplier;
         else
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * walkSpeed * roadMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadMultiplier;
 
         // Apply vertical momentum (falling/jumping).
         velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
 
-        isGrounded = CheckGrounded(velocityPlayer.y);
-        if (playerChunkIsActive)
-        {
-            Vector3 oldVelocity = velocityPlayer;
-            // horizontal collision detection
-            if (isMoving && velocityPlayer.z > 0 && front || velocityPlayer.z < 0 && back)
-            {
-                velocityPlayer.z = 0;
-            }
-            if (isMoving && velocityPlayer.x > 0 && right || velocityPlayer.x < 0 && left)
-            {
-                velocityPlayer.x = 0;
-            }
-            // vertical collision detection
-            if (velocityPlayer.y < 0 && isGrounded)
-            {
-                velocityPlayer.y = 0;
-            }
-            else if (velocityPlayer.y > 0)
-            {
-                velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
-            }
-            // step collision detection
-            if (isMoving && isGrounded && isSprinting && stepDetected && CheckIfPlayerCanStepUp())
-            {
-                // move this gameobject up slightly to get up steps
-                charController.enabled = false;
-                transform.position += stepUpOffset;
-                charController.enabled = true;
-                velocityPlayer = oldVelocity;
-            }
-        }
+        //isGrounded = CheckGrounded(velocityPlayer.y);
+        //if (playerChunkIsActive)
+        //{
+        //    Vector3 oldVelocity = velocityPlayer;
+        //    // horizontal collision detection
+        //    if (isMoving && velocityPlayer.z > 0 && front || velocityPlayer.z < 0 && back)
+        //    {
+        //        velocityPlayer.z = 0;
+        //    }
+        //    if (isMoving && velocityPlayer.x > 0 && right || velocityPlayer.x < 0 && left)
+        //    {
+        //        velocityPlayer.x = 0;
+        //    }
+        //    // vertical collision detection
+        //    if (velocityPlayer.y < 0 && isGrounded)
+        //    {
+        //        velocityPlayer.y = 0;
+        //    }
+        //    else if (velocityPlayer.y > 0)
+        //    {
+        //        velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
+        //    }
+        //    // step collision detection
+        //    if (isMoving && isGrounded && isSprinting && stepDetected && CheckIfPlayerCanStepUp())
+        //    {
+        //        // move this gameobject up slightly to get up steps
+        //        charController.enabled = false;
+        //        transform.position += stepUpOffset;
+        //        charController.enabled = true;
+        //        velocityPlayer = oldVelocity;
+        //    }
+        //}
 
         checkPositions = CalculateCheckPositions(velocityPlayer.y);
 
@@ -258,31 +258,31 @@ public class PlayerVoxelCollider : MonoBehaviour
     public Vector3 CalculateVelocityCamera(float horizontal, float vertical, bool isSprinting)
     {
         Vector3 velocityCamera;
-        bool cameraChunkIsActive = PlayerInActiveChunk();
+        //bool cameraChunkIsActive = PlayerInActiveChunk();
 
-        BoxCollider bc = GetComponent<BoxCollider>();
-        center = bc.transform.position + bc.center; // cache current center of collider position
+        //BoxCollider bc = GetComponent<BoxCollider>();
+        //center = bc.transform.position + bc.center; // cache current center of collider position
 
         // if we're sprinting, use the sprint multiplier
         if (isSprinting)
-            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * sprintSpeed;
+            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed;
         else
-            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * walkSpeed;
+            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed;
 
-        if (cameraChunkIsActive)
-        {
-            isGrounded = CheckGrounded(velocityCamera.y);
-            // horizontal collision detection
-            if ((velocityCamera.z > 0 && front) || (velocityCamera.z < 0 && back))
-                velocityCamera.z = 0;
-            if ((velocityCamera.x > 0 && right) || (velocityCamera.x < 0 && left))
-                velocityCamera.x = 0;
-            // vertical collision detection
-            if (velocityCamera.y < 0 && isGrounded)
-                velocityCamera.y = 0;
-            else if (velocityCamera.y > 0)
-                velocityCamera.y = CheckUpSpeed(velocityCamera.y);
-        }
+        //if (cameraChunkIsActive) // DISABLED since the camera was getting stuck inside meshes due to character controller?, more important to have a free camera
+        //{
+        //    isGrounded = CheckGrounded(velocityCamera.y);
+        //    // horizontal collision detection
+        //    if ((velocityCamera.z > 0 && front) || (velocityCamera.z < 0 && back))
+        //        velocityCamera.z = 0;
+        //    if ((velocityCamera.x > 0 && right) || (velocityCamera.x < 0 && left))
+        //        velocityCamera.x = 0;
+        //    // vertical collision detection
+        //    if (velocityCamera.y < 0 && isGrounded)
+        //        velocityCamera.y = 0;
+        //    else if (velocityCamera.y > 0)
+        //        velocityCamera.y = CheckUpSpeed(velocityCamera.y);
+        //}
 
         return velocityCamera;
     }

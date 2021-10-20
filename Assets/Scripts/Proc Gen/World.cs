@@ -202,13 +202,13 @@ public class World : MonoBehaviour
         WorldDataOverrides(SettingsStatic.LoadedSettings.seed);
 
         blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
-        blocktypes[26].voxelBoundObject = LDrawImportRuntime.Instance.procGenOb;
+        //blocktypes[26].voxelBoundObject = LDrawImportRuntime.Instance.procGenOb;
 
         if (Settings.OnlinePlay)
         {
             customNetworkManager = customNetworkManagerGameObject.GetComponent<CustomNetworkManager>();
             customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.baseOb);
-            customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.procGenOb);
+            //customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.procGenOb);
         }
 
         LoadWorld();
@@ -251,7 +251,7 @@ public class World : MonoBehaviour
         return galaxy;
     }
 
-    public int GetSolarSystem(int seed)
+    public int GetSystem(int seed)
     {
         int solarSystem = Mathf.CeilToInt(seed / 8.0f);
         return solarSystem;
@@ -272,15 +272,16 @@ public class World : MonoBehaviour
 
     public void WorldDataOverrides(int worldseed)
     {
+        //override worldData with planet data for specific planets in our solar system, otherwise randomize the blockIDs/colors
         int minRandBlockID = 2;
         int maxRandBlockID = 24;
 
-        worldData.solarSystem = GetSolarSystem(worldseed);
+        worldData.system = GetSystem(worldseed);
         worldData.distToStar = GetDistToStar(worldseed);
         worldData.galaxy = GetGalaxy(worldseed);
         int distToStar = worldData.distToStar;
-        //Debug.Log("Compressed Coords:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.solarSystem, worldData.distToStar));
-        //Debug.Log("Universal Coords (galaxy, sol sys, planet)" + worldData.galaxy + "-" + worldData.solarSystem + "-" + distToStar);
+        //Debug.Log("Seed:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.solarSystem, worldData.distToStar));
+        //Debug.Log("Universe Coords (galaxy, system, planet)" + worldData.galaxy + "-" + worldData.solarSystem + "-" + distToStar);
 
         if (worldseed < 9) // 8 planets
         {
@@ -429,10 +430,6 @@ public class World : MonoBehaviour
             chunkCoordsToDrawList.Clear();
         }
 
-        // DISABLED (Was used to undraw chunks?)
-        //previousChunksToLoadList = new List<ChunkCoord>(chunkCoordsToLoadList);
-        //chunkCoordsToLoadList.Clear();
-
         copyOfChunksToDrawObjectsList = new List<ChunkCoord>(chunksToDrawObjectsList);
         chunksToDrawObjectsList.Clear();
 
@@ -441,53 +438,96 @@ public class World : MonoBehaviour
         _playerChunkCoords = playerChunkCoords;
         _playerLastChunkCoords = playerLastChunkCoords;
 
-        //if(_playerChunkCoords.Count > 1) // only draw world if there is more than just the world player (DISABLED)
+        for (int i = 1; i < _players.Count; i++) // for all players (not including world player, thus start at 1)
         {
-            for (int i = 1; i < _players.Count; i++) // for all players (not including world player, thus start at 1)
+            // if the player disconnected, remove their gameobject from the dictionary and go to the next dictionary value
+            if (_players[i] == null)//|| playerChunkCoords.Count > 1 && player.Key == worldPlayer)
             {
-                // if the player disconnected, remove their gameobject from the dictionary and go to the next dictionary value
-                if (_players[i] == null)//|| playerChunkCoords.Count > 1 && player.Key == worldPlayer)
+                _players.RemoveAt(i);
+                _playerChunkCoords.RemoveAt(i);
+                _playerLastChunkCoords.RemoveAt(i);
+                //Debug.Log("Player Quit");
+                continue;
+            }
+
+            // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
+            if (_players[i].playerGameObject != worldPlayer && _players[i].playerGameObject != null && _players.Count == _playerChunkCoords.Count)
+            {
+                _playerChunkCoords[i] = GetChunkCoordFromVector3(controllers[_players[i]].playerCamera.transform.position); // get the current chunkCoords for given player camera
+
+                // Only update the chunks if the player has moved from the chunk they were previously on.
+                if (!_playerChunkCoords[i].Equals(_playerLastChunkCoords[i]))
                 {
-                    _players.RemoveAt(i);
-                    _playerChunkCoords.RemoveAt(i);
-                    _playerLastChunkCoords.RemoveAt(i);
-                    //Debug.Log("Player Quit");
-                    continue;
-                }
-
-                // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
-                if (_players[i].playerGameObject != worldPlayer && _players[i].playerGameObject != null && _players.Count == _playerChunkCoords.Count)
-                {
-                    _playerChunkCoords[i] = GetChunkCoordFromVector3(controllers[_players[i]].playerCamera.transform.position); // get the current chunkCoords for given player camera
-
-                    // Only update the chunks if the player has moved from the chunk they were previously on.
-                    if (!_playerChunkCoords[i].Equals(_playerLastChunkCoords[i]))
-                    {
-                        CheckDrawDistance(_playerChunkCoords[i], i); // re-draw chunks
-                        CheckObDrawDist(_playerChunkCoords[i], i); // re-draw studs
-                    }
-                }
-
-                if (chunksToDrawQueue.Count > 0)
-                {
-                    lock (chunksToDrawQueue)
-                    {
-                        chunksToDrawQueue.Dequeue().CreateMesh();
-                    }
-                }
-
-                if (!multithreading)
-                {
-                    if (!applyingModifications)
-                        ApplyModifications();
-
-                    if (chunksToDrawList.Count > 0)
-                    {
-                        DrawChunks();
-                    }
+                    CheckDrawDistance(_playerChunkCoords[i], i); // re-draw chunks
+                    CheckObDrawDist(_playerChunkCoords[i], i); // re-draw studs
                 }
             }
 
+            if (chunksToDrawQueue.Count > 0)
+            {
+                lock (chunksToDrawQueue)
+                {
+                    chunksToDrawQueue.Dequeue().CreateMesh();
+                }
+            }
+
+            if (!multithreading)
+            {
+                if (!applyingModifications)
+                    ApplyModifications();
+
+                if (chunksToDrawList.Count > 0)
+                {
+                    DrawChunks();
+                }
+            }
+        }
+
+        //lock (ChunkDrawThreadLock) // this code causing error when re-drawing world...
+        //{
+        //    if (!activateNewChunks) // deactivate all non-active chunks as some still had mesh colliders enabled...
+        //    {
+        //        foreach (KeyValuePair<ChunkCoord, Chunk> chunk in chunks)
+        //        {
+        //            if (chunk.Value.isActive)
+        //                chunk.Value.isActive = true;
+        //            else
+        //                chunk.Value.isActive = false;
+        //        }
+        //    }
+        //}
+
+        if (!activateNewChunks && !firstChunkLoaded)
+        {
+            AddObjectsToChunk(firstChunkCoord);
+            firstChunkLoaded = true; // only load the firstChunkVBO once and only check while in 'tutorial' small world mode
+        }
+
+        foreach (Player p in players)
+        {
+            foreach (ChunkCoord c in p.chunksToAddVBO)
+            {
+                if (!chunksToDrawObjectsList.Contains(c))
+                    chunksToDrawObjectsList.Add(c); // complile master list of chunks to draw objects
+            }
+        }
+
+        foreach (ChunkCoord c in chunksToDrawObjectsList)
+        {
+            if (!activateNewChunks && chunks.ContainsKey(c) && chunks[c].isActive)
+                AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
+            else if (activateNewChunks)
+                AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
+        }
+
+        foreach (ChunkCoord c in chunksToDrawObjectsList)
+        {
+            if (copyOfChunksToDrawObjectsList.Contains(c))
+                copyOfChunksToDrawObjectsList.Remove(c);
+        }
+
+        if (undrawVoxelBoundObjects)
+        {
             // create a new copy of master list
             // clear master list
             // for each player
@@ -496,57 +536,10 @@ public class World : MonoBehaviour
             // Add all player list values into master list (avoid duplicates)
             // create objects in master list
             // destroy objects in copy of master list
-
-            //lock (ChunkDrawThreadLock) // this code causing error when re-drawing world...
-            //{
-            //    if (!activateNewChunks) // deactivate all non-active chunks as some still had mesh colliders enabled...
-            //    {
-            //        foreach (KeyValuePair<ChunkCoord, Chunk> chunk in chunks)
-            //        {
-            //            if (chunk.Value.isActive)
-            //                chunk.Value.isActive = true;
-            //            else
-            //                chunk.Value.isActive = false;
-            //        }
-            //    }
-            //}
-
-            if (!activateNewChunks && !firstChunkLoaded)
+            foreach (ChunkCoord c in copyOfChunksToDrawObjectsList)
             {
-                AddObjectsToChunk(firstChunkCoord);
-                firstChunkLoaded = true; // only load the firstChunkVBO once and only check while in 'tutorial' small world mode
-            }
-
-            foreach (Player p in players)
-            {
-                foreach (ChunkCoord c in p.chunksToAddVBO)
-                {
-                    if (!chunksToDrawObjectsList.Contains(c))
-                        chunksToDrawObjectsList.Add(c); // complile master list of chunks to draw objects
-                }
-            }
-
-            foreach (ChunkCoord c in chunksToDrawObjectsList)
-            {
-                if (!activateNewChunks && chunks.ContainsKey(c) && chunks[c].isActive)
-                    AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
-                else if (activateNewChunks)
-                    AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
-            }
-
-            foreach (ChunkCoord c in chunksToDrawObjectsList)
-            {
-                if (copyOfChunksToDrawObjectsList.Contains(c))
-                    copyOfChunksToDrawObjectsList.Remove(c);
-            }
-
-            if (undrawVoxelBoundObjects)
-            {
-                foreach (ChunkCoord c in copyOfChunksToDrawObjectsList)
-                {
-                    if(activateNewChunks) // only undraw if out of tutorial mode
-                        RemoveObjectsFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
-                }
+                if(activateNewChunks) // only undraw if out of tutorial mode
+                    RemoveObjectsFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
             }
         }
     }

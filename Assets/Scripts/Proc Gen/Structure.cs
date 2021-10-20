@@ -118,13 +118,13 @@ public static class Structure
     static Queue<VoxelMod> MakeProcGenVBOImport(Vector3 position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        int xRadius = LDrawImportRuntime.Instance.procGenObSizeX / 2;
-        int zRadius = LDrawImportRuntime.Instance.procGenObSizeZ / 2;
-        xRadius += 1; // safety boundary in case import is offset by 1 block
-        zRadius += 1; // safety boundary in case import is offset by 1 block
-        byte blockID = 26;
-        ReserveSpaceVBO(queue, position, xRadius, zRadius);
-        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
+        //int xRadius = LDrawImportRuntime.Instance.procGenObSizeX / 2;
+        //int zRadius = LDrawImportRuntime.Instance.procGenObSizeZ / 2;
+        //xRadius += 1; // safety boundary in case import is offset by 1 block
+        //zRadius += 1; // safety boundary in case import is offset by 1 block
+        //byte blockID = 26;
+        //ReserveSpaceVBO(queue, position, xRadius, zRadius);
+        //queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
         return queue;
     }
 

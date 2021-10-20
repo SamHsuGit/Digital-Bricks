@@ -8,7 +8,7 @@ public class WorldData
 {
     public int seed;
     public int distToStar;
-    public int solarSystem;
+    public int system;
     public int galaxy;
     public byte blockIDsubsurface;
     public byte blockIDcore;

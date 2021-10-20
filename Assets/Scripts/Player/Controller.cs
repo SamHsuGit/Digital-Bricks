@@ -69,6 +69,7 @@ public class Controller : NetworkBehaviour
     public GameObject[] lightGameObjects;
     public GameObject reticle;
     public GameObject snowPlow;
+    public GameObject summonBrick;
 
     Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
@@ -796,7 +797,7 @@ public class Controller : NetworkBehaviour
                 LDrawImportRuntime.Instance.Summon(LDrawImportRuntime.Instance.summonOb, shootPos.position);
                 TakeFromCurrentSlot(1);
             }
-            else if (!World.Instance.activateNewChunks) // if player presses use button
+            else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
             {
                 if (!Settings.OnlinePlay)
                     World.Instance.ActivateChunks(); // activate the rest of the world chunks
@@ -805,7 +806,7 @@ public class Controller : NetworkBehaviour
             }
             else
             {
-                LDrawImportRuntime.Instance.Summon(LDrawImportRuntime.Instance.summonOb, shootPos.position); // spawn summonOb at shootPos
+                LDrawImportRuntime.Instance.Summon(summonBrick, shootPos.position); // spawn summonOb at shootPos
                 lightsOn = !lightsOn; // toggle lights
             }
         }

@@ -507,7 +507,6 @@ MonoBehaviour:
   lookVelocity: 1
   modelPrefab: {fileID: 1042402131758203174}
   gameMenu: {fileID: 1544487416782888094}
-  physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
   nametag: {fileID: 7392925619455070826}
   backgroundMask: {fileID: 233901654856809411}
   brickPickUp: {fileID: 7797738184168617201}
@@ -534,6 +533,7 @@ MonoBehaviour:
   - {fileID: 2354160388912234224}
   reticle: {fileID: 6798775625511660335}
   snowPlow: {fileID: 6885501941342332230}
+  summonBrick: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
 --- !u!114 &8377408319438795852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,9 +605,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8eec174fdbab234c947e7a2280a2e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 13
-  sprintSpeed: 25
-  jumpForce: 20
+  baseWalkSpeed: 15
+  baseSprintSpeed: 30
+  baseJumpForce: 15
   isGrounded: 0
   maxJumps: 0
   currentJumps: 0
