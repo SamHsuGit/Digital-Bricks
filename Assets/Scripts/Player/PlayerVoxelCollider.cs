@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class PlayerVoxelCollider : MonoBehaviour
 {
-    public float walkSpeed = 15f;
-    public float sprintSpeed = 30f;
-    public float jumpForce = 15f;
+    public float baseWalkSpeed = 15f;
+    public float baseSprintSpeed = 30f;
+    public float baseJumpForce = 15f;
     public bool isGrounded;
     public int maxJumps;
     public int currentJumps;
@@ -22,6 +22,7 @@ public class PlayerVoxelCollider : MonoBehaviour
 
     public bool isPlayer = false;
     public bool isCamera = false;
+    public bool isAI = false;
 
     private float gravity = -9.8f * 3; // multiply to account for scaled geometry
     private float verticalMomentum = 0;
@@ -48,7 +49,6 @@ public class PlayerVoxelCollider : MonoBehaviour
 
         if (isPlayer)
         {
-
             controller = GetComponent<Controller>();
             charController = GetComponent<CharacterController>();
             //set initial char size
@@ -58,33 +58,53 @@ public class PlayerVoxelCollider : MonoBehaviour
                 width = cc.radius * 2;
                 height = cc.height;
                 length = cc.radius * 2;
-            }
 
-            // different player collider and movement settings depending on if character can change shape
-            if (SettingsStatic.LoadedSettings.charType == 1)
+                // different player collider and movement settings depending on if character can change shape
+                if (SettingsStatic.LoadedSettings.charType == 1)
+                {
+                    halfColliderHeight = height / 2;
+                    stepHeight = 1;
+                    colliderOffset = 1;
+                    stepUpOffset = new Vector3(0, stepHeight, 0);
+                    maxJumps = 2;
+                }
+                else if (SettingsStatic.LoadedSettings.charType == 0)
+                {
+                    stepHeight = 1;
+                    colliderOffset = 1;
+                    stepUpOffset = new Vector3(0, stepHeight, 0);
+                    maxJumps = 2;
+                }
+            }
+        }
+        else if (isCamera)
+        {
+            width = 1;
+            height = 1;
+            length = 1;
+            stepHeight = 1;
+            colliderOffset = 1;
+        }
+        else if (isAI)
+        {
+            charController = GetComponent<CharacterController>();
+            if (gameObject.GetComponent<CapsuleCollider>() != null)
             {
+                cc = gameObject.GetComponent<CapsuleCollider>();
+                width = cc.radius * 2;
+                height = cc.height;
+                length = cc.radius * 2;
+
                 halfColliderHeight = height / 2;
                 stepHeight = 1;
                 colliderOffset = 1;
                 stepUpOffset = new Vector3(0, stepHeight, 0);
                 maxJumps = 2;
             }
-            else if(SettingsStatic.LoadedSettings.charType == 0)
-            {
-                stepHeight = 1;
-                colliderOffset = 1;
-                stepUpOffset = new Vector3(0, stepHeight, 0);
-                maxJumps = 2;
-            }
         }
-        //else // Create generic box voxel collider for objects???
-        //{
-        //    halfColliderHeight = height / 2;
-        //    colliderOffset = 1;
-        //}
     }
 
-    public Vector3 CalculateVelocityPlayer(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
+    public Vector3 CalculateVelocity(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
     {
         Vector3 velocityPlayer;
         playerChunkIsActive = PlayerInActiveChunk();
@@ -98,19 +118,19 @@ public class PlayerVoxelCollider : MonoBehaviour
         // updated once per frame update, while PlayerIsTouchingBlockID can be called by other scripts (multiple times per frame update. This reduces calls to GetVoxel).
         adjacentVoxelIDs = GetAdjacentVoxelIDs();
 
-        bool isMoving = false;
-        if (horizontal != 0 || vertical != 0)
-            isMoving = true;
+        //bool isMoving = false;
+        //if (horizontal != 0 || vertical != 0)
+        //    isMoving = true;
 
         // reset jumps when grounded
         if (playerChunkIsActive)
         {
-            if (isGrounded || controller.isGrounded)
+            if (isGrounded || (isPlayer && controller.isGrounded))
                 currentJumps = 0;
         }
 
         // can jump off sides of objects
-        if (front || back || left || right)
+        if (isPlayer && (front || back || left || right))
             currentJumps = 0;
 
         // when in vehicle form
@@ -123,7 +143,7 @@ public class PlayerVoxelCollider : MonoBehaviour
         // apply jump force
         if (jumpRequest && currentJumps < maxJumps)
         {
-            verticalMomentum = jumpForce;
+            verticalMomentum = baseJumpForce;
             currentJumps++;
         }
 
@@ -140,45 +160,45 @@ public class PlayerVoxelCollider : MonoBehaviour
 
         // if we're sprinting, use the sprint multiplier
         if (isSprinting)
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * sprintSpeed * roadMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadMultiplier;
         else
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * walkSpeed * roadMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadMultiplier;
 
         // Apply vertical momentum (falling/jumping).
         velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
 
-        isGrounded = CheckGrounded(velocityPlayer.y);
-        if (playerChunkIsActive)
-        {
-            Vector3 oldVelocity = velocityPlayer;
-            // horizontal collision detection
-            if (isMoving && velocityPlayer.z > 0 && front || velocityPlayer.z < 0 && back)
-            {
-                velocityPlayer.z = 0;
-            }
-            if (isMoving && velocityPlayer.x > 0 && right || velocityPlayer.x < 0 && left)
-            {
-                velocityPlayer.x = 0;
-            }
-            // vertical collision detection
-            if (velocityPlayer.y < 0 && isGrounded)
-            {
-                velocityPlayer.y = 0;
-            }
-            else if (velocityPlayer.y > 0)
-            {
-                velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
-            }
-            // step collision detection
-            if (isMoving && isGrounded && isSprinting && stepDetected && CheckIfPlayerCanStepUp())
-            {
-                // move this gameobject up slightly to get up steps
-                charController.enabled = false;
-                transform.position += stepUpOffset;
-                charController.enabled = true;
-                velocityPlayer = oldVelocity;
-            }
-        }
+        //isGrounded = CheckGrounded(velocityPlayer.y);
+        //if (playerChunkIsActive)
+        //{
+        //    Vector3 oldVelocity = velocityPlayer;
+        //    // horizontal collision detection
+        //    if (isMoving && velocityPlayer.z > 0 && front || velocityPlayer.z < 0 && back)
+        //    {
+        //        velocityPlayer.z = 0;
+        //    }
+        //    if (isMoving && velocityPlayer.x > 0 && right || velocityPlayer.x < 0 && left)
+        //    {
+        //        velocityPlayer.x = 0;
+        //    }
+        //    // vertical collision detection
+        //    if (velocityPlayer.y < 0 && isGrounded)
+        //    {
+        //        velocityPlayer.y = 0;
+        //    }
+        //    else if (velocityPlayer.y > 0)
+        //    {
+        //        velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
+        //    }
+        //    // step collision detection
+        //    if (isMoving && isGrounded && isSprinting && stepDetected && CheckIfPlayerCanStepUp())
+        //    {
+        //        // move this gameobject up slightly to get up steps
+        //        charController.enabled = false;
+        //        transform.position += stepUpOffset;
+        //        charController.enabled = true;
+        //        velocityPlayer = oldVelocity;
+        //    }
+        //}
 
         checkPositions = CalculateCheckPositions(velocityPlayer.y);
 
@@ -260,16 +280,15 @@ public class PlayerVoxelCollider : MonoBehaviour
         Vector3 velocityCamera;
         bool cameraChunkIsActive = PlayerInActiveChunk();
 
-        BoxCollider bc = GetComponent<BoxCollider>();
-        center = bc.transform.position + bc.center; // cache current center of collider position
+        center = transform.position;
 
         // if we're sprinting, use the sprint multiplier
         if (isSprinting)
-            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * sprintSpeed;
+            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed;
         else
-            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * walkSpeed;
+            velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed;
 
-        if (cameraChunkIsActive)
+        if (cameraChunkIsActive) // DISABLED since the camera was getting stuck inside meshes due to character controller?, more important to have a free camera
         {
             isGrounded = CheckGrounded(velocityCamera.y);
             // horizontal collision detection
@@ -367,10 +386,6 @@ public class PlayerVoxelCollider : MonoBehaviour
             if (
                 world.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) ||
                 world.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset))
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + yOffset, center.z + length / 2 + colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - yOffset, center.z + length / 2 + colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + yOffset, center.z + length / 2 + colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - yOffset, center.z + length / 2 + colliderOffset))
                 )
                 return true;
             else
@@ -384,10 +399,6 @@ public class PlayerVoxelCollider : MonoBehaviour
             if (
                 world.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) ||
                 world.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset))
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + yOffset, center.z - length / 2 - colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - yOffset, center.z - length / 2 - colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + yOffset, center.z - length / 2 - colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - yOffset, center.z - length / 2 - colliderOffset))
                 )
                 return true;
             else
@@ -401,10 +412,6 @@ public class PlayerVoxelCollider : MonoBehaviour
             if (
                 world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z)) ||
                 world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z))
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + yOffset, center.z + length / 2 + colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - yOffset, center.z + length / 2 + colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + yOffset, center.z - length / 2 - colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - yOffset, center.z - length / 2 - colliderOffset))
                 )
                 return true;
             else
@@ -418,10 +425,6 @@ public class PlayerVoxelCollider : MonoBehaviour
             if (
                 world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z)) ||
                 world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z))
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + yOffset, center.z + length / 2 + colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - yOffset, center.z + length / 2 + colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + yOffset, center.z - length / 2 - colliderOffset)) ||
-                //world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - yOffset, center.z - length / 2 - colliderOffset))
                 )
                 return true;
             else

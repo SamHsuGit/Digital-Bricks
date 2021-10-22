@@ -94,20 +94,20 @@ MonoBehaviour:
     Cycle Toolbar = Mouse Scroll/Arrow
     Keys (D-Pad)
 
-    Drop Items from Slot = Q (Xbox B)
+    Drop = Q (Xbox B)
 
 
-    Punch = Left Mouse
-    Button (Right Trigger) While aimed at bricks
+    Punch = Left Mouse Button (Right Trigger)
+    While aimed at bricks
 
 
     Photo Mode = Tab (Select)
 
-    Photo
-    Mode Depth of Field = Arrow Keys (D-Pad)'
+    Photo Mode Depth of
+    Field = Arrow Keys (D-Pad)'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -30,7 +30,7 @@ public static class Structure
             case 10:
                 return MakeEvergreen(position, minTrunkHeight, maxTrunkHeight);
             case 11:
-                return MakeDeadTree(position, minTrunkHeight, maxTrunkHeight);
+                return MakeHoneyComb(position, minTrunkHeight, maxTrunkHeight);
             case 12:
                 return MakeHugeTree(position, minTrunkHeight, maxTrunkHeight);
             case 13:
@@ -43,7 +43,7 @@ public static class Structure
 
     public static byte GetSeasonBlockID(Vector3 treePosition, Vector3 voxelPosition, int floraRadius, float threshold)
     {
-        byte blockID = PorousBlocks(floraRadius, treePosition, voxelPosition, 29, threshold); // leaves by default
+        byte blockID = PorousBlocks(floraRadius, treePosition, voxelPosition, World.Instance.worldData.blockIDTreeLeavesSummer, threshold); // leaves by default
 
         if (blockID == 0)
             return blockID;
@@ -52,13 +52,18 @@ public static class Structure
             switch (Mathf.CeilToInt(System.DateTime.Now.Month / 3f)) // Calculate current season based on system date
             {
                 case 1:
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, 4, 4, 4, 4);
+                    byte winter = World.Instance.worldData.blockIDTreeLeavesWinter;
+                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, winter, winter, winter, winter); // Winter (Season1)
                 case 2:
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, 29, 29, 29, 29);
+                    byte spring = World.Instance.worldData.blockIDTreeLeavesSpring;
+                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, spring, spring, spring, spring); // Spring (Season 2)
                 case 3:
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, 29, 29, 29, 29);
+                    byte summer = World.Instance.worldData.blockIDTreeLeavesSummer;
+                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, summer, summer, summer, summer); // Summer (Season 3)
                 case 4:
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, 11, 7, 11, 7);
+                    byte fall1 = World.Instance.worldData.blockIDTreeLeavesFall1;
+                    byte fall2 = World.Instance.worldData.blockIDTreeLeavesFall2;
+                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, fall1, fall2, fall1, fall2); // Fall (Season 4)
             }
             return 0;
         }
@@ -113,13 +118,13 @@ public static class Structure
     static Queue<VoxelMod> MakeProcGenVBOImport(Vector3 position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        int xRadius = LDrawImportRuntime.Instance.procGenObSizeX / 2;
-        int zRadius = LDrawImportRuntime.Instance.procGenObSizeZ / 2;
-        xRadius += 1; // safety boundary in case import is offset by 1 block
-        zRadius += 1; // safety boundary in case import is offset by 1 block
-        byte blockID = 26;
-        ReserveSpaceVBO(queue, position, xRadius, zRadius);
-        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
+        //int xRadius = LDrawImportRuntime.Instance.procGenObSizeX / 2;
+        //int zRadius = LDrawImportRuntime.Instance.procGenObSizeZ / 2;
+        //xRadius += 1; // safety boundary in case import is offset by 1 block
+        //zRadius += 1; // safety boundary in case import is offset by 1 block
+        //byte blockID = 26;
+        //ReserveSpaceVBO(queue, position, xRadius, zRadius);
+        //queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
         return queue;
     }
 
@@ -136,7 +141,7 @@ public static class Structure
             radius = minFloraRadius;
 
         for (int i = 1; i < height; i++)
-            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 28)); // trunk
+            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDTreeTrunk)); // trunk
 
         for (int y = 0; y < 7; y++)
         {
@@ -144,7 +149,7 @@ public static class Structure
             {
                 for (int z = -radius; z < radius; z++)
                 {
-                    byte blockID = PorousBlocks(maxFloraRadius, position, new Vector3(x,y,z), 29, 0.515f); // leaves
+                    byte blockID = PorousBlocks(maxFloraRadius, position, new Vector3(x,y,z), World.Instance.worldData.blockIDTreeLeavesSummer, 0.515f); // leaves
 
                     if (blockID == 0)
                         queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), blockID));
@@ -168,7 +173,7 @@ public static class Structure
             height = minTrunkHeight;
 
         for (int i = 1; i <= height; i++)
-            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 13)); // cacti
+            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDCacti)); // cacti
 
         return queue;
     }
@@ -202,7 +207,7 @@ public static class Structure
             radius = minFloraRadius;
 
         for (int i = 1; i < height + radius - 1; i++)
-            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 4)); // trunk
+            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDMushroomLargeStem)); // trunk
 
         for (int y = 0; y < radius; y++)
         {
@@ -211,7 +216,7 @@ public static class Structure
                 for (int z = -radius; z < radius; z++)
                 {
                     if (Mathf.Abs(x) == radius - y || Mathf.Abs(z) == radius - y || Mathf.Abs(x) == Mathf.Abs(z) && Mathf.Abs(x) == radius - 1 - y && Mathf.Abs(z) == radius - 1 - y)
-                        queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), 28)); // mushroom top
+                        queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), World.Instance.worldData.blockIDMushroomLargeCap)); // mushroom top
                 }
             }
         }
@@ -237,7 +242,7 @@ public static class Structure
             {
                 for (int z = -radius; z < radius; z++)
                 {
-                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + y, position.z + z), 2)); // large black block
+                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + y, position.z + z), World.Instance.worldData.blockIDMonolith)); // large black block
                 }
             }
         }
@@ -282,7 +287,7 @@ public static class Structure
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), 34));
+        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), 34)); // flower
 
         return queue;
     }
@@ -314,18 +319,18 @@ public static class Structure
                 for (int z = -radius; z < radius; z++)
                 {
                     if(Mathf.Abs(x) + Mathf.Abs(z) < radius)
-                        queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + Mathf.CeilToInt(height * 0.6f) + y, position.z + z), 29)); // leaves
+                        queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + Mathf.CeilToInt(height * 0.6f) + y, position.z + z), World.Instance.worldData.blockIDEvergreenLeaves)); // leaves
                 }
             }
         }
 
         for (int i = 1; i < height; i++)
-            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 28)); // trunk
+            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDEvergreenTrunk)); // trunk
 
         return queue;
     }
 
-    static Queue<VoxelMod> MakeDeadTree(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
+    static Queue<VoxelMod> MakeHoneyComb(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
@@ -334,7 +339,7 @@ public static class Structure
             height = minTrunkHeight;
 
         for (int i = 1; i < height; i++)
-            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 2)); // black trunk
+            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDHoneyComb)); // trunk
 
         return queue;
     }
@@ -361,7 +366,7 @@ public static class Structure
             {
                 for (int z = -radius; z < radius; z++)
                 {
-                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + y, position.z + z), PorousBlocks(radius, position, new Vector3(x, y, z), 28, 0.8f))); // trunk
+                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + y, position.z + z), PorousBlocks(radius, position, new Vector3(x, y, z), World.Instance.worldData.blockIDHugeTreeTrunk, 0.8f))); // trunk
                 }
             }
         }
@@ -374,7 +379,7 @@ public static class Structure
             {
                 for (int z = -radius; z < radius; z++)
                 {
-                    byte blockID = PorousBlocks(radius, position, new Vector3(x, y, z), 29, 0.7f); // leaves by default
+                    byte blockID = PorousBlocks(radius, position, new Vector3(x, y, z), World.Instance.worldData.blockIDHugeTreeLeaves, 0.7f); // leaves by default
 
                     queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), GetSeasonBlockID(position, new Vector3(x, y, z), radius, 0.7f))); // leaves
 
@@ -414,7 +419,7 @@ public static class Structure
 
         for (int i = start; i < (int)position.y; i++) // make column
         {
-            byte blockID = 3; // stone columns
+            byte blockID = World.Instance.worldData.blockIDColumn; // stone columns
 
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y - i, position.z), blockID));
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y - i, position.z + 1), blockID));

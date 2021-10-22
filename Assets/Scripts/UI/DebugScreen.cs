@@ -34,7 +34,7 @@ public class DebugScreen : MonoBehaviour
             debugText += "\n";
             debugText += "Chunk: " + (World.Instance.GetChunkFromVector3(player.transform.position).coord.x - halfWorldSizeInChunks) + " / " + (World.Instance.GetChunkFromVector3(player.transform.position).coord.z - halfWorldSizeInChunks);
             debugText += "\n";
-            debugText += "Press Y to show Controls";
+            debugText += "Y = Show Controls";
 
             text.text = debugText;
 

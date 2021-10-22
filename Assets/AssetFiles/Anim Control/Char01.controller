@@ -97,7 +97,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2633237145658540288}
@@ -121,7 +121,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RunTorch
-  m_Speed: 2
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6434251810115313428}
@@ -154,7 +154,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6120565855891617211}
@@ -182,7 +182,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6120565855891617211}
@@ -210,7 +210,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8014572164198903489}
@@ -238,7 +238,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2633237145658540288}
@@ -262,7 +262,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Standard Walk
-  m_Speed: 2
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -4263992696283374084}
@@ -297,31 +297,31 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: isGrounded
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Speed
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: isSprinting
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: lightsOn
+    m_Controller: {fileID: 0}
+  - m_Name: isHolding
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -347,7 +347,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2633237145658540288}
@@ -375,7 +375,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8014572164198903489}
@@ -403,7 +403,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6487256416760497720}
@@ -460,7 +460,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8014572164198903489}
@@ -488,7 +488,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6120565855891617211}
@@ -516,7 +516,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6487256416760497720}
@@ -544,7 +544,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isMoving
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: lightsOn
+    m_ConditionEvent: isHolding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6487256416760497720}

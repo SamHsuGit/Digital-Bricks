@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
+  m_Name: 06 Monoliths
+  m_EditorClassIdentifier: 
+  biomeName: 06 Monoliths
+  offset: 4444
+  scale: 0.09
+  terrainHeight: 80
+  terrainScale: 0.1
+  surfaceBlock: 2
+  placeFlora: 1
+  flora:
+  - name: Small Mushroom
+    floraIndex: 7
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Dead Tree
+    floraIndex: 11
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.8
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.3
+    minHeight: 13
+    maxHeight: 30
+    minRadius: 0
+    maxRadius: 0
+  - name: Monolith
+    floraIndex: 5
+    floraZoneScale: 1.2
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 5
+    floraPlacementThreshold: 0.88
+    minHeight: 1
+    maxHeight: 30
+    minRadius: 0
+    maxRadius: 0
+  lodes:
+  - nodeName: Crystals
+    blockID: 30
+    minHeight: 1
+    maxHeight: 96
+    scale: 2
+    threshold: 0.65
+    noiseOffset: 1
+  - nodeName: Cave
+    blockID: 0
+    minHeight: 1
+    maxHeight: 96
+    scale: 0.01
+    threshold: 0.6
+    noiseOffset: 40
+  - nodeName: CaveSmall
+    blockID: 0
+    minHeight: 1
+    maxHeight: 96
+    scale: 0.06
+    threshold: 0.5
+    noiseOffset: 30
