@@ -845,8 +845,8 @@ public class Controller : NetworkBehaviour
         }
         GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
         ob.transform.Rotate(new Vector3(180, 0, 0));
-        if (Settings.OnlinePlay)
-            NetworkServer.Spawn(ob);
+        //if (Settings.OnlinePlay)
+        //    NetworkServer.Spawn(ob);
     }
 
     [Command]
@@ -891,8 +891,8 @@ public class Controller : NetworkBehaviour
                 count++;
         ob.GetComponent<Health>().hp = count;
         rb.mass = rb.mass + 2* mass * count;
-        if (Settings.OnlinePlay)
-            NetworkServer.Spawn(ob);
+        //if (Settings.OnlinePlay)
+        //    NetworkServer.Spawn(ob);
     }
 
     void RemoveVoxel(Vector3 pos)
