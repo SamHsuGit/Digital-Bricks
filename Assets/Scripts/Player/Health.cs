@@ -6,6 +6,7 @@ public class Health : NetworkBehaviour
 {
     // public references
     public AudioSource death;
+    public PhysicMaterial physicMaterial;
 
     // public variables
     [SyncVar(hook = nameof(UpdateHP))] public float hp;
@@ -27,7 +28,6 @@ public class Health : NetworkBehaviour
     GameObject ob;
     List<GameObject> modelPieces;
     SyncList<GameObject> modelPiecesSyncList = new SyncList<GameObject>();
-    PhysicMaterial physicMaterial;
     MeshRenderer mr;
 
     void Awake()
@@ -45,7 +45,6 @@ public class Health : NetworkBehaviour
 
         hpMax = brickCount;
         hp = hpMax;
-        physicMaterial = World.Instance.physicMaterial;
     }
 
     public override void OnStartServer()
@@ -85,7 +84,7 @@ public class Health : NetworkBehaviour
         {
             Hunger();
 
-            // check if rebuilt
+            // Respawn
             if (hp < 1)
             {
                 if (Settings.OnlinePlay && hasAuthority)
@@ -110,6 +109,11 @@ public class Health : NetworkBehaviour
                         PlayHurtSound();
                 }
             }
+        }
+        else // if not a player object
+        {
+            if (hp < 1)
+                Destroy(gameObject);
         }
 
         if (transform.position.y < -20 && hp > 0) // hurt if falling below world
@@ -277,7 +281,10 @@ public class Health : NetworkBehaviour
         hp = hpMax;
 
         for (int i = 0; i < modelPieces.Count; i++)
-            modelPieces[i].GetComponent<MeshRenderer>().enabled = true; // unhide all original objects
+        {
+            if(modelPieces[i].GetComponent<MeshRenderer>() != null)
+                modelPieces[i].GetComponent<MeshRenderer>().enabled = true; // unhide all original objects
+        }
     }
 
 }

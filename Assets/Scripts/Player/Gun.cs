@@ -44,7 +44,7 @@ public class Gun : NetworkBehaviour
         target = null; // reset target
         target = FindTarget(); // get target gameObject
 
-        if (Time.time >= nextTimeToFire && !controller.holding && backgroundMaskCanvasGroup.alpha == 0 && !controller.photoMode)
+        if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && !controller.photoMode)
         {
             if (inputHandler.shoot)
             {

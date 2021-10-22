@@ -198,7 +198,7 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.drawDistance = (int)worldRenderDistanceSlider.value;
         try
         {
-            ulong result = System.UInt64.Parse(seedInputField.text);
+            int result = System.Int32.Parse(seedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
             SettingsStatic.LoadedSettings.seed = result;
         }
         catch (System.FormatException)
