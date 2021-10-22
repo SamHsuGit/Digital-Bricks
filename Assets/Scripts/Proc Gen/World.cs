@@ -120,7 +120,7 @@ public class World : MonoBehaviour
             _instance = this;
 
         appPath = Application.persistentDataPath;
-        activateNewChunks = false;
+        //activateNewChunks = false;
         firstChunkCoord = new ChunkCoord(VoxelData.WorldSizeInChunks / 2, VoxelData.WorldSizeInChunks / 2);
     }
 
@@ -341,10 +341,10 @@ public class World : MonoBehaviour
             worldData.blockIDDeadForest = (byte)Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDHugeTree = (byte)Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDMountain = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            int generateFlora = Random.Range(0, 1);
-            if (generateFlora == 0)
-                worldData.isAlive = false; // controls if the world is hospitable to flora
-            else
+            //int generateFlora = Random.Range(0, 1);
+            //if (generateFlora == 0)
+            //    worldData.isAlive = false; // controls if the world is hospitable to flora
+            //else
                 worldData.isAlive = true; // controls if the world is hospitable to flora
             worldData.biomes = new int[] {0, 1, 2, 3, 4, 5, 6}; // controls which biomes the world has
             worldData.blockIDTreeLeavesWinter = (byte)Random.Range(minRandBlockID, maxRandBlockID);
@@ -483,7 +483,7 @@ public class World : MonoBehaviour
             }
         }
 
-        //lock (ChunkDrawThreadLock) // this code causing error when re-drawing world...
+        //lock (ChunkDrawThreadLock) // chunks deactivate correctly, but do not get redrawn correctly...
         //{
         //    if (!activateNewChunks) // deactivate all non-active chunks as some still had mesh colliders enabled...
         //    {
@@ -497,11 +497,11 @@ public class World : MonoBehaviour
         //    }
         //}
 
-        if (!activateNewChunks && !firstChunkLoaded)
-        {
-            AddObjectsToChunk(firstChunkCoord);
-            firstChunkLoaded = true; // only load the firstChunkVBO once and only check while in 'tutorial' small world mode
-        }
+        //if (!activateNewChunks && !firstChunkLoaded)
+        //{
+        //    AddObjectsToChunk(firstChunkCoord);
+        //    firstChunkLoaded = true; // only load the firstChunkVBO once and only check while in 'tutorial' small world mode
+        //}
 
         foreach (Player p in players)
         {
@@ -514,9 +514,9 @@ public class World : MonoBehaviour
 
         foreach (ChunkCoord c in chunksToDrawObjectsList)
         {
-            if (!activateNewChunks && chunks.ContainsKey(c) && chunks[c].isActive)
-                AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
-            else if (activateNewChunks)
+            //if (!activateNewChunks && chunks.ContainsKey(c) && chunks[c].isActive)
+            //    AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
+            //else if (activateNewChunks)
                 AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
         }
 
@@ -538,7 +538,7 @@ public class World : MonoBehaviour
             // destroy objects in copy of master list
             foreach (ChunkCoord c in copyOfChunksToDrawObjectsList)
             {
-                if(activateNewChunks) // only undraw if out of tutorial mode
+                //if(activateNewChunks) // only undraw if out of tutorial mode
                     RemoveObjectsFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
             }
         }

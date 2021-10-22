@@ -388,8 +388,8 @@ public class Controller : NetworkBehaviour
 
         CheckAltMode();
 
-        //isGrounded = false;
-        //CheckGroundedCollider();
+        isGrounded = false;
+        CheckGroundedCollider();
         //isGrounded = voxelCollider.isGrounded;
 
         // if not in photo mode
@@ -797,13 +797,13 @@ public class Controller : NetworkBehaviour
                 LDrawImportRuntime.Instance.Summon(LDrawImportRuntime.Instance.summonOb, shootPos.position);
                 TakeFromCurrentSlot(1);
             }
-            else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
-            {
-                if (!Settings.OnlinePlay)
-                    World.Instance.ActivateChunks(); // activate the rest of the world chunks
-                else
-                    CmdActivateChunks();
-            }
+            //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
+            //{
+            //    if (!Settings.OnlinePlay)
+            //        World.Instance.ActivateChunks(); // activate the rest of the world chunks
+            //    else
+            //        CmdActivateChunks();
+            //}
             else
             {
                 LDrawImportRuntime.Instance.Summon(summonBrick, shootPos.position); // spawn summonOb at shootPos

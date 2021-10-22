@@ -55,11 +55,11 @@ public class Chunk
         {
             World.Instance.chunksToDrawList.Add(this);
 
-            if (coord.x == World.Instance.firstChunkCoord.x && coord.z == World.Instance.firstChunkCoord.z) //always show first chunk
-                isActive = true;
-            else if (!World.Instance.activateNewChunks)
-                isActive = false;
-            else
+            //if (coord.x == World.Instance.firstChunkCoord.x && coord.z == World.Instance.firstChunkCoord.z) //always show first chunk
+            //    isActive = true;
+            //else if (!World.Instance.activateNewChunks)
+            //    isActive = false;
+            //else
                 isActive = true;
         }
     }
@@ -232,9 +232,9 @@ public class Chunk
             Vector3 neighborPos = pos + VoxelData.faceChecks[p];
             VoxelState neighborVoxelState;
 
-            if (!World.Instance.activateNewChunks)
-                neighborVoxelState = new VoxelState(0);
-            else
+            //if (!World.Instance.activateNewChunks)
+            //    neighborVoxelState = new VoxelState(0);
+            //else
                 neighborVoxelState = CheckVoxel(neighborPos);
 
             if (neighborVoxelState != null && World.Instance.blocktypes[neighborVoxelState.id].isTransparent)
