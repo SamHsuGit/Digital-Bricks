@@ -16,7 +16,6 @@ public class World : MonoBehaviour
     public bool undrawVoxels = false;
 
     public GameObject mainCameraGameObject;
-    public GameObject customNetworkManagerGameObject;
     public GameObject globalLighting;
     public GameObject loadingText;
     public GameObject loadingBackground;
@@ -74,8 +73,7 @@ public class World : MonoBehaviour
     Thread ChunkRedrawThread;
 
     Camera mainCamera;
-    NetworkManager customNetworkManager;
-    
+    public NetworkManager customNetworkManager;
 
     private void Awake()
     {
@@ -204,13 +202,11 @@ public class World : MonoBehaviour
         WorldDataOverrides(SettingsStatic.LoadedSettings.seed);
 
         blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
-        //blocktypes[26].voxelBoundObject = LDrawImportRuntime.Instance.procGenOb;
 
         if (Settings.OnlinePlay)
         {
-            customNetworkManager = customNetworkManagerGameObject.GetComponent<CustomNetworkManager>();
             customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.baseOb);
-            //customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.procGenOb);
+            customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.summonOb);
         }
 
         LoadWorld();
@@ -861,7 +857,6 @@ public class World : MonoBehaviour
                                 AddBoxColliderMaterialToChildren(VBO);
                                 if (Settings.OnlinePlay)
                                     VBO.AddComponent<NetworkIdentity>();
-                                //VBO.AddComponent<Health>();
                                 VBO.GetComponent<BoxCollider>().enabled = true; // VBO Box collider used to add placeholder voxels for world procGen
                             }
                             objectDictionary.Add(globalPosition, VBO);
@@ -882,12 +877,7 @@ public class World : MonoBehaviour
         for(int i = 0; i < children.Length; i++)
         {
             if(children[i].gameObject.layer == 10)
-            {
                 children[i].gameObject.GetComponent<BoxCollider>().material = physicMaterial;
-                //if(Settings.OnlinePlay)
-                //    children[i].gameObject.AddComponent<NetworkIdentity>(); // having NetworkIdentity components is not supported for child gameObjects
-                //children[i].gameObject.AddComponent<Health>();
-            }
         }
     }
 

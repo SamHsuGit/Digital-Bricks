@@ -300,7 +300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.data[0]
@@ -321,7 +321,7 @@ PrefabInstance:
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.data[4]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.data[5]
       value: 
@@ -385,6 +385,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1777242250530501421, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
   m_PrefabInstance: {fileID: 2030909969}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2030909971 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
+  m_PrefabInstance: {fileID: 2030909969}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030909970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd7cea4d69b30849a2c8d98ece94a81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &568286980617694249
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,7 +830,6 @@ MonoBehaviour:
   undrawVoxelBoundObjects: 0
   undrawVoxels: 0
   mainCameraGameObject: {fileID: 5717714097373800335}
-  customNetworkManagerGameObject: {fileID: 2030909970}
   globalLighting: {fileID: 2529205028307385180}
   loadingText: {fileID: 4378316389117323992}
   loadingBackground: {fileID: 4378316389117323991}
@@ -1308,6 +1318,7 @@ MonoBehaviour:
   playerCount: 0
   firstChunkLoaded: 0
   activateNewChunks: 0
+  customNetworkManager: {fileID: 2030909971}
 --- !u!1 &2841459445815596870
 GameObject:
   m_ObjectHideFlags: 0

@@ -98,6 +98,8 @@ public class Controller : NetworkBehaviour
     PPFXSetValues worldPPFXSetValues;
     CharacterController charController;
     PhysicMaterial physicMaterial;
+    GameObject undefinedPrefabToSpawn;
+    GameObject predefinedPrefabToSpawn;
 
     //Initializers & Constants
     float clutchPower = 8000f;
@@ -793,7 +795,11 @@ public class Controller : NetworkBehaviour
             }
             else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal
             {
-                LDrawImportRuntime.Instance.SpawnUndefinedPrefab(LDrawImportRuntime.Instance.summonOb, shootPos.position);
+                if (Settings.OnlinePlay)
+                    CmdSpawnUndefinedPrefab(0, shootPos.position);
+                else
+                    SpawnUndefinedPrefab(0, shootPos.position);
+
                 TakeFromCurrentSlot(1);
             }
             //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
@@ -805,10 +811,88 @@ public class Controller : NetworkBehaviour
             //}
             else
             {
-                LDrawImportRuntime.Instance.SpawnUndefinedPrefab(summonBrick, shootPos.position); // spawn summonOb at shootPos
+                // spawn summonOb at shootPos
+                Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
+                if (Settings.OnlinePlay)
+                    CmdSpawnPreDefinedPrefab(0, position);
+                else
+                    SpawnPreDefinedPrefab(0, position);
+
                 isHolding = !isHolding; // toggle lights
             }
         }
+    }
+
+    [Command]
+    public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
+    {
+        RpcSpawnPreDefinedPrefab(option, pos);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnPreDefinedPrefab(int option, Vector3 pos)
+    {
+        SpawnPreDefinedPrefab(option, pos);
+    }
+
+    public void SpawnPreDefinedPrefab(int option, Vector3 pos)
+    {
+        switch(option)
+        {
+            case 0:
+                predefinedPrefabToSpawn = summonBrick;
+                break;
+        }
+        GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
+        ob.transform.Rotate(new Vector3(180, 0, 0));
+        if (Settings.OnlinePlay)
+            NetworkServer.Spawn(ob);
+    }
+
+    [Command]
+    public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
+    {
+        RpcSpawnUndefinedPrefab(option, pos);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnUndefinedPrefab(int option, Vector3 pos)
+    {
+        SpawnUndefinedPrefab(option, pos);
+    }
+
+    public void SpawnUndefinedPrefab(int option, Vector3 pos)
+    {
+        switch (option)
+        {
+            case 0:
+                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.summonOb;
+                break;
+        }
+        GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
+        ob.transform.Rotate(new Vector3(180, 0, 0));
+        ob.SetActive(true);
+        Rigidbody rb = ob.AddComponent<Rigidbody>();
+        float mass = gameObject.GetComponent<Health>().piecesRbMass;
+        rb.mass = mass;
+        ob.AddComponent<Health>();
+        if (Settings.OnlinePlay)
+        {
+            if (ob.GetComponent<NetworkIdentity>() == null)
+                ob.AddComponent<NetworkIdentity>();
+            if (ob.GetComponent<NetworkTransform>() == null)
+                ob.AddComponent<NetworkTransform>();
+        }
+        MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
+
+        int count = 0;
+        for (int i = 0; i < mrs.Length; i++)
+            if (mrs[i].gameObject.transform.childCount > 0)
+                count++;
+        ob.GetComponent<Health>().hp = count;
+        rb.mass = rb.mass + 2* mass * count;
+        //if(Settings.OnlinePlay)
+        //    NetworkServer.Spawn(ob);
     }
 
     void RemoveVoxel(Vector3 pos)

@@ -59,27 +59,6 @@ public class LDrawImportRuntime : MonoBehaviour
         //procGenObSizeY = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.y / 40) + 1;
     }
 
-    public void SpawnUndefinedPrefab(GameObject ldrawImportedOb, Vector3 pos)
-    {
-        GameObject ob = Instantiate(ldrawImportedOb, new Vector3(pos.x + 0.5f, pos.y + summonOb.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
-        ob.transform.Rotate(new Vector3(180, 0, 0));
-        ob.SetActive(true);
-        ob.transform.position = new Vector3(ob.transform.position.x, ob.transform.position.y, ob.transform.position.z);
-        ob.AddComponent<Rigidbody>();
-        ob.AddComponent<Health>();
-        if (Settings.OnlinePlay)
-        {
-            //ob.AddComponent<NetworkIdentity>();
-        }
-        MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
-
-        int count = 0;
-        for (int i = 0; i < mrs.Length; i++)
-            if (mrs[i].gameObject.transform.childCount > 0)
-                count++;
-        ob.GetComponent<Health>().hp = count;
-    }
-
     public GameObject ImportLDraw(string fileName, Vector3 pos, bool staticVBO)
     {
         ldrawConfigRuntime.InitParts();
