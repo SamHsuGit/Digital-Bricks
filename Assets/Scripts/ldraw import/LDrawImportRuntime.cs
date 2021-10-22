@@ -59,7 +59,7 @@ public class LDrawImportRuntime : MonoBehaviour
         //procGenObSizeY = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.y / 40) + 1;
     }
 
-    public void Summon(GameObject ldrawImportedOb, Vector3 pos)
+    public void SpawnUndefinedPrefab(GameObject ldrawImportedOb, Vector3 pos)
     {
         GameObject ob = Instantiate(ldrawImportedOb, new Vector3(pos.x + 0.5f, pos.y + summonOb.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
         ob.transform.Rotate(new Vector3(180, 0, 0));

@@ -30,15 +30,16 @@ public class Controller : NetworkBehaviour
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
-    public bool isMoving = false;
-    public bool photoMode = false;
     public bool isGrounded;
+    public bool isMoving = false;
+    public bool isSprinting;
+    [SyncVar] public bool isHolding = false;
+    public bool photoMode = false;
     public float checkIncrement = 0.1f;
     public float reach = 4f;
     public float maxFocusDistance = 2f;
     public float focusDistanceIncrement = 0.03f;
-    [SyncVar] public bool lightsOn = false;
-    public bool holding = false;
+    public bool holdingGrab = false;
     public byte blockID;
 
     [SerializeField] float lookVelocity = 1f;
@@ -100,7 +101,6 @@ public class Controller : NetworkBehaviour
 
     //Initializers & Constants
     float clutchPower = 8000f;
-    float scale = 1.0f;
     float colliderHeight;
     float colliderRadius;
     float sphereCastRadius;
@@ -127,8 +127,8 @@ public class Controller : NetworkBehaviour
         playerLimbs[3] = LegL;
         playerLimbs[4] = LegR;
 
-        lightsOn = false;
-        ToggleLights(lightsOn);
+        isHolding = false;
+        ToggleLights(isHolding);
 
         world = World.Instance;
         physicMaterial = world.physicMaterial;
@@ -388,8 +388,7 @@ public class Controller : NetworkBehaviour
 
         CheckAltMode();
 
-        isGrounded = false;
-        CheckGroundedCollider();
+        isGrounded = CheckGroundedCollider();
         //isGrounded = voxelCollider.isGrounded;
 
         // if not in photo mode
@@ -427,11 +426,11 @@ public class Controller : NetworkBehaviour
         {
             bool isInActiveChunk = voxelCollider.playerChunkIsActive;
             // IF PRESSED GRAB
-            if (!holding && inputHandler.grab && isInActiveChunk)
+            if (!holdingGrab && inputHandler.grab && isInActiveChunk)
                 PressedGrab();
 
             // IF HOLDING GRAB
-            if (holding && inputHandler.grab && isInActiveChunk)
+            if (holdingGrab && inputHandler.grab && isInActiveChunk)
                 HoldingGrab();
 
             // IF PRESSED SHOOT
@@ -439,7 +438,7 @@ public class Controller : NetworkBehaviour
                 pressedShoot();
 
             // IF RELEASED GRAB
-            if (holding && !inputHandler.grab && isInActiveChunk)
+            if (holdingGrab && !inputHandler.grab && isInActiveChunk)
                 ReleasedGrab();
             
             positionCursorBlocks();
@@ -451,12 +450,12 @@ public class Controller : NetworkBehaviour
         }
 
         if (Settings.OnlinePlay)
-            CmdToggleLights(lightsOn);
+            CmdToggleLights(isHolding);
         else
-            ToggleLights(lightsOn);
+            ToggleLights(isHolding);
 
         //animate player
-        Animate(inputHandler.sprint);
+        Animate();
     }
 
     [Command]
@@ -494,7 +493,7 @@ public class Controller : NetworkBehaviour
     public void pressedShoot()
     {
         // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
-        if (!holding && shootPos.gameObject.activeSelf)
+        if (!holdingGrab && shootPos.gameObject.activeSelf)
         {
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id;
@@ -509,7 +508,7 @@ public class Controller : NetworkBehaviour
             else
                 SpawnRbFromWorld(position, blockID);
         }
-        else if (holding)
+        else if (holdingGrab)
         {
             Vector3 position = holdPos.position;
 
@@ -520,12 +519,12 @@ public class Controller : NetworkBehaviour
             else
                 SpawnRbFromWorld(position, blockID);
 
-            holding = false;
+            holdingGrab = false;
             reticle.SetActive(true);
             //if (Settings.OnlinePlay)
             //    CmdUpdateShowGrabObject(holding, blockID);
             //else
-            UpdateShowGrabObject(holding, blockID);
+            UpdateShowGrabObject(holdingGrab, blockID);
         }
     }
 
@@ -593,7 +592,7 @@ public class Controller : NetworkBehaviour
             blockID = World.Instance.GetVoxelState(removePos.position).id;
             if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
                 return;
-            holding = true;
+            holdingGrab = true;
             holdPosPrefabNetworkPlaceholder = voxels[blockID];
             PickupBrick(removePos.position);
             reticle.SetActive(false);
@@ -601,7 +600,7 @@ public class Controller : NetworkBehaviour
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if toolbar slot has a stack
         {
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
-            holding = true;
+            holdingGrab = true;
             holdPosPrefabNetworkPlaceholder = voxels[blockID];
             TakeFromCurrentSlot(1);
             reticle.SetActive(false);
@@ -610,7 +609,7 @@ public class Controller : NetworkBehaviour
         //if (Settings.OnlinePlay)
         //    CmdUpdateShowGrabObject(holding, blockID);
         //else
-            UpdateShowGrabObject(holding, blockID);
+            UpdateShowGrabObject(holdingGrab, blockID);
         //Debug.Log(blockID);
     }
 
@@ -677,7 +676,7 @@ public class Controller : NetworkBehaviour
 
     public void ReleasedGrab()
     {
-        holding = false;
+        holdingGrab = false;
         if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT
         {
             health.blockCounter++;
@@ -690,7 +689,7 @@ public class Controller : NetworkBehaviour
         //if (Settings.OnlinePlay)
         //    CmdUpdateShowGrabObject(holding, blockID);
         //else
-            UpdateShowGrabObject(holding, blockID);
+            UpdateShowGrabObject(holdingGrab, blockID);
     }
 
     void PutAwayBrick(byte blockID)
@@ -794,7 +793,7 @@ public class Controller : NetworkBehaviour
             }
             else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal
             {
-                LDrawImportRuntime.Instance.Summon(LDrawImportRuntime.Instance.summonOb, shootPos.position);
+                LDrawImportRuntime.Instance.SpawnUndefinedPrefab(LDrawImportRuntime.Instance.summonOb, shootPos.position);
                 TakeFromCurrentSlot(1);
             }
             //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
@@ -806,8 +805,8 @@ public class Controller : NetworkBehaviour
             //}
             else
             {
-                LDrawImportRuntime.Instance.Summon(summonBrick, shootPos.position); // spawn summonOb at shootPos
-                lightsOn = !lightsOn; // toggle lights
+                LDrawImportRuntime.Instance.SpawnUndefinedPrefab(summonBrick, shootPos.position); // spawn summonOb at shootPos
+                isHolding = !isHolding; // toggle lights
             }
         }
     }
@@ -938,6 +937,7 @@ public class Controller : NetworkBehaviour
             }
             else // ALT MODE
             {
+                isSprinting = true;
                 CCShapeAlternate(cc, 0);
                 CCShapeAlternate(snowPlowcc, 0.5f);
                 voxelCollider.width = colliderRadius * 2;
@@ -984,20 +984,20 @@ public class Controller : NetworkBehaviour
     {
         RaycastHit hit;
 
-        Physics.Raycast(transform.position, Vector3.up, out hit, (colliderHeight * 0.5f - 0.1f) * scale);
+        Physics.Raycast(transform.position, Vector3.up, out hit, colliderHeight * 0.5f - 0.1f);
 
         // keep the player in alt mode if there is an object above to prevent getting stuck under platforms
         if (hit.transform != null && hit.transform.gameObject.layer != 12)
             inputHandler.sprint = true;
     }
 
-    void CheckGroundedCollider()
+    bool CheckGroundedCollider()
     {
         float rayLength;
         Vector3 rayStart = transform.position;
 
         // cast a ray starting from within the capsule collider down to just outside the capsule collider.
-        rayLength = cc.height * 0.25f * scale + 0.01f;
+        rayLength = cc.height * 0.25f + 0.01f;
         sphereCastRadius = cc.radius * 0.5f;
 
         switch (charType)
@@ -1007,7 +1007,7 @@ public class Controller : NetworkBehaviour
                 {
                     // for alt mode, we need to move the ray start down to be within the new collider volume and use the radius instead of height because the capsule was laid down
                     rayStart.y -= cc.radius;
-                    rayLength = cc.radius * 0.25f * scale + 0.01f;
+                    rayLength = cc.radius * 0.25f + 0.01f;
                     sphereCastRadius = cc.radius * 0.5f;
                 }
                 break;
@@ -1018,12 +1018,14 @@ public class Controller : NetworkBehaviour
         // Adjust the raycast to be slightly below the collider to allow the collider to climb small slopes
         rayLength += cc.height * 0.6f;
 
-        // check if the char is grounded by casting a ray from rayStart down extending rayLength
-        if (Physics.SphereCast(rayStart, sphereCastRadius, Vector3.down, out RaycastHit hit, rayLength))
-            isGrounded = true;
-
         // Debug tools
         Debug.DrawRay(rayStart, Vector3.down * rayLength, Color.red, 0.02f);
+
+        // check if the char is grounded by casting a ray from rayStart down extending rayLength
+        if (Physics.SphereCast(rayStart, sphereCastRadius, Vector3.down, out RaycastHit hit, rayLength))
+            return true;
+        else
+            return false;
     }
 
     public void MovePlayer()
@@ -1033,7 +1035,7 @@ public class Controller : NetworkBehaviour
         else
             isMoving = false;
 
-        velocityPlayer = voxelCollider.CalculateVelocityPlayer(inputHandler.move.x, inputHandler.move.y, inputHandler.sprint, inputHandler.jump);
+        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, inputHandler.sprint, inputHandler.jump);
 
         if (inputHandler.jump)
         {
@@ -1107,7 +1109,7 @@ public class Controller : NetworkBehaviour
         photoMode = !photoMode;
     }
 
-    void Animate(bool altMode)
+    void Animate()
     {
         // set animation speed of walk anim to match normalized speed of character.
         if (!photoMode)
@@ -1120,10 +1122,10 @@ public class Controller : NetworkBehaviour
         switch (charType)
         {
             case 0:
-                animator.SetBool("isSprinting", altMode);
+                animator.SetBool("isSprinting", isSprinting);
                 break;
             case 1:
-                animator.SetBool("lightsOn", lightsOn);
+                animator.SetBool("isHolding", isHolding);
                 break;
         }
     }

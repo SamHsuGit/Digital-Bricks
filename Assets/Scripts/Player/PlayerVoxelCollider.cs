@@ -22,6 +22,7 @@ public class PlayerVoxelCollider : MonoBehaviour
 
     public bool isPlayer = false;
     public bool isCamera = false;
+    public bool isAI = false;
 
     private float gravity = -9.8f * 3; // multiply to account for scaled geometry
     private float verticalMomentum = 0;
@@ -57,23 +58,23 @@ public class PlayerVoxelCollider : MonoBehaviour
                 width = cc.radius * 2;
                 height = cc.height;
                 length = cc.radius * 2;
-            }
 
-            // different player collider and movement settings depending on if character can change shape
-            if (SettingsStatic.LoadedSettings.charType == 1)
-            {
-                halfColliderHeight = height / 2;
-                stepHeight = 1;
-                colliderOffset = 1;
-                stepUpOffset = new Vector3(0, stepHeight, 0);
-                maxJumps = 2;
-            }
-            else if (SettingsStatic.LoadedSettings.charType == 0)
-            {
-                stepHeight = 1;
-                colliderOffset = 1;
-                stepUpOffset = new Vector3(0, stepHeight, 0);
-                maxJumps = 2;
+                // different player collider and movement settings depending on if character can change shape
+                if (SettingsStatic.LoadedSettings.charType == 1)
+                {
+                    halfColliderHeight = height / 2;
+                    stepHeight = 1;
+                    colliderOffset = 1;
+                    stepUpOffset = new Vector3(0, stepHeight, 0);
+                    maxJumps = 2;
+                }
+                else if (SettingsStatic.LoadedSettings.charType == 0)
+                {
+                    stepHeight = 1;
+                    colliderOffset = 1;
+                    stepUpOffset = new Vector3(0, stepHeight, 0);
+                    maxJumps = 2;
+                }
             }
         }
         else if (isCamera)
@@ -84,9 +85,26 @@ public class PlayerVoxelCollider : MonoBehaviour
             stepHeight = 1;
             colliderOffset = 1;
         }
+        else if (isAI)
+        {
+            charController = GetComponent<CharacterController>();
+            if (gameObject.GetComponent<CapsuleCollider>() != null)
+            {
+                cc = gameObject.GetComponent<CapsuleCollider>();
+                width = cc.radius * 2;
+                height = cc.height;
+                length = cc.radius * 2;
+
+                halfColliderHeight = height / 2;
+                stepHeight = 1;
+                colliderOffset = 1;
+                stepUpOffset = new Vector3(0, stepHeight, 0);
+                maxJumps = 2;
+            }
+        }
     }
 
-    public Vector3 CalculateVelocityPlayer(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
+    public Vector3 CalculateVelocity(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
     {
         Vector3 velocityPlayer;
         playerChunkIsActive = PlayerInActiveChunk();
@@ -107,12 +125,12 @@ public class PlayerVoxelCollider : MonoBehaviour
         // reset jumps when grounded
         if (playerChunkIsActive)
         {
-            if (isGrounded || controller.isGrounded)
+            if (isGrounded || (isPlayer && controller.isGrounded))
                 currentJumps = 0;
         }
 
         // can jump off sides of objects
-        if (front || back || left || right)
+        if (isPlayer && (front || back || left || right))
             currentJumps = 0;
 
         // when in vehicle form

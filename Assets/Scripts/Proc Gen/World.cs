@@ -20,6 +20,7 @@ public class World : MonoBehaviour
     public GameObject globalLighting;
     public GameObject loadingText;
     public GameObject loadingBackground;
+    public GameObject baseOb;
 
     [Header("World Generation Values")]
     public Planet[] planets;
@@ -74,6 +75,7 @@ public class World : MonoBehaviour
 
     Camera mainCamera;
     NetworkManager customNetworkManager;
+    
 
     private void Awake()
     {
@@ -854,6 +856,8 @@ public class World : MonoBehaviour
                             GameObject VBO = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                             if(blockID == 25 || blockID == 26)
                             {
+                                if (blockID == 25) // if base, cache object as baseOb
+                                    baseOb = VBO;
                                 AddBoxColliderMaterialToChildren(VBO);
                                 if (Settings.OnlinePlay)
                                     VBO.AddComponent<NetworkIdentity>();
