@@ -577,10 +577,13 @@ public class Controller : NetworkBehaviour
             bc.enabled = true;
             bc.material = physicMaterial;
         }
-        ob.AddComponent<NetworkIdentity>();
-
+        
         if (Settings.OnlinePlay)
+        {
+            ob.AddComponent<NetworkIdentity>();
+            //ob.AddComponent<NetworkTransform>();
             NetworkServer.Spawn(ob);
+        }
 
         rb.velocity = transform.forward * 25; // give some velocity away from player
 
@@ -845,8 +848,10 @@ public class Controller : NetworkBehaviour
         }
         GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
         ob.transform.Rotate(new Vector3(180, 0, 0));
-        //if (Settings.OnlinePlay)
-        //    NetworkServer.Spawn(ob);
+        if (Settings.OnlinePlay)
+        {
+            NetworkServer.Spawn(ob);
+        }
     }
 
     [Command]
@@ -880,8 +885,8 @@ public class Controller : NetworkBehaviour
         {
             if (ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            if (ob.GetComponent<NetworkTransform>() == null)
-                ob.AddComponent<NetworkTransform>();
+            //if (ob.GetComponent<NetworkTransform>() == null)
+            //    ob.AddComponent<NetworkTransform>();
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 
@@ -891,8 +896,8 @@ public class Controller : NetworkBehaviour
                 count++;
         ob.GetComponent<Health>().hp = count;
         rb.mass = rb.mass + 2* mass * count;
-        //if (Settings.OnlinePlay)
-        //    NetworkServer.Spawn(ob);
+        if (Settings.OnlinePlay)
+            NetworkServer.Spawn(ob);
     }
 
     void RemoveVoxel(Vector3 pos)
