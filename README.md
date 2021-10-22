@@ -1,5 +1,5 @@
 # BrickFormers
-A Fan-Made LEGO Open-World RPG game
+A Fan-Made LEGO Game
 Samuel Hsu 2021
 
 LEGO® and the LEGO® logo are trademarks of the LEGO® Group, which does not sponsor or endorse this work.
