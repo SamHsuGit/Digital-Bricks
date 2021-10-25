@@ -107,7 +107,7 @@ public class Controller : NetworkBehaviour
     GameObject predefinedPrefabToSpawn;
 
     //Initializers & Constants
-    float clutchPower = 8000f;
+    //float clutchPower = 8000f;
     float colliderHeight;
     float colliderRadius;
     float sphereCastRadius;
@@ -330,8 +330,12 @@ public class Controller : NetworkBehaviour
         timeOfDay = newTime;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        // enemies hurt player
+        if (hit.gameObject.tag == ("Enemy"))
+            health.EditSelfHealth(-1);
+
         //GameObject ob = collision.collider.gameObject;
         //// if touches a LegoPiece
         //if (ob.GetComponent<Brick>() != null) // if is a lego brick
@@ -346,18 +350,6 @@ public class Controller : NetworkBehaviour
         //        }
         //    }
         //}
-
-        // if collision is with object of layer in array, hurts player and breaks off a piece
-        int[] collisionLayers = { 9, 10, 11, 12 }; // environment, hazard, player, legoPiece (cannot collide with environment due to no collider on voxels)
-        for (int i = 0; i < collisionLayers.Length; i++)
-        {
-            if (collision.collider.gameObject.layer == collisionLayers[i])
-            {
-                collisionDamage = collision.impulse.magnitude / Time.fixedDeltaTime;
-                if (collisionDamage > clutchPower)
-                    health.EditSelfHealth(-1);
-            }
-        }
     }
 
     private void Update()
@@ -487,28 +479,28 @@ public class Controller : NetworkBehaviour
 
         if (wasDaytime && !daytime) // if turns nighttime, start next wave
         {
-            StartWave(wave);
             wave++;
+            StartWave(wave);
             wasDaytime = false;
         }
     }
 
     public void StartWave(int wave)
     {
-        switch (wave)
+        for (int i = 0; i < wave; i++) // wave = # enemies
         {
-            case 0:
-                SpawnEnemy(0, new Vector3(540, 91, 540));
-                break;
-            case 1:
-                SpawnEnemy(0, new Vector3(540, 91, 540));
-                SpawnEnemy(1, new Vector3(500, 91, 500));
-                break;
-            case 2:
-                SpawnEnemy(0, new Vector3(540, 91, 540));
-                SpawnEnemy(1, new Vector3(500, 91, 500));
-                SpawnEnemy(1, new Vector3(510, 91, 510));
-                break;
+            int type = 0; // randomized, linearly increase chance of harder enemies depending on wave number
+            Vector3 position = new Vector3(510, 91, 510); // Randomize position of enemies at a fixed distance from base (gives enough room to react)
+            switch (type)
+            {
+                case 0: // easy enemies spawn 2x as often
+                    SpawnEnemy(type, position);
+                    SpawnEnemy(type, new Vector3(position.x + 1, position.y + 1, position.z + 1));
+                    break;
+                case 1: // only spawn 1 hard enemy
+                    SpawnEnemy(type, position);
+                    break;
+            }
         }
     }
 
