@@ -15,6 +15,7 @@ public class Controller : NetworkBehaviour
     public GameObject[] LegL;
     public GameObject[] LegR;
     public GameObject[] voxels;
+    public List<GameObject> currentWaveEnemies;
 
     [SyncVar(hook = nameof(SetCharType))] public int charType = 0; // 0 = BrickFormer, 1 = Minifig
     [SyncVar(hook = nameof(SetName))] public string playerName;
@@ -41,6 +42,7 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public byte blockID;
+    [SyncVar] public int wave = 0;
 
     [SerializeField] float lookVelocity = 1f;
 
@@ -71,6 +73,8 @@ public class Controller : NetworkBehaviour
     public GameObject reticle;
     public GameObject snowPlow;
     public GameObject brick1x1;
+    public GameObject Enemy00;
+    public GameObject Enemy01;
 
     Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
@@ -113,6 +117,8 @@ public class Controller : NetworkBehaviour
     float maxCamAngle = 90f;
     float minCamAngle = -90f;
     //bool wasGrounded = true;
+    bool wasDaytime = true;
+    bool daytime = true;
 
     void Awake()
     {
@@ -387,6 +393,13 @@ public class Controller : NetworkBehaviour
             return;
         }
 
+        timeOfDay = World.Instance.globalLighting.timeOfDay; // update time of day from lighting component
+        daytime = World.Instance.globalLighting.daytime;
+
+        //if localplay or if online and is server, calculate current wave
+        if (!Settings.OnlinePlay || (Settings.OnlinePlay && isServer))
+            CalculateCurrentWave();
+
         if (inputHandler.optionsPressed)
             gameMenuComponent.OnOptions();
 
@@ -460,6 +473,62 @@ public class Controller : NetworkBehaviour
 
         //animate player
         Animate();
+    }
+
+    public void CalculateCurrentWave()
+    {
+        
+        if (!wasDaytime && daytime) // if turns daytime
+        {
+            foreach (GameObject enemy in currentWaveEnemies)
+                Destroy(enemy);
+            wasDaytime = true;
+        }
+
+        if (wasDaytime && !daytime) // if turns nighttime, start next wave
+        {
+            StartWave(wave);
+            wave++;
+            wasDaytime = false;
+        }
+    }
+
+    public void StartWave(int wave)
+    {
+        switch (wave)
+        {
+            case 0:
+                SpawnEnemy(0, new Vector3(540, 91, 540));
+                break;
+            case 1:
+                SpawnEnemy(0, new Vector3(540, 91, 540));
+                SpawnEnemy(1, new Vector3(500, 91, 500));
+                break;
+            case 2:
+                SpawnEnemy(0, new Vector3(540, 91, 540));
+                SpawnEnemy(1, new Vector3(500, 91, 500));
+                SpawnEnemy(1, new Vector3(510, 91, 510));
+                break;
+        }
+    }
+
+    public void SpawnEnemy(int type, Vector3 pos)
+    {
+        GameObject ob = null;
+        switch (type)
+        {
+            case 0:
+                ob = Enemy00;
+                break;
+            case 1:
+                ob = Enemy01;
+                break;
+        }
+
+        ob = Instantiate(ob, pos, Quaternion.identity);
+        if (Settings.OnlinePlay)
+            customNetworkManager.SpawnNetworkOb(ob);
+        currentWaveEnemies.Add(ob);
     }
 
     [Command]

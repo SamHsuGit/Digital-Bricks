@@ -46,7 +46,7 @@ public class GameMenu : MonoBehaviour
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
         playerHUDCanvasGroup = playerHUD.GetComponent<CanvasGroup>();
         optionsMenuCanvasGroup = optionsMenu.GetComponent<CanvasGroup>();
-        lighting = GameObject.Find("GlobalLighting").GetComponent<Lighting>();
+        lighting = World.Instance.globalLighting;
         controller = player.GetComponent<Controller>();
         canvas = GetComponent<Canvas>();
         health = player.GetComponent<Health>();

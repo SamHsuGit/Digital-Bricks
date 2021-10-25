@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2438597218858921544
+--- !u!1 &7747676749573697499
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2438597218858921546}
-  - component: {fileID: 2438597218858921547}
-  - component: {fileID: 4832607374064059900}
-  - component: {fileID: 8914315959556519551}
-  - component: {fileID: 2438597218858921545}
+  - component: {fileID: 7747676749573697497}
+  - component: {fileID: 7747676749573697496}
+  - component: {fileID: 667161086062380143}
+  - component: {fileID: 3595251938230663148}
+  - component: {fileID: 7747676749573697498}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -20,13 +20,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
---- !u!4 &2438597218858921546
+--- !u!4 &7747676749573697497
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2438597218858921544}
+  m_GameObject: {fileID: 7747676749573697499}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,50 +34,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2438597218858921547
+--- !u!114 &7747676749573697496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2438597218858921544}
+  m_GameObject: {fileID: 7747676749573697499}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 189eb45db5f68064d8da851126f78eb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldData:
-    seed: 0
-    distToStar: 0
-    system: 0
-    galaxy: 0
-    blockIDsubsurface: 0
-    blockIDcore: 0
-    blockIDForest: 0
-    blockIDGrasslands: 0
-    blockIDDesert: 0
-    blockIDDeadForest: 0
-    blockIDHugeTree: 0
-    blockIDMountain: 0
-    isAlive: 1
-    biomes: 
-    blockIDTreeLeavesWinter: 0
-    blockIDTreeLeavesSpring: 0
-    blockIDTreeLeavesSummer: 0
-    blockIDTreeLeavesFall1: 0
-    blockIDTreeLeavesFall2: 0
-    blockIDTreeTrunk: 0
-    blockIDCacti: 0
-    blockIDMushroomLargeCap: 0
-    blockIDMushroomLargeStem: 0
-    blockIDMonolith: 0
-    blockIDEvergreenLeaves: 0
-    blockIDEvergreenTrunk: 0
-    blockIDHoneyComb: 0
-    blockIDHugeTreeLeaves: 0
-    blockIDHugeTreeTrunk: 0
-    blockIDColumn: 0
-  appPath: 
   worldLoaded: 0
   tick: 0
   saving: 0
@@ -88,8 +56,7 @@ MonoBehaviour:
   loadingText: {fileID: 0}
   loadingBackground: {fileID: 0}
   baseOb: {fileID: 0}
-  EnemyPrefab0: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
-  EnemyPrefab1: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
+  customNetworkManager: {fileID: 0}
   planets:
   - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
   - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}
@@ -570,32 +537,63 @@ MonoBehaviour:
     bottomFaceTexture: 0
     leftFaceTexture: 0
     rightFaceTexture: 0
-  chunkLoadSound: {fileID: 2438597218858921545}
+  chunkLoadSound: {fileID: 7747676749573697498}
   playerCount: 0
   firstChunkLoaded: 0
   activateNewChunks: 0
-  customNetworkManager: {fileID: 0}
---- !u!114 &4832607374064059900
+  appPath: 
+  worldData:
+    seed: 0
+    distToStar: 0
+    system: 0
+    galaxy: 0
+    blockIDsubsurface: 0
+    blockIDcore: 0
+    blockIDForest: 0
+    blockIDGrasslands: 0
+    blockIDDesert: 0
+    blockIDDeadForest: 0
+    blockIDHugeTree: 0
+    blockIDMountain: 0
+    isAlive: 1
+    biomes: 
+    blockIDTreeLeavesWinter: 0
+    blockIDTreeLeavesSpring: 0
+    blockIDTreeLeavesSummer: 0
+    blockIDTreeLeavesFall1: 0
+    blockIDTreeLeavesFall2: 0
+    blockIDTreeTrunk: 0
+    blockIDCacti: 0
+    blockIDMushroomLargeCap: 0
+    blockIDMushroomLargeStem: 0
+    blockIDMonolith: 0
+    blockIDEvergreenLeaves: 0
+    blockIDEvergreenTrunk: 0
+    blockIDHoneyComb: 0
+    blockIDHugeTreeLeaves: 0
+    blockIDHugeTreeTrunk: 0
+    blockIDColumn: 0
+--- !u!114 &667161086062380143
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2438597218858921544}
+  m_GameObject: {fileID: 7747676749573697499}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54a76a77710426445a64fa844be35780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  world: {fileID: 2438597218858921547}
+  world: {fileID: 7747676749573697496}
   depthOfField: {fileID: 0}
---- !u!114 &8914315959556519551
+--- !u!114 &3595251938230663148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2438597218858921544}
+  m_GameObject: {fileID: 7747676749573697499}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
@@ -606,13 +604,13 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: 01bd5b6628cbad742a508470fdc93c2c, type: 2}
---- !u!82 &2438597218858921545
+--- !u!82 &7747676749573697498
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2438597218858921544}
+  m_GameObject: {fileID: 7747676749573697499}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}

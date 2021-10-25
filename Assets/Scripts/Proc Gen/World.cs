@@ -7,8 +7,6 @@ using Mirror;
 public class World : MonoBehaviour
 {
     public static World Instance { get { return _instance; } }
-    public WorldData worldData;
-    public string appPath;
     public bool worldLoaded = false;
     public int tick;
     public bool saving = false;
@@ -16,12 +14,11 @@ public class World : MonoBehaviour
     public bool undrawVoxels = false;
 
     public GameObject mainCameraGameObject;
-    public GameObject globalLighting;
+    public Lighting globalLighting;
     public GameObject loadingText;
     public GameObject loadingBackground;
     public GameObject baseOb;
-    public GameObject EnemyPrefab0;
-    public GameObject EnemyPrefab1;
+    public CustomNetworkManager customNetworkManager;
 
     [Header("World Generation Values")]
     public Planet[] planets;
@@ -35,9 +32,9 @@ public class World : MonoBehaviour
     public BlockType[] blocktypes;
     public AudioSource chunkLoadSound;
 
-    public int playerCount = 0;
+    // public variables
     public List<Player> players = new List<Player>();
-
+    public int playerCount = 0;
     // chunk draw lists and arrays
     public ChunkCoord firstChunkCoord;
     public bool firstChunkLoaded;
@@ -56,6 +53,8 @@ public class World : MonoBehaviour
     public object ChunkListThreadLock = new object();
     public Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
     public Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
+    public string appPath;
+    public WorldData worldData;
 
     private static World _instance;
     private static bool multithreading = true;
@@ -73,9 +72,7 @@ public class World : MonoBehaviour
     bool applyingModifications = false;
     Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
     Thread ChunkRedrawThread;
-
     Camera mainCamera;
-    public CustomNetworkManager customNetworkManager;
 
     private void Awake()
     {
@@ -220,13 +217,6 @@ public class World : MonoBehaviour
 
         PlayerJoined(worldPlayer);
 
-        if (!Settings.OnlinePlay)
-        {
-            // Test to spawn enemies upon start, eventually want to spawn these in waves against players only during night time
-            SpawnEnemy(0, new Vector3(540, 91, 540));
-            SpawnEnemy(1, new Vector3(500, 91, 500));
-        }
-
         //if (chunksToDrawQueue.Count > 0)
         //    lock (chunksToDrawQueue)
         //    {
@@ -239,7 +229,7 @@ public class World : MonoBehaviour
             ChunkRedrawThread.Start();
         }
 
-        globalLighting.SetActive(true);
+        globalLighting.gameObject.SetActive(true);
 
         if (Settings.OnlinePlay)
         {
@@ -250,24 +240,6 @@ public class World : MonoBehaviour
         Settings.WorldLoaded = true;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         mainCamera.enabled = false;
-    }
-
-    public void SpawnEnemy(int type, Vector3 pos)
-    {
-        GameObject ob = null;
-        switch (type)
-        {
-            case 0:
-                ob = EnemyPrefab0;
-                break;
-            case 1:
-                ob = EnemyPrefab1;
-                break;
-        }
-
-        ob = Instantiate(ob, pos, Quaternion.identity);
-        if(Settings.OnlinePlay)
-            customNetworkManager.SpawnNetworkOb(ob);
     }
 
     public int GetGalaxy(int seed)

@@ -304,7 +304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.data[0]
@@ -329,7 +329,7 @@ PrefabInstance:
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.data[5]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3232819355008200807, guid: 2c138186b0263ea45a8eb9fad0660e99, type: 3}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.data[6]
       value: 
@@ -833,6 +833,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
+--- !u!114 &2529205028307385179 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
+  m_PrefabInstance: {fileID: 2529205028307385178}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2529205028307385180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 387010ac6f429394c86779a87e370f2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2529205028307385180 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8640391040969436245, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
@@ -864,50 +875,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189eb45db5f68064d8da851126f78eb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldData:
-    seed: 0
-    distToStar: 0
-    system: 0
-    galaxy: 0
-    blockIDsubsurface: 0
-    blockIDcore: 0
-    blockIDForest: 0
-    blockIDGrasslands: 0
-    blockIDDesert: 0
-    blockIDDeadForest: 0
-    blockIDHugeTree: 0
-    blockIDMountain: 0
-    isAlive: 1
-    biomes: 
-    blockIDTreeLeavesWinter: 0
-    blockIDTreeLeavesSpring: 0
-    blockIDTreeLeavesSummer: 0
-    blockIDTreeLeavesFall1: 0
-    blockIDTreeLeavesFall2: 0
-    blockIDTreeTrunk: 0
-    blockIDCacti: 0
-    blockIDMushroomLargeCap: 0
-    blockIDMushroomLargeStem: 0
-    blockIDMonolith: 0
-    blockIDEvergreenLeaves: 0
-    blockIDEvergreenTrunk: 0
-    blockIDHoneyComb: 0
-    blockIDHugeTreeLeaves: 0
-    blockIDHugeTreeTrunk: 0
-    blockIDColumn: 0
-  appPath: 
   worldLoaded: 0
   tick: 0
   saving: 0
   undrawVoxelBoundObjects: 0
   undrawVoxels: 0
   mainCameraGameObject: {fileID: 5717714097373800335}
-  globalLighting: {fileID: 2529205028307385180}
+  globalLighting: {fileID: 2529205028307385179}
   loadingText: {fileID: 4378316389117323992}
   loadingBackground: {fileID: 4378316389117323991}
   baseOb: {fileID: 0}
-  EnemyPrefab0: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
-  EnemyPrefab1: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
+  customNetworkManager: {fileID: 2030909971}
   planets:
   - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
   - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}
@@ -1392,7 +1370,38 @@ MonoBehaviour:
   playerCount: 0
   firstChunkLoaded: 0
   activateNewChunks: 0
-  customNetworkManager: {fileID: 2030909971}
+  appPath: 
+  worldData:
+    seed: 0
+    distToStar: 0
+    system: 0
+    galaxy: 0
+    blockIDsubsurface: 0
+    blockIDcore: 0
+    blockIDForest: 0
+    blockIDGrasslands: 0
+    blockIDDesert: 0
+    blockIDDeadForest: 0
+    blockIDHugeTree: 0
+    blockIDMountain: 0
+    isAlive: 1
+    biomes: 
+    blockIDTreeLeavesWinter: 0
+    blockIDTreeLeavesSpring: 0
+    blockIDTreeLeavesSummer: 0
+    blockIDTreeLeavesFall1: 0
+    blockIDTreeLeavesFall2: 0
+    blockIDTreeTrunk: 0
+    blockIDCacti: 0
+    blockIDMushroomLargeCap: 0
+    blockIDMushroomLargeStem: 0
+    blockIDMonolith: 0
+    blockIDEvergreenLeaves: 0
+    blockIDEvergreenTrunk: 0
+    blockIDHoneyComb: 0
+    blockIDHugeTreeLeaves: 0
+    blockIDHugeTreeTrunk: 0
+    blockIDColumn: 0
 --- !u!1 &2841459445815596870
 GameObject:
   m_ObjectHideFlags: 0

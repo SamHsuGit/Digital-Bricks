@@ -442,6 +442,7 @@ MonoBehaviour:
   - {fileID: 7004858630717440624}
   - {fileID: 2009221117049920548}
   - {fileID: 1839619620696046812}
+  currentWaveEnemies: []
   charType: 1
   playerName: Host
   timeOfDay: 6.0066667
@@ -464,6 +465,7 @@ MonoBehaviour:
   focusDistanceIncrement: 0.03
   holdingGrab: 0
   blockID: 0
+  wave: 0
   lookVelocity: 1
   modelPrefab: {fileID: 143105093268077663}
   gameMenu: {fileID: 5290477769798018415}
@@ -491,6 +493,8 @@ MonoBehaviour:
   reticle: {fileID: 170724433810035422}
   snowPlow: {fileID: 8148803694933581234}
   brick1x1: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
+  Enemy00: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
+  Enemy01: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0

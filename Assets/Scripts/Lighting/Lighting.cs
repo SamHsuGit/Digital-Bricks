@@ -11,6 +11,8 @@ public class Lighting : MonoBehaviour
     [SerializeField] private Material skyboxDay;
     [SerializeField] private Material skyboxNight;
 
+    public bool daytime = true;
+
     Controller controller;
 
     //Variables
@@ -29,16 +31,17 @@ public class Lighting : MonoBehaviour
         if (sunProperties == null || moonProperties == null)
             return;
 
-        float TimeOfDayIncrement = Time.deltaTime / 60 * 2; // divide by 60 to get 24 min days, multiply by 2 to get 12 min days
+        float TimeOfDayIncrement = Time.deltaTime / 60 * 24; // divide by 60 to get 24 min days, multiply by 24 to get 1 min days
 
         if (Application.isPlaying)
         {
             if (timeOfDay > 6 && timeOfDay < 7 || timeOfDay > 18 && timeOfDay < 19) // golden hour slows time of day for more cinematic looks
-                timeOfDay += TimeOfDayIncrement / 10; // sun proceeds at 1/10 speed during golden hour
+                timeOfDay += TimeOfDayIncrement / 2; // sun proceeds at 1/2 speed during golden hour
             else
                 timeOfDay += TimeOfDayIncrement;
 
             timeOfDay %= 24; //Clamp between 0-24
+            
             UpdateLighting(timeOfDay / 24f);
         }
         else
@@ -46,8 +49,22 @@ public class Lighting : MonoBehaviour
             UpdateLighting(timeOfDay / 24f);
         }
 
+        daytime = CheckDaytime(timeOfDay);
+
         if (Settings.OnlinePlay && World.Instance.playerCount > 1 && World.Instance.players[1].playerGameObject != null) // if player is created, write variable to player syncVar
             controller.timeOfDay = timeOfDay;
+    }
+
+    public bool CheckDaytime(float _timeOfDay)
+    {
+        bool _dayTime;
+
+        if (_timeOfDay >= 6 && _timeOfDay <= 18)
+            _dayTime = true;
+        else
+            _dayTime = false;
+
+        return _dayTime;
     }
 
     private void UpdateLighting(float timePercent)

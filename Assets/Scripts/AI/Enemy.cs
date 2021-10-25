@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     public bool isHolding;
     public bool isJumping;
 
+    Vector3 lastPos;
     CharacterController charController;
     CapsuleCollider cc;
     PlayerVoxelCollider voxelCollider;
@@ -29,11 +30,6 @@ public class Enemy : MonoBehaviour
         cc = GetComponent<CapsuleCollider>();
         sphereCastRadius = cc.radius * 0.5f;
         voxelCollider = GetComponent<PlayerVoxelCollider>();
-    }
-
-    void Start()
-    {
-        
     }
 
     void FixedUpdate()
@@ -50,7 +46,7 @@ public class Enemy : MonoBehaviour
             if (transform.position != goal)
             {
                 isMoving = true;
-                moveVector = goal - transform.position; // moveVector is the difference of the goal and current position
+                moveVector = goal - transform.position; // AI always moves towards goal
                 moveVector.Normalize();
                 moveVector = voxelCollider.CalculateVelocity(moveVector.x, moveVector.z, isSprinting, isJumping);
                 if (moveVector != Vector3.zero)
@@ -59,17 +55,23 @@ public class Enemy : MonoBehaviour
                         charController.Move(moveVector); // move the characterController in direction towards goal
                 }
 
-                Vector3 lookVector = moveVector - model.transform.forward;
+                Vector3 lookVector = moveVector - model.transform.forward; // always looks in direction of motion
                 model.transform.localEulerAngles = lookVector;
             }
             else
             {
-                isMoving = false;
+                lastPos = gameObject.transform.position;
+                if (Mathf.Abs(gameObject.transform.position.magnitude - lastPos.magnitude) < 0.1f) // if position is not changing significantly, mark as not moving
+                    isMoving = false;
+                else
+                    isMoving = true;
             }
 
-            //AI pathfind if path available( if none, start breaking blocks to get to base, then go forwards, check pathfinding, repeat)
-            // if breaking wall
-            //isHolding = true;
+            if (!isMoving)
+            {
+                // try and jump
+                // try and break block
+            }
 
             animator.SetFloat("Speed", moveVector.magnitude * 3f);
             animator.SetBool("isMoving", isMoving);

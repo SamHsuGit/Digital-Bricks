@@ -110,7 +110,7 @@ public class Health : NetworkBehaviour
                 }
             }
         }
-        else // if not a player object
+        else if(gameObject.tag != "Enemy") // if not a player or enemy object
         {
             if (hp < 1)
                 Destroy(gameObject);
