@@ -585,8 +585,8 @@ public class Controller : NetworkBehaviour
         {
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            //if(ob.GetComponent<NetworkTransform>() == null)
-            //    ob.AddComponent<NetworkTransform>();
+            if(ob.GetComponent<NetworkTransform>() == null)
+                ob.AddComponent<NetworkTransform>();
             //NetworkServer.Spawn(ob);
             customNetworkManager.SpawnNetworkOb(ob);
         }
@@ -635,9 +635,12 @@ public class Controller : NetworkBehaviour
             GameObject holdPosPrefabNetworkPlaceholder = Instantiate(voxels[blockID]); // make a new voxel prefab based on block id
             holdPosPrefabNetworkPlaceholder.transform.position = pos;
             holdPosPrefabNetworkPlaceholder.transform.parent = holdPos; // parent the new object to this gameObject's holdPos
-            holdPosPrefabNetworkPlaceholder.AddComponent<NetworkIdentity>();
-            holdPosPrefabNetworkPlaceholder.AddComponent<NetworkTransform>();
-            NetworkServer.Spawn(holdPosPrefabNetworkPlaceholder, gameObject);
+            if(holdPosPrefabNetworkPlaceholder.GetComponent<NetworkIdentity>() == null)
+                holdPosPrefabNetworkPlaceholder.AddComponent<NetworkIdentity>();
+            if(holdPosPrefabNetworkPlaceholder.GetComponent<NetworkTransform>() == null)
+               holdPosPrefabNetworkPlaceholder.AddComponent<NetworkTransform>();
+            //NetworkServer.Spawn(holdPosPrefabNetworkPlaceholder, gameObject);
+            customNetworkManager.SpawnNetworkOb(holdPosPrefabNetworkPlaceholder);
         }
         else
             Destroy(holdPosPrefabNetworkPlaceholder); // destroy network object with blockID at position on server
@@ -836,8 +839,8 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
     {
-        SpawnPreDefinedPrefab(option, pos);
         //RpcSpawnPreDefinedPrefab(option, pos);
+        SpawnPreDefinedPrefab(option, pos);
     }
 
     [ClientRpc]
@@ -858,16 +861,16 @@ public class Controller : NetworkBehaviour
         ob.transform.Rotate(new Vector3(180, 0, 0));
         if (Settings.OnlinePlay)
         {
-            customNetworkManager.SpawnNetworkOb(ob);
             //NetworkServer.Spawn(ob);
+            customNetworkManager.SpawnNetworkOb(ob);
         }
     }
 
     [Command]
     public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
     {
-        SpawnUndefinedPrefab(option, pos);
         //RpcSpawnUndefinedPrefab(option, pos);
+        SpawnUndefinedPrefab(option, pos);
     }
 
     [ClientRpc]
@@ -895,8 +898,8 @@ public class Controller : NetworkBehaviour
         {
             if (ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            //if (ob.GetComponent<NetworkTransform>() == null)
-            //    ob.AddComponent<NetworkTransform>();
+            if (ob.GetComponent<NetworkTransform>() == null)
+                ob.AddComponent<NetworkTransform>();
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 
