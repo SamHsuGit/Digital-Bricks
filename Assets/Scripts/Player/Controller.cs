@@ -580,8 +580,10 @@ public class Controller : NetworkBehaviour
         
         if (Settings.OnlinePlay)
         {
-            ob.AddComponent<NetworkIdentity>();
-            //ob.AddComponent<NetworkTransform>();
+            if(ob.GetComponent<NetworkIdentity>() == null)
+                ob.AddComponent<NetworkIdentity>();
+            //if(ob.GetComponent<NetworkTransform>() == null)
+            //    ob.AddComponent<NetworkTransform>();
             NetworkServer.Spawn(ob);
         }
 
@@ -798,6 +800,7 @@ public class Controller : NetworkBehaviour
             }
             else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal
             {
+                // spawn summonOb at shootPos
                 if (Settings.OnlinePlay)
                     CmdSpawnUndefinedPrefab(0, shootPos.position);
                 else
@@ -814,7 +817,7 @@ public class Controller : NetworkBehaviour
             //}
             else
             {
-                // spawn summonOb at shootPos
+                // spawn brick1x1 at shootPos
                 Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
                 if (Settings.OnlinePlay)
                     CmdSpawnPreDefinedPrefab(0, position);
