@@ -643,9 +643,7 @@ public class Controller : NetworkBehaviour
         {
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            //if(ob.GetComponent<NetworkTransform>() == null)
-            //    ob.AddComponent<NetworkTransform>();
-            //NetworkServer.Spawn(ob);
+            NetworkServer.Spawn(ob);
             customNetworkManager.SpawnNetworkOb(ob);
         }
 
@@ -922,7 +920,6 @@ public class Controller : NetworkBehaviour
         ob.transform.Rotate(new Vector3(180, 0, 0));
         if (Settings.OnlinePlay)
         {
-            //NetworkServer.Spawn(ob);
             customNetworkManager.SpawnNetworkOb(ob);
         }
     }
@@ -930,8 +927,8 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
     {
-        RpcSpawnUndefinedPrefab(option, pos);
-        //SpawnUndefinedPrefab(option, pos);
+        //RpcSpawnUndefinedPrefab(option, pos);
+        SpawnUndefinedPrefab(option, pos);
     }
 
     [ClientRpc]
@@ -954,6 +951,7 @@ public class Controller : NetworkBehaviour
         Rigidbody rb = ob.AddComponent<Rigidbody>();
         float mass = gameObject.GetComponent<Health>().piecesRbMass;
         rb.mass = mass;
+        rb.isKinematic = true;
         ob.AddComponent<Health>();
         if (Settings.OnlinePlay)
         {
