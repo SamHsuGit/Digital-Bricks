@@ -6,7 +6,7 @@ public class PlayerVoxelCollider : MonoBehaviour
     public float baseWalkSpeed = 15f;
     public float baseSprintSpeed = 30f;
     public float baseJumpForce = 15f;
-    public bool isGrounded;
+    public bool isGrounded = false;
     public int maxJumps;
     public int currentJumps;
 

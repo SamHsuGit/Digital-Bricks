@@ -490,6 +490,7 @@ MonoBehaviour:
   - {fileID: 8815942561744781853}
   reticle: {fileID: 170724433810035422}
   snowPlow: {fileID: 8148803694933581234}
+  brick1x1: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0

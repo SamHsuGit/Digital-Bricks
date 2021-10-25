@@ -534,7 +534,7 @@ MonoBehaviour:
   - {fileID: 2354160388912234224}
   reticle: {fileID: 6798775625511660335}
   snowPlow: {fileID: 6885501941342332230}
-  summonBrick: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
+  brick1x1: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
 --- !u!114 &8377408319438795852
 MonoBehaviour:
   m_ObjectHideFlags: 0

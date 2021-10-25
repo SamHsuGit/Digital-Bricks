@@ -64,59 +64,9 @@ public class CustomNetworkManager : NetworkManager
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
     }
 
-    public void SpawnEnemy(int option, Vector3 pos)
+    public void SpawnNetworkOb(GameObject ob)
     {
-
-    }
-
-    public void SpawnPreDefinedPrefab(int option, Vector3 pos)
-    {
-        switch (option)
-        {
-            case 0:
-                predefinedPrefabToSpawn = brick1x1;
-                break;
-        }
-        GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
-        ob.transform.Rotate(new Vector3(180, 0, 0));
-        if (Settings.OnlinePlay)
-        {
-            NetworkServer.Spawn(ob);
-        }
-    }
-
-    public void SpawnUndefinedPrefab(int option, Vector3 pos)
-    {
-        switch (option)
-        {
-            case 0:
-                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.summonOb;
-                break;
-        }
-        GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
-        ob.transform.Rotate(new Vector3(180, 0, 0));
-        ob.SetActive(true);
-        Rigidbody rb = ob.AddComponent<Rigidbody>();
-        float mass = gameObject.GetComponent<Health>().piecesRbMass;
-        rb.mass = mass;
-        ob.AddComponent<Health>();
-        if (Settings.OnlinePlay)
-        {
-            if (ob.GetComponent<NetworkIdentity>() == null)
-                ob.AddComponent<NetworkIdentity>();
-            //if (ob.GetComponent<NetworkTransform>() == null)
-            //    ob.AddComponent<NetworkTransform>();
-        }
-        MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
-
-        int count = 0;
-        for (int i = 0; i < mrs.Length; i++)
-            if (mrs[i].gameObject.transform.childCount > 0)
-                count++;
-        ob.GetComponent<Health>().hp = count;
-        rb.mass = rb.mass + 2 * mass * count;
-        if (Settings.OnlinePlay)
-            NetworkServer.Spawn(ob);
+        NetworkServer.Spawn(ob);
     }
 
     public override void OnClientConnect(NetworkConnection conn)
