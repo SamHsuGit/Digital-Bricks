@@ -63,6 +63,9 @@ public class CustomNetworkManager : NetworkManager
         //};
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
+
+        World.Instance.SpawnEnemy(0, new Vector3(540, 91, 540));
+        World.Instance.SpawnEnemy(1, new Vector3(500, 91, 500));
     }
 
     public void SpawnNetworkOb(GameObject ob)

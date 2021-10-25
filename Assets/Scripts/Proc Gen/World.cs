@@ -220,9 +220,12 @@ public class World : MonoBehaviour
 
         PlayerJoined(worldPlayer);
 
-        // Test to spawn enemies upon start, eventually want to spawn these in waves against players only during night time
-        SpawnEnemy(0, new Vector3(540, 91, 540));
-        SpawnEnemy(1, new Vector3(500, 91, 500));
+        if (!Settings.OnlinePlay)
+        {
+            // Test to spawn enemies upon start, eventually want to spawn these in waves against players only during night time
+            SpawnEnemy(0, new Vector3(540, 91, 540));
+            SpawnEnemy(1, new Vector3(500, 91, 500));
+        }
 
         //if (chunksToDrawQueue.Count > 0)
         //    lock (chunksToDrawQueue)
