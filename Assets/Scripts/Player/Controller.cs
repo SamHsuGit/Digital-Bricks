@@ -428,13 +428,13 @@ public class Controller : NetworkBehaviour
 
         if (!photoMode && backgroundMaskCanvasGroup.alpha != 1) // IF NOT IN OPTIONS OR PHOTO MODE
         {
-            bool isInActiveChunk = voxelCollider.playerChunkIsActive;
+            //bool isInActiveChunk = voxelCollider.playerChunkIsActive;
             // IF PRESSED GRAB
-            if (!holdingGrab && inputHandler.grab && isInActiveChunk)
+            if (!holdingGrab && inputHandler.grab)// && isInActiveChunk)
                 PressedGrab();
 
             // IF HOLDING GRAB
-            if (holdingGrab && inputHandler.grab && isInActiveChunk)
+            if (holdingGrab && inputHandler.grab)// && isInActiveChunk)
                 HoldingGrab();
 
             // IF PRESSED SHOOT
@@ -442,7 +442,7 @@ public class Controller : NetworkBehaviour
                 pressedShoot();
 
             // IF RELEASED GRAB
-            if (holdingGrab && !inputHandler.grab && isInActiveChunk)
+            if (holdingGrab && !inputHandler.grab)// && isInActiveChunk)
                 ReleasedGrab();
             
             positionCursorBlocks();
@@ -635,12 +635,15 @@ public class Controller : NetworkBehaviour
             GameObject holdPosPrefabNetworkPlaceholder = Instantiate(voxels[blockID]); // make a new voxel prefab based on block id
             holdPosPrefabNetworkPlaceholder.transform.position = pos;
             holdPosPrefabNetworkPlaceholder.transform.parent = holdPos; // parent the new object to this gameObject's holdPos
-            if(holdPosPrefabNetworkPlaceholder.GetComponent<NetworkIdentity>() == null)
-                holdPosPrefabNetworkPlaceholder.AddComponent<NetworkIdentity>();
-            if(holdPosPrefabNetworkPlaceholder.GetComponent<NetworkTransform>() == null)
-               holdPosPrefabNetworkPlaceholder.AddComponent<NetworkTransform>();
-            //NetworkServer.Spawn(holdPosPrefabNetworkPlaceholder, gameObject);
-            customNetworkManager.SpawnNetworkOb(holdPosPrefabNetworkPlaceholder);
+            if (Settings.OnlinePlay)
+            {
+                if (holdPosPrefabNetworkPlaceholder.GetComponent<NetworkIdentity>() == null)
+                    holdPosPrefabNetworkPlaceholder.AddComponent<NetworkIdentity>();
+                //if(holdPosPrefabNetworkPlaceholder.GetComponent<NetworkTransform>() == null)
+                //   holdPosPrefabNetworkPlaceholder.AddComponent<NetworkTransform>();
+                //NetworkServer.Spawn(holdPosPrefabNetworkPlaceholder, gameObject);
+                customNetworkManager.SpawnNetworkOb(holdPosPrefabNetworkPlaceholder);
+            }
         }
         else
             Destroy(holdPosPrefabNetworkPlaceholder); // destroy network object with blockID at position on server
