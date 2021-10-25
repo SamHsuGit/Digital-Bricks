@@ -70,7 +70,6 @@ public class Controller : NetworkBehaviour
     public GameObject[] lightGameObjects;
     public GameObject reticle;
     public GameObject snowPlow;
-    public GameObject summonBrick;
 
     Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
@@ -98,8 +97,7 @@ public class Controller : NetworkBehaviour
     PPFXSetValues worldPPFXSetValues;
     CharacterController charController;
     PhysicMaterial physicMaterial;
-    GameObject undefinedPrefabToSpawn;
-    GameObject predefinedPrefabToSpawn;
+    CustomNetworkManager customNetworkManager;
 
     //Initializers & Constants
     float clutchPower = 8000f;
@@ -146,6 +144,7 @@ public class Controller : NetworkBehaviour
         playerCameraVoxelCollider = playerCamera.GetComponent<PlayerVoxelCollider>();
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
         charController = GetComponent<CharacterController>();
+        customNetworkManager = World.Instance.customNetworkManager;
 
         health.isAlive = true;
 
@@ -805,7 +804,7 @@ public class Controller : NetworkBehaviour
                 if (Settings.OnlinePlay)
                     CmdSpawnUndefinedPrefab(0, shootPos.position);
                 else
-                    SpawnUndefinedPrefab(0, shootPos.position);
+                    customNetworkManager.SpawnUndefinedPrefab(0, shootPos.position);
 
                 TakeFromCurrentSlot(1);
             }
@@ -823,7 +822,7 @@ public class Controller : NetworkBehaviour
                 if (Settings.OnlinePlay)
                     CmdSpawnPreDefinedPrefab(0, position);
                 else
-                    SpawnPreDefinedPrefab(0, position);
+                    customNetworkManager.SpawnPreDefinedPrefab(0, position);
 
                 isHolding = !isHolding; // toggle lights
             }
@@ -833,76 +832,27 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
     {
-        //SpawnPreDefinedPrefab(option, pos);
-        RpcSpawnPreDefinedPrefab(option, pos);
+        customNetworkManager.SpawnPreDefinedPrefab(option, pos);
+        //RpcSpawnPreDefinedPrefab(option, pos);
     }
 
     [ClientRpc]
     public void RpcSpawnPreDefinedPrefab(int option, Vector3 pos)
     {
-        SpawnPreDefinedPrefab(option, pos);
-    }
-
-    public void SpawnPreDefinedPrefab(int option, Vector3 pos)
-    {
-        switch(option)
-        {
-            case 0:
-                predefinedPrefabToSpawn = summonBrick;
-                break;
-        }
-        GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
-        ob.transform.Rotate(new Vector3(180, 0, 0));
-        if (Settings.OnlinePlay)
-        {
-            NetworkServer.Spawn(ob);
-        }
+        customNetworkManager.SpawnPreDefinedPrefab(option, pos);
     }
 
     [Command]
     public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
     {
-        RpcSpawnUndefinedPrefab(option, pos);
+        customNetworkManager.SpawnUndefinedPrefab(option, pos);
+        //RpcSpawnUndefinedPrefab(option, pos);
     }
 
     [ClientRpc]
     public void RpcSpawnUndefinedPrefab(int option, Vector3 pos)
     {
-        SpawnUndefinedPrefab(option, pos);
-    }
-
-    public void SpawnUndefinedPrefab(int option, Vector3 pos)
-    {
-        switch (option)
-        {
-            case 0:
-                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.summonOb;
-                break;
-        }
-        GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
-        ob.transform.Rotate(new Vector3(180, 0, 0));
-        ob.SetActive(true);
-        Rigidbody rb = ob.AddComponent<Rigidbody>();
-        float mass = gameObject.GetComponent<Health>().piecesRbMass;
-        rb.mass = mass;
-        ob.AddComponent<Health>();
-        if (Settings.OnlinePlay)
-        {
-            if (ob.GetComponent<NetworkIdentity>() == null)
-                ob.AddComponent<NetworkIdentity>();
-            //if (ob.GetComponent<NetworkTransform>() == null)
-            //    ob.AddComponent<NetworkTransform>();
-        }
-        MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
-
-        int count = 0;
-        for (int i = 0; i < mrs.Length; i++)
-            if (mrs[i].gameObject.transform.childCount > 0)
-                count++;
-        ob.GetComponent<Health>().hp = count;
-        rb.mass = rb.mass + 2* mass * count;
-        if (Settings.OnlinePlay)
-            NetworkServer.Spawn(ob);
+        customNetworkManager.SpawnUndefinedPrefab(option, pos);
     }
 
     void RemoveVoxel(Vector3 pos)

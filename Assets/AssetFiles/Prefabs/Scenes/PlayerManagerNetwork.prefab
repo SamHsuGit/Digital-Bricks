@@ -78,7 +78,7 @@ MonoBehaviour:
   onlineScene: Assets/AssetFiles/Scenes/02 Game.unity
   transport: {fileID: 1777242250530501423}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 4
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
@@ -94,3 +94,4 @@ MonoBehaviour:
   world: {fileID: 0}
   PlayerPrefab0: {fileID: 882067467362529611, guid: 89b1e2cae76c9a0418491aa869c68820, type: 3}
   PlayerPrefab1: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
+  brick1x1: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}

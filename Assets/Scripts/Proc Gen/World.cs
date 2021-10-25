@@ -73,7 +73,7 @@ public class World : MonoBehaviour
     Thread ChunkRedrawThread;
 
     Camera mainCamera;
-    public NetworkManager customNetworkManager;
+    public CustomNetworkManager customNetworkManager;
 
     private void Awake()
     {

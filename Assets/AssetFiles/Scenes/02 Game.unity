@@ -283,6 +283,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2841459445815596870}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
+      propertyPath: brick1x1
+      value: 
+      objectReference: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
+    - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: onlineScene
       value: Assets/AssetFiles/Scenes/02 Game.unity
       objectReference: {fileID: 0}
@@ -296,7 +300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: maxConnections
-      value: 100
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2040320122692201780, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
       propertyPath: spawnPrefabs.Array.size
