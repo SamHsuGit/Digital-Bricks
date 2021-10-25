@@ -533,7 +533,8 @@ public class Controller : NetworkBehaviour
     [Command]
     void CmdSpawnRbFromWorld(Vector3 position, byte blockID)
     {
-        RpcSpawnRbFromWorld(position, blockID);
+        SpawnRbFromWorld(position, blockID);
+        //RpcSpawnRbFromWorld(position, blockID);
     }
 
     [ClientRpc]
@@ -832,6 +833,7 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
     {
+        //SpawnPreDefinedPrefab(option, pos);
         RpcSpawnPreDefinedPrefab(option, pos);
     }
 
