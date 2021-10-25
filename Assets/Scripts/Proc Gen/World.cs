@@ -20,6 +20,8 @@ public class World : MonoBehaviour
     public GameObject loadingText;
     public GameObject loadingBackground;
     public GameObject baseOb;
+    public GameObject EnemyPrefab0;
+    public GameObject EnemyPrefab1;
 
     [Header("World Generation Values")]
     public Planet[] planets;
@@ -218,6 +220,10 @@ public class World : MonoBehaviour
 
         PlayerJoined(worldPlayer);
 
+        // Test to spawn enemies upon start, eventually want to spawn these in waves against players only during night time
+        SpawnEnemy(0, new Vector3(540, 91, 540));
+        SpawnEnemy(1, new Vector3(500, 91, 500));
+
         //if (chunksToDrawQueue.Count > 0)
         //    lock (chunksToDrawQueue)
         //    {
@@ -241,6 +247,24 @@ public class World : MonoBehaviour
         Settings.WorldLoaded = true;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         mainCamera.enabled = false;
+    }
+
+    public void SpawnEnemy(int type, Vector3 pos)
+    {
+        GameObject ob = null;
+        switch (type)
+        {
+            case 0:
+                ob = EnemyPrefab0;
+                break;
+            case 1:
+                ob = EnemyPrefab1;
+                break;
+        }
+
+        ob = Instantiate(ob, pos, Quaternion.identity);
+        if(Settings.OnlinePlay)
+            customNetworkManager.SpawnNetworkOb(ob);
     }
 
     public int GetGalaxy(int seed)

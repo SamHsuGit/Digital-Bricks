@@ -585,8 +585,8 @@ public class Controller : NetworkBehaviour
         {
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            if(ob.GetComponent<NetworkTransform>() == null)
-                ob.AddComponent<NetworkTransform>();
+            //if(ob.GetComponent<NetworkTransform>() == null)
+            //    ob.AddComponent<NetworkTransform>();
             //NetworkServer.Spawn(ob);
             customNetworkManager.SpawnNetworkOb(ob);
         }
@@ -839,8 +839,8 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
     {
-        //RpcSpawnPreDefinedPrefab(option, pos);
-        SpawnPreDefinedPrefab(option, pos);
+        RpcSpawnPreDefinedPrefab(option, pos);
+        //SpawnPreDefinedPrefab(option, pos);
     }
 
     [ClientRpc]
@@ -869,8 +869,8 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
     {
-        //RpcSpawnUndefinedPrefab(option, pos);
-        SpawnUndefinedPrefab(option, pos);
+        RpcSpawnUndefinedPrefab(option, pos);
+        //SpawnUndefinedPrefab(option, pos);
     }
 
     [ClientRpc]
@@ -898,8 +898,8 @@ public class Controller : NetworkBehaviour
         {
             if (ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            if (ob.GetComponent<NetworkTransform>() == null)
-                ob.AddComponent<NetworkTransform>();
+            //if (ob.GetComponent<NetworkTransform>() == null)
+            //    ob.AddComponent<NetworkTransform>();
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 

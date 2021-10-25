@@ -48,6 +48,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldData:
     seed: 0
+    distToStar: 0
+    system: 0
+    galaxy: 0
     blockIDsubsurface: 0
     blockIDcore: 0
     blockIDForest: 0
@@ -57,6 +60,7 @@ MonoBehaviour:
     blockIDHugeTree: 0
     blockIDMountain: 0
     isAlive: 1
+    biomes: 
     blockIDTreeLeavesWinter: 0
     blockIDTreeLeavesSpring: 0
     blockIDTreeLeavesSummer: 0
@@ -80,10 +84,12 @@ MonoBehaviour:
   undrawVoxelBoundObjects: 0
   undrawVoxels: 0
   mainCameraGameObject: {fileID: 0}
-  customNetworkManagerGameObject: {fileID: 0}
   globalLighting: {fileID: 0}
   loadingText: {fileID: 0}
   loadingBackground: {fileID: 0}
+  baseOb: {fileID: 0}
+  EnemyPrefab0: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
+  EnemyPrefab1: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
   planets:
   - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
   - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}
@@ -568,6 +574,7 @@ MonoBehaviour:
   playerCount: 0
   firstChunkLoaded: 0
   activateNewChunks: 0
+  customNetworkManager: {fileID: 0}
 --- !u!114 &4832607374064059900
 MonoBehaviour:
   m_ObjectHideFlags: 0

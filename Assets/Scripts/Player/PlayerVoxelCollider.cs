@@ -107,7 +107,7 @@ public class PlayerVoxelCollider : MonoBehaviour
     public Vector3 CalculateVelocity(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
     {
         Vector3 velocityPlayer;
-        playerChunkIsActive = PlayerInActiveChunk();
+        //playerChunkIsActive = PlayerInActiveChunk();
 
         //if (isGrounded && transform.position.y % 1 != 0)
         //    transform.Translate(new Vector3(0, 1 - transform.position.y % 1, 0)); // ensures elevation is a whole number (no longer needed as we are using colliders)
@@ -123,7 +123,7 @@ public class PlayerVoxelCollider : MonoBehaviour
         //    isMoving = true;
 
         // reset jumps when grounded
-        if (playerChunkIsActive)
+        //if (playerChunkIsActive)
         {
             if (isGrounded || (isPlayer && controller.isGrounded))
                 currentJumps = 0;
@@ -278,7 +278,7 @@ public class PlayerVoxelCollider : MonoBehaviour
     public Vector3 CalculateVelocityCamera(float horizontal, float vertical, bool isSprinting)
     {
         Vector3 velocityCamera;
-        bool cameraChunkIsActive = PlayerInActiveChunk();
+        //bool cameraChunkIsActive = PlayerInActiveChunk();
 
         center = transform.position;
 
@@ -288,7 +288,7 @@ public class PlayerVoxelCollider : MonoBehaviour
         else
             velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed;
 
-        if (cameraChunkIsActive) // DISABLED since the camera was getting stuck inside meshes due to character controller?, more important to have a free camera
+        //if (cameraChunkIsActive) // DISABLED since the camera was getting stuck inside meshes due to character controller?, more important to have a free camera
         {
             isGrounded = CheckGrounded(velocityCamera.y);
             // horizontal collision detection

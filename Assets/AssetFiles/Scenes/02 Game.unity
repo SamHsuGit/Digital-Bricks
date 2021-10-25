@@ -906,6 +906,8 @@ MonoBehaviour:
   loadingText: {fileID: 4378316389117323992}
   loadingBackground: {fileID: 4378316389117323991}
   baseOb: {fileID: 0}
+  EnemyPrefab0: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
+  EnemyPrefab1: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
   planets:
   - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
   - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}

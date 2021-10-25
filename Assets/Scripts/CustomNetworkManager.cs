@@ -41,6 +41,7 @@ public class CustomNetworkManager : NetworkManager
     GameObject undefinedPrefabToSpawn;
     GameObject predefinedPrefabToSpawn;
 
+
     public override void OnStartServer()
     {
         base.OnStartServer();
