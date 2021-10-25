@@ -71,7 +71,6 @@ public class Controller : NetworkBehaviour
     public GameObject cursorSlot;
     public GameObject[] lightGameObjects;
     public GameObject reticle;
-    public GameObject snowPlow;
     public GameObject brick1x1;
     public GameObject Enemy00;
     public GameObject Enemy01;
@@ -89,7 +88,6 @@ public class Controller : NetworkBehaviour
 
     //Components
     CapsuleCollider cc;
-    CapsuleCollider snowPlowcc;
     PlayerVoxelCollider voxelCollider;
     Animator animator;
     PlayerInput playerInput;
@@ -142,7 +140,6 @@ public class Controller : NetworkBehaviour
         world = World.Instance;
         physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
-        snowPlowcc = snowPlow.GetComponent<CapsuleCollider>();
         animator = modelPrefab.GetComponent<Animator>();
         inputHandler = gameObject.GetComponent<InputHandler>();
         health = gameObject.GetComponent<Health>();
@@ -1088,7 +1085,6 @@ public class Controller : NetworkBehaviour
             if (!inputHandler.sprint)
             {
                 CCShapeNormal(cc, 0);
-                CCShapeNormal(snowPlowcc, 0.5f);
                 voxelCollider.width = colliderRadius * 2;
                 voxelCollider.height = colliderHeight;
                 voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - (cc.height / 2));
@@ -1105,7 +1101,6 @@ public class Controller : NetworkBehaviour
             {
                 isSprinting = true;
                 CCShapeAlternate(cc, 0);
-                CCShapeAlternate(snowPlowcc, 0.5f);
                 voxelCollider.width = colliderRadius * 2;
                 voxelCollider.height = colliderRadius * 2;
                 voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - cc.radius);
