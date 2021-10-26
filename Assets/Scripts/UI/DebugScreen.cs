@@ -31,7 +31,7 @@ public class DebugScreen : MonoBehaviour
     {
         if (World.Instance.worldLoaded && World.Instance.GetChunkFromVector3(player.transform.position) != null) // don't do this unless the world is loaded and player is in a chunk
         {
-            string debugText = "wave: " + controller.wave;
+            string debugText = "day: " + controller.day;
             debugText += "\n";
             debugText += frameRate + " fps";
             debugText += "\n";

@@ -42,7 +42,7 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public byte blockID;
-    [SyncVar] public int wave = 0;
+    [SyncVar] public int day = 1;
 
     [SerializeField] float lookVelocity = 1f;
 
@@ -387,7 +387,7 @@ public class Controller : NetworkBehaviour
 
         //if localplay or if online and is server, calculate current wave
         if (!Settings.OnlinePlay || (Settings.OnlinePlay && isServer))
-            CalculateCurrentWave();
+            CalculateCurrentDay();
 
         if (inputHandler.optionsPressed)
             gameMenuComponent.OnOptions();
@@ -464,11 +464,12 @@ public class Controller : NetworkBehaviour
         Animate();
     }
 
-    public void CalculateCurrentWave()
+    public void CalculateCurrentDay()
     {
         
         if (!wasDaytime && daytime) // if turns daytime
         {
+            day++;
             foreach (GameObject enemy in currentWaveEnemies)
                 Destroy(enemy);
             wasDaytime = true;
@@ -476,8 +477,7 @@ public class Controller : NetworkBehaviour
 
         if (wasDaytime && !daytime) // if turns nighttime, start next wave
         {
-            wave++;
-            StartWave(wave);
+            StartWave(day);
             wasDaytime = false;
         }
     }
