@@ -330,7 +330,7 @@ public class Controller : NetworkBehaviour
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         // enemies hurt player
-        if (hit.gameObject.tag == ("Enemy"))
+        if (hit.gameObject.tag == "Enemy")
             health.EditSelfHealth(-1);
 
         //GameObject ob = collision.collider.gameObject;
@@ -647,8 +647,8 @@ public class Controller : NetworkBehaviour
             customNetworkManager.SpawnNetworkOb(ob);
         }
 
-        rb.velocity = transform.forward * 25; // give some velocity away from player
-
+        rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
+        ob.tag = "Projectile";
         Destroy(ob, 5); // Destroy after 5 seconds
     }
 
@@ -922,6 +922,7 @@ public class Controller : NetworkBehaviour
         {
             customNetworkManager.SpawnNetworkOb(ob);
         }
+        Destroy(ob, 60); // clean up objects after 60 seconds
     }
 
     [Command]

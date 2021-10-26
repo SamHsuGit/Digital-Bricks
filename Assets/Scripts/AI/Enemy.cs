@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     CharacterController charController;
     CapsuleCollider cc;
     PlayerVoxelCollider voxelCollider;
+    Health health;
 
     float sphereCastRadius;
 
@@ -30,6 +31,14 @@ public class Enemy : MonoBehaviour
         cc = GetComponent<CapsuleCollider>();
         sphereCastRadius = cc.radius * 0.5f;
         voxelCollider = GetComponent<PlayerVoxelCollider>();
+        health = GetComponent<Health>();
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        // projectiles hurt enemies
+        if (hit.gameObject.tag == "Projectile")
+            health.EditSelfHealth(-1);
     }
 
     void FixedUpdate()

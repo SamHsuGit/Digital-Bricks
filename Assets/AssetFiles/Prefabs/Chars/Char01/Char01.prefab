@@ -465,7 +465,7 @@ MonoBehaviour:
   focusDistanceIncrement: 0.03
   holdingGrab: 0
   blockID: 0
-  wave: 0
+  day: 1
   lookVelocity: 1
   modelPrefab: {fileID: 143105093268077663}
   gameMenu: {fileID: 5290477769798018415}
