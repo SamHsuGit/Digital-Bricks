@@ -660,10 +660,7 @@ public class Controller : NetworkBehaviour
             if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
                 return;
             holdingGrab = true;
-            grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
-            grabbedPrefab.transform.parent = holdPos;
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
+            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
             PickupBrick(removePos.position);
             reticle.SetActive(false);
         }
@@ -671,22 +668,26 @@ public class Controller : NetworkBehaviour
         {
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
             holdingGrab = true;
-            grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
-            grabbedPrefab.transform.parent = holdPos;
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
+            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
             TakeFromCurrentSlot(1);
             reticle.SetActive(false);
         }
-
+        //else
         if (Settings.OnlinePlay)
             CmdUpdateGrabObject(holdingGrab, blockID);
         else
             UpdateShowGrabObject(holdingGrab, blockID);
+        //Debug.Log(blockID);
     }
 
     [Command]
-    void CmdUpdateGrabObject(bool holding, byte blockID) // WIP (Cannot simply show/hide gameObjects like parts of player since movement is not updated by network animator)
+    void CmdUpdateGrabObject(bool holding, byte blockID) // WIP
+    {
+        RpcUpdateGrabObject(holding, blockID);
+    }
+
+    [ClientRpc]
+    void RpcUpdateGrabObject(bool holding, byte blockID)
     {
         UpdateShowGrabObject(holding, blockID);
     }
@@ -697,10 +698,13 @@ public class Controller : NetworkBehaviour
 
         if (holding)
         {
-            if (Settings.OnlinePlay)
+            grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
+            //ob.transform.Rotate(new Vector3(180, 0, 0));
+            if (Settings.OnlinePlay && isServer)
             {
                 customNetworkManager.SpawnNetworkOb(grabbedPrefab);
             }
+            grabbedPrefab.transform.parent = holdPos;
         }
         else
             Destroy(grabbedPrefab);
@@ -753,7 +757,6 @@ public class Controller : NetworkBehaviour
             PutAwayBrick(blockID);
 
         reticle.SetActive(true);
-
         if (Settings.OnlinePlay)
             CmdUpdateGrabObject(holdingGrab, blockID);
         else
