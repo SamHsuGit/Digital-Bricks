@@ -620,6 +620,16 @@ public class Controller : NetworkBehaviour
     {
         if (backgroundMaskCanvasGroup.alpha != 1 && !photoMode) // IF NOT IN OPTIONS OR PHOTO MODE
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
+
+        if (!toolbar.slots[toolbar.slotIndex].HasItem) // if no item when drop pressed, spawn items
+        {
+            // spawn brick1x1 at shootPos
+            Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
+            if (Settings.OnlinePlay)
+                CmdSpawnPreDefinedPrefab(0, position);
+            else
+                SpawnPreDefinedPrefab(0, position);
+        }
     }
 
     public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
@@ -881,13 +891,6 @@ public class Controller : NetworkBehaviour
             //}
             else
             {
-                // spawn brick1x1 at shootPos
-                Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
-                if (Settings.OnlinePlay)
-                    CmdSpawnPreDefinedPrefab(0, position);
-                else
-                    SpawnPreDefinedPrefab(0, position);
-
                 isHolding = !isHolding; // toggle lights
             }
         }
