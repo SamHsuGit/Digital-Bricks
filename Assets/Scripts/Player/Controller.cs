@@ -898,8 +898,8 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
     {
-        RpcSpawnPreDefinedPrefab(option, pos);
-        //SpawnPreDefinedPrefab(option, pos);
+        //RpcSpawnPreDefinedPrefab(option, pos);
+        SpawnPreDefinedPrefab(option, pos);
     }
 
     [ClientRpc]

@@ -106,6 +106,9 @@ public class PlayerVoxelCollider : MonoBehaviour
 
     public Vector3 CalculateVelocity(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
     {
+        if (controller == null)
+            return Vector3.zero;
+
         Vector3 velocityPlayer;
         //playerChunkIsActive = PlayerInActiveChunk();
 
