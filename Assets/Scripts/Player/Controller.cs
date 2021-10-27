@@ -643,8 +643,8 @@ public class Controller : NetworkBehaviour
         {
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            //NetworkServer.Spawn(ob);
-            customNetworkManager.SpawnNetworkOb(ob);
+            NetworkServer.Spawn(ob);
+            //customNetworkManager.SpawnNetworkOb(ob);
         }
 
         rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
