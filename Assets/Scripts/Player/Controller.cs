@@ -643,7 +643,7 @@ public class Controller : NetworkBehaviour
         {
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            NetworkServer.Spawn(ob);
+            //NetworkServer.Spawn(ob);
             customNetworkManager.SpawnNetworkOb(ob);
         }
 
@@ -898,13 +898,6 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
     {
-        //RpcSpawnPreDefinedPrefab(option, pos);
-        SpawnPreDefinedPrefab(option, pos);
-    }
-
-    [ClientRpc]
-    public void RpcSpawnPreDefinedPrefab(int option, Vector3 pos)
-    {
         SpawnPreDefinedPrefab(option, pos);
     }
 
@@ -927,13 +920,6 @@ public class Controller : NetworkBehaviour
 
     [Command]
     public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
-    {
-        //RpcSpawnUndefinedPrefab(option, pos);
-        SpawnUndefinedPrefab(option, pos);
-    }
-
-    [ClientRpc]
-    public void RpcSpawnUndefinedPrefab(int option, Vector3 pos)
     {
         SpawnUndefinedPrefab(option, pos);
     }
