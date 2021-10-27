@@ -660,7 +660,7 @@ public class Controller : NetworkBehaviour
             if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
                 return;
             holdingGrab = true;
-            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
+            grabbedPrefab = World.Instance.voxelPrefabs[blockID];
             PickupBrick(removePos.position);
             reticle.SetActive(false);
         }
@@ -668,7 +668,7 @@ public class Controller : NetworkBehaviour
         {
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
             holdingGrab = true;
-            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
+            grabbedPrefab = World.Instance.voxelPrefabs[blockID];
             TakeFromCurrentSlot(1);
             reticle.SetActive(false);
         }
@@ -692,7 +692,7 @@ public class Controller : NetworkBehaviour
 
         if (holding)
         {
-            grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
+            grabbedPrefab = Instantiate(grabbedPrefab, holdPos.transform.position, Quaternion.identity);
             //ob.transform.Rotate(new Vector3(180, 0, 0));
             if (Settings.OnlinePlay)
             {
