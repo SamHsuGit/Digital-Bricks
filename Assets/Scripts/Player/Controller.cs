@@ -722,6 +722,9 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
+        if (grabbedPrefab == null)
+            return;
+
         if (placePos.gameObject.activeSelf)
         {
             grabbedPrefab.transform.position = placePos.position; // move instance to position where it would attach
