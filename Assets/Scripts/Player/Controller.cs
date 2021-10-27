@@ -634,7 +634,7 @@ public class Controller : NetworkBehaviour
 
     public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
     {
-        GameObject ob = Instantiate(voxels[blockID]);
+        GameObject ob = Instantiate(World.Instance.voxelPrefabs[blockID]);
         //SetAllObChildrenMeshEnabled(ob, true);
 
         ob.gameObject.SetActive(true);
@@ -654,7 +654,7 @@ public class Controller : NetworkBehaviour
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
             //NetworkServer.Spawn(ob);
-            //customNetworkManager.SpawnNetworkOb(ob);
+            customNetworkManager.SpawnNetworkOb(ob);
         }
 
         rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
