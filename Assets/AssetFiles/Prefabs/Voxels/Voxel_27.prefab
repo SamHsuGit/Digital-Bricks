@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5277749860785751787}
   - component: {fileID: 1576624880582610519}
   - component: {fileID: 5424793606283925963}
+  - component: {fileID: 6387041282897598389}
   m_Layer: 0
   m_Name: Voxel_27
   m_TagString: Untagged
@@ -63,6 +64,35 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 38415eb0796cedb41b6f14f8f104949e
   hasSpawned: 0
+--- !u!114 &6387041282897598389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2403187756237027020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 1
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  bufferTimeMultiplier: 3
+  bufferSizeLimit: 64
+  catchupThreshold: 6
+  catchupMultiplier: 0.1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!1001 &1303457378670364533
 PrefabInstance:
   m_ObjectHideFlags: 0
