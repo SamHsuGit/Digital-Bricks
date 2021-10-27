@@ -84,7 +84,7 @@ public class Controller : NetworkBehaviour
     private Transform placePos;
     private Transform holdPos;
     private GameObject[][] playerLimbs = new GameObject[5][];
-    GameObject holdPosPrefabNetworkPlaceholder;
+    GameObject grabbedPrefab;
 
     //Components
     CapsuleCollider cc;
@@ -124,8 +124,8 @@ public class Controller : NetworkBehaviour
 
         for (int i = 0; i < voxels.Length; i++)
         {
-            voxels[i].SetActive(true);
-            SetAllObChildrenMeshEnabled(voxels[i], false); // set visibility of all voxels to false as default
+            //voxels[i].SetActive(true);
+            //SetAllObChildrenMeshEnabled(voxels[i], false); // set visibility of all voxels to false as default
         }
 
         playerLimbs[0] = Torso;
@@ -625,7 +625,7 @@ public class Controller : NetworkBehaviour
     public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
     {
         GameObject ob = Instantiate(voxels[blockID]);
-        SetAllObChildrenMeshEnabled(ob, true);
+        //SetAllObChildrenMeshEnabled(ob, true);
 
         ob.gameObject.SetActive(true);
         ob.transform.position = position;
@@ -660,7 +660,7 @@ public class Controller : NetworkBehaviour
             if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
                 return;
             holdingGrab = true;
-            holdPosPrefabNetworkPlaceholder = voxels[blockID];
+            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
             PickupBrick(removePos.position);
             reticle.SetActive(false);
         }
@@ -668,51 +668,40 @@ public class Controller : NetworkBehaviour
         {
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
             holdingGrab = true;
-            holdPosPrefabNetworkPlaceholder = voxels[blockID];
+            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
             TakeFromCurrentSlot(1);
             reticle.SetActive(false);
         }
         //else
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateShowGrabObject(holding, blockID);
-        //else
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
             UpdateShowGrabObject(holdingGrab, blockID);
         //Debug.Log(blockID);
     }
 
     [Command]
-    void CmdUpdateShowGrabObject(Vector3 pos, bool show, byte blockID) // WIP (Cannot simply show/hide gameObjects like parts of player since movement is not updated by network animator)
+    void CmdUpdateGrabObject(bool holding, byte blockID) // WIP (Cannot simply show/hide gameObjects like parts of player since movement is not updated by network animator)
     {
-        //RpcUpdateShowGrabObject(holding, blockID);
-
-        if (show)
-        {
-            // spawn network object with blockID at position on server
-            GameObject holdPosPrefabNetworkPlaceholder = Instantiate(voxels[blockID]); // make a new voxel prefab based on block id
-            holdPosPrefabNetworkPlaceholder.transform.position = pos;
-            holdPosPrefabNetworkPlaceholder.transform.parent = holdPos; // parent the new object to this gameObject's holdPos
-            if (Settings.OnlinePlay)
-            {
-                if (holdPosPrefabNetworkPlaceholder.GetComponent<NetworkIdentity>() == null)
-                    holdPosPrefabNetworkPlaceholder.AddComponent<NetworkIdentity>();
-                //if(holdPosPrefabNetworkPlaceholder.GetComponent<NetworkTransform>() == null)
-                //   holdPosPrefabNetworkPlaceholder.AddComponent<NetworkTransform>();
-                //NetworkServer.Spawn(holdPosPrefabNetworkPlaceholder, gameObject);
-                customNetworkManager.SpawnNetworkOb(holdPosPrefabNetworkPlaceholder);
-            }
-        }
-        else
-            Destroy(holdPosPrefabNetworkPlaceholder); // destroy network object with blockID at position on server
+        UpdateShowGrabObject(holding, blockID);
     }
-
-    //void RpcUpdateShowGrabObject(bool holding, byte blockID) // WIP (Cannot simply show/hide gameObjects like parts of player since movement is not updated by network animator)
-    //{
-    //    UpdateShowGrabObject(holding, blockID);
-    //}
 
     void UpdateShowGrabObject(bool holding, byte blockID)
     {
-        SetAllObChildrenMeshEnabled(voxels[blockID], holding);
+        //SetAllObChildrenMeshEnabled(voxels[blockID], holding);
+
+        if (holding)
+        {
+            grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
+            //ob.transform.Rotate(new Vector3(180, 0, 0));
+            if (Settings.OnlinePlay)
+            {
+                customNetworkManager.SpawnNetworkOb(grabbedPrefab);
+            }
+            grabbedPrefab.transform.parent = holdPos;
+        }
+        else
+            Destroy(grabbedPrefab);
     }
 
     void SetAllObChildrenMeshEnabled(GameObject ob, bool enabled)
@@ -735,15 +724,15 @@ public class Controller : NetworkBehaviour
     {
         if (placePos.gameObject.activeSelf)
         {
-            holdPosPrefabNetworkPlaceholder.transform.position = placePos.position; // move instance to position where it would attach
-            holdPosPrefabNetworkPlaceholder.transform.rotation = placePos.rotation;
+            grabbedPrefab.transform.position = placePos.position; // move instance to position where it would attach
+            grabbedPrefab.transform.rotation = placePos.rotation;
             //brickMove.Play(); // Does not work for some reason
         }
         else
         {
-            holdPosPrefabNetworkPlaceholder.transform.eulerAngles = placePos.eulerAngles;
-            holdPosPrefabNetworkPlaceholder.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
-            holdPosPrefabNetworkPlaceholder.transform.Translate(new Vector3(-0.5f, -0.5f, -0.5f));
+            grabbedPrefab.transform.eulerAngles = placePos.eulerAngles;
+            grabbedPrefab.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+            grabbedPrefab.transform.Translate(new Vector3(-0.5f, -0.5f, -0.5f));
         }
     }
 
@@ -759,9 +748,9 @@ public class Controller : NetworkBehaviour
             PutAwayBrick(blockID);
 
         reticle.SetActive(true);
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateShowGrabObject(holding, blockID);
-        //else
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
             UpdateShowGrabObject(holdingGrab, blockID);
     }
 
@@ -896,7 +885,7 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos)
+    public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
     {
         SpawnPreDefinedPrefab(option, pos);
     }
