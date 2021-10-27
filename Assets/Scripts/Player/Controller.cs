@@ -643,7 +643,7 @@ public class Controller : NetworkBehaviour
         {
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            NetworkServer.Spawn(ob);
+            //NetworkServer.Spawn(ob);
             //customNetworkManager.SpawnNetworkOb(ob);
         }
 
