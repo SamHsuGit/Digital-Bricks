@@ -632,7 +632,20 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public void SpawnVoxelRbAtPos(Vector3 position, byte blockID) // Might be bugged for MP drop?
+    [Command]
+    public void CmdSpawnRbFromInventory(Vector3 position, byte blockID)
+    {
+        SpawnVoxelRbAtPos(position, blockID);
+        //RpcSpawnRbFromInventory(position, blockID);
+    }
+
+    [ClientRpc]
+    void RpcSpawnRbFromInventory(Vector3 position, byte blockID)
+    {
+        SpawnVoxelRbAtPos(position, blockID);
+    }
+
+    public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
     {
         GameObject ob = Instantiate(World.Instance.voxelPrefabs[blockID]);
         //SetAllObChildrenMeshEnabled(ob, true);

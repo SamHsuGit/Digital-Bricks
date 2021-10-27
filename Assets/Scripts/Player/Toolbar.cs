@@ -61,7 +61,14 @@ public class Toolbar : MonoBehaviour
         {
             int amount = slots[slotIndexValue].itemSlot.stack.amount;
             for (int i = 0; i < amount; i++) // for each item in slot
-                controller.SpawnVoxelRbAtPos(new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z) + player.transform.forward * 4, slots[slotIndexValue].itemSlot.stack.id);
+            {
+                Vector3 pos = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z) + player.transform.forward * 4;
+                byte blockID = slots[slotIndexValue].itemSlot.stack.id;
+                if(!Settings.OnlinePlay)
+                    controller.SpawnVoxelRbAtPos(pos, blockID);
+                else
+                    controller.CmdSpawnRbFromInventory(pos, blockID);
+            }
             slots[slotIndexValue].itemSlot.EmptySlot();
         }
     }
