@@ -653,6 +653,8 @@ public class Controller : NetworkBehaviour
         {
             if(ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
+            if (ob.GetComponent<NetworkTransform>() == null)
+                ob.AddComponent<NetworkTransform>();
             //NetworkServer.Spawn(ob);
             customNetworkManager.SpawnNetworkOb(ob);
         }
@@ -709,31 +711,36 @@ public class Controller : NetworkBehaviour
         if (holding)
         {
             grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
-            //if (Settings.OnlinePlay && isServer)
-            //{
-            //    customNetworkManager.SpawnNetworkOb(grabbedPrefab);
-            //}
+            if (Settings.OnlinePlay)
+            {
+                if (grabbedPrefab.GetComponent<NetworkIdentity>() == null)
+                    grabbedPrefab.AddComponent<NetworkIdentity>();
+                if (grabbedPrefab.GetComponent<NetworkTransform>() == null)
+                    grabbedPrefab.AddComponent<NetworkTransform>();
+                //if(isServer)
+                //    customNetworkManager.SpawnNetworkOb(grabbedPrefab);
+            }
             grabbedPrefab.transform.parent = holdPos;
         }
         else
             Destroy(grabbedPrefab);
     }
 
-    void SetAllObChildrenMeshEnabled(GameObject ob, bool enabled)
-    {
-        if (ob.GetComponent<BoxCollider>() != null)
-            ob.GetComponent<BoxCollider>().enabled = enabled;
+    //void SetAllObChildrenMeshEnabled(GameObject ob, bool enabled) // Disabled as we'd prefer to sync across network by spawning in/out objects instead of turning visibility on/off
+    //{
+    //    if (ob.GetComponent<BoxCollider>() != null)
+    //        ob.GetComponent<BoxCollider>().enabled = enabled;
 
-        for (int i = 0; i < ob.transform.childCount; i++)
-        {
-            if (ob.transform.GetChild(i).GetComponent<MeshRenderer>() != null)
-            {
-                ob.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = enabled;
-                SetAllObChildrenMeshEnabled(ob.transform.GetChild(i).gameObject, enabled);
-            }
-            ob.transform.GetChild(i).gameObject.SetActive(enabled);
-        }
-    }
+    //    for (int i = 0; i < ob.transform.childCount; i++)
+    //    {
+    //        if (ob.transform.GetChild(i).GetComponent<MeshRenderer>() != null)
+    //        {
+    //            ob.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = enabled;
+    //            SetAllObChildrenMeshEnabled(ob.transform.GetChild(i).gameObject, enabled);
+    //        }
+    //        ob.transform.GetChild(i).gameObject.SetActive(enabled);
+    //    }
+    //}
 
     public void HoldingGrab()
     {

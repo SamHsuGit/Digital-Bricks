@@ -22,7 +22,6 @@ public class GameMenu : MonoBehaviour
     public GameObject backgroundMask;
     public GameObject playerHUD;
     public GameObject optionsMenu;
-    public GameObject playerManagerNetwork;
     public GameObject debugScreen;
     public AudioSource buttonSound;
     public GameObject autoSaveIcon;
@@ -35,8 +34,7 @@ public class GameMenu : MonoBehaviour
     Controller controller;
     Canvas canvas;
     Health health;
-
-    NetworkManager manager;
+    CustomNetworkManager customNetworkManager;
 
     // Components
     UnityEngine.Rendering.Universal.UniversalAdditionalCameraData uac;
@@ -50,6 +48,7 @@ public class GameMenu : MonoBehaviour
         controller = player.GetComponent<Controller>();
         canvas = GetComponent<Canvas>();
         health = player.GetComponent<Health>();
+        customNetworkManager = World.Instance.customNetworkManager;
     }
 
     private void Start()
@@ -63,8 +62,6 @@ public class GameMenu : MonoBehaviour
         invertYToggle.isOn = SettingsStatic.LoadedSettings.invertY;
         invertXToggle.isOn = SettingsStatic.LoadedSettings.invertX;
         UpdateHP();
-
-        manager = playerManagerNetwork.GetComponent<CustomNetworkManager>();
 
         uac = playerCamera.GetComponent<Camera>().GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
 
@@ -173,17 +170,17 @@ public class GameMenu : MonoBehaviour
         // stop host if host mode
         if (NetworkServer.active && NetworkClient.isConnected)
         {
-            manager.StopHost();
+            customNetworkManager.StopHost();
         }
         // stop client if client-only
         else if (NetworkClient.isConnected)
         {
-            manager.StopClient();
+            customNetworkManager.StopClient();
         }
         // stop server if server-only
         else if (NetworkServer.active)
         {
-            manager.StopServer();
+            customNetworkManager.StopServer();
         }
 
         SceneManager.LoadScene(0);
