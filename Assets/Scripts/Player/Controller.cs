@@ -594,13 +594,6 @@ public class Controller : NetworkBehaviour
     void CmdSpawnRbFromWorld(Vector3 position, byte blockID)
     {
         SpawnRbFromWorld(position, blockID);
-        //RpcSpawnRbFromWorld(position, blockID);
-    }
-
-    [ClientRpc]
-    void RpcSpawnRbFromWorld(Vector3 position, byte blockID)
-    {
-        SpawnRbFromWorld(position, blockID);
     }
 
     void SpawnRbFromWorld(Vector3 position, byte blockID)
@@ -618,10 +611,9 @@ public class Controller : NetworkBehaviour
 
     public void DropItemsInSlot()
     {
-        if (backgroundMaskCanvasGroup.alpha != 1 && !photoMode) // IF NOT IN OPTIONS OR PHOTO MODE
+        if (backgroundMaskCanvasGroup.alpha != 1 && !photoMode && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS OR PHOTO MODE AND ITEM IN SLOT
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
-
-        if (!toolbar.slots[toolbar.slotIndex].HasItem) // if no item when drop pressed, spawn items
+        else // if no item when drop pressed, spawn brick1x1
         {
             // spawn brick1x1 at shootPos
             Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
@@ -634,13 +626,6 @@ public class Controller : NetworkBehaviour
 
     [Command]
     public void CmdSpawnRbFromInventory(Vector3 position, byte blockID)
-    {
-        SpawnVoxelRbAtPos(position, blockID);
-        //RpcSpawnRbFromInventory(position, blockID);
-    }
-
-    [ClientRpc]
-    void RpcSpawnRbFromInventory(Vector3 position, byte blockID)
     {
         SpawnVoxelRbAtPos(position, blockID);
     }
@@ -964,7 +949,7 @@ public class Controller : NetworkBehaviour
         {
             if (ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            //if (ob.GetComponent<NetworkTransform>() == null)
+            //if (ob.GetComponent<NetworkTransform>() == null) // Network transform base error?
             //    ob.AddComponent<NetworkTransform>();
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
