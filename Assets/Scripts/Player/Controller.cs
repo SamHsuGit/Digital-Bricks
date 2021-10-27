@@ -709,11 +709,10 @@ public class Controller : NetworkBehaviour
         if (holding)
         {
             grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
-            //ob.transform.Rotate(new Vector3(180, 0, 0));
-            if (Settings.OnlinePlay && isServer)
-            {
-                customNetworkManager.SpawnNetworkOb(grabbedPrefab);
-            }
+            //if (Settings.OnlinePlay && isServer)
+            //{
+            //    customNetworkManager.SpawnNetworkOb(grabbedPrefab);
+            //}
             grabbedPrefab.transform.parent = holdPos;
         }
         else
