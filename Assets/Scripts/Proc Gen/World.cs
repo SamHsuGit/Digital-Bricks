@@ -30,6 +30,7 @@ public class World : MonoBehaviour
     public Material blockMaterialTransparent;
     public PhysicMaterial physicMaterial;
     public BlockType[] blocktypes;
+    public GameObject[] voxelPrefabs;
     public AudioSource chunkLoadSound;
 
     // public variables
