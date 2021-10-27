@@ -31,12 +31,13 @@ public class Lighting : MonoBehaviour
         if (sunProperties == null || moonProperties == null)
             return;
 
-        float TimeOfDayIncrement = Time.deltaTime / 60 * 24; // divide by 60 to get 24 min days, multiply by 24 to get 1 min days
+        float TimeOfDayIncrement = Time.deltaTime / 60 * 6; // divide by 60 to get 24 min days, multiply by 6 to get 2 min days
+        //float TimeOfDayIncrement = Time.deltaTime / 60 * 24; // divide by 60 to get 24 min days, multiply by 24 to get 30 sec days (TESTING)
 
         if (Application.isPlaying)
         {
             if (timeOfDay > 6 && timeOfDay < 7 || timeOfDay > 18 && timeOfDay < 19) // golden hour slows time of day for more cinematic looks
-                timeOfDay += TimeOfDayIncrement / 2; // sun proceeds at 1/2 speed during golden hour
+                timeOfDay += TimeOfDayIncrement / 10; // sun proceeds at 1/10 speed during golden hour
             else
                 timeOfDay += TimeOfDayIncrement;
 

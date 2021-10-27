@@ -482,23 +482,23 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public void StartWave(int wave)
+    public void StartWave(int wave) // WIP
     {
-        for (int i = 0; i < wave; i++) // wave = # enemies
-        {
-            int type = 0; // randomized, linearly increase chance of harder enemies depending on wave number
-            Vector3 position = new Vector3(510, 91, 510); // Randomize position of enemies at a fixed distance from base (gives enough room to react)
-            switch (type)
-            {
-                case 0: // easy enemies spawn 2x as often
-                    SpawnEnemy(type, position);
-                    SpawnEnemy(type, new Vector3(position.x + 1, position.y + 1, position.z + 1));
-                    break;
-                case 1: // only spawn 1 hard enemy
-                    SpawnEnemy(type, position);
-                    break;
-            }
-        }
+        //for (int i = 0; i < wave; i++) // wave = # enemies
+        //{
+        //    int type = 0; // randomized, linearly increase chance of harder enemies depending on wave number
+        //    Vector3 position = new Vector3(510, 91, 510); // Randomize position of enemies at a fixed distance from base (gives enough room to react)
+        //    switch (type)
+        //    {
+        //        case 0: // easy enemies spawn 2x as often
+        //            SpawnEnemy(type, position);
+        //            SpawnEnemy(type, new Vector3(position.x + 1, position.y + 1, position.z + 1));
+        //            break;
+        //        case 1: // only spawn 1 hard enemy
+        //            SpawnEnemy(type, position);
+        //            break;
+        //    }
+        //}
     }
 
     public void SpawnEnemy(int type, Vector3 pos)
@@ -718,7 +718,7 @@ public class Controller : NetworkBehaviour
                 if (grabbedPrefab.GetComponent<NetworkTransform>() == null)
                     grabbedPrefab.AddComponent<NetworkTransform>();
                 //if(isServer)
-                //    customNetworkManager.SpawnNetworkOb(grabbedPrefab);
+                //    customNetworkManager.SpawnNetworkOb(grabbedPrefab); // Does not work for some reason
             }
             grabbedPrefab.transform.parent = holdPos;
         }
