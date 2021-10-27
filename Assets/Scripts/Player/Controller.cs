@@ -632,7 +632,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
+    public void SpawnVoxelRbAtPos(Vector3 position, byte blockID) // Might be bugged for MP drop?
     {
         GameObject ob = Instantiate(World.Instance.voxelPrefabs[blockID]);
         //SetAllObChildrenMeshEnabled(ob, true);
