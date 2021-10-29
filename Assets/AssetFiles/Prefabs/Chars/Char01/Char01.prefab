@@ -457,6 +457,7 @@ MonoBehaviour:
   isGrounded: 0
   isMoving: 0
   isSprinting: 0
+  isDriving: 0
   isHolding: 0
   photoMode: 0
   checkIncrement: 0.1
@@ -585,6 +586,7 @@ MonoBehaviour:
   baseWalkSpeed: 5
   baseSprintSpeed: 9
   baseJumpForce: 15
+  isMoving: 0
   isGrounded: 0
   maxJumps: 0
   currentJumps: 0
