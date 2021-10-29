@@ -34,6 +34,7 @@ public class Controller : NetworkBehaviour
     public bool isGrounded;
     public bool isMoving = false;
     public bool isSprinting;
+    public bool isDriving = false;
     [SyncVar] public bool isHolding = false;
     public bool photoMode = false;
     public float checkIncrement = 0.1f;
@@ -93,6 +94,8 @@ public class Controller : NetworkBehaviour
     PlayerInput playerInput;
     InputHandler inputHandler;
     Health health;
+    Gun gun;
+    GameObject vehicle;
     CanvasGroup backgroundMaskCanvasGroup;
     GameMenu gameMenuComponent;
     BoxCollider playerCameraBoxCollider;
@@ -141,9 +144,10 @@ public class Controller : NetworkBehaviour
         physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
         animator = modelPrefab.GetComponent<Animator>();
-        inputHandler = gameObject.GetComponent<InputHandler>();
-        health = gameObject.GetComponent<Health>();
-        voxelCollider = gameObject.GetComponent<PlayerVoxelCollider>();
+        inputHandler = GetComponent<InputHandler>();
+        health = GetComponent<Health>();
+        gun = GetComponent<Gun>();
+        voxelCollider = GetComponent<PlayerVoxelCollider>();
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
         gameMenuComponent = gameMenu.GetComponent<GameMenu>();
         playerCameraBoxCollider = playerCamera.GetComponent<BoxCollider>();
@@ -392,10 +396,9 @@ public class Controller : NetworkBehaviour
         if (inputHandler.optionsPressed)
             gameMenuComponent.OnOptions();
 
-        CheckAltMode();
+        ReshapeCollider();
 
         isGrounded = CheckGroundedCollider();
-        //isGrounded = voxelCollider.isGrounded;
 
         // if not in photo mode
         if (!photoMode)
@@ -878,13 +881,26 @@ public class Controller : NetworkBehaviour
             }
             else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal
             {
-                // spawn summonOb at shootPos
+                // spawn vehicleOb at shootPos
                 if (Settings.OnlinePlay)
                     CmdSpawnUndefinedPrefab(0, shootPos.position);
                 else
                     SpawnUndefinedPrefab(0, shootPos.position);
 
                 TakeFromCurrentSlot(1);
+            }
+            else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
+            {
+                vehicle = gun.target.gameObject;
+                vehicle.transform.parent = transform;
+                modelPrefab.SetActive(false);
+                isDriving = true;
+            }
+            else if (isDriving)
+            {
+                vehicle.transform.parent = null;
+                modelPrefab.SetActive(true);
+                isDriving = false;
             }
             //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
             //{
@@ -934,7 +950,7 @@ public class Controller : NetworkBehaviour
         switch (option)
         {
             case 0:
-                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.summonOb;
+                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.vehicleOb;
                 break;
         }
         GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
@@ -1068,7 +1084,7 @@ public class Controller : NetworkBehaviour
         placePos.gameObject.SetActive(false);
     }
 
-    public void CheckAltMode()
+    public void ReshapeCollider()
     {
         if (charType == 0)
         {
@@ -1149,6 +1165,12 @@ public class Controller : NetworkBehaviour
 
         // cast a ray starting from within the capsule collider down to just outside the capsule collider.
         rayLength = cc.height * 0.25f + 0.01f;
+
+        if (isDriving && vehicle.GetComponent<BoxCollider>() != null)
+        {
+            rayLength = Mathf.Abs(transform.position.y - vehicle.transform.position.y);
+        }
+
         sphereCastRadius = cc.radius * 0.5f;
 
         switch (charType)

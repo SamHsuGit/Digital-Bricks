@@ -1,14 +1,14 @@
-0 FILE summon.io
+0 FILE vehicle.io
 0 Untitled Model
-0 Name:  summon
-0 Author:  
+0 Name:  vehicle
+0 Author:  Samuel HSU
 0 CustomBrick
 0 NumOfBricks:  35
-1 16 0.000000 0.000000 10.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 summon-submodel.ldr
+1 16 0.000000 0.000000 10.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 vehicle-submodel.ldr
 0 NOFILE
-0 FILE summon-submodel.ldr
-0 summon-submodel.ldr
-0 Name:  summon-submodel.ldr
+0 FILE vehicle-submodel.ldr
+0 vehicle-submodel.ldr
+0 Name:  vehicle-submodel.ldr
 0 Author:  
 0 CustomBrick
 0 NumOfBricks:  35

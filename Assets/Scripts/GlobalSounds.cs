@@ -16,45 +16,52 @@ public class GlobalSounds : MonoBehaviour
     private void Awake()
     {
         lighting = globalLighting.GetComponent<Lighting>();
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (lighting.timeOfDay >= 6 && lighting.timeOfDay <= 18)
+        if (SettingsStatic.LoadedSettings.seed == 3)
         {
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", 1, 0.0001f));
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", fadeTime, 0.125f));
+            if (lighting.timeOfDay >= 6 && lighting.timeOfDay <= 18)
+            {
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", 1, 0.0001f));
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", fadeTime, 0.125f));
+            }
+            else
+            {
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", 1, 0.0001f));
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", fadeTime, 0.125f));
+            }
         }
-        else
+        else // if not on earth, no ambient sounds
         {
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", 1, 0.0001f));
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", fadeTime, 0.125f));
+            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", 0.0001f, 0.0001f));
+            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", 0.0001f, 0.0001f));
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        previousDayTime = dayTime;
-
-        if (lighting.timeOfDay >= 6 && lighting.timeOfDay <= 18)
-            dayTime = true;
-        else if (lighting.timeOfDay >= 0 && lighting.timeOfDay < 6)
-            dayTime = false;
-        else if (lighting.timeOfDay > 18 && lighting.timeOfDay <= 24)
-            dayTime = false;
-
-        if (dayTime && dayTime != previousDayTime)
+        if (SettingsStatic.LoadedSettings.seed == 3)
         {
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", fadeTime, 0.0001f));
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", fadeTime, 0.125f));
+            previousDayTime = dayTime;
 
-        }
-        else if (!dayTime && dayTime != previousDayTime)
-        {
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", fadeTime, 0.0001f));
-            StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", fadeTime, 0.125f));
+            if (lighting.timeOfDay >= 6 && lighting.timeOfDay <= 18)
+                dayTime = true;
+            else if (lighting.timeOfDay >= 0 && lighting.timeOfDay < 6)
+                dayTime = false;
+            else if (lighting.timeOfDay > 18 && lighting.timeOfDay <= 24)
+                dayTime = false;
+
+            if (dayTime && dayTime != previousDayTime)
+            {
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", fadeTime, 0.0001f));
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", fadeTime, 0.125f));
+
+            }
+            else if (!dayTime && dayTime != previousDayTime)
+            {
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "birdsongVolume", fadeTime, 0.0001f));
+                StartCoroutine(FadeMixerGroup.StartFade(masterMix, "cricketsVolume", fadeTime, 0.125f));
+            }
         }
     }
 }

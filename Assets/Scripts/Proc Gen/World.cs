@@ -206,7 +206,7 @@ public class World : MonoBehaviour
         if (Settings.OnlinePlay)
         {
             customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.baseOb);
-            customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.summonOb);
+            customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.vehicleOb);
         }
 
         LoadWorld();

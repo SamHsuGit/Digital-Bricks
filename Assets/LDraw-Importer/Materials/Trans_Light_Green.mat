@@ -9,8 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Trans_Light_Green
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ShaderKeywords: _DETAIL_MULX2 _EMISSION _NORMALMAP _OCCLUSIONMAP _SPECULAR_SETUP
-  m_LightmapFlags: 2
+  m_ShaderKeywords: _DETAIL_MULX2 _NORMALMAP _OCCLUSIONMAP _SPECULAR_SETUP
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
@@ -107,7 +107,7 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.49019608, g: 0.7607843, b: 0.5686275, a: 0.69803923}
+    - _BaseColor: {r: 0.490196, g: 0.7607843, b: 0.5686274, a: 0.5019608}
     - _Color: {r: 0.49019608, g: 0.7607843, b: 0.5686275, a: 0.5}
     - _EmissionColor: {r: 0.050980393, g: 0.13529412, b: 0.07058824, a: 1}
     - _SpecColor: {r: 0.21960784, g: 0.21960784, b: 0.21960784, a: 1}
