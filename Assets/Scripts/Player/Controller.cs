@@ -968,8 +968,7 @@ public class Controller : NetworkBehaviour
             //if (ob.GetComponent<NetworkTransform>() == null) // Network transform base error?
             //    ob.AddComponent<NetworkTransform>();
 
-            if (!customNetworkManager.spawnPrefabs.Contains(ob))
-                customNetworkManager.spawnPrefabs.Add(ob); // if not already regisetered, register network prefab
+            RpcRegisterPrefab(ob); // if not already regisetered, all clients register network prefab
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 
@@ -981,6 +980,13 @@ public class Controller : NetworkBehaviour
         rb.mass = rb.mass + 2 * mass * count;
         if (Settings.OnlinePlay)
             customNetworkManager.SpawnNetworkOb(ob);
+    }
+
+    [ClientRpc]
+    void RpcRegisterPrefab(GameObject ob)
+    {
+        if (!customNetworkManager.spawnPrefabs.Contains(ob))
+            customNetworkManager.spawnPrefabs.Add(ob);
     }
 
     void RemoveVoxel(Vector3 pos)
