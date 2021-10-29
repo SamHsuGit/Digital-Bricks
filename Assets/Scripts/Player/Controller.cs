@@ -967,6 +967,9 @@ public class Controller : NetworkBehaviour
                 ob.AddComponent<NetworkIdentity>();
             //if (ob.GetComponent<NetworkTransform>() == null) // Network transform base error?
             //    ob.AddComponent<NetworkTransform>();
+
+            if (!customNetworkManager.spawnPrefabs.Contains(ob))
+                customNetworkManager.spawnPrefabs.Add(ob); // if not already regisetered, register network prefab
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 

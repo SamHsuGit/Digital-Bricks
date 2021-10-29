@@ -68,6 +68,8 @@ public class CustomNetworkManager : NetworkManager
     public void SpawnNetworkOb(GameObject ob)
     {
         NetworkServer.Spawn(ob);
+
+        
     }
 
     public override void OnClientConnect(NetworkConnection conn)
