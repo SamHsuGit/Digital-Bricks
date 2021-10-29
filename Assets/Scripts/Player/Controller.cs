@@ -879,15 +879,16 @@ public class Controller : NetworkBehaviour
                 eat.Play();
                 RemoveVoxel(pos);
             }
-            else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal
+            else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn vehicle
             {
-                // spawn vehicleOb at shootPos
-                if (Settings.OnlinePlay)
-                    CmdSpawnUndefinedPrefab(0, shootPos.position);
-                else
-                    SpawnUndefinedPrefab(0, shootPos.position);
+                // WIP
+                //// spawn vehicleOb at shootPos
+                //if (Settings.OnlinePlay)
+                //    CmdSpawnUndefinedPrefab(0, shootPos.position);
+                //else
+                //    SpawnUndefinedPrefab(0, shootPos.position);
 
-                TakeFromCurrentSlot(1);
+                //TakeFromCurrentSlot(1);
             }
             else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
             {
@@ -967,8 +968,6 @@ public class Controller : NetworkBehaviour
                 ob.AddComponent<NetworkIdentity>();
             //if (ob.GetComponent<NetworkTransform>() == null) // Network transform base error?
             //    ob.AddComponent<NetworkTransform>();
-
-            RpcRegisterPrefab(ob); // if not already regisetered, all clients register network prefab
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 
@@ -979,14 +978,7 @@ public class Controller : NetworkBehaviour
         ob.GetComponent<Health>().hp = count;
         rb.mass = rb.mass + 2 * mass * count;
         if (Settings.OnlinePlay)
-            customNetworkManager.SpawnNetworkOb(ob);
-    }
-
-    [ClientRpc]
-    void RpcRegisterPrefab(GameObject ob)
-    {
-        if (!customNetworkManager.spawnPrefabs.Contains(ob))
-            customNetworkManager.spawnPrefabs.Add(ob);
+            customNetworkManager.SpawnNetworkOb(ob); // no assetId or sceneId???
     }
 
     void RemoveVoxel(Vector3 pos)
