@@ -18,8 +18,8 @@ public class Controller : NetworkBehaviour
     public List<GameObject> currentWaveEnemies;
 
     [SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
-    [SyncVar(hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
-    [SyncVar(hook = nameof(SetTypeArmor))] public int typeArmor = 0;
+    [SyncVar] public int typeHelmet = 0;
+    [SyncVar] public int typeArmor = 0;
     [SyncVar(hook = nameof(SetName))] public string playerName;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
@@ -184,19 +184,29 @@ public class Controller : NetworkBehaviour
     {
         InputComponents();
 
+        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+        typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+        typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+
+        for (int i = 0; i < helmet.Length; i++)
+            helmet[i].SetActive(false);
+        for (int i = 0; i < armor.Length; i++)
+            armor[i].SetActive(false);
+        helmet[typeHelmet].SetActive(true);
+        armor[typeArmor].SetActive(true);
+
         if (!Settings.OnlinePlay)
         {
+            //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+            //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+            //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
 
-            typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-            typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-            typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-
-            for (int i = 0; i < helmet.Length; i++)
-                helmet[i].SetActive(false);
-            for (int i = 0; i < armor.Length; i++)
-                armor[i].SetActive(false);
-            helmet[typeHelmet].SetActive(true);
-            armor[typeArmor].SetActive(true);
+            //for (int i = 0; i < helmet.Length; i++)
+            //    helmet[i].SetActive(false);
+            //for (int i = 0; i < armor.Length; i++)
+            //    armor[i].SetActive(false);
+            //helmet[typeHelmet].SetActive(true);
+            //armor[typeArmor].SetActive(true);
 
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
@@ -239,9 +249,9 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartServer();
 
-        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-        typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+        //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+        //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+        //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
 
         // SET SERVER VALUES FROM HOST CLIENT
         timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
@@ -690,10 +700,22 @@ public class Controller : NetworkBehaviour
         
         if (Settings.OnlinePlay)
         {
-            if(ob.GetComponent<NetworkIdentity>() == null)
+            if (ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
+            else
+            {
+                NetworkIdentity netID = ob.GetComponent<NetworkIdentity>();
+                if (netID.enabled == false)
+                    netID.enabled = true;
+            }
             if (ob.GetComponent<NetworkTransform>() == null)
                 ob.AddComponent<NetworkTransform>();
+            else
+            {
+                NetworkTransform NetTrans = ob.GetComponent<NetworkTransform>(); // not enabled by default since too many network transforms were slowing down the game
+                if (NetTrans.enabled == false)
+                    NetTrans.enabled = true;
+            }
 
             customNetworkManager.SpawnNetworkOb(ob);
         }

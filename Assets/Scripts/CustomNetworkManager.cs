@@ -175,8 +175,6 @@ public class CustomNetworkManager : NetworkManager
         controller.colorHelmet = message.colorHelmet;
         controller.colorArmor = message.colorArmor;
 
-
-
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);
     }
