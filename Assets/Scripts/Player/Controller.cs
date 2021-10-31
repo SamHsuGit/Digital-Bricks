@@ -184,19 +184,19 @@ public class Controller : NetworkBehaviour
     {
         InputComponents();
 
-        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-        typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-
-        for (int i = 0; i < helmet.Length; i++)
-            helmet[i].SetActive(false);
-        for (int i = 0; i < armor.Length; i++)
-            armor[i].SetActive(false);
-        helmet[typeHelmet].SetActive(true);
-        armor[typeArmor].SetActive(true);
-
         if (!Settings.OnlinePlay)
         {
+            typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+            typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+            typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+
+            for (int i = 0; i < helmet.Length; i++)
+                helmet[i].SetActive(false);
+            for (int i = 0; i < armor.Length; i++)
+                armor[i].SetActive(false);
+            helmet[typeHelmet].SetActive(true);
+            armor[typeArmor].SetActive(true);
+
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
             colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
@@ -254,10 +254,6 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartClient();
 
-        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-        typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-
         // SET CLIENT SYNCVAR FROM SERVER
         SetTime(timeOfDay, timeOfDay);
 
@@ -285,6 +281,8 @@ public class Controller : NetworkBehaviour
         SetName(playerName, playerName);
 
         // set this object's color from saved settings
+        SetTypeHelmet(typeHelmet, typeHelmet);
+        SetTypeArmor(typeArmor, typeArmor);
         SetColorTorso(colorTorso, colorTorso);
         SetColorArmL(colorArmL, colorArmL);
         SetColorArmR(colorArmR, colorArmR);
