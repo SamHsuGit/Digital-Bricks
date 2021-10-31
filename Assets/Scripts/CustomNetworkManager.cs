@@ -175,6 +175,14 @@ public class CustomNetworkManager : NetworkManager
         controller.colorHelmet = message.colorHelmet;
         controller.colorArmor = message.colorArmor;
 
+        // Set the correct helmet and armor models on server
+        for (int i = 0; i < controller.helmet.Length; i++)
+            controller.helmet[i].SetActive(false);
+        for (int i = 0; i < controller.armor.Length; i++)
+            controller.armor[i].SetActive(false);
+        controller.helmet[message.typeHelmet].SetActive(true);
+        controller.armor[message.typeArmor].SetActive(true);
+
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);
     }

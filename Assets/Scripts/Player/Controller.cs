@@ -197,17 +197,6 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-            //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-            //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-
-            //for (int i = 0; i < helmet.Length; i++)
-            //    helmet[i].SetActive(false);
-            //for (int i = 0; i < armor.Length; i++)
-            //    armor[i].SetActive(false);
-            //helmet[typeHelmet].SetActive(true);
-            //armor[typeArmor].SetActive(true);
-
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
             colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
@@ -248,10 +237,6 @@ public class Controller : NetworkBehaviour
     public override void OnStartServer()
     {
         base.OnStartServer();
-
-        //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-        //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
 
         // SET SERVER VALUES FROM HOST CLIENT
         timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
