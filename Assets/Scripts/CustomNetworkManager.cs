@@ -165,8 +165,8 @@ public class CustomNetworkManager : NetworkManager
         // Apply data from the message however appropriate for your game
         // Typically a Player would be a component you write with syncvars or properties
         controller.playerName = message.playerName;
-        //controller.typeHelmet = message.typeHelmet;
-        //controller.typeArmor = message.typeArmor;
+        controller.typeHelmet = message.typeHelmet;
+        controller.typeArmor = message.typeArmor;
         controller.colorTorso = message.colorTorso;
         controller.colorArmL = message.colorArmL;
         controller.colorArmR = message.colorArmR;
@@ -175,15 +175,15 @@ public class CustomNetworkManager : NetworkManager
         controller.colorHelmet = message.colorHelmet;
         controller.colorArmor = message.colorArmor;
 
-        //// hide all helmet and armor models on server
-        //for (int i = 0; i < controller.helmet.Length; i++)
-        //    controller.helmet[i].SetActive(false);
-        //for (int i = 0; i < controller.armor.Length; i++)
-        //    controller.armor[i].SetActive(false);
+        // hide all helmet and armor models on server
+        for (int i = 0; i < controller.helmet.Length; i++)
+            controller.helmet[i].SetActive(false);
+        for (int i = 0; i < controller.armor.Length; i++)
+            controller.armor[i].SetActive(false);
 
-        //// Set the correct helmet and armor models on server
-        //controller.helmet[message.typeHelmet].SetActive(true);
-        //controller.armor[message.typeArmor].SetActive(true);
+        // Set the correct helmet and armor models on server
+        controller.helmet[message.typeHelmet].SetActive(true);
+        controller.armor[message.typeArmor].SetActive(true);
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);
