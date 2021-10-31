@@ -259,10 +259,6 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartClient();
 
-        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-        typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-
         // SET CLIENT SYNCVAR FROM SERVER
         SetTime(timeOfDay, timeOfDay);
 
