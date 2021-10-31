@@ -18,13 +18,13 @@ public class Controller : NetworkBehaviour
     public List<GameObject> currentWaveEnemies;
 
     [SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
-    [SyncVar] public int typeHelmet = 0;
-    [SyncVar] public int typeArmor = 0;
+    [SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
+    [SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
     [SyncVar(hook = nameof(SetName))] public string playerName;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
     [SyncVar] public string version; // all clients can see server syncVar version to check against
-    public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
+    readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
     [SyncVar(hook = nameof(SetColorTorso))] public int colorTorso;
     [SyncVar(hook = nameof(SetColorArmL))] public int colorArmL;
     [SyncVar(hook = nameof(SetColorArmR))] public int colorArmR;

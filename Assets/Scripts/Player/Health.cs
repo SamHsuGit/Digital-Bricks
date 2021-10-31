@@ -27,7 +27,7 @@ public class Health : NetworkBehaviour
     PlayerVoxelCollider voxelCollider;
     GameObject ob;
     List<GameObject> modelPieces;
-    SyncList<GameObject> modelPiecesSyncList = new SyncList<GameObject>();
+    readonly SyncList<GameObject> modelPiecesSyncList = new SyncList<GameObject>();
     MeshRenderer mr;
 
     void Awake()
