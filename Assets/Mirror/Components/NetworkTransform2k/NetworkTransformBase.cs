@@ -32,7 +32,7 @@ namespace Mirror
 
         // Is this a client with authority over this transform?
         // This component could be on the player object or any object that has been assigned authority to this client.
-        bool IsClientWithAuthority => hasAuthority && clientAuthority;
+        protected bool IsClientWithAuthority => hasAuthority && clientAuthority;
 
         // target transform to sync. can be on a child.
         protected abstract Transform targetComponent { get; }
@@ -52,7 +52,7 @@ namespace Mirror
         [Header("Interpolation")]
         public bool interpolatePosition = true;
         public bool interpolateRotation = true;
-        public bool interpolateScale = true;
+        public bool interpolateScale = false;
 
         // "Experimentally I’ve found that the amount of delay that works best
         //  at 2-5% packet loss is 3X the packet send rate"
@@ -63,14 +63,14 @@ namespace Mirror
         //       the vast majority of connections.
         //       (a player with 2000ms latency will have issues no matter what)
         [Header("Buffering")]
-        [Tooltip("Snapshots are buffered for sendInterval * multiplier seconds. At 2-5% packet loss, 3x supposedly works best.")]
-        public int bufferTimeMultiplier = 3;
+        [Tooltip("Snapshots are buffered for sendInterval * multiplier seconds. If your expected client base is to run at non-ideal connection quality (2-5% packet loss), 3x supposedly works best.")]
+        public int bufferTimeMultiplier = 1;
         public float bufferTime => sendInterval * bufferTimeMultiplier;
         [Tooltip("Buffer size limit to avoid ever growing list memory consumption attacks.")]
         public int bufferSizeLimit = 64;
 
         [Tooltip("Start to accelerate interpolation if buffer size is >= threshold. Needs to be larger than bufferTimeMultiplier.")]
-        public int catchupThreshold = 6;
+        public int catchupThreshold = 4;
 
         [Tooltip("Once buffer is larger catchupThreshold, accelerate by multiplier % per excess entry.")]
         [Range(0, 1)] public float catchupMultiplier = 0.10f;
@@ -277,15 +277,15 @@ namespace Mirror
             // DO NOT send nulls if not changed 'since last send' either. we
             // send unreliable and don't know which 'last send' the other end
             // received successfully.
-            // 
+            //
             // Checks to ensure server only sends snapshots if object is
-            // on server authority(!clientAuthority) mode because on client 
-            // authority mode snapshots are broadcasted right after the authoritative 
+            // on server authority(!clientAuthority) mode because on client
+            // authority mode snapshots are broadcasted right after the authoritative
             // client updates server in the command function(see above), OR,
             // since host does not send anything to update the server, any client
-            // authoritative movement done by the host will have to be broadcasted 
+            // authoritative movement done by the host will have to be broadcasted
             // here by checking IsClientWithAuthority.
-            if (NetworkTime.localTime >= lastServerSendTime + sendInterval && 
+            if (NetworkTime.localTime >= lastServerSendTime + sendInterval &&
                 (!clientAuthority || IsClientWithAuthority))
             {
                 // send snapshot without timestamp.
@@ -471,10 +471,10 @@ namespace Mirror
             // for a buffer multiplier of '3', we usually have at _least_ 3
             // buffered snapshots. often 4-5 even.
             //
-            // catchUpThreshold should be a minimum of bufferTimeMultiplier + 3, 
-            // to prevent clashes with SnapshotInterpolation looking for at least 
-            // 3 old enough buffers, else catch up will be implemented while there 
-            // is not enough old buffers, and will result in jitter. 
+            // catchUpThreshold should be a minimum of bufferTimeMultiplier + 3,
+            // to prevent clashes with SnapshotInterpolation looking for at least
+            // 3 old enough buffers, else catch up will be implemented while there
+            // is not enough old buffers, and will result in jitter.
             // (validated with several real world tests by ninja & imer)
             catchupThreshold = Mathf.Max(bufferTimeMultiplier + 3, catchupThreshold);
 
