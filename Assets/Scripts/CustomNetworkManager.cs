@@ -162,6 +162,11 @@ public class CustomNetworkManager : NetworkManager
 
         Controller controller = playerGameObject.GetComponent<Controller>();
 
+        for (int i = 0; i < controller.helmet.Length; i++)
+            controller.helmet[i].SetActive(false);
+        for (int i = 0; i < controller.armor.Length; i++)
+            controller.armor[i].SetActive(false);
+
         // Apply data from the message however appropriate for your game
         // Typically a Player would be a component you write with syncvars or properties
         controller.playerName = message.playerName;
