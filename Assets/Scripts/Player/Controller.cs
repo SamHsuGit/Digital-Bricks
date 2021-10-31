@@ -254,6 +254,14 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartClient();
 
+        if (isClientOnly)
+        {
+            for (int i = 0; i < helmet.Length; i++)
+                helmet[i].SetActive(false);
+            for (int i = 0; i < armor.Length; i++)
+                armor[i].SetActive(false);
+        }
+
         //CmdUpdateHelmetArmor(typeHelmet, typeArmor);
 
         // SET CLIENT SYNCVAR FROM SERVER
