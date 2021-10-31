@@ -254,6 +254,8 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartClient();
 
+        CmdUpdateHelmetArmor(typeHelmet, typeArmor);
+
         // SET CLIENT SYNCVAR FROM SERVER
         SetTime(timeOfDay, timeOfDay);
 
@@ -274,6 +276,25 @@ public class Controller : NetworkBehaviour
         }
 
         SetPlayerAttributes();
+    }
+
+    [Command]
+    void CmdUpdateHelmetArmor(int _typeHelmet, int _typeArmor)
+    {
+        typeHelmet = _typeHelmet;
+        typeArmor = _typeArmor;
+        RpcUpdateHelmetArmor();
+    }
+
+    [ClientRpc]
+    void RpcUpdateHelmetArmor()
+    {
+        for (int i = 0; i < helmet.Length; i++)
+            helmet[i].SetActive(false);
+        for (int i = 0; i < armor.Length; i++)
+            armor[i].SetActive(false);
+        helmet[typeHelmet].SetActive(true);
+        armor[typeArmor].SetActive(true);
     }
 
     public void SetPlayerAttributes()
