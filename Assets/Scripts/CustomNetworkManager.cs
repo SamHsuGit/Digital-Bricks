@@ -5,12 +5,16 @@ using UnityEngine.SceneManagement;
 public struct ClientToServerMessage : NetworkMessage
 {
     public string playerName;
-    public CharType charType;
+    public CharType typeChar;
+    public int typeHelmet;
+    public int typeArmor;
     public int colorTorso;
     public int colorArmL;
     public int colorArmR;
     public int colorLegL;
     public int colorLegR;
+    public int colorHelmet;
+    public int colorArmor;
 }
 
 // https://mirror-networking.gitbook.io/docs/guides/communications/network-messages
@@ -68,8 +72,6 @@ public class CustomNetworkManager : NetworkManager
     public void SpawnNetworkOb(GameObject ob)
     {
         NetworkServer.Spawn(ob);
-
-        
     }
 
     public override void OnClientConnect(NetworkConnection conn)
@@ -81,19 +83,23 @@ public class CustomNetworkManager : NetworkManager
 
         ClientToServerMessage clientMessage;
 
-        switch (SettingsStatic.LoadedSettings.charType)
+        switch (SettingsStatic.LoadedSettings.playerTypeChar)
         {
             case 0:
                 // you can send the message here, or whatever else you want
                 clientMessage = new ClientToServerMessage
                 {
                     playerName = SettingsStatic.LoadedSettings.playerName,
-                    charType = CharType.BrickFormer,
+                    typeChar = CharType.BrickFormer,
+                    typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet,
+                    typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor,
                     colorTorso = SettingsStatic.LoadedSettings.playerColorTorso,
                     colorArmL = SettingsStatic.LoadedSettings.playerColorArmL,
                     colorArmR = SettingsStatic.LoadedSettings.playerColorArmR,
                     colorLegL = SettingsStatic.LoadedSettings.playerColorLegL,
-                    colorLegR = SettingsStatic.LoadedSettings.playerColorLegR
+                    colorLegR = SettingsStatic.LoadedSettings.playerColorLegR,
+                    colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet,
+                    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor
                 };
                 conn.Send(clientMessage);
                 break;
@@ -102,12 +108,16 @@ public class CustomNetworkManager : NetworkManager
                 clientMessage = new ClientToServerMessage
                 {
                     playerName = SettingsStatic.LoadedSettings.playerName,
-                    charType = CharType.Minifig,
+                    typeChar = CharType.Minifig,
+                    typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet,
+                    typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor,
                     colorTorso = SettingsStatic.LoadedSettings.playerColorTorso,
                     colorArmL = SettingsStatic.LoadedSettings.playerColorArmL,
                     colorArmR = SettingsStatic.LoadedSettings.playerColorArmR,
                     colorLegL = SettingsStatic.LoadedSettings.playerColorLegL,
-                    colorLegR = SettingsStatic.LoadedSettings.playerColorLegR
+                    colorLegR = SettingsStatic.LoadedSettings.playerColorLegR,
+                    colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet,
+                    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor
                 };
                 conn.Send(clientMessage);
                 break;
@@ -136,7 +146,7 @@ public class CustomNetworkManager : NetworkManager
         // Manager but you can use different prefabs per race for example
         Transform startPos = GetStartPosition();
 
-        switch (message.charType)
+        switch (message.typeChar)
         {
             case CharType.BrickFormer:
                 {
@@ -150,14 +160,20 @@ public class CustomNetworkManager : NetworkManager
                 }
         }
 
+        Controller controller = playerGameObject.GetComponent<Controller>();
+
         // Apply data from the message however appropriate for your game
         // Typically a Player would be a component you write with syncvars or properties
-        playerGameObject.GetComponent<Controller>().playerName = message.playerName;
-        playerGameObject.GetComponent<Controller>().colorTorso = message.colorTorso;
-        playerGameObject.GetComponent<Controller>().colorArmL = message.colorArmL;
-        playerGameObject.GetComponent<Controller>().colorArmR = message.colorArmR;
-        playerGameObject.GetComponent<Controller>().colorLegL = message.colorLegL;
-        playerGameObject.GetComponent<Controller>().colorLegR = message.colorLegR;
+        controller.playerName = message.playerName;
+        controller.typeHelmet = message.typeHelmet;
+        controller.typeArmor = message.typeArmor;
+        controller.colorTorso = message.colorTorso;
+        controller.colorArmL = message.colorArmL;
+        controller.colorArmR = message.colorArmR;
+        controller.colorLegL = message.colorLegL;
+        controller.colorLegR = message.colorLegR;
+        controller.colorHelmet = message.colorHelmet;
+        controller.colorArmor = message.colorArmor;
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);

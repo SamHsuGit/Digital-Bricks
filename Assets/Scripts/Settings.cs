@@ -37,13 +37,17 @@ public static class SettingsStatic
         settings.fullscreen = true;
         settings.seed = 0;
         settings.timeOfDay = 6.01f;
-        settings.charType = 1;
         settings.playerName = "PlayerName";
+        settings.playerTypeChar = 1;
+        settings.playerTypeHelmet = 0;
+        settings.playerTypeArmor = 0;
         settings.playerColorTorso = 32;
         settings.playerColorArmL = 32;
         settings.playerColorArmR = 32;
         settings.playerColorLegL = 32;
         settings.playerColorLegR = 32;
+        settings.playerColorHelmet = 32;
+        settings.playerColorArmor = 32;
 
         if (File.Exists(Application.dataPath + "/settings.cfg"))
         {
@@ -86,13 +90,17 @@ public class Settings
     public float timeOfDay;
 
     [Header("Player Customization")]
-    public int charType;
     public string playerName;
+    public int playerTypeChar;
+    public int playerTypeHelmet;
+    public int playerTypeArmor;
     public int playerColorTorso;
     public int playerColorArmL;
     public int playerColorArmR;
     public int playerColorLegL;
     public int playerColorLegR;
+    public int playerColorHelmet;
+    public int playerColorArmor;
 
     public static bool WorldLoaded
     {
@@ -186,6 +194,8 @@ public static class LDrawColors
             colorLib[SettingsStatic.LoadedSettings.playerColorArmR],
             colorLib[SettingsStatic.LoadedSettings.playerColorLegL],
             colorLib[SettingsStatic.LoadedSettings.playerColorLegR],
+            colorLib[SettingsStatic.LoadedSettings.playerColorHelmet],
+            colorLib[SettingsStatic.LoadedSettings.playerColorArmor]
         };
     }
 

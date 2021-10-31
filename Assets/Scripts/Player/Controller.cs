@@ -1,23 +1,25 @@
 using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 public class Controller : NetworkBehaviour
 {
     public Player player;
 
-    [Header("Player Stats")]
+    [Header("GameObjectArrays")]
     public GameObject[] Torso;
     public GameObject[] ArmL;
     public GameObject[] ArmR;
     public GameObject[] LegL;
     public GameObject[] LegR;
+    public GameObject[] helmet;
+    public GameObject[] armor;
     public GameObject[] voxels;
     public List<GameObject> currentWaveEnemies;
 
-    [SyncVar(hook = nameof(SetCharType))] public int charType = 0; // 0 = BrickFormer, 1 = Minifig
+    [SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
+    [SyncVar(hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
+    [SyncVar(hook = nameof(SetTypeArmor))] public int typeArmor = 0;
     [SyncVar(hook = nameof(SetName))] public string playerName;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
@@ -28,6 +30,8 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetColorArmR))] public int colorArmR;
     [SyncVar(hook = nameof(SetColorLegL))] public int colorLegL;
     [SyncVar(hook = nameof(SetColorLegR))] public int colorLegR;
+    [SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet;
+    [SyncVar(hook = nameof(SetColorArmor))] public int colorArmor;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -84,7 +88,7 @@ public class Controller : NetworkBehaviour
     private Transform shootPos;
     private Transform placePos;
     private Transform holdPos;
-    private GameObject[][] playerLimbs = new GameObject[5][];
+    private GameObject[][] playerLimbs = new GameObject[7][];
     GameObject grabbedPrefab;
 
     //Components
@@ -108,7 +112,6 @@ public class Controller : NetworkBehaviour
     GameObject predefinedPrefabToSpawn;
 
     //Initializers & Constants
-    //float clutchPower = 8000f;
     float colliderHeight;
     float colliderRadius;
     float sphereCastRadius;
@@ -117,7 +120,6 @@ public class Controller : NetworkBehaviour
     float maxLookVelocity = 5f;
     float maxCamAngle = 90f;
     float minCamAngle = -90f;
-    //bool wasGrounded = true;
     bool wasDaytime = true;
     bool daytime = true;
 
@@ -125,17 +127,13 @@ public class Controller : NetworkBehaviour
     {
         NamePlayer();
 
-        for (int i = 0; i < voxels.Length; i++)
-        {
-            //voxels[i].SetActive(true);
-            //SetAllObChildrenMeshEnabled(voxels[i], false); // set visibility of all voxels to false as default
-        }
-
         playerLimbs[0] = Torso;
         playerLimbs[1] = ArmL;
         playerLimbs[2] = ArmR;
         playerLimbs[3] = LegL;
         playerLimbs[4] = LegR;
+        playerLimbs[5] = helmet;
+        playerLimbs[6] = armor;
 
         isHolding = false;
         ToggleLights(isHolding);
@@ -168,8 +166,6 @@ public class Controller : NetworkBehaviour
         holdPos = holdPosPrefab.transform;
 
         CinematicBars.SetActive(false);
-
-        //Application.targetFrameRate = 24; // Chose not to stylize by limiting framerate
     }
 
     void NamePlayer()
@@ -190,12 +186,26 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
+
+            typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+            typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+            typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+
+            for (int i = 0; i < helmet.Length; i++)
+                helmet[i].SetActive(false);
+            for (int i = 0; i < armor.Length; i++)
+                armor[i].SetActive(false);
+            helmet[typeHelmet].SetActive(true);
+            armor[typeArmor].SetActive(true);
+
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
             colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
             colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
             colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
             colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
+            colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
+            colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
             SetPlayerAttributes();
         }
     }
@@ -228,6 +238,10 @@ public class Controller : NetworkBehaviour
     public override void OnStartServer()
     {
         base.OnStartServer();
+
+        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+        typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+        typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
 
         // SET SERVER VALUES FROM HOST CLIENT
         timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
@@ -277,39 +291,66 @@ public class Controller : NetworkBehaviour
         SetColorArmR(colorArmR, colorArmR);
         SetColorLegL(colorLegL, colorLegL);
         SetColorLegR(colorLegR, colorLegR);
+        SetColorHelmet(colorHelmet, colorHelmet);
+        SetColorArmor(colorArmor, colorArmor);
     }
 
-    public void SetCharType(int oldCharType, int newCharType)
+    public void SetTypeChar(int oldValue, int newValue)
     {
-        charType = newCharType;
+        typeChar = newValue;
     }
 
-    public void SetColorTorso(int oldColor, int newColor) // update the player visuals using the SyncVars pushed from the server to clients
+    public void SetTypeHelmet(int oldValue, int newValue)
     {
-        SetColor(0, newColor);
+        typeHelmet = newValue;
+        helmet[typeHelmet].SetActive(true);
     }
 
-    public void SetColorArmL(int oldColor, int newColor)
+    public void SetTypeArmor(int oldValue, int newValue)
     {
-        SetColor(1, newColor);
-    }
-    public void SetColorArmR(int oldColor, int newColor)
-    {
-        SetColor(2, newColor);
+        typeArmor = newValue;
+        armor[typeArmor].SetActive(true);
     }
 
-    public void SetColorLegL(int oldColor, int newColor)
+    public void SetColorTorso(int oldValue, int newValue) // update the player visuals using the SyncVars pushed from the server to clients
     {
-        SetColor(3, newColor);
+        SetColor(0, newValue);
     }
 
-    public void SetColorLegR(int oldColor, int newColor)
+    public void SetColorArmL(int oldValue, int newValue)
     {
-        SetColor(4, newColor);
+        SetColor(1, newValue);
+    }
+    public void SetColorArmR(int oldValue, int newValue)
+    {
+        SetColor(2, newValue);
+    }
+
+    public void SetColorLegL(int oldValue, int newValue)
+    {
+        SetColor(3, newValue);
+    }
+
+    public void SetColorLegR(int oldValue, int newValue)
+    {
+        SetColor(4, newValue);
+    }
+
+    public void SetColorHelmet(int oldValue, int newValue)
+    {
+        SetColor(5, newValue);
+    }
+
+    public void SetColorArmor(int oldValue, int newValue)
+    {
+        SetColor(6, newValue);
     }
 
     public void SetColor(int index, int newColor)
     {
+        if (index == 5 && typeHelmet == 0) // if no helmet, do not color head
+            return;
+
         for (int j = 0; j < playerLimbs[index].Length; j++)
             playerLimbs[index][j].GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor);
     }
@@ -405,7 +446,7 @@ public class Controller : NetworkBehaviour
         {
             playerCameraBoxCollider.enabled = false;
             playerCameraVoxelCollider.enabled = false;
-            if (charType == 1)
+            if (typeChar == 1)
             {
                 charController.enabled = false;
                 playerCamera.transform.localPosition = Vector3.zero; // reset camera to FPS view
@@ -586,9 +627,7 @@ public class Controller : NetworkBehaviour
 
             holdingGrab = false;
             reticle.SetActive(true);
-            //if (Settings.OnlinePlay)
-            //    CmdUpdateShowGrabObject(holding, blockID);
-            //else
+
             UpdateShowGrabObject(holdingGrab, blockID);
         }
     }
@@ -636,7 +675,6 @@ public class Controller : NetworkBehaviour
     public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
     {
         GameObject ob = Instantiate(World.Instance.voxelPrefabs[blockID]);
-        //SetAllObChildrenMeshEnabled(ob, true);
 
         ob.gameObject.SetActive(true);
         ob.transform.position = position;
@@ -656,7 +694,7 @@ public class Controller : NetworkBehaviour
                 ob.AddComponent<NetworkIdentity>();
             if (ob.GetComponent<NetworkTransform>() == null)
                 ob.AddComponent<NetworkTransform>();
-            //NetworkServer.Spawn(ob);
+
             customNetworkManager.SpawnNetworkOb(ob);
         }
 
@@ -673,7 +711,7 @@ public class Controller : NetworkBehaviour
             if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
                 return;
             holdingGrab = true;
-            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
+
             PickupBrick(removePos.position);
             reticle.SetActive(false);
         }
@@ -681,16 +719,14 @@ public class Controller : NetworkBehaviour
         {
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
             holdingGrab = true;
-            //holdPosPrefabNetworkPlaceholder = voxels[blockID];
+
             TakeFromCurrentSlot(1);
             reticle.SetActive(false);
         }
-        //else
         if (Settings.OnlinePlay)
             CmdUpdateGrabObject(holdingGrab, blockID);
         else
             UpdateShowGrabObject(holdingGrab, blockID);
-        //Debug.Log(blockID);
     }
 
     [Command]
@@ -707,8 +743,6 @@ public class Controller : NetworkBehaviour
 
     void UpdateShowGrabObject(bool holding, byte blockID)
     {
-        //SetAllObChildrenMeshEnabled(voxels[blockID], holding);
-
         if (holding)
         {
             grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
@@ -726,22 +760,6 @@ public class Controller : NetworkBehaviour
         else
             Destroy(grabbedPrefab);
     }
-
-    //void SetAllObChildrenMeshEnabled(GameObject ob, bool enabled) // Disabled as we'd prefer to sync across network by spawning in/out objects instead of turning visibility on/off
-    //{
-    //    if (ob.GetComponent<BoxCollider>() != null)
-    //        ob.GetComponent<BoxCollider>().enabled = enabled;
-
-    //    for (int i = 0; i < ob.transform.childCount; i++)
-    //    {
-    //        if (ob.transform.GetChild(i).GetComponent<MeshRenderer>() != null)
-    //        {
-    //            ob.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = enabled;
-    //            SetAllObChildrenMeshEnabled(ob.transform.GetChild(i).gameObject, enabled);
-    //        }
-    //        ob.transform.GetChild(i).gameObject.SetActive(enabled);
-    //    }
-    //}
 
     public void HoldingGrab()
     {
@@ -864,7 +882,7 @@ public class Controller : NetworkBehaviour
             byte blockID = World.Instance.GetVoxelState(pos).id;
 
             // if charType is mechanical, and block is crystal, and health is not max and the selected slot has a stack
-            if (charType == 0 && blockID == 30 && health.hp < health.hpMax)
+            if (typeChar == 0 && blockID == 30 && health.hp < health.hpMax)
             {
                 // remove qty 1 from stack
                 health.RequestEditSelfHealth(1);
@@ -872,7 +890,7 @@ public class Controller : NetworkBehaviour
                 RemoveVoxel(pos);
             }
             // else if charType is organic, and block is mushroom, and health is not max and the selected slot has a stack
-            else if (charType == 1 && blockID == 32 && health.hp < health.hpMax)
+            else if (typeChar == 1 && blockID == 32 && health.hp < health.hpMax)
             {
                 // remove qty 1 from stack
                 health.RequestEditSelfHealth(1);
@@ -985,7 +1003,6 @@ public class Controller : NetworkBehaviour
     {
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
         {
-            // edit voxel
             if (Settings.OnlinePlay && hasAuthority)
                 CmdEditVoxel(pos, 0, true);
             else
@@ -1087,7 +1104,7 @@ public class Controller : NetworkBehaviour
 
     public void ReshapeCollider()
     {
-        if (charType == 0)
+        if (typeChar == 0)
         {
             if (!inputHandler.sprint)
             {
@@ -1122,7 +1139,7 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        switch (charType)
+        switch (typeChar)
         {
             case 0:
                 CheckObjectAbove();
@@ -1174,7 +1191,7 @@ public class Controller : NetworkBehaviour
 
         sphereCastRadius = cc.radius * 0.5f;
 
-        switch (charType)
+        switch (typeChar)
         {
             case 0:
                 if (inputHandler.sprint)
@@ -1293,7 +1310,7 @@ public class Controller : NetworkBehaviour
             animator.SetBool("isGrounded", voxelCollider.isGrounded);
         }
 
-        switch (charType)
+        switch (typeChar)
         {
             case 0:
                 animator.SetBool("isSprinting", isSprinting);
