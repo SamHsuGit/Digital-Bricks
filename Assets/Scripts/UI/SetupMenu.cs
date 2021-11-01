@@ -397,7 +397,7 @@ public class SetupMenu : MonoBehaviour
         index++;
         int gameObjectCount = array.Length - 1;
 
-        while (CheckRestrictions())
+        while (CurrentComboIsRestricted())
             index++;
 
         if (index > gameObjectCount)
@@ -415,24 +415,16 @@ public class SetupMenu : MonoBehaviour
         UpdateFromIndex(index);
     }
 
-    bool CheckRestrictions()
-    {
-        bool interference = false;
-        // if selected type is helmet, check currentIndexHelmet against list, if matches, mark armor as none
-        if (selectedType == 1 && currentIndexArmor != 0) // if choosing helmet and armor selected, or if choosing armor and helmet selected
-        {
-            // if current combo is restricted, increment index and re-check restrictions
-            if (CurrentComboIsRestricted())
-                interference = true;
-        }
-        else if (selectedType == 2 && currentIndexHelmet != 0)
-        {
-            // while current combo is restricted, increment index and re-check restrictions
-            if (CurrentComboIsRestricted())
-                interference = true; 
-        }
-        return interference;
-    }
+    //bool CheckRestrictions()
+    //{
+    //    bool interference = false;
+
+    //    if (selectedType == 1 && index != 0) // if choosing helmet and armor selected
+    //        interference = CurrentComboIsRestricted();
+    //    else if (selectedType == 2 && index != 0) // if choosing armor and helmet selected
+    //        interference = CurrentComboIsRestricted(); 
+    //    return interference;
+    //}
 
     bool CurrentComboIsRestricted()
     {
@@ -493,7 +485,7 @@ public class SetupMenu : MonoBehaviour
         index--;
         int gameObjectCount = array.Length - 1;
 
-        while (CheckRestrictions())
+        while (CurrentComboIsRestricted())
             index--;
 
         if (index < 0)
