@@ -1,9 +1,9 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 using System.IO;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class SetupMenu : MonoBehaviour
 {
@@ -30,6 +30,7 @@ public class SetupMenu : MonoBehaviour
 
     int selectedLimb;
     int selectedType;
+    int index;
 
     List<int> helmetTypes;
     List<int> armorTypes;
@@ -368,7 +369,7 @@ public class SetupMenu : MonoBehaviour
     public void Next()
     {
         buttonSound.Play();
-        int index = 0;
+        index = 0;
         GameObject[] array = new GameObject[] { };
 
         switch (selectedType)
@@ -396,7 +397,7 @@ public class SetupMenu : MonoBehaviour
         index++;
         int gameObjectCount = array.Length - 1;
 
-        index = CheckRestrictions(index);
+        CheckRestrictions();
 
         if (index > gameObjectCount)
         {
@@ -413,28 +414,32 @@ public class SetupMenu : MonoBehaviour
         UpdateFromIndex(index);
     }
 
-    int CheckRestrictions(int index)
+    void CheckRestrictions()
     {
         // if selected type is helmet, check currentIndexHelmet against list, if matches, mark armor as none
         if (selectedType == 1 && currentIndexArmor != 0) // if choosing helmet and armor selected, or if choosing armor and helmet selected
         {
-            // while current combo is restricted, toggle next index
-            while (CurrentComboIsRestricted())
-                index++;
+            // if current combo is restricted, increment index and re-check restrictions
+            if (CurrentComboIsRestricted())
+            {
+                while(CurrentComboIsRestricted())
+                    index++;
+            }
         }
         else if (selectedType == 2 && currentIndexHelmet != 0)
         {
-            // while current combo is restricted, toggle next index
-            while (CurrentComboIsRestricted())
-                index++;
+            // while current combo is restricted, increment index and re-check restrictions
+            if (CurrentComboIsRestricted())
+            {
+                while (CurrentComboIsRestricted())
+                    index++;
+            }    
         }
-
-        return index;
     }
 
     bool CurrentComboIsRestricted()
     {
-        Vector2 combo = new Vector2(helmetTypes[currentIndexHelmet], armorTypes[currentIndexArmor]);
+        Vector2 combo = new Vector2(helmetTypes[index], armorTypes[index]);
         bool restricted = false;
         foreach (Vector2 restrictedCombo in restrictedCombos)
         {
@@ -491,7 +496,7 @@ public class SetupMenu : MonoBehaviour
         index--;
         int gameObjectCount = array.Length - 1;
 
-        index = CheckRestrictions(index);
+        CheckRestrictions();
 
         if (index < 0)
         {
