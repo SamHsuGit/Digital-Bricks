@@ -32,6 +32,9 @@ public class SetupMenu : MonoBehaviour
     int selectedLimb;
     int selectedType;
 
+    Dictionary<GameObject, int> armorTypes = new Dictionary<GameObject, int>();
+    List<Vector2> restrictedCombos;
+
     private void Awake()
     {
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
@@ -47,6 +50,19 @@ public class SetupMenu : MonoBehaviour
         charTypeModels[currentIndexChar].SetActive(true);
         helmet[currentIndexHelmet].SetActive(true);
         armor[currentIndexArmor].SetActive(true);
+
+        restrictedCombos = new List<Vector2>()
+        {
+            new Vector2(0,0),
+            new Vector2(1,1),
+            new Vector2(2,2),
+            new Vector2(3,3),
+            new Vector2(3,5),
+            new Vector2(4,4),
+            new Vector2(4,5),
+            new Vector2(6,2),
+            new Vector2(6,3)
+        };
 
         selectedLimb = 0;
 
@@ -142,6 +158,25 @@ public class SetupMenu : MonoBehaviour
 
         index++;
         int gameObjectCount = array.Length - 1;
+
+        // if selected type is helmet, check currentIndexHelmet against list, if matches, mark armor as none
+        if(selectedType == 1) // helmet
+        {
+            if(currentIndexArmor != 0) // if armor was selected
+            {
+                // check armor against list, if restricted, set helmet to 0
+            }
+            else
+            {
+                // check helmet against list, if restricted set armor to 0
+            }
+        }
+        else if (selectedType == 2)
+        {
+
+        }
+        // if selected type is armor, check currentIndexArmor against list, if matches, mark helmet as none
+
         if(index > gameObjectCount)
         {
             index = 0;
@@ -257,6 +292,7 @@ public class SetupMenu : MonoBehaviour
     public void SaveSettings()
     {
         SettingsStatic.LoadedSettings.playerTypeChar = currentIndexChar;
+
         SettingsStatic.LoadedSettings.playerTypeHelmet = currentIndexHelmet;
         SettingsStatic.LoadedSettings.playerTypeArmor = currentIndexArmor;
 
