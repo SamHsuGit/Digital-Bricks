@@ -28,13 +28,17 @@ public class SetupMenu : MonoBehaviour
     public Material[] playerMaterials;
     public AudioSource buttonSound;
 
-    int selectedLimb;
     int selectedType;
-    int index;
+    int selectedLimb;
+    public int index;
 
     List<int> helmetTypes;
     List<int> armorTypes;
     List<Vector2> restrictedCombos;
+
+    GameObject[] array;
+    int gameObjectCount;
+    bool restricted;
 
     private void Awake()
     {
@@ -368,9 +372,19 @@ public class SetupMenu : MonoBehaviour
 
     public void Next()
     {
+        Increment(true);
+    }
+
+    public void Previous()
+    {
+        Increment(false);
+    }
+
+    void Increment(bool increase)
+    {
         buttonSound.Play();
         index = 0;
-        GameObject[] array = new GameObject[] { };
+        array = new GameObject[] { };
 
         switch (selectedType)
         {
@@ -394,30 +408,34 @@ public class SetupMenu : MonoBehaviour
                 }
         }
 
-        index++;
-        int gameObjectCount = array.Length - 1;
-
-        CheckCurrentComboIsRestricted();
-
-        if (index > gameObjectCount)
+        if(selectedType != 0) // if changing helmet or armor types
         {
-            index = 0;
-            array[gameObjectCount].SetActive(false);
-            array[index].SetActive(true);
-        }
-        else
-        {
-            array[index - 1].SetActive(false);
-            array[index].SetActive(true);
+            gameObjectCount = array.Length - 1;
+            while(restricted)
+                CheckCurrentComboIsRestricted(increase);
+            UpdateIncrementVisuals(increase); // if not restricted update visuals to show valid combination
         }
 
         UpdateFromIndex(index);
     }
 
-    void CheckCurrentComboIsRestricted()
+    bool CheckCurrentComboIsRestricted(bool increase)
     {
+        if (increase)
+        {
+            index++;
+            if (index > gameObjectCount)
+                index = 0;
+        }
+        else
+        {
+            index--;
+            if (index < 0)
+                index = gameObjectCount;
+        }
+
         Vector2 combo = new Vector2(helmetTypes[index], armorTypes[index]);
-        bool restricted = false;
+        restricted = false;
         foreach (Vector2 restrictedCombo in restrictedCombos)
         {
             if (combo.x == restrictedCombo.x && combo.y == restrictedCombo.y)
@@ -425,8 +443,39 @@ public class SetupMenu : MonoBehaviour
         }
         if (restricted)
         {
-            index++;
-            CheckCurrentComboIsRestricted(); // recursively loop until not not restricted
+            Debug.Log("Interference");
+            //CheckCurrentComboIsRestricted(increase); // recursively loop until not not restricted
+        }
+        return restricted;
+    }
+
+    void UpdateIncrementVisuals(bool increase) // show visuals based on current index and whether increasing or not
+    {
+        if (increase)
+        {
+            if (index > gameObjectCount)
+            {
+                array[gameObjectCount].SetActive(false);
+                array[index].SetActive(true);
+            }
+            else
+            {
+                array[index - 1].SetActive(false);
+                array[index].SetActive(true);
+            }
+        }
+        else
+        {
+            if (index < 0)
+            {
+                array[0].SetActive(false);
+                array[index].SetActive(true);
+            }
+            else
+            {
+                array[index + 1].SetActive(false);
+                array[index].SetActive(true);
+            }
         }
     }
 
@@ -444,54 +493,6 @@ public class SetupMenu : MonoBehaviour
                 currentIndexArmor = _index;
                 break;
         }
-    }
-
-    public void Previous()
-    {
-        buttonSound.Play();
-        int index = 0;
-        GameObject[] array = new GameObject[] { };
-
-        switch (selectedType)
-        {
-            case 0: // charType
-                {
-                    index = currentIndexChar;
-                    array = charTypeModels;
-                    break;
-                }
-            case 1: // helmetType
-                {
-                    index = currentIndexHelmet;
-                    array = helmet;
-                    break;
-                }
-            case 2: // armorType
-                {
-                    index = currentIndexArmor;
-                    array = armor;
-                    break;
-                }
-        }
-
-        index--;
-        int gameObjectCount = array.Length - 1;
-
-        CheckCurrentComboIsRestricted();
-
-        if (index < 0)
-        {
-            index = gameObjectCount;
-            array[0].SetActive(false);
-            array[index].SetActive(true);
-        }
-        else
-        {
-            array[index + 1].SetActive(false);
-            array[index].SetActive(true);
-        }
-
-        UpdateFromIndex(index);
     }
 
     public void Tutorial()
