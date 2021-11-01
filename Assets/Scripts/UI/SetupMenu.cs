@@ -411,15 +411,29 @@ public class SetupMenu : MonoBehaviour
         if(selectedType != 0) // if changing helmet or armor types
         {
             gameObjectCount = array.Length - 1;
-            while(restricted)
-                CheckCurrentComboIsRestricted(increase);
+            CheckCurrentComboIsRestricted(increase);
             UpdateIncrementVisuals(increase); // if not restricted update visuals to show valid combination
+        }
+        else // increment or decrement charType
+        {
+            if (increase)
+            {
+                index++;
+                if (index > gameObjectCount)
+                    index = 0;
+            }
+            else
+            {
+                index--;
+                if (index < 0)
+                    index = gameObjectCount;
+            }
         }
 
         UpdateFromIndex(index);
     }
 
-    bool CheckCurrentComboIsRestricted(bool increase)
+    void CheckCurrentComboIsRestricted(bool increase)
     {
         if (increase)
         {
@@ -443,10 +457,9 @@ public class SetupMenu : MonoBehaviour
         }
         if (restricted)
         {
-            Debug.Log("Interference");
-            //CheckCurrentComboIsRestricted(increase); // recursively loop until not not restricted
+            Debug.Log(currentIndexHelmet + ", " + currentIndexArmor + " is of restricted type " + combo.x + ", " + combo.y); // show restricted combo
+            CheckCurrentComboIsRestricted(increase); // if restricted, recursively loop to increment or decrement again and re-check if restricted...
         }
-        return restricted;
     }
 
     void UpdateIncrementVisuals(bool increase) // show visuals based on current index and whether increasing or not
