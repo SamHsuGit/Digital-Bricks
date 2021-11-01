@@ -23,7 +23,6 @@ public class SetupMenu : MonoBehaviour
     public TextMeshProUGUI worldRenderText;
 
     public Slider colorSlider;
-    public Slider typeSlider;
     public Dropdown limbSelect;
     public Dropdown typeSelect;
     public Material[] playerMaterials;
@@ -32,7 +31,8 @@ public class SetupMenu : MonoBehaviour
     int selectedLimb;
     int selectedType;
 
-    Dictionary<GameObject, int> armorTypes = new Dictionary<GameObject, int>();
+    List<int> helmetTypes;
+    List<int> armorTypes;
     List<Vector2> restrictedCombos;
 
     private void Awake()
@@ -51,17 +51,251 @@ public class SetupMenu : MonoBehaviour
         helmet[currentIndexHelmet].SetActive(true);
         armor[currentIndexArmor].SetActive(true);
 
+        helmetTypes = new List<int>()
+        {
+            7,
+            3,
+            5,
+            5,
+            5,
+            5,
+            5,
+            2,
+            5,
+            5,
+            5,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            3,
+            2,
+            5,
+            5,
+            0,
+            1,
+            4,
+            3,
+            1,
+            1,
+            3,
+            4,
+            5,
+            5,
+            3
+        };
+
+        armorTypes = new List<int>()
+        {
+            6,
+            2,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0,
+            3,
+            5,
+            5,
+            5,
+            0,
+            2,
+            3,
+            1,
+            3,
+            3,
+            3,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1,
+            3,
+            4,
+            5,
+            3,
+            3,
+            3,
+            5,
+            5,
+            5,
+            3,
+            2,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            5,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            5,
+            1,
+            1,
+            1,
+            3,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            5,
+            1,
+            5,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            3,
+            1,
+            2,
+            1,
+            0,
+            4,
+            1,
+            1,
+            5,
+            5,
+            5,
+            1,
+            1,
+            3,
+            3,
+            5,
+            5,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            5,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            4,
+            2,
+            2,
+            2,
+            1,
+            0,
+            3,
+            4,
+            4,
+            5,
+            0,
+            5,
+            5,
+            2,
+            1,
+            1,
+            1
+        };
+
+        // Matrix of restricted helmet and armor type combinations to prevent players from selecting combos which create interferences
+        // Syntax = Vector2(helmet, armor)
+        // helmet           armor
+        // 0 = all          0 = all
+        // 1 = head         1 = head
+        // 2 = sides        2 = sides
+        // 3 = back         3 = back
+        // 4 = front        4 = front
+        // 5 = backsides    5 = frontback
+        // 6 = none         6 = none
         restrictedCombos = new List<Vector2>()
         {
             new Vector2(0,0),
+            new Vector2(0,1),
+            new Vector2(0,2),
+            new Vector2(0,3),
+            new Vector2(0,4),
+            new Vector2(0,5),
+            new Vector2(1,0),
+            new Vector2(2,0),
+            new Vector2(3,0),
+            new Vector2(4,0),
+            new Vector2(5,0),
             new Vector2(1,1),
             new Vector2(2,2),
             new Vector2(3,3),
             new Vector2(3,5),
             new Vector2(4,4),
             new Vector2(4,5),
-            new Vector2(6,2),
-            new Vector2(6,3)
+            new Vector2(5,2),
+            new Vector2(5,3)
         };
 
         selectedLimb = 0;
@@ -160,22 +394,12 @@ public class SetupMenu : MonoBehaviour
         int gameObjectCount = array.Length - 1;
 
         // if selected type is helmet, check currentIndexHelmet against list, if matches, mark armor as none
-        if(selectedType == 1) // helmet
+        if((selectedType == 1 && currentIndexArmor != 0) || (selectedType == 2 && currentIndexHelmet != 0)) // if choosing helmet and armor selected, or if choosing armor and helmet selected
         {
-            if(currentIndexArmor != 0) // if armor was selected
-            {
-                // check armor against list, if restricted, set helmet to 0
-            }
-            else
-            {
-                // check helmet against list, if restricted set armor to 0
-            }
+            // while current combo is restricted, toggle next index
+            if (CurrentComboIsRestricted())
+                Debug.Log("interference");
         }
-        else if (selectedType == 2)
-        {
-
-        }
-        // if selected type is armor, check currentIndexArmor against list, if matches, mark helmet as none
 
         if(index > gameObjectCount)
         {
@@ -190,6 +414,18 @@ public class SetupMenu : MonoBehaviour
         }
 
         UpdateFromIndex(index);
+    }
+
+    bool CurrentComboIsRestricted()
+    {
+        Vector2 combo = new Vector2(currentIndexHelmet, currentIndexArmor);
+        bool restricted = false;
+        foreach (Vector2 restrictedCombo in restrictedCombos)
+        {
+            if (combo == restrictedCombo)
+                restricted = true;
+        }
+        return restricted;
     }
 
     void UpdateFromIndex(int _index)
