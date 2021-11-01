@@ -53,54 +53,6 @@ public class SetupMenu : MonoBehaviour
 
         helmetTypes = new List<int>()
         {
-            7,
-            3,
-            5,
-            5,
-            5,
-            5,
-            5,
-            2,
-            5,
-            5,
-            5,
-            2,
-            3,
-            3,
-            3,
-            3,
-            3,
-            3,
-            3,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            3,
-            3,
-            2,
-            5,
-            5,
-            0,
-            1,
-            4,
-            3,
-            1,
-            1,
-            3,
-            4,
-            5,
-            5,
-            3
-        };
-
-        armorTypes = new List<int>()
-        {
             6,
             2,
             1,
@@ -265,6 +217,54 @@ public class SetupMenu : MonoBehaviour
             1
         };
 
+        armorTypes = new List<int>()
+        {
+            7,
+            3,
+            5,
+            5,
+            5,
+            5,
+            5,
+            2,
+            5,
+            5,
+            5,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            3,
+            2,
+            5,
+            5,
+            0,
+            1,
+            4,
+            3,
+            1,
+            1,
+            3,
+            4,
+            5,
+            5,
+            3
+        };
+
         // Matrix of restricted helmet and armor type combinations to prevent players from selecting combos which create interferences
         // Syntax = Vector2(helmet, armor)
         // helmet           armor
@@ -277,17 +277,20 @@ public class SetupMenu : MonoBehaviour
         // 6 = none         6 = none
         restrictedCombos = new List<Vector2>()
         {
+            // helmets with all marked can have no armor
             new Vector2(0,0),
             new Vector2(0,1),
             new Vector2(0,2),
             new Vector2(0,3),
             new Vector2(0,4),
             new Vector2(0,5),
+            // armor with all marked can have no helmet
             new Vector2(1,0),
             new Vector2(2,0),
             new Vector2(3,0),
             new Vector2(4,0),
             new Vector2(5,0),
+
             new Vector2(1,1),
             new Vector2(2,2),
             new Vector2(3,3),
@@ -393,15 +396,9 @@ public class SetupMenu : MonoBehaviour
         index++;
         int gameObjectCount = array.Length - 1;
 
-        // if selected type is helmet, check currentIndexHelmet against list, if matches, mark armor as none
-        if((selectedType == 1 && currentIndexArmor != 0) || (selectedType == 2 && currentIndexHelmet != 0)) // if choosing helmet and armor selected, or if choosing armor and helmet selected
-        {
-            // while current combo is restricted, toggle next index
-            if (CurrentComboIsRestricted())
-                Debug.Log("interference");
-        }
+        index = CheckRestrictions(index);
 
-        if(index > gameObjectCount)
+        if (index > gameObjectCount)
         {
             index = 0;
             array[gameObjectCount].SetActive(false);
@@ -416,13 +413,32 @@ public class SetupMenu : MonoBehaviour
         UpdateFromIndex(index);
     }
 
+    int CheckRestrictions(int index)
+    {
+        // if selected type is helmet, check currentIndexHelmet against list, if matches, mark armor as none
+        if (selectedType == 1 && currentIndexArmor != 0) // if choosing helmet and armor selected, or if choosing armor and helmet selected
+        {
+            // while current combo is restricted, toggle next index
+            while (CurrentComboIsRestricted())
+                index++;
+        }
+        else if (selectedType == 2 && currentIndexHelmet != 0)
+        {
+            // while current combo is restricted, toggle next index
+            while (CurrentComboIsRestricted())
+                index++;
+        }
+
+        return index;
+    }
+
     bool CurrentComboIsRestricted()
     {
-        Vector2 combo = new Vector2(currentIndexHelmet, currentIndexArmor);
+        Vector2 combo = new Vector2(helmetTypes[currentIndexHelmet], armorTypes[currentIndexArmor]);
         bool restricted = false;
         foreach (Vector2 restrictedCombo in restrictedCombos)
         {
-            if (combo == restrictedCombo)
+            if (combo.x == restrictedCombo.x && combo.y == restrictedCombo.y)
                 restricted = true;
         }
         return restricted;
@@ -474,7 +490,10 @@ public class SetupMenu : MonoBehaviour
 
         index--;
         int gameObjectCount = array.Length - 1;
-        if(index < 0)
+
+        index = CheckRestrictions(index);
+
+        if (index < 0)
         {
             index = gameObjectCount;
             array[0].SetActive(false);
