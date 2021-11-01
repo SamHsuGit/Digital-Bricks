@@ -408,33 +408,8 @@ public class SetupMenu : MonoBehaviour
                 }
         }
 
-        if(selectedType != 0) // if changing helmet or armor types
-        {
-            gameObjectCount = array.Length - 1;
-            CheckCurrentComboIsRestricted(increase);
-            UpdateIncrementVisuals(increase); // if not restricted update visuals to show valid combination
-        }
-        else // increment or decrement charType
-        {
-            if (increase)
-            {
-                index++;
-                if (index > gameObjectCount)
-                    index = 0;
-            }
-            else
-            {
-                index--;
-                if (index < 0)
-                    index = gameObjectCount;
-            }
-        }
-
-        UpdateFromIndex(index);
-    }
-
-    void CheckCurrentComboIsRestricted(bool increase)
-    {
+        // increment or decrement depending on 'increase' flag
+        gameObjectCount = array.Length - 1;
         if (increase)
         {
             index++;
@@ -448,6 +423,17 @@ public class SetupMenu : MonoBehaviour
                 index = gameObjectCount;
         }
 
+        if (selectedType != 0) // if changing helmet or armor types
+        {
+            CheckCurrentComboIsRestricted(increase);
+            UpdateIncrementVisuals(increase); // if not restricted update visuals to show valid combination
+        }
+
+        UpdateFromIndex(index);
+    }
+
+    void CheckCurrentComboIsRestricted(bool increase)
+    {
         Vector2 combo = new Vector2(helmetTypes[index], armorTypes[index]);
         restricted = false;
         foreach (Vector2 restrictedCombo in restrictedCombos)
@@ -455,10 +441,24 @@ public class SetupMenu : MonoBehaviour
             if (combo.x == restrictedCombo.x && combo.y == restrictedCombo.y)
                 restricted = true;
         }
-        if (restricted)
+        if (restricted) // if restricted, increment or decrement, then recursively loop to  again and re-check if restricted...
         {
-            Debug.Log(currentIndexHelmet + ", " + currentIndexArmor + " is of restricted type " + combo.x + ", " + combo.y); // show restricted combo
-            CheckCurrentComboIsRestricted(increase); // if restricted, recursively loop to increment or decrement again and re-check if restricted...
+            Debug.Log("helmet: " + index + " caused restricted combo <helmet>,<armor>: " + combo.x + ", " + combo.y); // show restricted combo
+
+            if (increase)
+            {
+                index++;
+                if (index > gameObjectCount)
+                    index = 0;
+            }
+            else
+            {
+                index--;
+                if (index < 0)
+                    index = gameObjectCount;
+            }
+            
+            CheckCurrentComboIsRestricted(increase);
         }
     }
 
