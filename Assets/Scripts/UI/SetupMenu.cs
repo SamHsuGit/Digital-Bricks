@@ -339,6 +339,13 @@ public class SetupMenu : MonoBehaviour
     private void Update()
     {
         modelsObjectToSpin.transform.Rotate(new Vector3(0, 1, 0));
+
+        for (int i = 0; i < helmet.Length; i++)
+            helmet[i].SetActive(false);
+        for (int i = 0; i < armor.Length; i++)
+            armor[i].SetActive(false);
+        helmet[currentIndexHelmet].SetActive(true);
+        armor[currentIndexArmor].SetActive(true);
     }
 
     public void SelectLimb()
@@ -373,11 +380,15 @@ public class SetupMenu : MonoBehaviour
     public void Next()
     {
         Increment(true);
+        //Debug.Log("helmet: " + currentIndexHelmet + " is of type: " + helmetTypes[currentIndexHelmet]);
+        //Debug.Log("armor: " + currentIndexArmor + " is of type: " + armorTypes[currentIndexArmor]);
     }
 
     public void Previous()
     {
         Increment(false);
+        //Debug.Log("helmet: " + currentIndexHelmet + " is of type: " + helmetTypes[currentIndexHelmet]);
+        //Debug.Log("armor: " + currentIndexArmor + " is of type: " + armorTypes[currentIndexArmor]);
     }
 
     void Increment(bool increase)
@@ -426,7 +437,6 @@ public class SetupMenu : MonoBehaviour
         if (selectedType != 0) // if changing helmet or armor types
         {
             CheckCurrentComboIsRestricted(increase);
-            UpdateIncrementVisuals(increase); // if not restricted update visuals to show valid combination
         }
 
         UpdateFromIndex(index);
@@ -434,17 +444,21 @@ public class SetupMenu : MonoBehaviour
 
     void CheckCurrentComboIsRestricted(bool increase)
     {
-        Vector2 combo = new Vector2(helmetTypes[index], armorTypes[index]);
+        UpdateFromIndex(index); // update values from current index
+        Vector2 combo = new Vector2(helmetTypes[currentIndexHelmet], armorTypes[currentIndexArmor]);
         restricted = false;
         foreach (Vector2 restrictedCombo in restrictedCombos)
         {
-            if (combo.x == restrictedCombo.x && combo.y == restrictedCombo.y)
+            //Debug.Log(combo + " vs " + restrictedCombo);
+            if (combo == restrictedCombo)
+            {
+                //Debug.Log("helmet, armor combo: " + index + ", " + currentIndexArmor + " caused restricted combo <helmet>,<armor>: " + combo + " with " + restrictedCombo);
                 restricted = true;
+                break;
+            }
         }
         if (restricted) // if restricted, increment or decrement, then recursively loop to  again and re-check if restricted...
         {
-            Debug.Log("helmet: " + index + " caused restricted combo <helmet>,<armor>: " + combo.x + ", " + combo.y); // show restricted combo
-
             if (increase)
             {
                 index++;
@@ -457,38 +471,8 @@ public class SetupMenu : MonoBehaviour
                 if (index < 0)
                     index = gameObjectCount;
             }
-            
+            UpdateFromIndex(index);
             CheckCurrentComboIsRestricted(increase);
-        }
-    }
-
-    void UpdateIncrementVisuals(bool increase) // show visuals based on current index and whether increasing or not
-    {
-        if (increase)
-        {
-            if (index > gameObjectCount)
-            {
-                array[gameObjectCount].SetActive(false);
-                array[index].SetActive(true);
-            }
-            else
-            {
-                array[index - 1].SetActive(false);
-                array[index].SetActive(true);
-            }
-        }
-        else
-        {
-            if (index < 0)
-            {
-                array[0].SetActive(false);
-                array[index].SetActive(true);
-            }
-            else
-            {
-                array[index + 1].SetActive(false);
-                array[index].SetActive(true);
-            }
         }
     }
 
