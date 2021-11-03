@@ -467,12 +467,9 @@ public class Controller : NetworkBehaviour
                 }
                 else // if no children, color main object as normal (if possible)
                 {
-                    for (int j = 0; j < playerLimbs[index].Length; j++)
-                    {
-                        Material cachedMaterial = playerLimbs[index][j].GetComponent<MeshRenderer>().material;
-                        cachedMaterials.Add(cachedMaterial);
-                        cachedMaterial.color = LDrawColors.IntToColor(newColor);
-                    }
+                    Material cachedMaterial = playerLimbs[index][k].GetComponent<MeshRenderer>().material;
+                    cachedMaterials.Add(cachedMaterial);
+                    cachedMaterial.color = LDrawColors.IntToColor(newColor);
                 }
             }
         }
