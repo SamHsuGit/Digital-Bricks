@@ -282,6 +282,7 @@ public class Controller : NetworkBehaviour
             playerNames.Add(World.Instance.players[i].name);
         }
 
+        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
         SetPlayerAttributes();
     }
 
