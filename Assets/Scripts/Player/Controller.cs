@@ -207,15 +207,18 @@ public class Controller : NetworkBehaviour
             typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
             typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
 
-            for (int i = 0; i < helmet.Length; i++)
-                helmet[i].SetActive(false);
-            for (int i = 0; i < armor.Length; i++)
-                armor[i].SetActive(false);
-            for (int i = 0; i < tool.Length; i++)
-                tool[i].SetActive(false);
-            helmet[typeHelmet].SetActive(true);
-            armor[typeArmor].SetActive(true);
-            tool[typeTool].SetActive(true);
+            if(typeChar == 1)
+            {
+                for (int i = 0; i < helmet.Length; i++)
+                    helmet[i].SetActive(false);
+                for (int i = 0; i < armor.Length; i++)
+                    armor[i].SetActive(false);
+                for (int i = 0; i < tool.Length; i++)
+                    tool[i].SetActive(false);
+                helmet[typeHelmet].SetActive(true);
+                armor[typeArmor].SetActive(true);
+                tool[typeTool].SetActive(true);
+            }
 
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
@@ -307,21 +310,29 @@ public class Controller : NetworkBehaviour
         SetName(playerName, playerName);
 
         // set this object's color from saved settings
-        SetTypeHelmet(typeHelmet, typeHelmet);
-        SetTypeArmor(typeArmor, typeArmor);
-        SetTypeTool(typeTool, typeTool);
+        if(typeChar == 1)
+        {
+            SetTypeHelmet(typeHelmet, typeHelmet);
+            SetTypeArmor(typeArmor, typeArmor);
+            SetTypeTool(typeTool, typeTool);
+        }
+
         SetColorTorso(colorTorso, colorTorso);
         SetColorArmL(colorArmL, colorArmL);
         SetColorArmR(colorArmR, colorArmR);
         SetColorLegL(colorLegL, colorLegL);
         SetColorLegR(colorLegR, colorLegR);
-        SetColorHelmet(colorHelmet, colorHelmet);
-        SetColorArmor(colorArmor, colorArmor);
-        SetColorHead(colorHead, colorHead);
-        SetColorBelt(colorBelt, colorBelt);
-        SetColorHandL(colorHandL, colorHandL);
-        SetColorHandR(colorHandR, colorHandR);
-        SetColorTool(colorTool, colorTool);
+
+        if(typeChar == 1)
+        {
+            SetColorHelmet(colorHelmet, colorHelmet);
+            SetColorArmor(colorArmor, colorArmor);
+            SetColorHead(colorHead, colorHead);
+            SetColorBelt(colorBelt, colorBelt);
+            SetColorHandL(colorHandL, colorHandL);
+            SetColorHandR(colorHandR, colorHandR);
+            SetColorTool(colorTool, colorTool);
+        }
     }
 
     public void SetTypeChar(int oldValue, int newValue)
@@ -1202,7 +1213,7 @@ public class Controller : NetworkBehaviour
                 voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - (cc.height / 2));
                 if (!photoMode)
                 {
-                    //playerCamera.transform.localPosition = Vector3.zero;
+                    playerCamera.transform.localPosition = Vector3.zero;
                     playerCameraVoxelCollider.enabled = true;
                 }
                 charController.center = cc.center;
@@ -1211,14 +1222,13 @@ public class Controller : NetworkBehaviour
             }
             else // ALT MODE
             {
-                isSprinting = true;
                 CCShapeAlternate(cc, 0);
                 voxelCollider.width = colliderRadius * 2;
                 voxelCollider.height = colliderRadius * 2;
                 voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - cc.radius);
                 if (!photoMode)
                 {
-                    //playerCamera.transform.localPosition = new Vector3(0, -5.5f, 0);
+                    playerCamera.transform.localPosition = new Vector3(0, -5.5f, 0);
                     playerCameraVoxelCollider.enabled = false;
                 }
                 charController.center = cc.center;
@@ -1401,7 +1411,7 @@ public class Controller : NetworkBehaviour
         switch (typeChar)
         {
             case 0:
-                animator.SetBool("isSprinting", isSprinting);
+                animator.SetBool("isSprinting", inputHandler.sprint);
                 break;
             case 1:
                 animator.SetBool("isHolding", isHolding);
