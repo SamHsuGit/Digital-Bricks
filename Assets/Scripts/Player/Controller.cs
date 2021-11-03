@@ -451,11 +451,17 @@ public class Controller : NetworkBehaviour
         if (index == 5 && typeHelmet == 0) // if no helmet, do not color head
             return;
 
-        if (index == 11) // for tool, only color child objects
+        if (index == 11) // for tool, only color child objects (if any, otherwise try and color main objects)
         {
             for (int k = 0; k < playerLimbs[index].Length; k++)
             {
-                if (playerLimbs[index][k].transform.childCount != 0) // if has children
+                if (playerLimbs[index][k].transform.childCount == 0) // if no children, color main object as normal (if possible)
+                {
+                    Material cachedMaterial = playerLimbs[index][k].GetComponent<MeshRenderer>().material;
+                    cachedMaterials.Add(cachedMaterial);
+                    cachedMaterial.color = LDrawColors.IntToColor(newColor);
+                }
+                else // if has children
                 {
                     GameObject ob = playerLimbs[index][k];
                     foreach (Transform child in ob.transform)
@@ -464,12 +470,6 @@ public class Controller : NetworkBehaviour
                         cachedMaterials.Add(cachedMaterial);
                         cachedMaterial.color = LDrawColors.IntToColor(newColor); // color children
                     }
-                }
-                else // if no children, color main object as normal (if possible)
-                {
-                    Material cachedMaterial = playerLimbs[index][k].GetComponent<MeshRenderer>().material;
-                    cachedMaterials.Add(cachedMaterial);
-                    cachedMaterial.color = LDrawColors.IntToColor(newColor);
                 }
             }
         }
