@@ -22,7 +22,7 @@ public class Controller : NetworkBehaviour
     public GameObject[] voxels;
     public List<GameObject> currentWaveEnemies;
 
-    [SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
+    [SyncVar] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
     [SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
     [SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
     [SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
@@ -312,6 +312,7 @@ public class Controller : NetworkBehaviour
 
         typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
         SetPlayerAttributes();
+        Debug.Log(typeChar);
     }
 
     public void SetPlayerAttributes()
@@ -343,12 +344,12 @@ public class Controller : NetworkBehaviour
         SetColorTool(colorTool, colorTool);
     }
 
-    public void SetTypeChar(int oldValue, int newValue) // update the player visuals using the SyncVars pushed from the server to clients
-    {
-        typeChar = newValue;
-    }
+    //public void SetTypeChar(int oldValue, int newValue)
+    //{
+    //    typeChar = newValue;
+    //}
 
-    public void SetName(string oldName, string newName)
+    public void SetName(string oldName, string newName) // update the player visuals using the SyncVars pushed from the server to clients
     {
         if (playerName == null)
         {
