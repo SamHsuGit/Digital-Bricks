@@ -366,7 +366,7 @@ public class Controller : NetworkBehaviour
     public void SetTypeHelmet(int oldValue, int newValue)
     {
         typeHelmet = newValue;
-        if(helmet[typeHelmet] != null)
+        if(typeChar == 1 && helmet[typeHelmet] != null)
         {
             helmet[typeHelmet].SetActive(true);
             helmet[typeHelmet].layer = 10; // tag to be able to shoot
@@ -376,7 +376,7 @@ public class Controller : NetworkBehaviour
     public void SetTypeArmor(int oldValue, int newValue)
     {
         typeArmor = newValue;
-        if (armor[typeArmor] != null)
+        if (typeChar == 1 && armor[typeArmor] != null)
         {
             armor[typeArmor].SetActive(true);
             armor[typeArmor].layer = 10; // tag to be able to shoot
@@ -386,7 +386,7 @@ public class Controller : NetworkBehaviour
     public void SetTypeTool(int oldValue, int newValue)
     {
         typeTool = newValue;
-        if (tool[typeTool] != null)
+        if (typeChar == 1 && tool[typeTool] != null)
         {
             tool[typeTool].SetActive(true);
             tool[typeTool].layer = 10; // tag to be able to shoot
@@ -718,7 +718,7 @@ public class Controller : NetworkBehaviour
         {
             ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
         }
-        if (tool[typeTool] != null)
+        if (typeChar == 1 && tool[typeTool] != null)
             tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
     }
 
