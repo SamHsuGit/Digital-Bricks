@@ -203,12 +203,13 @@ public class Controller : NetworkBehaviour
         if (!Settings.OnlinePlay)
         {
             typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-            typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-            typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-            typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
 
             if(typeChar == 1)
             {
+                typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+                typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+                typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
+
                 for (int i = 0; i < helmet.Length; i++)
                     helmet[i].SetActive(false);
                 for (int i = 0; i < armor.Length; i++)
@@ -218,6 +219,13 @@ public class Controller : NetworkBehaviour
                 helmet[typeHelmet].SetActive(true);
                 armor[typeArmor].SetActive(true);
                 tool[typeTool].SetActive(true);
+
+                colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
+                colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
+
+                colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
+                
+                colorTool = SettingsStatic.LoadedSettings.playerColorTool;
             }
 
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
@@ -226,13 +234,12 @@ public class Controller : NetworkBehaviour
             colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
             colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
             colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
-            colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
-            colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
+            
             colorHead = SettingsStatic.LoadedSettings.playerColorHead;
-            colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
+
             colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
             colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
-            colorTool = SettingsStatic.LoadedSettings.playerColorTool;
+
             SetPlayerAttributes();
         }
     }
@@ -323,16 +330,15 @@ public class Controller : NetworkBehaviour
         SetColorLegL(colorLegL, colorLegL);
         SetColorLegR(colorLegR, colorLegR);
 
-        if(typeChar == 1)
-        {
-            SetColorHelmet(colorHelmet, colorHelmet);
-            SetColorArmor(colorArmor, colorArmor);
-            SetColorHead(colorHead, colorHead);
-            SetColorBelt(colorBelt, colorBelt);
-            SetColorHandL(colorHandL, colorHandL);
-            SetColorHandR(colorHandR, colorHandR);
-            SetColorTool(colorTool, colorTool);
-        }
+        SetColorHelmet(colorHelmet, colorHelmet);
+        SetColorArmor(colorArmor, colorArmor);
+        SetColorHead(colorHead, colorHead);
+        SetColorBelt(colorBelt, colorBelt);
+
+        SetColorHandL(colorHandL, colorHandL);
+        SetColorHandR(colorHandR, colorHandR);
+
+        SetColorTool(colorTool, colorTool);
     }
 
     public void SetTypeChar(int oldValue, int newValue)
@@ -343,19 +349,22 @@ public class Controller : NetworkBehaviour
     public void SetTypeHelmet(int oldValue, int newValue)
     {
         typeHelmet = newValue;
-        helmet[typeHelmet].SetActive(true);
+        if(typeChar == 1)
+            helmet[typeHelmet].SetActive(true);
     }
 
     public void SetTypeArmor(int oldValue, int newValue)
     {
         typeArmor = newValue;
-        armor[typeArmor].SetActive(true);
+        if (typeChar == 1)
+            armor[typeArmor].SetActive(true);
     }
 
     public void SetTypeTool(int oldValue, int newValue)
     {
         typeTool = newValue;
-        tool[typeTool].SetActive(true);
+        if (typeChar == 1)
+            tool[typeTool].SetActive(true);
     }
 
     public void SetColorTorso(int oldValue, int newValue) // update the player visuals using the SyncVars pushed from the server to clients
