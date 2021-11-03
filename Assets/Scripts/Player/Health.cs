@@ -67,13 +67,20 @@ public class Health : NetworkBehaviour
     {
         foreach (Transform child in _ob.transform)
         {
-            if (child.gameObject.layer == 10) // PLAYER PIECES MUST TAGGED AS LEGO PIECE TO BE COUNTED TOWARDS HP
+            if (child.gameObject.layer == 10 && child.gameObject.activeSelf) // PLAYER PIECES MUST TAGGED AS LEGO PIECE AND BE ACTIVE TO BE COUNTED TOWARDS HP
             {
                 brickCount++;
                 modelPieces.Add(child.gameObject); // add to list of pieces
             }
             CountPieces(child.gameObject);
         }
+    }
+
+    public void AddToHealth(GameObject _ob)
+    {
+        hpMax++;
+        hp++;
+        modelPieces.Add(_ob);
     }
 
     private void FixedUpdate()

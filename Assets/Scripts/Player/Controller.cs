@@ -219,10 +219,13 @@ public class Controller : NetworkBehaviour
                     tool[i].SetActive(false);
                 helmet[typeHelmet].SetActive(true);
                 helmet[typeHelmet].layer = 10; // tag to be able to shoot
+                health.AddToHealth(helmet[typeHelmet]);
                 armor[typeArmor].SetActive(true);
                 armor[typeArmor].layer = 10; // tag to be able to shoot
+                health.AddToHealth(armor[typeArmor]);
                 tool[typeTool].SetActive(true);
                 tool[typeTool].layer = 10; // tag to be able to shoot
+                health.AddToHealth(tool[typeTool]);
 
                 colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
                 colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
@@ -310,9 +313,7 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
         SetPlayerAttributes();
-        Debug.Log(typeChar);
     }
 
     public void SetPlayerAttributes()
@@ -370,6 +371,7 @@ public class Controller : NetworkBehaviour
         {
             helmet[typeHelmet].SetActive(true);
             helmet[typeHelmet].layer = 10; // tag to be able to shoot
+            health.AddToHealth(helmet[typeHelmet]);
         }
     }
 
@@ -380,6 +382,7 @@ public class Controller : NetworkBehaviour
         {
             armor[typeArmor].SetActive(true);
             armor[typeArmor].layer = 10; // tag to be able to shoot
+            health.AddToHealth(armor[typeArmor]);
         }   
     }
 
@@ -390,6 +393,7 @@ public class Controller : NetworkBehaviour
         {
             tool[typeTool].SetActive(true);
             tool[typeTool].layer = 10; // tag to be able to shoot
+            health.AddToHealth(tool[typeTool]);
         }
             
     }
