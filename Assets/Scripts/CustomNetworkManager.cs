@@ -148,17 +148,6 @@ public class CustomNetworkManager : NetworkManager
 
     void OnCreateCharacter(NetworkConnection conn, ClientToServerMessage message)
     {
-        //// checks client name
-        //for(int i = 0; i < World.Instance.players.Count; i++)
-        //{
-        //    if(message.playerName == World.Instance.players[i].name)
-        //    {
-        //        Debug.Log("Error: Non-Unique Player Name. Client name already exists on server. Player names must be unique. Disconnecting Client.");
-        //        conn.Disconnect();
-        //        return;
-        //    }
-        //}
-
         // playerPrefab is the one assigned in the inspector in Network
         // Manager but you can use different prefabs per race for example
         Transform startPos = GetStartPosition();

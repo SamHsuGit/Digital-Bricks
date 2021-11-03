@@ -298,6 +298,7 @@ public class Controller : NetworkBehaviour
             }
         }
 
+        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
         SetPlayerAttributes();
     }
 
@@ -410,19 +411,19 @@ public class Controller : NetworkBehaviour
         if (index == 5 && typeHelmet == 0) // if no helmet, do not color head
             return;
 
-        if (index == 11) // for tool, only color child objects
-        {
-            for (int j = 0; j < playerLimbs[index].Length; j++)
-            {
-                if (playerLimbs[index][j].transform.childCount != 0) // if has children
-                {
-                    GameObject ob = playerLimbs[index][j];
-                    foreach (Transform child in ob.transform)
-                        child.GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor); // color children
-                }
-            }
-        }
-        else // color gameObjects
+        //if (index == 11) // for tool, only color child objects
+        //{
+        //    for (int j = 0; j < playerLimbs[index].Length; j++)
+        //    {
+        //        if (playerLimbs[index][j].transform.childCount != 0) // if has children
+        //        {
+        //            GameObject ob = playerLimbs[index][j];
+        //            foreach (Transform child in ob.transform)
+        //                child.GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor); // color children
+        //        }
+        //    }
+        //}
+        //else // color gameObjects
         {
             for (int j = 0; j < playerLimbs[index].Length; j++)
                 playerLimbs[index][j].GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor);
@@ -489,7 +490,6 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    // FixedUpdate is called once per frame
     void FixedUpdate()
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
@@ -668,7 +668,7 @@ public class Controller : NetworkBehaviour
         {
             ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
         }
-        if (typeChar == 1)
+        if (typeChar == 1 && tool[typeTool] != null)
             tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
     }
 
