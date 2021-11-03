@@ -26,23 +26,23 @@ public class Controller : NetworkBehaviour
     [SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
     [SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
     [SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
-    [SyncVar(hook = nameof(SetName))] public string playerName;
+    [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
-    [SyncVar] public int seed; // all clients can see server syncVar seed to check against
-    [SyncVar] public string version; // all clients can see server syncVar version to check against
+    [SyncVar] public int seed = 3; // all clients can see server syncVar seed to check against
+    [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
     readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
-    [SyncVar(hook = nameof(SetColorTorso))] public int colorTorso;
-    [SyncVar(hook = nameof(SetColorArmL))] public int colorArmL;
-    [SyncVar(hook = nameof(SetColorArmR))] public int colorArmR;
-    [SyncVar(hook = nameof(SetColorLegL))] public int colorLegL;
-    [SyncVar(hook = nameof(SetColorLegR))] public int colorLegR;
-    [SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet;
-    [SyncVar(hook = nameof(SetColorArmor))] public int colorArmor;
-    [SyncVar(hook = nameof(SetColorHead))] public int colorHead;
-    [SyncVar(hook = nameof(SetColorBelt))] public int colorBelt;
-    [SyncVar(hook = nameof(SetColorHandL))] public int colorHandL;
-    [SyncVar(hook = nameof(SetColorHandR))] public int colorHandR;
-    [SyncVar(hook = nameof(SetColorTool))] public int colorTool;
+    [SyncVar(hook = nameof(SetColorTorso))] public int colorTorso = 0;
+    [SyncVar(hook = nameof(SetColorArmL))] public int colorArmL = 0;
+    [SyncVar(hook = nameof(SetColorArmR))] public int colorArmR = 0;
+    [SyncVar(hook = nameof(SetColorLegL))] public int colorLegL = 0;
+    [SyncVar(hook = nameof(SetColorLegR))] public int colorLegR = 0;
+    [SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet = 0;
+    [SyncVar(hook = nameof(SetColorArmor))] public int colorArmor = 0;
+    [SyncVar(hook = nameof(SetColorHead))] public int colorHead = 0;
+    [SyncVar(hook = nameof(SetColorBelt))] public int colorBelt = 0;
+    [SyncVar(hook = nameof(SetColorHandL))] public int colorHandL = 0;
+    [SyncVar(hook = nameof(SetColorHandR))] public int colorHandR = 0;
+    [SyncVar(hook = nameof(SetColorTool))] public int colorTool = 0;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -133,6 +133,7 @@ public class Controller : NetworkBehaviour
     float minCamAngle = -90f;
     bool wasDaytime = true;
     bool daytime = true;
+    List<Material> cachedMaterials = new List<Material>();
 
     void Awake()
     {
@@ -282,8 +283,34 @@ public class Controller : NetworkBehaviour
             playerNames.Add(World.Instance.players[i].name);
         }
 
-        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        SetPlayerAttributes();
+        //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+
+        //if (typeChar == 1)
+        //{
+        //    typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+        //    typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+        //    typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
+
+        //    colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
+        //    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
+
+        //    colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
+
+        //    colorTool = SettingsStatic.LoadedSettings.playerColorTool;
+        //}
+
+        //timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
+        //colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
+        //colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
+        //colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
+        //colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
+        //colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
+
+        //colorHead = SettingsStatic.LoadedSettings.playerColorHead;
+
+        //colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
+        //colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
+        //SetPlayerAttributes();
     }
 
     public override void OnStartClient()
@@ -309,16 +336,19 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        SetPlayerAttributes();
+        //if (isClientOnly)
+        {
+            typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+            SetPlayerAttributes();
+        }
     }
 
     public void SetPlayerAttributes()
     {
         SetName(playerName, playerName);
 
-        // set this object's color from saved settings
-        if(typeChar == 1)
+        //set this object's color from saved settings
+        if (typeChar == 1)
         {
             SetTypeHelmet(typeHelmet, typeHelmet);
             SetTypeArmor(typeArmor, typeArmor);
@@ -342,11 +372,29 @@ public class Controller : NetworkBehaviour
         SetColorTool(colorTool, colorTool);
     }
 
-    public void SetTypeChar(int oldValue, int newValue)
+    public void SetTypeChar(int oldValue, int newValue) // update the player visuals using the SyncVars pushed from the server to clients
     {
         typeChar = newValue;
+        Debug.Log("SyncTypeChar");
     }
 
+    public void SetName(string oldName, string newName)
+    {
+        if (playerName == null)
+        {
+            Debug.Log("No string found for playerName");
+            return;
+        }
+
+        playerName = newName;
+        nametag.GetComponent<TextMesh>().text = newName;
+    }
+
+    public void SetTime(float oldTime, float newTime)
+    {
+        timeOfDay = newTime;
+    }
+    
     public void SetTypeHelmet(int oldValue, int newValue)
     {
         typeHelmet = newValue;
@@ -368,7 +416,7 @@ public class Controller : NetworkBehaviour
             tool[typeTool].SetActive(true);
     }
 
-    public void SetColorTorso(int oldValue, int newValue) // update the player visuals using the SyncVars pushed from the server to clients
+    public void SetColorTorso(int oldValue, int newValue)
     {
         SetColor(0, newValue);
     }
@@ -436,40 +484,37 @@ public class Controller : NetworkBehaviour
         if (index == 5 && typeHelmet == 0) // if no helmet, do not color head
             return;
 
-        //if (index == 11) // for tool, only color child objects
-        //{
-        //    for (int j = 0; j < playerLimbs[index].Length; j++)
-        //    {
-        //        if (playerLimbs[index][j].transform.childCount != 0) // if has children
-        //        {
-        //            GameObject ob = playerLimbs[index][j];
-        //            foreach (Transform child in ob.transform)
-        //                child.GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor); // color children
-        //        }
-        //    }
-        //}
-        //else // color gameObjects
+        if (index == 11) // for tool, only color child objects
         {
             for (int j = 0; j < playerLimbs[index].Length; j++)
-                playerLimbs[index][j].GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor);
+            {
+                if (playerLimbs[index][j].transform.childCount != 0) // if has children
+                {
+                    GameObject ob = playerLimbs[index][j];
+                    foreach (Transform child in ob.transform)
+                    {
+                        Material cachedMaterial = child.GetComponent<MeshRenderer>().material;
+                        cachedMaterials.Add(cachedMaterial);
+                        cachedMaterial.color = LDrawColors.IntToColor(newColor); // color children
+                    }
+                }
+            }
         }
-    }
-
-    public void SetName(string oldName, string newName)
-    {
-        if (playerName == null)
+        else // color gameObjects
         {
-            Debug.Log("No string found for playerName");
-            return;
+            for (int j = 0; j < playerLimbs[index].Length; j++)
+            {
+                Material cachedMaterial = playerLimbs[index][j].GetComponent<MeshRenderer>().material;
+                cachedMaterials.Add(cachedMaterial);
+                cachedMaterial.color = LDrawColors.IntToColor(newColor);
+            }
         }
-
-        playerName = newName;
-        nametag.GetComponent<TextMesh>().text = newName;
     }
 
-    public void SetTime(float oldTime, float newTime)
+    private void OnDestroy()
     {
-        timeOfDay = newTime;
+        foreach(Material mat in cachedMaterials)
+            Destroy(mat); // Unity makes a clone of the Material every time GetComponent().material is used. Cache it and destroy it in OnDestroy to prevent a memory leak.
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
