@@ -453,16 +453,25 @@ public class Controller : NetworkBehaviour
 
         if (index == 11) // for tool, only color child objects
         {
-            for (int j = 0; j < playerLimbs[index].Length; j++)
+            for (int k = 0; k < playerLimbs[index].Length; k++)
             {
-                if (playerLimbs[index][j].transform.childCount != 0) // if has children
+                if (playerLimbs[index][k].transform.childCount != 0) // if has children
                 {
-                    GameObject ob = playerLimbs[index][j];
+                    GameObject ob = playerLimbs[index][k];
                     foreach (Transform child in ob.transform)
                     {
                         Material cachedMaterial = child.GetComponent<MeshRenderer>().material;
                         cachedMaterials.Add(cachedMaterial);
                         cachedMaterial.color = LDrawColors.IntToColor(newColor); // color children
+                    }
+                }
+                else // if no children, color main object as normal (if possible)
+                {
+                    for (int j = 0; j < playerLimbs[index].Length; j++)
+                    {
+                        Material cachedMaterial = playerLimbs[index][j].GetComponent<MeshRenderer>().material;
+                        cachedMaterials.Add(cachedMaterial);
+                        cachedMaterial.color = LDrawColors.IntToColor(newColor);
                     }
                 }
             }
