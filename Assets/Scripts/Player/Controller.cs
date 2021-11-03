@@ -282,35 +282,6 @@ public class Controller : NetworkBehaviour
         {
             playerNames.Add(World.Instance.players[i].name);
         }
-
-        //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-
-        //if (typeChar == 1)
-        //{
-        //    typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-        //    typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-        //    typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
-
-        //    colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
-        //    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
-
-        //    colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
-
-        //    colorTool = SettingsStatic.LoadedSettings.playerColorTool;
-        //}
-
-        //timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
-        //colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
-        //colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
-        //colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
-        //colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
-        //colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
-
-        //colorHead = SettingsStatic.LoadedSettings.playerColorHead;
-
-        //colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
-        //colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
-        //SetPlayerAttributes();
     }
 
     public override void OnStartClient()
@@ -336,11 +307,8 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        //if (isClientOnly)
-        {
-            typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-            SetPlayerAttributes();
-        }
+        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+        SetPlayerAttributes();
     }
 
     public void SetPlayerAttributes()
@@ -375,7 +343,6 @@ public class Controller : NetworkBehaviour
     public void SetTypeChar(int oldValue, int newValue) // update the player visuals using the SyncVars pushed from the server to clients
     {
         typeChar = newValue;
-        Debug.Log("SyncTypeChar");
     }
 
     public void SetName(string oldName, string newName)
