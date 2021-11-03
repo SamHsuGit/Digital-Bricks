@@ -152,16 +152,19 @@ public class CustomNetworkManager : NetworkManager
         // Manager but you can use different prefabs per race for example
         Transform startPos = GetStartPosition();
 
+        int typeChar = 1;
         switch (message.typeChar)
         {
             case CharType.BrickFormer:
                 {
                     playerGameObject = Instantiate(PlayerPrefab0, startPos.position, startPos.rotation);
+                    typeChar = 0;
                     break;
                 }
             case CharType.Minifig:
                 {
                     playerGameObject = Instantiate(PlayerPrefab1, startPos.position, startPos.rotation);
+                    typeChar = 1;
                     break;
                 }
         }
@@ -170,6 +173,7 @@ public class CustomNetworkManager : NetworkManager
 
         // Apply data from the message however appropriate for your game
         // Typically a Player would be a component you write with syncvars or properties
+        controller.typeChar = typeChar;
         controller.playerName = message.playerName;
         controller.typeHelmet = message.typeHelmet;
         controller.typeArmor = message.typeArmor;

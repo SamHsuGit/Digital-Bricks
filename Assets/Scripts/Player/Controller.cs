@@ -218,8 +218,11 @@ public class Controller : NetworkBehaviour
                 for (int i = 0; i < tool.Length; i++)
                     tool[i].SetActive(false);
                 helmet[typeHelmet].SetActive(true);
+                helmet[typeHelmet].layer = 10; // tag to be able to shoot
                 armor[typeArmor].SetActive(true);
+                armor[typeArmor].layer = 10; // tag to be able to shoot
                 tool[typeTool].SetActive(true);
+                tool[typeTool].layer = 10; // tag to be able to shoot
 
                 colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
                 colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
@@ -366,21 +369,31 @@ public class Controller : NetworkBehaviour
     {
         typeHelmet = newValue;
         if(typeChar == 1)
+        {
             helmet[typeHelmet].SetActive(true);
+            helmet[typeHelmet].layer = 10; // tag to be able to shoot
+        }
     }
 
     public void SetTypeArmor(int oldValue, int newValue)
     {
         typeArmor = newValue;
         if (typeChar == 1)
+        {
             armor[typeArmor].SetActive(true);
+            armor[typeArmor].layer = 10; // tag to be able to shoot
+        }   
     }
 
     public void SetTypeTool(int oldValue, int newValue)
     {
         typeTool = newValue;
         if (typeChar == 1)
+        {
             tool[typeTool].SetActive(true);
+            tool[typeTool].layer = 10; // tag to be able to shoot
+        }
+            
     }
 
     public void SetColorTorso(int oldValue, int newValue)
