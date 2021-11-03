@@ -22,7 +22,7 @@ public class Controller : NetworkBehaviour
     public GameObject[] voxels;
     public List<GameObject> currentWaveEnemies;
 
-    [SyncVar] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
+    [SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
     [SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
     [SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
     [SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
@@ -310,7 +310,7 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+        //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
         SetPlayerAttributes();
         Debug.Log(typeChar);
     }
@@ -320,12 +320,9 @@ public class Controller : NetworkBehaviour
         SetName(playerName, playerName);
 
         //set this object's color from saved settings
-        if (typeChar == 1)
-        {
-            SetTypeHelmet(typeHelmet, typeHelmet);
-            SetTypeArmor(typeArmor, typeArmor);
-            SetTypeTool(typeTool, typeTool);
-        }
+        SetTypeHelmet(typeHelmet, typeHelmet);
+        SetTypeArmor(typeArmor, typeArmor);
+        SetTypeTool(typeTool, typeTool);
 
         SetColorTorso(colorTorso, colorTorso);
         SetColorArmL(colorArmL, colorArmL);
@@ -344,10 +341,10 @@ public class Controller : NetworkBehaviour
         SetColorTool(colorTool, colorTool);
     }
 
-    //public void SetTypeChar(int oldValue, int newValue)
-    //{
-    //    typeChar = newValue;
-    //}
+    public void SetTypeChar(int oldValue, int newValue)
+    {
+        typeChar = newValue;
+    }
 
     public void SetName(string oldName, string newName) // update the player visuals using the SyncVars pushed from the server to clients
     {
@@ -369,7 +366,7 @@ public class Controller : NetworkBehaviour
     public void SetTypeHelmet(int oldValue, int newValue)
     {
         typeHelmet = newValue;
-        if(typeChar == 1)
+        if(helmet[typeHelmet] != null)
         {
             helmet[typeHelmet].SetActive(true);
             helmet[typeHelmet].layer = 10; // tag to be able to shoot
@@ -379,7 +376,7 @@ public class Controller : NetworkBehaviour
     public void SetTypeArmor(int oldValue, int newValue)
     {
         typeArmor = newValue;
-        if (typeChar == 1)
+        if (armor[typeArmor] != null)
         {
             armor[typeArmor].SetActive(true);
             armor[typeArmor].layer = 10; // tag to be able to shoot
@@ -389,7 +386,7 @@ public class Controller : NetworkBehaviour
     public void SetTypeTool(int oldValue, int newValue)
     {
         typeTool = newValue;
-        if (typeChar == 1)
+        if (tool[typeTool] != null)
         {
             tool[typeTool].SetActive(true);
             tool[typeTool].layer = 10; // tag to be able to shoot
@@ -423,14 +420,12 @@ public class Controller : NetworkBehaviour
 
     public void SetColorHelmet(int oldValue, int newValue)
     {
-        if (typeChar == 1)
-            SetColor(5, newValue);
+        SetColor(5, newValue);
     }
 
     public void SetColorArmor(int oldValue, int newValue)
     {
-        if (typeChar == 1)
-            SetColor(6, newValue);
+        SetColor(6, newValue);
     }
 
     public void SetColorHead(int oldValue, int newValue)
@@ -440,8 +435,7 @@ public class Controller : NetworkBehaviour
 
     public void SetColorBelt(int oldValue, int newValue)
     {
-        if (typeChar == 1)
-            SetColor(8, newValue);
+        SetColor(8, newValue);
     }
 
     public void SetColorHandL(int oldValue, int newValue)
@@ -456,8 +450,7 @@ public class Controller : NetworkBehaviour
 
     public void SetColorTool(int oldValue, int newValue)
     {
-        if(typeChar == 1)
-            SetColor(11, newValue);
+        SetColor(11, newValue);
     }
 
     public void SetColor(int index, int newColor)
@@ -725,7 +718,7 @@ public class Controller : NetworkBehaviour
         {
             ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
         }
-        if (typeChar == 1 && tool[typeTool] != null)
+        if (tool[typeTool] != null)
             tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
     }
 
