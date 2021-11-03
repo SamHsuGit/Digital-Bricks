@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 336042609471235116}
   - component: {fileID: 1877778018915931661}
   m_Layer: 0
-  m_Name: h000_head
+  m_Name: h000_head.dat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4580003309809741132}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

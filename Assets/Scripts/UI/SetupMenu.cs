@@ -14,17 +14,19 @@ public class SetupMenu : MonoBehaviour
     public GameObject[] charTypeModels;
     public GameObject[] helmet;
     public GameObject[] armor;
+    public GameObject[] tool;
     public GameObject modelsObjectToSpin;
     public int currentIndexChar;
     public int currentIndexHelmet;
     public int currentIndexArmor;
+    public int currentIndexTool;
     
     public Slider worldRenderDistanceSlider;
     public TextMeshProUGUI worldRenderText;
 
     public Slider colorSlider;
-    public Dropdown limbSelect;
-    public Dropdown typeSelect;
+    public Dropdown colorSelector;
+    public Dropdown typeSelector;
     public Material[] playerMaterials;
     public AudioSource buttonSound;
 
@@ -46,15 +48,19 @@ public class SetupMenu : MonoBehaviour
         currentIndexChar = SettingsStatic.LoadedSettings.playerTypeChar;
         currentIndexHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
         currentIndexArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+        currentIndexTool = SettingsStatic.LoadedSettings.playerTypeTool;
         for (int i = 0; i < charTypeModels.Length; i++)
             charTypeModels[i].SetActive(false);
         for (int i = 0; i < helmet.Length; i++)
             helmet[i].SetActive(false);
         for (int i = 0; i < armor.Length; i++)
             armor[i].SetActive(false);
+        for (int i = 0; i < tool.Length; i++)
+            tool[i].SetActive(false);
         charTypeModels[currentIndexChar].SetActive(true);
         helmet[currentIndexHelmet].SetActive(true);
         armor[currentIndexArmor].SetActive(true);
+        tool[currentIndexTool].SetActive(true);
 
         helmetTypes = new List<int>()
         {
@@ -219,7 +225,30 @@ public class SetupMenu : MonoBehaviour
             2,
             1,
             1,
-            1
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            1,
+            1,
+            3,
+            3,
+            0,
+            4,
+            0,
+            4,
+            1,
+            1,
+            1,
+            1,
+            1,
         };
 
         armorTypes = new List<int>()
@@ -267,7 +296,11 @@ public class SetupMenu : MonoBehaviour
             4,
             5,
             5,
-            3
+            3,
+            5,
+            3,
+            3,
+            3,
         };
 
         // Matrix of restricted helmet and armor type combinations to prevent players from selecting combos which create interferences
@@ -327,7 +360,7 @@ public class SetupMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         // always sets default limb select as torso upon opening
-        limbSelect.value = 0;
+        colorSelector.value = 0;
         colorSlider.value = SettingsStatic.LoadedSettings.playerColorTorso; // loads value from save file
         
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
@@ -340,24 +373,30 @@ public class SetupMenu : MonoBehaviour
     {
         modelsObjectToSpin.transform.Rotate(new Vector3(0, 1, 0));
 
+        for (int i = 0; i < charTypeModels.Length; i++)
+            charTypeModels[i].SetActive(false);
         for (int i = 0; i < helmet.Length; i++)
             helmet[i].SetActive(false);
         for (int i = 0; i < armor.Length; i++)
             armor[i].SetActive(false);
+        for (int i = 0; i < tool.Length; i++)
+            tool[i].SetActive(false);
+        charTypeModels[currentIndexChar].SetActive(true);
         helmet[currentIndexHelmet].SetActive(true);
         armor[currentIndexArmor].SetActive(true);
+        tool[currentIndexTool].SetActive(true);
     }
 
     public void SelectLimb()
     {
         buttonSound.Play();
-        selectedLimb = limbSelect.value;
+        selectedLimb = colorSelector.value;
     }
 
     public void SelectType()
     {
         buttonSound.Play();
-        selectedType = typeSelect.value;
+        selectedType = typeSelector.value;
     }
 
     public void SetColor()
@@ -417,6 +456,12 @@ public class SetupMenu : MonoBehaviour
                     array = armor;
                     break;
                 }
+            case 3: // toolType
+                {
+                    index = currentIndexTool;
+                    array = tool;
+                    break;
+                }
         }
 
         // increment or decrement depending on 'increase' flag
@@ -434,7 +479,7 @@ public class SetupMenu : MonoBehaviour
                 index = gameObjectCount;
         }
 
-        if (selectedType != 0) // if changing helmet or armor types
+        if (selectedType == 1 || selectedType == 2) // if changing helmet or armor types
         {
             CheckCurrentComboIsRestricted(increase);
         }
@@ -489,6 +534,9 @@ public class SetupMenu : MonoBehaviour
             case 2: // armorType
                 currentIndexArmor = _index;
                 break;
+            case 3: // toolType
+                currentIndexTool = _index;
+                break;
         }
     }
 
@@ -534,6 +582,7 @@ public class SetupMenu : MonoBehaviour
 
         SettingsStatic.LoadedSettings.playerTypeHelmet = currentIndexHelmet;
         SettingsStatic.LoadedSettings.playerTypeArmor = currentIndexArmor;
+        SettingsStatic.LoadedSettings.playerTypeTool = currentIndexTool;
 
         // Save Colors for next time
         for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Torso
@@ -570,6 +619,31 @@ public class SetupMenu : MonoBehaviour
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[6])
                 SettingsStatic.LoadedSettings.playerColorArmor = i;
+        }
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Head
+        {
+            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[7])
+                SettingsStatic.LoadedSettings.playerColorHead = i;
+        }
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Belt
+        {
+            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[8])
+                SettingsStatic.LoadedSettings.playerColorBelt = i;
+        }
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // HandL
+        {
+            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[9])
+                SettingsStatic.LoadedSettings.playerColorHandL = i;
+        }
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // HandR
+        {
+            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[10])
+                SettingsStatic.LoadedSettings.playerColorHandR = i;
+        }
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Tool
+        {
+            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[11])
+                SettingsStatic.LoadedSettings.playerColorTool = i;
         }
 
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;

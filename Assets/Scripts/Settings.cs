@@ -41,13 +41,19 @@ public static class SettingsStatic
         settings.playerTypeChar = 1;
         settings.playerTypeHelmet = 0;
         settings.playerTypeArmor = 0;
-        settings.playerColorTorso = 32;
-        settings.playerColorArmL = 32;
-        settings.playerColorArmR = 32;
-        settings.playerColorLegL = 32;
-        settings.playerColorLegR = 32;
-        settings.playerColorHelmet = 32;
-        settings.playerColorArmor = 32;
+        settings.playerTypeTool = 0;
+        settings.playerColorTorso = 17;
+        settings.playerColorArmL = 17;
+        settings.playerColorArmR = 17;
+        settings.playerColorLegL = 17;
+        settings.playerColorLegR = 17;
+        settings.playerColorHelmet = 17;
+        settings.playerColorArmor = 17;
+        settings.playerColorHead = 9;
+        settings.playerColorBelt = 17;
+        settings.playerColorHandL = 9;
+        settings.playerColorHandR = 9;
+        settings.playerColorTool = 0;
 
         if (File.Exists(Application.dataPath + "/settings.cfg"))
         {
@@ -94,6 +100,7 @@ public class Settings
     public int playerTypeChar;
     public int playerTypeHelmet;
     public int playerTypeArmor;
+    public int playerTypeTool;
     public int playerColorTorso;
     public int playerColorArmL;
     public int playerColorArmR;
@@ -101,6 +108,11 @@ public class Settings
     public int playerColorLegR;
     public int playerColorHelmet;
     public int playerColorArmor;
+    public int playerColorHead;
+    public int playerColorBelt;
+    public int playerColorHandL;
+    public int playerColorHandR;
+    public int playerColorTool;
 
     public static bool WorldLoaded
     {
@@ -195,7 +207,12 @@ public static class LDrawColors
             colorLib[SettingsStatic.LoadedSettings.playerColorLegL],
             colorLib[SettingsStatic.LoadedSettings.playerColorLegR],
             colorLib[SettingsStatic.LoadedSettings.playerColorHelmet],
-            colorLib[SettingsStatic.LoadedSettings.playerColorArmor]
+            colorLib[SettingsStatic.LoadedSettings.playerColorArmor],
+            colorLib[SettingsStatic.LoadedSettings.playerColorHead],
+            colorLib[SettingsStatic.LoadedSettings.playerColorBelt],
+            colorLib[SettingsStatic.LoadedSettings.playerColorHandL],
+            colorLib[SettingsStatic.LoadedSettings.playerColorHandR],
+            colorLib[SettingsStatic.LoadedSettings.playerColorTool],
         };
     }
 

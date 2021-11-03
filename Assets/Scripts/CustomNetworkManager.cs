@@ -8,6 +8,7 @@ public struct ClientToServerMessage : NetworkMessage
     public CharType typeChar;
     public int typeHelmet;
     public int typeArmor;
+    public int typeTool;
     public int colorTorso;
     public int colorArmL;
     public int colorArmR;
@@ -15,6 +16,11 @@ public struct ClientToServerMessage : NetworkMessage
     public int colorLegR;
     public int colorHelmet;
     public int colorArmor;
+    public int colorHead;
+    public int colorBelt;
+    public int colorHandL;
+    public int colorHandR;
+    public int colorTool;
 }
 
 // https://mirror-networking.gitbook.io/docs/guides/communications/network-messages
@@ -44,7 +50,6 @@ public class CustomNetworkManager : NetworkManager
     GameObject playerGameObject;
     GameObject undefinedPrefabToSpawn;
     GameObject predefinedPrefabToSpawn;
-
 
     public override void OnStartServer()
     {
@@ -93,13 +98,19 @@ public class CustomNetworkManager : NetworkManager
                     typeChar = CharType.BrickFormer,
                     typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet,
                     typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor,
+                    typeTool = SettingsStatic.LoadedSettings.playerTypeTool,
                     colorTorso = SettingsStatic.LoadedSettings.playerColorTorso,
                     colorArmL = SettingsStatic.LoadedSettings.playerColorArmL,
                     colorArmR = SettingsStatic.LoadedSettings.playerColorArmR,
                     colorLegL = SettingsStatic.LoadedSettings.playerColorLegL,
                     colorLegR = SettingsStatic.LoadedSettings.playerColorLegR,
                     colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet,
-                    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor
+                    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor,
+                    colorHead = SettingsStatic.LoadedSettings.playerColorHead,
+                    colorBelt = SettingsStatic.LoadedSettings.playerColorBelt,
+                    colorHandL = SettingsStatic.LoadedSettings.playerColorHandL,
+                    colorHandR = SettingsStatic.LoadedSettings.playerColorHandR,
+                    colorTool = SettingsStatic.LoadedSettings.playerColorTool,
                 };
                 conn.Send(clientMessage);
                 break;
@@ -111,13 +122,19 @@ public class CustomNetworkManager : NetworkManager
                     typeChar = CharType.Minifig,
                     typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet,
                     typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor,
+                    typeTool = SettingsStatic.LoadedSettings.playerTypeTool,
                     colorTorso = SettingsStatic.LoadedSettings.playerColorTorso,
                     colorArmL = SettingsStatic.LoadedSettings.playerColorArmL,
                     colorArmR = SettingsStatic.LoadedSettings.playerColorArmR,
                     colorLegL = SettingsStatic.LoadedSettings.playerColorLegL,
                     colorLegR = SettingsStatic.LoadedSettings.playerColorLegR,
                     colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet,
-                    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor
+                    colorArmor = SettingsStatic.LoadedSettings.playerColorArmor,
+                    colorHead = SettingsStatic.LoadedSettings.playerColorHead,
+                    colorBelt = SettingsStatic.LoadedSettings.playerColorBelt,
+                    colorHandL = SettingsStatic.LoadedSettings.playerColorHandL,
+                    colorHandR = SettingsStatic.LoadedSettings.playerColorHandR,
+                    colorTool = SettingsStatic.LoadedSettings.playerColorTool,
                 };
                 conn.Send(clientMessage);
                 break;
@@ -167,6 +184,7 @@ public class CustomNetworkManager : NetworkManager
         controller.playerName = message.playerName;
         controller.typeHelmet = message.typeHelmet;
         controller.typeArmor = message.typeArmor;
+        controller.typeTool = message.typeTool;
         controller.colorTorso = message.colorTorso;
         controller.colorArmL = message.colorArmL;
         controller.colorArmR = message.colorArmR;
@@ -174,16 +192,11 @@ public class CustomNetworkManager : NetworkManager
         controller.colorLegR = message.colorLegR;
         controller.colorHelmet = message.colorHelmet;
         controller.colorArmor = message.colorArmor;
-
-        //// hide all helmet and armor models on server
-        //for (int i = 0; i < controller.helmet.Length; i++)
-        //    controller.helmet[i].SetActive(false);
-        //for (int i = 0; i < controller.armor.Length; i++)
-        //    controller.armor[i].SetActive(false);
-
-        //// Set the correct helmet and armor models on server
-        //controller.helmet[message.typeHelmet].SetActive(true);
-        //controller.armor[message.typeArmor].SetActive(true);
+        controller.colorHead = message.colorHead;
+        controller.colorBelt = message.colorBelt;
+        controller.colorHandL = message.colorHandL;
+        controller.colorHandR = message.colorHandR;
+        controller.colorTool = message.colorTool;
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);

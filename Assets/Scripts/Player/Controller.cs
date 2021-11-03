@@ -6,7 +6,7 @@ public class Controller : NetworkBehaviour
 {
     public Player player;
 
-    [Header("GameObjectArrays")]
+    [Header("GameObject Arrays")]
     public GameObject[] Torso;
     public GameObject[] ArmL;
     public GameObject[] ArmR;
@@ -14,12 +14,18 @@ public class Controller : NetworkBehaviour
     public GameObject[] LegR;
     public GameObject[] helmet;
     public GameObject[] armor;
+    public GameObject[] head;
+    public GameObject[] belt;
+    public GameObject[] handL;
+    public GameObject[] handR;
+    public GameObject[] tool;
     public GameObject[] voxels;
     public List<GameObject> currentWaveEnemies;
 
     [SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
     [SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
     [SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
+    [SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
     [SyncVar(hook = nameof(SetName))] public string playerName;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
@@ -32,6 +38,11 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetColorLegR))] public int colorLegR;
     [SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet;
     [SyncVar(hook = nameof(SetColorArmor))] public int colorArmor;
+    [SyncVar(hook = nameof(SetColorHead))] public int colorHead;
+    [SyncVar(hook = nameof(SetColorBelt))] public int colorBelt;
+    [SyncVar(hook = nameof(SetColorHandL))] public int colorHandL;
+    [SyncVar(hook = nameof(SetColorHandR))] public int colorHandR;
+    [SyncVar(hook = nameof(SetColorTool))] public int colorTool;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -88,7 +99,7 @@ public class Controller : NetworkBehaviour
     private Transform shootPos;
     private Transform placePos;
     private Transform holdPos;
-    private GameObject[][] playerLimbs = new GameObject[7][];
+    private GameObject[][] playerLimbs = new GameObject[12][];
     GameObject grabbedPrefab;
 
     //Components
@@ -134,6 +145,11 @@ public class Controller : NetworkBehaviour
         playerLimbs[4] = LegR;
         playerLimbs[5] = helmet;
         playerLimbs[6] = armor;
+        playerLimbs[7] = head;
+        playerLimbs[8] = belt;
+        playerLimbs[9] = handL;
+        playerLimbs[10] = handR;
+        playerLimbs[11] = tool;
 
         isHolding = false;
         ToggleLights(isHolding);
@@ -189,13 +205,17 @@ public class Controller : NetworkBehaviour
             typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
             typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
             typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+            typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
 
             for (int i = 0; i < helmet.Length; i++)
                 helmet[i].SetActive(false);
             for (int i = 0; i < armor.Length; i++)
                 armor[i].SetActive(false);
+            for (int i = 0; i < tool.Length; i++)
+                tool[i].SetActive(false);
             helmet[typeHelmet].SetActive(true);
             armor[typeArmor].SetActive(true);
+            tool[typeTool].SetActive(true);
 
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
@@ -205,6 +225,11 @@ public class Controller : NetworkBehaviour
             colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
             colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
             colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
+            colorHead = SettingsStatic.LoadedSettings.playerColorHead;
+            colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
+            colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
+            colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
+            colorTool = SettingsStatic.LoadedSettings.playerColorTool;
             SetPlayerAttributes();
         }
     }
@@ -283,6 +308,7 @@ public class Controller : NetworkBehaviour
         // set this object's color from saved settings
         SetTypeHelmet(typeHelmet, typeHelmet);
         SetTypeArmor(typeArmor, typeArmor);
+        SetTypeTool(typeTool, typeTool);
         SetColorTorso(colorTorso, colorTorso);
         SetColorArmL(colorArmL, colorArmL);
         SetColorArmR(colorArmR, colorArmR);
@@ -290,6 +316,11 @@ public class Controller : NetworkBehaviour
         SetColorLegR(colorLegR, colorLegR);
         SetColorHelmet(colorHelmet, colorHelmet);
         SetColorArmor(colorArmor, colorArmor);
+        SetColorHead(colorHead, colorHead);
+        SetColorBelt(colorBelt, colorBelt);
+        SetColorHandL(colorHandL, colorHandL);
+        SetColorHandR(colorHandR, colorHandR);
+        SetColorTool(colorTool, colorTool);
     }
 
     public void SetTypeChar(int oldValue, int newValue)
@@ -307,6 +338,12 @@ public class Controller : NetworkBehaviour
     {
         typeArmor = newValue;
         armor[typeArmor].SetActive(true);
+    }
+
+    public void SetTypeTool(int oldValue, int newValue)
+    {
+        typeTool = newValue;
+        tool[typeTool].SetActive(true);
     }
 
     public void SetColorTorso(int oldValue, int newValue) // update the player visuals using the SyncVars pushed from the server to clients
@@ -343,13 +380,53 @@ public class Controller : NetworkBehaviour
         SetColor(6, newValue);
     }
 
+    public void SetColorHead(int oldValue, int newValue)
+    {
+        SetColor(7, newValue);
+    }
+
+    public void SetColorBelt(int oldValue, int newValue)
+    {
+        SetColor(8, newValue);
+    }
+
+    public void SetColorHandL(int oldValue, int newValue)
+    {
+        SetColor(9, newValue);
+    }
+
+    public void SetColorHandR(int oldValue, int newValue)
+    {
+        SetColor(10, newValue);
+    }
+
+    public void SetColorTool(int oldValue, int newValue)
+    {
+        SetColor(11, newValue);
+    }
+
     public void SetColor(int index, int newColor)
     {
         if (index == 5 && typeHelmet == 0) // if no helmet, do not color head
             return;
 
-        for (int j = 0; j < playerLimbs[index].Length; j++)
-            playerLimbs[index][j].GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor);
+        if (index == 11) // for tool, only color child objects
+        {
+            for (int j = 0; j < playerLimbs[index].Length; j++)
+            {
+                if (playerLimbs[index][j].transform.childCount != 0) // if has children
+                {
+                    GameObject ob = playerLimbs[index][j];
+                    foreach (Transform child in ob.transform)
+                        child.GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor); // color children
+                }
+            }
+        }
+        else // color gameObjects
+        {
+            for (int j = 0; j < playerLimbs[index].Length; j++)
+                playerLimbs[index][j].GetComponent<MeshRenderer>().material.color = LDrawColors.IntToColor(newColor);
+        }
     }
 
     public void SetName(string oldName, string newName)
@@ -591,6 +668,8 @@ public class Controller : NetworkBehaviour
         {
             ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
         }
+        if (typeChar == 1)
+            tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
     }
 
     public void pressedShoot()

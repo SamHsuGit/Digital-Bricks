@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7737894608335337892}
   - component: {fileID: 6607145288174785666}
   m_Layer: 0
-  m_Name: a000_armor
+  m_Name: a000_armor.dat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511666710591797913}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
