@@ -393,12 +393,14 @@ public class Controller : NetworkBehaviour
 
     public void SetColorHelmet(int oldValue, int newValue)
     {
-        SetColor(5, newValue);
+        if (typeChar == 1)
+            SetColor(5, newValue);
     }
 
     public void SetColorArmor(int oldValue, int newValue)
     {
-        SetColor(6, newValue);
+        if (typeChar == 1)
+            SetColor(6, newValue);
     }
 
     public void SetColorHead(int oldValue, int newValue)
@@ -408,7 +410,8 @@ public class Controller : NetworkBehaviour
 
     public void SetColorBelt(int oldValue, int newValue)
     {
-        SetColor(8, newValue);
+        if (typeChar == 1)
+            SetColor(8, newValue);
     }
 
     public void SetColorHandL(int oldValue, int newValue)
@@ -423,7 +426,8 @@ public class Controller : NetworkBehaviour
 
     public void SetColorTool(int oldValue, int newValue)
     {
-        SetColor(11, newValue);
+        if(typeChar == 1)
+            SetColor(11, newValue);
     }
 
     public void SetColor(int index, int newColor)
