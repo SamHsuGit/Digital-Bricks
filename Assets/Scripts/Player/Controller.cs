@@ -760,7 +760,7 @@ public class Controller : NetworkBehaviour
         else // if not shooting voxels or holding voxel, spawn projectile
         {
             // spawn brick1x1 at shootPos
-            Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
+            Vector3 position = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 2, playerCamera.transform.position.z);
             if (Settings.OnlinePlay)
                 CmdSpawnPreDefinedPrefab(0, position);
             else
