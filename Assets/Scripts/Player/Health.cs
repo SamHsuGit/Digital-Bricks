@@ -78,6 +78,7 @@ public class Health : NetworkBehaviour
 
     public void AddToHealth(GameObject _ob)
     {
+        _ob.layer = 10; // tag as LEGO piece
         hpMax++;
         hp++;
         modelPieces.Add(_ob);

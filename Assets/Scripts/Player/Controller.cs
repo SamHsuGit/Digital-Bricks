@@ -87,7 +87,7 @@ public class Controller : NetworkBehaviour
     public GameObject cursorSlot;
     public GameObject[] lightGameObjects;
     public GameObject reticle;
-    public GameObject brick1x1;
+    public GameObject projectile;
     public GameObject Enemy00;
     public GameObject Enemy01;
 
@@ -218,13 +218,10 @@ public class Controller : NetworkBehaviour
                 for (int i = 0; i < tool.Length; i++)
                     tool[i].SetActive(false);
                 helmet[typeHelmet].SetActive(true);
-                helmet[typeHelmet].layer = 10; // tag to be able to shoot
                 health.AddToHealth(helmet[typeHelmet]);
                 armor[typeArmor].SetActive(true);
-                armor[typeArmor].layer = 10; // tag to be able to shoot
                 health.AddToHealth(armor[typeArmor]);
                 tool[typeTool].SetActive(true);
-                tool[typeTool].layer = 10; // tag to be able to shoot
                 health.AddToHealth(tool[typeTool]);
 
                 colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
@@ -744,7 +741,7 @@ public class Controller : NetworkBehaviour
             else
                 SpawnRbFromWorld(position, blockID);
         }
-        else if (holdingGrab)
+        else if (holdingGrab) // if holding spawn held ob
         {
             Vector3 position = holdPos.position;
 
@@ -759,6 +756,15 @@ public class Controller : NetworkBehaviour
             reticle.SetActive(true);
 
             UpdateShowGrabObject(holdingGrab, blockID);
+        }
+        else // if not shooting voxels or holding voxel, spawn projectile
+        {
+            // spawn brick1x1 at shootPos
+            Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
+            if (Settings.OnlinePlay)
+                CmdSpawnPreDefinedPrefab(0, position);
+            else
+                SpawnPreDefinedPrefab(0, position);
         }
     }
 
@@ -785,15 +791,6 @@ public class Controller : NetworkBehaviour
     {
         if (backgroundMaskCanvasGroup.alpha != 1 && !photoMode && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS OR PHOTO MODE AND ITEM IN SLOT
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
-        else // if no item when drop pressed, spawn brick1x1
-        {
-            // spawn brick1x1 at shootPos
-            Vector3 position = new Vector3(shootPos.position.x, shootPos.position.y + 2, shootPos.position.z);
-            if (Settings.OnlinePlay)
-                CmdSpawnPreDefinedPrefab(0, position);
-            else
-                SpawnPreDefinedPrefab(0, position);
-        }
     }
 
     [Command]
@@ -1088,11 +1085,19 @@ public class Controller : NetworkBehaviour
         switch (option)
         {
             case 0:
-                predefinedPrefabToSpawn = brick1x1;
+                predefinedPrefabToSpawn = projectile;
                 break;
         }
         GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
         ob.transform.Rotate(new Vector3(180, 0, 0));
+
+        Rigidbody rb;
+        if (ob.GetComponent<Rigidbody>() == null)
+            rb = ob.AddComponent<Rigidbody>();
+        else
+            rb = ob.GetComponent<Rigidbody>();
+        rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
+
         if (Settings.OnlinePlay)
         {
             customNetworkManager.SpawnNetworkOb(ob);

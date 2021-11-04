@@ -465,6 +465,7 @@ MonoBehaviour:
   - {fileID: 1813654781794285573}
   - {fileID: 5166158688449741232}
   - {fileID: 8297242065434465506}
+  tool: []
   voxels:
   - {fileID: 8386554847803347902}
   - {fileID: 274919271161085858}
@@ -505,6 +506,7 @@ MonoBehaviour:
   typeChar: 0
   typeHelmet: 0
   typeArmor: 0
+  typeTool: 0
   playerName: 
   timeOfDay: 6.01
   seed: 0
@@ -520,6 +522,7 @@ MonoBehaviour:
   colorBelt: 0
   colorHandL: 0
   colorHandR: 0
+  colorTool: 0
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0
@@ -562,7 +565,7 @@ MonoBehaviour:
   - {fileID: 3786249838681315277}
   - {fileID: 2354160388912234224}
   reticle: {fileID: 6798775625511660335}
-  brick1x1: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
+  projectile: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
   Enemy00: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
   Enemy01: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
 --- !u!114 &8377408319438795852
