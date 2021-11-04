@@ -26,7 +26,7 @@ public class Health : NetworkBehaviour
     Controller controller;
     PlayerVoxelCollider voxelCollider;
     GameObject ob;
-    List<GameObject> modelPieces;
+    public List<GameObject> modelPieces;
     readonly SyncList<GameObject> modelPiecesSyncList = new SyncList<GameObject>();
     MeshRenderer mr;
 
@@ -36,15 +36,6 @@ public class Health : NetworkBehaviour
             controller = gameObject.GetComponent<Controller>();
         if(gameObject.GetComponent<PlayerVoxelCollider>() != null)
             voxelCollider = gameObject.GetComponent<PlayerVoxelCollider>();
-        brickCount = 0;
-        modelPieces = new List<GameObject>();
-        if (gameObject.layer == 10) // if this object is a single lego Piece
-            brickCount = 1;
-        else
-            CountPieces(gameObject);
-
-        hpMax = brickCount;
-        hp = hpMax;
     }
 
     public override void OnStartServer()
@@ -60,6 +51,16 @@ public class Health : NetworkBehaviour
 
     private void Start()
     {
+        brickCount = 0;
+        modelPieces = new List<GameObject>();
+        if (gameObject.layer == 10) // if this object is a single lego Piece
+            brickCount = 1;
+        else
+            CountPieces(gameObject);
+
+        hpMax = brickCount;
+        hp = hpMax;
+
         lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
     }
 
@@ -67,21 +68,14 @@ public class Health : NetworkBehaviour
     {
         foreach (Transform child in _ob.transform)
         {
-            if (child.gameObject.layer == 10 && child.gameObject.activeSelf) // PLAYER PIECES MUST TAGGED AS LEGO PIECE AND BE ACTIVE TO BE COUNTED TOWARDS HP
+            // PLAYER PIECES MUST TAGGED AS LEGO PIECE AND BE ACTIVE AND HAVE MESH RENDERER TO BE COUNTED TOWARDS HP
+            if (child.gameObject.layer == 10 && child.gameObject.activeSelf && child.gameObject.GetComponent<MeshRenderer>() != null)
             {
                 brickCount++;
                 modelPieces.Add(child.gameObject); // add to list of pieces
             }
             CountPieces(child.gameObject);
         }
-    }
-
-    public void AddToHealth(GameObject _ob)
-    {
-        _ob.layer = 10; // tag as LEGO piece
-        hpMax++;
-        hp++;
-        modelPieces.Add(_ob);
     }
 
     private void FixedUpdate()

@@ -866,6 +866,7 @@ MonoBehaviour:
   jumpCounter: 0
   blockCounter: 0
   isAlive: 0
+  modelPieces: []
 --- !u!114 &3324826297497535085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4844,11 +4845,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 272410726436970576, guid: e23e2455aa42685498573ed483877bc7, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 927708423704314529, guid: e23e2455aa42685498573ed483877bc7, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1012781920010259014, guid: e23e2455aa42685498573ed483877bc7, type: 3}
       propertyPath: m_Layer
