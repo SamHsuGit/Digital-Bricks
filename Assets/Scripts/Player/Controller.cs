@@ -759,8 +759,8 @@ public class Controller : NetworkBehaviour
         }
         else // if not shooting voxels or holding voxel, spawn projectile
         {
-            // spawn brick1x1 at shootPos
-            Vector3 position = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 2, playerCamera.transform.position.z);
+            // spawn projectile just outside player capsule collider
+            Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
             if (Settings.OnlinePlay)
                 CmdSpawnPreDefinedPrefab(0, position);
             else
