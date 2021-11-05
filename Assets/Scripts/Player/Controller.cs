@@ -1118,6 +1118,9 @@ public class Controller : NetworkBehaviour
             case 0: // projectile
                 predefinedPrefabToSpawn = projectile;
                 break;
+            case 1:
+                //predefinedPrefabToSpawn = World.Instance.tools[typeTool];
+                break;
         }
         GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
 
