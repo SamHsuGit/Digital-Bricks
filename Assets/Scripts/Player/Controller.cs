@@ -1141,6 +1141,9 @@ public class Controller : NetworkBehaviour
 
         if (Settings.OnlinePlay)
         {
+            if (ob.GetComponent<NetworkIdentity>() == null)
+                ob.AddComponent<NetworkIdentity>();
+
             customNetworkManager.SpawnNetworkOb(ob);
         }
         Destroy(ob, 15); // clean up objects after 15 seconds
