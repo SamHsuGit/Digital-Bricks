@@ -67,7 +67,7 @@ public class Toolbar : MonoBehaviour
                 if(!Settings.OnlinePlay)
                     controller.SpawnVoxelRbAtPos(pos, blockID);
                 else
-                    controller.CmdSpawnRbFromInventory(pos, blockID);
+                    controller.CmdSpawnVoxelRbFromInventory(pos, blockID);
             }
             slots[slotIndexValue].itemSlot.EmptySlot();
         }

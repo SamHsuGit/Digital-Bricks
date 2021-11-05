@@ -346,7 +346,7 @@ public class Controller : NetworkBehaviour
             projectile = arrow;
         else if (typeTool >= 84 && typeTool <= 90) // laser guns
             projectile = laser;
-        else if (typeTool >= 92 && typeTool <= 93) // magic wand/staff
+        else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
             projectile = laser;
         else
             projectile = tool[typeTool]; // throw whatever object you are holding
@@ -825,7 +825,7 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSpawnRbFromInventory(Vector3 position, byte blockID)
+    public void CmdSpawnVoxelRbFromInventory(Vector3 position, byte blockID)
     {
         SpawnVoxelRbAtPos(position, blockID);
     }
@@ -1143,6 +1143,20 @@ public class Controller : NetworkBehaviour
         {
             if (ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
+            else
+            {
+                NetworkIdentity netID = ob.GetComponent<NetworkIdentity>();
+                if (netID.enabled == false)
+                    netID.enabled = true;
+            }
+            if (ob.GetComponent<NetworkTransform>() == null)
+                ob.AddComponent<NetworkTransform>();
+            else
+            {
+                NetworkTransform NetTrans = ob.GetComponent<NetworkTransform>(); // not enabled by default since too many network transforms were slowing down the game
+                if (NetTrans.enabled == false)
+                    NetTrans.enabled = true;
+            }
 
             customNetworkManager.SpawnNetworkOb(ob);
         }
