@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 310320405d39bd747a911d1afc7cdf50, type: 3}
-  m_Name: 6 Saturn
+  m_Name: 017 Brown
   m_EditorClassIdentifier: 
-  planet: 6
-  blockIDsubsurface: 11
-  blockIDcore: 11
-  blockIDForest: 9
-  blockIDGrasslands: 9
-  blockIDDesert: 11
-  blockIDDeadForest: 12
-  blockIDHugeTree: 9
-  blockIDMountain: 11
+  distToStar: 1
+  blockIDsubsurface: 10
+  blockIDcore: 2
+  blockIDForest: 10
+  blockIDGrasslands: 10
+  blockIDDesert: 10
+  blockIDDeadForest: 10
+  blockIDHugeTree: 10
+  blockIDMountain: 10
   isAlive: 0
   biomes: 0000000001000000020000000300000004000000
   blockIDTreeLeavesWinter: 4

@@ -278,10 +278,10 @@ public class World : MonoBehaviour
         worldData.distToStar = GetDistToStar(worldseed);
         worldData.galaxy = GetGalaxy(worldseed);
         int distToStar = worldData.distToStar;
-        //Debug.Log("Seed:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.solarSystem, worldData.distToStar));
-        //Debug.Log("Universe Coords (galaxy, system, planet)" + worldData.galaxy + "-" + worldData.solarSystem + "-" + distToStar);
+        //Debug.Log("Seed:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.system, worldData.distToStar));
+        //Debug.Log("Universe Coords (galaxy, system, planet)" + worldData.galaxy + "-" + worldData.system + "-" + distToStar);
 
-        if (worldseed < 9) // 8 planets
+        if (worldseed < 32) // 8 planets + solid colored planets
         {
             Planet planet = planets[worldseed];
 
@@ -312,7 +312,7 @@ public class World : MonoBehaviour
             worldData.blockIDHugeTreeTrunk = planet.blockIDHugeTreeTrunk;
             worldData.blockIDColumn = planet.blockIDColumn;
         }
-        if (worldseed >= 9)
+        if (worldseed >= 32) // random colored planets based on proximity to star
         {
             if (distToStar >= 0 && distToStar <= 3) // hot, close to star
             {

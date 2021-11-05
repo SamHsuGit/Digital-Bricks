@@ -894,6 +894,7 @@ MonoBehaviour:
   reticleChangeColor: {fileID: 170724433810035422}
   backgroundMask: {fileID: 6861918821474845234}
   target: {fileID: 0}
+  nextTimeToFire: 0
 --- !u!54 &1999248456142662278
 Rigidbody:
   m_ObjectHideFlags: 0

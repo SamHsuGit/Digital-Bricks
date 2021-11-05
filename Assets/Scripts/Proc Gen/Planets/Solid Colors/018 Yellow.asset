@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 310320405d39bd747a911d1afc7cdf50, type: 3}
-  m_Name: 5 Jupiter
+  m_Name: 018 Yellow
   m_EditorClassIdentifier: 
-  planet: 5
-  blockIDsubsurface: 9
-  blockIDcore: 9
-  blockIDForest: 4
-  blockIDGrasslands: 6
-  blockIDDesert: 9
-  blockIDDeadForest: 5
-  blockIDHugeTree: 4
-  blockIDMountain: 9
+  distToStar: 2
+  blockIDsubsurface: 11
+  blockIDcore: 2
+  blockIDForest: 11
+  blockIDGrasslands: 11
+  blockIDDesert: 11
+  blockIDDeadForest: 11
+  blockIDHugeTree: 11
+  blockIDMountain: 11
   isAlive: 0
   biomes: 0000000001000000020000000300000004000000
   blockIDTreeLeavesWinter: 4

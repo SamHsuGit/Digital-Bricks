@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 310320405d39bd747a911d1afc7cdf50, type: 3}
-  m_Name: 3 Earth
+  m_Name: 015 Dark_Orange
   m_EditorClassIdentifier: 
-  planet: 3
-  blockIDsubsurface: 3
-  blockIDcore: 5
-  blockIDForest: 27
-  blockIDGrasslands: 27
-  blockIDDesert: 4
-  blockIDDeadForest: 2
-  blockIDHugeTree: 3
-  blockIDMountain: 4
-  isAlive: 1
+  distToStar: 7
+  blockIDsubsurface: 8
+  blockIDcore: 2
+  blockIDForest: 8
+  blockIDGrasslands: 8
+  blockIDDesert: 8
+  blockIDDeadForest: 8
+  blockIDHugeTree: 8
+  blockIDMountain: 8
+  isAlive: 0
   biomes: 0000000001000000020000000300000004000000
   blockIDTreeLeavesWinter: 4
   blockIDTreeLeavesSpring: 29
