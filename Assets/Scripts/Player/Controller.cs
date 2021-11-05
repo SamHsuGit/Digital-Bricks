@@ -7,18 +7,18 @@ public class Controller : NetworkBehaviour
     public Player player;
 
     [Header("GameObject Arrays")]
+    public GameObject[] helmet;
+    public GameObject[] head;
+    public GameObject[] armor;
     public GameObject[] Torso;
+    public GameObject[] tool;
     public GameObject[] ArmL;
+    public GameObject[] handL;
     public GameObject[] ArmR;
+    public GameObject[] handR;
+    public GameObject[] belt;
     public GameObject[] LegL;
     public GameObject[] LegR;
-    public GameObject[] helmet;
-    public GameObject[] armor;
-    public GameObject[] head;
-    public GameObject[] belt;
-    public GameObject[] handL;
-    public GameObject[] handR;
-    public GameObject[] tool;
     public GameObject[] voxels;
     public List<GameObject> currentWaveEnemies;
 
@@ -31,18 +31,18 @@ public class Controller : NetworkBehaviour
     [SyncVar] public int seed = 3; // all clients can see server syncVar seed to check against
     [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
     readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
+    [SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet = 0;
+    [SyncVar(hook = nameof(SetColorHead))] public int colorHead = 0;
+    [SyncVar(hook = nameof(SetColorArmor))] public int colorArmor = 0;
     [SyncVar(hook = nameof(SetColorTorso))] public int colorTorso = 0;
+    [SyncVar(hook = nameof(SetColorTool))] public int colorTool = 0;
     [SyncVar(hook = nameof(SetColorArmL))] public int colorArmL = 0;
+    [SyncVar(hook = nameof(SetColorHandL))] public int colorHandL = 0;
     [SyncVar(hook = nameof(SetColorArmR))] public int colorArmR = 0;
+    [SyncVar(hook = nameof(SetColorHandR))] public int colorHandR = 0;
+    [SyncVar(hook = nameof(SetColorBelt))] public int colorBelt = 0;
     [SyncVar(hook = nameof(SetColorLegL))] public int colorLegL = 0;
     [SyncVar(hook = nameof(SetColorLegR))] public int colorLegR = 0;
-    [SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet = 0;
-    [SyncVar(hook = nameof(SetColorArmor))] public int colorArmor = 0;
-    [SyncVar(hook = nameof(SetColorHead))] public int colorHead = 0;
-    [SyncVar(hook = nameof(SetColorBelt))] public int colorBelt = 0;
-    [SyncVar(hook = nameof(SetColorHandL))] public int colorHandL = 0;
-    [SyncVar(hook = nameof(SetColorHandR))] public int colorHandR = 0;
-    [SyncVar(hook = nameof(SetColorTool))] public int colorTool = 0;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -88,6 +88,9 @@ public class Controller : NetworkBehaviour
     public GameObject[] lightGameObjects;
     public GameObject reticle;
     public GameObject projectile;
+    public GameObject brick1x1;
+    public GameObject arrow;
+    public GameObject laser;
     public GameObject Enemy00;
     public GameObject Enemy01;
 
@@ -134,23 +137,24 @@ public class Controller : NetworkBehaviour
     bool wasDaytime = true;
     bool daytime = true;
     List<Material> cachedMaterials = new List<Material>();
+    int[] toolsToChangeColor;
 
     void Awake()
     {
         NamePlayer();
 
-        playerLimbs[0] = Torso;
-        playerLimbs[1] = ArmL;
-        playerLimbs[2] = ArmR;
-        playerLimbs[3] = LegL;
-        playerLimbs[4] = LegR;
-        playerLimbs[5] = helmet;
-        playerLimbs[6] = armor;
-        playerLimbs[7] = head;
-        playerLimbs[8] = belt;
-        playerLimbs[9] = handL;
-        playerLimbs[10] = handR;
-        playerLimbs[11] = tool;
+        playerLimbs[0] = helmet;
+        playerLimbs[1] = head;
+        playerLimbs[2] = armor;
+        playerLimbs[3] = Torso;
+        playerLimbs[4] = tool;
+        playerLimbs[5] = ArmL;
+        playerLimbs[6] = handL;
+        playerLimbs[7] = ArmR;
+        playerLimbs[8] = handR;
+        playerLimbs[9] = belt;
+        playerLimbs[10] = LegL;
+        playerLimbs[11] = LegR;
 
         isHolding = false;
         ToggleLights(isHolding);
@@ -170,6 +174,7 @@ public class Controller : NetworkBehaviour
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
         charController = GetComponent<CharacterController>();
         customNetworkManager = World.Instance.customNetworkManager;
+        projectile = brick1x1;
 
         health.isAlive = true;
 
@@ -183,6 +188,19 @@ public class Controller : NetworkBehaviour
         holdPos = holdPosPrefab.transform;
 
         CinematicBars.SetActive(false);
+
+        toolsToChangeColor = new int[]  // only change colors of tools in this list
+        {
+            34,
+            39,
+            40,
+            75,
+            76,
+            77,
+            91,
+            92,
+            93,
+        };
     }
 
     void NamePlayer()
@@ -212,21 +230,22 @@ public class Controller : NetworkBehaviour
                 typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
                 colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
                 colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
-                colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
                 colorTool = SettingsStatic.LoadedSettings.playerColorTool;
+                colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
             }
 
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
+            colorHead = SettingsStatic.LoadedSettings.playerColorHead;
             colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
             colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
+            colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
             colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
+            colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
             colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
             colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
-            colorHead = SettingsStatic.LoadedSettings.playerColorHead;
-            colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
-            colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
 
             SetPlayerAttributes();
+            SetTypeProjectile();
         }
     }
 
@@ -293,9 +312,10 @@ public class Controller : NetworkBehaviour
         }
 
         SetPlayerAttributes();
+        SetTypeProjectile();
     }
 
-    public void SetPlayerAttributes()
+    void SetPlayerAttributes()
     {
         SetName(playerName, playerName);
 
@@ -304,21 +324,32 @@ public class Controller : NetworkBehaviour
         SetTypeArmor(typeArmor, typeArmor);
         SetTypeTool(typeTool, typeTool);
 
+        SetColorHelmet(colorHelmet, colorHelmet);
+        SetColorHead(colorHead, colorHead);
+        SetColorArmor(colorArmor, colorArmor);
         SetColorTorso(colorTorso, colorTorso);
+        SetColorTool(colorTool, colorTool);
         SetColorArmL(colorArmL, colorArmL);
+        SetColorHandL(colorHandL, colorHandL);
         SetColorArmR(colorArmR, colorArmR);
+        SetColorHandR(colorHandR, colorHandR);
+        SetColorBelt(colorBelt, colorBelt);
         SetColorLegL(colorLegL, colorLegL);
         SetColorLegR(colorLegR, colorLegR);
+    }
 
-        SetColorHelmet(colorHelmet, colorHelmet);
-        SetColorArmor(colorArmor, colorArmor);
-        SetColorHead(colorHead, colorHead);
-        SetColorBelt(colorBelt, colorBelt);
-
-        SetColorHandL(colorHandL, colorHandL);
-        SetColorHandR(colorHandR, colorHandR);
-
-        SetColorTool(colorTool, colorTool);
+    void SetTypeProjectile()
+    {
+        if (typeTool == 0)
+            projectile = brick1x1;
+        if (typeTool >= 78 && typeTool <= 81) // bows
+            projectile = arrow;
+        else if (typeTool >= 84 && typeTool <= 90) // laser guns
+            projectile = laser;
+        else if (typeTool >= 92 && typeTool <= 93) // magic wand/staff
+            projectile = laser;
+        else
+            projectile = tool[typeTool]; // throw whatever object you are holding
     }
 
     public void SetTypeChar(int oldValue, int newValue)
@@ -373,80 +404,94 @@ public class Controller : NetworkBehaviour
         }
             
     }
-
-    public void SetColorTorso(int oldValue, int newValue)
+    public void SetColorHelmet(int oldValue, int newValue)
     {
         SetColor(0, newValue);
     }
 
-    public void SetColorArmL(int oldValue, int newValue)
+    public void SetColorHead(int oldValue, int newValue)
     {
         SetColor(1, newValue);
-    }
-    public void SetColorArmR(int oldValue, int newValue)
-    {
-        SetColor(2, newValue);
-    }
-
-    public void SetColorLegL(int oldValue, int newValue)
-    {
-        SetColor(3, newValue);
-    }
-
-    public void SetColorLegR(int oldValue, int newValue)
-    {
-        SetColor(4, newValue);
-    }
-
-    public void SetColorHelmet(int oldValue, int newValue)
-    {
-        SetColor(5, newValue);
     }
 
     public void SetColorArmor(int oldValue, int newValue)
     {
-        SetColor(6, newValue);
+        SetColor(2, newValue);
     }
 
-    public void SetColorHead(int oldValue, int newValue)
+    public void SetColorTorso(int oldValue, int newValue)
     {
-        SetColor(7, newValue);
+        SetColor(3, newValue);
     }
 
-    public void SetColorBelt(int oldValue, int newValue)
+    public void SetColorTool(int oldValue, int newValue)
     {
-        SetColor(8, newValue);
+        SetColor(4, newValue);
+    }
+
+    public void SetColorArmL(int oldValue, int newValue)
+    {
+        SetColor(5, newValue);
     }
 
     public void SetColorHandL(int oldValue, int newValue)
     {
-        SetColor(9, newValue);
+        SetColor(6, newValue);
+    }
+
+    public void SetColorArmR(int oldValue, int newValue)
+    {
+        SetColor(7, newValue);
     }
 
     public void SetColorHandR(int oldValue, int newValue)
     {
+        SetColor(8, newValue);
+    }
+
+    public void SetColorBelt(int oldValue, int newValue)
+    {
+        SetColor(9, newValue);
+    }
+
+    public void SetColorLegL(int oldValue, int newValue)
+    {
         SetColor(10, newValue);
     }
 
-    public void SetColorTool(int oldValue, int newValue)
+    public void SetColorLegR(int oldValue, int newValue)
     {
         SetColor(11, newValue);
     }
 
     public void SetColor(int index, int newColor)
     {
-        if (index == 5 && typeHelmet == 0) // if no helmet, do not color head
+        if (index == 1 && typeHelmet == 0) // if no helmet, do not color head
             return;
 
-        if (index == 11) // for tool, only color child objects (if any, otherwise try and color main objects)
+        if (index == 4) // for tool, only color child objects (if any, otherwise try and color main objects)
         {
+            bool match = false;
+            for (int i = 0; i < toolsToChangeColor.Length; i++) // if not an approved tool to change color do not change color
+            {
+                if (typeTool == i)
+                    match = true;
+            }
+            if (!match)
+                return;
+
             for (int k = 0; k < playerLimbs[index].Length; k++)
             {
                 if (playerLimbs[index][k].transform.childCount == 0) // if no children, color main object as normal (if possible)
                 {
                     Material cachedMaterial = playerLimbs[index][k].GetComponent<MeshRenderer>().material;
                     cachedMaterials.Add(cachedMaterial);
-                    cachedMaterial.color = LDrawColors.IntToColor(newColor);
+
+                    Color newCol = LDrawColors.IntToColor(newColor);
+                    newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
+                    cachedMaterial.color = newCol;
+                    if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
+                        cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
                 }
                 else // if has children
                 {
@@ -455,7 +500,11 @@ public class Controller : NetworkBehaviour
                     {
                         Material cachedMaterial = child.GetComponent<MeshRenderer>().material;
                         cachedMaterials.Add(cachedMaterial);
-                        cachedMaterial.color = LDrawColors.IntToColor(newColor); // color children
+                        Color newCol = LDrawColors.IntToColor(newColor);
+                        newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
+                        cachedMaterial.color = newCol; // color children
+                        if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
+                            cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
                     }
                 }
             }
@@ -736,14 +785,17 @@ public class Controller : NetworkBehaviour
 
             UpdateShowGrabObject(holdingGrab, blockID);
         }
-        else // if not shooting voxels or holding voxel, spawn projectile
+        else if (isHolding) // if not shooting voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
         {
-            // spawn projectile just outside player capsule collider
-            Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
-            if (Settings.OnlinePlay)
-                CmdSpawnPreDefinedPrefab(0, position);
-            else
-                SpawnPreDefinedPrefab(0, position);
+            if(typeTool <= 31 || typeTool >= 78)
+            {
+                // spawn projectile just outside player capsule collider
+                Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
+                if (Settings.OnlinePlay)
+                    CmdSpawnPreDefinedPrefab(0, position);
+                else
+                    SpawnPreDefinedPrefab(0, position);
+            }
         }
     }
 
@@ -1063,12 +1115,22 @@ public class Controller : NetworkBehaviour
     {
         switch (option)
         {
-            case 0:
+            case 0: // projectile
                 predefinedPrefabToSpawn = projectile;
                 break;
         }
         GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
-        ob.transform.Rotate(new Vector3(180, 0, 0));
+
+        if (option != 0) // if not projectile
+            ob.transform.Rotate(new Vector3(180, 0, 0));
+        else // if projectile
+            ob.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward); // orient forwards in direction of camera
+
+        if (ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
+            ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+
+        if (ob.GetComponent<BoxCollider>() == null)
+            ob.AddComponent<BoxCollider>();
 
         Rigidbody rb;
         if (ob.GetComponent<Rigidbody>() == null)
@@ -1081,7 +1143,7 @@ public class Controller : NetworkBehaviour
         {
             customNetworkManager.SpawnNetworkOb(ob);
         }
-        Destroy(ob, 60); // clean up objects after 60 seconds
+        Destroy(ob, 15); // clean up objects after 15 seconds
     }
 
     [Command]

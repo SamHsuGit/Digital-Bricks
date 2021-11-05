@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 6885639081814093113}
     m_SelectOnDown: {fileID: 6885639081132439823}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 6885639080768086132}
@@ -203,13 +203,13 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: CharType
+    - m_Text: Tool
       m_Image: {fileID: 0}
     - m_Text: Helmet
       m_Image: {fileID: 0}
     - m_Text: Armor
       m_Image: {fileID: 0}
-    - m_Text: Tool
+    - m_Text: CharType
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -512,7 +512,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: CharType
+  m_Text: Tool
 --- !u!1 &3651580343961107256
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,18 +973,18 @@ MonoBehaviour:
   colorSelector: {fileID: 6885639081132439823}
   typeSelector: {fileID: 8602787733234409627}
   playerMaterials:
+  - {fileID: 2100000, guid: eb2dfdcfdf2e4ef4b838a181ee045f19, type: 2}
+  - {fileID: 2100000, guid: e3b5c206a8c664744926aaced8086c31, type: 2}
+  - {fileID: 2100000, guid: a22ab3645e9f0964b837c66f90dcd5be, type: 2}
   - {fileID: 2100000, guid: 0723661fba5762849ab93d33a23f1250, type: 2}
+  - {fileID: 2100000, guid: 8513fc26d2921bf40a0ea347943c2f5a, type: 2}
   - {fileID: 2100000, guid: 43e0f3ed36b4f504c80dec598ee1a029, type: 2}
+  - {fileID: 2100000, guid: 36b9f7a1626fbb54c97eaa2a0dded436, type: 2}
   - {fileID: 2100000, guid: d94bb944bbab7fe47ad31552d7f59e86, type: 2}
+  - {fileID: 2100000, guid: 09f56a74cdf80854fa2c7437e716b4b8, type: 2}
+  - {fileID: 2100000, guid: 3838878ffc675254f8f3fdcb481c9773, type: 2}
   - {fileID: 2100000, guid: cb449f8e1aa7477448c5668a6b28fa06, type: 2}
   - {fileID: 2100000, guid: faf42b89f3947c24095365b71e37e49e, type: 2}
-  - {fileID: 2100000, guid: eb2dfdcfdf2e4ef4b838a181ee045f19, type: 2}
-  - {fileID: 2100000, guid: a22ab3645e9f0964b837c66f90dcd5be, type: 2}
-  - {fileID: 2100000, guid: e3b5c206a8c664744926aaced8086c31, type: 2}
-  - {fileID: 2100000, guid: 3838878ffc675254f8f3fdcb481c9773, type: 2}
-  - {fileID: 2100000, guid: 36b9f7a1626fbb54c97eaa2a0dded436, type: 2}
-  - {fileID: 2100000, guid: 09f56a74cdf80854fa2c7437e716b4b8, type: 2}
-  - {fileID: 2100000, guid: 8513fc26d2921bf40a0ea347943c2f5a, type: 2}
   buttonSound: {fileID: 2776061181525321054}
   index: 0
 --- !u!82 &2776061181525321054
@@ -3140,7 +3140,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 6885639081814093113}
     m_SelectOnDown: {fileID: 6885639081132439823}
     m_SelectOnLeft: {fileID: 8602787733234409627}
     m_SelectOnRight: {fileID: 6885639080398427688}
@@ -4076,29 +4076,29 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: Helmet
+      m_Image: {fileID: 0}
+    - m_Text: Head
+      m_Image: {fileID: 0}
+    - m_Text: Armor
+      m_Image: {fileID: 0}
     - m_Text: Torso
+      m_Image: {fileID: 0}
+    - m_Text: Tool
       m_Image: {fileID: 0}
     - m_Text: Left Arm
       m_Image: {fileID: 0}
+    - m_Text: Left Hand
+      m_Image: {fileID: 0}
     - m_Text: Right Arm
+      m_Image: {fileID: 0}
+    - m_Text: Right Hand
+      m_Image: {fileID: 0}
+    - m_Text: Belt
       m_Image: {fileID: 0}
     - m_Text: Left Leg
       m_Image: {fileID: 0}
     - m_Text: Right Leg
-      m_Image: {fileID: 0}
-    - m_Text: Helmet
-      m_Image: {fileID: 0}
-    - m_Text: Armor
-      m_Image: {fileID: 0}
-    - m_Text: Head
-      m_Image: {fileID: 0}
-    - m_Text: Belt
-      m_Image: {fileID: 0}
-    - m_Text: Left Hand
-      m_Image: {fileID: 0}
-    - m_Text: Right Hand
-      m_Image: {fileID: 0}
-    - m_Text: Tool
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5942,7 +5942,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Torso
+  m_Text: Helmet
 --- !u!1 &6885639081580420960
 GameObject:
   m_ObjectHideFlags: 0

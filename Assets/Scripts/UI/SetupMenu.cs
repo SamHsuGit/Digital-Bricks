@@ -348,7 +348,13 @@ public class SetupMenu : MonoBehaviour
         for (int i = 0; i < LDrawColors.savedPlayerColors.Length; i++) // for all player limb materials
         {
             if (ColorUtility.TryParseHtmlString(LDrawColors.savedPlayerColors[i], out Color newCol))
+            {
+                if (i == 4) // if tool color
+                    newCol.a = 0.5f;
                 playerMaterials[i].color = newCol; // set the material from saved hex values
+                if(playerMaterials[i].IsKeywordEnabled("_EMISSION"))
+                    playerMaterials[i].SetColor("_EmissionColor", newCol);
+            }
         }
     }
 
@@ -361,7 +367,7 @@ public class SetupMenu : MonoBehaviour
 
         // always sets default limb select as torso upon opening
         colorSelector.value = 0;
-        colorSlider.value = SettingsStatic.LoadedSettings.playerColorTorso; // loads value from save file
+        colorSlider.value = SettingsStatic.LoadedSettings.playerColorHelmet; // loads value from save file
         
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.drawDistance;
@@ -406,7 +412,11 @@ public class SetupMenu : MonoBehaviour
 
         if(ColorUtility.TryParseHtmlString(htmlValue, out newCol))
         {
+            if (selectedLimb == 4) // if tool color
+                newCol.a = 0.5f;
             playerMaterials[selectedLimb].SetColor("_BaseColor", newCol);
+            if(playerMaterials[selectedLimb].IsKeywordEnabled("_EMISSION"))
+                playerMaterials[selectedLimb].SetColor("_EmissionColor", newCol);
             LDrawColors.savedPlayerColors[selectedLimb] = htmlValue;
         }
     }
@@ -438,10 +448,10 @@ public class SetupMenu : MonoBehaviour
 
         switch (selectedType)
         {
-            case 0: // charType
+            case 0: // toolType
                 {
-                    index = currentIndexChar;
-                    array = charTypeModels;
+                    index = currentIndexTool;
+                    array = tool;
                     break;
                 }
             case 1: // helmetType
@@ -456,10 +466,10 @@ public class SetupMenu : MonoBehaviour
                     array = armor;
                     break;
                 }
-            case 3: // toolType
+            case 3: // charType
                 {
-                    index = currentIndexTool;
-                    array = tool;
+                    index = currentIndexChar;
+                    array = charTypeModels;
                     break;
                 }
         }
@@ -525,8 +535,8 @@ public class SetupMenu : MonoBehaviour
     {
         switch (selectedType)
         {
-            case 0: // charType
-                currentIndexChar = _index;
+            case 0: // toolType
+                currentIndexTool = _index;
                 break;
             case 1: // helmetType
                 currentIndexHelmet = _index;
@@ -534,8 +544,8 @@ public class SetupMenu : MonoBehaviour
             case 2: // armorType
                 currentIndexArmor = _index;
                 break;
-            case 3: // toolType
-                currentIndexTool = _index;
+            case 3: // charType
+                currentIndexChar = _index;
                 break;
         }
     }
@@ -585,65 +595,65 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.playerTypeTool = currentIndexTool;
 
         // Save Colors for next time
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Torso
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[0])
-                SettingsStatic.LoadedSettings.playerColorTorso = i;
+                SettingsStatic.LoadedSettings.playerColorHelmet = i; // helmet
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // ArmL
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[1])
-                SettingsStatic.LoadedSettings.playerColorArmL = i;
+                SettingsStatic.LoadedSettings.playerColorHead = i; // head
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // ArmR
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[2])
-                SettingsStatic.LoadedSettings.playerColorArmR = i;
+                SettingsStatic.LoadedSettings.playerColorArmor = i; // armor
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // LegL
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[3])
-                SettingsStatic.LoadedSettings.playerColorLegL = i;
+                SettingsStatic.LoadedSettings.playerColorTorso = i; // torso
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // LegR
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[4])
-                SettingsStatic.LoadedSettings.playerColorLegR = i;
+                SettingsStatic.LoadedSettings.playerColorTool = i; // tool
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Helmet
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[5])
-                SettingsStatic.LoadedSettings.playerColorHelmet = i;
+                SettingsStatic.LoadedSettings.playerColorArmL = i; // ArmL
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Armor
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[6])
-                SettingsStatic.LoadedSettings.playerColorArmor = i;
+                SettingsStatic.LoadedSettings.playerColorHandL = i; // HandL
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Head
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[7])
-                SettingsStatic.LoadedSettings.playerColorHead = i;
+                SettingsStatic.LoadedSettings.playerColorArmR = i; // ArmR
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Belt
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[8])
-                SettingsStatic.LoadedSettings.playerColorBelt = i;
+                SettingsStatic.LoadedSettings.playerColorHandR = i; // HandR
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // HandL
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[9])
-                SettingsStatic.LoadedSettings.playerColorHandL = i;
+                SettingsStatic.LoadedSettings.playerColorBelt = i; // Belt
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // HandR
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[10])
-                SettingsStatic.LoadedSettings.playerColorHandR = i;
+                SettingsStatic.LoadedSettings.playerColorLegL = i; // LegL
         }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++) // Tool
+        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
         {
             if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[11])
-                SettingsStatic.LoadedSettings.playerColorTool = i;
+                SettingsStatic.LoadedSettings.playerColorLegR = i; // LegR
         }
 
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;

@@ -395,6 +395,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  helmet: []
+  head:
+  - {fileID: 7878079819457210336}
+  - {fileID: 154322396074029743}
+  - {fileID: 8077900458917672814}
+  - {fileID: 3989715156453460525}
+  armor: []
   Torso:
   - {fileID: 1841112542438965480}
   - {fileID: 5142835079195087554}
@@ -425,47 +432,32 @@ MonoBehaviour:
   - {fileID: 8077900458917672814}
   - {fileID: 3989715156453460525}
   - {fileID: 7878079819457210336}
+  tool: []
   ArmL:
-  - {fileID: 8267638922382992750}
-  - {fileID: 5166158688449741232}
-  - {fileID: 1813654781794285573}
-  - {fileID: 8297242065434465506}
-  - {fileID: 8988197173439062925}
-  - {fileID: 6901310045302782536}
-  ArmR:
-  - {fileID: 776023043051802285}
-  - {fileID: 8287947331003810219}
-  - {fileID: 4011725571109259371}
-  - {fileID: 28915334747034806}
-  - {fileID: 361558962724643441}
   - {fileID: 1693242628082436568}
-  LegL:
-  - {fileID: 1948115813353987887}
-  - {fileID: 8542355792159363826}
-  - {fileID: 336753746834965343}
-  LegR:
-  - {fileID: 7891853202644262244}
-  - {fileID: 1954944576279081532}
-  - {fileID: 1921436225008628730}
-  helmet: []
-  armor: []
-  head:
-  - {fileID: 7878079819457210336}
-  - {fileID: 154322396074029743}
-  - {fileID: 8077900458917672814}
-  - {fileID: 3989715156453460525}
-  belt: []
+  - {fileID: 361558962724643441}
   handL:
   - {fileID: 776023043051802285}
   - {fileID: 4011725571109259371}
   - {fileID: 8287947331003810219}
   - {fileID: 28915334747034806}
+  ArmR:
+  - {fileID: 6901310045302782536}
+  - {fileID: 8988197173439062925}
   handR:
   - {fileID: 8267638922382992750}
   - {fileID: 1813654781794285573}
   - {fileID: 5166158688449741232}
   - {fileID: 8297242065434465506}
-  tool: []
+  belt: []
+  LegL:
+  - {fileID: 1921436225008628730}
+  - {fileID: 1954944576279081532}
+  - {fileID: 7891853202644262244}
+  LegR:
+  - {fileID: 336753746834965343}
+  - {fileID: 8542355792159363826}
+  - {fileID: 1948115813353987887}
   voxels:
   - {fileID: 8386554847803347902}
   - {fileID: 274919271161085858}
@@ -511,18 +503,18 @@ MonoBehaviour:
   timeOfDay: 6.01
   seed: 0
   version: 
+  colorHelmet: 0
+  colorHead: 0
+  colorArmor: 0
   colorTorso: 0
+  colorTool: 0
   colorArmL: 0
+  colorHandL: 0
   colorArmR: 0
+  colorHandR: 0
+  colorBelt: 0
   colorLegL: 0
   colorLegR: 0
-  colorHelmet: 0
-  colorArmor: 0
-  colorHead: 0
-  colorBelt: 0
-  colorHandL: 0
-  colorHandR: 0
-  colorTool: 0
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0
@@ -566,6 +558,9 @@ MonoBehaviour:
   - {fileID: 2354160388912234224}
   reticle: {fileID: 6798775625511660335}
   projectile: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
+  brick1x1: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
+  arrow: {fileID: 964914632239637472, guid: 0e9ba101960990c4aa9caba04cb3e370, type: 3}
+  laser: {fileID: 964914632239637472, guid: a050bc80579b89b4aa23d8f5b470f46f, type: 3}
   Enemy00: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
   Enemy01: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
 --- !u!114 &8377408319438795852
@@ -590,6 +585,7 @@ MonoBehaviour:
   jumpCounter: 0
   blockCounter: 0
   isAlive: 0
+  modelPieces: []
 --- !u!114 &72714347524170806
 MonoBehaviour:
   m_ObjectHideFlags: 0

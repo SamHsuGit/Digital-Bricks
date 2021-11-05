@@ -202,12 +202,6 @@ public class World : MonoBehaviour
         WorldDataOverrides(SettingsStatic.LoadedSettings.seed);
 
         blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
-        // if classic space planet
-        //blocktypes[30].voxelBoundObject = crystal1;
-        // else if aqua raiders planet
-        //blocktypes[30].voxelBoundObject = crystal2;
-        // else // rock raiders crystals
-        //blocktypes[30].voxelBoundObject = crystal3;
 
         if (Settings.OnlinePlay)
         {
