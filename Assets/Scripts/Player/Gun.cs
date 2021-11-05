@@ -24,7 +24,7 @@ public class Gun : NetworkBehaviour
     private Image image;
 
     // private variables
-    float nextTimeToFire = 0f;
+    public float nextTimeToFire = 0f;
     float sphereCastRadius = 0.1f;
 
     RaycastHit hit;

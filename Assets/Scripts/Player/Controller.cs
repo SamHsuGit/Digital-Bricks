@@ -785,7 +785,7 @@ public class Controller : NetworkBehaviour
 
             UpdateShowGrabObject(holdingGrab, blockID);
         }
-        else if (isHolding) // if not shooting voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
+        else if (isHolding && Time.time >= gun.nextTimeToFire) // if not shooting voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
         {
             if(typeTool <= 31 || typeTool >= 78)
             {
@@ -1069,25 +1069,25 @@ public class Controller : NetworkBehaviour
             }
             else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn vehicle
             {
-                // WIP
-                //// spawn vehicleOb at shootPos
-                //if (Settings.OnlinePlay)
-                //    CmdSpawnUndefinedPrefab(0, shootPos.position);
-                //else
-                //    SpawnUndefinedPrefab(0, shootPos.position);
+                // spawn vehicleOb at shootPos
+                if (Settings.OnlinePlay)
+                    CmdSpawnUndefinedPrefab(0, shootPos.position);
+                else
+                    SpawnUndefinedPrefab(0, shootPos.position);
 
-                //TakeFromCurrentSlot(1);
+                TakeFromCurrentSlot(1);
             }
             else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
             {
+                // WIP
                 vehicle = gun.target.gameObject;
-                vehicle.transform.parent = transform;
+                //vehicle.transform.parent = transform;
                 modelPrefab.SetActive(false);
                 isDriving = true;
             }
             else if (isDriving)
             {
-                vehicle.transform.parent = null;
+                //vehicle.transform.parent = null;
                 modelPrefab.SetActive(true);
                 isDriving = false;
             }
