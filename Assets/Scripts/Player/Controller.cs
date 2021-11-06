@@ -93,6 +93,7 @@ public class Controller : NetworkBehaviour
     public GameObject laser;
     public GameObject Enemy00;
     public GameObject Enemy01;
+    public GameObject sceneObjectPrefab;
 
     Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
@@ -123,7 +124,6 @@ public class Controller : NetworkBehaviour
     PhysicMaterial physicMaterial;
     CustomNetworkManager customNetworkManager;
     GameObject undefinedPrefabToSpawn;
-    GameObject predefinedPrefabToSpawn;
 
     //Initializers & Constants
     float colliderHeight;
@@ -792,9 +792,9 @@ public class Controller : NetworkBehaviour
                 // spawn projectile just outside player capsule collider
                 Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
                 if (Settings.OnlinePlay)
-                    CmdSpawnPreDefinedPrefab(0, position);
+                    CmdSpawnPreDefinedPrefab(typeTool, position);
                 else
-                    SpawnPreDefinedPrefab(0, position);
+                    SpawnPreDefinedPrefab(typeTool, position);
             }
         }
     }
@@ -832,45 +832,10 @@ public class Controller : NetworkBehaviour
 
     public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
     {
-        GameObject ob = Instantiate(World.Instance.voxelPrefabs[blockID]);
-
-        ob.gameObject.SetActive(true);
-        ob.transform.position = position;
-        ob.layer = 10;
-        Rigidbody rb = ob.AddComponent<Rigidbody>();
-        rb.mass = gameObject.GetComponent<Health>().piecesRbMass; // add various colliders to allow the piece to bounce off other objects
-        if(ob.GetComponent<BoxCollider>() != null)
-        {
-            BoxCollider bc = ob.GetComponent<BoxCollider>();
-            bc.enabled = true;
-            bc.material = physicMaterial;
-        }
-        
         if (Settings.OnlinePlay)
-        {
-            if (ob.GetComponent<NetworkIdentity>() == null)
-                ob.AddComponent<NetworkIdentity>();
-            else
-            {
-                NetworkIdentity netID = ob.GetComponent<NetworkIdentity>();
-                if (netID.enabled == false)
-                    netID.enabled = true;
-            }
-            if (ob.GetComponent<NetworkTransform>() == null)
-                ob.AddComponent<NetworkTransform>();
-            else
-            {
-                NetworkTransform NetTrans = ob.GetComponent<NetworkTransform>(); // not enabled by default since too many network transforms were slowing down the game
-                if (NetTrans.enabled == false)
-                    NetTrans.enabled = true;
-            }
-
-            customNetworkManager.SpawnNetworkOb(ob);
-        }
-
-        rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
-        ob.tag = "Projectile";
-        Destroy(ob, 5); // Destroy after 5 seconds
+            CmdSpawnPreDefinedPrefab(blockID, position);
+        else
+            SpawnPreDefinedPrefab(blockID, position);
     }
 
     public void PressedGrab()
@@ -1106,63 +1071,36 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSpawnPreDefinedPrefab(int option, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
+    public void CmdSpawnPreDefinedPrefab(int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
     {
-        SpawnPreDefinedPrefab(option, pos);
+        SpawnPreDefinedPrefab(item, pos);
     }
 
-    public void SpawnPreDefinedPrefab(int option, Vector3 pos)
+    public void SpawnPreDefinedPrefab(int item, Vector3 pos)
     {
-        switch (option)
-        {
-            case 0: // projectile
-                predefinedPrefabToSpawn = projectile;
-                break;
-            case 1:
-                //predefinedPrefabToSpawn = World.Instance.tools[typeTool];
-                break;
-        }
-        GameObject ob = Instantiate(predefinedPrefabToSpawn, pos, Quaternion.identity);
-
-        if (option != 0) // if not projectile
-            ob.transform.Rotate(new Vector3(180, 0, 0));
-        else // if projectile
-            ob.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward); // orient forwards in direction of camera
+        GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
+        Rigidbody rb;
 
         if (ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
             ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
 
-        if (ob.GetComponent<BoxCollider>() == null)
-            ob.AddComponent<BoxCollider>();
-
-        Rigidbody rb;
-        if (ob.GetComponent<Rigidbody>() == null)
-            rb = ob.AddComponent<Rigidbody>();
-        else
-            rb = ob.GetComponent<Rigidbody>();
+        ob.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward); // orient forwards in direction of camera
+        rb = ob.GetComponent<Rigidbody>();
+        rb.mass = health.piecesRbMass;
+        rb.isKinematic = false;
         rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
+
+        SceneObject sceneObject = ob.GetComponent<SceneObject>();
+        sceneObject.equippedItem = item;
 
         if (Settings.OnlinePlay)
         {
-            if (ob.GetComponent<NetworkIdentity>() == null)
-                ob.AddComponent<NetworkIdentity>();
-            else
-            {
-                NetworkIdentity netID = ob.GetComponent<NetworkIdentity>();
-                if (netID.enabled == false)
-                    netID.enabled = true;
-            }
-            if (ob.GetComponent<NetworkTransform>() == null)
-                ob.AddComponent<NetworkTransform>();
-            else
-            {
-                NetworkTransform NetTrans = ob.GetComponent<NetworkTransform>(); // not enabled by default since too many network transforms were slowing down the game
-                if (NetTrans.enabled == false)
-                    NetTrans.enabled = true;
-            }
-
+            ob.GetComponent<NetworkIdentity>().enabled = true;
+            ob.GetComponent<NetworkTransform>().enabled = true;
             customNetworkManager.SpawnNetworkOb(ob);
         }
+        ob.tag = "Projectile";
+        ob.layer = 10;
         Destroy(ob, 15); // clean up objects after 15 seconds
     }
 
