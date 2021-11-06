@@ -1091,7 +1091,8 @@ public class Controller : NetworkBehaviour
         rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
-        sceneObject.equippedItem = item;
+        sceneObject.SetEquippedItem(item); // set the child object on the server
+        sceneObject.equippedItem = item; // set the SyncVar on the scene object for clients
 
         if (Settings.OnlinePlay)
         {

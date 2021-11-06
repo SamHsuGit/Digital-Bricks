@@ -404,9 +404,7 @@ public class SceneObject : NetworkBehaviour
     // and on the server from CmdDropItem in the PlayerEquip script.
     public void SetEquippedItem(int newEquippedItem)
     {
-        foreach (GameObject _ob in itemArt)
-            _ob.SetActive(false);
-        GameObject ob = itemArt[newEquippedItem];
+        GameObject ob = Instantiate(itemArt[newEquippedItem], transform.position, Quaternion.identity);
         ob.SetActive(true);
         if (ob.GetComponent<BoxCollider>() != null)
             ob.GetComponent<BoxCollider>().enabled = true;
