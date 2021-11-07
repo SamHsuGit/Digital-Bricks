@@ -26,6 +26,7 @@ public class Controller : NetworkBehaviour
     [SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
     [SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
     [SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
+    public int typeProjectile = 0;
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed = 3; // all clients can see server syncVar seed to check against
@@ -340,16 +341,34 @@ public class Controller : NetworkBehaviour
 
     void SetTypeProjectile()
     {
-        if (typeTool == 0)
-            projectile = brick1x1;
-        if (typeTool >= 78 && typeTool <= 81) // bows
-            projectile = arrow;
-        else if (typeTool >= 84 && typeTool <= 90) // laser guns
-            projectile = laser;
-        else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
-            projectile = laser;
-        else
-            projectile = tool[typeTool]; // throw whatever object you are holding
+        if (typeTool <= 31 || typeTool >= 78) // if not sword
+        {
+            if (typeTool == 0)
+            {
+                projectile = brick1x1;
+                typeProjectile = 1; // brick1x1
+            }
+            if (typeTool >= 78 && typeTool <= 81) // bows
+            {
+                projectile = arrow;
+                typeProjectile = 2; // arrow
+            }
+            else if (typeTool >= 84 && typeTool <= 90) // laser guns
+            {
+                projectile = laser;
+                typeProjectile = 3; // laser
+            }
+            else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
+            {
+                projectile = laser;
+                typeProjectile = 3; // laser
+            }
+            else
+            {
+                projectile = tool[typeTool]; // throw whatever object you are holding
+                typeProjectile = typeTool;
+            }
+        }
     }
 
     public void SetTypeChar(int oldValue, int newValue)
@@ -402,7 +421,6 @@ public class Controller : NetworkBehaviour
             tool[typeTool].SetActive(true);
             tool[typeTool].layer = 10; // tag to be able to shoot
         }
-            
     }
     public void SetColorHelmet(int oldValue, int newValue)
     {
@@ -787,14 +805,42 @@ public class Controller : NetworkBehaviour
         }
         else if (isHolding && Time.time >= gun.nextTimeToFire) // if not shooting voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
         {
-            if(typeTool <= 31 || typeTool >= 78)
+            int typePrefab;
+            int type;
+            if (typeTool <= 31 || typeTool >= 78) // if not sword
             {
+                if (typeTool == 0)
+                {
+                    typePrefab = 2; // projectile
+                    type = typeProjectile;
+                }
+                if (typeTool >= 78 && typeTool <= 81) // bows
+                {
+                    typePrefab = 2; // projectile
+                    type = typeProjectile;
+                }
+                else if (typeTool >= 84 && typeTool <= 90) // laser guns
+                {
+                    typePrefab = 2; // projectile
+                    type = typeProjectile;
+                }
+                else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
+                {
+                    typePrefab = 2; // projectile
+                    type = typeProjectile;
+                }
+                else
+                {
+                    typePrefab = 1; // tool
+                    type = typeTool;
+                }
+
                 // spawn projectile just outside player capsule collider
                 Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
                 if (Settings.OnlinePlay)
-                    CmdSpawnPreDefinedPrefab(typeTool, position);
+                    CmdSpawnPreDefinedPrefab(typePrefab, type, position);
                 else
-                    SpawnPreDefinedPrefab(typeTool, position);
+                    SpawnPreDefinedPrefab(typePrefab, type, position);
             }
         }
     }
@@ -833,9 +879,9 @@ public class Controller : NetworkBehaviour
     public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
     {
         if (Settings.OnlinePlay)
-            CmdSpawnPreDefinedPrefab(blockID, position);
+            CmdSpawnPreDefinedPrefab(0, blockID, position);
         else
-            SpawnPreDefinedPrefab(blockID, position);
+            SpawnPreDefinedPrefab(0, blockID, position);
     }
 
     public void PressedGrab()
@@ -1071,18 +1117,15 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSpawnPreDefinedPrefab(int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
+    public void CmdSpawnPreDefinedPrefab(int type, int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
     {
-        SpawnPreDefinedPrefab(item, pos);
+        SpawnPreDefinedPrefab(type, item, pos);
     }
 
-    public void SpawnPreDefinedPrefab(int item, Vector3 pos)
+    public void SpawnPreDefinedPrefab(int type, int item, Vector3 pos)
     {
         GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
         Rigidbody rb;
-
-        if (ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
-            ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
 
         ob.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward); // orient forwards in direction of camera
         rb = ob.GetComponent<Rigidbody>();
@@ -1091,8 +1134,19 @@ public class Controller : NetworkBehaviour
         rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
-        sceneObject.SetEquippedItem(item); // set the child object on the server
-        sceneObject.equippedItem = item; // set the SyncVar on the scene object for clients
+        sceneObject.SetEquippedItem(type, item); // set the child object on the server
+        switch (type)
+        {
+            case 0:
+                sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
+                break;
+            case 1:
+                sceneObject.typeTool = item;
+                break;
+            case 2:
+                sceneObject.typeProjectile = item;
+                break;
+        }
 
         if (Settings.OnlinePlay)
         {

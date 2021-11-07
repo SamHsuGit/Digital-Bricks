@@ -40,10 +40,6 @@ using Mirror;
 //    v032,
 //    v033,
 //    v034,
-//    p000,
-//    p001,
-//    p002,
-//    p003,
 //    t000,
 //    t001,
 //    t002,
@@ -141,6 +137,10 @@ using Mirror;
 //    t094,
 //    t095,
 //    t096,
+//    p000,
+//    p001,
+//    p002,
+//    p003,
 //    a000,
 //    a001,
 //    a002,
@@ -378,19 +378,32 @@ using Mirror;
 
 public class SceneObject : NetworkBehaviour
 {
-    [SyncVar(hook = nameof(onChangeEquipment))]
-    public int equippedItem;
+    [SyncVar(hook = nameof(onChangeVoxel))] public int typeVoxel;
+    [SyncVar(hook = nameof(onChangeTool))] public int typeTool;
+    [SyncVar(hook = nameof(onChangeProjectile))] public int typeProjectile;
 
-    public GameObject[] itemArt;
+    public GameObject[] voxel;
+    public GameObject[] tool;
+    public GameObject[] projectile;
 
-    void onChangeEquipment(int oldEquippedItem, int newEquippedItem)
+    void onChangeVoxel(int oldValue, int newValue)
     {
-        StartCoroutine(ChangeEquipment(newEquippedItem));
+        StartCoroutine(ChangeEquipment(0, newValue));
+    }
+
+    void onChangeTool(int oldValue, int newValue)
+    {
+        StartCoroutine(ChangeEquipment(1, newValue));
+    }
+
+    void onChangeProjectile(int oldValue, int newValue)
+    {
+        StartCoroutine(ChangeEquipment(2, newValue));
     }
 
     // Since Destroy is delayed to the end of the current frame, we use a coroutine
     // to clear out any child objects before instantiating the new one
-    IEnumerator ChangeEquipment(int newEquippedItem)
+    IEnumerator ChangeEquipment(int type, int newEquippedItem)
     {
         while (transform.childCount > 0)
         {
@@ -398,15 +411,38 @@ public class SceneObject : NetworkBehaviour
             yield return null;
         }
         // Use the new value, not the SyncVar property value
-        SetEquippedItem(newEquippedItem);
+        SetEquippedItem(type, newEquippedItem);
     }
     // SetEquippedItem is called on the client from OnChangeEquipment (above),
     // and on the server from CmdDropItem in the PlayerEquip script.
-    public void SetEquippedItem(int newEquippedItem)
+    public void SetEquippedItem(int type, int typeItem)
     {
-        GameObject ob = Instantiate(itemArt[newEquippedItem], transform.position, Quaternion.identity);
-        ob.SetActive(true);
+        GameObject[] array = voxel;
+        switch (type)
+        {
+            case 0:
+                {
+                    array = voxel;
+                    break;
+                }
+            case 1:
+                {
+                    array = tool;
+                    break;
+                }
+            case 2:
+                {
+                    array = projectile;
+                    break;
+                }
+        }
+        
+        GameObject ob = Instantiate(array[typeItem], transform.position, Quaternion.identity);
         if (ob.GetComponent<BoxCollider>() != null)
             ob.GetComponent<BoxCollider>().enabled = true;
+        ob.SetActive(true);
+        if (type != 0 && ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
+            ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+        ob.transform.parent = transform;
     }
 }

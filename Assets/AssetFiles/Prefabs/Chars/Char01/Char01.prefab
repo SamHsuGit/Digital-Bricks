@@ -788,6 +788,7 @@ MonoBehaviour:
   typeHelmet: 0
   typeArmor: 0
   typeTool: 0
+  typeProjectile: 0
   playerName: Host
   timeOfDay: 6.0066667
   seed: 0
