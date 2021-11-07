@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5029044177995777830
+--- !u!1 &7845153910574276078
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5029044177995777831}
-  - component: {fileID: 5029044177995777828}
-  - component: {fileID: 4697365696611785023}
+  - component: {fileID: 7845153910574276079}
+  - component: {fileID: 7845153910574276076}
+  - component: {fileID: 7504459144502576119}
   m_Layer: 0
   m_Name: PlayerManagerNetwork
   m_TagString: Untagged
@@ -18,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &5029044177995777831
+--- !u!4 &7845153910574276079
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029044177995777830}
+  m_GameObject: {fileID: 7845153910574276078}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,13 +32,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5029044177995777828
+--- !u!114 &7845153910574276076
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029044177995777830}
+  m_GameObject: {fileID: 7845153910574276078}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
@@ -48,7 +48,7 @@ MonoBehaviour:
   DualMode: 1
   NoDelay: 1
   Interval: 10
-  Timeout: 10000
+  Timeout: 60000
   FastResend: 2
   CongestionWindow: 0
   SendWindowSize: 4096
@@ -57,13 +57,13 @@ MonoBehaviour:
   debugLog: 0
   statisticsGUI: 0
   statisticsLog: 0
---- !u!114 &4697365696611785023
+--- !u!114 &7504459144502576119
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029044177995777830}
+  m_GameObject: {fileID: 7845153910574276078}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbd7cea4d69b30849a2c8d98ece94a81, type: 3}
@@ -76,7 +76,7 @@ MonoBehaviour:
   serverTickRate: 60
   offlineScene: Assets/AssetFiles/Scenes/00 Main Menu.unity
   onlineScene: Assets/AssetFiles/Scenes/02 Game.unity
-  transport: {fileID: 5029044177995777828}
+  transport: {fileID: 7845153910574276076}
   networkAddress: localhost
   maxConnections: 4
   authenticator: {fileID: 0}
