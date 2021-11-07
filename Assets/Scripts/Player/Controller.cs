@@ -1179,7 +1179,7 @@ public class Controller : NetworkBehaviour
         Rigidbody rb = ob.AddComponent<Rigidbody>();
         float mass = gameObject.GetComponent<Health>().piecesRbMass;
         rb.mass = mass;
-        rb.isKinematic = true;
+        rb.isKinematic = false;
         ob.AddComponent<Health>();
         if (Settings.OnlinePlay)
         {
