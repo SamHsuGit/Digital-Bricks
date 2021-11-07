@@ -443,6 +443,7 @@ public class SceneObject : NetworkBehaviour
         ob.SetActive(true);
         if (type != 0 && ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
             ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+        ob.transform.rotation = Quaternion.LookRotation(transform.forward); // orient forwards in direction of camera
         ob.transform.parent = transform;
     }
 }
