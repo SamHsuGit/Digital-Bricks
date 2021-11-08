@@ -341,33 +341,34 @@ public class Controller : NetworkBehaviour
 
     void SetTypeProjectile()
     {
-        if (typeTool <= 31 || typeTool >= 78) // if not sword
+        if (typeTool == 0)
         {
-            if (typeTool == 0)
-            {
-                projectile = brick1x1;
-                typeProjectile = 1; // brick1x1
-            }
-            if (typeTool >= 78 && typeTool <= 81) // bows
-            {
-                projectile = arrow;
-                typeProjectile = 2; // arrow
-            }
-            else if (typeTool >= 84 && typeTool <= 90) // laser guns
-            {
-                projectile = laser;
-                typeProjectile = 3; // laser
-            }
-            else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
-            {
-                projectile = laser;
-                typeProjectile = 3; // laser
-            }
-            else
-            {
-                projectile = tool[typeTool]; // throw whatever object you are holding
-                typeProjectile = typeTool;
-            }
+            projectile = brick1x1;
+            typeProjectile = 1; // brick1x1
+        }
+        else if (typeTool >= 32 && typeTool <= 77) // melee weapon
+        {
+            return;
+        }
+        else if (typeTool >= 78 && typeTool <= 81) // bows
+        {
+            projectile = arrow;
+            typeProjectile = 2; // arrow
+        }
+        else if (typeTool >= 84 && typeTool <= 90) // laser guns
+        {
+            projectile = laser;
+            typeProjectile = 3; // laser
+        }
+        else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
+        {
+            projectile = laser;
+            typeProjectile = 3; // laser
+        }
+        else
+        {
+            projectile = tool[typeTool]; // throw whatever object you are holding
+            typeProjectile = typeTool;
         }
     }
 
@@ -492,7 +493,7 @@ public class Controller : NetworkBehaviour
             bool match = false;
             for (int i = 0; i < toolsToChangeColor.Length; i++) // if not an approved tool to change color do not change color
             {
-                if (typeTool == i)
+                if (typeTool == toolsToChangeColor[i])
                     match = true;
             }
             if (!match)
@@ -807,42 +808,42 @@ public class Controller : NetworkBehaviour
         {
             int typePrefab;
             int type;
-            if (typeTool <= 31 || typeTool >= 78) // if not sword
-            {
-                if (typeTool == 0) // brick1x1
-                {
-                    typePrefab = 2; // projectile
-                    type = typeProjectile;
-                    Debug.Log(typeProjectile); // why is this reset to 0???
-                }
-                if (typeTool >= 78 && typeTool <= 81) // bows
-                {
-                    typePrefab = 2; // projectile
-                    type = typeProjectile;
-                }
-                else if (typeTool >= 84 && typeTool <= 90) // laser guns
-                {
-                    typePrefab = 2; // projectile
-                    type = typeProjectile;
-                }
-                else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
-                {
-                    typePrefab = 2; // projectile
-                    type = typeProjectile;
-                }
-                else
-                {
-                    typePrefab = 1; // tool
-                    type = typeTool;
-                }
 
-                // spawn projectile just outside player capsule collider
-                Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
-                if (Settings.OnlinePlay)
-                    CmdSpawnPreDefinedPrefab(typePrefab, type, position);
-                else
-                    SpawnPreDefinedPrefab(typePrefab, type, position);
+            if (typeTool == 0) // brick1x1
+            {
+                typePrefab = 2; // projectile
+                type = typeProjectile;
             }
+            else if (typeTool >= 32 && typeTool <= 77) // if melee weapon
+            {
+                return;
+            }
+            else if (typeTool >= 78 && typeTool <= 81) // bows
+            {
+                typePrefab = 2; // projectile
+                type = typeProjectile;
+            }
+            else if (typeTool >= 84 && typeTool <= 90) // laser guns
+            {
+                typePrefab = 2; // projectile
+                type = typeProjectile;
+            }
+            else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
+            {
+                typePrefab = 2; // projectile
+                type = typeProjectile;
+            }
+            else
+            {
+                typePrefab = 1; // tool
+                type = typeTool;
+            }
+            // spawn projectile just outside player capsule collider
+            Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
+            if (Settings.OnlinePlay)
+                CmdSpawnPreDefinedPrefab(typePrefab, type, position);
+            else
+                SpawnPreDefinedPrefab(typePrefab, type, position);
         }
     }
 

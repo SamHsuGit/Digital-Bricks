@@ -417,6 +417,8 @@ public class SceneObject : NetworkBehaviour
     // and on the server from CmdDropItem in the PlayerEquip script.
     public void SetEquippedItem(int type, int typeItem)
     {
+        Debug.Log("type = " + type);
+        Debug.Log("typeItem = " + typeItem);
         GameObject[] array = voxel;
         switch (type)
         {
