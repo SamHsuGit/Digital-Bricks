@@ -10,7 +10,7 @@ public class Health : NetworkBehaviour
 
     // public variables
     [SyncVar(hook = nameof(UpdateHP))] public float hp;
-    public int hpMax;
+    [SyncVar(hook = nameof(UpdateHPMax))] public int hpMax;
     public float piecesRbMass = 0.0001f;
     public int jumpCounter = 0;
     public int blockCounter = 0;
@@ -194,6 +194,11 @@ public class Health : NetworkBehaviour
     {
         hp = newValue;
         hpLogicAlive(modelPieces);
+    }
+
+    public void UpdateHPMax(int oldValue, int newValue)
+    {
+        hpMax = newValue;
     }
 
     public void PlayHurtSound()
