@@ -803,16 +803,17 @@ public class Controller : NetworkBehaviour
 
             UpdateShowGrabObject(holdingGrab, blockID);
         }
-        else if (isHolding && Time.time >= gun.nextTimeToFire) // if not shooting voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
+        else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
         {
             int typePrefab;
             int type;
             if (typeTool <= 31 || typeTool >= 78) // if not sword
             {
-                if (typeTool == 0)
+                if (typeTool == 0) // brick1x1
                 {
                     typePrefab = 2; // projectile
                     type = typeProjectile;
+                    Debug.Log(typeProjectile); // why is this reset to 0???
                 }
                 if (typeTool >= 78 && typeTool <= 81) // bows
                 {
