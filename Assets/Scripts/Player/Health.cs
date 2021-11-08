@@ -256,7 +256,7 @@ public class Health : NetworkBehaviour
             ob.AddComponent<NetworkIdentity>();
         }
 
-        Destroy(ob, 10); // destroy newly created parts after 10 seconds to clean up scene
+        Destroy(ob, 5); // destroy newly created parts after 5 seconds to clean up scene
     }
 
     [Command]

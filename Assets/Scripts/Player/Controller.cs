@@ -1158,7 +1158,7 @@ public class Controller : NetworkBehaviour
         }
         ob.tag = "Projectile";
         ob.layer = 10;
-        Destroy(ob, 15); // clean up objects after 15 seconds
+        Destroy(ob, 5); // clean up objects after 5 seconds
     }
 
     [Command]
