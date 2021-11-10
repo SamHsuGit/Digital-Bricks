@@ -45,9 +45,9 @@ public class LDrawImportRuntime : MonoBehaviour
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models and hides upon world load to be instantiated later
-        baseOb = ImportLDraw("base", new Vector3(0, 0, 0), true);
-        //procGenOb = ImportLDraw("procGen", new Vector3(0, 0, 0), true); // spawn preloaded copy far below world so its not visible since cannot make prefab???
-        vehicleOb = ImportLDraw("vehicle", new Vector3(0, 0, 0), false);
+        baseOb = ImportLDraw("base", new Vector3(0, -10000, 0), true);
+        //procGenOb = ImportLDraw("procGen", new Vector3(0, 0, 0), true); // spawn preloaded copy far below world so its not visible since cannot make prefab
+        vehicleOb = ImportLDraw("vehicle", new Vector3(0, -10000, 0), false);
         vehicleOb.tag = "Vehicle";
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
@@ -94,7 +94,7 @@ public class LDrawImportRuntime : MonoBehaviour
         modelOb.layer = 9; // add the model component to mark this object as a model
         CombineMeshes(modelOb);
         modelOb.transform.LocalReflect(Vector3.up);
-        modelOb.transform.position = pos; // position imported gameObject at origin
+        modelOb.transform.position = pos; // position imported gameObject at origin, far below world
         modelOb.SetActive(staticVBO);
 
         ElevateMeshRendererChildren(modelOb);

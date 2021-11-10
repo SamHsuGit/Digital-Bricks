@@ -478,7 +478,11 @@ public class Controller : NetworkBehaviour
             projectile = brick1x1;
             typeProjectile = 1; // brick1x1
         }
-        else if (typeTool >= 32 && typeTool <= 77) // melee weapon
+        else if (typeTool >= 32 && typeTool <= 43) // shield
+        {
+            return;
+        }
+        else if (typeTool >= 55 && typeTool <= 77) // melee weapon
         {
             return;
         }
@@ -968,7 +972,11 @@ public class Controller : NetworkBehaviour
                 typePrefab = 2; // projectile
                 type = typeProjectile;
             }
-            else if (typeTool >= 32 && typeTool <= 77) // if melee weapon
+            else if (typeTool >= 32 && typeTool <= 43) // shield
+            {
+                return;
+            }
+            else if (typeTool >= 55 && typeTool <= 77) // melee weapon
             {
                 return;
             }
