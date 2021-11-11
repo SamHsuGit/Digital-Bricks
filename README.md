@@ -12,7 +12,7 @@ Lego WorldBuilder: https://worldbuilder.tongal.com/world/de7bbb75-74bc-4b31-923f
 
 Code based on previous work by:
 
-LDraw Community (work under CCAL 2.0): https://www.ldraw.org/docs-main/licenses/legal-info.html
+LDraw Community (CCAL 2.0): https://www.ldraw.org/docs-main/licenses/legal-info.html
 
 Grygory Dyadichenko - LDraw Importer (MIT License): https://github.com/Nox7atra/LDraw_Importer_Unity
 
