@@ -7,7 +7,6 @@ public class InputHandler : MonoBehaviour
     public Vector2 look;
     public Vector2 navigate;
     public Vector2 scrollWheel;
-    public bool optionsPressed = false;
     public bool jump = false;
     public bool sprint = false;
     public bool grab = false;
@@ -23,5 +22,4 @@ public class InputHandler : MonoBehaviour
     public void OnSprint(InputAction.CallbackContext ctx) => sprint = ctx.performed;
     public void OnGrab(InputAction.CallbackContext ctx) => grab = ctx.performed;
     public void OnShoot(InputAction.CallbackContext ctx) => shoot = ctx.performed;
-    public void OnOptions(InputAction.CallbackContext ctx) => optionsPressed = ctx.performed;
 }

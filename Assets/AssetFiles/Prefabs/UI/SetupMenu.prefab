@@ -209,7 +209,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Armor
       m_Image: {fileID: 0}
-    - m_Text: CharType
+    - m_Text: Character Type
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -635,7 +635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16c6f78230fa4964a222622d8aae332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 6885639081162736874}
+  m_FirstSelected: {fileID: 6885639081749778818}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
   m_PlayerRoot: {fileID: 0}
@@ -3321,7 +3321,7 @@ GameObject:
   - component: {fileID: 6885639080844121919}
   - component: {fileID: 6885639080844121917}
   m_Layer: 5
-  m_Name: Seed InputField
+  m_Name: Planet InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7044,7 +7044,7 @@ GameObject:
   - component: {fileID: 6885639082183399287}
   - component: {fileID: 6885639082183399286}
   m_Layer: 5
-  m_Name: Seed Text
+  m_Name: Planet Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7067,7 +7067,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -200, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 75.6, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6885639082183399287
 CanvasRenderer:
@@ -7097,7 +7097,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Seed
+  m_text: Planet
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

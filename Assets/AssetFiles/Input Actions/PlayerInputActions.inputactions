@@ -78,7 +78,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Options",
+                    "name": "ToggleOptions",
                     "type": "Button",
                     "id": "e48d9ee9-f7a2-4f57-8594-8e233bea0382",
                     "expectedControlType": "Button",
@@ -272,7 +272,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Options",
+                    "action": "ToggleOptions",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -283,7 +283,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Options",
+                    "action": "ToggleOptions",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

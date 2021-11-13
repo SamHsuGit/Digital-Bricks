@@ -28,9 +28,6 @@ public class NetworkMenu : MonoBehaviour
         networkMenuElementsCanvasGroup.interactable = true;
         networkAddressInputField.text = SettingsStatic.LoadedSettings.ipAddress;
         background.GetComponent<CanvasGroup>().alpha = 1;
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void OnHostClient()

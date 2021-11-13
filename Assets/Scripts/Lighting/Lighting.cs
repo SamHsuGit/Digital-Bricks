@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -7,11 +8,16 @@ public class Lighting : MonoBehaviour
     [SerializeField] private Light sun;
     [SerializeField] private Light moon;
     [SerializeField] private LightingPreset sunProperties;
-    [SerializeField] private LightingPreset moonProperties;
-    [SerializeField] private Material skyboxDay;
-    [SerializeField] private Material skyboxNight;
+    [SerializeField] private Material skyboxAtmosphere;
+    [SerializeField] private Material skyboxSpace;
 
     public bool daytime = true;
+    public bool wasDaytime = false;
+    [SerializeField] private Color skyTint;
+
+    [SerializeField] private float skyTintValue = 1;
+    [SerializeField] private float ambientIntensity;
+    [SerializeField] private float reflectionIntensity;
 
     Controller controller;
 
@@ -28,16 +34,18 @@ public class Lighting : MonoBehaviour
             timeOfDay = controller.timeOfDay;
         }
 
-        if (sunProperties == null || moonProperties == null)
+        if (sunProperties == null)
             return;
 
-        float TimeOfDayIncrement = Time.deltaTime / 60 * 6; // divide by 60 to get 24 min days, multiply by 6 to get 2 min days
-        //float TimeOfDayIncrement = Time.deltaTime / 60 * 24; // divide by 60 to get 24 min days, multiply by 24 to get 30 sec days (TESTING)
+        float TimeOfDayIncrement = Time.deltaTime / 60 * 12 / 10; // divide by 60 to get 24 min days, multiply by 12 to get 1 min days, divide by 10 to get 10  min days
+        //float TimeOfDayIncrement = Time.deltaTime / 60 * 48; // divide by 60 to get 24 min days, multiply by 48 to get 15 sec days (TESTING)
 
         if (Application.isPlaying)
         {
-            if (timeOfDay > 6 && timeOfDay < 7 || timeOfDay > 18 && timeOfDay < 19) // golden hour slows time of day for more cinematic looks
-                timeOfDay += TimeOfDayIncrement / 10; // sun proceeds at 1/10 speed during golden hour
+            if (timeOfDay > 5 && timeOfDay < 7)
+                timeOfDay += TimeOfDayIncrement / 2; // sun proceeds at 1/2 speed during dawn golden hour
+            else if(timeOfDay > 17 && timeOfDay < 19)
+                timeOfDay += TimeOfDayIncrement / 2; // sun proceeds at 1/2 speed during dusk golden hour
             else
                 timeOfDay += TimeOfDayIncrement;
 
@@ -83,30 +91,107 @@ public class Lighting : MonoBehaviour
 
         RenderSettings.fogDensity = amplitude * Mathf.Sin(frequency * (timePercent * 24) - horizontalShift) + verticalShift;
 
-        // DAY/NIGHT
-        if (timePercent > 0.25 && timePercent < 0.75) // DAY
-        {
-            sun.gameObject.SetActive(true);
-            moon.gameObject.SetActive(false);
-            RenderSettings.ambientLight = sunProperties.AmbientColor.Evaluate(timePercent);
-            sun.color = sunProperties.DirectionalColor.Evaluate(timePercent);
-            RenderSettings.skybox = skyboxDay;
-            RenderSettings.sun = sun;
-            RenderSettings.ambientIntensity = 1;
-            RenderSettings.reflectionIntensity = 1;
-        }
-        else // NIGHT
-        {
-            sun.gameObject.SetActive(false);
-            moon.gameObject.SetActive(true);
-            RenderSettings.ambientLight = moonProperties.AmbientColor.Evaluate(timePercent);
-            sun.color = moonProperties.DirectionalColor.Evaluate(timePercent);
-            RenderSettings.skybox = skyboxNight;
-            RenderSettings.sun = moon;
-            RenderSettings.ambientIntensity = 0.2f;
-            RenderSettings.reflectionIntensity = 0.2f;
-        }
+        RenderSettings.ambientLight = sunProperties.AmbientColor.Evaluate(timePercent);
+        sun.color = sunProperties.DirectionalColor.Evaluate(timePercent);
+
+        skyTint = Color.HSVToRGB(0, 0, skyTintValue);
+        if (RenderSettings.skybox.HasProperty("_SkyTint"))
+            RenderSettings.skybox.SetColor("_SkyTint", skyTint);
+
+        RenderSettings.ambientIntensity = ambientIntensity;
+        RenderSettings.reflectionIntensity = reflectionIntensity;
+
+        // SET DAY OR NIGHT BASED ON TIME
+        if (daytime && !wasDaytime)
+            SetDay();
+        else if(!daytime && wasDaytime)
+            SetNight();
 
         transform.localRotation = Quaternion.Euler(new Vector3(-90f - (timePercent * 360f), 0, 0)); // rotate light
+    }
+
+    void SetDay()
+    {
+        wasDaytime = true;
+
+        sun.gameObject.SetActive(true);
+        moon.gameObject.SetActive(false);
+
+        if (World.Instance.worldData.isAlive)
+        {
+            RenderSettings.skybox = skyboxAtmosphere;
+            StartCoroutine(LerpSkyTintValue(1, 10));
+        }
+        else
+            RenderSettings.skybox = skyboxSpace; // only show daytime skybox for planets with atmosphere
+
+        RenderSettings.sun = sun;
+        StartCoroutine(LerpAmbientIntensity(1f, 10));
+        StartCoroutine(LerpReflectionIntensity(1f, 10));
+    }
+
+    void SetNight()
+    {
+        wasDaytime = false;
+
+        sun.gameObject.SetActive(false);
+        moon.gameObject.SetActive(true);
+
+        if (World.Instance.worldData.isAlive)
+        {
+            RenderSettings.skybox = skyboxAtmosphere;
+            StartCoroutine(LerpSkyTintValue(0, 10));
+        }
+        else
+            RenderSettings.skybox = skyboxSpace; // only show daytime skybox for planets with atmosphere
+
+        RenderSettings.sun = moon;
+        StartCoroutine(LerpAmbientIntensity(0.2f, 10));
+        StartCoroutine(LerpReflectionIntensity(0.2f, 10));
+    }
+
+    IEnumerator LerpSkyTintValue(float endValue, float duration)
+    {
+        float time = 0;
+        float startValue;
+
+        startValue = skyTintValue;
+        while (time < duration)
+        {
+            skyTintValue = Mathf.Lerp(startValue, endValue, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        skyTintValue = endValue;
+    }
+
+    IEnumerator LerpAmbientIntensity(float endValue, float duration)
+    {
+        float time = 0;
+        float startValue;
+
+        startValue = ambientIntensity;
+        while (time < duration)
+        {
+            ambientIntensity = Mathf.Lerp(startValue, endValue, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        ambientIntensity = endValue;
+    }
+
+    IEnumerator LerpReflectionIntensity(float endValue, float duration)
+    {
+        float time = 0;
+        float startValue;
+
+        startValue = reflectionIntensity;
+        while (time < duration)
+        {
+            reflectionIntensity = Mathf.Lerp(startValue, endValue, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        reflectionIntensity = endValue;
     }
 }

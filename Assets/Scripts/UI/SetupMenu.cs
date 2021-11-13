@@ -362,8 +362,6 @@ public class SetupMenu : MonoBehaviour
     {
         //reset framerate of game for video animation
         Application.targetFrameRate = 60;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
 
         // always sets default limb select as torso upon opening
         colorSelector.value = 0;

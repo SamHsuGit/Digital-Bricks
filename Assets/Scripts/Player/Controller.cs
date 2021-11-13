@@ -53,6 +53,7 @@ public class Controller : NetworkBehaviour
     public bool isDriving = false;
     [SyncVar] public bool isHolding = false;
     public bool photoMode = false;
+    public bool options = false;
     public float checkIncrement = 0.1f;
     public float reach = 4f;
     public float maxFocusDistance = 2f;
@@ -125,11 +126,14 @@ public class Controller : NetworkBehaviour
     PhysicMaterial physicMaterial;
     CustomNetworkManager customNetworkManager;
     GameObject undefinedPrefabToSpawn;
+    RaycastHit raycastHit;
+    Transform grabbedOb;
 
     //Initializers & Constants
     float colliderHeight;
     float colliderRadius;
     float sphereCastRadius;
+    float grabRange;
     float rotationY = 0f;
     float rotationX = 0f;
     float maxLookVelocity = 5f;
@@ -352,6 +356,9 @@ public class Controller : NetworkBehaviour
     {
         InputComponents();
 
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         if (!Settings.OnlinePlay)
         {
             typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
@@ -379,6 +386,18 @@ public class Controller : NetworkBehaviour
 
             SetPlayerAttributes();
             SetTypeProjectile();
+        }
+
+        grabRange = 10f;
+
+        switch (typeChar)
+        {
+            case 0:
+                grabRange = 10f;
+                break;
+            case 1:
+                grabRange = 10f;
+                break;
         }
     }
 
@@ -475,34 +494,41 @@ public class Controller : NetworkBehaviour
     {
         if (typeTool == 0)
         {
+            gun.range = 0f;
             projectile = brick1x1;
             typeProjectile = 1; // brick1x1
         }
-        else if (typeTool >= 32 && typeTool <= 43) // shield
+        else if (typeTool >= 32 && typeTool <= 43) // shield & claws
         {
+            gun.range = 2f;
             return;
         }
         else if (typeTool >= 55 && typeTool <= 77) // melee weapon
         {
+            gun.range = 2f;
             return;
         }
         else if (typeTool >= 78 && typeTool <= 81) // bows
         {
+            gun.range = 0f;
             projectile = arrow;
             typeProjectile = 2; // arrow
         }
         else if (typeTool >= 84 && typeTool <= 90) // laser guns
         {
+            gun.range = 0f;
             projectile = laser;
             typeProjectile = 3; // laser
         }
         else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
         {
+            gun.range = 0f;
             projectile = laser;
             typeProjectile = 3; // laser
         }
         else
         {
+            gun.range = 0f;
             projectile = tool[typeTool]; // throw whatever object you are holding
             typeProjectile = typeTool;
         }
@@ -703,47 +729,56 @@ public class Controller : NetworkBehaviour
             Destroy(mat); // Unity makes a clone of the Material every time GetComponent().material is used. Cache it and destroy it in OnDestroy to prevent a memory leak.
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        // enemies hurt player
-        if (hit.gameObject.tag == "Enemy")
-            health.EditSelfHealth(-1);
+    //private void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    //hazards hurt player
+    //    if (hit.gameObject.tag == "Hazard")
+    //        health.EditSelfHealth(-1);
 
-        //GameObject ob = collision.collider.gameObject;
-        //// if touches a LegoPiece
-        //if (ob.GetComponent<Brick>() != null) // if is a lego brick
-        //{
-        //    int obBlockID;
-        //    if (Int32.TryParse(ob.name.Substring(6, 2), out obBlockID)) // Assumes the voxel prefabs are named with syntax: "Voxel_##"
-        //    {
-        //        if (blockID != 25) // cannot pickup procGen.ldr (imported VBO)
-        //        {
-        //            PutAwayBrick((byte)obBlockID); // try to add item to toolbar
-        //            Destroy(ob); // destroy LegoPiece
-        //        }
-        //    }
-        //}
+    //    GameObject ob = hit.collider.gameObject;
+    //    // if touches a LegoPiece
+    //    if (ob.GetComponent<Brick>() != null) // if is a lego brick
+    //    {
+    //        int obBlockID;
+    //        if (System.Int32.TryParse(ob.name.Substring(6, 2), out obBlockID)) // Assumes the voxel prefabs are named with syntax: "Voxel_##"
+    //        {
+    //            if (blockID != 25) // cannot pickup procGen.ldr (imported VBO)
+    //            {
+    //                PutAwayBrick((byte)obBlockID); // try to add item to toolbar
+    //                Destroy(ob); // destroy LegoPiece
+    //            }
+    //        }
+    //    }
+    //}
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // hazards hurt player
+        if (collision.gameObject.tag == "Hazard")
+            health.EditSelfHealth(-1);
     }
 
     private void Update()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
-        if (!photoMode && backgroundMaskCanvasGroup.alpha == 0)
+        if (!photoMode && !options)
         {
             playerHUD.SetActive(true);
             nametag.SetActive(true);
             CinematicBars.SetActive(false);
         }
-        else if (photoMode && backgroundMaskCanvasGroup.alpha == 0)
+        else if (photoMode && !options)
         {
             playerHUD.SetActive(false);
             nametag.SetActive(false);
             CinematicBars.SetActive(true);
         }
+
+        if (options)
+            gameMenuComponent.OnOptions();
+        else if (!options)
+            gameMenuComponent.ReturnToGame();
     }
 
     void FixedUpdate()
@@ -763,9 +798,6 @@ public class Controller : NetworkBehaviour
         //if localplay or if online and is server, calculate current wave
         if (!Settings.OnlinePlay || (Settings.OnlinePlay && isServer))
             CalculateCurrentDay();
-
-        if (inputHandler.optionsPressed)
-            gameMenuComponent.OnOptions();
 
         ReshapeCollider();
 
@@ -802,7 +834,7 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        if (!photoMode && backgroundMaskCanvasGroup.alpha != 1) // IF NOT IN OPTIONS OR PHOTO MODE
+        if (!photoMode && !options) // IF NOT IN OPTIONS OR PHOTO MODE
         {
             //bool isInActiveChunk = voxelCollider.playerChunkIsActive;
             // IF PRESSED GRAB
@@ -824,7 +856,7 @@ public class Controller : NetworkBehaviour
             positionCursorBlocks();
             MovePlayer(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
         }
-        else if (photoMode && backgroundMaskCanvasGroup.alpha != 1)
+        else if (photoMode && !options)
         {
             MoveCamera(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
         }
@@ -1030,7 +1062,7 @@ public class Controller : NetworkBehaviour
 
     public void DropItemsInSlot()
     {
-        if (backgroundMaskCanvasGroup.alpha != 1 && !photoMode && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS OR PHOTO MODE AND ITEM IN SLOT
+        if (!options && !photoMode && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS OR PHOTO MODE AND ITEM IN SLOT
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
     }
 
@@ -1050,6 +1082,8 @@ public class Controller : NetworkBehaviour
 
     public void PressedGrab()
     {
+        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabRange, 11); // ignore player layer
+
         if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT
         {
             blockID = World.Instance.GetVoxelState(removePos.position).id;
@@ -1060,6 +1094,16 @@ public class Controller : NetworkBehaviour
             PickupBrick(removePos.position);
             reticle.SetActive(false);
         }
+        //else if (hitCollider && raycastHit.transform.tag != "Chunk") // WIP (Do not need to be able to hold rigidbodies since they dissapear soon after spawning anyways)
+        //{
+        //    grabbedOb = raycastHit.transform;
+        //    if (grabbedOb.gameObject.GetComponent<Rigidbody>() != null) // if has a rigidbody
+        //    {
+        //        Debug.Log(grabbedOb.name);
+        //        grabbedOb.parent = playerCamera.transform;
+        //        holdingGrab = true;
+        //    }
+        //}
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if toolbar slot has a stack
         {
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
@@ -1128,12 +1172,17 @@ public class Controller : NetworkBehaviour
     public void ReleasedGrab()
     {
         holdingGrab = false;
-        if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT
+        if (removePos.gameObject.activeSelf && grabbedOb == null) // IF VOXEL PRESENT AND NOT HOLDING COLLIDER, PLACE VOXEL
         {
             health.blockCounter++;
             PlaceBrick(placePos.position);
         }
-        else
+        else if (grabbedOb != null) // IF HOLDING OB (WIP)
+        {
+            grabbedOb.parent = null;
+            grabbedOb = null;
+        }
+        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
             PutAwayBrick(blockID);
 
         reticle.SetActive(true);
@@ -1220,63 +1269,63 @@ public class Controller : NetworkBehaviour
 
     public void Use()
     {
-        if (backgroundMaskCanvasGroup.alpha != 1 && !photoMode) // IF NOT IN OPTIONS OR PHOTO MODE
+        if (options || photoMode) // IF NOT IN OPTIONS OR PHOTO MODE
+            return;
+        
+        Vector3 pos = removePos.position;
+
+        byte blockID = World.Instance.GetVoxelState(pos).id;
+
+        // if charType is mechanical, and block is crystal, and health is not max and the selected slot has a stack
+        if (typeChar == 0 && blockID == 30 && health.hp < health.hpMax)
         {
-            Vector3 pos = removePos.position;
-
-            byte blockID = World.Instance.GetVoxelState(pos).id;
-
-            // if charType is mechanical, and block is crystal, and health is not max and the selected slot has a stack
-            if (typeChar == 0 && blockID == 30 && health.hp < health.hpMax)
-            {
-                // remove qty 1 from stack
-                health.RequestEditSelfHealth(1);
-                crystal.Play();
-                RemoveVoxel(pos);
-            }
-            // else if charType is organic, and block is mushroom, and health is not max and the selected slot has a stack
-            else if (typeChar == 1 && blockID == 32 && health.hp < health.hpMax)
-            {
-                // remove qty 1 from stack
-                health.RequestEditSelfHealth(1);
-                eat.Play();
-                RemoveVoxel(pos);
-            }
-            else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn vehicle
-            {
-                // spawn vehicleOb at shootPos
-                if (Settings.OnlinePlay)
-                    CmdSpawnUndefinedPrefab(0, shootPos.position);
-                else
-                    SpawnUndefinedPrefab(0, shootPos.position);
-
-                TakeFromCurrentSlot(1);
-            }
-            else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
-            {
-                // WIP
-                vehicle = gun.target.gameObject;
-                //vehicle.transform.parent = transform;
-                modelPrefab.SetActive(false);
-                isDriving = true;
-            }
-            else if (isDriving)
-            {
-                //vehicle.transform.parent = null;
-                modelPrefab.SetActive(true);
-                isDriving = false;
-            }
-            //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
-            //{
-            //    if (!Settings.OnlinePlay)
-            //        World.Instance.ActivateChunks(); // activate the rest of the world chunks
-            //    else
-            //        CmdActivateChunks();
-            //}
+            // remove qty 1 from stack
+            health.RequestEditSelfHealth(1);
+            crystal.Play();
+            RemoveVoxel(pos);
+        }
+        // else if charType is organic, and block is mushroom, and health is not max and the selected slot has a stack
+        else if (typeChar == 1 && blockID == 32 && health.hp < health.hpMax)
+        {
+            // remove qty 1 from stack
+            health.RequestEditSelfHealth(1);
+            eat.Play();
+            RemoveVoxel(pos);
+        }
+        else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn vehicle
+        {
+            // spawn vehicleOb at shootPos
+            if (Settings.OnlinePlay)
+                CmdSpawnUndefinedPrefab(0, shootPos.position);
             else
-            {
-                isHolding = !isHolding; // toggle lights
-            }
+                SpawnUndefinedPrefab(0, shootPos.position);
+
+            TakeFromCurrentSlot(1);
+        }
+        else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
+        {
+            // WIP
+            vehicle = gun.target.gameObject;
+            //vehicle.transform.parent = transform;
+            modelPrefab.SetActive(false);
+            isDriving = true;
+        }
+        else if (isDriving)
+        {
+            //vehicle.transform.parent = null;
+            modelPrefab.SetActive(true);
+            isDriving = false;
+        }
+        //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
+        //{
+        //    if (!Settings.OnlinePlay)
+        //        World.Instance.ActivateChunks(); // activate the rest of the world chunks
+        //    else
+        //        CmdActivateChunks();
+        //}
+        else
+        {
+            isHolding = !isHolding; // toggle lights
         }
     }
 
@@ -1306,9 +1355,12 @@ public class Controller : NetworkBehaviour
                 break;
             case 1:
                 sceneObject.typeTool = item;
+                if (typeTool >= 44 && typeTool <= 55) // throwing knives, blades, axes
+                    ob.tag = "Hazard";
                 break;
             case 2:
                 sceneObject.typeProjectile = item;
+                ob.tag = "Hazard";
                 break;
         }
 
@@ -1318,7 +1370,6 @@ public class Controller : NetworkBehaviour
             ob.GetComponent<NetworkTransform>().enabled = true;
             customNetworkManager.SpawnNetworkOb(ob);
         }
-        ob.tag = "Projectile";
         ob.layer = 10;
         Destroy(ob, 5); // clean up objects after 5 seconds
     }
@@ -1662,6 +1713,11 @@ public class Controller : NetworkBehaviour
     public void TogglePhotoMode()
     {
         photoMode = !photoMode;
+    }
+
+    public void ToggleOptions()
+    {
+        options = !options;
     }
 
     void Animate()

@@ -234,8 +234,13 @@ MonoBehaviour:
   sun: {fileID: 1564743102805949143}
   moon: {fileID: 6383730471121164465}
   sunProperties: {fileID: 11400000, guid: 534fae1f7a7665147bfe10d593da92d2, type: 2}
-  moonProperties: {fileID: 11400000, guid: 2b8e869b5d77d3e4785c40aa0bb98fdd, type: 2}
-  skyboxDay: {fileID: 2100000, guid: 0ffaa0b7117ba8c47a9d05ae701d4b4d, type: 2}
-  skyboxNight: {fileID: 2100000, guid: f7252232c77ec2047adb489a75ee0fd7, type: 2}
+  skyboxAtmosphere: {fileID: 2100000, guid: 0ffaa0b7117ba8c47a9d05ae701d4b4d, type: 2}
+  skyboxSpace: {fileID: 2100000, guid: a4e018cbf55eee744ab731c1fc96934b, type: 2}
+  daytime: 1
+  wasDaytime: 1
+  skyTint: {r: 1, g: 1, b: 1, a: 1}
+  skyTintValue: 1
+  ambientIntensity: 1
+  reflectionIntensity: 1
   timeOfDay: 6.01
   maxFogDensity: 0.00125

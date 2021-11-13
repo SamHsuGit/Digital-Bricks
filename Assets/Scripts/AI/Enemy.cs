@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         // projectiles hurt enemies
-        if (hit.gameObject.tag == "Projectile")
+        if (hit.gameObject.tag == "Hazard")
             health.EditSelfHealth(-1);
     }
 

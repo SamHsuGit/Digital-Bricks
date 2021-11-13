@@ -91,7 +91,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Options"",
+                    ""name"": ""ToggleOptions"",
                     ""type"": ""Button"",
                     ""id"": ""e48d9ee9-f7a2-4f57-8594-8e233bea0382"",
                     ""expectedControlType"": ""Button"",
@@ -285,7 +285,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Options"",
+                    ""action"": ""ToggleOptions"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -296,7 +296,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Options"",
+                    ""action"": ""ToggleOptions"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1103,7 +1103,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_Actions_Shoot = m_Actions.FindAction("Shoot", throwIfNotFound: true);
         m_Actions_Jump = m_Actions.FindAction("Jump", throwIfNotFound: true);
         m_Actions_Sprint = m_Actions.FindAction("Sprint", throwIfNotFound: true);
-        m_Actions_Options = m_Actions.FindAction("Options", throwIfNotFound: true);
+        m_Actions_ToggleOptions = m_Actions.FindAction("ToggleOptions", throwIfNotFound: true);
         m_Actions_TogglePhotoMode = m_Actions.FindAction("TogglePhotoMode", throwIfNotFound: true);
         m_Actions_ToggleControls = m_Actions.FindAction("ToggleControls", throwIfNotFound: true);
         m_Actions_Navigate = m_Actions.FindAction("Navigate", throwIfNotFound: true);
@@ -1177,7 +1177,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Actions_Shoot;
     private readonly InputAction m_Actions_Jump;
     private readonly InputAction m_Actions_Sprint;
-    private readonly InputAction m_Actions_Options;
+    private readonly InputAction m_Actions_ToggleOptions;
     private readonly InputAction m_Actions_TogglePhotoMode;
     private readonly InputAction m_Actions_ToggleControls;
     private readonly InputAction m_Actions_Navigate;
@@ -1194,7 +1194,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         public InputAction @Shoot => m_Wrapper.m_Actions_Shoot;
         public InputAction @Jump => m_Wrapper.m_Actions_Jump;
         public InputAction @Sprint => m_Wrapper.m_Actions_Sprint;
-        public InputAction @Options => m_Wrapper.m_Actions_Options;
+        public InputAction @ToggleOptions => m_Wrapper.m_Actions_ToggleOptions;
         public InputAction @TogglePhotoMode => m_Wrapper.m_Actions_TogglePhotoMode;
         public InputAction @ToggleControls => m_Wrapper.m_Actions_ToggleControls;
         public InputAction @Navigate => m_Wrapper.m_Actions_Navigate;
@@ -1234,9 +1234,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Sprint.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
-                @Options.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnOptions;
-                @Options.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnOptions;
-                @Options.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnOptions;
+                @ToggleOptions.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleOptions;
+                @ToggleOptions.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleOptions;
+                @ToggleOptions.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleOptions;
                 @TogglePhotoMode.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTogglePhotoMode;
                 @TogglePhotoMode.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTogglePhotoMode;
                 @TogglePhotoMode.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTogglePhotoMode;
@@ -1277,9 +1277,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
-                @Options.started += instance.OnOptions;
-                @Options.performed += instance.OnOptions;
-                @Options.canceled += instance.OnOptions;
+                @ToggleOptions.started += instance.OnToggleOptions;
+                @ToggleOptions.performed += instance.OnToggleOptions;
+                @ToggleOptions.canceled += instance.OnToggleOptions;
                 @TogglePhotoMode.started += instance.OnTogglePhotoMode;
                 @TogglePhotoMode.performed += instance.OnTogglePhotoMode;
                 @TogglePhotoMode.canceled += instance.OnTogglePhotoMode;
@@ -1454,7 +1454,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
-        void OnOptions(InputAction.CallbackContext context);
+        void OnToggleOptions(InputAction.CallbackContext context);
         void OnTogglePhotoMode(InputAction.CallbackContext context);
         void OnToggleControls(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);

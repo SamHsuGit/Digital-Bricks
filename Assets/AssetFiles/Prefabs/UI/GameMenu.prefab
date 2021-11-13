@@ -1434,7 +1434,6 @@ MonoBehaviour:
   backgroundMask: {fileID: 360627694452526005}
   playerHUD: {fileID: 106192739479082698}
   optionsMenu: {fileID: 1391849460525943594}
-  playerManagerNetwork: {fileID: 1777242250530501421, guid: 98900ebfb9509574eb5f96d489dedcdf, type: 3}
   debugScreen: {fileID: 6143453991621907583}
   buttonSound: {fileID: 6193172391877120140}
   autoSaveIcon: {fileID: 6268836736887431323}
@@ -2021,7 +2020,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 7792842065350826006}
+    m_SelectOnUp: {fileID: 1732610991206421095}
     m_SelectOnDown: {fileID: 4077332918785026370}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -5158,7 +5157,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 2813964470443044392}
-    m_SelectOnDown: {fileID: 7792842065350826006}
+    m_SelectOnDown: {fileID: 1391849460782599793}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -5869,7 +5868,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8829535018077747947
 RectTransform:
   m_ObjectHideFlags: 0

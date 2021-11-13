@@ -79,6 +79,14 @@ MonoBehaviour:
         m_Groups: 
         m_Action: Join
         m_Flags: 0
+      - m_Name: 
+        m_Id: 8eb8dab9-bc6f-4c25-b064-4d4a402364dd
+        m_Path: <Mouse>/leftButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
     m_Reference: {fileID: 0}
   m_PlayerPrefab: {fileID: 882067467362529611, guid: 89b1e2cae76c9a0418491aa869c68820, type: 3}
   m_SplitScreen: 1

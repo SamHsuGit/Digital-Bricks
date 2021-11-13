@@ -18,8 +18,6 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
         Application.targetFrameRate = 60;
     }
 

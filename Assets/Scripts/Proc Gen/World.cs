@@ -853,11 +853,14 @@ public class World : MonoBehaviour
                             if(blockID == 25 || blockID == 26)
                             {
                                 if (blockID == 25) // if base, cache object as baseOb
+                                {
                                     baseOb = VBO;
-                                AddBoxColliderMaterialToChildren(VBO);
+                                    baseOb.AddComponent<Health>();
+                                } 
+                                AddToBaseChildren(VBO);
                                 if (Settings.OnlinePlay)
                                     VBO.AddComponent<NetworkIdentity>();
-                                VBO.GetComponent<BoxCollider>().enabled = true; // VBO Box collider used to add placeholder voxels for world procGen
+                                VBO.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
                             }
                             objectDictionary.Add(globalPosition, VBO);
                         }
@@ -871,13 +874,18 @@ public class World : MonoBehaviour
         }
     }
 
-    public void AddBoxColliderMaterialToChildren(GameObject _go)
+    public void AddToBaseChildren(GameObject _go)
     {
         BoxCollider[] children = _go.GetComponentsInChildren<BoxCollider>();
         for(int i = 0; i < children.Length; i++)
         {
             if(children[i].gameObject.layer == 10)
+            {
+                children[i].gameObject.AddComponent<Health>();
+                children[i].gameObject.GetComponent<Health>().physicMaterial = physicMaterial;
                 children[i].gameObject.GetComponent<BoxCollider>().material = physicMaterial;
+            }
+                
         }
     }
 

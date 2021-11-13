@@ -6,7 +6,7 @@ public class Gun : NetworkBehaviour
     public float fireRate = 2f;
     public float impactForce = 0.01f;
     public int damage = 1;
-    public float range = 100f;
+    public float range = 2f;
 
     public Camera fpsCam;
     public AudioSource pewpew;
@@ -25,7 +25,7 @@ public class Gun : NetworkBehaviour
 
     // private variables
     public float nextTimeToFire = 0f;
-    float sphereCastRadius = 0.1f;
+    public float sphereCastRadius = 0.1f;
 
     RaycastHit hit;
 
@@ -58,6 +58,9 @@ public class Gun : NetworkBehaviour
     // if raycast hits a destructible object (with health but not this player), turn outer reticle red
     public Health FindTarget()
     {
+        if (!controller.isHolding) // can only hit other objects if holding a melee weapon
+            return null;
+
         image.color = Color.HSVToRGB(0, 0, 50, true);
 
         //if hit something

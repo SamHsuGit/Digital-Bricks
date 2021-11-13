@@ -107,8 +107,8 @@ public class GameMenu : MonoBehaviour
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
 
         uac.renderPostProcessing = false;
-        Cursor.visible = false; // mouse click fires UI toggle elements 2x, so disabled cursor entirely
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         backgroundMaskCanvasGroup.alpha = 1;
         playerHUDCanvasGroup.alpha = 0;
         playerHUDCanvasGroup.interactable = false;
@@ -123,8 +123,8 @@ public class GameMenu : MonoBehaviour
         buttonSound.Play();
 
         uac.renderPostProcessing = true;
-        //Cursor.visible = false; // mouse click fires UI toggle elements 2x, so disabled cursor entirely
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         backgroundMaskCanvasGroup.alpha = 0;
         playerHUDCanvasGroup.alpha = 1;
         playerHUDCanvasGroup.interactable = true;

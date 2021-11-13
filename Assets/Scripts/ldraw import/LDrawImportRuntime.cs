@@ -46,7 +46,7 @@ public class LDrawImportRuntime : MonoBehaviour
 
         // imports models and hides upon world load to be instantiated later
         baseOb = ImportLDraw("base", new Vector3(0, -10000, 0), true);
-        //procGenOb = ImportLDraw("procGen", new Vector3(0, 0, 0), true); // spawn preloaded copy far below world so its not visible since cannot make prefab
+        //procGenOb = ImportLDraw("procGen", new Vector3(0, -10000, 0), true); // spawn preloaded copy far below world so its not visible since cannot make prefab
         vehicleOb = ImportLDraw("vehicle", new Vector3(0, -10000, 0), false);
         vehicleOb.tag = "Vehicle";
 

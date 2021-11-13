@@ -6,8 +6,8 @@ TagManager:
   tags:
   - UIItemSlot
   - Vehicle
-  - Enemy
-  - Projectile
+  - Hazard
+  - Chunk
   layers:
   - Default
   - TransparentFX
