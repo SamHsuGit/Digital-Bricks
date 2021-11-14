@@ -808,6 +808,7 @@ MonoBehaviour:
   isMoving: 0
   isSprinting: 0
   isDriving: 0
+  isMeleeWeapon: 0
   isHolding: 0
   photoMode: 0
   options: 0

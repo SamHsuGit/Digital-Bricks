@@ -1739,7 +1739,7 @@ public class Controller : NetworkBehaviour
                 break;
             case 1:
                 animator.SetBool("isHolding", isHolding);
-                if(isMeleeWeapon)
+                if(isHolding && isMeleeWeapon)
                     animator.SetBool("isMelee", inputHandler.shoot);
                 break;
         }
