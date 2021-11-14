@@ -51,6 +51,7 @@ public class Controller : NetworkBehaviour
     public bool isMoving = false;
     public bool isSprinting;
     public bool isDriving = false;
+    public bool isMeleeWeapon = false;
     [SyncVar] public bool isHolding = false;
     public bool photoMode = false;
     public bool options = false;
@@ -505,6 +506,7 @@ public class Controller : NetworkBehaviour
         }
         else if (typeTool >= 55 && typeTool <= 77) // melee weapon
         {
+            isMeleeWeapon = true;
             gun.range = 2f;
             return;
         }
@@ -1737,6 +1739,8 @@ public class Controller : NetworkBehaviour
                 break;
             case 1:
                 animator.SetBool("isHolding", isHolding);
+                if(isMeleeWeapon)
+                    animator.SetBool("isMelee", inputHandler.shoot);
                 break;
         }
     }

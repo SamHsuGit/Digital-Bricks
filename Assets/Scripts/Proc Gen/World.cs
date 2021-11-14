@@ -855,7 +855,7 @@ public class World : MonoBehaviour
                                 if (blockID == 25) // if base, cache object as baseOb
                                 {
                                     baseOb = VBO;
-                                    baseOb.AddComponent<Health>();
+                                    //baseOb.AddComponent<Health>(); // not needed if we give child objects health components
                                 } 
                                 AddToBaseChildren(VBO);
                                 if (Settings.OnlinePlay)
@@ -879,14 +879,24 @@ public class World : MonoBehaviour
 
     public void AddToBaseChildren(GameObject _go)
     {
-        BoxCollider[] children = _go.GetComponentsInChildren<BoxCollider>();
-        for(int i = 0; i < children.Length; i++)
+        BoxCollider[] childObs = _go.GetComponentsInChildren<BoxCollider>();
+        for(int i = 0; i < childObs.Length; i++)
         {
-            if(children[i].gameObject.layer == 10)
+            if(childObs[i].gameObject.layer == 10)
             {
-                children[i].gameObject.AddComponent<Health>();
-                children[i].gameObject.GetComponent<Health>().physicMaterial = physicMaterial;
-                children[i].gameObject.GetComponent<BoxCollider>().material = physicMaterial;
+                // WIP, has error no netID for Gun CmdDamage(target) to work
+                //if(childObs[i].gameObject.GetComponent<NetworkIdentity>() == null)
+                //    childObs[i].gameObject.AddComponent<NetworkIdentity>();
+                //if (Settings.OnlinePlay)
+                //{
+                //    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(childObs[i].gameObject); // if not already registered, register child gameObject
+                //    customNetworkManager.SpawnNetworkOb(childObs[i].gameObject);
+                //}
+                //if (childObs[i].gameObject.GetComponent<Health>() == null)
+                //    childObs[i].gameObject.AddComponent<Health>();
+                //childObs[i].gameObject.GetComponent<Health>().physicMaterial = physicMaterial;
+
+                childObs[i].gameObject.GetComponent<BoxCollider>().material = physicMaterial;
             }
                 
         }
