@@ -17,3 +17,29 @@ LDraw Community (Creative Commons Attribution License 2.0): https://www.ldraw.or
 Grygory Dyadichenko - LDraw Importer (MIT License): https://github.com/Nox7atra/LDraw_Importer_Unity
 
 B3agz - Code A Game Like Minecraft in Unity (YouTube Tutorials): https://github.com/b3agz/Code-A-Game-Like-Minecraft-In-Unity
+
+vis2k Mirror (MIT License): https://github.com/vis2k/Mirror
+
+Unity (Personal License)
+
+Unity Packages:
+
+2D Sprite
+
+Unity Input System
+
+JetBrains Rider Editor
+
+Test Framework
+
+TextMeshPro
+
+Timeline
+
+Unity UI
+
+Universal RP
+
+Visual Studio Code Editor
+
+Visual Studio Editor
