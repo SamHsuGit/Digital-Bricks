@@ -149,8 +149,8 @@ public class Gun : NetworkBehaviour
     [Command]
     public void CmdBreakBaseObPiece(int piece)
     {
-        BreakBaseObPiece(piece);
-        //RpcBreakBaseObPiece(piece);
+        //BreakBaseObPiece(piece);
+        RpcBreakBaseObPiece(piece);
     }
 
     [ClientRpc]
