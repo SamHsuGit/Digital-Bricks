@@ -93,45 +93,45 @@ public class Gun : NetworkBehaviour
             //if(Settings.OnlinePlay && !World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Contains(target.gameObject))
             //    World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(target.gameObject); // if not already registered, register target gameObject
 
-            //if(target.gameObject.tag == "BaseObPiece")
-            //{
-            //    baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
-            //    for (int i = 0; i < baseModelPieces.Count; i++)
-            //    {
-            //        if(baseModelPieces[i] == target.gameObject)
-            //        {
-            //            if (Settings.OnlinePlay)
-            //                CmdBreakBaseObPiece(i);
-            //            else
-            //                BreakBaseObPiece(i);
-            //        }
-            //    }
-            //}
-            //else
+            if(target.gameObject.tag == "BaseObPiece")
+            {
+                baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
+                for (int i = 0; i < baseModelPieces.Count; i++)
+                {
+                    if(baseModelPieces[i] == target.gameObject)
+                    {
+                        if (Settings.OnlinePlay)
+                            CmdBreakBaseObPiece(i);
+                        else
+                            BreakBaseObPiece(i);
+                    }
+                }
+            }
+            else
             {
                 if (Settings.OnlinePlay)
-                    CmdDamage(); // target has no valid id or network writer to transmit health?
+                    CmdDamage(target); // target has no valid id or network writer to transmit health?
                 else
-                    Damage();
+                    Damage(target);
             }
         }
     }
 
     [Command]
     // public function called when gun raycast hits target
-    public void CmdDamage()
+    public void CmdDamage(Health target)
     {
         // player identity validation logic here
-        RpcDamage();
+        RpcDamage(target);
     }
 
     [ClientRpc]
-    public void RpcDamage()
+    public void RpcDamage(Health target)
     {
-        Damage();
+        Damage(target);
     }
 
-    public void Damage()
+    public void Damage(Health target)
     {
         target.hp -= damage; // only edit health on server which pushes syncVar updates to clients
         target.UpdateHP(target.hp, target.hp);
@@ -142,18 +142,18 @@ public class Gun : NetworkBehaviour
     [Command]
     public void CmdBreakBaseObPiece(int piece)
     {
-
+        RpcBreakBaseObPiece(piece);
     }
 
     [ClientRpc]
     public void RpcBreakBaseObPiece(int piece)
     {
-
+        BreakBaseObPiece(piece);
     }
 
     public void BreakBaseObPiece(int piece)
     {
-        gameObject.GetComponent<Health>().SpawnCopyRb(target.gameObject);
-        Destroy(target.gameObject);
+        gameObject.GetComponent<Health>().SpawnCopyRb(baseModelPieces[piece]);
+        baseModelPieces[piece].SetActive(false);
     }
 }
