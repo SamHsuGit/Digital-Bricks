@@ -892,14 +892,14 @@ MonoBehaviour:
   impactForce: 0.01
   damage: 1
   range: 2
+  nextTimeToFire: 0
+  sphereCastRadius: 0.1
   fpsCam: {fileID: 6534775095329473395}
   pewpew: {fileID: 2364338383874120313}
   hitSound: {fileID: 4441129712410841954}
   reticleChangeColor: {fileID: 170724433810035422}
   backgroundMask: {fileID: 6861918821474845234}
   target: {fileID: 0}
-  nextTimeToFire: 0
-  sphereCastRadius: 0.1
 --- !u!54 &1999248456142662278
 Rigidbody:
   m_ObjectHideFlags: 0
