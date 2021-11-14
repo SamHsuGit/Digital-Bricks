@@ -65,8 +65,6 @@ public class Gun : NetworkBehaviour
         {
             if (hit.transform.GetComponent<Health>() != null)
                 target = hit.transform.GetComponent<Health>();
-            //else if (hit.transform.parent.root.GetComponent<Health>() != null)
-            //    target = hit.transform.parent.root.GetComponent<Health>();
 
             if (hit.transform.tag == "BaseObPiece") // else if targeting a base object
             {
@@ -142,7 +140,6 @@ public class Gun : NetworkBehaviour
     [Command]
     public void CmdBreakBaseObPiece(int piece)
     {
-        //BreakBaseObPiece(piece);
         RpcBreakBaseObPiece(piece);
     }
 

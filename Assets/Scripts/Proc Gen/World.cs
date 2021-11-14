@@ -887,7 +887,7 @@ public class World : MonoBehaviour
             {
                 GameObject ob = childObs[i].gameObject;
 
-                //ob.transform.parent = null; // unparent as separate objects from base parent object
+                ob.transform.parent = null; // unparent as separate objects from base parent object
                 if (Settings.OnlinePlay)
                 {
                     if (ob.GetComponent<NetworkIdentity>() == null)
