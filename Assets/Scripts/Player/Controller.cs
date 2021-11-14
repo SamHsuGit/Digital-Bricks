@@ -1141,8 +1141,8 @@ public class Controller : NetworkBehaviour
             {
                 if (grabbedPrefab.GetComponent<NetworkIdentity>() == null)
                     grabbedPrefab.AddComponent<NetworkIdentity>();
-                if (grabbedPrefab.GetComponent<NetworkTransform>() == null)
-                    grabbedPrefab.AddComponent<NetworkTransform>();
+                //if (grabbedPrefab.GetComponent<NetworkTransform>() == null)
+                //    grabbedPrefab.AddComponent<NetworkTransform>();
                 //if(isServer)
                 //    customNetworkManager.SpawnNetworkOb(grabbedPrefab); // Does not work for some reason
             }
@@ -1179,11 +1179,11 @@ public class Controller : NetworkBehaviour
             health.blockCounter++;
             PlaceBrick(placePos.position);
         }
-        else if (grabbedOb != null) // IF HOLDING OB (WIP)
-        {
-            grabbedOb.parent = null;
-            grabbedOb = null;
-        }
+        //else if (grabbedOb != null) // IF HOLDING OB (WIP)
+        //{
+        //    grabbedOb.parent = null;
+        //    grabbedOb = null;
+        //}
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
             PutAwayBrick(blockID);
 
@@ -1369,7 +1369,9 @@ public class Controller : NetworkBehaviour
         if (Settings.OnlinePlay)
         {
             ob.GetComponent<NetworkIdentity>().enabled = true;
-            ob.GetComponent<NetworkTransform>().enabled = true;
+            if (ob.GetComponent<NetworkTransform>() == null)
+                ob.AddComponent<NetworkTransform>();
+            //ob.GetComponent<NetworkTransform>().enabled = true;
             customNetworkManager.SpawnNetworkOb(ob);
         }
         ob.layer = 10;
