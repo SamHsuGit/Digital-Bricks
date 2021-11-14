@@ -90,7 +90,7 @@ public class Gun : NetworkBehaviour
     // Server calculated shoot logic gives players the authority to change hp of other gameObjects
     public void Shoot()
     {
-        if (hit.transform.gameObject != null && hit.transform.tag == "BaseObPiece") // hit base object
+        if (hit.transform != null && hit.transform.tag == "BaseObPiece") // hit base object
         {
             hitSound.Play();
 
