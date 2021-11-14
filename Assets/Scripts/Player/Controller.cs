@@ -1121,7 +1121,7 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    void CmdUpdateGrabObject(bool holding, byte blockID) // WIP
+    void CmdUpdateGrabObject(bool holding, byte blockID)
     {
         RpcUpdateGrabObject(holding, blockID);
     }
@@ -1141,7 +1141,7 @@ public class Controller : NetworkBehaviour
             {
                 if (grabbedPrefab.GetComponent<NetworkIdentity>() == null)
                     grabbedPrefab.AddComponent<NetworkIdentity>();
-                //if (grabbedPrefab.GetComponent<NetworkTransform>() == null)
+                //if (grabbedPrefab.GetComponent<NetworkTransform>() == null) // causes null object error for TransformBase
                 //    grabbedPrefab.AddComponent<NetworkTransform>();
                 //if(isServer)
                 //    customNetworkManager.SpawnNetworkOb(grabbedPrefab); // Does not work for some reason
@@ -1371,7 +1371,7 @@ public class Controller : NetworkBehaviour
             ob.GetComponent<NetworkIdentity>().enabled = true;
             if (ob.GetComponent<NetworkTransform>() == null)
                 ob.AddComponent<NetworkTransform>();
-            //ob.GetComponent<NetworkTransform>().enabled = true;
+            ob.GetComponent<NetworkTransform>().enabled = true;
             customNetworkManager.SpawnNetworkOb(ob);
         }
         ob.layer = 10;
@@ -1404,8 +1404,8 @@ public class Controller : NetworkBehaviour
         {
             if (ob.GetComponent<NetworkIdentity>() == null)
                 ob.AddComponent<NetworkIdentity>();
-            //if (ob.GetComponent<NetworkTransform>() == null) // Network transform base error?
-            //    ob.AddComponent<NetworkTransform>();
+            if (ob.GetComponent<NetworkTransform>() == null) // DISABLED (Chose to use Rb instead?) Network transform base error?
+                ob.AddComponent<NetworkTransform>();
         }
         MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 
@@ -1461,7 +1461,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public Vector3[] GetVoxelPositionsInVolume(Vector3 center, int width)
+    public Vector3[] GetVoxelPositionsInVolume(Vector3 center, int width) // DISABLED would allow players to edit more than 1 voxel at a time causing block duplication (breaks gameplay)
     {
         if (width % 2 == 0) // if even number, round up to nearest odd number
             width += 1;
