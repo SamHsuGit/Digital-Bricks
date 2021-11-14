@@ -896,7 +896,7 @@ public class World : MonoBehaviour
                     if (ob.GetComponent<NetworkIdentity>() == null)
                         ob.AddComponent<NetworkIdentity>();
                     customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(ob); // if not already registered, register child gameObject
-                    customNetworkManager.SpawnNetworkOb(ob);
+                    //customNetworkManager.SpawnNetworkOb(ob);
                 }
                 //if (ob.GetComponent<Health>() == null)
                 //    ob.AddComponent<Health>();
