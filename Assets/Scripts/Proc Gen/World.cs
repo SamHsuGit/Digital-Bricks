@@ -855,7 +855,7 @@ public class World : MonoBehaviour
                                 if (blockID == 25) // if base, cache object as baseOb
                                 {
                                     baseOb = VBO;
-                                    //baseOb.AddComponent<Health>(); // not needed if we give child objects health components
+                                    baseOb.AddComponent<Health>(); // used for baseOb gameObject references even though we give child objects health components
                                 } 
                                 AddToBaseChildren(VBO);
                                 if (Settings.OnlinePlay)

@@ -1,33 +1,31 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
+using System.Collections.Generic;
+
 public class Gun : NetworkBehaviour
 {
     public float fireRate = 2f;
     public float impactForce = 0.01f;
     public int damage = 1;
     public float range = 2f;
+    public float nextTimeToFire = 0f;
+    public float sphereCastRadius = 0.1f;
 
     public Camera fpsCam;
     public AudioSource pewpew;
     public AudioSource hitSound;
     public GameObject reticleChangeColor;
     public GameObject backgroundMask;
+    public Health target;
 
+    List<GameObject> baseModelPieces;
     InputHandler inputHandler;
     Controller controller;
     CanvasGroup backgroundMaskCanvasGroup;
-
-    public Health target;
-
-    // Components
-    private Image image;
-
-    // private variables
-    public float nextTimeToFire = 0f;
-    public float sphereCastRadius = 0.1f;
-
     RaycastHit hit;
+
+    private Image image;
 
     private void Awake()
     {
@@ -95,40 +93,67 @@ public class Gun : NetworkBehaviour
             //if(Settings.OnlinePlay && !World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Contains(target.gameObject))
             //    World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(target.gameObject); // if not already registered, register target gameObject
 
-            if(target.gameObject.tag == "BaseObPiece")
-            {
-                gameObject.GetComponent<Health>().SpawnCopyRb(target.gameObject);
-                Destroy(target.gameObject);
-            }
-            else
+            //if(target.gameObject.tag == "BaseObPiece")
+            //{
+            //    baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
+            //    for (int i = 0; i < baseModelPieces.Count; i++)
+            //    {
+            //        if(baseModelPieces[i] == target.gameObject)
+            //        {
+            //            if (Settings.OnlinePlay)
+            //                CmdBreakBaseObPiece(i);
+            //            else
+            //                BreakBaseObPiece(i);
+            //        }
+            //    }
+            //}
+            //else
             {
                 if (Settings.OnlinePlay)
-                    CmdDamage(target); // target has no valid id or network writer to transmit health?
+                    CmdDamage(); // target has no valid id or network writer to transmit health?
                 else
-                    Damage(target);
+                    Damage();
             }
         }
     }
 
     [Command]
     // public function called when gun raycast hits target
-    public void CmdDamage(Health target)
+    public void CmdDamage()
     {
         // player identity validation logic here
-        RpcDamage(target);
+        RpcDamage();
     }
 
     [ClientRpc]
-    public void RpcDamage(Health target)
+    public void RpcDamage()
     {
-        Damage(target);
+        Damage();
     }
 
-    public void Damage(Health target)
+    public void Damage()
     {
         target.hp -= damage; // only edit health on server which pushes syncVar updates to clients
         target.UpdateHP(target.hp, target.hp);
         if (target.isAlive)
             target.PlayHurtSound();
+    }
+
+    [Command]
+    public void CmdBreakBaseObPiece(int piece)
+    {
+
+    }
+
+    [ClientRpc]
+    public void RpcBreakBaseObPiece(int piece)
+    {
+
+    }
+
+    public void BreakBaseObPiece(int piece)
+    {
+        gameObject.GetComponent<Health>().SpawnCopyRb(target.gameObject);
+        Destroy(target.gameObject);
     }
 }
