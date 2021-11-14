@@ -26,6 +26,7 @@ public class Gun : NetworkBehaviour
     RaycastHit hit;
 
     private Image image;
+    bool baseModelPiecesInit = false;
 
     private void Awake()
     {
@@ -35,17 +36,19 @@ public class Gun : NetworkBehaviour
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
     }
 
-    private void Start()
-    {
-        baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
-    }
-
     private void FixedUpdate()
     {
         if(Settings.OnlinePlay && !isLocalPlayer) return;
 
         target = null; // reset target
         target = FindTarget(); // get target gameObject
+
+        
+        if(World.Instance.baseOb != null && !baseModelPiecesInit) // if baseOb has been set in world script and did not already run this code
+        {
+            baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces; // cannot run in Awake or Start as World.Instance.baseOb has not been set yet
+            baseModelPiecesInit = true; // only need to run this code once
+        }  
 
         if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && !controller.photoMode)
         {
