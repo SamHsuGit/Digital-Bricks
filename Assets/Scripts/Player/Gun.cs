@@ -56,10 +56,10 @@ public class Gun : NetworkBehaviour
     // if raycast hits a destructible object (with health but not this player), turn outer reticle red
     public Health FindTarget()
     {
+        image.color = Color.HSVToRGB(0, 0, 50, true);
+
         if (!controller.isHolding) // can only hit other objects if holding a melee weapon
             return null;
-
-        image.color = Color.HSVToRGB(0, 0, 50, true);
 
         //if hit something
         if (Physics.SphereCast(fpsCam.transform.position, sphereCastRadius, fpsCam.transform.forward, out hit, range))
@@ -67,11 +67,15 @@ public class Gun : NetworkBehaviour
             if (hit.transform.GetComponent<Health>() != null)
                 target = hit.transform.GetComponent<Health>();
 
-            // if hits a model that is not this model
-            if (target != null && target.gameObject != gameObject && target.hp != 0)
+            if (target != null && target.gameObject != gameObject && target.hp != 0) // if hits a model that is not this model
             {
-                image.color = Color.HSVToRGB(0, 100, 50, true); // color reticle red if target found
+                image.color = Color.HSVToRGB(0, 100, 50, true); // turn reticle red
                 return target;
+            }
+            else if(hit.transform.tag == "BaseObPiece") // else if targeting a base object
+            {
+                image.color = Color.HSVToRGB(0, 100, 50, true); // turn reticle red
+                return null;
             }
             else
             {
@@ -86,34 +90,30 @@ public class Gun : NetworkBehaviour
     // Server calculated shoot logic gives players the authority to change hp of other gameObjects
     public void Shoot()
     {
-        if (target != null) // if target was found
+        if (hit.transform.tag == "BaseObPiece") // hit base object
         {
             hitSound.Play();
 
-            //if(Settings.OnlinePlay && !World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Contains(target.gameObject))
-            //    World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(target.gameObject); // if not already registered, register target gameObject
-
-            if(target.gameObject.tag == "BaseObPiece")
+            baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
+            for (int i = 0; i < baseModelPieces.Count; i++)
             {
-                baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
-                for (int i = 0; i < baseModelPieces.Count; i++)
+                if (baseModelPieces[i] == hit.transform.gameObject)
                 {
-                    if(baseModelPieces[i] == target.gameObject)
-                    {
-                        if (Settings.OnlinePlay)
-                            CmdBreakBaseObPiece(i);
-                        else
-                            BreakBaseObPiece(i);
-                    }
+                    if (Settings.OnlinePlay)
+                        CmdBreakBaseObPiece(i);
+                    else
+                        BreakBaseObPiece(i);
                 }
             }
+        }
+        else if (target != null) // if target was found
+        {
+            hitSound.Play();
+
+            if (Settings.OnlinePlay)
+                CmdDamage(target);
             else
-            {
-                if (Settings.OnlinePlay)
-                    CmdDamage(target); // target has no valid id or network writer to transmit health?
-                else
-                    Damage(target);
-            }
+                Damage(target);
         }
     }
 
