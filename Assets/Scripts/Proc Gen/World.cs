@@ -859,7 +859,10 @@ public class World : MonoBehaviour
                                 } 
                                 AddToBaseChildren(VBO);
                                 if (Settings.OnlinePlay)
-                                    VBO.AddComponent<NetworkIdentity>();
+                                {
+                                    if(VBO.GetComponent<NetworkIdentity>() == null)
+                                        VBO.AddComponent<NetworkIdentity>();
+                                }
                                 VBO.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
                             }
                             objectDictionary.Add(globalPosition, VBO);
