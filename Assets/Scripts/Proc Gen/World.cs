@@ -861,8 +861,6 @@ public class World : MonoBehaviour
                                 }
                                 baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                                 baseOb.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
-                                //baseOb.AddComponent<Health>(); // used for baseOb gameObject references
-                                //baseOb.GetComponent<Health>().physicMaterial = physicMaterial;
                                 AddToBaseChildren(baseOb);
                                 VBO = baseOb;
                             }
@@ -889,18 +887,13 @@ public class World : MonoBehaviour
             {
                 GameObject ob = childObs[i].gameObject;
 
-                //WIP, has error no netID for Gun CmdDamage(target) to work
-                ob.transform.parent = null; // unparent as separate objects from base parent object
+                //ob.transform.parent = null; // unparent as separate objects from base parent object
                 if (Settings.OnlinePlay)
                 {
                     if (ob.GetComponent<NetworkIdentity>() == null)
                         ob.AddComponent<NetworkIdentity>();
                     customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(ob); // if not already registered, register child gameObject
-                    //customNetworkManager.SpawnNetworkOb(ob);
                 }
-                //if (ob.GetComponent<Health>() == null)
-                //    ob.AddComponent<Health>();
-                //ob.GetComponent<Health>().physicMaterial = physicMaterial;
 
                 ob.tag = "BaseObPiece";
                 baseObPieces.Add(ob);

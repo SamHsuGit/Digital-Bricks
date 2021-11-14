@@ -156,12 +156,7 @@ public class Gun : NetworkBehaviour
     {
         GameObject ob = World.Instance.baseObPieces[piece];
 
-        //gameObject.GetComponent<Health>().SpawnCopyRb(ob);
+        gameObject.GetComponent<Health>().SpawnCopyRb(ob);
         Destroy(ob);
-
-        //if (ob.GetComponent<MeshRenderer>() != null)
-        //    ob.GetComponent<MeshRenderer>().enabled = false;
-        //if (ob.GetComponent<BoxCollider>() != null)
-        //    ob.GetComponent<BoxCollider>().enabled = false;
     }
 }
