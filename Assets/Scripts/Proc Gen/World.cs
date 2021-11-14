@@ -48,6 +48,7 @@ public class World : MonoBehaviour
     public List<ChunkCoord> previousChunksToDrawList = new List<ChunkCoord>();
     public List<ChunkCoord> chunksToDrawObjectsList = new List<ChunkCoord>();
     public List<ChunkCoord> copyOfChunksToDrawObjectsList = new List<ChunkCoord>();
+    public List<GameObject> baseObPieces = new List<GameObject>();
 
     public object ChunkDrawThreadLock = new object();
     public object ChunkLoadThreadLock = new object();
@@ -849,22 +850,24 @@ public class World : MonoBehaviour
                                 VBOPosition = new Vector3(globalPosition.x + 0.5f, globalPosition.y, globalPosition.z + 0.5f); // make center of the VBO center of the voxel (voxel origin is corner)
                                 VBOorientation.eulerAngles = new Vector3(180, 0, 0); // if VBOImport then flip right side up
                             }
-                            GameObject VBO = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
-                            if(blockID == 25 || blockID == 26)
+                            GameObject VBO;
+                            if (blockID == 25)
                             {
-                                if (blockID == 25) // if base, cache object as baseOb
-                                {
-                                    baseOb = VBO;
-                                    baseOb.AddComponent<Health>(); // used for baseOb gameObject references even though we give child objects health components
-                                } 
-                                AddToBaseChildren(VBO);
+                                baseOb = blocktypes[blockID].voxelBoundObject;
                                 if (Settings.OnlinePlay)
                                 {
-                                    if(VBO.GetComponent<NetworkIdentity>() == null)
-                                        VBO.AddComponent<NetworkIdentity>();
+                                    if(baseOb.GetComponent<NetworkIdentity>() == null)
+                                        baseOb.AddComponent<NetworkIdentity>();
                                 }
-                                VBO.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
+                                baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
+                                baseOb.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
+                                //baseOb.AddComponent<Health>(); // used for baseOb gameObject references
+                                //baseOb.GetComponent<Health>().physicMaterial = physicMaterial;
+                                AddToBaseChildren(baseOb);
+                                VBO = baseOb;
                             }
+                            else
+                                VBO = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                             objectDictionary.Add(globalPosition, VBO);
                         }
                     }
@@ -884,20 +887,25 @@ public class World : MonoBehaviour
         {
             if(childObs[i].gameObject.layer == 10) // if layer is LegoPiece
             {
-                ////WIP, has error no netID for Gun CmdDamage(target) to work
-                //if (childObs[i].gameObject.GetComponent<NetworkIdentity>() == null)
-                //        childObs[i].gameObject.AddComponent<NetworkIdentity>();
-                //if (Settings.OnlinePlay)
-                //{
-                //    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(childObs[i].gameObject); // if not already registered, register child gameObject
-                //    customNetworkManager.SpawnNetworkOb(childObs[i].gameObject);
-                //}
-                //if (childObs[i].gameObject.GetComponent<Health>() == null)
-                //    childObs[i].gameObject.AddComponent<Health>();
-                //childObs[i].gameObject.GetComponent<Health>().physicMaterial = physicMaterial;
-                childObs[i].gameObject.tag = "BaseObPiece";
+                GameObject ob = childObs[i].gameObject;
 
-                childObs[i].gameObject.GetComponent<BoxCollider>().material = physicMaterial;
+                //WIP, has error no netID for Gun CmdDamage(target) to work
+                ob.transform.parent = null; // unparent as separate objects from base parent object
+                if (Settings.OnlinePlay)
+                {
+                    if (ob.GetComponent<NetworkIdentity>() == null)
+                        ob.AddComponent<NetworkIdentity>();
+                    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(ob); // if not already registered, register child gameObject
+                    customNetworkManager.SpawnNetworkOb(ob);
+                }
+                //if (ob.GetComponent<Health>() == null)
+                //    ob.AddComponent<Health>();
+                //ob.GetComponent<Health>().physicMaterial = physicMaterial;
+
+                ob.tag = "BaseObPiece";
+                baseObPieces.Add(ob);
+
+                ob.GetComponent<BoxCollider>().material = physicMaterial;
             }
                 
         }

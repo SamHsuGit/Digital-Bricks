@@ -19,14 +19,12 @@ public class Gun : NetworkBehaviour
     public GameObject backgroundMask;
     public Health target;
 
-    List<GameObject> baseModelPieces;
     InputHandler inputHandler;
     Controller controller;
     CanvasGroup backgroundMaskCanvasGroup;
     RaycastHit hit;
 
     private Image image;
-    bool baseModelPiecesInit = false;
 
     private void Awake()
     {
@@ -42,13 +40,6 @@ public class Gun : NetworkBehaviour
 
         target = null; // reset target
         target = FindTarget(); // get target gameObject
-
-        
-        if(World.Instance.baseOb != null && !baseModelPiecesInit) // if baseOb has been set in world script and did not already run this code
-        {
-            baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces; // cannot run in Awake or Start as World.Instance.baseOb has not been set yet
-            baseModelPiecesInit = true; // only need to run this code once
-        }  
 
         if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && !controller.photoMode)
         {
@@ -74,16 +65,18 @@ public class Gun : NetworkBehaviour
         {
             if (hit.transform.GetComponent<Health>() != null)
                 target = hit.transform.GetComponent<Health>();
+            //else if (hit.transform.parent.root.GetComponent<Health>() != null)
+            //    target = hit.transform.parent.root.GetComponent<Health>();
 
-            if (target != null && target.gameObject != gameObject && target.hp != 0) // if hits a model that is not this model
-            {
-                image.color = Color.HSVToRGB(0, 100, 50, true); // turn reticle red
-                return target;
-            }
-            else if(hit.transform.tag == "BaseObPiece") // else if targeting a base object
+            if (hit.transform.tag == "BaseObPiece") // else if targeting a base object
             {
                 image.color = Color.HSVToRGB(0, 100, 50, true); // turn reticle red
                 return null;
+            }
+            else if (target != null && target.gameObject != gameObject && target.hp != 0) // if hits a model that is not this model
+            {
+                image.color = Color.HSVToRGB(0, 100, 50, true); // turn reticle red
+                return target;
             }
             else
             {
@@ -102,9 +95,9 @@ public class Gun : NetworkBehaviour
         {
             hitSound.Play();
 
-            for (int i = 0; i < baseModelPieces.Count; i++)
+            for (int i = 0; i < World.Instance.baseObPieces.Count; i++)
             {
-                if (baseModelPieces[i] == hit.transform.gameObject)
+                if (World.Instance.baseObPieces[i] == hit.transform.gameObject)
                 {
                     if (Settings.OnlinePlay)
                         CmdBreakBaseObPiece(i);
@@ -149,7 +142,8 @@ public class Gun : NetworkBehaviour
     [Command]
     public void CmdBreakBaseObPiece(int piece)
     {
-        RpcBreakBaseObPiece(piece);
+        BreakBaseObPiece(piece);
+        //RpcBreakBaseObPiece(piece);
     }
 
     [ClientRpc]
@@ -160,11 +154,14 @@ public class Gun : NetworkBehaviour
 
     public void BreakBaseObPiece(int piece)
     {
-        GameObject ob = baseModelPieces[piece];
+        GameObject ob = World.Instance.baseObPieces[piece];
+
         //gameObject.GetComponent<Health>().SpawnCopyRb(ob);
-        if (ob.GetComponent<MeshRenderer>() != null)
-            ob.GetComponent<MeshRenderer>().enabled = false;
-        if (ob.GetComponent<BoxCollider>() != null)
-            ob.GetComponent<BoxCollider>().enabled = false;
+        Destroy(ob);
+
+        //if (ob.GetComponent<MeshRenderer>() != null)
+        //    ob.GetComponent<MeshRenderer>().enabled = false;
+        //if (ob.GetComponent<BoxCollider>() != null)
+        //    ob.GetComponent<BoxCollider>().enabled = false;
     }
 }
