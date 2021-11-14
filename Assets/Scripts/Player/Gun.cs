@@ -149,7 +149,6 @@ public class Gun : NetworkBehaviour
     [Command]
     public void CmdBreakBaseObPiece(int piece)
     {
-        //BreakBaseObPiece(piece);
         RpcBreakBaseObPiece(piece);
     }
 
@@ -161,7 +160,11 @@ public class Gun : NetworkBehaviour
 
     public void BreakBaseObPiece(int piece)
     {
-        //gameObject.GetComponent<Health>().SpawnCopyRb(baseModelPieces[piece]);
-        baseModelPieces[piece].SetActive(false);
+        GameObject ob = baseModelPieces[piece];
+        //gameObject.GetComponent<Health>().SpawnCopyRb(ob);
+        if (ob.GetComponent<MeshRenderer>() != null)
+            ob.GetComponent<MeshRenderer>().enabled = false;
+        if (ob.GetComponent<BoxCollider>() != null)
+            ob.GetComponent<BoxCollider>().enabled = false;
     }
 }
