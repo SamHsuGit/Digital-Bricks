@@ -35,6 +35,11 @@ public class Gun : NetworkBehaviour
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
     }
 
+    private void Start()
+    {
+        baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
+    }
+
     private void FixedUpdate()
     {
         if(Settings.OnlinePlay && !isLocalPlayer) return;
@@ -87,14 +92,13 @@ public class Gun : NetworkBehaviour
             return null;
     }
 
-    // Server calculated shoot logic gives players the authority to change hp of other gameObjects
+    // Server calculated shoot logic gives players the authority to change hp of other preregistered gameObjects
     public void Shoot()
     {
         if (hit.transform != null && hit.transform.tag == "BaseObPiece") // hit base object
         {
             hitSound.Play();
 
-            baseModelPieces = World.Instance.baseOb.GetComponent<Health>().modelPieces;
             for (int i = 0; i < baseModelPieces.Count; i++)
             {
                 if (baseModelPieces[i] == hit.transform.gameObject)
@@ -142,7 +146,8 @@ public class Gun : NetworkBehaviour
     [Command]
     public void CmdBreakBaseObPiece(int piece)
     {
-        RpcBreakBaseObPiece(piece);
+        BreakBaseObPiece(piece);
+        //RpcBreakBaseObPiece(piece);
     }
 
     [ClientRpc]
