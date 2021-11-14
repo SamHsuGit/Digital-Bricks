@@ -248,7 +248,8 @@ public class Health : NetworkBehaviour
         bc.material = physicMaterial;
         if (Settings.OnlinePlay)
         {
-            ob.AddComponent<NetworkIdentity>();
+            if(ob.GetComponent<NetworkIdentity>() == null)
+                ob.AddComponent<NetworkIdentity>();
         }
 
         Destroy(ob, 5); // destroy newly created parts after 5 seconds to clean up scene

@@ -95,10 +95,18 @@ public class Gun : NetworkBehaviour
             //if(Settings.OnlinePlay && !World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Contains(target.gameObject))
             //    World.Instance.customNetworkManagerGameObject.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(target.gameObject); // if not already registered, register target gameObject
 
-            if (Settings.OnlinePlay)
-                CmdDamage(target); // target has no valid id or network writer to transmit health?
+            if(target.gameObject.tag == "BaseObPiece")
+            {
+                gameObject.GetComponent<Health>().SpawnCopyRb(target.gameObject);
+                Destroy(target.gameObject);
+            }
             else
-                Damage(target);
+            {
+                if (Settings.OnlinePlay)
+                    CmdDamage(target); // target has no valid id or network writer to transmit health?
+                else
+                    Damage(target);
+            }
         }
     }
 
