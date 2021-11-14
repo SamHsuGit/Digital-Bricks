@@ -882,19 +882,19 @@ public class World : MonoBehaviour
         BoxCollider[] childObs = _go.GetComponentsInChildren<BoxCollider>();
         for(int i = 0; i < childObs.Length; i++)
         {
-            if(childObs[i].gameObject.layer == 10)
+            if(childObs[i].gameObject.layer == 10) // if layer is LegoPiece
             {
-                //WIP, has error no netID for Gun CmdDamage(target) to work
-                if (childObs[i].gameObject.GetComponent<NetworkIdentity>() == null)
-                        childObs[i].gameObject.AddComponent<NetworkIdentity>();
-                if (Settings.OnlinePlay)
-                {
-                    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(childObs[i].gameObject); // if not already registered, register child gameObject
-                    customNetworkManager.SpawnNetworkOb(childObs[i].gameObject);
-                }
-                if (childObs[i].gameObject.GetComponent<Health>() == null)
-                    childObs[i].gameObject.AddComponent<Health>();
-                childObs[i].gameObject.GetComponent<Health>().physicMaterial = physicMaterial;
+                ////WIP, has error no netID for Gun CmdDamage(target) to work
+                //if (childObs[i].gameObject.GetComponent<NetworkIdentity>() == null)
+                //        childObs[i].gameObject.AddComponent<NetworkIdentity>();
+                //if (Settings.OnlinePlay)
+                //{
+                //    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(childObs[i].gameObject); // if not already registered, register child gameObject
+                //    customNetworkManager.SpawnNetworkOb(childObs[i].gameObject);
+                //}
+                //if (childObs[i].gameObject.GetComponent<Health>() == null)
+                //    childObs[i].gameObject.AddComponent<Health>();
+                //childObs[i].gameObject.GetComponent<Health>().physicMaterial = physicMaterial;
                 childObs[i].gameObject.tag = "BaseObPiece";
 
                 childObs[i].gameObject.GetComponent<BoxCollider>().material = physicMaterial;
