@@ -162,6 +162,6 @@ public class Gun : NetworkBehaviour
     public void BreakBaseObPiece(int piece)
     {
         //gameObject.GetComponent<Health>().SpawnCopyRb(baseModelPieces[piece]);
-        Destroy(baseModelPieces[piece]);
+        baseModelPieces[piece].SetActive(false);
     }
 }
