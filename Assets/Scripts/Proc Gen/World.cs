@@ -219,11 +219,11 @@ public class World : MonoBehaviour
 
         PlayerJoined(worldPlayer);
 
-        if (chunksToDrawQueue.Count > 0)
-            lock (chunksToDrawQueue)
-            {
-                chunksToDrawQueue.Dequeue().CreateMesh();
-            }
+        //if (chunksToDrawQueue.Count > 0)
+        //    lock (chunksToDrawQueue)
+        //    {
+        //        chunksToDrawQueue.Dequeue().CreateMesh();
+        //    }
 
         if (multithreading)
         {

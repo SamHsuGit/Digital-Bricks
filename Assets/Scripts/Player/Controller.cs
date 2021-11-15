@@ -965,7 +965,7 @@ public class Controller : NetworkBehaviour
     public void pressedShoot()
     {
         // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
-        if (!holdingGrab && shootPos.gameObject.activeSelf)
+        if (!holdingGrab && shootPos.gameObject.activeSelf && Time.time >= gun.nextTimeToFire) // if shooting world voxels
         {
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id;
@@ -996,7 +996,7 @@ public class Controller : NetworkBehaviour
 
             UpdateShowGrabObject(holdingGrab, blockID);
         }
-        else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
+        else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting world voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
         {
             int typePrefab;
             int type;
@@ -1059,27 +1059,16 @@ public class Controller : NetworkBehaviour
         else
             EditVoxel(position, 0, true); // destroy voxel at position
 
-        SpawnVoxelRbAtPos(position, blockID); // Spawn objects at position
+        if (Settings.OnlinePlay)
+            CmdSpawnPreDefinedPrefab(0, blockID, position);
+        else
+            SpawnPreDefinedPrefab(0, blockID, position);
     }
 
     public void DropItemsInSlot()
     {
         if (!options && !photoMode && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS OR PHOTO MODE AND ITEM IN SLOT
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
-    }
-
-    [Command]
-    public void CmdSpawnVoxelRbFromInventory(Vector3 position, byte blockID)
-    {
-        SpawnVoxelRbAtPos(position, blockID);
-    }
-
-    public void SpawnVoxelRbAtPos(Vector3 position, byte blockID)
-    {
-        if (Settings.OnlinePlay)
-            CmdSpawnPreDefinedPrefab(0, blockID, position);
-        else
-            SpawnPreDefinedPrefab(0, blockID, position);
     }
 
     public void PressedGrab()
