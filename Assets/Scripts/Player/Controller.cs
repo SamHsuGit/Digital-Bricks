@@ -975,10 +975,7 @@ public class Controller : NetworkBehaviour
 
             shootBricks.Play();
 
-            if (Settings.OnlinePlay && hasAuthority)
-                CmdSpawnVoxelRbFromWorld(position, blockID);
-            else
-                SpawnVoxelRbFromWorld(position, blockID);
+            SpawnVoxelRbFromWorld(position, blockID);
         }
         else if (holdingGrab) // if holding spawn held ob
         {
@@ -986,10 +983,7 @@ public class Controller : NetworkBehaviour
 
             shootBricks.Play();
 
-            if (Settings.OnlinePlay && hasAuthority)
-                CmdSpawnVoxelRbFromWorld(position, blockID);
-            else
-                SpawnVoxelRbFromWorld(position, blockID);
+            SpawnVoxelRbFromWorld(position, blockID);
 
             holdingGrab = false;
             reticle.SetActive(true);
@@ -1043,32 +1037,21 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    [Command]
-    void CmdSpawnVoxelRbFromWorld(Vector3 position, byte blockID)
-    {
-        RpcSpawnVoxelRbFromWorld(position, blockID);
-    }
-
-    [ClientRpc]
-    void RpcSpawnVoxelRbFromWorld(Vector3 position, byte blockID)
-    {
-        SpawnVoxelRbFromWorld(position, blockID);
-    }
-
     void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
     {
         if (blockID == 0 || blockID == 1 || blockID == 26) // if the blockID at position is air or barrier blocks, then skip to next position
             return;
 
         if (Settings.OnlinePlay && hasAuthority)
+        {
             CmdEditVoxel(position, 0, true); // destroy voxel at position (online play)
-        else
-            EditVoxel(position, 0, true); // destroy voxel at position
-
-        if (Settings.OnlinePlay && hasAuthority)
             CmdSpawnPreDefinedPrefab(0, blockID, position);
+        }
         else
+        {
+            EditVoxel(position, 0, true); // destroy voxel at position
             SpawnPreDefinedPrefab(0, blockID, position);
+        }
     }
 
     public void DropItemsInSlot()
