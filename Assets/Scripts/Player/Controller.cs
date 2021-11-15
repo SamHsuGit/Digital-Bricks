@@ -976,9 +976,9 @@ public class Controller : NetworkBehaviour
             shootBricks.Play();
 
             if (Settings.OnlinePlay && hasAuthority)
-                CmdSpawnRbFromWorld(position, blockID);
+                CmdSpawnVoxelRbFromWorld(position, blockID);
             else
-                SpawnRbFromWorld(position, blockID);
+                SpawnVoxelRbFromWorld(position, blockID);
         }
         else if (holdingGrab) // if holding spawn held ob
         {
@@ -987,9 +987,9 @@ public class Controller : NetworkBehaviour
             shootBricks.Play();
 
             if (Settings.OnlinePlay && hasAuthority)
-                CmdSpawnRbFromWorld(position, blockID);
+                CmdSpawnVoxelRbFromWorld(position, blockID);
             else
-                SpawnRbFromWorld(position, blockID);
+                SpawnVoxelRbFromWorld(position, blockID);
 
             holdingGrab = false;
             reticle.SetActive(true);
@@ -1044,12 +1044,18 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    void CmdSpawnRbFromWorld(Vector3 position, byte blockID)
+    void CmdSpawnVoxelRbFromWorld(Vector3 position, byte blockID)
     {
-        SpawnRbFromWorld(position, blockID);
+        RpcSpawnVoxelRbFromWorld(position, blockID);
     }
 
-    void SpawnRbFromWorld(Vector3 position, byte blockID)
+    [ClientRpc]
+    void RpcSpawnVoxelRbFromWorld(Vector3 position, byte blockID)
+    {
+        SpawnVoxelRbFromWorld(position, blockID);
+    }
+
+    void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
     {
         if (blockID == 0 || blockID == 1 || blockID == 26) // if the blockID at position is air or barrier blocks, then skip to next position
             return;
