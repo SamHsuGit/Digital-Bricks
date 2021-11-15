@@ -9,13 +9,16 @@ EditorBuildSettings:
     path: Assets/AssetFiles/Scenes/00 Main Menu.unity
     guid: 5b8c85277e3f0c443a40f9748bb99e4e
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/01 Setup Menu.unity
+    path: Assets/AssetFiles/Scenes/01 Credits.unity
+    guid: 6e3904c2351b1ce4bad72ecd993b7b02
+  - enabled: 1
+    path: Assets/AssetFiles/Scenes/02 Setup Menu.unity
     guid: 99b18406e95a1614784f37981aae2e61
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/02 Game.unity
+    path: Assets/AssetFiles/Scenes/03 Game.unity
     guid: be72a628eb50faa43a76b646c9f51f79
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/03 Error.unity
+    path: Assets/AssetFiles/Scenes/04 Error.unity
     guid: fb81fff4923ed914d8d32bd4a2251e4c
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 64bf3d08b4d41044db675234603b956e, type: 2}

@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 256.4, y: -96.17}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 398.6, y: 243.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8776988034569615507
@@ -65,46 +65,45 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Mouse&Keyboard (Xbox Controller):
+  m_text: 'Mouse & Keyboard (Xbox Controller):
 
-    Press A to Join Game
+    Move = WASD (Left Stick)
 
-
-    Move
-    = WASD (Left Stick)
-
-    Look = Mouse (Right Stick)
+    Look
+    = Mouse (Right Stick)
 
     Jump = Space (Xbox A)
 
-    Sprint
-    = Left Shift (Left Bumper)
+    Sprint = Left Shift (Left
+    Bumper)
+
+    Attack = Left Mouse Button (Right Trigger)
+
+    Use = E (Xbox X)
 
 
-    Grab = Hold Right Mouse Button (Left Trigger)
+    Grab
+    = Hold Right Mouse Button (Left Trigger)
 
-    Put
-    in Inventory = Release Grab while aimed at air
+    Store Item = Release Grab while
+    aimed at air
 
-    Grab From Inventory = Hold
-    Grab while aimed at air
+    Unstore Item = Hold Grab while aimed at air
 
-    Eat/Tool/Light = E (Xbox X)
+    Cycle Slots
+    = Mouse Scroll/Arrow Keys (D-Pad)
 
-    Cycle Toolbar =
-    Mouse Scroll/Arrow Keys (D-Pad)
-
-    Drop From Inventory = Q (Xbox B)
+    Drop Item = Q (Xbox B)
 
 
-    Shoot
-    = Left Mouse Button (Right Trigger)
+    Options =
+    Esc (Start)
 
 
     Photo Mode = Tab (Select)
 
-    Photo
-    Mode Depth of Field = Arrow Keys (D-Pad)'
+    Depth of Field = Arrow Keys
+    (D-Pad) in photo mode'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

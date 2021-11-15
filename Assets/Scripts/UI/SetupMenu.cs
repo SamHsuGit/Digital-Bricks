@@ -555,7 +555,7 @@ public class SetupMenu : MonoBehaviour
         menuElements.SetActive(false);
         loadingText.SetActive(true);
         SaveSettings();
-        SceneManager.LoadScene(4);
+        SceneManager.LoadScene(5);
     }
 
     public void Splitscreen()
@@ -565,7 +565,7 @@ public class SetupMenu : MonoBehaviour
         menuElements.SetActive(false);
         loadingText.SetActive(true);
         SaveSettings();
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
     public void Online()
@@ -574,7 +574,7 @@ public class SetupMenu : MonoBehaviour
         Settings.OnlinePlay = true;
         menuElements.SetActive(false);
         SaveSettings();
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
     public void Back()

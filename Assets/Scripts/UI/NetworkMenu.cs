@@ -87,7 +87,7 @@ public class NetworkMenu : MonoBehaviour
     {
         buttonSound.Play();
         SaveSettings();
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     // Removed button since I did not want to share my IP address with internet

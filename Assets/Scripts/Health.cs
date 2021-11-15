@@ -18,8 +18,8 @@ public class Health : NetworkBehaviour
 
     // private variables
     private int brickCount;
-    float lavaHurtRate = 2f;
-    float nextTimeToLavaHurt = 0f;
+    //float lavaHurtRate = 2f;
+    //float nextTimeToLavaHurt = 0f;
     int lastPlayerPos = 0;
 
     // private references
@@ -95,22 +95,22 @@ public class Health : NetworkBehaviour
                     Respawn();
             }
 
-            // only if voxelCollider component exists
-            if (voxelCollider != null)
-            {
-                // hurt if touching lava
-                if (voxelCollider.PlayerIsTouchingBlockID(5) && Time.time >= nextTimeToLavaHurt)
-                {
-                    nextTimeToLavaHurt = Time.time + 1f / lavaHurtRate;
+            //// only if voxelCollider component exists
+            //if (voxelCollider != null)
+            //{
+            //    // hurt if touching lava (WIP, BROKEN)
+            //    if (voxelCollider.PlayerIsTouchingBlockID(5) && Time.time >= nextTimeToLavaHurt)
+            //    {
+            //        nextTimeToLavaHurt = Time.time + 1f / lavaHurtRate;
 
-                    if (Settings.OnlinePlay && hasAuthority)
-                        CmdEditSelfHealth(-1);
-                    if (!Settings.OnlinePlay)
-                        EditSelfHealth(-1);
-                    if(gameObject.layer == 11) // if it is a player
-                        PlayHurtSound();
-                }
-            }
+            //        if (Settings.OnlinePlay && hasAuthority)
+            //            CmdEditSelfHealth(-1);
+            //        if (!Settings.OnlinePlay)
+            //            EditSelfHealth(-1);
+            //        if(gameObject.layer == 11) // if it is a player
+            //            PlayHurtSound();
+            //    }
+            //}
         }
         else if(gameObject.tag != "Enemy") // if not a player or enemy object
         {

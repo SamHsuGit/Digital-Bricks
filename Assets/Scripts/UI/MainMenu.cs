@@ -24,12 +24,18 @@ public class MainMenu : MonoBehaviour
     public void Play()
     {
         buttonSound.Play();
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     public void Quit()
     {
         buttonSound.Play();
         Application.Quit();
+    }
+
+    public void Credits()
+    {
+        buttonSound.Play();
+        SceneManager.LoadScene(1);
     }
 }

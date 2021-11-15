@@ -54,7 +54,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 4077332918785026370}
-    m_SelectOnDown: {fileID: 1391849460279741594}
+    m_SelectOnDown: {fileID: 2941586644497020350}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -1245,7 +1245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1391849460279741595
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16c6f78230fa4964a222622d8aae332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 1391849460279741592}
+  m_FirstSelected: {fileID: 1391849460921825672}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
   m_PlayerRoot: {fileID: 0}
@@ -6302,7 +6302,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 1391849460279741594}
+    m_SelectOnUp: {fileID: 4470790744897391657}
     m_SelectOnDown: {fileID: 1391849460921825674}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}

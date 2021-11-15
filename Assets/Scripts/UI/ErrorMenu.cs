@@ -34,6 +34,6 @@ public static class ErrorMessage
     {
         message = _message;
         Debug.Log(_message);
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(4);
     }
 }
