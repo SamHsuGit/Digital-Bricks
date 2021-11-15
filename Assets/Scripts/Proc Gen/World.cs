@@ -89,17 +89,17 @@ public class World : MonoBehaviour
         if (SettingsStatic.LoadedSettings.graphicsQuality  == 2)
         {
             undrawVoxelBoundObjects = false;
-            undrawVoxels = false;
+            undrawVoxels = false; // found that performance is good enough to never undraw voxels (regardless of graphics settings) which can cause other issues
         }
         else if(SettingsStatic.LoadedSettings.graphicsQuality == 1)
         {
             undrawVoxelBoundObjects = true;
-            undrawVoxels = false;
+            undrawVoxels = false; // found that performance is good enough to never undraw voxels (regardless of graphics settings) which can cause other issues
         }
         else if(SettingsStatic.LoadedSettings.graphicsQuality == 0)
         {
             undrawVoxelBoundObjects = false;
-            undrawVoxels = false;
+            undrawVoxels = false; // found that performance is good enough to never undraw voxels (regardless of graphics settings) which can cause other issues
         }
 
         playerCount = 0;
@@ -422,8 +422,8 @@ public class World : MonoBehaviour
         if (!worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
 
-        // only if more than one player and local splitcreen mode, do not undraw chunks
-        if(!undrawVoxels && playerCount > 2)
+        // if set to not undraw voxels, do not undraw chunks
+        if(!undrawVoxels)
         {
             previousChunksToDrawList = new List<ChunkCoord>(chunkCoordsToDrawList);
             chunkCoordsToDrawList.Clear();
@@ -568,8 +568,8 @@ public class World : MonoBehaviour
     {
         playerLastChunkCoords[playerIndex] = playerChunkCoord;
 
-        // if single player or network play, undraw chunks to save memory (Disabled until we can find a way to remove far away chunks selectively. Current method removes all chunks outside viewDist)
-        if (undrawVoxels && playerCount < 3)
+        // if set to undrawVoxels, undraw chunks to save memory (Disabled until we can find a way to remove far away chunks selectively)
+        if (undrawVoxels)
         {
             previousChunksToDrawList = new List<ChunkCoord>(chunkCoordsToDrawList);
             chunkCoordsToDrawList.Clear();
