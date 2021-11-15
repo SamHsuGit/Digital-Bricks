@@ -1059,7 +1059,7 @@ public class Controller : NetworkBehaviour
         else
             EditVoxel(position, 0, true); // destroy voxel at position
 
-        if (Settings.OnlinePlay)
+        if (Settings.OnlinePlay && hasAuthority)
             CmdSpawnPreDefinedPrefab(0, blockID, position);
         else
             SpawnPreDefinedPrefab(0, blockID, position);
