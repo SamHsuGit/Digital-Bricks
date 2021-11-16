@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 6976479444726254941}
   - component: {fileID: 6976479444726254940}
   m_Layer: 5
-  m_Name: Contributors Text
+  m_Name: Names
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -316.2, y: -14.2}
-  m_SizeDelta: {x: 110.6, y: 338}
+  m_AnchoredPosition: {x: 0, y: -26}
+  m_SizeDelta: {x: 714.5, y: 540.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6976479444726254941
 CanvasRenderer:
@@ -140,9 +140,29 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'B3agz
+  m_text: 'Procedural Generation
+
+    B3agz
+
+
+    Modelling
+
+    The LDraw.org Community
+
+
+    LDraw
+    Model Importer
 
     Grygory Dyadichenko
+
+
+    Multiplayer Networking
+
+    vis2k
+
+
+    Titlescreen
+    Rendering
 
     Olliboy'
   m_isRightToLeft: 0
@@ -178,7 +198,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -496,7 +516,7 @@ GameObject:
   - component: {fileID: 6976479445994056059}
   - component: {fileID: 6976479445994056058}
   m_Layer: 5
-  m_Name: Title Text
+  m_Name: Contributors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -518,8 +538,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -312.4, y: 181.2}
-  m_SizeDelta: {x: 171.8, y: 20}
+  m_AnchoredPosition: {x: 0, y: 268}
+  m_SizeDelta: {x: 166.1, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6976479445994056059
 CanvasRenderer:
@@ -549,7 +569,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CONTRIBUTORS
+  m_text: Contributors
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
