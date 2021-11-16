@@ -12,11 +12,11 @@ Lego WorldBuilder: https://worldbuilder.tongal.com/world/de7bbb75-74bc-4b31-923f
 
 Code based on previous work by:
 
+B3agz - Code A Game Like Minecraft in Unity (YouTube Tutorials): https://github.com/b3agz/Code-A-Game-Like-Minecraft-In-Unity
+
 LDraw Community (Creative Commons Attribution License 2.0): https://www.ldraw.org/docs-main/licenses/legal-info.html
 
 Grygory Dyadichenko - LDraw Importer (MIT License): https://github.com/Nox7atra/LDraw_Importer_Unity
-
-B3agz - Code A Game Like Minecraft in Unity (YouTube Tutorials): https://github.com/b3agz/Code-A-Game-Like-Minecraft-In-Unity
 
 vis2k Mirror (MIT License): https://github.com/vis2k/Mirror
 
