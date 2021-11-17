@@ -8,6 +8,8 @@ This is a non-profit, fan-made game.
 
 Discord: https://discord.gg/NZW4QqusYW
 
+Quick Installer: https://sam-hsu.itch.io/brickformers
+
 Lego WorldBuilder: https://worldbuilder.tongal.com/world/de7bbb75-74bc-4b31-923f-2cdc595d6127
 
 Code based on previous work by:
