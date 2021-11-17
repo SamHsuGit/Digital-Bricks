@@ -10,7 +10,7 @@ public class World : MonoBehaviour
     public bool worldLoaded = false;
     public int tick;
     public bool saving = false;
-    public bool undrawVoxelBoundObjects = true;
+    public bool undrawVoxelBoundObjects = false;
     public bool undrawVoxels = false;
 
     public GameObject mainCameraGameObject;
@@ -39,7 +39,7 @@ public class World : MonoBehaviour
     // chunk draw lists and arrays
     public ChunkCoord firstChunkCoord;
     public bool firstChunkLoaded;
-    public bool activateNewChunks = false;
+    public bool activateNewChunks = true;
     public Dictionary<ChunkCoord, Chunk> chunks = new Dictionary<ChunkCoord, Chunk>();
     public Chunk[,] chunksToDrawArray = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
     public List<ChunkCoord> chunkCoordsToDrawList = new List<ChunkCoord>();
@@ -86,20 +86,21 @@ public class World : MonoBehaviour
         //    CmdRequestSeed();
         //}
 
+        // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
         if (SettingsStatic.LoadedSettings.graphicsQuality  == 2)
         {
             undrawVoxelBoundObjects = false;
-            undrawVoxels = false; // found that performance is good enough to never undraw voxels (regardless of graphics settings) which can cause other issues
+            undrawVoxels = false;
         }
         else if(SettingsStatic.LoadedSettings.graphicsQuality == 1)
         {
-            undrawVoxelBoundObjects = true;
-            undrawVoxels = false; // found that performance is good enough to never undraw voxels (regardless of graphics settings) which can cause other issues
+            undrawVoxelBoundObjects = false;
+            undrawVoxels = false;
         }
         else if(SettingsStatic.LoadedSettings.graphicsQuality == 0)
         {
             undrawVoxelBoundObjects = false;
-            undrawVoxels = false; // found that performance is good enough to never undraw voxels (regardless of graphics settings) which can cause other issues
+            undrawVoxels = false;
         }
 
         playerCount = 0;
@@ -422,12 +423,12 @@ public class World : MonoBehaviour
         if (!worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
 
-        // if set to not undraw voxels, do not undraw chunks
-        if(!undrawVoxels)
-        {
-            previousChunksToDrawList = new List<ChunkCoord>(chunkCoordsToDrawList);
-            chunkCoordsToDrawList.Clear();
-        }
+        // if set to not undraw voxels, do not undraw chunks (DISABLED, was causing chunks to 'randomly' be turned off)
+        //if(!undrawVoxels)
+        //{
+        //    previousChunksToDrawList = new List<ChunkCoord>(chunkCoordsToDrawList);
+        //    chunkCoordsToDrawList.Clear();
+        //}
 
         copyOfChunksToDrawObjectsList = new List<ChunkCoord>(chunksToDrawObjectsList);
         chunksToDrawObjectsList.Clear();
