@@ -102,10 +102,17 @@ public class Lighting : MonoBehaviour
         RenderSettings.reflectionIntensity = reflectionIntensity;
 
         // SET DAY OR NIGHT BASED ON TIME
-        if (daytime && !wasDaytime)
-            SetDay();
-        else if(!daytime && wasDaytime)
-            SetNight();
+        if (!World.Instance.worldData.isAlive)
+        {
+            SetSpace();
+        }
+        else
+        {
+            if (daytime && !wasDaytime) // only show daytime skybox and daytime for planets which host life (isAlive)
+                SetDay();
+            else if (!daytime && wasDaytime)
+                SetNight();
+        }
 
         transform.localRotation = Quaternion.Euler(new Vector3(-90f - (timePercent * 360f), 0, 0)); // rotate light
     }
@@ -117,13 +124,8 @@ public class Lighting : MonoBehaviour
         sun.gameObject.SetActive(true);
         moon.gameObject.SetActive(false);
 
-        if (World.Instance.worldData.isAlive)
-        {
-            RenderSettings.skybox = skyboxAtmosphere;
-            StartCoroutine(LerpSkyTintValue(1, 10));
-        }
-        else
-            RenderSettings.skybox = skyboxSpace; // only show daytime skybox for planets with atmosphere
+        RenderSettings.skybox = skyboxAtmosphere;
+        StartCoroutine(LerpSkyTintValue(1, 10));
 
         RenderSettings.sun = sun;
         StartCoroutine(LerpAmbientIntensity(1f, 10));
@@ -137,13 +139,23 @@ public class Lighting : MonoBehaviour
         sun.gameObject.SetActive(false);
         moon.gameObject.SetActive(true);
 
-        if (World.Instance.worldData.isAlive)
-        {
-            RenderSettings.skybox = skyboxAtmosphere;
-            StartCoroutine(LerpSkyTintValue(0, 10));
-        }
-        else
-            RenderSettings.skybox = skyboxSpace; // only show daytime skybox for planets with atmosphere
+        RenderSettings.skybox = skyboxAtmosphere;
+        StartCoroutine(LerpSkyTintValue(0, 10));
+
+        RenderSettings.sun = moon;
+        StartCoroutine(LerpAmbientIntensity(0.2f, 10));
+        StartCoroutine(LerpReflectionIntensity(0.2f, 10));
+    }
+
+    void SetSpace()
+    {
+        wasDaytime = false;
+
+        sun.gameObject.SetActive(false);
+        moon.gameObject.SetActive(true);
+
+        RenderSettings.skybox = skyboxSpace;
+        StartCoroutine(LerpSkyTintValue(0, 10));
 
         RenderSettings.sun = moon;
         StartCoroutine(LerpAmbientIntensity(0.2f, 10));
