@@ -683,7 +683,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: BrickFormers
-  metroPackageVersion: 0.35.0.0
+  metroPackageVersion: 0.36.0.0
   metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: "@ikc\x7F8ai"
   metroCertificateSubject: Sam Hsu
