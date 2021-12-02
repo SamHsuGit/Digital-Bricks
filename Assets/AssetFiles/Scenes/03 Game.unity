@@ -544,6 +544,10 @@ PrefabInstance:
       value: 6.01
       objectReference: {fileID: 0}
     - target: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
+      propertyPath: wasDaytime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
       propertyPath: maxFogDensity
       value: 0.00125
       objectReference: {fileID: 0}
@@ -2312,7 +2316,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: 42f5abb842c5ad24da4b6fba8ca43c20, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0

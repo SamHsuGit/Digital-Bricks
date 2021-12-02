@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 05 Mushrooms
   m_EditorClassIdentifier: 
   biomeName: 05 Mushrooms
-  offset: 4441
-  scale: 0.09
+  offset: 1231
+  scale: 0.06
   terrainHeight: 80
   terrainScale: 0.1
-  surfaceBlock: 6
+  surfaceBlock: 4
   placeFlora: 1
   flora:
   - name: Small Mushroom

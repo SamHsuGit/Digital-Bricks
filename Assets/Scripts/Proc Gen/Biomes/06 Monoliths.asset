@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 06 Monoliths
   m_EditorClassIdentifier: 
   biomeName: 06 Monoliths
-  offset: 4444
-  scale: 0.09
+  offset: 3125
+  scale: 0.06
   terrainHeight: 80
   terrainScale: 0.1
   surfaceBlock: 2

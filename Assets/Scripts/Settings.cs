@@ -35,6 +35,7 @@ public static class SettingsStatic
         settings.invertY = false;
         settings.invertX = false;
         settings.fullscreen = true;
+        settings.planetNumber = 3;
         settings.seed = 0;
         settings.timeOfDay = 6.01f;
         settings.playerName = "PlayerName";
@@ -92,6 +93,7 @@ public class Settings
     public bool fullscreen;
 
     [Header("World Gen")]
+    public int planetNumber;
     public int seed; // int yields numbers from 0 to 2,147,483,647 inclusively
     public float timeOfDay;
 

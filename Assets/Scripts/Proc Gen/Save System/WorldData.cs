@@ -6,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class WorldData
 {
+    public int planetNumber;
     public int seed;
     public int distToStar;
     public int system;
@@ -49,18 +50,21 @@ public class WorldData
             modifiedChunks.Add(chunk);
     }
 
-    public WorldData (int _seed)
+    public WorldData (int _planetNumber, int _seed)
     {
+        planetNumber = _planetNumber;
         seed = _seed;
     }
 
     public WorldData() // default constructor for deserialization
     {
+        planetNumber = 3;
         seed = 1234;
     }
 
     public WorldData(WorldData wD)
     {
+        planetNumber = wD.planetNumber;
         seed = wD.seed;
     }
 
@@ -93,7 +97,7 @@ public class WorldData
         if (chunks.ContainsKey(coord))
             return;
 
-        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.seed, coord); // (THIS IS SLOW/EXPENSIVE)
+        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed, coord); // (THIS IS SLOW/EXPENSIVE)
         if (chunk != null)
         {
             chunks.Add(coord, chunk);

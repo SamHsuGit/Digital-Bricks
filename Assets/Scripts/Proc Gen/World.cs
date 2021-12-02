@@ -200,8 +200,8 @@ public class World : MonoBehaviour
     private void Start()
     {
         worldLoaded = false;
-        worldData = SaveSystem.LoadWorld(SettingsStatic.LoadedSettings.seed);
-        WorldDataOverrides(SettingsStatic.LoadedSettings.seed);
+        worldData = SaveSystem.LoadWorld(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed);
+        WorldDataOverrides(SettingsStatic.LoadedSettings.planetNumber);
 
         blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
 
@@ -245,47 +245,47 @@ public class World : MonoBehaviour
         mainCamera.enabled = false;
     }
 
-    public int GetGalaxy(int seed)
+    public int GetGalaxy(int planetNumber)
     {
-        int galaxy = Mathf.CeilToInt(seed / 64.0f);
+        int galaxy = Mathf.CeilToInt(planetNumber / 64.0f);
         return galaxy;
     }
 
-    public int GetSystem(int seed)
+    public int GetSystem(int planetNumber)
     {
-        int solarSystem = Mathf.CeilToInt(seed / 8.0f);
+        int solarSystem = Mathf.CeilToInt(planetNumber / 8.0f);
         return solarSystem;
     }
 
-    public int GetDistToStar(int seed)
+    public int GetDistToStar(int planetNumber)
     {
-        int solarSystem = Mathf.CeilToInt(seed / 8.0f);
-        int distToStar = (int)(seed - 8.0f * (solarSystem - 1));
+        int solarSystem = Mathf.CeilToInt(planetNumber / 8.0f);
+        int distToStar = (int)(planetNumber - 8.0f * (solarSystem - 1));
         return distToStar;
     }
 
     public int GetSeedFromSpaceCoords (int galaxy, int solarSystem, int distToStar)
     {
-        int seed = (int)((galaxy - 1) * 64.0f + (solarSystem - 1) * 8.0f + distToStar);
-        return seed;
+        int planetNumber = (int)((galaxy - 1) * 64.0f + (solarSystem - 1) * 8.0f + distToStar);
+        return planetNumber;
     }
 
-    public void WorldDataOverrides(int worldseed)
+    public void WorldDataOverrides(int planetNumber)
     {
         //override worldData with planet data for specific planets in our solar system, otherwise randomize the blockIDs/colors
         int minRandBlockID = 2;
         int maxRandBlockID = 24;
 
-        worldData.system = GetSystem(worldseed);
-        worldData.distToStar = GetDistToStar(worldseed);
-        worldData.galaxy = GetGalaxy(worldseed);
+        worldData.system = GetSystem(planetNumber);
+        worldData.distToStar = GetDistToStar(planetNumber);
+        worldData.galaxy = GetGalaxy(planetNumber);
         int distToStar = worldData.distToStar;
         //Debug.Log("Seed:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.system, worldData.distToStar));
         //Debug.Log("Universe Coords (galaxy, system, planet)" + worldData.galaxy + "-" + worldData.system + "-" + distToStar);
 
-        if (worldseed < 32) // 8 planets + solid colored planets
+        if (planetNumber < 32) // 8 planets + solid colored planets
         {
-            Planet planet = planets[worldseed];
+            Planet planet = planets[planetNumber];
 
             worldData.blockIDsubsurface = planet.blockIDsubsurface;
             worldData.blockIDcore = planet.blockIDcore;
@@ -314,7 +314,7 @@ public class World : MonoBehaviour
             worldData.blockIDHugeTreeTrunk = planet.blockIDHugeTreeTrunk;
             worldData.blockIDColumn = planet.blockIDColumn;
         }
-        if (worldseed >= 32) // random colored planets based on proximity to star
+        if (planetNumber >= 32) // random colored planets based on proximity to star
         {
             if (distToStar >= 0 && distToStar <= 3) // hot, close to star
             {
@@ -693,7 +693,7 @@ public class World : MonoBehaviour
         if (yGlobalPos == 0)
             return 0; // Disabled to allow players to fall thru world as unbreakable barrier blocks break immersion)
 
-        // Lava level (DO NOT MAKE VOXEL BOUND OBJECT, SIGNIFICANTLY SLOWS DOWN GAME)
+        // Lava/Water level (DO NOT MAKE VOXEL BOUND OBJECT, SIGNIFICANTLY SLOWS DOWN GAME)
         if (yGlobalPos == 1)
         {
             //if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.2f) > 0.2f) // determines if water or lava

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: 04 Mountain
   offset: 6666
-  scale: 0.09
+  scale: 0.06
   terrainHeight: 80
   terrainScale: 0.7
-  surfaceBlock: 4
+  surfaceBlock: 3
   placeFlora: 1
   flora: []
   lodes:

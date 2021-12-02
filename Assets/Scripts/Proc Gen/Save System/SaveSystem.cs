@@ -10,7 +10,7 @@ public static class SaveSystem
     public static void SaveWorld(WorldData world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = World.Instance.appPath + "/saves/" + world.seed + "/";
+        string savePath = World.Instance.appPath + "/saves/" + world.planetNumber + "-" + world.seed + "/";
 
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
@@ -18,7 +18,7 @@ public static class SaveSystem
         //Debug.Log("Saving " + world.worldName);
 
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(savePath + world.seed + ".worldData", FileMode.Create);
+        FileStream stream = new FileStream(savePath + world.planetNumber + "-" + world.seed + ".worldData", FileMode.Create);
 
         formatter.Serialize(stream, world);
         stream.Close();
@@ -108,7 +108,7 @@ public static class SaveSystem
 
     public static int[] LoadPlayerStats(GameObject player, string playerName, WorldData world)
     {
-        string loadPath = World.Instance.appPath + "/saves/" + world.seed + "/";
+        string loadPath = World.Instance.appPath + "/saves/" + world.planetNumber + "-" + world.seed + "/";
 
         if (File.Exists(loadPath + playerName + ".stats")) // IF PLAYER STATS FOUND
         {
@@ -161,19 +161,19 @@ public static class SaveSystem
         int count = 0;
         foreach(ChunkData chunk in chunks)
         {
-            SaveChunk(chunk, world.seed);
+            SaveChunk(chunk, world.planetNumber, world.seed);
             //Debug.Log("saving " + chunk.position.x + " , " + chunk.position.y);
             count++;
         }
         //Debug.Log(count + " chunks saved.");
     }
 
-    public static void SaveChunk(ChunkData chunk, int _seed)
+    public static void SaveChunk(ChunkData chunk, int _planetNumber, int _seed)
     {
         string chunkName = chunk.position.x + "-" + chunk.position.y;
 
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = World.Instance.appPath + "/saves/" + _seed + "/chunks/";
+        string savePath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/";
 
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
@@ -185,16 +185,16 @@ public static class SaveSystem
         stream.Close();
     }
 
-    public static WorldData LoadWorld(int seed) // loads world upon game start in world script
+    public static WorldData LoadWorld(int _planetNumber, int _seed) // loads world upon game start in world script
     {
-        string loadPath = World.Instance.appPath + "/saves/" + seed + "/";
+        string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/";
 
-        if (File.Exists(loadPath + seed + ".worldData"))
+        if (File.Exists(loadPath + _planetNumber + "-" + _seed + ".worldData"))
         {
             //Debug.Log(worldName + " found. Loading from save.");
 
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(loadPath + seed + ".worldData", FileMode.Open);
+            FileStream stream = new FileStream(loadPath + _planetNumber + "-" + _seed + ".worldData", FileMode.Open);
 
             WorldData world = formatter.Deserialize(stream) as WorldData;
             stream.Close();
@@ -204,18 +204,18 @@ public static class SaveSystem
         {
             //Debug.Log(worldName + " not found. Creating new world.");
 
-            WorldData world = new WorldData(seed);
+            WorldData world = new WorldData(_planetNumber, _seed);
             SaveWorld(world);
 
             return world;
         }
     }
 
-    public static ChunkData LoadChunk(int _seed, Vector2Int position) // loads chunks from file (slow)
+    public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (slow)
     {
         string chunkName = position.x + "-" + position.y;
 
-        string loadPath = World.Instance.appPath + "/saves/" + _seed + "/chunks/" + chunkName + ".chunk";
+        string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
 
         if (File.Exists(loadPath))
         {

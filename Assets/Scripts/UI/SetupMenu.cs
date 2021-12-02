@@ -10,6 +10,7 @@ public class SetupMenu : MonoBehaviour
     public GameObject menuElements;
     public GameObject loadingText;
     public TMP_InputField playerNameInputField;
+    public TMP_InputField planetInputField;
     public TMP_InputField seedInputField;
     public GameObject[] charTypeModels;
     public GameObject[] helmet;
@@ -370,6 +371,7 @@ public class SetupMenu : MonoBehaviour
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.drawDistance;
         worldRenderText.text = SettingsStatic.LoadedSettings.drawDistance.ToString();
+        planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
         seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
     }
 
@@ -656,6 +658,17 @@ public class SetupMenu : MonoBehaviour
 
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
         SettingsStatic.LoadedSettings.drawDistance = (int)worldRenderDistanceSlider.value;
+
+        try
+        {
+            int result = System.Int32.Parse(planetInputField.text); // Int32 can hold up to 2,147,483,647 numbers
+            SettingsStatic.LoadedSettings.planetNumber = result;
+        }
+        catch (System.FormatException)
+        {
+            SettingsStatic.LoadedSettings.planetNumber = 3;
+        }
+
         try
         {
             int result = System.Int32.Parse(seedInputField.text); // Int32 can hold up to 2,147,483,647 numbers

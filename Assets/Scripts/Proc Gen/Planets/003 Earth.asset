@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 3
   blockIDsubsurface: 3
-  blockIDcore: 5
-  blockIDForest: 27
+  blockIDcore: 19
+  blockIDForest: 28
   blockIDGrasslands: 27
-  blockIDDesert: 4
+  blockIDDesert: 9
   blockIDDeadForest: 2
   blockIDHugeTree: 3
   blockIDMountain: 4

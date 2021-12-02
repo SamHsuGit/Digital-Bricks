@@ -387,6 +387,7 @@ public class Controller : NetworkBehaviour
 
             SetPlayerAttributes();
             SetTypeProjectile();
+            nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
         }
 
         grabRange = 10f;
@@ -767,14 +768,18 @@ public class Controller : NetworkBehaviour
         if (!photoMode && !options)
         {
             playerHUD.SetActive(true);
-            nametag.SetActive(true);
             CinematicBars.SetActive(false);
+
+            if(Settings.OnlinePlay)
+                nametag.SetActive(true);
         }
         else if (photoMode && !options)
         {
             playerHUD.SetActive(false);
-            nametag.SetActive(false);
             CinematicBars.SetActive(true);
+
+            if (Settings.OnlinePlay)
+                nametag.SetActive(false);
         }
 
         if (options)
