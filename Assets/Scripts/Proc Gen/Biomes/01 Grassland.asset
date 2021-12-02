@@ -20,26 +20,6 @@ MonoBehaviour:
   surfaceBlock: 27
   placeFlora: 1
   flora:
-  - name: Grass
-    floraIndex: 6
-    floraZoneScale: 1.9
-    floraZoneThreshold: 0.5
-    floraPlacementScale: 10
-    floraPlacementThreshold: 0.73
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Flower
-    floraIndex: 9
-    floraZoneScale: 1.9
-    floraZoneThreshold: 0.5
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.7
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
   - name: Small Mushroom
     floraIndex: 7
     floraZoneScale: 1.3

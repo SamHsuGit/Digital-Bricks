@@ -30,16 +30,6 @@ MonoBehaviour:
     maxHeight: 0
     minRadius: 0
     maxRadius: 0
-  - name: Bamboo
-    floraIndex: 8
-    floraZoneScale: 1.4
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.79
-    minHeight: 1
-    maxHeight: 5
-    minRadius: 0
-    maxRadius: 0
   - name: Evergreen
     floraIndex: 10
     floraZoneScale: 1.3

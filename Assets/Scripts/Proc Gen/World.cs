@@ -828,17 +828,28 @@ public class World : MonoBehaviour
                     Vector3 globalPosition = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y, chunkCoord.z * VoxelData.ChunkWidth + z);
                     Vector3 globalPositionAbove = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y + 1, chunkCoord.z * VoxelData.ChunkWidth + z);
 
-                    // if studs or objects don't already exist, add them
-                    if (!studDictionary.TryGetValue(globalPositionAbove, out _) && !objectDictionary.TryGetValue(globalPosition, out _))
+                    // if voxel matches Perlin noise pattern
+                    if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
                     {
-                        // if voxel is solid, and voxel above is air, and voxel is not barrier block
-                        if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].isSolid && chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y + 1, z].id == 0 && chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id != 1)
+                        // if studs don't already exist
+                        if (!studDictionary.TryGetValue(globalPositionAbove, out _))
                         {
-                            // if voxel matches Perlin noise pattern, add studs object
-                            if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
+                            // if voxel is solid, and voxel above is air, and voxel is not barrier block
+                            if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].isSolid && chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y + 1, z].id == 0 && chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id != 1)
+                            {
+                                // add studs
                                 studDictionary.Add(globalPositionAbove, Instantiate(blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs, globalPositionAbove, Quaternion.identity));
+                            }
                         }
+                    }
+                    else
+                    {
+                        //Debug.Log(globalPositionAbove + " already exists");
+                    }
 
+                    // if objects don't already exist
+                    if (!objectDictionary.TryGetValue(globalPosition, out _))
+                    {
                         byte blockID = chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
 
                         // if voxel has an object defined, then add object to voxel
@@ -857,7 +868,7 @@ public class World : MonoBehaviour
                                 baseOb = blocktypes[blockID].voxelBoundObject;
                                 if (Settings.OnlinePlay)
                                 {
-                                    if(baseOb.GetComponent<NetworkIdentity>() == null)
+                                    if (baseOb.GetComponent<NetworkIdentity>() == null)
                                         baseOb.AddComponent<NetworkIdentity>();
                                 }
                                 baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
@@ -869,10 +880,6 @@ public class World : MonoBehaviour
                                 VBO = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                             objectDictionary.Add(globalPosition, VBO);
                         }
-                    }
-                    else
-                    {
-                        //Debug.Log(globalPositionAbove + " already exists");
                     }
                 }
             }

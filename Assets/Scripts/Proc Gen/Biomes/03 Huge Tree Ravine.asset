@@ -20,16 +20,6 @@ MonoBehaviour:
   surfaceBlock: 12
   placeFlora: 1
   flora:
-  - name: Small Mushroom
-    floraIndex: 7
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
   - name: Huge Tree
     floraIndex: 12
     floraZoneScale: 20
