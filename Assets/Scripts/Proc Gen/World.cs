@@ -841,20 +841,21 @@ public class World : MonoBehaviour
                                 studDictionary.Add(globalPositionAbove, Instantiate(blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs, globalPositionAbove, Quaternion.identity));
                             }
                         }
-                    }
-                    else
-                    {
-                        //Debug.Log(globalPositionAbove + " already exists");
-                    }
-
-                    // if objects don't already exist
-                    if (!objectDictionary.TryGetValue(globalPosition, out _))
-                    {
-                        byte blockID = chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
-
-                        // if voxel has an object defined, then add object to voxel
-                        if (blocktypes[blockID].voxelBoundObject != null)
+                        else
                         {
+                            //Debug.Log(globalPositionAbove + " already exists");
+                        }
+                    }
+
+                    byte blockID = chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
+
+                    // if voxel has an object defined
+                    if (blocktypes[blockID].voxelBoundObject != null)
+                    {
+                        // if objects don't already exist
+                        if (!objectDictionary.TryGetValue(globalPosition, out _))
+                        {
+                            //Add VBO to voxel
                             Vector3 VBOPosition = globalPosition;
                             Quaternion VBOorientation = Quaternion.identity;
                             if (blockID == 25 || blockID == 26)

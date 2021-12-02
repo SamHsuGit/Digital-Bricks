@@ -1282,20 +1282,20 @@ public class Controller : NetworkBehaviour
 
             TakeFromCurrentSlot(1);
         }
-        else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
-        {
-            // WIP
-            vehicle = gun.target.gameObject;
-            //vehicle.transform.parent = transform;
-            modelPrefab.SetActive(false);
-            isDriving = true;
-        }
-        else if (isDriving)
-        {
-            //vehicle.transform.parent = null;
-            modelPrefab.SetActive(true);
-            isDriving = false;
-        }
+        //else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
+        //{
+        //    // WIP
+        //    vehicle = gun.target.gameObject;
+        //    //vehicle.transform.parent = transform;
+        //    modelPrefab.SetActive(false);
+        //    isDriving = true;
+        //}
+        //else if (isDriving) // WIP
+        //{
+        //    //vehicle.transform.parent = null;
+        //    modelPrefab.SetActive(true);
+        //    isDriving = false;
+        //}
         //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
         //{
         //    if (!Settings.OnlinePlay)
