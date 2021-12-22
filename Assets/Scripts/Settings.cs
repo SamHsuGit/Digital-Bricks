@@ -39,22 +39,22 @@ public static class SettingsStatic
         settings.seed = 0;
         settings.timeOfDay = 6.01f;
         settings.playerName = "PlayerName";
-        settings.playerTypeChar = 1;
-        settings.playerTypeHelmet = 0;
-        settings.playerTypeArmor = 0;
-        settings.playerTypeTool = 0;
-        settings.playerColorHelmet = 17;
-        settings.playerColorHead = 9;
-        settings.playerColorArmor = 17;
-        settings.playerColorTorso = 17;
-        settings.playerColorTool = 0;
-        settings.playerColorArmL = 17;
-        settings.playerColorHandL = 9;
-        settings.playerColorArmR = 17;
-        settings.playerColorHandR = 9;
-        settings.playerColorBelt = 17;
-        settings.playerColorLegL = 17;
-        settings.playerColorLegR = 17;
+        //settings.playerTypeChar = 1;
+        //settings.playerTypeHelmet = 0;
+        //settings.playerTypeArmor = 0;
+        //settings.playerTypeTool = 0;
+        //settings.playerColorHelmet = 17;
+        //settings.playerColorHead = 9;
+        //settings.playerColorArmor = 17;
+        //settings.playerColorTorso = 17;
+        //settings.playerColorTool = 0;
+        //settings.playerColorArmL = 17;
+        //settings.playerColorHandL = 9;
+        //settings.playerColorArmR = 17;
+        //settings.playerColorHandR = 9;
+        //settings.playerColorBelt = 17;
+        //settings.playerColorLegL = 17;
+        //settings.playerColorLegR = 17;
 
         if (File.Exists(Application.dataPath + "/settings.cfg"))
         {
@@ -99,22 +99,22 @@ public class Settings
 
     [Header("Player Customization")]
     public string playerName;
-    public int playerTypeChar;
-    public int playerTypeHelmet;
-    public int playerTypeArmor;
-    public int playerTypeTool;
-    public int playerColorHelmet;
-    public int playerColorHead;
-    public int playerColorArmor;
-    public int playerColorTorso;
-    public int playerColorTool;
-    public int playerColorArmL;
-    public int playerColorHandL;
-    public int playerColorArmR;
-    public int playerColorHandR;
-    public int playerColorBelt;
-    public int playerColorLegL;
-    public int playerColorLegR;
+    //public int playerTypeChar;
+    //public int playerTypeHelmet;
+    //public int playerTypeArmor;
+    //public int playerTypeTool;
+    //public int playerColorHelmet;
+    //public int playerColorHead;
+    //public int playerColorArmor;
+    //public int playerColorTorso;
+    //public int playerColorTool;
+    //public int playerColorArmL;
+    //public int playerColorHandL;
+    //public int playerColorArmR;
+    //public int playerColorHandR;
+    //public int playerColorBelt;
+    //public int playerColorLegL;
+    //public int playerColorLegR;
 
     public static bool WorldLoaded
     {
@@ -197,26 +197,26 @@ public static class LDrawColors
         }
     }
 
-    public static void GetSavedColorHexValues() // only needs to be called once since the savedPlayerColorHexValues array is static
-    {
-        // get material hex values from loaded settings
-        savedPlayerColors = new string[]
-        {
-            // use color dictionary to convert to hex values
-            colorLib[SettingsStatic.LoadedSettings.playerColorHelmet],
-            colorLib[SettingsStatic.LoadedSettings.playerColorHead],
-            colorLib[SettingsStatic.LoadedSettings.playerColorArmor],
-            colorLib[SettingsStatic.LoadedSettings.playerColorTorso],
-            colorLib[SettingsStatic.LoadedSettings.playerColorTool],
-            colorLib[SettingsStatic.LoadedSettings.playerColorArmL],
-            colorLib[SettingsStatic.LoadedSettings.playerColorHandL],
-            colorLib[SettingsStatic.LoadedSettings.playerColorArmR],
-            colorLib[SettingsStatic.LoadedSettings.playerColorHandR],
-            colorLib[SettingsStatic.LoadedSettings.playerColorBelt],
-            colorLib[SettingsStatic.LoadedSettings.playerColorLegL],
-            colorLib[SettingsStatic.LoadedSettings.playerColorLegR],
-        };
-    }
+    //public static void GetSavedColorHexValues() // only needs to be called once since the savedPlayerColorHexValues array is static
+    //{
+    //    // get material hex values from loaded settings
+    //    savedPlayerColors = new string[]
+    //    {
+    //        // use color dictionary to convert to hex values
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorHelmet],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorHead],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorArmor],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorTorso],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorTool],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorArmL],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorHandL],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorArmR],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorHandR],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorBelt],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorLegL],
+    //        colorLib[SettingsStatic.LoadedSettings.playerColorLegR],
+    //    };
+    //}
 
     public static Color IntToColor(int colorLibIndex)
     {

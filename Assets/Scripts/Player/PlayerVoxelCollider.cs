@@ -61,21 +61,21 @@ public class PlayerVoxelCollider : MonoBehaviour
                 length = cc.radius * 2;
 
                 // different player collider and movement settings depending on if character can change shape
-                if (SettingsStatic.LoadedSettings.playerTypeChar == 1)
-                {
+                //if (SettingsStatic.LoadedSettings.playerTypeChar == 1)
+                //{
                     halfColliderHeight = height / 2;
                     stepHeight = 1;
                     colliderOffset = 1;
                     stepUpOffset = new Vector3(0, stepHeight, 0);
                     maxJumps = 2;
-                }
-                else if (SettingsStatic.LoadedSettings.playerTypeChar == 0)
-                {
-                    stepHeight = 1;
-                    colliderOffset = 1;
-                    stepUpOffset = new Vector3(0, stepHeight, 0);
-                    maxJumps = 2;
-                }
+                //}
+                //else if (SettingsStatic.LoadedSettings.playerTypeChar == 0)
+                //{
+                //    stepHeight = 1;
+                //    colliderOffset = 1;
+                //    stepUpOffset = new Vector3(0, stepHeight, 0);
+                //    maxJumps = 2;
+                //}
             }
         }
         else if (isCamera)
@@ -137,12 +137,12 @@ public class PlayerVoxelCollider : MonoBehaviour
         if (isPlayer && (front || back || left || right))
             currentJumps = 0;
 
-        // when in vehicle form
-        if(SettingsStatic.LoadedSettings.playerTypeChar == 0 && isSprinting)
-        {
-            halfColliderHeight = cc.radius;
-            length = cc.height;
-        }
+        //// when in vehicle form
+        //if(SettingsStatic.LoadedSettings.playerTypeChar == 0 && isSprinting)
+        //{
+        //    halfColliderHeight = cc.radius;
+        //    length = cc.height;
+        //}
 
         // apply jump force
         if (jumpRequest && currentJumps < maxJumps)

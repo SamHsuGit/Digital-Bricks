@@ -22,28 +22,29 @@ public class Controller : NetworkBehaviour
     public GameObject[] voxels;
     public List<GameObject> currentWaveEnemies;
 
-    [SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
-    [SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
-    [SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
-    [SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
+    int typeChar = 1;
+    //[SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
+    //[SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
+    //[SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
+    //[SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
     public int typeProjectile = 0;
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed = 3; // all clients can see server syncVar seed to check against
     [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
     readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
-    [SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet = 0;
-    [SyncVar(hook = nameof(SetColorHead))] public int colorHead = 0;
-    [SyncVar(hook = nameof(SetColorArmor))] public int colorArmor = 0;
-    [SyncVar(hook = nameof(SetColorTorso))] public int colorTorso = 0;
-    [SyncVar(hook = nameof(SetColorTool))] public int colorTool = 0;
-    [SyncVar(hook = nameof(SetColorArmL))] public int colorArmL = 0;
-    [SyncVar(hook = nameof(SetColorHandL))] public int colorHandL = 0;
-    [SyncVar(hook = nameof(SetColorArmR))] public int colorArmR = 0;
-    [SyncVar(hook = nameof(SetColorHandR))] public int colorHandR = 0;
-    [SyncVar(hook = nameof(SetColorBelt))] public int colorBelt = 0;
-    [SyncVar(hook = nameof(SetColorLegL))] public int colorLegL = 0;
-    [SyncVar(hook = nameof(SetColorLegR))] public int colorLegR = 0;
+    //[SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet = 0;
+    //[SyncVar(hook = nameof(SetColorHead))] public int colorHead = 0;
+    //[SyncVar(hook = nameof(SetColorArmor))] public int colorArmor = 0;
+    //[SyncVar(hook = nameof(SetColorTorso))] public int colorTorso = 0;
+    //[SyncVar(hook = nameof(SetColorTool))] public int colorTool = 0;
+    //[SyncVar(hook = nameof(SetColorArmL))] public int colorArmL = 0;
+    //[SyncVar(hook = nameof(SetColorHandL))] public int colorHandL = 0;
+    //[SyncVar(hook = nameof(SetColorArmR))] public int colorArmR = 0;
+    //[SyncVar(hook = nameof(SetColorHandR))] public int colorHandR = 0;
+    //[SyncVar(hook = nameof(SetColorBelt))] public int colorBelt = 0;
+    //[SyncVar(hook = nameof(SetColorLegL))] public int colorLegL = 0;
+    //[SyncVar(hook = nameof(SetColorLegR))] public int colorLegR = 0;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -66,6 +67,7 @@ public class Controller : NetworkBehaviour
     [SerializeField] float lookVelocity = 1f;
 
     [Header("GameObject References")]
+    public GameObject charOb;
     public GameObject modelPrefab;
     public GameObject gameMenu;
     
@@ -362,31 +364,37 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+            charOb = LDrawImportRuntime.Instance.charOb;
+            charOb.SetActive(true);
+            charOb.transform.parent = modelPrefab.transform;
+            charOb.transform.localPosition = new Vector3(0, -0.35f, 0);
+            charOb.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            if(typeChar == 1)
-            {
-                typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-                typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-                typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
-                colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
-                colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
-                colorTool = SettingsStatic.LoadedSettings.playerColorTool;
-                colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
-            }
+            //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
+
+            //if(typeChar == 1)
+            //{
+                //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+                //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+                //typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
+                //colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
+                //colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
+                //colorTool = SettingsStatic.LoadedSettings.playerColorTool;
+                //colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
+            //}
 
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
-            colorHead = SettingsStatic.LoadedSettings.playerColorHead;
-            colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
-            colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
-            colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
-            colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
-            colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
-            colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
-            colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
+            //colorHead = SettingsStatic.LoadedSettings.playerColorHead;
+            //colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
+            //colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
+            //colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
+            //colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
+            //colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
+            //colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
+            //colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
 
             SetPlayerAttributes();
-            SetTypeProjectile();
+            //SetTypeProjectile();
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
         }
 
@@ -466,7 +474,7 @@ public class Controller : NetworkBehaviour
         }
 
         SetPlayerAttributes();
-        SetTypeProjectile();
+        //SetTypeProjectile();
     }
 
     void SetPlayerAttributes()
@@ -474,73 +482,73 @@ public class Controller : NetworkBehaviour
         SetName(playerName, playerName);
 
         //set this object's color from saved settings
-        SetTypeHelmet(typeHelmet, typeHelmet);
-        SetTypeArmor(typeArmor, typeArmor);
-        SetTypeTool(typeTool, typeTool);
+        //SetTypeHelmet(typeHelmet, typeHelmet);
+        //SetTypeArmor(typeArmor, typeArmor);
+        //SetTypeTool(typeTool, typeTool);
 
-        SetColorHelmet(colorHelmet, colorHelmet);
-        SetColorHead(colorHead, colorHead);
-        SetColorArmor(colorArmor, colorArmor);
-        SetColorTorso(colorTorso, colorTorso);
-        SetColorTool(colorTool, colorTool);
-        SetColorArmL(colorArmL, colorArmL);
-        SetColorHandL(colorHandL, colorHandL);
-        SetColorArmR(colorArmR, colorArmR);
-        SetColorHandR(colorHandR, colorHandR);
-        SetColorBelt(colorBelt, colorBelt);
-        SetColorLegL(colorLegL, colorLegL);
-        SetColorLegR(colorLegR, colorLegR);
+        //SetColorHelmet(colorHelmet, colorHelmet);
+        //SetColorHead(colorHead, colorHead);
+        //SetColorArmor(colorArmor, colorArmor);
+        //SetColorTorso(colorTorso, colorTorso);
+        //SetColorTool(colorTool, colorTool);
+        //SetColorArmL(colorArmL, colorArmL);
+        //SetColorHandL(colorHandL, colorHandL);
+        //SetColorArmR(colorArmR, colorArmR);
+        //SetColorHandR(colorHandR, colorHandR);
+        //SetColorBelt(colorBelt, colorBelt);
+        //SetColorLegL(colorLegL, colorLegL);
+        //SetColorLegR(colorLegR, colorLegR);
     }
 
-    void SetTypeProjectile()
-    {
-        if (typeTool == 0)
-        {
-            gun.range = 0f;
-            projectile = brick1x1;
-            typeProjectile = 1; // brick1x1
-        }
-        else if (typeTool >= 32 && typeTool <= 43) // shield & claws
-        {
-            gun.range = 2f;
-            return;
-        }
-        else if (typeTool >= 55 && typeTool <= 77) // melee weapon
-        {
-            isMeleeWeapon = true;
-            gun.range = 2f;
-            return;
-        }
-        else if (typeTool >= 78 && typeTool <= 81) // bows
-        {
-            gun.range = 0f;
-            projectile = arrow;
-            typeProjectile = 2; // arrow
-        }
-        else if (typeTool >= 84 && typeTool <= 90) // laser guns
-        {
-            gun.range = 0f;
-            projectile = laser;
-            typeProjectile = 3; // laser
-        }
-        else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
-        {
-            gun.range = 0f;
-            projectile = laser;
-            typeProjectile = 3; // laser
-        }
-        else
-        {
-            gun.range = 0f;
-            projectile = tool[typeTool]; // throw whatever object you are holding
-            typeProjectile = typeTool;
-        }
-    }
+    //void SetTypeProjectile()
+    //{
+    //    if (typeTool == 0)
+    //    {
+    //        gun.range = 0f;
+    //        projectile = brick1x1;
+    //        typeProjectile = 1; // brick1x1
+    //    }
+    //    else if (typeTool >= 32 && typeTool <= 43) // shield & claws
+    //    {
+    //        gun.range = 2f;
+    //        return;
+    //    }
+    //    else if (typeTool >= 55 && typeTool <= 77) // melee weapon
+    //    {
+    //        isMeleeWeapon = true;
+    //        gun.range = 2f;
+    //        return;
+    //    }
+    //    else if (typeTool >= 78 && typeTool <= 81) // bows
+    //    {
+    //        gun.range = 0f;
+    //        projectile = arrow;
+    //        typeProjectile = 2; // arrow
+    //    }
+    //    else if (typeTool >= 84 && typeTool <= 90) // laser guns
+    //    {
+    //        gun.range = 0f;
+    //        projectile = laser;
+    //        typeProjectile = 3; // laser
+    //    }
+    //    else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
+    //    {
+    //        gun.range = 0f;
+    //        projectile = laser;
+    //        typeProjectile = 3; // laser
+    //    }
+    //    else
+    //    {
+    //        gun.range = 0f;
+    //        projectile = tool[typeTool]; // throw whatever object you are holding
+    //        typeProjectile = typeTool;
+    //    }
+    //}
 
-    public void SetTypeChar(int oldValue, int newValue)
-    {
-        typeChar = newValue;
-    }
+    //public void SetTypeChar(int oldValue, int newValue)
+    //{
+    //    typeChar = newValue;
+    //}
 
     public void SetName(string oldName, string newName) // update the player visuals using the SyncVars pushed from the server to clients
     {
@@ -559,172 +567,173 @@ public class Controller : NetworkBehaviour
         timeOfDay = newTime;
     }
     
-    public void SetTypeHelmet(int oldValue, int newValue)
-    {
-        typeHelmet = newValue;
-        if(typeChar == 1 && helmet[typeHelmet] != null)
-        {
-            helmet[typeHelmet].SetActive(true);
-            helmet[typeHelmet].layer = 10; // tag to be able to shoot
-        }
-    }
+    //public void SetTypeHelmet(int oldValue, int newValue)
+    //{
+    //    typeHelmet = newValue;
+    //    if(typeChar == 1 && helmet[typeHelmet] != null)
+    //    {
+    //        helmet[typeHelmet].SetActive(true);
+    //        helmet[typeHelmet].layer = 10; // tag to be able to shoot
+    //    }
+    //}
 
-    public void SetTypeArmor(int oldValue, int newValue)
-    {
-        typeArmor = newValue;
-        if (typeChar == 1 && armor[typeArmor] != null)
-        {
-            armor[typeArmor].SetActive(true);
-            armor[typeArmor].layer = 10; // tag to be able to shoot
-        }   
-    }
+    //public void SetTypeArmor(int oldValue, int newValue)
+    //{
+    //    typeArmor = newValue;
+    //    if (typeChar == 1 && armor[typeArmor] != null)
+    //    {
+    //        armor[typeArmor].SetActive(true);
+    //        armor[typeArmor].layer = 10; // tag to be able to shoot
+    //    }   
+    //}
 
-    public void SetTypeTool(int oldValue, int newValue)
-    {
-        typeTool = newValue;
-        if (typeChar == 1 && tool[typeTool] != null)
-        {
-            tool[typeTool].SetActive(true);
-            tool[typeTool].layer = 10; // tag to be able to shoot
-        }
-    }
-    public void SetColorHelmet(int oldValue, int newValue)
-    {
-        SetColor(0, newValue);
-    }
+    //public void SetTypeTool(int oldValue, int newValue)
+    //{
+    //    typeTool = newValue;
+    //    if (typeChar == 1 && tool[typeTool] != null)
+    //    {
+    //        tool[typeTool].SetActive(true);
+    //        tool[typeTool].layer = 10; // tag to be able to shoot
+    //    }
+    //}
 
-    public void SetColorHead(int oldValue, int newValue)
-    {
-        SetColor(1, newValue);
-    }
+    //public void SetColorHelmet(int oldValue, int newValue)
+    //{
+    //    SetColor(0, newValue);
+    //}
 
-    public void SetColorArmor(int oldValue, int newValue)
-    {
-        SetColor(2, newValue);
-    }
+    //public void SetColorHead(int oldValue, int newValue)
+    //{
+    //    SetColor(1, newValue);
+    //}
 
-    public void SetColorTorso(int oldValue, int newValue)
-    {
-        SetColor(3, newValue);
-    }
+    //public void SetColorArmor(int oldValue, int newValue)
+    //{
+    //    SetColor(2, newValue);
+    //}
 
-    public void SetColorTool(int oldValue, int newValue)
-    {
-        SetColor(4, newValue);
-    }
+    //public void SetColorTorso(int oldValue, int newValue)
+    //{
+    //    SetColor(3, newValue);
+    //}
 
-    public void SetColorArmL(int oldValue, int newValue)
-    {
-        SetColor(5, newValue);
-    }
+    //public void SetColorTool(int oldValue, int newValue)
+    //{
+    //    SetColor(4, newValue);
+    //}
 
-    public void SetColorHandL(int oldValue, int newValue)
-    {
-        SetColor(6, newValue);
-    }
+    //public void SetColorArmL(int oldValue, int newValue)
+    //{
+    //    SetColor(5, newValue);
+    //}
 
-    public void SetColorArmR(int oldValue, int newValue)
-    {
-        SetColor(7, newValue);
-    }
+    //public void SetColorHandL(int oldValue, int newValue)
+    //{
+    //    SetColor(6, newValue);
+    //}
 
-    public void SetColorHandR(int oldValue, int newValue)
-    {
-        SetColor(8, newValue);
-    }
+    //public void SetColorArmR(int oldValue, int newValue)
+    //{
+    //    SetColor(7, newValue);
+    //}
 
-    public void SetColorBelt(int oldValue, int newValue)
-    {
-        SetColor(9, newValue);
-    }
+    //public void SetColorHandR(int oldValue, int newValue)
+    //{
+    //    SetColor(8, newValue);
+    //}
 
-    public void SetColorLegL(int oldValue, int newValue)
-    {
-        SetColor(10, newValue);
-    }
+    //public void SetColorBelt(int oldValue, int newValue)
+    //{
+    //    SetColor(9, newValue);
+    //}
 
-    public void SetColorLegR(int oldValue, int newValue)
-    {
-        SetColor(11, newValue);
-    }
+    //public void SetColorLegL(int oldValue, int newValue)
+    //{
+    //    SetColor(10, newValue);
+    //}
 
-    public void SetColor(int index, int newColor)
-    {
-        if (index == 1 && typeHelmet == 0) // if no helmet, do not color head
-            return;
+    //public void SetColorLegR(int oldValue, int newValue)
+    //{
+    //    SetColor(11, newValue);
+    //}
 
-        if(index == 0) // if helmet
-        {
-            bool match = false;
-            for (int i = 0; i < helmetToChangeColor.Length; i++) // if not an approved helmet to change color do not change color
-            {
-                if (typeHelmet == helmetToChangeColor[i])
-                    match = true;
-            }
-            if (!match)
-                return;
-        }
-        else if(index == 2) // if armor
-        {
-            bool match = false;
-            for (int i = 0; i < armorToChangeColor.Length; i++) // if not an approved armor to change color do not change color
-            {
-                if (typeArmor == armorToChangeColor[i])
-                    match = true;
-            }
-            if (!match)
-                return;
-        }
-        else if (index == 4) // for tool, only color child objects (if any, otherwise try and color main objects)
-        {
-            bool match = false;
-            for (int i = 0; i < toolsToChangeColor.Length; i++) // if not an approved tool to change color do not change color
-            {
-                if (typeTool == toolsToChangeColor[i])
-                    match = true;
-            }
-            if (!match)
-                return;
+    //public void SetColor(int index, int newColor)
+    //{
+    //    if (index == 1 && typeHelmet == 0) // if no helmet, do not color head
+    //        return;
 
-            for (int k = 0; k < playerLimbs[index].Length; k++)
-            {
-                if (playerLimbs[index][k].transform.childCount == 0) // if no children, color main object as normal (if possible)
-                {
-                    Material cachedMaterial = playerLimbs[index][k].GetComponent<MeshRenderer>().material;
-                    cachedMaterials.Add(cachedMaterial);
+    //    if(index == 0) // if helmet
+    //    {
+    //        bool match = false;
+    //        for (int i = 0; i < helmetToChangeColor.Length; i++) // if not an approved helmet to change color do not change color
+    //        {
+    //            if (typeHelmet == helmetToChangeColor[i])
+    //                match = true;
+    //        }
+    //        if (!match)
+    //            return;
+    //    }
+    //    else if(index == 2) // if armor
+    //    {
+    //        bool match = false;
+    //        for (int i = 0; i < armorToChangeColor.Length; i++) // if not an approved armor to change color do not change color
+    //        {
+    //            if (typeArmor == armorToChangeColor[i])
+    //                match = true;
+    //        }
+    //        if (!match)
+    //            return;
+    //    }
+    //    else if (index == 4) // for tool, only color child objects (if any, otherwise try and color main objects)
+    //    {
+    //        bool match = false;
+    //        for (int i = 0; i < toolsToChangeColor.Length; i++) // if not an approved tool to change color do not change color
+    //        {
+    //            if (typeTool == toolsToChangeColor[i])
+    //                match = true;
+    //        }
+    //        if (!match)
+    //            return;
 
-                    Color newCol = LDrawColors.IntToColor(newColor);
-                    newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
-                    cachedMaterial.color = newCol;
-                    if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
-                        cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
-                }
-                else // if has children
-                {
-                    GameObject ob = playerLimbs[index][k];
-                    foreach (Transform child in ob.transform)
-                    {
-                        Material cachedMaterial = child.GetComponent<MeshRenderer>().material;
-                        cachedMaterials.Add(cachedMaterial);
-                        Color newCol = LDrawColors.IntToColor(newColor);
-                        newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
-                        cachedMaterial.color = newCol; // color children
-                        if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
-                            cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
-                    }
-                }
-            }
-        }
-        else // color gameObjects
-        {
-            for (int j = 0; j < playerLimbs[index].Length; j++)
-            {
-                Material cachedMaterial = playerLimbs[index][j].GetComponent<MeshRenderer>().material;
-                cachedMaterials.Add(cachedMaterial);
-                cachedMaterial.color = LDrawColors.IntToColor(newColor);
-            }
-        }
-    }
+    //        for (int k = 0; k < playerLimbs[index].Length; k++)
+    //        {
+    //            if (playerLimbs[index][k].transform.childCount == 0) // if no children, color main object as normal (if possible)
+    //            {
+    //                Material cachedMaterial = playerLimbs[index][k].GetComponent<MeshRenderer>().material;
+    //                cachedMaterials.Add(cachedMaterial);
+
+    //                Color newCol = LDrawColors.IntToColor(newColor);
+    //                newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
+    //                cachedMaterial.color = newCol;
+    //                if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
+    //                    cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
+    //            }
+    //            else // if has children
+    //            {
+    //                GameObject ob = playerLimbs[index][k];
+    //                foreach (Transform child in ob.transform)
+    //                {
+    //                    Material cachedMaterial = child.GetComponent<MeshRenderer>().material;
+    //                    cachedMaterials.Add(cachedMaterial);
+    //                    Color newCol = LDrawColors.IntToColor(newColor);
+    //                    newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
+    //                    cachedMaterial.color = newCol; // color children
+    //                    if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
+    //                        cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
+    //                }
+    //            }
+    //        }
+    //    }
+    //    else // color gameObjects
+    //    {
+    //        for (int j = 0; j < playerLimbs[index].Length; j++)
+    //        {
+    //            Material cachedMaterial = playerLimbs[index][j].GetComponent<MeshRenderer>().material;
+    //            cachedMaterials.Add(cachedMaterial);
+    //            cachedMaterial.color = LDrawColors.IntToColor(newColor);
+    //        }
+    //    }
+    //}
 
     private void OnDestroy()
     {
@@ -963,8 +972,8 @@ public class Controller : NetworkBehaviour
         {
             ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
         }
-        if (typeChar == 1 && tool[typeTool] != null)
-            tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
+        //if (typeChar == 1 && tool[typeTool] != null)
+        //    tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
     }
 
     public void pressedShoot()
@@ -995,51 +1004,51 @@ public class Controller : NetworkBehaviour
 
             UpdateShowGrabObject(holdingGrab, blockID);
         }
-        else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting world voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
-        {
-            int typePrefab;
-            int type;
+        //else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting world voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
+        //{
+        //    int typePrefab;
+        //    int type;
 
-            if (typeTool == 0) // brick1x1
-            {
-                typePrefab = 2; // projectile
-                type = typeProjectile;
-            }
-            else if (typeTool >= 32 && typeTool <= 43) // shield
-            {
-                return;
-            }
-            else if (typeTool >= 55 && typeTool <= 77) // melee weapon
-            {
-                return;
-            }
-            else if (typeTool >= 78 && typeTool <= 81) // bows
-            {
-                typePrefab = 2; // projectile
-                type = typeProjectile;
-            }
-            else if (typeTool >= 84 && typeTool <= 90) // laser guns
-            {
-                typePrefab = 2; // projectile
-                type = typeProjectile;
-            }
-            else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
-            {
-                typePrefab = 2; // projectile
-                type = typeProjectile;
-            }
-            else
-            {
-                typePrefab = 1; // tool
-                type = typeTool;
-            }
-            // spawn projectile just outside player capsule collider
-            Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
-            if (Settings.OnlinePlay)
-                CmdSpawnPreDefinedPrefab(typePrefab, type, position);
-            else
-                SpawnPreDefinedPrefab(typePrefab, type, position);
-        }
+        //    if (typeTool == 0) // brick1x1
+        //    {
+        //        typePrefab = 2; // projectile
+        //        type = typeProjectile;
+        //    }
+        //    else if (typeTool >= 32 && typeTool <= 43) // shield
+        //    {
+        //        return;
+        //    }
+        //    else if (typeTool >= 55 && typeTool <= 77) // melee weapon
+        //    {
+        //        return;
+        //    }
+        //    else if (typeTool >= 78 && typeTool <= 81) // bows
+        //    {
+        //        typePrefab = 2; // projectile
+        //        type = typeProjectile;
+        //    }
+        //    else if (typeTool >= 84 && typeTool <= 90) // laser guns
+        //    {
+        //        typePrefab = 2; // projectile
+        //        type = typeProjectile;
+        //    }
+        //    else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
+        //    {
+        //        typePrefab = 2; // projectile
+        //        type = typeProjectile;
+        //    }
+        //    else
+        //    {
+        //        typePrefab = 1; // tool
+        //        type = typeTool;
+        //    }
+        //    // spawn projectile just outside player capsule collider
+        //    Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
+        //    if (Settings.OnlinePlay)
+        //        CmdSpawnPreDefinedPrefab(typePrefab, type, position);
+        //    else
+        //        SpawnPreDefinedPrefab(typePrefab, type, position);
+        //}
     }
 
     void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
@@ -1261,16 +1270,16 @@ public class Controller : NetworkBehaviour
 
         byte blockID = World.Instance.GetVoxelState(pos).id;
 
-        // if charType is mechanical, and block is crystal, and health is not max and the selected slot has a stack
-        if (typeChar == 0 && blockID == 30 && health.hp < health.hpMax)
-        {
-            // remove qty 1 from stack
-            health.RequestEditSelfHealth(1);
-            crystal.Play();
-            RemoveVoxel(pos);
-        }
-        // else if charType is organic, and block is mushroom, and health is not max and the selected slot has a stack
-        else if (typeChar == 1 && blockID == 32 && health.hp < health.hpMax)
+        //// if charType is mechanical, and block is crystal, and health is not max and the selected slot has a stack
+        //if (typeChar == 0 && blockID == 30 && health.hp < health.hpMax)
+        //{
+        //    // remove qty 1 from stack
+        //    health.RequestEditSelfHealth(1);
+        //    crystal.Play();
+        //    RemoveVoxel(pos);
+        //}
+        // else if charType is organic, and block is mushroom, and health is not max and the selected slot has a stack 
+        if (typeChar == 1 && blockID == 32 && health.hp < health.hpMax)
         {
             // remove qty 1 from stack
             health.RequestEditSelfHealth(1);
@@ -1338,11 +1347,11 @@ public class Controller : NetworkBehaviour
             case 0:
                 sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
                 break;
-            case 1:
-                sceneObject.typeTool = item;
-                if (typeTool >= 44 && typeTool <= 55) // throwing knives, blades, axes
-                    ob.tag = "Hazard";
-                break;
+            //case 1:
+            //    sceneObject.typeTool = item;
+            //    if (typeTool >= 44 && typeTool <= 55) // throwing knives, blades, axes
+            //        ob.tag = "Hazard";
+            //    break;
             case 2:
                 sceneObject.typeProjectile = item;
                 ob.tag = "Hazard";

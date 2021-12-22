@@ -12,14 +12,11 @@ public class LDrawImportRuntime : MonoBehaviour
     public LDrawConfigRuntime ldrawConfigRuntime;
     public GameObject modelOb;
 
+    public GameObject charOb;
     public GameObject baseOb;
-    //public GameObject procGenOb;
     public GameObject vehicleOb;
     public PhysicMaterial physicMaterial;
 
-    //public int procGenObSizeX;
-    //public int procGenObSizeZ;
-    //public int procGenObSizeY;
     public int baseObSizeX;
     public int baseObSizeZ;
     public int baseObSizeY;
@@ -30,10 +27,10 @@ public class LDrawImportRuntime : MonoBehaviour
 
     private void Awake()
     {
-        LoadVBOImports();
+        LoadModels();
     }
 
-    public void LoadVBOImports()
+    public void LoadModels()
     {
         if (_instance != null && _instance != this)
             Destroy(gameObject);
@@ -45,8 +42,8 @@ public class LDrawImportRuntime : MonoBehaviour
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models and hides upon world load to be instantiated later
+        charOb = ImportLDraw("char", new Vector3(0, 0, 0), false);
         baseOb = ImportLDraw("base", new Vector3(0, -10000, 0), true);
-        //procGenOb = ImportLDraw("procGen", new Vector3(0, -10000, 0), true); // spawn preloaded copy far below world so its not visible since cannot make prefab
         vehicleOb = ImportLDraw("vehicle", new Vector3(0, -10000, 0), false);
         vehicleOb.tag = "Vehicle";
 
@@ -54,9 +51,6 @@ public class LDrawImportRuntime : MonoBehaviour
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
         baseObSizeZ = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.z / 40) + 1;
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
-        //procGenObSizeX = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.x / 40) + 1;
-        //procGenObSizeZ = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.z / 40) + 1;
-        //procGenObSizeY = Mathf.CeilToInt(procGenOb.GetComponent<BoxCollider>().size.y / 40) + 1;
     }
 
     public GameObject ImportLDraw(string fileName, Vector3 pos, bool staticVBO)

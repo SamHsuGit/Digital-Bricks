@@ -12,6 +12,7 @@ public class SetupMenu : MonoBehaviour
     public TMP_InputField playerNameInputField;
     public TMP_InputField planetInputField;
     public TMP_InputField seedInputField;
+    public GameObject charOb;
     public GameObject[] charTypeModels;
     public GameObject[] helmet;
     public GameObject[] armor;
@@ -31,332 +32,340 @@ public class SetupMenu : MonoBehaviour
     public Material[] playerMaterials;
     public AudioSource buttonSound;
 
-    int selectedType;
-    int selectedLimb;
+    //int selectedType;
+    //int selectedLimb;
     public int index;
 
-    List<int> helmetTypes;
-    List<int> armorTypes;
-    List<Vector2> restrictedCombos;
+    //List<int> helmetTypes;
+    //List<int> armorTypes;
+    //List<Vector2> restrictedCombos;
 
-    GameObject[] array;
-    int gameObjectCount;
-    bool restricted;
+    //GameObject[] array;
+    //int gameObjectCount;
+    //bool restricted;
 
     private void Awake()
     {
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
-        currentIndexChar = SettingsStatic.LoadedSettings.playerTypeChar;
-        currentIndexHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-        currentIndexArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-        currentIndexTool = SettingsStatic.LoadedSettings.playerTypeTool;
-        for (int i = 0; i < charTypeModels.Length; i++)
-            charTypeModels[i].SetActive(false);
-        for (int i = 0; i < helmet.Length; i++)
-            helmet[i].SetActive(false);
-        for (int i = 0; i < armor.Length; i++)
-            armor[i].SetActive(false);
-        for (int i = 0; i < tool.Length; i++)
-            tool[i].SetActive(false);
-        charTypeModels[currentIndexChar].SetActive(true);
-        helmet[currentIndexHelmet].SetActive(true);
-        armor[currentIndexArmor].SetActive(true);
-        tool[currentIndexTool].SetActive(true);
+        charOb = LDrawImportRuntime.Instance.charOb;
+        charOb.transform.parent = modelsObjectToSpin.transform;
+        charOb.SetActive(true);
+        charOb.transform.localPosition = new Vector3(0, charOb.GetComponent<BoxCollider>().center.y * LDrawImportRuntime.Instance.scale, 0);
 
-        helmetTypes = new List<int>()
-        {
-            6,
-            2,
-            1,
-            2,
-            1,
-            1,
-            1,
-            1,
-            1,
-            3,
-            0,
-            3,
-            5,
-            5,
-            5,
-            0,
-            2,
-            3,
-            1,
-            3,
-            3,
-            3,
-            1,
-            2,
-            1,
-            1,
-            2,
-            1,
-            0,
-            1,
-            1,
-            3,
-            4,
-            5,
-            3,
-            3,
-            3,
-            5,
-            5,
-            5,
-            3,
-            2,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            5,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            5,
-            1,
-            1,
-            1,
-            3,
-            3,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            5,
-            1,
-            5,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            3,
-            1,
-            2,
-            1,
-            0,
-            4,
-            1,
-            1,
-            5,
-            5,
-            5,
-            1,
-            1,
-            3,
-            3,
-            5,
-            5,
-            1,
-            1,
-            0,
-            1,
-            1,
-            1,
-            5,
-            1,
-            3,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            1,
-            0,
-            1,
-            4,
-            2,
-            2,
-            2,
-            1,
-            0,
-            3,
-            4,
-            4,
-            5,
-            0,
-            5,
-            5,
-            2,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            3,
-            1,
-            1,
-            3,
-            3,
-            0,
-            4,
-            0,
-            4,
-            1,
-            1,
-            1,
-            1,
-            1,
-        };
+        Destroy(LDrawImportRuntime.Instance.baseOb);
+        Destroy(LDrawImportRuntime.Instance.vehicleOb);
 
-        armorTypes = new List<int>()
-        {
-            7,
-            3,
-            5,
-            5,
-            5,
-            5,
-            5,
-            2,
-            5,
-            5,
-            5,
-            2,
-            3,
-            3,
-            3,
-            3,
-            3,
-            3,
-            3,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            3,
-            3,
-            2,
-            5,
-            5,
-            0,
-            1,
-            4,
-            3,
-            1,
-            1,
-            3,
-            4,
-            5,
-            5,
-            3,
-            5,
-            3,
-            3,
-            3,
-        };
+        //currentIndexChar = SettingsStatic.LoadedSettings.playerTypeChar;
+        //currentIndexHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+        //currentIndexArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+        //currentIndexTool = SettingsStatic.LoadedSettings.playerTypeTool;
+        //for (int i = 0; i < charTypeModels.Length; i++)
+        //    charTypeModels[i].SetActive(false);
+        //for (int i = 0; i < helmet.Length; i++)
+        //    helmet[i].SetActive(false);
+        //for (int i = 0; i < armor.Length; i++)
+        //    armor[i].SetActive(false);
+        //for (int i = 0; i < tool.Length; i++)
+        //    tool[i].SetActive(false);
+        //charTypeModels[currentIndexChar].SetActive(true);
+        //helmet[currentIndexHelmet].SetActive(true);
+        //armor[currentIndexArmor].SetActive(true);
+        //tool[currentIndexTool].SetActive(true);
 
-        // Matrix of restricted helmet and armor type combinations to prevent players from selecting combos which create interferences
-        // Syntax = Vector2(helmet, armor)
-        // helmet           armor
-        // 0 = all          0 = all
-        // 1 = head         1 = head
-        // 2 = sides        2 = sides
-        // 3 = back         3 = back
-        // 4 = front        4 = front
-        // 5 = backsides    5 = frontback
-        // 6 = none         6 = none
-        restrictedCombos = new List<Vector2>()
-        {
-            // helmets with all marked can have no armor
-            new Vector2(0,0),
-            new Vector2(0,1),
-            new Vector2(0,2),
-            new Vector2(0,3),
-            new Vector2(0,4),
-            new Vector2(0,5),
-            // armor with all marked can have no helmet
-            new Vector2(1,0),
-            new Vector2(2,0),
-            new Vector2(3,0),
-            new Vector2(4,0),
-            new Vector2(5,0),
+        //helmetTypes = new List<int>()
+        //{
+        //    6,
+        //    2,
+        //    1,
+        //    2,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    3,
+        //    0,
+        //    3,
+        //    5,
+        //    5,
+        //    5,
+        //    0,
+        //    2,
+        //    3,
+        //    1,
+        //    3,
+        //    3,
+        //    3,
+        //    1,
+        //    2,
+        //    1,
+        //    1,
+        //    2,
+        //    1,
+        //    0,
+        //    1,
+        //    1,
+        //    3,
+        //    4,
+        //    5,
+        //    3,
+        //    3,
+        //    3,
+        //    5,
+        //    5,
+        //    5,
+        //    3,
+        //    2,
+        //    0,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    5,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    5,
+        //    1,
+        //    1,
+        //    1,
+        //    3,
+        //    3,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    5,
+        //    1,
+        //    5,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    0,
+        //    3,
+        //    1,
+        //    2,
+        //    1,
+        //    0,
+        //    4,
+        //    1,
+        //    1,
+        //    5,
+        //    5,
+        //    5,
+        //    1,
+        //    1,
+        //    3,
+        //    3,
+        //    5,
+        //    5,
+        //    1,
+        //    1,
+        //    0,
+        //    1,
+        //    1,
+        //    1,
+        //    5,
+        //    1,
+        //    3,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    0,
+        //    1,
+        //    0,
+        //    1,
+        //    4,
+        //    2,
+        //    2,
+        //    2,
+        //    1,
+        //    0,
+        //    3,
+        //    4,
+        //    4,
+        //    5,
+        //    0,
+        //    5,
+        //    5,
+        //    2,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    3,
+        //    1,
+        //    1,
+        //    3,
+        //    3,
+        //    0,
+        //    4,
+        //    0,
+        //    4,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //};
 
-            new Vector2(1,1),
-            new Vector2(2,2),
-            new Vector2(3,3),
-            new Vector2(3,5),
-            new Vector2(4,4),
-            new Vector2(4,5),
-            new Vector2(5,2),
-            new Vector2(5,3)
-        };
+        //armorTypes = new List<int>()
+        //{
+        //    7,
+        //    3,
+        //    5,
+        //    5,
+        //    5,
+        //    5,
+        //    5,
+        //    2,
+        //    5,
+        //    5,
+        //    5,
+        //    2,
+        //    3,
+        //    3,
+        //    3,
+        //    3,
+        //    3,
+        //    3,
+        //    3,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    1,
+        //    3,
+        //    3,
+        //    2,
+        //    5,
+        //    5,
+        //    0,
+        //    1,
+        //    4,
+        //    3,
+        //    1,
+        //    1,
+        //    3,
+        //    4,
+        //    5,
+        //    5,
+        //    3,
+        //    5,
+        //    3,
+        //    3,
+        //    3,
+        //};
 
-        selectedLimb = 0;
+        //// Matrix of restricted helmet and armor type combinations to prevent players from selecting combos which create interferences
+        //// Syntax = Vector2(helmet, armor)
+        //// helmet           armor
+        //// 0 = all          0 = all
+        //// 1 = head         1 = head
+        //// 2 = sides        2 = sides
+        //// 3 = back         3 = back
+        //// 4 = front        4 = front
+        //// 5 = backsides    5 = frontback
+        //// 6 = none         6 = none
+        //restrictedCombos = new List<Vector2>()
+        //{
+        //    // helmets with all marked can have no armor
+        //    new Vector2(0,0),
+        //    new Vector2(0,1),
+        //    new Vector2(0,2),
+        //    new Vector2(0,3),
+        //    new Vector2(0,4),
+        //    new Vector2(0,5),
+        //    // armor with all marked can have no helmet
+        //    new Vector2(1,0),
+        //    new Vector2(2,0),
+        //    new Vector2(3,0),
+        //    new Vector2(4,0),
+        //    new Vector2(5,0),
 
-        LDrawColors.GenerateColorLib();
+        //    new Vector2(1,1),
+        //    new Vector2(2,2),
+        //    new Vector2(3,3),
+        //    new Vector2(3,5),
+        //    new Vector2(4,4),
+        //    new Vector2(4,5),
+        //    new Vector2(5,2),
+        //    new Vector2(5,3)
+        //};
 
-        LDrawColors.GetSavedColorHexValues();
+        //selectedLimb = 0;
 
-        for (int i = 0; i < LDrawColors.savedPlayerColors.Length; i++) // for all player limb materials
-        {
-            if (ColorUtility.TryParseHtmlString(LDrawColors.savedPlayerColors[i], out Color newCol))
-            {
-                if (i == 4) // if tool color
-                    newCol.a = 0.5f;
-                playerMaterials[i].color = newCol; // set the material from saved hex values
-                if(playerMaterials[i].IsKeywordEnabled("_EMISSION"))
-                    playerMaterials[i].SetColor("_EmissionColor", newCol);
-            }
-        }
+        //LDrawColors.GenerateColorLib();
+
+        //LDrawColors.GetSavedColorHexValues();
+
+        //for (int i = 0; i < LDrawColors.savedPlayerColors.Length; i++) // for all player limb materials
+        //{
+        //    if (ColorUtility.TryParseHtmlString(LDrawColors.savedPlayerColors[i], out Color newCol))
+        //    {
+        //        if (i == 4) // if tool color
+        //            newCol.a = 0.5f;
+        //        playerMaterials[i].color = newCol; // set the material from saved hex values
+        //        if(playerMaterials[i].IsKeywordEnabled("_EMISSION"))
+        //            playerMaterials[i].SetColor("_EmissionColor", newCol);
+        //    }
+        //}
     }
 
     private void Start()
@@ -364,9 +373,9 @@ public class SetupMenu : MonoBehaviour
         //reset framerate of game for video animation
         Application.targetFrameRate = 60;
 
-        // always sets default limb select as torso upon opening
-        colorSelector.value = 0;
-        colorSlider.value = SettingsStatic.LoadedSettings.playerColorHelmet; // loads value from save file
+        //// always sets default limb select as torso upon opening
+        //colorSelector.value = 0;
+        //colorSlider.value = SettingsStatic.LoadedSettings.playerColorHelmet; // loads value from save file
         
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.drawDistance;
@@ -379,176 +388,176 @@ public class SetupMenu : MonoBehaviour
     {
         modelsObjectToSpin.transform.Rotate(new Vector3(0, 1, 0));
 
-        for (int i = 0; i < charTypeModels.Length; i++)
-            charTypeModels[i].SetActive(false);
-        for (int i = 0; i < helmet.Length; i++)
-            helmet[i].SetActive(false);
-        for (int i = 0; i < armor.Length; i++)
-            armor[i].SetActive(false);
-        for (int i = 0; i < tool.Length; i++)
-            tool[i].SetActive(false);
-        charTypeModels[currentIndexChar].SetActive(true);
-        helmet[currentIndexHelmet].SetActive(true);
-        armor[currentIndexArmor].SetActive(true);
-        tool[currentIndexTool].SetActive(true);
+        //for (int i = 0; i < charTypeModels.Length; i++)
+        //    charTypeModels[i].SetActive(false);
+        //for (int i = 0; i < helmet.Length; i++)
+        //    helmet[i].SetActive(false);
+        //for (int i = 0; i < armor.Length; i++)
+        //    armor[i].SetActive(false);
+        //for (int i = 0; i < tool.Length; i++)
+        //    tool[i].SetActive(false);
+        //charTypeModels[currentIndexChar].SetActive(true);
+        //helmet[currentIndexHelmet].SetActive(true);
+        //armor[currentIndexArmor].SetActive(true);
+        //tool[currentIndexTool].SetActive(true);
     }
 
-    public void SelectLimb()
-    {
-        buttonSound.Play();
-        selectedLimb = colorSelector.value;
-    }
+    //public void SelectLimb()
+    //{
+    //    buttonSound.Play();
+    //    selectedLimb = colorSelector.value;
+    //}
 
-    public void SelectType()
-    {
-        buttonSound.Play();
-        selectedType = typeSelector.value;
-    }
+    //public void SelectType()
+    //{
+    //    buttonSound.Play();
+    //    selectedType = typeSelector.value;
+    //}
 
-    public void SetColor()
-    {
-        string htmlValue = LDrawColors.colorLib[(int)colorSlider.value];
-        Color newCol;
+    //public void SetColor()
+    //{
+    //    string htmlValue = LDrawColors.colorLib[(int)colorSlider.value];
+    //    Color newCol;
 
-        if(ColorUtility.TryParseHtmlString(htmlValue, out newCol))
-        {
-            if (selectedLimb == 4) // if tool color
-                newCol.a = 0.5f;
-            playerMaterials[selectedLimb].SetColor("_BaseColor", newCol);
-            if(playerMaterials[selectedLimb].IsKeywordEnabled("_EMISSION"))
-                playerMaterials[selectedLimb].SetColor("_EmissionColor", newCol);
-            LDrawColors.savedPlayerColors[selectedLimb] = htmlValue;
-        }
-    }
+    //    if(ColorUtility.TryParseHtmlString(htmlValue, out newCol))
+    //    {
+    //        if (selectedLimb == 4) // if tool color
+    //            newCol.a = 0.5f;
+    //        playerMaterials[selectedLimb].SetColor("_BaseColor", newCol);
+    //        if(playerMaterials[selectedLimb].IsKeywordEnabled("_EMISSION"))
+    //            playerMaterials[selectedLimb].SetColor("_EmissionColor", newCol);
+    //        LDrawColors.savedPlayerColors[selectedLimb] = htmlValue;
+    //    }
+    //}
 
     public void SetRenderDistance()
     {
         worldRenderText.text = worldRenderDistanceSlider.value.ToString();
     }
 
-    public void Next()
-    {
-        Increment(true);
-        //Debug.Log("helmet: " + currentIndexHelmet + " is of type: " + helmetTypes[currentIndexHelmet]);
-        //Debug.Log("armor: " + currentIndexArmor + " is of type: " + armorTypes[currentIndexArmor]);
-    }
+    //public void Next()
+    //{
+    //    Increment(true);
+    //    //Debug.Log("helmet: " + currentIndexHelmet + " is of type: " + helmetTypes[currentIndexHelmet]);
+    //    //Debug.Log("armor: " + currentIndexArmor + " is of type: " + armorTypes[currentIndexArmor]);
+    //}
 
-    public void Previous()
-    {
-        Increment(false);
-        //Debug.Log("helmet: " + currentIndexHelmet + " is of type: " + helmetTypes[currentIndexHelmet]);
-        //Debug.Log("armor: " + currentIndexArmor + " is of type: " + armorTypes[currentIndexArmor]);
-    }
+    //public void Previous()
+    //{
+    //    Increment(false);
+    //    //Debug.Log("helmet: " + currentIndexHelmet + " is of type: " + helmetTypes[currentIndexHelmet]);
+    //    //Debug.Log("armor: " + currentIndexArmor + " is of type: " + armorTypes[currentIndexArmor]);
+    //}
 
-    void Increment(bool increase)
-    {
-        buttonSound.Play();
-        index = 0;
-        array = new GameObject[] { };
+    //void Increment(bool increase)
+    //{
+    //    buttonSound.Play();
+    //    index = 0;
+    //    array = new GameObject[] { };
 
-        switch (selectedType)
-        {
-            case 0: // toolType
-                {
-                    index = currentIndexTool;
-                    array = tool;
-                    break;
-                }
-            case 1: // helmetType
-                {
-                    index = currentIndexHelmet;
-                    array = helmet;
-                    break;
-                }
-            case 2: // armorType
-                {
-                    index = currentIndexArmor;
-                    array = armor;
-                    break;
-                }
-            case 3: // charType
-                {
-                    index = currentIndexChar;
-                    array = charTypeModels;
-                    break;
-                }
-        }
+    //    switch (selectedType)
+    //    {
+    //        case 0: // toolType
+    //            {
+    //                index = currentIndexTool;
+    //                array = tool;
+    //                break;
+    //            }
+    //        case 1: // helmetType
+    //            {
+    //                index = currentIndexHelmet;
+    //                array = helmet;
+    //                break;
+    //            }
+    //        case 2: // armorType
+    //            {
+    //                index = currentIndexArmor;
+    //                array = armor;
+    //                break;
+    //            }
+    //        case 3: // charType
+    //            {
+    //                index = currentIndexChar;
+    //                array = charTypeModels;
+    //                break;
+    //            }
+    //    }
 
-        // increment or decrement depending on 'increase' flag
-        gameObjectCount = array.Length - 1;
-        if (increase)
-        {
-            index++;
-            if (index > gameObjectCount)
-                index = 0;
-        }
-        else
-        {
-            index--;
-            if (index < 0)
-                index = gameObjectCount;
-        }
+    //    // increment or decrement depending on 'increase' flag
+    //    gameObjectCount = array.Length - 1;
+    //    if (increase)
+    //    {
+    //        index++;
+    //        if (index > gameObjectCount)
+    //            index = 0;
+    //    }
+    //    else
+    //    {
+    //        index--;
+    //        if (index < 0)
+    //            index = gameObjectCount;
+    //    }
 
-        if (selectedType == 1 || selectedType == 2) // if changing helmet or armor types
-        {
-            CheckCurrentComboIsRestricted(increase);
-        }
+    //    if (selectedType == 1 || selectedType == 2) // if changing helmet or armor types
+    //    {
+    //        CheckCurrentComboIsRestricted(increase);
+    //    }
 
-        UpdateFromIndex(index);
-    }
+    //    UpdateFromIndex(index);
+    //}
 
-    void CheckCurrentComboIsRestricted(bool increase)
-    {
-        UpdateFromIndex(index); // update values from current index
-        Vector2 combo = new Vector2(helmetTypes[currentIndexHelmet], armorTypes[currentIndexArmor]);
-        restricted = false;
-        foreach (Vector2 restrictedCombo in restrictedCombos)
-        {
-            //Debug.Log(combo + " vs " + restrictedCombo);
-            if (combo == restrictedCombo)
-            {
-                //Debug.Log("helmet, armor combo: " + index + ", " + currentIndexArmor + " caused restricted combo <helmet>,<armor>: " + combo + " with " + restrictedCombo);
-                restricted = true;
-                break;
-            }
-        }
-        if (restricted) // if restricted, increment or decrement, then recursively loop to  again and re-check if restricted...
-        {
-            if (increase)
-            {
-                index++;
-                if (index > gameObjectCount)
-                    index = 0;
-            }
-            else
-            {
-                index--;
-                if (index < 0)
-                    index = gameObjectCount;
-            }
-            UpdateFromIndex(index);
-            CheckCurrentComboIsRestricted(increase);
-        }
-    }
+    //void CheckCurrentComboIsRestricted(bool increase)
+    //{
+    //    UpdateFromIndex(index); // update values from current index
+    //    Vector2 combo = new Vector2(helmetTypes[currentIndexHelmet], armorTypes[currentIndexArmor]);
+    //    restricted = false;
+    //    foreach (Vector2 restrictedCombo in restrictedCombos)
+    //    {
+    //        //Debug.Log(combo + " vs " + restrictedCombo);
+    //        if (combo == restrictedCombo)
+    //        {
+    //            //Debug.Log("helmet, armor combo: " + index + ", " + currentIndexArmor + " caused restricted combo <helmet>,<armor>: " + combo + " with " + restrictedCombo);
+    //            restricted = true;
+    //            break;
+    //        }
+    //    }
+    //    if (restricted) // if restricted, increment or decrement, then recursively loop to  again and re-check if restricted...
+    //    {
+    //        if (increase)
+    //        {
+    //            index++;
+    //            if (index > gameObjectCount)
+    //                index = 0;
+    //        }
+    //        else
+    //        {
+    //            index--;
+    //            if (index < 0)
+    //                index = gameObjectCount;
+    //        }
+    //        UpdateFromIndex(index);
+    //        CheckCurrentComboIsRestricted(increase);
+    //    }
+    //}
 
-    void UpdateFromIndex(int _index)
-    {
-        switch (selectedType)
-        {
-            case 0: // toolType
-                currentIndexTool = _index;
-                break;
-            case 1: // helmetType
-                currentIndexHelmet = _index;
-                break;
-            case 2: // armorType
-                currentIndexArmor = _index;
-                break;
-            case 3: // charType
-                currentIndexChar = _index;
-                break;
-        }
-    }
+    //void UpdateFromIndex(int _index)
+    //{
+    //    switch (selectedType)
+    //    {
+    //        case 0: // toolType
+    //            currentIndexTool = _index;
+    //            break;
+    //        case 1: // helmetType
+    //            currentIndexHelmet = _index;
+    //            break;
+    //        case 2: // armorType
+    //            currentIndexArmor = _index;
+    //            break;
+    //        case 3: // charType
+    //            currentIndexChar = _index;
+    //            break;
+    //    }
+    //}
 
     public void Tutorial()
     {
@@ -588,73 +597,73 @@ public class SetupMenu : MonoBehaviour
 
     public void SaveSettings()
     {
-        SettingsStatic.LoadedSettings.playerTypeChar = currentIndexChar;
+        //SettingsStatic.LoadedSettings.playerTypeChar = currentIndexChar;
 
-        SettingsStatic.LoadedSettings.playerTypeHelmet = currentIndexHelmet;
-        SettingsStatic.LoadedSettings.playerTypeArmor = currentIndexArmor;
-        SettingsStatic.LoadedSettings.playerTypeTool = currentIndexTool;
+        //SettingsStatic.LoadedSettings.playerTypeHelmet = currentIndexHelmet;
+        //SettingsStatic.LoadedSettings.playerTypeArmor = currentIndexArmor;
+        //SettingsStatic.LoadedSettings.playerTypeTool = currentIndexTool;
 
-        // Save Colors for next time
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[0])
-                SettingsStatic.LoadedSettings.playerColorHelmet = i; // helmet
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[1])
-                SettingsStatic.LoadedSettings.playerColorHead = i; // head
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[2])
-                SettingsStatic.LoadedSettings.playerColorArmor = i; // armor
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[3])
-                SettingsStatic.LoadedSettings.playerColorTorso = i; // torso
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[4])
-                SettingsStatic.LoadedSettings.playerColorTool = i; // tool
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[5])
-                SettingsStatic.LoadedSettings.playerColorArmL = i; // ArmL
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[6])
-                SettingsStatic.LoadedSettings.playerColorHandL = i; // HandL
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[7])
-                SettingsStatic.LoadedSettings.playerColorArmR = i; // ArmR
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[8])
-                SettingsStatic.LoadedSettings.playerColorHandR = i; // HandR
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[9])
-                SettingsStatic.LoadedSettings.playerColorBelt = i; // Belt
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[10])
-                SettingsStatic.LoadedSettings.playerColorLegL = i; // LegL
-        }
-        for (int i = 0; i < LDrawColors.colorLib.Count; i++)
-        {
-            if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[11])
-                SettingsStatic.LoadedSettings.playerColorLegR = i; // LegR
-        }
+        //// Save Colors for next time
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[0])
+        //        SettingsStatic.LoadedSettings.playerColorHelmet = i; // helmet
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[1])
+        //        SettingsStatic.LoadedSettings.playerColorHead = i; // head
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[2])
+        //        SettingsStatic.LoadedSettings.playerColorArmor = i; // armor
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[3])
+        //        SettingsStatic.LoadedSettings.playerColorTorso = i; // torso
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[4])
+        //        SettingsStatic.LoadedSettings.playerColorTool = i; // tool
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[5])
+        //        SettingsStatic.LoadedSettings.playerColorArmL = i; // ArmL
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[6])
+        //        SettingsStatic.LoadedSettings.playerColorHandL = i; // HandL
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[7])
+        //        SettingsStatic.LoadedSettings.playerColorArmR = i; // ArmR
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[8])
+        //        SettingsStatic.LoadedSettings.playerColorHandR = i; // HandR
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[9])
+        //        SettingsStatic.LoadedSettings.playerColorBelt = i; // Belt
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[10])
+        //        SettingsStatic.LoadedSettings.playerColorLegL = i; // LegL
+        //}
+        //for (int i = 0; i < LDrawColors.colorLib.Count; i++)
+        //{
+        //    if (LDrawColors.colorLib[i] == LDrawColors.savedPlayerColors[11])
+        //        SettingsStatic.LoadedSettings.playerColorLegR = i; // LegR
+        //}
 
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
         SettingsStatic.LoadedSettings.drawDistance = (int)worldRenderDistanceSlider.value;

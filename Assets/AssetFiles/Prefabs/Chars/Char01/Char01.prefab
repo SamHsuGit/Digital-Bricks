@@ -782,27 +782,11 @@ MonoBehaviour:
   - {fileID: 2009221117049920548}
   - {fileID: 1839619620696046812}
   currentWaveEnemies: []
-  typeChar: 0
-  typeHelmet: 0
-  typeArmor: 0
-  typeTool: 0
   typeProjectile: 0
   playerName: Host
   timeOfDay: 6.0066667
   seed: 0
   version: 
-  colorHelmet: 0
-  colorHead: 0
-  colorArmor: 0
-  colorTorso: 0
-  colorTool: 0
-  colorArmL: 0
-  colorHandL: 0
-  colorArmR: 0
-  colorHandR: 0
-  colorBelt: 0
-  colorLegL: 0
-  colorLegR: 0
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0
@@ -820,6 +804,7 @@ MonoBehaviour:
   blockID: 0
   day: 1
   lookVelocity: 1
+  charOb: {fileID: 0}
   modelPrefab: {fileID: 143105093268077663}
   gameMenu: {fileID: 5290477769798018415}
   nametag: {fileID: 2688012131756474887}
@@ -4818,6 +4803,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 927708423704314529, guid: e23e2455aa42685498573ed483877bc7, type: 3}
       propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 927708423704314529, guid: e23e2455aa42685498573ed483877bc7, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1012781920010259014, guid: e23e2455aa42685498573ed483877bc7, type: 3}
