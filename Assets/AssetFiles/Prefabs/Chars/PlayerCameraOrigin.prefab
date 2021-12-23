@@ -89,7 +89,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.01
+  near clip plane: 0.8
   far clip plane: 5000
   field of view: 75
   orthographic: 0
@@ -169,6 +169,7 @@ MonoBehaviour:
   baseWalkSpeed: 15
   baseSprintSpeed: 30
   baseJumpForce: 15
+  isMoving: 0
   isGrounded: 0
   maxJumps: 0
   currentJumps: 0
@@ -179,6 +180,7 @@ MonoBehaviour:
   colliderOffset: 0
   isPlayer: 0
   isCamera: 1
+  isAI: 0
   width: 0
   length: 0
   height: 0

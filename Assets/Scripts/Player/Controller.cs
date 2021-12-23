@@ -136,6 +136,7 @@ public class Controller : NetworkBehaviour
     //Initializers & Constants
     float colliderHeight;
     float colliderRadius;
+    Vector3 colliderCenter;
     float sphereCastRadius;
     float grabRange;
     float rotationY = 0f;
@@ -173,7 +174,6 @@ public class Controller : NetworkBehaviour
         world = World.Instance;
         physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
-        bc = modelPrefab.GetComponent<BoxCollider>();
         animator = modelPrefab.GetComponent<Animator>();
         inputHandler = GetComponent<InputHandler>();
         health = GetComponent<Health>();
@@ -189,12 +189,6 @@ public class Controller : NetworkBehaviour
         projectile = brick1x1;
 
         health.isAlive = true;
-
-        //collider size starts off from component, gets transformed when altMode is enabled later on
-        colliderHeight = bc.size.y;
-        colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x,2) + Mathf.Pow(bc.size.z,2));
-        cc.height = colliderHeight;
-        cc.radius = colliderRadius;
 
         removePos = Instantiate(removePosPrefab).transform;
         shootPos = Instantiate(shootPosPrefab).transform;
@@ -368,23 +362,37 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
+            // Import character model
             charOb = LDrawImportRuntime.Instance.charOb;
             charOb.SetActive(true);
             charOb.transform.parent = modelPrefab.transform;
-            charOb.transform.localPosition = new Vector3(0, -0.35f, 0);
+            bc = modelPrefab.transform.GetChild(1).GetComponent<BoxCollider>();
+            charOb.transform.localPosition = new Vector3(0, 0, 0);
             charOb.transform.localEulerAngles = new Vector3(0, 180, 180);
+
+            // position/size capsule collider procedurally based on imported character model
+            colliderHeight = bc.size.y * LDrawImportRuntime.Instance.scale;
+            colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * LDrawImportRuntime.Instance.scale, 2) + Mathf.Pow(bc.size.z * LDrawImportRuntime.Instance.scale, 2)) * 0.25f;
+            colliderCenter = new Vector3(0, -bc.center.y * LDrawImportRuntime.Instance.scale, 0);
+            cc.center = colliderCenter;
+            cc.height = colliderHeight;
+            cc.radius = colliderRadius;
+
+            // position camera procedurally based on imported character model
+            playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
+            playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius * 0.5f;
 
             //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
 
             //if(typeChar == 1)
             //{
-                //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-                //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-                //typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
-                //colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
-                //colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
-                //colorTool = SettingsStatic.LoadedSettings.playerColorTool;
-                //colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
+            //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
+            //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
+            //typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
+            //colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
+            //colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
+            //colorTool = SettingsStatic.LoadedSettings.playerColorTool;
+            //colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
             //}
 
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;

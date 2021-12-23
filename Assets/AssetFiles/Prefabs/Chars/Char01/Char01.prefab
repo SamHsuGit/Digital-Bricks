@@ -1994,11 +1994,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1528517879950106, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1528517879950106, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1528517879950106, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2094,7 +2094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 277097101524814866, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: near clip plane
-      value: 0.01
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 277097101524814866, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_CullingMask.m_Bits
@@ -4090,6 +4090,14 @@ PrefabInstance:
       propertyPath: creativeInventoryWindow
       value: 
       objectReference: {fileID: 1115402795395955849}
+    - target: {fileID: 2138201561010861441, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2138201561010861441, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2150582636618988276, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -4216,6 +4224,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4901406134701896310, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4970192553057043873, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4970192553057043873, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4970192553057043873, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5344161054330779058, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
@@ -5231,7 +5251,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9142627446851858110, guid: e23e2455aa42685498573ed483877bc7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.85
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9142627446851858110, guid: e23e2455aa42685498573ed483877bc7, type: 3}
       propertyPath: m_LocalPosition.z
