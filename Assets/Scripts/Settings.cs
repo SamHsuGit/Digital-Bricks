@@ -31,7 +31,8 @@ public static class SettingsStatic
         settings.volume = 0.5f;
         settings.lookSpeed = 0.1f;
         settings.lookAccel = 0.1f;
-        settings.graphicsQuality = 0;
+        settings.fov = 90f;
+        //settings.graphicsQuality = 0;
         settings.invertY = false;
         settings.invertX = false;
         settings.fullscreen = true;
@@ -87,7 +88,8 @@ public class Settings
     [Range(0.001f, 10f)]
     public float lookSpeed;
     public float lookAccel;
-    public int graphicsQuality;
+    public float fov;
+    //public int graphicsQuality;
     public bool invertY;
     public bool invertX;
     public bool fullscreen;

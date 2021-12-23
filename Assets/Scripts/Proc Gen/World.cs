@@ -87,21 +87,23 @@ public class World : MonoBehaviour
         //}
 
         // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
-        if (SettingsStatic.LoadedSettings.graphicsQuality  == 2)
-        {
-            undrawVoxelBoundObjects = false;
-            undrawVoxels = false;
-        }
-        else if(SettingsStatic.LoadedSettings.graphicsQuality == 1)
-        {
-            undrawVoxelBoundObjects = false;
-            undrawVoxels = false;
-        }
-        else if(SettingsStatic.LoadedSettings.graphicsQuality == 0)
-        {
-            undrawVoxelBoundObjects = false;
-            undrawVoxels = false;
-        }
+        undrawVoxelBoundObjects = false;
+        undrawVoxels = false;
+        //if (SettingsStatic.LoadedSettings.graphicsQuality  == 2)
+        //{
+        //    undrawVoxelBoundObjects = false;
+        //    undrawVoxels = false;
+        //}
+        //else if(SettingsStatic.LoadedSettings.graphicsQuality == 1)
+        //{
+        //    undrawVoxelBoundObjects = false;
+        //    undrawVoxels = false;
+        //}
+        //else if(SettingsStatic.LoadedSettings.graphicsQuality == 0)
+        //{
+        //    undrawVoxelBoundObjects = false;
+        //    undrawVoxels = false;
+        //}
 
         playerCount = 0;
 

@@ -113,6 +113,7 @@ public class Controller : NetworkBehaviour
 
     //Components
     CapsuleCollider cc;
+    BoxCollider bc;
     PlayerVoxelCollider voxelCollider;
     Animator animator;
     PlayerInput playerInput;
@@ -172,6 +173,7 @@ public class Controller : NetworkBehaviour
         world = World.Instance;
         physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
+        bc = modelPrefab.GetComponent<BoxCollider>();
         animator = modelPrefab.GetComponent<Animator>();
         inputHandler = GetComponent<InputHandler>();
         health = GetComponent<Health>();
@@ -189,8 +191,10 @@ public class Controller : NetworkBehaviour
         health.isAlive = true;
 
         //collider size starts off from component, gets transformed when altMode is enabled later on
-        colliderHeight = cc.height;
-        colliderRadius = cc.radius;
+        colliderHeight = bc.size.y;
+        colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x,2) + Mathf.Pow(bc.size.z,2));
+        cc.height = colliderHeight;
+        cc.radius = colliderRadius;
 
         removePos = Instantiate(removePosPrefab).transform;
         shootPos = Instantiate(shootPosPrefab).transform;
@@ -815,7 +819,7 @@ public class Controller : NetworkBehaviour
         if (!Settings.OnlinePlay || (Settings.OnlinePlay && isServer))
             CalculateCurrentDay();
 
-        ReshapeCollider();
+        //ReshapeCollider();
 
         isGrounded = CheckGroundedCollider();
 
@@ -1514,51 +1518,51 @@ public class Controller : NetworkBehaviour
         placePos.gameObject.SetActive(false);
     }
 
-    public void ReshapeCollider()
-    {
-        if (typeChar == 0)
-        {
-            if (!inputHandler.sprint)
-            {
-                CCShapeNormal(cc, 0);
-                voxelCollider.width = colliderRadius * 2;
-                voxelCollider.height = colliderHeight;
-                voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - (cc.height / 2));
-                if (!photoMode)
-                {
-                    playerCamera.transform.localPosition = Vector3.zero;
-                    playerCameraVoxelCollider.enabled = true;
-                }
-                charController.center = cc.center;
-                charController.radius = cc.radius;
-                charController.height = cc.height;
-            }
-            else // ALT MODE
-            {
-                CCShapeAlternate(cc, 0);
-                voxelCollider.width = colliderRadius * 2;
-                voxelCollider.height = colliderRadius * 2;
-                voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - cc.radius);
-                if (!photoMode)
-                {
-                    playerCamera.transform.localPosition = new Vector3(0, -5.5f, 0);
-                    playerCameraVoxelCollider.enabled = false;
-                }
-                charController.center = cc.center;
-                charController.radius = cc.radius;
-                charController.height = cc.radius;
-            }
-        }
+    //public void ReshapeCollider()
+    //{
+    //    if (typeChar == 0)
+    //    {
+    //        if (!inputHandler.sprint)
+    //        {
+    //            CCShapeNormal(cc, 0);
+    //            voxelCollider.width = colliderRadius * 2;
+    //            voxelCollider.height = colliderHeight;
+    //            voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - (cc.height / 2));
+    //            if (!photoMode)
+    //            {
+    //                playerCamera.transform.localPosition = Vector3.zero;
+    //                playerCameraVoxelCollider.enabled = true;
+    //            }
+    //            charController.center = cc.center;
+    //            charController.radius = cc.radius;
+    //            charController.height = cc.height;
+    //        }
+    //        else // ALT MODE
+    //        {
+    //            CCShapeAlternate(cc, 0);
+    //            voxelCollider.width = colliderRadius * 2;
+    //            voxelCollider.height = colliderRadius * 2;
+    //            voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - cc.radius);
+    //            if (!photoMode)
+    //            {
+    //                playerCamera.transform.localPosition = new Vector3(0, -5.5f, 0);
+    //                playerCameraVoxelCollider.enabled = false;
+    //            }
+    //            charController.center = cc.center;
+    //            charController.radius = cc.radius;
+    //            charController.height = cc.radius;
+    //        }
+    //    }
 
-        switch (typeChar)
-        {
-            case 0:
-                CheckObjectAbove();
-                break;
-            case 1:
-                break;
-        }
-    }
+    //    switch (typeChar)
+    //    {
+    //        case 0:
+    //            CheckObjectAbove();
+    //            break;
+    //        case 1:
+    //            break;
+    //    }
+    //}
 
     void CCShapeAlternate(CapsuleCollider cc, float offset)
     {
@@ -1576,16 +1580,16 @@ public class Controller : NetworkBehaviour
         cc.center = Vector3.zero;
     }
 
-    void CheckObjectAbove()
-    {
-        RaycastHit hit;
+    //void CheckObjectAbove()
+    //{
+    //    RaycastHit hit;
 
-        Physics.Raycast(transform.position, Vector3.up, out hit, colliderHeight * 0.5f - 0.1f);
+    //    Physics.Raycast(transform.position, Vector3.up, out hit, colliderHeight * 0.5f - 0.1f);
 
-        // keep the player in alt mode if there is an object above to prevent getting stuck under platforms
-        if (hit.transform != null && hit.transform.gameObject.layer != 12)
-            inputHandler.sprint = true;
-    }
+    //    // keep the player in alt mode if there is an object above to prevent getting stuck under platforms
+    //    if (hit.transform != null && hit.transform.gameObject.layer != 12)
+    //        inputHandler.sprint = true;
+    //}
 
     bool CheckGroundedCollider()
     {

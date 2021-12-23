@@ -11,6 +11,7 @@ public class GameMenu : MonoBehaviour
     public Slider volumeSlider;
     public Slider lookSpeedSlider;
     public Slider lookAccelerationSlider;
+    public Slider fovSlider;
     public Dropdown graphicsQualityDropdown;
     public Toggle fullScreenToggle;
     public Toggle invertYToggle;
@@ -57,7 +58,8 @@ public class GameMenu : MonoBehaviour
         volumeSlider.value = SettingsStatic.LoadedSettings.volume;
         lookSpeedSlider.value = SettingsStatic.LoadedSettings.lookSpeed;
         lookAccelerationSlider.value = SettingsStatic.LoadedSettings.lookAccel;
-        graphicsQualityDropdown.value = SettingsStatic.LoadedSettings.graphicsQuality;
+        fovSlider.value = SettingsStatic.LoadedSettings.fov;
+        //graphicsQualityDropdown.value = SettingsStatic.LoadedSettings.graphicsQuality;
         fullScreenToggle.isOn = SettingsStatic.LoadedSettings.fullscreen;
         invertYToggle.isOn = SettingsStatic.LoadedSettings.invertY;
         invertXToggle.isOn = SettingsStatic.LoadedSettings.invertX;
@@ -202,12 +204,18 @@ public class GameMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.lookAccel = value;
     }
 
+    public void SetFoV(float value)
+    {
+        SettingsStatic.LoadedSettings.fov = value;
+        playerCamera.GetComponent<Camera>().fieldOfView = value;
+    }
+
     public void SetGraphicsQuality(int qualityIndex)
     {
-        if (optionsMenuCanvasGroup.alpha == 1) // added this condition since this was accidentally playing when player spawned
-            buttonSound.Play();
-        QualitySettings.SetQualityLevel(qualityIndex);
-        SettingsStatic.LoadedSettings.graphicsQuality = qualityIndex;
+        //if (optionsMenuCanvasGroup.alpha == 1) // added this condition since this was accidentally playing when player spawned
+        //    buttonSound.Play();
+        //QualitySettings.SetQualityLevel(qualityIndex);
+        //SettingsStatic.LoadedSettings.graphicsQuality = qualityIndex;
     }
 
     public void SetFullScreen (bool value)
