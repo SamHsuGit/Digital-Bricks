@@ -14,7 +14,7 @@ public class LDrawImportRuntime : MonoBehaviour
 
     public GameObject charOb;
     public GameObject baseOb;
-    public GameObject vehicleOb;
+    public GameObject projectileOb;
     public PhysicMaterial physicMaterial;
 
     public int baseObSizeX;
@@ -42,10 +42,9 @@ public class LDrawImportRuntime : MonoBehaviour
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models and hides upon world load to be instantiated later
-        charOb = ImportLDraw("char", new Vector3(0, 0, 0), false);
+        charOb = ImportLDraw("char", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
         baseOb = ImportLDraw("base", new Vector3(0, -10000, 0), true);
-        vehicleOb = ImportLDraw("vehicle", new Vector3(0, -10000, 0), false);
-        vehicleOb.tag = "Vehicle";
+        projectileOb = ImportLDraw("projectile", new Vector3(0,-10000,0), false);
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
@@ -53,7 +52,7 @@ public class LDrawImportRuntime : MonoBehaviour
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
     }
 
-    public GameObject ImportLDraw(string fileName, Vector3 pos, bool staticVBO)
+    public GameObject ImportLDraw(string fileName, Vector3 pos, bool isStatic)
     {
         ldrawConfigRuntime.InitParts();
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
@@ -84,12 +83,12 @@ public class LDrawImportRuntime : MonoBehaviour
         _CurrentPart = ldrawConfigRuntime.GetModelByFileName(_ModelNames[_CurrentIndex]);
         // good test 949ac01
         var model = LDrawModelRuntime.Create(_CurrentPart, ldrawConfigRuntime.GetSerializedPart(_CurrentPart));
-        modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+        modelOb = model.CreateMeshGameObject(isStatic, ldrawConfigRuntime.ScaleMatrix);
         modelOb.layer = 9; // add the model component to mark this object as a model
         CombineMeshes(modelOb);
         modelOb.transform.LocalReflect(Vector3.up);
         modelOb.transform.position = pos; // position imported gameObject at origin, far below world
-        modelOb.SetActive(staticVBO);
+        modelOb.SetActive(isStatic);
 
         ElevateMeshRendererChildren(modelOb);
 
@@ -102,7 +101,11 @@ public class LDrawImportRuntime : MonoBehaviour
         modelObbc.center += new Vector3(distMoveRight, -distMoveUp, distMoveForward); // move box collider by same distance
 
         modelOb.transform.localScale = new Vector3(scale, scale, scale); // rescale imported object to match voxel size
-        modelOb.isStatic = true;
+        modelOb.isStatic = isStatic;
+        if(!isStatic)
+        {
+            modelObbc.enabled = false;
+        }
 
         return modelOb;
     }
@@ -126,6 +129,7 @@ public class LDrawImportRuntime : MonoBehaviour
         go.transform.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);
         go.transform.gameObject.SetActive(true);
         go.transform.gameObject.AddComponent<MeshRenderer>().enabled = false; // only used to generate bounds for BoxCollider
+
         BoxCollider bc = go.AddComponent<BoxCollider>();
         bc.material = physicMaterial;
     }

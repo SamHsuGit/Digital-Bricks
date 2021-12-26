@@ -60,22 +60,11 @@ public class PlayerVoxelCollider : MonoBehaviour
                 height = cc.height;
                 length = cc.radius * 2;
 
-                // different player collider and movement settings depending on if character can change shape
-                //if (SettingsStatic.LoadedSettings.playerTypeChar == 1)
-                //{
-                    halfColliderHeight = height / 2;
-                    stepHeight = 1;
-                    colliderOffset = 1;
-                    stepUpOffset = new Vector3(0, stepHeight, 0);
-                    maxJumps = 2;
-                //}
-                //else if (SettingsStatic.LoadedSettings.playerTypeChar == 0)
-                //{
-                //    stepHeight = 1;
-                //    colliderOffset = 1;
-                //    stepUpOffset = new Vector3(0, stepHeight, 0);
-                //    maxJumps = 2;
-                //}
+                halfColliderHeight = height / 2;
+                stepHeight = 1;
+                colliderOffset = 1;
+                stepUpOffset = new Vector3(0, stepHeight, 0);
+                maxJumps = 2;
             }
         }
         else if (isCamera)
@@ -122,10 +111,6 @@ public class PlayerVoxelCollider : MonoBehaviour
         // updated once per frame update, while PlayerIsTouchingBlockID can be called by other scripts (multiple times per frame update. This reduces calls to GetVoxel).
         adjacentVoxelIDs = GetAdjacentVoxelIDs();
 
-        //bool isMoving = false;
-        //if (horizontal != 0 || vertical != 0)
-        //    isMoving = true;
-
         // reset jumps when grounded
         //if (playerChunkIsActive)
         {
@@ -136,13 +121,6 @@ public class PlayerVoxelCollider : MonoBehaviour
         // can jump off sides of objects
         if (isPlayer && (front || back || left || right))
             currentJumps = 0;
-
-        //// when in vehicle form
-        //if(SettingsStatic.LoadedSettings.playerTypeChar == 0 && isSprinting)
-        //{
-        //    halfColliderHeight = cc.radius;
-        //    length = cc.height;
-        //}
 
         // apply jump force
         if (jumpRequest && currentJumps < maxJumps)
@@ -162,54 +140,45 @@ public class PlayerVoxelCollider : MonoBehaviour
         else
             roadMultiplier = 1;
 
-        int vehicleMultiplier;
-        if (controller.isDriving)
-            vehicleMultiplier = 2;
-        else
-            vehicleMultiplier = 1;
-
         // if we're sprinting, use the sprint multiplier
         if (isSprinting)
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadMultiplier * vehicleMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadMultiplier;
         else
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadMultiplier * vehicleMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadMultiplier;
 
         // Apply vertical momentum (falling/jumping).
         velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
 
         //isGrounded = CheckGrounded(velocityPlayer.y);
-        //if (playerChunkIsActive)
-        if(controller.isDriving)
-        {
-            //Vector3 oldVelocity = velocityPlayer;
-            //// horizontal collision detection
-            //if (isMoving && velocityPlayer.z > 0 && front || velocityPlayer.z < 0 && back)
-            //{
-            //    velocityPlayer.z = 0;
-            //}
-            //if (isMoving && velocityPlayer.x > 0 && right || velocityPlayer.x < 0 && left)
-            //{
-            //    velocityPlayer.x = 0;
-            //}
-            // vertical collision detection
-            if (velocityPlayer.y < 0 && controller.isGrounded)
-            {
-                velocityPlayer.y = 0;
-            }
-            //else if (velocityPlayer.y > 0)
-            //{
-            //    velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
-            //}
-            //// step collision detection
-            //if (isMoving && isGrounded && isSprinting && stepDetected && CheckIfPlayerCanStepUp())
-            //{
-            //    // move this gameobject up slightly to get up steps
-            //    charController.enabled = false;
-            //    transform.position += stepUpOffset;
-            //    charController.enabled = true;
-            //    velocityPlayer = oldVelocity;
-            //}
-        }
+
+        //Vector3 oldVelocity = velocityPlayer;
+        //// horizontal collision detection
+        //if (isMoving && velocityPlayer.z > 0 && front || velocityPlayer.z < 0 && back)
+        //{
+        //    velocityPlayer.z = 0;
+        //}
+        //if (isMoving && velocityPlayer.x > 0 && right || velocityPlayer.x < 0 && left)
+        //{
+        //    velocityPlayer.x = 0;
+        //}
+        // vertical collision detection
+        //if (velocityPlayer.y < 0 && controller.isGrounded)
+        //{
+        //    velocityPlayer.y = 0;
+        //}
+        //else if (velocityPlayer.y > 0)
+        //{
+        //    velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
+        //}
+        //// step collision detection
+        //if (isMoving && isGrounded && isSprinting && stepDetected && CheckIfPlayerCanStepUp())
+        //{
+        //    // move this gameobject up slightly to get up steps
+        //    charController.enabled = false;
+        //    transform.position += stepUpOffset;
+        //    charController.enabled = true;
+        //    velocityPlayer = oldVelocity;
+        //}
 
         checkPositions = CalculateCheckPositions(velocityPlayer.y);
 

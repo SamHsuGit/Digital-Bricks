@@ -53,7 +53,7 @@ public class SetupMenu : MonoBehaviour
         charOb.transform.localPosition = new Vector3(0, charOb.GetComponent<BoxCollider>().center.y * LDrawImportRuntime.Instance.scale, 0);
 
         Destroy(LDrawImportRuntime.Instance.baseOb);
-        Destroy(LDrawImportRuntime.Instance.vehicleOb);
+        Destroy(LDrawImportRuntime.Instance.projectileOb);
 
         //currentIndexChar = SettingsStatic.LoadedSettings.playerTypeChar;
         //currentIndexHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;

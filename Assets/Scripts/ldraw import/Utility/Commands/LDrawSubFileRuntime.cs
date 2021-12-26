@@ -11,9 +11,9 @@ namespace LDraw
 		private Matrix4x4 _Matrix;
 		private LDrawModelRuntime _Model;
 
-		public void GetModelGameObject(Transform parent)
+		public void GetModelGameObject(bool isStatic, Transform parent)
 		{
-			_Model.CreateMeshGameObject(_Matrix, GetMaterial(), parent); // calls function that calls this function (recursive)
+			_Model.CreateMeshGameObject(isStatic, _Matrix, GetMaterial(), parent); // calls function that calls this function (recursive)
 		}
 
 		public override void PrepareMeshData(List<int> triangles, List<Vector3> verts)

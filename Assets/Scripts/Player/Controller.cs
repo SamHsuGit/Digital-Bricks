@@ -7,52 +7,20 @@ public class Controller : NetworkBehaviour
     public Player player;
 
     [Header("GameObject Arrays")]
-    public GameObject[] helmet;
-    public GameObject[] head;
-    public GameObject[] armor;
-    public GameObject[] Torso;
-    public GameObject[] tool;
-    public GameObject[] ArmL;
-    public GameObject[] handL;
-    public GameObject[] ArmR;
-    public GameObject[] handR;
-    public GameObject[] belt;
-    public GameObject[] LegL;
-    public GameObject[] LegR;
     public GameObject[] voxels;
-    public List<GameObject> currentWaveEnemies;
 
     int typeChar = 1;
-    //[SyncVar(hook = nameof(SetTypeChar))] public int typeChar = 0; // 0 = BrickFormer, 1 = Minifig
-    //[SyncVar (hook = nameof(SetTypeHelmet))] public int typeHelmet = 0;
-    //[SyncVar (hook = nameof(SetTypeArmor))] public int typeArmor = 0;
-    //[SyncVar(hook = nameof(SetTypeTool))] public int typeTool = 0;
-    public int typeProjectile = 0;
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
-    [SyncVar] public int seed = 3; // all clients can see server syncVar seed to check against
+    [SyncVar] public int seed; // all clients can see server syncVar seed to check against
     [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
     readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
-    //[SyncVar(hook = nameof(SetColorHelmet))] public int colorHelmet = 0;
-    //[SyncVar(hook = nameof(SetColorHead))] public int colorHead = 0;
-    //[SyncVar(hook = nameof(SetColorArmor))] public int colorArmor = 0;
-    //[SyncVar(hook = nameof(SetColorTorso))] public int colorTorso = 0;
-    //[SyncVar(hook = nameof(SetColorTool))] public int colorTool = 0;
-    //[SyncVar(hook = nameof(SetColorArmL))] public int colorArmL = 0;
-    //[SyncVar(hook = nameof(SetColorHandL))] public int colorHandL = 0;
-    //[SyncVar(hook = nameof(SetColorArmR))] public int colorArmR = 0;
-    //[SyncVar(hook = nameof(SetColorHandR))] public int colorHandR = 0;
-    //[SyncVar(hook = nameof(SetColorBelt))] public int colorBelt = 0;
-    //[SyncVar(hook = nameof(SetColorLegL))] public int colorLegL = 0;
-    //[SyncVar(hook = nameof(SetColorLegR))] public int colorLegR = 0;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
     public bool isGrounded;
     public bool isMoving = false;
     public bool isSprinting;
-    public bool isDriving = false;
-    public bool isMeleeWeapon = false;
     [SyncVar] public bool isHolding = false;
     public bool photoMode = false;
     public bool options = false;
@@ -68,9 +36,8 @@ public class Controller : NetworkBehaviour
 
     [Header("GameObject References")]
     public GameObject charOb;
-    public GameObject modelPrefab;
+    public GameObject charModelOrigin;
     public GameObject gameMenu;
-    
     public GameObject nametag;
     public GameObject backgroundMask;
     public AudioSource brickPickUp;
@@ -90,14 +57,8 @@ public class Controller : NetworkBehaviour
     public GameObject CinematicBars;
     public GameObject creativeInventoryWindow;
     public GameObject cursorSlot;
-    public GameObject[] lightGameObjects;
     public GameObject reticle;
     public GameObject projectile;
-    public GameObject brick1x1;
-    public GameObject arrow;
-    public GameObject laser;
-    public GameObject Enemy00;
-    public GameObject Enemy01;
     public GameObject sceneObjectPrefab;
 
     Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
@@ -108,7 +69,6 @@ public class Controller : NetworkBehaviour
     private Transform shootPos;
     private Transform placePos;
     private Transform holdPos;
-    private GameObject[][] playerLimbs = new GameObject[12][];
     GameObject grabbedPrefab;
 
     //Components
@@ -120,7 +80,6 @@ public class Controller : NetworkBehaviour
     InputHandler inputHandler;
     Health health;
     Gun gun;
-    GameObject vehicle;
     CanvasGroup backgroundMaskCanvasGroup;
     GameMenu gameMenuComponent;
     BoxCollider playerCameraBoxCollider;
@@ -155,26 +114,13 @@ public class Controller : NetworkBehaviour
     {
         NamePlayer();
 
-        playerLimbs[0] = helmet;
-        playerLimbs[1] = head;
-        playerLimbs[2] = armor;
-        playerLimbs[3] = Torso;
-        playerLimbs[4] = tool;
-        playerLimbs[5] = ArmL;
-        playerLimbs[6] = handL;
-        playerLimbs[7] = ArmR;
-        playerLimbs[8] = handR;
-        playerLimbs[9] = belt;
-        playerLimbs[10] = LegL;
-        playerLimbs[11] = LegR;
-
         isHolding = false;
         ToggleLights(isHolding);
 
         world = World.Instance;
         physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
-        animator = modelPrefab.GetComponent<Animator>();
+        //animator = modelPrefab.GetComponent<Animator>();
         inputHandler = GetComponent<InputHandler>();
         health = GetComponent<Health>();
         gun = GetComponent<Gun>();
@@ -186,7 +132,7 @@ public class Controller : NetworkBehaviour
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
         charController = GetComponent<CharacterController>();
         customNetworkManager = World.Instance.customNetworkManager;
-        projectile = brick1x1;
+        projectile = LDrawImportRuntime.Instance.projectileOb;
 
         health.isAlive = true;
 
@@ -365,8 +311,8 @@ public class Controller : NetworkBehaviour
             // Import character model
             charOb = LDrawImportRuntime.Instance.charOb;
             charOb.SetActive(true);
-            charOb.transform.parent = modelPrefab.transform;
-            bc = modelPrefab.transform.GetChild(1).GetComponent<BoxCollider>();
+            charOb.transform.parent = charModelOrigin.transform;
+            bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
             charOb.transform.localPosition = new Vector3(0, 0, 0);
             charOb.transform.localEulerAngles = new Vector3(0, 180, 180);
 
@@ -382,31 +328,9 @@ public class Controller : NetworkBehaviour
             playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
             playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius * 0.5f;
 
-            //typeChar = SettingsStatic.LoadedSettings.playerTypeChar;
-
-            //if(typeChar == 1)
-            //{
-            //typeHelmet = SettingsStatic.LoadedSettings.playerTypeHelmet;
-            //typeArmor = SettingsStatic.LoadedSettings.playerTypeArmor;
-            //typeTool = SettingsStatic.LoadedSettings.playerTypeTool;
-            //colorHelmet = SettingsStatic.LoadedSettings.playerColorHelmet;
-            //colorArmor = SettingsStatic.LoadedSettings.playerColorArmor;
-            //colorTool = SettingsStatic.LoadedSettings.playerColorTool;
-            //colorBelt = SettingsStatic.LoadedSettings.playerColorBelt;
-            //}
-
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
-            //colorHead = SettingsStatic.LoadedSettings.playerColorHead;
-            //colorTorso = SettingsStatic.LoadedSettings.playerColorTorso;
-            //colorArmL = SettingsStatic.LoadedSettings.playerColorArmL;
-            //colorHandL = SettingsStatic.LoadedSettings.playerColorHandL;
-            //colorArmR = SettingsStatic.LoadedSettings.playerColorArmR;
-            //colorHandR = SettingsStatic.LoadedSettings.playerColorHandR;
-            //colorLegL = SettingsStatic.LoadedSettings.playerColorLegL;
-            //colorLegR = SettingsStatic.LoadedSettings.playerColorLegR;
 
             SetPlayerAttributes();
-            //SetTypeProjectile();
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
         }
 
@@ -492,24 +416,6 @@ public class Controller : NetworkBehaviour
     void SetPlayerAttributes()
     {
         SetName(playerName, playerName);
-
-        //set this object's color from saved settings
-        //SetTypeHelmet(typeHelmet, typeHelmet);
-        //SetTypeArmor(typeArmor, typeArmor);
-        //SetTypeTool(typeTool, typeTool);
-
-        //SetColorHelmet(colorHelmet, colorHelmet);
-        //SetColorHead(colorHead, colorHead);
-        //SetColorArmor(colorArmor, colorArmor);
-        //SetColorTorso(colorTorso, colorTorso);
-        //SetColorTool(colorTool, colorTool);
-        //SetColorArmL(colorArmL, colorArmL);
-        //SetColorHandL(colorHandL, colorHandL);
-        //SetColorArmR(colorArmR, colorArmR);
-        //SetColorHandR(colorHandR, colorHandR);
-        //SetColorBelt(colorBelt, colorBelt);
-        //SetColorLegL(colorLegL, colorLegL);
-        //SetColorLegR(colorLegR, colorLegR);
     }
 
     //void SetTypeProjectile()
@@ -827,8 +733,6 @@ public class Controller : NetworkBehaviour
         if (!Settings.OnlinePlay || (Settings.OnlinePlay && isServer))
             CalculateCurrentDay();
 
-        //ReshapeCollider();
-
         isGrounded = CheckGroundedCollider();
 
         // if not in photo mode
@@ -904,54 +808,13 @@ public class Controller : NetworkBehaviour
         if (!wasDaytime && daytime) // if turns daytime
         {
             day++;
-            foreach (GameObject enemy in currentWaveEnemies)
-                Destroy(enemy);
             wasDaytime = true;
         }
 
         if (wasDaytime && !daytime) // if turns nighttime, start next wave
         {
-            StartWave(day);
             wasDaytime = false;
         }
-    }
-
-    public void StartWave(int wave) // WIP
-    {
-        //for (int i = 0; i < wave; i++) // wave = # enemies
-        //{
-        //    int type = 0; // randomized, linearly increase chance of harder enemies depending on wave number
-        //    Vector3 position = new Vector3(510, 91, 510); // Randomize position of enemies at a fixed distance from base (gives enough room to react)
-        //    switch (type)
-        //    {
-        //        case 0: // easy enemies spawn 2x as often
-        //            SpawnEnemy(type, position);
-        //            SpawnEnemy(type, new Vector3(position.x + 1, position.y + 1, position.z + 1));
-        //            break;
-        //        case 1: // only spawn 1 hard enemy
-        //            SpawnEnemy(type, position);
-        //            break;
-        //    }
-        //}
-    }
-
-    public void SpawnEnemy(int type, Vector3 pos)
-    {
-        GameObject ob = null;
-        switch (type)
-        {
-            case 0:
-                ob = Enemy00;
-                break;
-            case 1:
-                ob = Enemy01;
-                break;
-        }
-
-        ob = Instantiate(ob, pos, Quaternion.identity);
-        if (Settings.OnlinePlay)
-            customNetworkManager.SpawnNetworkOb(ob);
-        currentWaveEnemies.Add(ob);
     }
 
     [Command]
@@ -980,10 +843,10 @@ public class Controller : NetworkBehaviour
 
     public void ToggleLights(bool lightsOn)
     {
-        foreach (GameObject ob in lightGameObjects)
-        {
-            ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
-        }
+        //foreach (GameObject ob in lightGameObjects)
+        //{
+        //    ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
+        //}
         //if (typeChar == 1 && tool[typeTool] != null)
         //    tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
     }
@@ -1282,25 +1145,17 @@ public class Controller : NetworkBehaviour
 
         byte blockID = World.Instance.GetVoxelState(pos).id;
 
-        //// if charType is mechanical, and block is crystal, and health is not max and the selected slot has a stack
-        //if (typeChar == 0 && blockID == 30 && health.hp < health.hpMax)
-        //{
-        //    // remove qty 1 from stack
-        //    health.RequestEditSelfHealth(1);
-        //    crystal.Play();
-        //    RemoveVoxel(pos);
-        //}
-        // else if charType is organic, and block is mushroom, and health is not max and the selected slot has a stack 
-        if (typeChar == 1 && blockID == 32 && health.hp < health.hpMax)
+        // else if block is mushroom, and health is not max and the selected slot has a stack 
+        if (blockID == 32 && health.hp < health.hpMax)
         {
             // remove qty 1 from stack
             health.RequestEditSelfHealth(1);
             eat.Play();
             RemoveVoxel(pos);
         }
-        else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn vehicle
+        else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
         {
-            // spawn vehicleOb at shootPos
+            // spawn projectile at shootPos
             if (Settings.OnlinePlay)
                 CmdSpawnUndefinedPrefab(0, shootPos.position);
             else
@@ -1308,20 +1163,6 @@ public class Controller : NetworkBehaviour
 
             TakeFromCurrentSlot(1);
         }
-        //else if (!isDriving && gun.target != null && gun.target.tag == "Vehicle")
-        //{
-        //    // WIP
-        //    vehicle = gun.target.gameObject;
-        //    //vehicle.transform.parent = transform;
-        //    modelPrefab.SetActive(false);
-        //    isDriving = true;
-        //}
-        //else if (isDriving) // WIP
-        //{
-        //    //vehicle.transform.parent = null;
-        //    modelPrefab.SetActive(true);
-        //    isDriving = false;
-        //}
         //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
         //{
         //    if (!Settings.OnlinePlay)
@@ -1393,7 +1234,7 @@ public class Controller : NetworkBehaviour
         switch (option)
         {
             case 0:
-                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.vehicleOb;
+                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.projectileOb;
                 break;
         }
         GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
@@ -1607,9 +1448,9 @@ public class Controller : NetworkBehaviour
         // cast a ray starting from within the capsule collider down to just outside the capsule collider.
         rayLength = cc.height * 0.25f + 0.01f;
 
-        if (isDriving && vehicle.GetComponent<BoxCollider>() != null)
+        if (projectile.GetComponent<BoxCollider>() != null)
         {
-            rayLength = Mathf.Abs(transform.position.y - vehicle.transform.position.y);
+            rayLength = Mathf.Abs(transform.position.y - projectile.transform.position.y);
         }
 
         sphereCastRadius = cc.radius * 0.5f;
@@ -1730,25 +1571,25 @@ public class Controller : NetworkBehaviour
 
     void Animate()
     {
-        // set animation speed of walk anim to match normalized speed of character.
-        if (!photoMode)
-        {
-            animator.SetFloat("Speed", velocityPlayer.magnitude * 3f);
-            animator.SetBool("isMoving", isMoving);
-            animator.SetBool("isGrounded", voxelCollider.isGrounded);
-        }
+        //// set animation speed of walk anim to match normalized speed of character.
+        //if (!photoMode)
+        //{
+        //    animator.SetFloat("Speed", velocityPlayer.magnitude * 3f);
+        //    animator.SetBool("isMoving", isMoving);
+        //    animator.SetBool("isGrounded", voxelCollider.isGrounded);
+        //}
 
-        switch (typeChar)
-        {
-            case 0:
-                animator.SetBool("isSprinting", inputHandler.sprint);
-                break;
-            case 1:
-                animator.SetBool("isHolding", isHolding);
-                if(isHolding && isMeleeWeapon)
-                    animator.SetBool("isMelee", inputHandler.shoot);
-                break;
-        }
+        //switch (typeChar)
+        //{
+        //    case 0:
+        //        animator.SetBool("isSprinting", inputHandler.sprint);
+        //        break;
+        //    case 1:
+        //        animator.SetBool("isHolding", isHolding);
+        //        if(isHolding)
+        //            animator.SetBool("isMelee", inputHandler.shoot);
+        //        break;
+        //}
     }
 
     public void RequestSaveWorld()
