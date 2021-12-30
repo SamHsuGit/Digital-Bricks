@@ -308,29 +308,6 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            // Import character model
-            charOb = LDrawImportRuntime.Instance.charOb;
-            charOb.SetActive(true);
-            charOb.transform.parent = charModelOrigin.transform;
-            bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
-            charOb.transform.localPosition = new Vector3(0, 0, 0);
-            charOb.transform.localEulerAngles = new Vector3(0, 180, 180);
-
-            // position/size capsule collider procedurally based on imported character model
-            colliderHeight = bc.size.y * LDrawImportRuntime.Instance.scale;
-            colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * LDrawImportRuntime.Instance.scale, 2) + Mathf.Pow(bc.size.z * LDrawImportRuntime.Instance.scale, 2)) * 0.25f;
-            colliderCenter = new Vector3(0, -bc.center.y * LDrawImportRuntime.Instance.scale, 0);
-            cc.center = colliderCenter;
-            cc.height = colliderHeight;
-            cc.radius = colliderRadius;
-            charController.height = colliderHeight;
-            charController.radius = colliderRadius;
-            charController.center = colliderCenter;
-
-            // position camera procedurally based on imported character model
-            playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
-            playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius * 0.5f;
-
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
 
             SetPlayerAttributes();
@@ -418,6 +395,29 @@ public class Controller : NetworkBehaviour
 
     void SetPlayerAttributes()
     {
+        // Import character model
+        charOb = LDrawImportRuntime.Instance.charOb;
+        charOb.SetActive(true);
+        charOb.transform.parent = charModelOrigin.transform;
+        bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
+        charOb.transform.localPosition = new Vector3(0, 0, 0);
+        charOb.transform.localEulerAngles = new Vector3(0, 180, 180);
+
+        // position/size capsule collider procedurally based on imported character model
+        colliderHeight = bc.size.y * LDrawImportRuntime.Instance.scale;
+        colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * LDrawImportRuntime.Instance.scale, 2) + Mathf.Pow(bc.size.z * LDrawImportRuntime.Instance.scale, 2)) * 0.25f;
+        colliderCenter = new Vector3(0, -bc.center.y * LDrawImportRuntime.Instance.scale, 0);
+        cc.center = colliderCenter;
+        cc.height = colliderHeight;
+        cc.radius = colliderRadius;
+        charController.height = colliderHeight;
+        charController.radius = colliderRadius;
+        charController.center = colliderCenter;
+
+        // position camera procedurally based on imported character model
+        playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
+        playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius * 0.5f;
+
         SetName(playerName, playerName);
     }
 
@@ -1448,33 +1448,10 @@ public class Controller : NetworkBehaviour
         float rayLength;
         Vector3 rayStart = transform.position;
 
-        // cast a ray starting from within the capsule collider down to just outside the capsule collider.
+        // cast a ray starting from within the capsule collider down to outside the capsule collider.
         rayLength = cc.height * 0.25f + 0.01f;
 
-        if (projectile.GetComponent<BoxCollider>() != null)
-        {
-            rayLength = Mathf.Abs(transform.position.y - projectile.transform.position.y);
-        }
-
         sphereCastRadius = cc.radius * 0.5f;
-
-        switch (typeChar)
-        {
-            case 0:
-                if (inputHandler.sprint)
-                {
-                    // for alt mode, we need to move the ray start down to be within the new collider volume and use the radius instead of height because the capsule was laid down
-                    rayStart.y -= cc.radius;
-                    rayLength = cc.radius * 0.25f + 0.01f;
-                    sphereCastRadius = cc.radius * 0.5f;
-                }
-                break;
-            case 1:
-                break;
-        }
-
-        // Adjust the raycast to be slightly below the collider to allow the collider to climb small slopes
-        rayLength += cc.height * 0.6f;
 
         // Debug tools
         Debug.DrawRay(rayStart, Vector3.down * rayLength, Color.red, 0.02f);
