@@ -19,7 +19,7 @@ public class Controller : NetworkBehaviour
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
     public bool isGrounded;
-    public bool isMoving = false;
+    [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
     public bool isSprinting;
     [SyncVar] public bool isHolding = false;
     public bool photoMode = false;
@@ -35,7 +35,6 @@ public class Controller : NetworkBehaviour
     [SerializeField] float lookVelocity = 1f;
 
     [Header("GameObject References")]
-    public GameObject charOb;
     public GameObject charModelOrigin;
     public GameObject gameMenu;
     public GameObject nametag;
@@ -91,6 +90,8 @@ public class Controller : NetworkBehaviour
     GameObject undefinedPrefabToSpawn;
     RaycastHit raycastHit;
     Transform grabbedOb;
+    GameObject charObIdle;
+    GameObject charObRun;
 
     //Initializers & Constants
     float colliderHeight;
@@ -395,13 +396,20 @@ public class Controller : NetworkBehaviour
 
     void SetPlayerAttributes()
     {
-        // Import character model
-        charOb = LDrawImportRuntime.Instance.charOb;
-        charOb.SetActive(true);
-        charOb.transform.parent = charModelOrigin.transform;
+        // Import character model idle pose
+        charObIdle = LDrawImportRuntime.Instance.charObIdle;
+        charObIdle.SetActive(!isMoving);
+        charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
-        charOb.transform.localPosition = new Vector3(0, 0, 0);
-        charOb.transform.localEulerAngles = new Vector3(0, 180, 180);
+        charObIdle.transform.localPosition = new Vector3(0, 0, 0);
+        charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
+
+        // Import character model run pose
+        charObRun = LDrawImportRuntime.Instance.charObRun;
+        charObRun.SetActive(isMoving);
+        charObRun.transform.parent = charModelOrigin.transform;
+        charObRun.transform.localPosition = new Vector3(0, 0, 0);
+        charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
         // position/size capsule collider procedurally based on imported character model
         colliderHeight = bc.size.y * LDrawImportRuntime.Instance.scale;
@@ -416,7 +424,7 @@ public class Controller : NetworkBehaviour
 
         // position camera procedurally based on imported character model
         playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
-        playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius * 0.5f;
+        playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius;
 
         SetName(playerName, playerName);
     }
@@ -486,6 +494,11 @@ public class Controller : NetworkBehaviour
     public void SetTime(float oldTime, float newTime)
     {
         timeOfDay = newTime;
+    }
+
+    public void SetIsMoving(bool oldIsMoving, bool newIsMoving)
+    {
+        isMoving = newIsMoving;
     }
     
     //public void SetTypeHelmet(int oldValue, int newValue)
@@ -1551,6 +1564,9 @@ public class Controller : NetworkBehaviour
 
     void Animate()
     {
+        charObIdle.SetActive(!isMoving);
+        charObRun.SetActive(isMoving);
+
         //// set animation speed of walk anim to match normalized speed of character.
         //if (!photoMode)
         //{

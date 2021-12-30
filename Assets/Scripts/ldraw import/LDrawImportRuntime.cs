@@ -12,7 +12,8 @@ public class LDrawImportRuntime : MonoBehaviour
     public LDrawConfigRuntime ldrawConfigRuntime;
     public GameObject modelOb;
 
-    public GameObject charOb;
+    public GameObject charObIdle;
+    public GameObject charObRun;
     public GameObject baseOb;
     public GameObject projectileOb;
     public PhysicMaterial physicMaterial;
@@ -42,7 +43,8 @@ public class LDrawImportRuntime : MonoBehaviour
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models and hides upon world load to be instantiated later
-        charOb = ImportLDraw("char", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
+        charObIdle = ImportLDraw("charIdle", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
+        charObRun = ImportLDraw("charRun", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
         baseOb = ImportLDraw("base", new Vector3(0, -10000, 0), true);
         projectileOb = ImportLDraw("projectile", new Vector3(0,-10000,0), false);
 
@@ -83,7 +85,7 @@ public class LDrawImportRuntime : MonoBehaviour
         _CurrentPart = ldrawConfigRuntime.GetModelByFileName(_ModelNames[_CurrentIndex]);
         // good test 949ac01
         var model = LDrawModelRuntime.Create(_CurrentPart, ldrawConfigRuntime.GetSerializedPart(_CurrentPart));
-        modelOb = model.CreateMeshGameObject(isStatic, ldrawConfigRuntime.ScaleMatrix);
+        modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
         modelOb.layer = 9; // add the model component to mark this object as a model
         CombineMeshes(modelOb);
         modelOb.transform.LocalReflect(Vector3.up);

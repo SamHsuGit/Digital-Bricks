@@ -68,7 +68,7 @@ namespace LDraw
             }
         }
 
-        public GameObject CreateMeshGameObject(bool isStatic, Matrix4x4 trs, Material mat = null, Transform parent = null)
+        public GameObject CreateMeshGameObject(Matrix4x4 trs, Material mat = null, Transform parent = null)
         {
             if (_Commands.Count == 0) return null;
             GameObject go = new GameObject(_Name);
@@ -92,7 +92,7 @@ namespace LDraw
                         //ErrorMessage.Show(parent.gameObject.name + " = " + go.name); // Error handling to prevent stack overflow if parent and model have same name (except instead of error message, keeps going)...
                     }
                     else
-                        sfCommand.GetModelGameObject(isStatic, go.transform); // calls function that calls this function (recursive), can sometimes create stack overflow fatal crash?
+                        sfCommand.GetModelGameObject(go.transform); // calls function that calls this function (recursive), can sometimes create stack overflow fatal crash?
                 }
             }
         
@@ -110,7 +110,7 @@ namespace LDraw
                 var mf = go.AddComponent<MeshFilter>();
                 mf.sharedMesh = PrepareMesh(verts, triangles);
                 var mr = go.AddComponent<MeshRenderer>();
-                CombineMeshes(go, isStatic); // Combine Meshes AFTER PrepareMesh (was hitting vertex limit?)
+                CombineMeshes(go); // Combine Meshes AFTER PrepareMesh (was hitting vertex limit?)
                 if (mat != null)
                 {
                     mr.sharedMaterial = mat;
@@ -123,7 +123,7 @@ namespace LDraw
             return go;
         }
 
-        public void CombineMeshes(GameObject _go, bool isStatic)
+        public void CombineMeshes(GameObject _go)
         {
             // Combine the submeshes into one optimized mesh
             MeshFilter[] meshFilters = _go.GetComponentsInChildren<MeshFilter>();
@@ -145,12 +145,9 @@ namespace LDraw
             _go.transform.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine, true);
             _go.transform.gameObject.SetActive(true);
 
-            if (isStatic)
-            {
-                BoxCollider bc = _go.AddComponent<BoxCollider>();
-                bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z)); // avoids negative values for box collider scale
-                bc.center = new Vector3(bc.center.x, bc.center.y, bc.center.z); // recenter box collider
-            }
+            BoxCollider bc = _go.AddComponent<BoxCollider>();
+            bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z)); // avoids negative values for box collider scale
+            bc.center = new Vector3(bc.center.x, bc.center.y, bc.center.z); // recenter box collider
         }
 
         private Mesh PrepareMesh(List<Vector3> verts, List<int> triangles)

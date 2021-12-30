@@ -447,7 +447,8 @@ MonoBehaviour:
   blockID: 0
   day: 1
   lookVelocity: 1
-  charOb: {fileID: 0}
+  charObIdle: {fileID: 0}
+  charObRun: {fileID: 0}
   charModelOrigin: {fileID: 6156733249479519148}
   gameMenu: {fileID: 5290477769798018415}
   nametag: {fileID: 2688012131756474887}
