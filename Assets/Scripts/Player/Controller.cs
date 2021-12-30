@@ -323,6 +323,9 @@ public class Controller : NetworkBehaviour
             cc.center = colliderCenter;
             cc.height = colliderHeight;
             cc.radius = colliderRadius;
+            charController.height = colliderHeight;
+            charController.radius = colliderRadius;
+            charController.center = colliderCenter;
 
             // position camera procedurally based on imported character model
             playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
