@@ -57,8 +57,8 @@ public class Gun : NetworkBehaviour
     {
         image.color = Color.HSVToRGB(0, 0, 50, true);
 
-        if (!controller.isHolding) // can only hit other objects if holding a melee weapon
-            return null;
+        //if (!controller.isHolding) // can only hit other objects if holding a melee weapon
+        //    return null;
 
         //if hit something
         if (Physics.SphereCast(fpsCam.transform.position, sphereCastRadius, fpsCam.transform.forward, out hit, range))

@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class PlayerVoxelCollider : MonoBehaviour
 {
-    public float baseWalkSpeed = 15f;
-    public float baseSprintSpeed = 30f;
+    
+    public float baseWalkSpeed;
+    public float baseSprintSpeed;
     public float baseJumpForce = 15f;
     public bool isMoving = false;
     public bool isGrounded = false;
@@ -134,17 +135,17 @@ public class PlayerVoxelCollider : MonoBehaviour
             verticalMomentum += Time.fixedDeltaTime * gravity;
 
         // if we're running on road, increase road multiplier.
-        int roadMultiplier;
+        int roadFactor;
         if (PlayerIsTouchingBlockID(3))
-            roadMultiplier = 2;
+            roadFactor = 2;
         else
-            roadMultiplier = 1;
+            roadFactor = 1;
 
         // if we're sprinting, use the sprint multiplier
         if (isSprinting)
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadFactor;
         else
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadMultiplier;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadFactor;
 
         // Apply vertical momentum (falling/jumping).
         velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;

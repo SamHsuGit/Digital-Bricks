@@ -432,6 +432,7 @@ MonoBehaviour:
   timeOfDay: 6.0066667
   seed: 0
   version: 
+  baseMoveSpeed: 0
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0
@@ -445,10 +446,10 @@ MonoBehaviour:
   focusDistanceIncrement: 0.03
   holdingGrab: 0
   blockID: 0
+  baseAnimRate: 2
+  animRate: 2
   day: 1
   lookVelocity: 1
-  charObIdle: {fileID: 0}
-  charObRun: {fileID: 0}
   charModelOrigin: {fileID: 6156733249479519148}
   gameMenu: {fileID: 5290477769798018415}
   nametag: {fileID: 2688012131756474887}
@@ -473,6 +474,8 @@ MonoBehaviour:
   reticle: {fileID: 170724433810035422}
   projectile: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
   sceneObjectPrefab: {fileID: 267288310360540051, guid: 04bb5ef7f14330842b6b88d9be1ec42b, type: 3}
+  charObIdle: {fileID: 0}
+  charObRun: {fileID: 0}
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -489,6 +492,12 @@ MonoBehaviour:
   syncInterval: 0.1
   death: {fileID: 7776426633823192301}
   physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
+  minPieces: 1
+  maxPieces: 500
+  minBaseMoveSpeed: 0
+  maxBaseMoveSpeed: 5
+  minAnimSpeed: 2
+  maxAnimSpeed: 8
   hp: 9
   hpMax: 9
   piecesRbMass: 0.0001

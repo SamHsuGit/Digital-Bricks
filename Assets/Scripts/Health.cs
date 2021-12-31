@@ -9,6 +9,12 @@ public class Health : NetworkBehaviour
     public PhysicMaterial physicMaterial;
 
     // public variables
+    public int minPieces = 1; // chars must have at least 1 piece
+    public int maxPieces = 500; // limited based on performance of min pc spec model load time
+    public int minBaseMoveSpeed = 0; // larger builds are essentially immovable
+    public int maxBaseMoveSpeed = 5; // smaller builds have faster speeds
+    public int minAnimSpeed = 2;
+    public int maxAnimSpeed = 8;
     [SyncVar(hook = nameof(UpdateHP))] public float hp;
     public int hpMax;
     public float piecesRbMass = 0.0001f;
@@ -56,26 +62,48 @@ public class Health : NetworkBehaviour
         if (gameObject.layer == 10) // if this object is a single lego Piece
             brickCount = 1;
         else
-            CountPieces(gameObject);
+            CountPieces(controller.charObIdle);
 
         hpMax = brickCount;
         hp = hpMax;
 
+        controller.baseMoveSpeed = CalculateBaseMoveSpeed(hpMax); // calculate base move speed based on # pieces (already counted in health hpMax)
+        controller.baseAnimRate = (maxAnimSpeed - minAnimSpeed) / (CalculateBaseMoveSpeed(minPieces) - CalculateBaseMoveSpeed(maxPieces)) * controller.baseMoveSpeed + minAnimSpeed; // function of base move speed
+        voxelCollider.baseWalkSpeed = controller.baseMoveSpeed;
+        voxelCollider.baseSprintSpeed = 2 * voxelCollider.baseWalkSpeed;
+
         lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
     }
 
-    void CountPieces(GameObject _ob) // recursively adds parts to list of parts to count as health
+    void CountPieces(GameObject _ob)
     {
-        foreach (Transform child in _ob.transform)
-        {
-            // PLAYER PIECES MUST TAGGED AS LEGO PIECE AND BE ACTIVE AND HAVE MESH RENDERER TO BE COUNTED TOWARDS HP
-            if (child.gameObject.layer == 10 && child.gameObject.activeSelf && child.gameObject.GetComponent<MeshRenderer>() != null)
-            {
-                brickCount++;
-                modelPieces.Add(child.gameObject); // add to list of pieces
-            }
-            CountPieces(child.gameObject);
-        }
+        //foreach (Transform child in _ob.transform) // recursively adds parts to list of parts to count as health
+        //{
+        //    // PLAYER PIECES MUST TAGGED AS LEGO PIECE AND BE ACTIVE AND HAVE MESH RENDERER TO BE COUNTED TOWARDS HP
+        //    if (child.gameObject.layer == 10 && child.gameObject.activeSelf && child.gameObject.GetComponent<MeshRenderer>() != null)
+        //    {
+        //        brickCount++;
+        //        modelPieces.Add(child.gameObject); // add to list of pieces
+        //    }
+        //    CountPieces(child.gameObject);
+        //}
+        brickCount = _ob.transform.GetChild(0).childCount;
+    }
+
+    public float CalculateBaseMoveSpeed(int pieces)
+    {
+        float moveSpeed;
+
+        if (pieces > maxPieces)
+            pieces = maxPieces;
+        else if (pieces < minPieces)
+            pieces = minPieces;
+
+        moveSpeed = -1 * (float)(maxBaseMoveSpeed - minBaseMoveSpeed) / (maxPieces - minPieces) * pieces + maxBaseMoveSpeed;
+        if (moveSpeed < 0)
+            moveSpeed = 0;
+
+        return moveSpeed;
     }
 
     private void FixedUpdate()

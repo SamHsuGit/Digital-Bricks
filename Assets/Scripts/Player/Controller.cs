@@ -17,6 +17,7 @@ public class Controller : NetworkBehaviour
     readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
 
     [Header("Debug States")]
+    public float baseMoveSpeed;
     [SerializeField] float collisionDamage;
     public bool isGrounded;
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
@@ -30,6 +31,8 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public byte blockID;
+    public float baseAnimRate = 2;
+    public float animRate = 2;
     [SyncVar] public int day = 1;
 
     [SerializeField] float lookVelocity = 1f;
@@ -59,6 +62,8 @@ public class Controller : NetworkBehaviour
     public GameObject reticle;
     public GameObject projectile;
     public GameObject sceneObjectPrefab;
+    public GameObject charObIdle;
+    public GameObject charObRun;
 
     Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
@@ -90,8 +95,6 @@ public class Controller : NetworkBehaviour
     GameObject undefinedPrefabToSpawn;
     RaycastHit raycastHit;
     Transform grabbedOb;
-    GameObject charObIdle;
-    GameObject charObRun;
 
     //Initializers & Constants
     float colliderHeight;
@@ -106,6 +109,7 @@ public class Controller : NetworkBehaviour
     float minCamAngle = -90f;
     bool wasDaytime = true;
     bool daytime = true;
+    float nextTimeToAnim = 0;
     List<Material> cachedMaterials = new List<Material>();
     int[] helmetToChangeColor;
     int[] armorToChangeColor;
@@ -285,7 +289,6 @@ public class Controller : NetworkBehaviour
             92,
             93,
         };
-
     }
 
     void NamePlayer()
@@ -411,7 +414,7 @@ public class Controller : NetworkBehaviour
         charObRun.transform.localPosition = new Vector3(0, 0, 0);
         charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-        // position/size capsule collider procedurally based on imported character model
+        // position/size capsule collider procedurally based on imported char model size
         colliderHeight = bc.size.y * LDrawImportRuntime.Instance.scale;
         colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * LDrawImportRuntime.Instance.scale, 2) + Mathf.Pow(bc.size.z * LDrawImportRuntime.Instance.scale, 2)) * 0.25f;
         colliderCenter = new Vector3(0, -bc.center.y * LDrawImportRuntime.Instance.scale, 0);
@@ -422,62 +425,16 @@ public class Controller : NetworkBehaviour
         charController.radius = colliderRadius;
         charController.center = colliderCenter;
 
-        // position camera procedurally based on imported character model
+        // position camera procedurally based on imported char model size
         playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
         playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius;
 
+        // set reach and gun range procedurally based on imported char model size
+        reach = cc.radius * 2f * 6f;
+        gun.range = reach * 10f;
+
         SetName(playerName, playerName);
     }
-
-    //void SetTypeProjectile()
-    //{
-    //    if (typeTool == 0)
-    //    {
-    //        gun.range = 0f;
-    //        projectile = brick1x1;
-    //        typeProjectile = 1; // brick1x1
-    //    }
-    //    else if (typeTool >= 32 && typeTool <= 43) // shield & claws
-    //    {
-    //        gun.range = 2f;
-    //        return;
-    //    }
-    //    else if (typeTool >= 55 && typeTool <= 77) // melee weapon
-    //    {
-    //        isMeleeWeapon = true;
-    //        gun.range = 2f;
-    //        return;
-    //    }
-    //    else if (typeTool >= 78 && typeTool <= 81) // bows
-    //    {
-    //        gun.range = 0f;
-    //        projectile = arrow;
-    //        typeProjectile = 2; // arrow
-    //    }
-    //    else if (typeTool >= 84 && typeTool <= 90) // laser guns
-    //    {
-    //        gun.range = 0f;
-    //        projectile = laser;
-    //        typeProjectile = 3; // laser
-    //    }
-    //    else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
-    //    {
-    //        gun.range = 0f;
-    //        projectile = laser;
-    //        typeProjectile = 3; // laser
-    //    }
-    //    else
-    //    {
-    //        gun.range = 0f;
-    //        projectile = tool[typeTool]; // throw whatever object you are holding
-    //        typeProjectile = typeTool;
-    //    }
-    //}
-
-    //public void SetTypeChar(int oldValue, int newValue)
-    //{
-    //    typeChar = newValue;
-    //}
 
     public void SetName(string oldName, string newName) // update the player visuals using the SyncVars pushed from the server to clients
     {
@@ -744,10 +701,6 @@ public class Controller : NetworkBehaviour
 
         timeOfDay = World.Instance.globalLighting.timeOfDay; // update time of day from lighting component
         daytime = World.Instance.globalLighting.daytime;
-
-        //if localplay or if online and is server, calculate current wave
-        if (!Settings.OnlinePlay || (Settings.OnlinePlay && isServer))
-            CalculateCurrentDay();
 
         isGrounded = CheckGroundedCollider();
 
@@ -1483,7 +1436,12 @@ public class Controller : NetworkBehaviour
         else
             isMoving = false;
 
-        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, inputHandler.sprint, inputHandler.jump);
+        if (inputHandler.sprint)
+            isSprinting = true;
+        else
+            isSprinting = false;
+
+        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 
         if (inputHandler.jump)
         {
@@ -1564,8 +1522,26 @@ public class Controller : NetworkBehaviour
 
     void Animate()
     {
-        charObIdle.SetActive(!isMoving);
-        charObRun.SetActive(isMoving);
+        // adjust player animations to speed up according to player movement speed
+        if (Time.time >= nextTimeToAnim)
+        {
+            if (isMoving)
+            {
+                if (isSprinting)
+                    animRate = baseAnimRate * 2f;
+                else
+                    animRate = baseAnimRate;
+
+                nextTimeToAnim = Time.time + 1f / animRate;
+                charObIdle.SetActive(!charObIdle.activeSelf);
+                charObRun.SetActive(!charObRun.activeSelf);
+            }
+            else
+            {
+                charObIdle.SetActive(true);
+                charObRun.SetActive(false);
+            }
+        }
 
         //// set animation speed of walk anim to match normalized speed of character.
         //if (!photoMode)

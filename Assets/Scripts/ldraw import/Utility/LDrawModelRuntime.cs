@@ -148,6 +148,7 @@ namespace LDraw
             BoxCollider bc = _go.AddComponent<BoxCollider>();
             bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z)); // avoids negative values for box collider scale
             bc.center = new Vector3(bc.center.x, bc.center.y, bc.center.z); // recenter box collider
+            bc.material = LDrawImportRuntime.Instance.physicMaterial;
         }
 
         private Mesh PrepareMesh(List<Vector3> verts, List<int> triangles)
