@@ -93,7 +93,7 @@ public class CustomNetworkManager : NetworkManager
         clientMessage = new ClientToServerMessage
         {
             playerName = SettingsStatic.LoadedSettings.playerName,
-            serializedCharIdle = LDrawImportRuntime.Instance.GetSerializedPart("charIdle"),
+            serializedCharIdle = LDrawImportRuntime.Instance.GetSerializedPart("charIdle"), // this is just sending the name of the file, need to serialize the file (WIP!!!!)
             serializedCharRun = LDrawImportRuntime.Instance.GetSerializedPart("charRun"),
         };
         conn.Send(clientMessage);

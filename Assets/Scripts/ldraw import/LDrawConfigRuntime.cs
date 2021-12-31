@@ -82,7 +82,7 @@ namespace LDraw
         {
             return _ModelFileNames[modelFileName];
         }
-        public string GetSerializedPart(string name)
+        public string GetSerializedPart(string name) // returns the name of the part from the file
         {
             try
             {
@@ -98,7 +98,7 @@ namespace LDraw
             }
         }
 
-        public void InitParts()
+        public void InitParts() // makes a list of parts in the ldraw file
         { 
             PrepareModels();
             ParseColors();
