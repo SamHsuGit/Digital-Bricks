@@ -459,7 +459,7 @@ public class Controller : NetworkBehaviour
 
     public void SetCharIdle(string oldCharIdle, string newCharIdle)
     {
-        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charIdle", newCharIdle, charModelOrigin.transform.position, false); // WIP!!!
+        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charIdle", newCharIdle, charModelOrigin.transform.position, false);
         charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
@@ -471,7 +471,7 @@ public class Controller : NetworkBehaviour
 
     public void SetCharRun(string oldCharRun, string newCharRun)
     {
-        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charRun", newCharRun, charModelOrigin.transform.position, false); // WIP!!!
+        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charRun", newCharRun, charModelOrigin.transform.position, false);
         charObRun.SetActive(false);
         charObRun.transform.parent = charModelOrigin.transform;
         charObRun.transform.localPosition = new Vector3(0, 0, 0);

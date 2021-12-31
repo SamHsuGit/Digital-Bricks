@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public struct ClientToServerMessage : NetworkMessage
 {
@@ -93,10 +94,23 @@ public class CustomNetworkManager : NetworkManager
         clientMessage = new ClientToServerMessage
         {
             playerName = SettingsStatic.LoadedSettings.playerName,
-            serializedCharIdle = LDrawImportRuntime.Instance.GetSerializedPart("charIdle"), // this is just sending the name of the file, need to serialize the file (WIP!!!!)
-            serializedCharRun = LDrawImportRuntime.Instance.GetSerializedPart("charRun"),
+            serializedCharIdle = ReadFileToString("charIdle.ldr"),
+            serializedCharRun = ReadFileToString("charRun.ldr"),
         };
         conn.Send(clientMessage);
+    }
+
+    public string ReadFileToString(string fileName)
+    {
+        string path = LDrawImportRuntime.Instance.ldrawConfigRuntime._ModelsPath + fileName;
+        if (!Directory.Exists(path))
+            ErrorMessage.Show("File not found: " + path);
+
+        StreamReader reader = new StreamReader(path);
+        string result = reader.ReadToEnd();
+        reader.Close();
+
+        return result;
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
