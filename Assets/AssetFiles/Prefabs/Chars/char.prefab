@@ -429,6 +429,8 @@ MonoBehaviour:
   - {fileID: 2009221117049920548}
   - {fileID: 1839619620696046812}
   playerName: Host
+  playerCharIdleString: 
+  playerCharRunString: 
   timeOfDay: 6.0066667
   seed: 0
   version: 
