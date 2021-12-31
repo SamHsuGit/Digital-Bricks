@@ -419,8 +419,8 @@ public class Controller : NetworkBehaviour
         SetName(playerName, playerName);
 
         // set this object's properties from local file
-        SetCharIdle(LDrawImportRuntime.Instance.GetSerializedPart("charIdle"), LDrawImportRuntime.Instance.GetSerializedPart("charIdle"));
-        SetCharRun(LDrawImportRuntime.Instance.GetSerializedPart("charRun"), LDrawImportRuntime.Instance.GetSerializedPart("charRun"));
+        //SetCharIdle(LDrawImportRuntime.Instance.GetSerializedPart("charIdle"), LDrawImportRuntime.Instance.GetSerializedPart("charIdle"));
+        //SetCharRun(LDrawImportRuntime.Instance.GetSerializedPart("charRun"), LDrawImportRuntime.Instance.GetSerializedPart("charRun"));
     }
 
     void SetPlayerColliderSettings()
