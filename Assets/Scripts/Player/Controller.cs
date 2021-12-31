@@ -459,6 +459,7 @@ public class Controller : NetworkBehaviour
 
     public void SetCharIdle(string oldCharIdle, string newCharIdle)
     {
+        Debug.Log(newCharIdle);
         charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charIdle", newCharIdle, charModelOrigin.transform.position, false);
         charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
