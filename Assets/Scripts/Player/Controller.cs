@@ -401,7 +401,8 @@ public class Controller : NetworkBehaviour
     {
         // Import character model idle pose
         charObIdle = LDrawImportRuntime.Instance.charObIdle;
-        charObIdle.SetActive(!isMoving);
+        if(Settings.OnlinePlay)
+            charObIdle.SetActive(!isLocalPlayer);
         charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
         charObIdle.transform.localPosition = new Vector3(0, 0, 0);
@@ -409,7 +410,7 @@ public class Controller : NetworkBehaviour
 
         // Import character model run pose
         charObRun = LDrawImportRuntime.Instance.charObRun;
-        charObRun.SetActive(isMoving);
+        charObRun.SetActive(false);
         charObRun.transform.parent = charModelOrigin.transform;
         charObRun.transform.localPosition = new Vector3(0, 0, 0);
         charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
@@ -427,7 +428,8 @@ public class Controller : NetworkBehaviour
 
         // position camera procedurally based on imported char model size
         playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
-        playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius;
+        //playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius;
+        playerCamera.GetComponent<Camera>().nearClipPlane = 0.01f;
 
         // set reach and gun range procedurally based on imported char model size
         reach = cc.radius * 2f * 6f;
@@ -737,6 +739,15 @@ public class Controller : NetworkBehaviour
 
         if (!photoMode && !options) // IF NOT IN OPTIONS OR PHOTO MODE
         {
+            //animate player
+            if (Settings.OnlinePlay && !isLocalPlayer)
+                Animate();
+            else
+            {
+                charObIdle.SetActive(false);
+                charObRun.SetActive(false);
+            }
+
             //bool isInActiveChunk = voxelCollider.playerChunkIsActive;
             // IF PRESSED GRAB
             if (!holdingGrab && inputHandler.grab)// && isInActiveChunk)
@@ -760,15 +771,14 @@ public class Controller : NetworkBehaviour
         else if (photoMode && !options)
         {
             MoveCamera(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
+
+            Animate();
         }
 
         if (Settings.OnlinePlay)
             CmdToggleLights(isHolding);
         else
             ToggleLights(isHolding);
-
-        //animate player
-        Animate();
     }
 
     public void CalculateCurrentDay()
