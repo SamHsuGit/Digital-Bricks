@@ -43,10 +43,10 @@ public class LDrawImportRuntime : MonoBehaviour
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models and hides upon world load to be instantiated later
-        charObIdle = ImportLDraw("charIdle", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
-        charObRun = ImportLDraw("charRun", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
-        baseOb = ImportLDraw("base", new Vector3(0, -10000, 0), true);
-        projectileOb = ImportLDraw("projectile", new Vector3(0,-10000,0), false);
+        charObIdle = ImportLDrawLocal("charIdle", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
+        charObRun = ImportLDrawLocal("charRun", new Vector3(0, 0, 0), false); // char is not static (i.e. isStatic = false)
+        baseOb = ImportLDrawLocal("base", new Vector3(0, -10000, 0), true);
+        projectileOb = ImportLDrawLocal("projectile", new Vector3(0,-10000,0), false);
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
@@ -54,8 +54,50 @@ public class LDrawImportRuntime : MonoBehaviour
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
     }
 
-    public GameObject ImportLDraw(string fileName, Vector3 pos, bool isStatic)
+    public GameObject ImportLDrawLocal(string fileName, Vector3 pos, bool isStatic)
     {
+        var model = LDrawModelRuntime.Create(_CurrentPart, GetSerializedPart(fileName));
+        modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+        return ConfigureModelOb(modelOb, pos, isStatic);
+    }
+
+    public GameObject ImportLDrawOnline(string serializedPart, Vector3 pos, bool isStatic)
+    {
+        var model = LDrawModelRuntime.Create(_CurrentPart, serializedPart);
+        modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+        return ConfigureModelOb(modelOb, pos, isStatic);
+    }
+
+    public GameObject ConfigureModelOb(GameObject _modelOb, Vector3 pos, bool isStatic)
+    {
+        modelOb.layer = 9; // add the model component to mark this object as a model
+        CombineMeshes(modelOb);
+        modelOb.transform.LocalReflect(Vector3.up);
+        modelOb.transform.position = pos; // position imported gameObject at origin, far below world
+        modelOb.SetActive(isStatic);
+
+        ElevateMeshRendererChildren(modelOb);
+
+        BoxCollider modelObbc = modelOb.GetComponent<BoxCollider>();
+        Transform submodel = modelOb.transform.GetChild(0);
+        float distMoveRight = -modelObbc.center.x;
+        float distMoveUp = Mathf.Abs(modelObbc.size.y / 2 - Mathf.Abs(modelObbc.center.y));
+        float distMoveForward = -modelObbc.center.z;
+        submodel.transform.position += new Vector3(-distMoveRight, distMoveUp, distMoveForward); // ensures imported model is always centered above 0 plane
+        modelObbc.center += new Vector3(distMoveRight, -distMoveUp, distMoveForward); // move box collider by same distance
+
+        modelOb.transform.localScale = new Vector3(scale, scale, scale); // rescale imported object to match voxel size
+        modelOb.isStatic = isStatic;
+        if (!isStatic)
+            modelObbc.enabled = false;
+
+        return modelOb;
+    }
+
+    public string GetSerializedPart(string fileName)
+    {
+        string serializedPart;
+
         ldrawConfigRuntime.InitParts();
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
@@ -83,33 +125,9 @@ public class LDrawImportRuntime : MonoBehaviour
         }
 
         _CurrentPart = ldrawConfigRuntime.GetModelByFileName(_ModelNames[_CurrentIndex]);
-        // good test 949ac01
-        var model = LDrawModelRuntime.Create(_CurrentPart, ldrawConfigRuntime.GetSerializedPart(_CurrentPart));
-        modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
-        modelOb.layer = 9; // add the model component to mark this object as a model
-        CombineMeshes(modelOb);
-        modelOb.transform.LocalReflect(Vector3.up);
-        modelOb.transform.position = pos; // position imported gameObject at origin, far below world
-        modelOb.SetActive(isStatic);
+        serializedPart = ldrawConfigRuntime.GetSerializedPart(_CurrentPart);
 
-        ElevateMeshRendererChildren(modelOb);
-
-        BoxCollider modelObbc = modelOb.GetComponent<BoxCollider>();
-        Transform submodel = modelOb.transform.GetChild(0);
-        float distMoveRight = -modelObbc.center.x;
-        float distMoveUp = Mathf.Abs(modelObbc.size.y / 2 - Mathf.Abs(modelObbc.center.y));
-        float distMoveForward = -modelObbc.center.z;
-        submodel.transform.position += new Vector3(-distMoveRight, distMoveUp, distMoveForward); // ensures imported model is always centered above 0 plane
-        modelObbc.center += new Vector3(distMoveRight, -distMoveUp, distMoveForward); // move box collider by same distance
-
-        modelOb.transform.localScale = new Vector3(scale, scale, scale); // rescale imported object to match voxel size
-        modelOb.isStatic = isStatic;
-        if(!isStatic)
-        {
-            modelObbc.enabled = false;
-        }
-
-        return modelOb;
+        return serializedPart;
     }
 
     public void CombineMeshes(GameObject go)

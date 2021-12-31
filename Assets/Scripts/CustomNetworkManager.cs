@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public struct ClientToServerMessage : NetworkMessage
 {
     public string playerName;
+    public string serializedCharIdle;
+    public string serializedCharRun;
 }
 
 // https://mirror-networking.gitbook.io/docs/guides/communications/network-messages
@@ -64,6 +66,8 @@ public class CustomNetworkManager : NetworkManager
         clientMessage = new ClientToServerMessage
         {
             playerName = SettingsStatic.LoadedSettings.playerName,
+            serializedCharIdle = LDrawImportRuntime.Instance.GetSerializedPart("charIdle"),
+            serializedCharRun = LDrawImportRuntime.Instance.GetSerializedPart("charRun"),
         };
         conn.Send(clientMessage);
     }
@@ -85,6 +89,8 @@ public class CustomNetworkManager : NetworkManager
         // Apply data from the message however appropriate for your game
         // Typically a Player would be a component you write with syncvars or properties
         controller.playerName = message.playerName;
+        controller.playerCharIdleString = message.serializedCharIdle;
+        controller.playerCharRunString = message.serializedCharRun;
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);

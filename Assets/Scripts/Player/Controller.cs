@@ -11,6 +11,8 @@ public class Controller : NetworkBehaviour
 
     int typeChar = 1;
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
+    [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdleString;
+    [SyncVar(hook = nameof(SetCharRun))] public string playerCharRunString;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
     [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
@@ -313,6 +315,23 @@ public class Controller : NetworkBehaviour
         {
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
 
+            // Import character model idle pose
+            charObIdle = LDrawImportRuntime.Instance.charObIdle;
+            charObIdle.SetActive(true);
+            charObIdle.transform.parent = charModelOrigin.transform;
+            bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
+            charObIdle.transform.localPosition = new Vector3(0, 0, 0);
+            charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
+
+            // Import character model run pose
+            charObRun = LDrawImportRuntime.Instance.charObRun;
+            charObRun.SetActive(false);
+            charObRun.transform.parent = charModelOrigin.transform;
+            charObRun.transform.localPosition = new Vector3(0, 0, 0);
+            charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
+
+            SetPlayerColliderSettings();
+
             SetPlayerAttributes();
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
         }
@@ -397,23 +416,11 @@ public class Controller : NetworkBehaviour
 
     void SetPlayerAttributes()
     {
-        // Import character model idle pose
-        charObIdle = new GameObject();
-        charObIdle = LDrawImportRuntime.Instance.charObIdle;
-        charObIdle.SetActive(true);
-        charObIdle.transform.parent = charModelOrigin.transform;
-        bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
-        charObIdle.transform.localPosition = new Vector3(0, 0, 0);
-        charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
+        SetName(playerName, playerName);
+    }
 
-        // Import character model run pose
-        charObRun = new GameObject();
-        charObRun = LDrawImportRuntime.Instance.charObRun;
-        charObRun.SetActive(false);
-        charObRun.transform.parent = charModelOrigin.transform;
-        charObRun.transform.localPosition = new Vector3(0, 0, 0);
-        charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
-
+    void SetPlayerColliderSettings()
+    {
         // position/size capsule collider procedurally based on imported char model size
         colliderHeight = bc.size.y * LDrawImportRuntime.Instance.scale;
         colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * LDrawImportRuntime.Instance.scale, 2) + Mathf.Pow(bc.size.z * LDrawImportRuntime.Instance.scale, 2)) * 0.25f;
@@ -432,8 +439,6 @@ public class Controller : NetworkBehaviour
         // set reach and gun range procedurally based on imported char model size
         reach = cc.radius * 2f * 6f;
         gun.range = reach * 10f;
-
-        SetName(playerName, playerName);
     }
 
     public void SetName(string oldName, string newName) // update the player visuals using the SyncVars pushed from the server to clients
@@ -446,6 +451,29 @@ public class Controller : NetworkBehaviour
 
         playerName = newName;
         nametag.GetComponent<TextMesh>().text = newName;
+    }
+
+    public void SetCharIdle(string oldCharIdle, string newCharIdle)
+    {
+        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(newCharIdle, charModelOrigin.transform.position, false);
+        charObIdle.SetActive(true);
+        charObIdle.transform.parent = charModelOrigin.transform;
+        bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
+        charObIdle.transform.localPosition = new Vector3(0, 0, 0);
+        charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
+
+        SetPlayerColliderSettings();
+    }
+
+    public void SetCharRun(string oldCharRun, string newCharRun)
+    {
+        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(newCharRun, charModelOrigin.transform.position, false);
+        charObRun.SetActive(false);
+        charObRun.transform.parent = charModelOrigin.transform;
+        charObRun.transform.localPosition = new Vector3(0, 0, 0);
+        charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
+
+        SetPlayerColliderSettings();
     }
 
     public void SetTime(float oldTime, float newTime)
