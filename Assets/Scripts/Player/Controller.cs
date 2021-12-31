@@ -398,6 +398,7 @@ public class Controller : NetworkBehaviour
     void SetPlayerAttributes()
     {
         // Import character model idle pose
+        charObIdle = new GameObject();
         charObIdle = LDrawImportRuntime.Instance.charObIdle;
         charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
@@ -406,6 +407,7 @@ public class Controller : NetworkBehaviour
         charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
 
         // Import character model run pose
+        charObRun = new GameObject();
         charObRun = LDrawImportRuntime.Instance.charObRun;
         charObRun.SetActive(false);
         charObRun.transform.parent = charModelOrigin.transform;
