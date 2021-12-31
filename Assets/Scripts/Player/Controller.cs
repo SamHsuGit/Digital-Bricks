@@ -417,6 +417,10 @@ public class Controller : NetworkBehaviour
     void SetPlayerAttributes()
     {
         SetName(playerName, playerName);
+
+        // set this object's properties from local file
+        SetCharIdle(LDrawImportRuntime.Instance.GetSerializedPart("charIdle"), LDrawImportRuntime.Instance.GetSerializedPart("charIdle"));
+        SetCharRun(LDrawImportRuntime.Instance.GetSerializedPart("charRun"), LDrawImportRuntime.Instance.GetSerializedPart("charRun"));
     }
 
     void SetPlayerColliderSettings()
@@ -455,7 +459,7 @@ public class Controller : NetworkBehaviour
 
     public void SetCharIdle(string oldCharIdle, string newCharIdle)
     {
-        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline("charIdle", newCharIdle, charModelOrigin.transform.position, false);
+        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charIdle", newCharIdle, charModelOrigin.transform.position, false);
         charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
@@ -467,7 +471,7 @@ public class Controller : NetworkBehaviour
 
     public void SetCharRun(string oldCharRun, string newCharRun)
     {
-        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline("charRun", newCharRun, charModelOrigin.transform.position, false);
+        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charRun", newCharRun, charModelOrigin.transform.position, false);
         charObRun.SetActive(false);
         charObRun.transform.parent = charModelOrigin.transform;
         charObRun.transform.localPosition = new Vector3(0, 0, 0);

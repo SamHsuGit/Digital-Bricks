@@ -40,7 +40,14 @@ namespace LDraw
 
         #region service methods
 
-        private void Init(string name, string serialized)
+        private void Init(string name, string serialized) // uses serialized ldraw commands to store commands into a new List called _Commands, adds matching models to the list of models
+        {
+            GetCommands(name, serialized);
+
+            AddToModels(name);
+        }
+
+        public List<LDrawCommandRuntime> GetCommands(string name, string serialized) // serialized is a string of ldraw commands
         {
             _Name = name;
             //Debug.Log(_Name);
@@ -62,6 +69,11 @@ namespace LDraw
                 }
             }
 
+            return _Commands;
+        }
+
+        public void AddToModels(string name)
+        {
             if (!_models.ContainsKey(name))
             {
                 _models.Add(name, this);
@@ -184,7 +196,7 @@ namespace LDraw
             
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            //LDrawConfig1.Instance.SaveMesh(mesh);
+            //LDrawConfig.Instance.SaveMesh(mesh);
             return mesh;
         }
   

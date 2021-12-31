@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+
 public struct ClientToServerMessage : NetworkMessage
 {
     public string playerName;
@@ -17,6 +18,32 @@ public struct ClientToServerMessage : NetworkMessage
 //{
 //    //public List<ChunkData> modifiedChunks;
 //    //public List<VoxelState[,,]> mapList;
+//}
+
+//public static class ChunkDataReaderWriter
+//{
+//    public static void WriteChunkData(this NetworkWriter writer, ChunkData chunkData)
+//    {
+//        writer.WriteInt(chunkData);
+//    }
+
+//    public static ChunkData ReadChunkData(this NetworkReader reader)
+//    {
+//        return new ChunkData(reader.ReadInt());
+//    }
+//}
+
+//public static class VoxelStatReaderWriter
+//{
+//    public static void WriteVoxelState(this NetworkWriter writer, VoxelState voxelState)
+//    {
+//        writer.WriteByte(voxelState);
+//    }
+
+//    public static VoxelState ReadVoxelState(this NetworkReader reader)
+//    {
+//        return new VoxelState(reader.WriteByte());
+//    }
 //}
 
 public class CustomNetworkManager : NetworkManager

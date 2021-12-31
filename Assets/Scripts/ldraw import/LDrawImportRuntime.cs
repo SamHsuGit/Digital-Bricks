@@ -63,7 +63,7 @@ public class LDrawImportRuntime : MonoBehaviour
 
     public GameObject ImportLDrawOnline(string fileName, string serializedPart, Vector3 pos, bool isStatic)
     {
-        var model = LDrawModelRuntime.Create(GetCurrentPart(fileName), serializedPart);
+        var model = LDrawModelRuntime.Create(fileName, serializedPart);
         modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
         return ConfigureModelOb(modelOb, pos, isStatic);
     }
