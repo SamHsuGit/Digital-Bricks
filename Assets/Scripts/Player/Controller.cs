@@ -125,7 +125,6 @@ public class Controller : NetworkBehaviour
         world = World.Instance;
         physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
-        //animator = modelPrefab.GetComponent<Animator>();
         inputHandler = GetComponent<InputHandler>();
         health = GetComponent<Health>();
         gun = GetComponent<Gun>();
@@ -394,15 +393,13 @@ public class Controller : NetworkBehaviour
         }
 
         SetPlayerAttributes();
-        //SetTypeProjectile();
     }
 
     void SetPlayerAttributes()
     {
         // Import character model idle pose
         charObIdle = LDrawImportRuntime.Instance.charObIdle;
-        if(Settings.OnlinePlay)
-            charObIdle.SetActive(!isLocalPlayer);
+        charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
         charObIdle.transform.localPosition = new Vector3(0, 0, 0);
@@ -428,7 +425,6 @@ public class Controller : NetworkBehaviour
 
         // position camera procedurally based on imported char model size
         playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
-        //playerCamera.GetComponent<Camera>().nearClipPlane = cc.radius;
         playerCamera.GetComponent<Camera>().nearClipPlane = 0.01f;
 
         // set reach and gun range procedurally based on imported char model size
@@ -459,174 +455,6 @@ public class Controller : NetworkBehaviour
     {
         isMoving = newIsMoving;
     }
-    
-    //public void SetTypeHelmet(int oldValue, int newValue)
-    //{
-    //    typeHelmet = newValue;
-    //    if(typeChar == 1 && helmet[typeHelmet] != null)
-    //    {
-    //        helmet[typeHelmet].SetActive(true);
-    //        helmet[typeHelmet].layer = 10; // tag to be able to shoot
-    //    }
-    //}
-
-    //public void SetTypeArmor(int oldValue, int newValue)
-    //{
-    //    typeArmor = newValue;
-    //    if (typeChar == 1 && armor[typeArmor] != null)
-    //    {
-    //        armor[typeArmor].SetActive(true);
-    //        armor[typeArmor].layer = 10; // tag to be able to shoot
-    //    }   
-    //}
-
-    //public void SetTypeTool(int oldValue, int newValue)
-    //{
-    //    typeTool = newValue;
-    //    if (typeChar == 1 && tool[typeTool] != null)
-    //    {
-    //        tool[typeTool].SetActive(true);
-    //        tool[typeTool].layer = 10; // tag to be able to shoot
-    //    }
-    //}
-
-    //public void SetColorHelmet(int oldValue, int newValue)
-    //{
-    //    SetColor(0, newValue);
-    //}
-
-    //public void SetColorHead(int oldValue, int newValue)
-    //{
-    //    SetColor(1, newValue);
-    //}
-
-    //public void SetColorArmor(int oldValue, int newValue)
-    //{
-    //    SetColor(2, newValue);
-    //}
-
-    //public void SetColorTorso(int oldValue, int newValue)
-    //{
-    //    SetColor(3, newValue);
-    //}
-
-    //public void SetColorTool(int oldValue, int newValue)
-    //{
-    //    SetColor(4, newValue);
-    //}
-
-    //public void SetColorArmL(int oldValue, int newValue)
-    //{
-    //    SetColor(5, newValue);
-    //}
-
-    //public void SetColorHandL(int oldValue, int newValue)
-    //{
-    //    SetColor(6, newValue);
-    //}
-
-    //public void SetColorArmR(int oldValue, int newValue)
-    //{
-    //    SetColor(7, newValue);
-    //}
-
-    //public void SetColorHandR(int oldValue, int newValue)
-    //{
-    //    SetColor(8, newValue);
-    //}
-
-    //public void SetColorBelt(int oldValue, int newValue)
-    //{
-    //    SetColor(9, newValue);
-    //}
-
-    //public void SetColorLegL(int oldValue, int newValue)
-    //{
-    //    SetColor(10, newValue);
-    //}
-
-    //public void SetColorLegR(int oldValue, int newValue)
-    //{
-    //    SetColor(11, newValue);
-    //}
-
-    //public void SetColor(int index, int newColor)
-    //{
-    //    if (index == 1 && typeHelmet == 0) // if no helmet, do not color head
-    //        return;
-
-    //    if(index == 0) // if helmet
-    //    {
-    //        bool match = false;
-    //        for (int i = 0; i < helmetToChangeColor.Length; i++) // if not an approved helmet to change color do not change color
-    //        {
-    //            if (typeHelmet == helmetToChangeColor[i])
-    //                match = true;
-    //        }
-    //        if (!match)
-    //            return;
-    //    }
-    //    else if(index == 2) // if armor
-    //    {
-    //        bool match = false;
-    //        for (int i = 0; i < armorToChangeColor.Length; i++) // if not an approved armor to change color do not change color
-    //        {
-    //            if (typeArmor == armorToChangeColor[i])
-    //                match = true;
-    //        }
-    //        if (!match)
-    //            return;
-    //    }
-    //    else if (index == 4) // for tool, only color child objects (if any, otherwise try and color main objects)
-    //    {
-    //        bool match = false;
-    //        for (int i = 0; i < toolsToChangeColor.Length; i++) // if not an approved tool to change color do not change color
-    //        {
-    //            if (typeTool == toolsToChangeColor[i])
-    //                match = true;
-    //        }
-    //        if (!match)
-    //            return;
-
-    //        for (int k = 0; k < playerLimbs[index].Length; k++)
-    //        {
-    //            if (playerLimbs[index][k].transform.childCount == 0) // if no children, color main object as normal (if possible)
-    //            {
-    //                Material cachedMaterial = playerLimbs[index][k].GetComponent<MeshRenderer>().material;
-    //                cachedMaterials.Add(cachedMaterial);
-
-    //                Color newCol = LDrawColors.IntToColor(newColor);
-    //                newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
-    //                cachedMaterial.color = newCol;
-    //                if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
-    //                    cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
-    //            }
-    //            else // if has children
-    //            {
-    //                GameObject ob = playerLimbs[index][k];
-    //                foreach (Transform child in ob.transform)
-    //                {
-    //                    Material cachedMaterial = child.GetComponent<MeshRenderer>().material;
-    //                    cachedMaterials.Add(cachedMaterial);
-    //                    Color newCol = LDrawColors.IntToColor(newColor);
-    //                    newCol.a = 0.5f; // for tools newColor alpha is 50% for transparent materials
-    //                    cachedMaterial.color = newCol; // color children
-    //                    if (cachedMaterial.IsKeywordEnabled("_EMISSION"))
-    //                        cachedMaterial.SetColor("_EmissionColor", cachedMaterial.color);
-    //                }
-    //            }
-    //        }
-    //    }
-    //    else // color gameObjects
-    //    {
-    //        for (int j = 0; j < playerLimbs[index].Length; j++)
-    //        {
-    //            Material cachedMaterial = playerLimbs[index][j].GetComponent<MeshRenderer>().material;
-    //            cachedMaterials.Add(cachedMaterial);
-    //            cachedMaterial.color = LDrawColors.IntToColor(newColor);
-    //        }
-    //    }
-    //}
 
     private void OnDestroy()
     {
@@ -697,6 +525,7 @@ public class Controller : NetworkBehaviour
         //disable virtual camera and exit from FixedUpdate if this is not the local player
         if (Settings.OnlinePlay && !isLocalPlayer)
         {
+            Animate();
             playerCamera.SetActive(false);
             return;
         }
@@ -739,14 +568,8 @@ public class Controller : NetworkBehaviour
 
         if (!photoMode && !options) // IF NOT IN OPTIONS OR PHOTO MODE
         {
-            //animate player
-            if (Settings.OnlinePlay && !isLocalPlayer)
-                Animate();
-            else
-            {
-                charObIdle.SetActive(false);
-                charObRun.SetActive(false);
-            }
+            charObIdle.SetActive(false);
+            charObRun.SetActive(false);
 
             //bool isInActiveChunk = voxelCollider.playerChunkIsActive;
             // IF PRESSED GRAB
