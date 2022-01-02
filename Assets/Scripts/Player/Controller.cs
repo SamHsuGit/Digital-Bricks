@@ -318,6 +318,9 @@ public class Controller : NetworkBehaviour
         charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
 
         SetPlayerColliderSettings();
+
+        if (charObIdle.transform.GetChild(0).name.Contains("-submodel")) // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
+            Destroy(charObIdle.transform.GetChild(0).transform.gameObject);
     }
 
     public void SetCharRun(string oldCharRun, string newCharRun)
@@ -329,6 +332,9 @@ public class Controller : NetworkBehaviour
         charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
         SetPlayerColliderSettings();
+
+        if (charObRun.transform.GetChild(0).name.Contains("-submodel")) // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
+            Destroy(charObRun.transform.GetChild(0).transform.gameObject);
     }
 
     public void SetTime(float oldTime, float newTime)
