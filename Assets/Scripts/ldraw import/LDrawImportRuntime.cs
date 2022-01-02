@@ -65,6 +65,7 @@ public class LDrawImportRuntime : MonoBehaviour
     {
         var model = LDrawModelRuntime.Create(fileName, commandString, false);
         modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+        modelOb.name = fileName;
         return ConfigureModelOb(modelOb, pos, isStatic);
     }
 
