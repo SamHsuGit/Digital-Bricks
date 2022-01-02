@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using LDraw;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class LDrawImportRuntime : MonoBehaviour
 {
@@ -66,7 +67,24 @@ public class LDrawImportRuntime : MonoBehaviour
         var model = LDrawModelRuntime.Create(fileName, commandString, false);
         modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
         modelOb.name = fileName;
+
+        if (modelOb.transform.GetChild(0).name.Contains("-submodel")) // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
+            Destroy(modelOb.transform.GetChild(0).transform.gameObject);
+
         return ConfigureModelOb(modelOb, pos, isStatic);
+    }
+
+    public string ReadFileToString(string fileName)
+    {
+        string path = LDrawImportRuntime.Instance.ldrawConfigRuntime._ModelsPath + fileName;
+        if (!File.Exists(path))
+            ErrorMessage.Show("File not found: " + path);
+
+        StreamReader reader = new StreamReader(path);
+        string result = reader.ReadToEnd();
+        reader.Close();
+
+        return result;
     }
 
     public string GetCurrentPart(string fileName)

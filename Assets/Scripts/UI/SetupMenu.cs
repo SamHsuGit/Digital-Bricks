@@ -30,14 +30,6 @@ public class SetupMenu : MonoBehaviour
     {
         // import this player's char model as a preview before entering the game
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
-        charObIdle = LDrawImportRuntime.Instance.charObIdle;
-        charObIdle.transform.parent = modelsObjectToSpin.transform;
-        modelsObjectToSpin.transform.Translate(new Vector3(0, 0, charObIdle.GetComponent<BoxCollider>().size.y * 0.025f));
-        charObIdle.SetActive(true);
-        charObIdle.transform.localPosition = new Vector3(0, charObIdle.GetComponent<BoxCollider>().center.y * LDrawImportRuntime.Instance.scale, 0);
-
-        Destroy(LDrawImportRuntime.Instance.baseOb);
-        Destroy(LDrawImportRuntime.Instance.projectileOb);
     }
 
     private void Start()
@@ -50,6 +42,22 @@ public class SetupMenu : MonoBehaviour
         worldRenderText.text = SettingsStatic.LoadedSettings.drawDistance.ToString();
         planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
         seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
+
+        GetImportedCharModelAfterAwake();
+    }
+
+    private void GetImportedCharModelAfterAwake()
+    {
+        // has to occur after Awake since the importer needs time to import during awake
+        charObIdle = LDrawImportRuntime.Instance.charObIdle;
+        charObIdle.transform.parent = modelsObjectToSpin.transform;
+        modelsObjectToSpin.transform.Translate(new Vector3(0, 0, charObIdle.GetComponent<BoxCollider>().size.y * 0.025f));
+
+        charObIdle.SetActive(true);
+        charObIdle.transform.localPosition = new Vector3(0, charObIdle.GetComponent<BoxCollider>().center.y * LDrawImportRuntime.Instance.scale, 0);
+
+        Destroy(LDrawImportRuntime.Instance.baseOb);
+        Destroy(LDrawImportRuntime.Instance.projectileOb);
     }
 
     private void Update()
@@ -111,7 +119,7 @@ public class SetupMenu : MonoBehaviour
         }
         catch (System.FormatException)
         {
-            SettingsStatic.LoadedSettings.seed = 1234;
+            SettingsStatic.LoadedSettings.seed = 5;
         }
 
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start

@@ -94,23 +94,10 @@ public class CustomNetworkManager : NetworkManager
         clientMessage = new ClientToServerMessage
         {
             playerName = SettingsStatic.LoadedSettings.playerName,
-            serializedCharIdle = ReadFileToString("charIdle.ldr"),
-            serializedCharRun = ReadFileToString("charRun.ldr"),
+            serializedCharIdle = LDrawImportRuntime.Instance.ReadFileToString("charIdle.ldr"),
+            serializedCharRun = LDrawImportRuntime.Instance.ReadFileToString("charRun.ldr"),
         };
         conn.Send(clientMessage);
-    }
-
-    public string ReadFileToString(string fileName)
-    {
-        string path = LDrawImportRuntime.Instance.ldrawConfigRuntime._ModelsPath + fileName;
-        if (!File.Exists(path))
-            ErrorMessage.Show("File not found: " + path);
-
-        StreamReader reader = new StreamReader(path);
-        string result = reader.ReadToEnd();
-        reader.Close();
-
-        return result;
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)

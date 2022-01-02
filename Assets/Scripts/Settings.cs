@@ -37,7 +37,7 @@ public static class SettingsStatic
         settings.invertX = false;
         settings.fullscreen = true;
         settings.planetNumber = 3;
-        settings.seed = 0;
+        settings.seed = 5;
         settings.timeOfDay = 6.01f;
         settings.playerName = "PlayerName";
         //settings.playerTypeChar = 1;

@@ -153,7 +153,7 @@ namespace LDraw
         private void PrepareModels()
         {
             _ModelFileNames = new Dictionary<string, string>();
-            //Debug.Log(_ModelsPath);
+            //Debug.Log("SEARCHING FOR MODELS IN " + _ModelsPath);
             var files = Directory.GetFiles(_ModelsPath, "*.*", SearchOption.AllDirectories);
             _Models = new Dictionary<string, string>();
             foreach (var file in files)
