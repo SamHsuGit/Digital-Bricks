@@ -291,6 +291,9 @@ public class Controller : NetworkBehaviour
         playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
         playerCamera.GetComponent<Camera>().nearClipPlane = 0.01f;
 
+        // position nametag procedurally based on imported char model size
+        nametag.transform.localPosition = new Vector3(0, colliderCenter.y + colliderHeight * 0.55f, 0);
+
         // set reach and gun range procedurally based on imported char model size
         reach = cc.radius * 2f * 6f;
         gun.range = reach * 10f;
