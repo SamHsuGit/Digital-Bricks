@@ -7,7 +7,7 @@ public class Gun : NetworkBehaviour
 {
     public float fireRate = 2f;
     public float impactForce = 0.01f;
-    public int damage = 1;
+    public int damage = 3;
     public float range = 2f;
     public float nextTimeToFire = 0f;
     public float sphereCastRadius = 0.1f;

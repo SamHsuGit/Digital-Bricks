@@ -103,7 +103,7 @@ public class CustomNetworkManager : NetworkManager
     public string ReadFileToString(string fileName)
     {
         string path = LDrawImportRuntime.Instance.ldrawConfigRuntime._ModelsPath + fileName;
-        if (!Directory.Exists(path))
+        if (!File.Exists(path))
             ErrorMessage.Show("File not found: " + path);
 
         StreamReader reader = new StreamReader(path);

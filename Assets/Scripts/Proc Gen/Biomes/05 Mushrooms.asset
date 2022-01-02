@@ -46,7 +46,7 @@ MonoBehaviour:
     minHeight: 1
     maxHeight: 96
     scale: 2
-    threshold: 0.65
+    threshold: 0.85
     noiseOffset: 1
   - nodeName: Cave
     blockID: 0

@@ -56,14 +56,14 @@ public class LDrawImportRuntime : MonoBehaviour
 
     public GameObject ImportLDrawLocal(string fileName, Vector3 pos, bool isStatic)
     {
-        var model = LDrawModelRuntime.Create(GetCurrentPart(fileName), GetSerializedPart(fileName));
+        var model = LDrawModelRuntime.Create(GetCurrentPart(fileName), GetSerializedPart(fileName), true);
         modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
         return ConfigureModelOb(modelOb, pos, isStatic);
     }
 
-    public GameObject ImportLDrawOnline(string fileName, string serializedPart, Vector3 pos, bool isStatic)
+    public GameObject ImportLDrawOnline(string fileName, string commandString, Vector3 pos, bool isStatic)
     {
-        var model = LDrawModelRuntime.Create(fileName, serializedPart);
+        var model = LDrawModelRuntime.Create(fileName, commandString, false);
         modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
         return ConfigureModelOb(modelOb, pos, isStatic);
     }

@@ -775,7 +775,7 @@ public class World : MonoBehaviour
         else if (yGlobalPos == terrainHeight) // if surface block
         {
             if (Mathf.CeilToInt(System.DateTime.Now.Month / 3f) == 1)
-                voxelValue = 5; // snow for winter season
+                voxelValue = worldData.blockIDTreeLeavesWinter; // snow for winter season
             else
                 voxelValue = biome.surfaceBlock;
         }

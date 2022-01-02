@@ -42,7 +42,7 @@ namespace LDraw
 				}
 			}
 
-			_Model = LDrawModelRuntime.Create(_Name, LDrawImportRuntime.Instance.ldrawConfigRuntime.GetSerializedPart(_Name));
+			_Model = LDrawModelRuntime.Create(_Name, LDrawImportRuntime.Instance.ldrawConfigRuntime.GetSerializedPart(_Name), true);
 			
 			_Matrix = new Matrix4x4(
 				new Vector4(param[3], param[6], param[9],  0),

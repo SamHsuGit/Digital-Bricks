@@ -14,11 +14,11 @@ namespace LDraw
 
         #region factory
 
-        public static LDrawModelRuntime Create(string name, string path)
+        public static LDrawModelRuntime Create(string name, string pathOrCommandString, bool isPath)
         {
             if (_models.ContainsKey(name)) return _models[name];
             var model = new LDrawModelRuntime();
-            model.Init(name, path);
+            model.Init(name, pathOrCommandString, isPath);
           
             return model;
         }
@@ -40,19 +40,45 @@ namespace LDraw
 
         #region service methods
 
-        private void Init(string name, string serialized) // uses serialized ldraw commands to store commands into a new List called _Commands, adds matching models to the list of models
+        private void Init(string name, string pathOrCommandString, bool isPath) // uses serialized ldraw commands to store commands into a new List called _Commands, adds matching models to the list of models
         {
-            GetCommands(name, serialized);
+            if (isPath)
+                GetCommandsFromPath(name, pathOrCommandString);
+            else
+                GetCommandsFromString(pathOrCommandString);
 
             AddToModels(name);
         }
 
-        public List<LDrawCommandRuntime> GetCommands(string name, string serialized) // serialized is a string of ldraw commands
+        public List<LDrawCommandRuntime> GetCommandsFromPath(string fileName, string path) // gets commands from a local path
         {
-            _Name = name;
+            _Name = fileName;
             //Debug.Log(_Name);
             _Commands = new List<LDrawCommandRuntime>();
-            using (StringReader reader = new StringReader(serialized))
+            using (StringReader reader = new StringReader(path))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Regex regex = new Regex("[ ]{2,}", RegexOptions.None); // Sometime runs into stack overflow fatal error from multiple pieces with same name???
+                    line = regex.Replace(line, " ").Trim();
+                    //Debug.Log(line);
+                    if (!String.IsNullOrEmpty(line))
+                    {
+                        var command = LDrawCommandRuntime.DeserializeCommand(line, this);
+                        if (command != null)
+                            _Commands.Add(command);
+                    }
+                }
+            }
+
+            return _Commands;
+        }
+
+        public List<LDrawCommandRuntime> GetCommandsFromString(string commandString) // gets commands from serialized string of commands
+        {
+            _Commands = new List<LDrawCommandRuntime>();
+            using (StringReader reader = new StringReader(commandString))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -84,10 +110,10 @@ namespace LDraw
         {
             if (_Commands.Count == 0) return null;
             GameObject go = new GameObject(_Name);
-        
+
             var triangles = new List<int>();
             var verts = new List<Vector3>();
-        
+
             for (int i = 0; i < _Commands.Count; i++)
             {
                 var sfCommand = _Commands[i] as LDrawSubFileRuntime;
@@ -107,7 +133,7 @@ namespace LDraw
                         sfCommand.GetModelGameObject(go.transform); // calls function that calls this function (recursive), can sometimes create stack overflow fatal crash?
                 }
             }
-        
+
             if (mat != null)
             {
                 var childMrs = go.transform.GetComponentsInChildren<MeshRenderer>();
@@ -116,7 +142,7 @@ namespace LDraw
                     meshRenderer.material = mat;
                 }
             }
-        
+
             if (verts.Count > 0)
             {
                 var mf = go.AddComponent<MeshFilter>();
@@ -128,7 +154,7 @@ namespace LDraw
                     mr.sharedMaterial = mat;
                 }
             }
-            
+
             go.transform.ApplyLocalTRS(trs);
             go.transform.SetParent(parent);
             //go.isStatic = true; // cannot use static batching on individual parts since this hides the piece gameObject when rendered for some reason

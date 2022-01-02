@@ -113,9 +113,6 @@ public class Controller : NetworkBehaviour
     bool daytime = true;
     float nextTimeToAnim = 0;
     List<Material> cachedMaterials = new List<Material>();
-    int[] helmetToChangeColor;
-    int[] armorToChangeColor;
-    int[] toolsToChangeColor;
 
     void Awake()
     {
@@ -148,148 +145,6 @@ public class Controller : NetworkBehaviour
         holdPos = holdPosPrefab.transform;
 
         CinematicBars.SetActive(false);
-
-        helmetToChangeColor = new int[]
-        {
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            34,
-            35,
-            36,
-            37,
-            38,
-            39,
-            40,
-            41,
-            42,
-            43,
-            44,
-            45,
-            46,
-            47,
-            48,
-            49,
-            50,
-            51,
-            52,
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
-            61,
-            62,
-            63,
-            64,
-            65,
-            66,
-            67,
-            68,
-            69,
-            70,
-            72,
-            73,
-            75,
-            76,
-            79,
-            81,
-            82,
-            85,
-            86,
-            87,
-            88,
-            89,
-            93,
-            94,
-            95,
-            100,
-            104,
-            105,
-            106,
-            107,
-            127,
-            129,
-            130,
-            131,
-            133,
-            137,
-            138,
-            139,
-            147,
-            150,
-            152,
-            155,
-            158,
-            160,
-            161,
-            162,
-            163,
-            164,
-            166,
-            167,
-            168,
-            176,
-        };
-
-        armorToChangeColor = new int[]
-        {
-            1,
-            19,
-            20,
-            28,
-            29,
-            30,
-            31,
-            38,
-            40,
-        };
-
-        toolsToChangeColor = new int[]  // only change colors of tools in this list
-        {
-            34,
-            39,
-            40,
-            75,
-            76,
-            77,
-            91,
-            92,
-            93,
-        };
     }
 
     void NamePlayer()
@@ -417,10 +272,6 @@ public class Controller : NetworkBehaviour
     void SetPlayerAttributes()
     {
         SetName(playerName, playerName);
-
-        // set this object's properties from local file
-        //SetCharIdle(LDrawImportRuntime.Instance.GetSerializedPart("charIdle"), LDrawImportRuntime.Instance.GetSerializedPart("charIdle"));
-        //SetCharRun(LDrawImportRuntime.Instance.GetSerializedPart("charRun"), LDrawImportRuntime.Instance.GetSerializedPart("charRun"));
     }
 
     void SetPlayerColliderSettings()
