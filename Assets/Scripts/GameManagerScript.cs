@@ -35,7 +35,7 @@ public class GameManagerScript : MonoBehaviour
             NETWORK.SetActive(false);
             PlayerManagerNetwork.SetActive(false);
             world.SetActive(true);
-            playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = playerPrefabs[1]; //SettingsStatic.LoadedSettings.playerTypeChar];
+            playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = playerPrefabs[0]; //SettingsStatic.LoadedSettings.playerTypeChar];
             LOCAL.SetActive(true);
         }
         LDrawImporterRuntime.SetActive(true);
