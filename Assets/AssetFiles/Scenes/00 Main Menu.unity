@@ -290,6 +290,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 3777327230482718217, guid: a556edc8a122ffa46889a6a67b7f9ff0, type: 3}
+      propertyPath: m_Colors.m_FadeDuration
+      value: 0.62
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a556edc8a122ffa46889a6a67b7f9ff0, type: 3}
 --- !u!82 &5805858742217742906
