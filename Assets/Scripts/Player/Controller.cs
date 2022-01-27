@@ -96,7 +96,8 @@ public class Controller : NetworkBehaviour
     CustomNetworkManager customNetworkManager;
     GameObject undefinedPrefabToSpawn;
     RaycastHit raycastHit;
-    Transform grabbedOb;
+    GameObject heldOb;
+    Rigidbody heldObRb;
 
     //Initializers & Constants
     float colliderHeight;
@@ -543,31 +544,53 @@ public class Controller : NetworkBehaviour
 
     public void pressedShoot()
     {
-        // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
-        if (!holdingGrab && shootPos.gameObject.activeSelf && Time.time >= gun.nextTimeToFire) // if shooting world voxels
+        if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
+            return;
+
+        if (holdingGrab)
         {
-            Vector3 position = shootPos.position;
-            blockID = World.Instance.GetVoxelState(position).id;
-
-            if (blockID == 25 || blockID == 26) // cannot destroy procGen.ldr or base.ldr (imported VBO)
-                return;
-
-            shootBricks.Play();
-
-            SpawnVoxelRbFromWorld(position, blockID);
-        }
-        else if (holdingGrab) // if holding spawn held ob
-        {
-            Vector3 position = holdPos.position;
-
-            shootBricks.Play();
-
-            SpawnVoxelRbFromWorld(position, blockID);
-
             holdingGrab = false;
-            reticle.SetActive(true);
+            if(grabbedPrefab != null) // IF HOLDING VOXEL
+            {
+                Vector3 position = holdPos.position;
 
-            UpdateShowGrabObject(holdingGrab, blockID);
+                shootBricks.Play();
+
+                SpawnVoxelRbFromWorld(position, blockID);
+
+                reticle.SetActive(true);
+
+                UpdateShowGrabObject(holdingGrab, blockID);
+            }
+            //if (heldOb != null && heldObRb != null && heldOb.tag == "object") // IF SHOT HELD NON-VOXEL RIGIDBODY OBJECT
+            //{
+            //    Debug.Log("shot non-voxel rb");
+            //    holdingGrab = false;
+            //    reticle.SetActive(true);
+            //}
+
+            if(heldObRb != null)
+            {
+                heldObRb.useGravity = true;
+                heldObRb.detectCollisions = true;
+            }
+            heldOb = null;
+            heldObRb = null;
+        }
+        else
+        {
+            if (shootPos.gameObject.activeSelf) //IF SHOT WORLD (NOT HELD) VOXEL
+            {
+                Vector3 position = shootPos.position;
+                blockID = World.Instance.GetVoxelState(position).id;
+
+                if (blockID == 25 || blockID == 26) // cannot destroy procGen.ldr or base.ldr (imported VBO)
+                    return;
+
+                shootBricks.Play();
+
+                SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+            }
         }
         //else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting world voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
         //{
@@ -643,38 +666,49 @@ public class Controller : NetworkBehaviour
     {
         bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabRange, 11); // ignore player layer
 
-        if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT
+        if (hitCollider) // IF HIT COLLIDER
         {
-            blockID = World.Instance.GetVoxelState(removePos.position).id;
-            if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
-                return;
+            heldOb = raycastHit.transform.gameObject;
             holdingGrab = true;
 
-            PickupBrick(removePos.position);
-            reticle.SetActive(false);
+            if (removePos.gameObject.activeSelf) // IF VOXEL
+            {
+                blockID = World.Instance.GetVoxelState(removePos.position).id;
+                if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
+                    return;
+
+                PickupBrick(removePos.position);
+                reticle.SetActive(false);
+
+                if (Settings.OnlinePlay)
+                    CmdUpdateGrabObject(holdingGrab, blockID);
+                else
+                    UpdateShowGrabObject(holdingGrab, blockID);
+            }
+
+            if (heldOb.GetComponent<Rigidbody>() != null)
+            {
+                heldObRb = heldOb.GetComponent<Rigidbody>();
+                heldObRb.isKinematic = false;
+                heldObRb.velocity = Vector3.zero;
+                heldObRb.angularVelocity = Vector3.zero;
+                heldObRb.useGravity = false;
+                heldObRb.detectCollisions = true;
+            }
         }
-        //else if (hitCollider && raycastHit.transform.tag != "Chunk") // WIP (Do not need to be able to hold rigidbodies since they dissapear soon after spawning anyways)
-        //{
-        //    grabbedOb = raycastHit.transform;
-        //    if (grabbedOb.gameObject.GetComponent<Rigidbody>() != null) // if has a rigidbody
-        //    {
-        //        Debug.Log(grabbedOb.name);
-        //        grabbedOb.parent = playerCamera.transform;
-        //        holdingGrab = true;
-        //    }
-        //}
-        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if toolbar slot has a stack
+        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // IF NOT HIT COLLIDER AND TOOLBAR HAS STACK
         {
-            blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
             holdingGrab = true;
+            blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
             TakeFromCurrentSlot(1);
             reticle.SetActive(false);
+
+            if (Settings.OnlinePlay)
+                CmdUpdateGrabObject(holdingGrab, blockID);
+            else
+                UpdateShowGrabObject(holdingGrab, blockID);
         }
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
-        else
-            UpdateShowGrabObject(holdingGrab, blockID);
     }
 
     [Command]
@@ -711,44 +745,53 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
-        if (grabbedPrefab == null)
-            return;
-
-        if (placePos.gameObject.activeSelf)
+        if (heldObRb != null && heldOb.tag == "object") // IF NON-VOXEL RB
         {
-            grabbedPrefab.transform.position = placePos.position; // move instance to position where it would attach
-            grabbedPrefab.transform.rotation = placePos.rotation;
+            heldObRb.MovePosition(holdPos.transform.position);
+        }
+        else if (placePos.gameObject.activeSelf) // IF VOXEL RB
+        {
+            if(grabbedPrefab != null)
+            {
+                grabbedPrefab.transform.position = placePos.position; // move instance to position where it would attach
+                grabbedPrefab.transform.rotation = placePos.rotation;
+            }
             //brickMove.Play(); // Does not work for some reason
         }
-        else
-        {
-            grabbedPrefab.transform.eulerAngles = placePos.eulerAngles;
-            grabbedPrefab.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
-            grabbedPrefab.transform.Translate(new Vector3(-0.5f, -0.5f, -0.5f));
-        }
+        //else
+        //{
+        //    grabbedPrefab.transform.eulerAngles = placePos.eulerAngles;
+        //    grabbedPrefab.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+        //    grabbedPrefab.transform.Translate(new Vector3(-0.5f, -0.5f, -0.5f));
+        //}
     }
 
     public void ReleasedGrab()
     {
         holdingGrab = false;
-        if (removePos.gameObject.activeSelf && grabbedOb == null) // IF VOXEL PRESENT AND NOT HOLDING COLLIDER, PLACE VOXEL
-        {
-            health.blockCounter++;
-            PlaceBrick(placePos.position);
-        }
-        //else if (grabbedOb != null) // IF HOLDING OB (WIP)
-        //{
-        //    grabbedOb.parent = null;
-        //    grabbedOb = null;
-        //}
-        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
-            PutAwayBrick(blockID);
-
         reticle.SetActive(true);
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
-        else
-            UpdateShowGrabObject(holdingGrab, blockID);
+
+        if(grabbedPrefab != null) // IF HOLDING VOXEL
+        {
+            if (Settings.OnlinePlay)
+                CmdUpdateGrabObject(holdingGrab, blockID);
+            else
+                UpdateShowGrabObject(holdingGrab, blockID);
+            if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT, PLACE VOXEL
+            {
+                health.blockCounter++;
+                PlaceBrick(placePos.position);
+            }
+            else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
+                PutAwayBrick(blockID);
+        }
+        else if (heldOb != null && heldObRb != null && heldOb.tag == "object") // IF HOLDING NON-VOXEL OBJECT
+        {
+            heldObRb.useGravity = true;
+            heldObRb.detectCollisions = true;
+            heldOb = null;
+            heldObRb = null;
+        }
     }
 
     void PutAwayBrick(byte blockID)
@@ -875,6 +918,7 @@ public class Controller : NetworkBehaviour
     public void SpawnPreDefinedPrefab(int type, int item, Vector3 pos)
     {
         GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
+        ob.tag = "object";
         Rigidbody rb;
 
         ob.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward); // orient forwards in direction of camera
@@ -887,15 +931,18 @@ public class Controller : NetworkBehaviour
         sceneObject.SetEquippedItem(type, item); // set the child object on the server
         switch (type)
         {
-            case 0:
+            case 0: // IF VOXEL
                 sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
+                BoxCollider bc = ob.AddComponent<BoxCollider>();
+                bc.material = physicMaterial;
+                bc.center = new Vector3(0.5f, 0.5f, 0.5f);
                 break;
-            //case 1:
+            //case 1: // IF TOOL
             //    sceneObject.typeTool = item;
             //    if (typeTool >= 44 && typeTool <= 55) // throwing knives, blades, axes
             //        ob.tag = "Hazard";
             //    break;
-            case 2:
+            case 2: // IF PROJECTILE
                 sceneObject.typeProjectile = item;
                 ob.tag = "Hazard";
                 break;
@@ -910,7 +957,7 @@ public class Controller : NetworkBehaviour
             customNetworkManager.SpawnNetworkOb(ob);
         }
         ob.layer = 10;
-        Destroy(ob, 5); // clean up objects after 5 seconds
+        Destroy(ob, 30); // clean up objects after 30 seconds
     }
 
     [Command]

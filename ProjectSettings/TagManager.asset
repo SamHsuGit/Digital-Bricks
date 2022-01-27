@@ -9,6 +9,7 @@ TagManager:
   - Hazard
   - Chunk
   - BaseObPiece
+  - object
   layers:
   - Default
   - TransparentFX
