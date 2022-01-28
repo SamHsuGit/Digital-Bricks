@@ -19,7 +19,6 @@ public class Controller : NetworkBehaviour
     readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
 
     [Header("Debug States")]
-    public float baseMoveSpeed;
     [SerializeField] float collisionDamage;
     public bool isGrounded;
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
@@ -28,14 +27,14 @@ public class Controller : NetworkBehaviour
     public bool photoMode = false;
     public bool options = false;
     public float checkIncrement = 0.1f;
-    public float reach = 4f;
+    public float reach = 4f; // defines how far player can reach to grab/place voxels
     public float maxFocusDistance = 2f;
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public byte blockID;
     public float baseAnimRate = 2;
     public float animRate = 2;
-    [SyncVar] public int day = 1;
+    //[SyncVar] public int day = 1;
 
     [SerializeField] float lookVelocity = 1f;
 
@@ -104,7 +103,6 @@ public class Controller : NetworkBehaviour
     float colliderRadius;
     Vector3 colliderCenter;
     float sphereCastRadius;
-    float grabRange;
     float rotationY = 0f;
     float rotationX = 0f;
     float maxLookVelocity = 5f;
@@ -190,18 +188,6 @@ public class Controller : NetworkBehaviour
 
             SetPlayerAttributes();
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
-        }
-
-        grabRange = 10f;
-
-        switch (typeChar)
-        {
-            case 0:
-                grabRange = 10f;
-                break;
-            case 1:
-                grabRange = 10f;
-                break;
         }
     }
 
@@ -493,20 +479,20 @@ public class Controller : NetworkBehaviour
             ToggleLights(isHolding);
     }
 
-    public void CalculateCurrentDay()
-    {
+    //public void CalculateCurrentDay()
+    //{
         
-        if (!wasDaytime && daytime) // if turns daytime
-        {
-            day++;
-            wasDaytime = true;
-        }
+    //    if (!wasDaytime && daytime) // if turns daytime
+    //    {
+    //        day++;
+    //        wasDaytime = true;
+    //    }
 
-        if (wasDaytime && !daytime) // if turns nighttime, start next wave
-        {
-            wasDaytime = false;
-        }
-    }
+    //    if (wasDaytime && !daytime) // if turns nighttime, start next wave
+    //    {
+    //        wasDaytime = false;
+    //    }
+    //}
 
     [Command]
     void CmdActivateChunks()
@@ -672,7 +658,7 @@ public class Controller : NetworkBehaviour
         if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
             return;
 
-        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabRange, 11); // ignore player layer
+        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, reach, 11); // ignore player layer
         if (hitCollider) // IF HIT COLLIDER (can be rb or chunk)
         {
             heldOb = raycastHit.transform.gameObject;

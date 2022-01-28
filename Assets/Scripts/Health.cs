@@ -15,6 +15,8 @@ public class Health : NetworkBehaviour
     public int maxBaseMoveSpeed = 5; // smaller builds have faster speeds
     public int minAnimSpeed = 2;
     public int maxAnimSpeed = 8;
+    public int jumpHungerThreshold = 160; // Minecraft jumpHungerThreshold = 40
+    public int blockHungerThreshold = 320; // Minecraft blockHungerThreshold = 320
     [SyncVar(hook = nameof(UpdateHP))] public float hp;
     public int hpMax;
     public float piecesRbMass = 0.0001f;
@@ -67,9 +69,8 @@ public class Health : NetworkBehaviour
         hpMax = brickCount;
         hp = hpMax;
 
-        controller.baseMoveSpeed = CalculateBaseMoveSpeed(hpMax); // calculate base move speed based on # pieces (already counted in health hpMax)
-        controller.baseAnimRate = (maxAnimSpeed - minAnimSpeed) / (CalculateBaseMoveSpeed(minPieces) - CalculateBaseMoveSpeed(maxPieces)) * controller.baseMoveSpeed + minAnimSpeed; // function of base move speed
-        voxelCollider.baseWalkSpeed = controller.baseMoveSpeed;
+        voxelCollider.baseWalkSpeed = CalculateBaseMoveSpeed(hpMax); // calculate base move speed based on # pieces (already counted in health hpMax)
+        controller.baseAnimRate = (maxAnimSpeed - minAnimSpeed) / (CalculateBaseMoveSpeed(minPieces) - CalculateBaseMoveSpeed(maxPieces)) * voxelCollider.baseWalkSpeed + minAnimSpeed; // function of base move speed
         voxelCollider.baseSprintSpeed = 2 * voxelCollider.baseWalkSpeed;
 
         lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
@@ -169,8 +170,8 @@ public class Health : NetworkBehaviour
             lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
         }
 
-        // Minecraft: if jumpCounter > 40 cause hunger
-        if (jumpCounter > 160)
+        // causes hunger if jumpCounter > jumpHungerThreshold
+        if (jumpCounter > jumpHungerThreshold)
         {
             if (Settings.OnlinePlay && hasAuthority)
                 CmdEditSelfHealth(-1);
@@ -179,8 +180,8 @@ public class Health : NetworkBehaviour
             jumpCounter = 0;
         }
 
-        // Minecraft: if blockCounter > 320 cause hunger
-        if (blockCounter > 320)
+        // causes hunger if blockCounter > blockHungerThreshold
+        if (blockCounter > blockHungerThreshold)
         {
             if (Settings.OnlinePlay && hasAuthority)
                 CmdEditSelfHealth(-1);

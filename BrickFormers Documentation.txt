@@ -1,0 +1,141 @@
+BrickFormers
+Samuel Hsu 2002
+
+TABLE OF CONTENTS
+	Input Handler
+	Controller
+	Gun
+	Health
+	Collisions
+	Camera
+	Procedural Generation
+	LDraw Importer
+	Save System
+	Networking
+	Lighting
+	Saved Settings
+	UI
+	AI
+
+INPUT HANDLER
+	The "Input Handler" script uses InputActions from the Unity InputSystem package.
+	This sets up input action callbacks which the PlayerInput script on the player prefab references to invoke unity events.
+	This allows for easy revision of control schemes through the InputAction asset.
+
+CONTROLLER
+	The "Controller" script defines player actions, animations, and properties.
+	Spawns SceneObjects when breaking off pieces, breaking/placing blocks, shooting blocks...
+	SceneObjects are used to simplify the networked spawning of objects thru Mirror.
+	Actions:
+		Move (WASD keys, left stick, see collisions)
+		Sprint (Shift, left shoulder bumper, increases speed when held)
+		Jump (Spacebar, A button, max 2 jumps)
+		Look (Mouse, right stick, speeds and FOV defined by settings)
+		Select (Scroll wheel, Arrow Keys, D-Pad moves through 9 hotbar slots in HUD)
+		Use (E Key/X button)
+		Drop (Q key/B button)
+		Shoot (Left click)
+		Grab (Right click)
+		Options (Escape Key, Start Button toggles on/off)
+		PhotoMode (Tab Key, Select Button toggles on/off)
+		Show Controls (Y key, Y button toggles on/off)
+	Animations:
+		Defined procedurally based on 2 imported keyframes for charIdle.ldr and charRun.ldr
+		Makes the appearance of animation by toggling these two imported models on/off. Chosen for stylistic reasons as well since
+		most brick-films have a destinctive lower fps. Also much simpler to procedurally animate this way than to define bones
+		programmatically.
+	Variables:
+		reach (distance player can shoot/grab, procedurally defined based on imported model)
+		collider height (procedurally defined based on charIdle.ldr # pieces)
+		collider radius (procedurally defined based on charIdle.ldr # pieces)
+
+GUN
+	This script uses a raycast to find gameobjects with the Health Component and subtracts hp when shots are landed.
+	Variables:
+		fireRate (how fast player can shoot)
+		damage (how much hp is damaged from each shot)
+
+HEALTH
+	Calculated player HP procedurally based on # bricks in imported player model charIdle.ldr. Removes hp when triggered by Gun script
+	when a shot is landed. Also subtracts hp when hunger (caused by jumping, breaking blocks)
+	Respawns the player when destroyed (i.e. hp = 0)
+	Variables:
+		hpMax (procedurally defined based on charIdle.ldr # pieces)
+		minPieces
+		maxPieces (limited based on performance of min pc spec model load time, does not actually prevent import but defines soft 
+		upper limit where the character's calculated move speed will equal 0 becuase it is too large/heavy)
+		minBaseMoveSpeed
+		maxBaseMoveSpeed
+		minAnimSpeed
+		maxAnimSpeed
+		piecesRbMass (determines gravity's effects)
+		baseAnimRate (procedurally defined based on charIdle.ldr # pieces)
+		baseWalkSpeed (procedurally defined based on charIdle.ldr # pieces)
+		baseSprintSpeed (procedurally defined based on charIdle.ldr # pieces)
+
+PROCEDURAL GENERATION
+	Code based on the YouTube tutorials by B3agz https://github.com/b3agz/Code-A-Game-Like-Minecraft-In-Unity
+		was modified to make a brick-build procedural world
+	VoxelData
+		Determines voxel size, max world size in chunks, chunk size
+	Chunk
+		Handles coordinates, mesh data, generates a mesh collider
+	World	
+		Handles procedural world generation/rendering during the GetVoxel pass, adds players to the game
+		loadDistance (the distance around the player in chunks in which the world is loaded before rendering)
+		drawDistance (saved to settings)
+		studRenderDistanceInChunks
+		solidGroundHeight
+	Noise
+		Defines the perlin noise functions used to procedurally generate the world. Makes the entire world generate from 
+		a single seed number
+	Structure
+		Hard-coded definitions for structures like trees, mushrooms, cacti, monoliths...
+	Planets
+		Scriptable objects which define blockID(colors) and biome values for world generation for each planet in our solarsystm.
+	Biomes
+		Scriptable objects which define blockID(color) values for regions in a world
+
+LDRAW IMPORTER
+	Original Code by Grygory Dyadichenko (MIT License) (https://github.com/Nox7atra/LDraw_Importer_Unity)
+		was modified to import ldraw models at runtime during gameplay.
+	LDraw file format used to define model geometry for character rendering (CCAL 2.0)
+	LDrawImporterRuntime
+		Defines the model names that can be imported
+
+COLLISIONS
+	Originally added to eliminate need for mesh collisions (thought to be performance heavy). Mesh Collisions were not as 
+	performance heavy as originally thought so chose to use mesh collisions again.
+	Variables:
+		jump height 
+		baseWalkSpeed (defined in "Health")
+		baseSprintSpeed (defined in "Health")
+
+SAVE SYSTEM
+	Gameworlds are saved as worldData (serialized chunkIDs) which are essentially a long list of chunk names and locations in the world.
+	chunks are saved as chunkData (serialized blockIDs) which are essentially a long list of blockIDs for each chunk.
+	The save system writes and reads the worldData and chunkData files as well as playerData which stores 
+	player name, inventory, position, hp
+
+NETWORKING
+	Uses Mirror by vis2k (MIT License)
+
+LIGHTING
+	
+
+SAVED SETTINGS
+	player preferences for gameplay settings are stored in the settings.cfg file in C:\BrickFormers\BrickFormers_Data
+	player preferences include in-game options menu selections for
+		ip Address
+		Volume
+		Look Speed
+		Look Accel
+		FOV
+		InvertY
+		InvertX
+
+UI
+	
+
+AI
+	

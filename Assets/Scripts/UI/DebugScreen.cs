@@ -31,9 +31,7 @@ public class DebugScreen : MonoBehaviour
     {
         if (World.Instance.worldLoaded && World.Instance.GetChunkFromVector3(player.transform.position) != null) // don't do this unless the world is loaded and player is in a chunk
         {
-            string debugText = "day: " + controller.day;
-            debugText += "\n";
-            debugText += frameRate + " fps";
+            string debugText = frameRate + " fps";
             debugText += "\n";
             debugText += "XYZ: " + (Mathf.FloorToInt(player.transform.position.x) - halfWorldSizeInVoxels) + " / " + Mathf.FloorToInt(player.transform.position.y) + " / " + (Mathf.FloorToInt(player.transform.position.z) - halfWorldSizeInVoxels);
             debugText += "\n";

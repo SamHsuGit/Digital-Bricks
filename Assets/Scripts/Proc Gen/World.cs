@@ -62,7 +62,7 @@ public class World : MonoBehaviour
     private static bool multithreading = true;
     private int loadDistance;
     private int LOD0threshold;
-    private int studRenderDistanceInChunks; // acts as a radius like viewDistance
+    private int studRenderDistanceInChunks; // acts as a radius like drawDistance
 
     List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
