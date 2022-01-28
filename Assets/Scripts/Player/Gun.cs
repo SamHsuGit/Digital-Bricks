@@ -22,7 +22,7 @@ public class Gun : NetworkBehaviour
     InputHandler inputHandler;
     Controller controller;
     CanvasGroup backgroundMaskCanvasGroup;
-    RaycastHit hit;
+    public RaycastHit hit;
 
     private Image image;
 

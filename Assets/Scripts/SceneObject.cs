@@ -381,10 +381,14 @@ public class SceneObject : NetworkBehaviour
     [SyncVar(hook = nameof(onChangeVoxel))] public int typeVoxel;
     [SyncVar(hook = nameof(onChangeTool))] public int typeTool;
     [SyncVar(hook = nameof(onChangeProjectile))] public int typeProjectile;
+    [SyncVar(hook = nameof(onChangeVoxelBit))] public int typeVoxelBit;
 
     public GameObject[] voxel;
     public GameObject[] tool;
     public GameObject[] projectile;
+    public GameObject[] voxelBit;
+    public Controller controller;
+    int collisions = 0;
 
     void onChangeVoxel(int oldValue, int newValue)
     {
@@ -399,6 +403,11 @@ public class SceneObject : NetworkBehaviour
     void onChangeProjectile(int oldValue, int newValue)
     {
         StartCoroutine(ChangeEquipment(2, newValue));
+    }
+
+    void onChangeVoxelBit(int oldValue, int newValue)
+    {
+        StartCoroutine(ChangeEquipment(3, newValue));
     }
 
     // Since Destroy is delayed to the end of the current frame, we use a coroutine
@@ -435,6 +444,11 @@ public class SceneObject : NetworkBehaviour
                     array = projectile;
                     break;
                 }
+            case 3:
+                {
+                    array = voxelBit;
+                    break;
+                }
         }
         
         GameObject ob = Instantiate(array[typeItem], transform.position, Quaternion.identity);
@@ -445,5 +459,22 @@ public class SceneObject : NetworkBehaviour
             ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         ob.transform.rotation = Quaternion.LookRotation(transform.forward); // orient forwards in direction of camera
         ob.transform.parent = transform;
+    }
+
+    private void OnCollisionEnter(Collision collision) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS
+    {
+        if(collisions < 4) // only count a few collisions not all
+        {
+            collisions++;
+            if (gameObject.tag == "voxelRb" && controller != null && collisions > 2) // after a few collisions break into pieces
+            {
+                Vector3 pos = transform.position;
+                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                Destroy(gameObject);
+            }
+        }
     }
 }

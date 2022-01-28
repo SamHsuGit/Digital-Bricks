@@ -42,6 +42,7 @@ public class SetupMenu : MonoBehaviour
         worldRenderText.text = SettingsStatic.LoadedSettings.drawDistance.ToString();
         planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
         seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
+        loadingText.SetActive(false);
 
         GetImportedCharModelAfterAwake();
     }

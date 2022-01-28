@@ -10,6 +10,8 @@ TagManager:
   - Chunk
   - BaseObPiece
   - object
+  - voxelRb
+  - voxelBit
   layers:
   - Default
   - TransparentFX

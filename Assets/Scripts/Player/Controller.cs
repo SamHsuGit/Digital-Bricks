@@ -547,7 +547,7 @@ public class Controller : NetworkBehaviour
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
             return;
 
-        if (holdingGrab)
+        if (holdingGrab) // IF HOLDING SOMETHING
         {
             holdingGrab = false;
             reticle.SetActive(true);
@@ -562,7 +562,7 @@ public class Controller : NetworkBehaviour
 
                 UpdateShowGrabObject(holdingGrab, blockID);
             }
-            else if (heldObRb != null) // IF SHOT HELD NON-VOXEL RIGIDBODY OBJECT
+            else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
             {
                 heldObRb.velocity = playerCamera.transform.forward * 25; // give some velocity forwards
             }
@@ -575,20 +575,27 @@ public class Controller : NetworkBehaviour
             heldOb = null;
             heldObRb = null;
         }
-        else
+        else if (shootPos.gameObject.activeSelf) // IF SHOT WORLD (NOT HELD) VOXEL
         {
-            if (shootPos.gameObject.activeSelf) //IF SHOT WORLD (NOT HELD) VOXEL
-            {
-                Vector3 position = shootPos.position;
-                blockID = World.Instance.GetVoxelState(position).id;
+            Vector3 position = shootPos.position;
+            blockID = World.Instance.GetVoxelState(position).id;
 
-                if (blockID == 25 || blockID == 26) // cannot destroy procGen.ldr or base.ldr (imported VBO)
-                    return;
+            if (blockID == 25 || blockID == 26) // cannot destroy procGen.ldr or base.ldr (imported VBO)
+                return;
 
-                shootBricks.Play();
+            shootBricks.Play();
 
-                SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
-            }
+            SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+        }
+        else if (gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
+        {
+            GameObject hitObject = gun.hit.transform.gameObject;
+            Destroy(gun.hit.transform.gameObject);
+            Vector3 pos = hitObject.transform.position;
+            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
         }
         //else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting world voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
         //{
@@ -671,7 +678,7 @@ public class Controller : NetworkBehaviour
             heldOb = raycastHit.transform.gameObject;
             holdingGrab = true;
 
-            if (removePos.gameObject.activeSelf && heldOb.tag != "object") // IF GRABBED VOXEL CHUNK
+            if (removePos.gameObject.activeSelf && heldOb.tag != "voxelRb" && heldOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
             {
                 blockID = World.Instance.GetVoxelState(removePos.position).id;
                 if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
@@ -748,9 +755,12 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
-        if (heldObRb != null && heldOb.tag == "object") // IF NON-VOXEL RB
+        if (heldObRb != null) // IF NON-VOXEL RB
         {
-            heldObRb.MovePosition(holdPos.transform.position);
+            //if (heldOb.GetComponent<BoxCollider>() != null) // try to center voxel (WIP)
+            //    heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f - heldOb.GetComponent<BoxCollider>().center);
+            //else
+                heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f);
         }
         else if (grabbedPrefab != null) // IF HOLDING VOXEL
         {
@@ -774,12 +784,27 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        if(grabbedPrefab != null) // IF HOLDING VOXEL
+        if(grabbedPrefab != null || (heldOb != null && heldOb.tag == "voxelRb")) // IF HOLDING VOXEL OR VOXEL RB
         {
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
+            if (heldOb != null && heldOb.tag == "voxelRb") // If voxel Rb
+            {
+                blockID = (byte)heldOb.GetComponent<SceneObject>().typeVoxel; //determine type of voxel to store back in inventory
+                Destroy(heldOb); // destroy the gameobject as it has been 'stored' in inventory
+
+                //reset heldOb and heldObRb properties
+                heldObRb.useGravity = true;
+                heldObRb.detectCollisions = true;
+                heldOb = null;
+                heldObRb = null;
+            }
             else
-                UpdateShowGrabObject(holdingGrab, blockID);
+            {
+                if (Settings.OnlinePlay)
+                    CmdUpdateGrabObject(holdingGrab, blockID);
+                else
+                    UpdateShowGrabObject(holdingGrab, blockID);
+            }
+
             if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT, PLACE VOXEL
             {
                 health.blockCounter++;
@@ -788,8 +813,9 @@ public class Controller : NetworkBehaviour
             else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
                 PutAwayBrick(blockID);
         }
-        else if (heldOb != null && heldObRb != null && heldOb.tag == "object") // IF HOLDING NON-VOXEL OBJECT
+        else if (heldOb != null && heldObRb != null) // IF HOLDING NON-VOXEL OBJECT
         {
+            //reset heldOb and heldObRb properties
             heldObRb.useGravity = true;
             heldObRb.detectCollisions = true;
             heldOb = null;
@@ -921,7 +947,6 @@ public class Controller : NetworkBehaviour
     public void SpawnPreDefinedPrefab(int type, int item, Vector3 pos)
     {
         GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
-        ob.tag = "object";
         Rigidbody rb;
 
         ob.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward); // orient forwards in direction of camera
@@ -936,9 +961,11 @@ public class Controller : NetworkBehaviour
         {
             case 0: // IF VOXEL
                 sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
-                BoxCollider bc = ob.AddComponent<BoxCollider>();
-                bc.material = physicMaterial;
-                bc.center = new Vector3(0.5f, 0.5f, 0.5f);
+                BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
+                VoxelBc.material = physicMaterial;
+                VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
+                ob.tag = "voxelRb";
+                sceneObject.controller = this;
                 break;
             //case 1: // IF TOOL
             //    sceneObject.typeTool = item;
@@ -948,6 +975,14 @@ public class Controller : NetworkBehaviour
             case 2: // IF PROJECTILE
                 sceneObject.typeProjectile = item;
                 ob.tag = "Hazard";
+                break;
+            case 3: // IF VOXEL BIT
+                sceneObject.typeVoxelBit = item;
+                BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();
+                voxelBitBc.material = physicMaterial;
+                voxelBitBc.center = new Vector3(0, -.047f, 0);
+                voxelBitBc.size = new Vector3(0.5f, 0.3f, 0.5f);
+                ob.tag = "voxelBit";
                 break;
         }
 
