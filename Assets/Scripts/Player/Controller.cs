@@ -550,7 +550,9 @@ public class Controller : NetworkBehaviour
         if (holdingGrab)
         {
             holdingGrab = false;
-            if(grabbedPrefab != null) // IF HOLDING VOXEL
+            reticle.SetActive(true);
+
+            if (grabbedPrefab != null) // IF HOLDING VOXEL
             {
                 Vector3 position = holdPos.position;
 
@@ -558,18 +560,14 @@ public class Controller : NetworkBehaviour
 
                 SpawnVoxelRbFromWorld(position, blockID);
 
-                reticle.SetActive(true);
-
                 UpdateShowGrabObject(holdingGrab, blockID);
             }
-            //if (heldOb != null && heldObRb != null && heldOb.tag == "object") // IF SHOT HELD NON-VOXEL RIGIDBODY OBJECT
-            //{
-            //    Debug.Log("shot non-voxel rb");
-            //    holdingGrab = false;
-            //    reticle.SetActive(true);
-            //}
+            else if (heldObRb != null) // IF SHOT HELD NON-VOXEL RIGIDBODY OBJECT
+            {
+                heldObRb.velocity = playerCamera.transform.forward * 25; // give some velocity forwards
+            }
 
-            if(heldObRb != null)
+            if (heldObRb != null)
             {
                 heldObRb.useGravity = true;
                 heldObRb.detectCollisions = true;
@@ -664,14 +662,16 @@ public class Controller : NetworkBehaviour
 
     public void PressedGrab()
     {
-        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabRange, 11); // ignore player layer
+        if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
+            return;
 
-        if (hitCollider) // IF HIT COLLIDER
+        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabRange, 11); // ignore player layer
+        if (hitCollider) // IF HIT COLLIDER (can be rb or chunk)
         {
             heldOb = raycastHit.transform.gameObject;
             holdingGrab = true;
 
-            if (removePos.gameObject.activeSelf) // IF VOXEL
+            if (removePos.gameObject.activeSelf && heldOb.tag != "object") // IF GRABBED VOXEL CHUNK
             {
                 blockID = World.Instance.GetVoxelState(removePos.position).id;
                 if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
@@ -685,8 +685,7 @@ public class Controller : NetworkBehaviour
                 else
                     UpdateShowGrabObject(holdingGrab, blockID);
             }
-
-            if (heldOb.GetComponent<Rigidbody>() != null)
+            if (heldOb.GetComponent<Rigidbody>() != null) // if rigidbody
             {
                 heldObRb = heldOb.GetComponent<Rigidbody>();
                 heldObRb.isKinematic = false;
@@ -728,6 +727,10 @@ public class Controller : NetworkBehaviour
         if (holding)
         {
             grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
+            BoxCollider bc = grabbedPrefab.AddComponent<BoxCollider>(); //add a box collider to the grabbedPrefab voxel
+            bc.center = new Vector3(0.5f, 0.5f, 0.5f);
+            bc.material = physicMaterial;
+
             if (Settings.OnlinePlay)
             {
                 if (grabbedPrefab.GetComponent<NetworkIdentity>() == null)
@@ -749,21 +752,21 @@ public class Controller : NetworkBehaviour
         {
             heldObRb.MovePosition(holdPos.transform.position);
         }
-        else if (placePos.gameObject.activeSelf) // IF VOXEL RB
+        else if (grabbedPrefab != null) // IF HOLDING VOXEL
         {
-            if(grabbedPrefab != null)
+            if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
             {
-                grabbedPrefab.transform.position = placePos.position; // move instance to position where it would attach
-                grabbedPrefab.transform.rotation = placePos.rotation;
+                    grabbedPrefab.transform.position = placePos.position; // move instance to position where it would attach
+                    grabbedPrefab.transform.rotation = placePos.rotation;
+                //brickMove.Play(); // Does not work for some reason
             }
-            //brickMove.Play(); // Does not work for some reason
+            else // IF HOLDING VOXEL
+            {
+                grabbedPrefab.transform.eulerAngles = placePos.eulerAngles;
+                grabbedPrefab.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+                grabbedPrefab.transform.Translate(new Vector3(-0.5f, -0.5f, -0.5f));
+            }
         }
-        //else
-        //{
-        //    grabbedPrefab.transform.eulerAngles = placePos.eulerAngles;
-        //    grabbedPrefab.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
-        //    grabbedPrefab.transform.Translate(new Vector3(-0.5f, -0.5f, -0.5f));
-        //}
     }
 
     public void ReleasedGrab()
@@ -956,7 +959,7 @@ public class Controller : NetworkBehaviour
             ob.GetComponent<NetworkTransform>().enabled = true;
             customNetworkManager.SpawnNetworkOb(ob);
         }
-        ob.layer = 10;
+        //ob.layer = 10; (was causing bugs with picking up rigidbody objects after spawned)
         Destroy(ob, 30); // clean up objects after 30 seconds
     }
 
