@@ -434,7 +434,6 @@ MonoBehaviour:
   timeOfDay: 6.0066667
   seed: 0
   version: 
-  baseMoveSpeed: 0
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0
@@ -450,7 +449,6 @@ MonoBehaviour:
   blockID: 0
   baseAnimRate: 2
   animRate: 2
-  day: 1
   lookVelocity: 1
   charModelOrigin: {fileID: 6156733249479519148}
   gameMenu: {fileID: 5290477769798018415}
@@ -500,6 +498,8 @@ MonoBehaviour:
   maxBaseMoveSpeed: 5
   minAnimSpeed: 2
   maxAnimSpeed: 8
+  jumpHungerThreshold: 160
+  blockHungerThreshold: 360
   hp: 9
   hpMax: 9
   piecesRbMass: 0.0001

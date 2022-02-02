@@ -248,17 +248,23 @@ namespace LDraw
 
         public void SetFileNames()
         {
-            if (Application.isEditor)
+            //if (Application.isEditor)
+            //{
+            //    _BasePartsPath = "D:/BrickFormers/ldraw/parts/";
+            //    _ModelsPath = "D:/BrickFormers/ldraw/models/";
+            //    _ColorConfigPath = "D:/BrickFormers/ldraw/LDConfig.ldr";
+            //}
+            //else
+            if(SystemInfo.operatingSystem.Substring(0,3) == "Mac")
             {
-                _BasePartsPath = "D:/BrickFormers/ldraw/parts/";
-                _ModelsPath = "D:/BrickFormers/ldraw/models/";
-                _ColorConfigPath = "D:/BrickFormers/ldraw/LDConfig.ldr";
+                _BasePartsPath = ".app/Contents/Data/Resources/StreamingAssets/ldraw/parts/";
+                _ModelsPath = ".app/Contents/Data/Resources/StreamingAssets/ldraw/models/";
+                _ColorConfigPath = ".app/Contents/Data/Resources/StreamingAssets/ldraw/LDConfig.ldr";
             }
-            else
             {
-                _BasePartsPath = Application.dataPath + "/ldraw/parts/";
-                _ModelsPath = Application.dataPath + "/ldraw/models/";
-                _ColorConfigPath = Application.dataPath + "/ldraw/LDConfig.ldr";
+                _BasePartsPath = Application.streamingAssetsPath + "/ldraw/parts/";
+                _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
+                _ColorConfigPath = Application.streamingAssetsPath + "/ldraw/LDConfig.ldr";
             }
         }
 

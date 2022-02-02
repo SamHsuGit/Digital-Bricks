@@ -573,7 +573,7 @@ public class Controller : NetworkBehaviour
 
             SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
         }
-        else if (gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
+        else if (gun.hit.transform != null && gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
         {
             GameObject hitObject = gun.hit.transform.gameObject;
             Destroy(gun.hit.transform.gameObject);
@@ -901,13 +901,13 @@ public class Controller : NetworkBehaviour
             eat.Play();
             RemoveVoxel(pos);
         }
-        else if (toolbar.slots[toolbar.slotIndex].HasItem && shootPos.gameObject.activeSelf && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
+        else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
         {
-            // spawn projectile at shootPos
+            // spawn projectile where camera is looking
             if (Settings.OnlinePlay)
-                CmdSpawnUndefinedPrefab(0, shootPos.position);
+                CmdSpawnUndefinedPrefab(0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
             else
-                SpawnUndefinedPrefab(0, shootPos.position);
+                SpawnUndefinedPrefab(0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
 
             TakeFromCurrentSlot(1);
         }
@@ -996,15 +996,25 @@ public class Controller : NetworkBehaviour
         {
             case 0:
                 undefinedPrefabToSpawn = LDrawImportRuntime.Instance.projectileOb;
+                undefinedPrefabToSpawn.tag = "Hazard";
                 break;
         }
         GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
         ob.transform.Rotate(new Vector3(180, 0, 0));
         ob.SetActive(true);
+
+        if(option == 0 && GetComponent<BoxCollider>() != null) // IF PROJECTILE
+        {
+            BoxCollider bc = GetComponent<BoxCollider>();
+            bc.enabled = true;
+            bc.material = physicMaterial;
+        }
+
         Rigidbody rb = ob.AddComponent<Rigidbody>();
         float mass = gameObject.GetComponent<Health>().piecesRbMass;
         rb.mass = mass;
         rb.isKinematic = false;
+        rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
         ob.AddComponent<Health>();
         if (Settings.OnlinePlay)
         {

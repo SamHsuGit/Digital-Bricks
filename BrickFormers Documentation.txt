@@ -102,6 +102,10 @@ LDRAW IMPORTER
 	LDraw file format used to define model geometry for character rendering (CCAL 2.0)
 	LDrawImporterRuntime
 		Defines the model names that can be imported
+		base.ldr      - The player base spawned at world origin (must match for online play)
+		charIdle.ldr  - The player character idle pose
+		charRun.ldr   - The player character's run pose
+		projectile.ldr- The player character's projectile that can be shot if you have crystals
 
 COLLISIONS
 	Originally added to eliminate need for mesh collisions (thought to be performance heavy). Mesh Collisions were not as 

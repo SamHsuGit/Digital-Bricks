@@ -63,17 +63,21 @@ public class Health : NetworkBehaviour
         modelPieces = new List<GameObject>();
         if (gameObject.layer == 10) // if this object is a single lego Piece
             brickCount = 1;
-        else
+        else if (isAlive)
             CountPieces(controller.charObIdle);
+        else
+            CountPieces(gameObject);
 
         hpMax = brickCount;
         hp = hpMax;
 
-        voxelCollider.baseWalkSpeed = CalculateBaseMoveSpeed(hpMax); // calculate base move speed based on # pieces (already counted in health hpMax)
-        controller.baseAnimRate = (maxAnimSpeed - minAnimSpeed) / (CalculateBaseMoveSpeed(minPieces) - CalculateBaseMoveSpeed(maxPieces)) * voxelCollider.baseWalkSpeed + minAnimSpeed; // function of base move speed
-        voxelCollider.baseSprintSpeed = 2 * voxelCollider.baseWalkSpeed;
-
-        lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
+        if (isAlive)
+        {
+            voxelCollider.baseWalkSpeed = CalculateBaseMoveSpeed(hpMax); // calculate base move speed based on # pieces (already counted in health hpMax)
+            controller.baseAnimRate = (maxAnimSpeed - minAnimSpeed) / (CalculateBaseMoveSpeed(minPieces) - CalculateBaseMoveSpeed(maxPieces)) * voxelCollider.baseWalkSpeed + minAnimSpeed; // function of base move speed
+            voxelCollider.baseSprintSpeed = 2 * voxelCollider.baseWalkSpeed;
+            lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
+        }  
     }
 
     void CountPieces(GameObject _ob)
