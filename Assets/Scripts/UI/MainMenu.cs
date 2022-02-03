@@ -16,6 +16,11 @@ public class MainMenu : MonoBehaviour
         Screen.fullScreen = SettingsStatic.LoadedSettings.fullscreen;
     }
 
+    private void OnGUI()
+    {
+        
+    }
+
     private void Start()
     {
         Application.targetFrameRate = 60;
