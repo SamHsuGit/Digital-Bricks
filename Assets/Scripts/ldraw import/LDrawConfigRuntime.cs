@@ -223,10 +223,11 @@ namespace LDraw
             {
                 name += args[i] + ' ';
             }
+
+            // Manually remove all chars before and including '\' since MacOS does not remove 's\' when Path.GetFileNameWithoutExtension(name) is used (Windows does remove this)
             if (name.Contains(@"\"))
             {
                 int index = name.IndexOf(@"\");
-                //Debug.Log(index);
                 name = name.Remove(0, index + 1);
             }
             //Debug.Log(name);
