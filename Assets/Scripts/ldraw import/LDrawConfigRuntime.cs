@@ -84,9 +84,15 @@ namespace LDraw
         }
         public string GetSerializedPart(string name) // returns the name of the part from the file
         {
+            Debug.Log(name);
             try
             {
                 name = name.ToLower();
+
+                if (name.Substring(0, 2).Contains(@"\"))
+                {
+                    name = name.Substring(3, name.Length);
+                }
            
                 var serialized = _Parts.ContainsKey(name) ? File.ReadAllText(_Parts[name]) : _Models[name]; 
                 return serialized;
@@ -248,17 +254,9 @@ namespace LDraw
 
         public void SetFileNames()
         {
-            //if (Application.isEditor)
-            //{
-            //    _BasePartsPath = "D:/BrickFormers/ldraw/parts/";
-            //    _ModelsPath = "D:/BrickFormers/ldraw/models/";
-            //    _ColorConfigPath = "D:/BrickFormers/ldraw/LDConfig.ldr";
-            //}
-            //else
             _BasePartsPath = Application.streamingAssetsPath + "/ldraw/partfiles/";
             _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
             _ColorConfigPath = Application.streamingAssetsPath + "/ldraw/LDConfig.ldr";
-            
         }
 
         private void OnEnable()

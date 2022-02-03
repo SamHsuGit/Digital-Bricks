@@ -246,8 +246,16 @@ namespace LDraw
             }
         }
 
+        public void SetFileNames()
+        {
+            _BasePartsPath = Application.streamingAssetsPath + "/ldraw/partfiles/";
+            _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
+            _ColorConfigPath = Application.streamingAssetsPath + "/ldraw/LDConfig.ldr";
+        }
+
         private void OnEnable()
         {
+            SetFileNames();
             InitParts();
         }
 
