@@ -255,7 +255,7 @@ namespace LDraw
             //    _ColorConfigPath = "D:/BrickFormers/ldraw/LDConfig.ldr";
             //}
             //else
-            _BasePartsPath = Application.streamingAssetsPath + "/ldraw/parts/";
+            _BasePartsPath = Application.streamingAssetsPath + "/ldraw/partfiles/";
             _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
             _ColorConfigPath = Application.streamingAssetsPath + "/ldraw/LDConfig.ldr";
             

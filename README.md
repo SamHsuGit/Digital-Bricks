@@ -22,22 +22,6 @@ Unity (Personal License)
 
 Unity Packages:
 
-2D Sprite
-
 Unity Input System
 
-JetBrains Rider Editor
-
-Test Framework
-
-TextMeshPro
-
-Timeline
-
-Unity UI
-
 Universal RP
-
-Visual Studio Code Editor
-
-Visual Studio Editor
