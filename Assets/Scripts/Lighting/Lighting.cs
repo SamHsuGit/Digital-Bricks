@@ -25,6 +25,8 @@ public class Lighting : MonoBehaviour
     [SerializeField, Range(0, 24)] public float timeOfDay = 6.01f;
     public float maxFogDensity = 0.005f;
 
+    //NOTE: MacOS requires Gamma Color Space. Cannot use Linear.
+
     private void Update()
     {
         if (Settings.OnlinePlay && World.Instance.playerCount > 1 && World.Instance.players[1].playerGameObject != null) // if player is created, get variable from player syncVar

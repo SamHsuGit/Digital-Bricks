@@ -10,7 +10,8 @@ namespace LDraw
 		{
 			tr.localPosition = trs.ExtractPosition();
 			tr.localRotation = trs.ExtractRotation();
-			tr.localScale = new Vector3(Mathf.Abs(trs.lossyScale.x), Mathf.Abs(trs.lossyScale.y), Mathf.Abs(trs.lossyScale.z)); // use Mathf.Abs to ensure scales are positive for box colliders
+			//tr.localScale = new Vector3(Mathf.Abs(trs.lossyScale.x), Mathf.Abs(trs.lossyScale.y), Mathf.Abs(trs.lossyScale.z)); // use Mathf.Abs to ensure scales are positive for box colliders
+			tr.localScale = trs.lossyScale; // Mathf.Abs was causing import errors, reverted and box colliders appear correct...
 		}
 		
 		public static Matrix4x4 ExtractLocalTRS(this Transform tr)

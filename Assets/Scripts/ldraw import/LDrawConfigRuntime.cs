@@ -159,7 +159,7 @@ namespace LDraw
         {
             _ModelFileNames = new Dictionary<string, string>();
             //Debug.Log("SEARCHING FOR MODELS IN " + _ModelsPath);
-            var files = Directory.GetFiles(_ModelsPath, "*.*", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(_ModelsPath, "*.*", SearchOption.AllDirectories); // MacOS cannot search all directories with Directory.GetFiles so put all ldraw part files into same directory
             _Models = new Dictionary<string, string>();
             foreach (var file in files)
             {
