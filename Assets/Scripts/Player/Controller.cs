@@ -108,7 +108,7 @@ public class Controller : NetworkBehaviour
     float maxLookVelocity = 5f;
     float maxCamAngle = 90f;
     float minCamAngle = -90f;
-    bool wasDaytime = true;
+    //bool wasDaytime = true;
     bool daytime = true;
     float nextTimeToAnim = 0;
     List<Material> cachedMaterials = new List<Material>();

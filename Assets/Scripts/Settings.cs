@@ -57,21 +57,10 @@ public static class SettingsStatic
         //settings.playerColorLegL = 17;
         //settings.playerColorLegR = 17;
 
-        if(SystemInfo.operatingSystem.Substring(0,3) == "Mac")
+        if (File.Exists(Application.streamingAssetsPath + "/settings.cfg"))
         {
-            if (File.Exists(".app/Contents/Data/Resources/StreamingAssets/settings.cfg"))
-            {
-                string JsonImport = File.ReadAllText(".app/Contents/Data/Resources/StreamingAssets/settings.cfg");
-                settings = JsonUtility.FromJson<Settings>(JsonImport);
-            }
-        }
-        else
-        {
-            if (File.Exists(Application.streamingAssetsPath + "/settings.cfg"))
-            {
-                string JsonImport = File.ReadAllText(Application.streamingAssetsPath + "/settings.cfg");
-                settings = JsonUtility.FromJson<Settings>(JsonImport);
-            }
+            string JsonImport = File.ReadAllText(Application.streamingAssetsPath + "/settings.cfg");
+            settings = JsonUtility.FromJson<Settings>(JsonImport);
         }
 
         return settings;

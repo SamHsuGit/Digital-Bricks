@@ -255,17 +255,10 @@ namespace LDraw
             //    _ColorConfigPath = "D:/BrickFormers/ldraw/LDConfig.ldr";
             //}
             //else
-            if(SystemInfo.operatingSystem.Substring(0,3) == "Mac")
-            {
-                _BasePartsPath = ".app/Contents/Data/Resources/StreamingAssets/ldraw/parts/";
-                _ModelsPath = ".app/Contents/Data/Resources/StreamingAssets/ldraw/models/";
-                _ColorConfigPath = ".app/Contents/Data/Resources/StreamingAssets/ldraw/LDConfig.ldr";
-            }
-            {
-                _BasePartsPath = Application.streamingAssetsPath + "/ldraw/parts/";
-                _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
-                _ColorConfigPath = Application.streamingAssetsPath + "/ldraw/LDConfig.ldr";
-            }
+            _BasePartsPath = Application.streamingAssetsPath + "/ldraw/parts/";
+            _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
+            _ColorConfigPath = Application.streamingAssetsPath + "/ldraw/LDConfig.ldr";
+            
         }
 
         private void OnEnable()
