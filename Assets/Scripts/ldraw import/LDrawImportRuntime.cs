@@ -40,7 +40,7 @@ public class LDrawImportRuntime : MonoBehaviour
         else
             _instance = this;
 
-        ldrawConfigRuntime.SetFileNames();
+        ldrawConfigRuntime.SetFilePaths();
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models and hides upon world load to be instantiated later

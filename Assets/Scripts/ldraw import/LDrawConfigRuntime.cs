@@ -84,7 +84,6 @@ namespace LDraw
         }
         public string GetSerializedPart(string name) // returns the name of the part from the file
         {
-            Debug.Log(name);
             try
             {
                 name = name.ToLower();
@@ -224,7 +223,8 @@ namespace LDraw
             {
                 name += args[i] + ' ';
             }
-
+            Debug.Log(name);
+            Debug.Log(Path.GetFileNameWithoutExtension(name).ToLower());
             return Path.GetFileNameWithoutExtension(name).ToLower();
         }
         public static string GetExtension(string[] args, int filenamePos)
@@ -252,7 +252,7 @@ namespace LDraw
         //    }
         //}
 
-        public void SetFileNames()
+        public void SetFilePaths()
         {
             _BasePartsPath = Application.streamingAssetsPath + "/ldraw/partfiles/";
             _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
@@ -261,7 +261,7 @@ namespace LDraw
 
         private void OnEnable()
         {
-            SetFileNames();
+            SetFilePaths();
             InitParts();
         }
 
