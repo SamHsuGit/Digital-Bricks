@@ -223,8 +223,14 @@ namespace LDraw
             {
                 name += args[i] + ' ';
             }
-            Debug.Log(name);
-            Debug.Log(Path.GetFileNameWithoutExtension(name).ToLower());
+            if (name.Contains(@"\"))
+            {
+                int index = name.IndexOf(@"\");
+                //Debug.Log(index);
+                name = name.Remove(0, index + 1);
+            }
+            //Debug.Log(name);
+            //Debug.Log(Path.GetFileNameWithoutExtension(name).ToLower());
             return Path.GetFileNameWithoutExtension(name).ToLower();
         }
         public static string GetExtension(string[] args, int filenamePos)
