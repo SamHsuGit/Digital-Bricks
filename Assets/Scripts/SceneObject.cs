@@ -382,11 +382,13 @@ public class SceneObject : NetworkBehaviour
     [SyncVar(hook = nameof(onChangeTool))] public int typeTool;
     [SyncVar(hook = nameof(onChangeProjectile))] public int typeProjectile;
     [SyncVar(hook = nameof(onChangeVoxelBit))] public int typeVoxelBit;
+    [SyncVar(hook = nameof(onChangeUndefinedPrfab))] public int typeUndefinedPrefab;
 
     public GameObject[] voxel;
     public GameObject[] tool;
     public GameObject[] projectile;
     public GameObject[] voxelBit;
+    public GameObject[] undefinedPrefab;
     public Controller controller;
     int collisions = 0;
 
@@ -408,6 +410,11 @@ public class SceneObject : NetworkBehaviour
     void onChangeVoxelBit(int oldValue, int newValue)
     {
         StartCoroutine(ChangeEquipment(3, newValue));
+    }
+
+    void onChangeUndefinedPrfab(int oldValue, int newValue)
+    {
+        StartCoroutine(ChangeEquipment(4, newValue));
     }
 
     // Since Destroy is delayed to the end of the current frame, we use a coroutine
@@ -447,6 +454,11 @@ public class SceneObject : NetworkBehaviour
             case 3:
                 {
                     array = voxelBit;
+                    break;
+                }
+            case 4:
+                {
+                    array = undefinedPrefab;
                     break;
                 }
         }

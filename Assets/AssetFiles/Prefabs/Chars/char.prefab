@@ -431,6 +431,7 @@ MonoBehaviour:
   playerName: Host
   playerCharIdleString: 
   playerCharRunString: 
+  playerProjectileString: 
   timeOfDay: 6.0066667
   seed: 0
   version: 

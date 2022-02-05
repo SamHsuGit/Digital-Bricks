@@ -911,9 +911,9 @@ public class Controller : NetworkBehaviour
         {
             // spawn projectile where camera is looking
             if (Settings.OnlinePlay)
-                CmdSpawnUndefinedPrefab(0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+                CmdSpawnPreDefinedPrefab(2, 4, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
             else
-                SpawnUndefinedPrefab(0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+                SpawnPreDefinedPrefab(2, 4, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
 
             TakeFromCurrentSlot(1);
         }
@@ -965,6 +965,7 @@ public class Controller : NetworkBehaviour
             //        ob.tag = "Hazard";
             //    break;
             case 2: // IF PROJECTILE
+                sceneObject.projectile[0] = LDrawImportRuntime.Instance.projectileOb;
                 sceneObject.typeProjectile = item;
                 ob.tag = "Hazard";
                 break;
@@ -1009,9 +1010,9 @@ public class Controller : NetworkBehaviour
         ob.transform.Rotate(new Vector3(180, 0, 0));
         ob.SetActive(true);
 
-        if(option == 0 && GetComponent<BoxCollider>() != null) // IF PROJECTILE
+        if(option == 0 && ob.GetComponent<BoxCollider>() != null) // IF PROJECTILE
         {
-            BoxCollider bc = GetComponent<BoxCollider>();
+            BoxCollider bc = ob.GetComponent<BoxCollider>();
             bc.enabled = true;
             bc.material = physicMaterial;
         }
