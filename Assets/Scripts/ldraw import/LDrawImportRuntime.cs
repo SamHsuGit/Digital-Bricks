@@ -18,6 +18,8 @@ public class LDrawImportRuntime : MonoBehaviour
     public GameObject baseOb;
     public GameObject projectileOb;
     public PhysicMaterial physicMaterial;
+    public Mesh[] _meshArray;
+    public Dictionary<string, Mesh> _Meshes = new Dictionary<string, Mesh>();
 
     public int baseObSizeX;
     public int baseObSizeZ;
@@ -29,7 +31,17 @@ public class LDrawImportRuntime : MonoBehaviour
 
     private void Awake()
     {
+        LoadMeshes();
         LoadModels();
+
+    }
+
+    public void LoadMeshes()
+    {
+        for (int i = 0; i < _meshArray.Length; i++)
+        {
+            _Meshes.Add(_meshArray[i].name, _meshArray[i]);
+        }
     }
 
     public void LoadModels()

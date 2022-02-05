@@ -200,10 +200,15 @@ namespace LDraw
             }
         }
 
+        // moved GetMesh to LDrawModelRuntime
         //public Mesh GetMesh(string name)
         //{
-        //    var path = Path.Combine(_MeshesPath, name + ".asset");
-        //    return File.Exists(path) ? AssetDatabase.LoadAssetAtPath<Mesh>(path) : null;
+        //    if (LDrawImportRuntime.Instance._Meshes.ContainsKey(name))
+        //        return LDrawImportRuntime.Instance._Meshes[name];
+        //    else
+        //        return null;
+        //    //var path = Path.Combine(_MeshesPath, name + ".asset");
+        //    //return File.Exists(path) ? AssetDatabase.LoadAssetAtPath<Mesh>(path) : null;
         //}
         //public void SaveMesh(Mesh mesh)
         //{
@@ -245,19 +250,6 @@ namespace LDraw
             return Path.GetExtension(name).Trim();
         }
         private static LDrawConfigRuntime _Instance;
-
-        //public static LDrawConfig1 Instance
-        //{
-        //    get
-        //    {
-        //        if (_Instance == null)
-        //        {
-        //            _Instance = AssetDatabase.LoadAssetAtPath<LDrawConfig1>(ConfigPath);
-        //        }
-
-        //        return _Instance;
-        //    }
-        //}
 
         public void SetFilePaths()
         {

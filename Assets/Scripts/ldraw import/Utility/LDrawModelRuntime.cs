@@ -189,11 +189,19 @@ namespace LDraw
             bc.material = LDrawImportRuntime.Instance.physicMaterial;
         }
 
+        public Mesh GetMesh(string name)
+        {
+            if (LDrawImportRuntime.Instance._Meshes.ContainsKey(name))
+                return LDrawImportRuntime.Instance._Meshes[name];
+            else
+                return null;
+        }
+
         private Mesh PrepareMesh(List<Vector3> verts, List<int> triangles)
         {
-            Mesh mesh;
-            //mesh = LDrawConfig1.Instance.GetMesh(_Name);
-            //if (mesh != null) return mesh;
+            // Tries to get mesh from previously saved meshes compiled into game code. If cannot find, then creates new mesh based on LDraw partfiles in StreamingAssets
+            Mesh mesh = GetMesh(_Name);
+            if (mesh != null) return mesh;
           
             mesh = new Mesh();
       
@@ -222,7 +230,7 @@ namespace LDraw
             
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            //LDrawConfig.Instance.SaveMesh(mesh);
+            //LDrawConfigRuntime.Instance.SaveMesh(mesh);
             return mesh;
         }
   
