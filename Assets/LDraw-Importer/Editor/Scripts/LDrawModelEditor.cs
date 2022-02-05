@@ -123,6 +123,26 @@ namespace LDraw
             return go;
         }
 
+        public void SaveMesh()
+        {
+            var triangles = new List<int>();
+            var verts = new List<Vector3>();
+
+            for (int i = 0; i < _Commands.Count; i++)
+            {
+                var sfCommand = _Commands[i] as LDrawSubFileEditor;
+                if (sfCommand == null)
+                {
+                    _Commands[i].PrepareMeshData(triangles, verts);
+                }
+            }
+
+            if (verts.Count > 0)
+            {
+                Mesh mesh = PrepareMesh(verts, triangles);
+            }
+        }
+
         public void CombineMeshes(GameObject _go)
         {
             // Combine the submeshes into one optimized mesh

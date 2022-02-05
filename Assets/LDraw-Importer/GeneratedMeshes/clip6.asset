@@ -7,7 +7,7 @@ Mesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: clip6
-  serializedVersion: 9
+  serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
@@ -27,6 +27,9 @@ Mesh:
   m_BindPose: []
   m_BoneNameHashes: 
   m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
   m_MeshCompression: 0
   m_IsReadable: 1
   m_KeepVertices: 1
@@ -34,7 +37,7 @@ Mesh:
   m_IndexFormat: 0
   m_IndexBuffer: 01000200000001000300020005000600040005000700060009000a00080009000b000a000d000e000c000d000f000e00110012001000110013001200150016001400150017001600180019001a001c001d001b001c001e001d001f002000210022002300240026002700250026002800270029002a002b002d002e002c002d002f002e003000310032003300340035003700380036003700390038003c003b003a003d003b003c0040003f003e0041003f0040004400430042004500430044004800470046004900470048004c004b004a004d004b004c0050004f004e0051004f0050005300520054005700560055005800560057005a0059005b005d005c005e00610060005f006200600061006400630065006800670066006900670068006b006a006c006e006d006f00720071007000730071007200
   m_VertexData:
-    serializedVersion: 2
+    serializedVersion: 3
     m_VertexCount: 116
     m_Channels:
     - stream: 0
@@ -155,8 +158,9 @@ Mesh:
   m_BakedTriangleCollisionMesh: 
   m_MeshMetrics[0]: 1
   m_MeshMetrics[1]: 1
-  m_MeshOptimized: 0
+  m_MeshOptimizationFlags: 1
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 

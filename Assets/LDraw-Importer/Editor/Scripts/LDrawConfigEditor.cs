@@ -23,6 +23,7 @@ namespace LDraw
         [SerializeField] private Material _DefaultTransparentMaterial;
         private Dictionary<string, string> _Parts;
         private Dictionary<string, string> _Models;
+        public string[] _PartMeshNames;
 
         private Dictionary<int, Material> _MainColors;
         private Dictionary<string, Material> _CustomColors;
@@ -96,16 +97,23 @@ namespace LDraw
             _Parts = new Dictionary<string, string>();
             var files = Directory.GetFiles(_BasePartsPath, "*.*", SearchOption.AllDirectories);
 
+            _PartMeshNames = new string[files.Length];
+            int i = 0;
+
             foreach (var file in files)
             {
                 if (!file.Contains(".meta"))
                 {
                     string fileName = file.Replace(_BasePartsPath, "").Split('.')[0];
-
                     if (fileName.Contains("\\"))
                         fileName = fileName.Split('\\')[1];
                     if (!_Parts.ContainsKey(fileName))
+                    {
                         _Parts.Add(fileName, file);
+                        
+                        _PartMeshNames[i] = fileName; // add to a list for later use to import all meshes into editor
+                        i++;
+                    }
                 }
             }
         }

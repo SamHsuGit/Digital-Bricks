@@ -14,6 +14,7 @@ namespace LDraw
         }
 
         private string[] _ModelNames;
+        
         private string _CurrentPart;
         private int _CurrentIndex;
         private GeneratingType _CurrentType;
@@ -69,6 +70,17 @@ namespace LDraw
 
                 modelOb.transform.localScale = new Vector3(scale, scale, scale); // rescale imported object to match voxel size
                 modelOb.isStatic = true;
+            }
+            else if (GUILayout.Button("Import All Meshes"))
+            {
+                string[] partMeshNames = LDrawConfigEditor.Instance._PartMeshNames;
+                for (int i = 0; i < partMeshNames.Length; i++)
+                {
+                    _CurrentPart = partMeshNames[i];
+                    //Debug.Log(_CurrentPart);
+                    var model = LDrawModelEditor.Create(_CurrentPart, LDrawConfigEditor.Instance.GetSerializedPart(_CurrentPart));
+                    model.SaveMesh();
+                }
             }
         }
 
