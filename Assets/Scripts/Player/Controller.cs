@@ -13,6 +13,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdleString;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRunString;
+    [SyncVar(hook = nameof(SetProjectile))] public string playerProjectileString;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
     [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
@@ -319,6 +320,11 @@ public class Controller : NetworkBehaviour
         charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
         SetPlayerColliderSettings();
+    }
+
+    public void SetProjectile(string oldProjectile, string newProjectile)
+    {
+        projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newProjectile, projectile.transform.position, false);
     }
 
     public void SetTime(float oldTime, float newTime)

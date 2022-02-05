@@ -200,6 +200,7 @@ namespace LDraw
         private Mesh PrepareMesh(List<Vector3> verts, List<int> triangles)
         {
             // Tries to get mesh from previously saved meshes compiled into game code. If cannot find, then creates new mesh based on LDraw partfiles in StreamingAssets
+            // This is only marginally faster since it takes alot of time to load, index, search the dictionary of loaded meshes so load time is about the same as creating new meshes every time...
             Mesh mesh = GetMesh(_Name);
             if (mesh != null) return mesh;
           

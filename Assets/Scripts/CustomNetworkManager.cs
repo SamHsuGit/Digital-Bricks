@@ -9,6 +9,7 @@ public struct ClientToServerMessage : NetworkMessage
     public string playerName;
     public string serializedCharIdle;
     public string serializedCharRun;
+    public string serializedProjectile;
 }
 
 // https://mirror-networking.gitbook.io/docs/guides/communications/network-messages
@@ -96,6 +97,7 @@ public class CustomNetworkManager : NetworkManager
             playerName = SettingsStatic.LoadedSettings.playerName,
             serializedCharIdle = LDrawImportRuntime.Instance.ReadFileToString("charIdle.ldr"),
             serializedCharRun = LDrawImportRuntime.Instance.ReadFileToString("charRun.ldr"),
+            serializedProjectile = LDrawImportRuntime.Instance.ReadFileToString("projectile.ldr"),
         };
         conn.Send(clientMessage);
     }
@@ -119,6 +121,7 @@ public class CustomNetworkManager : NetworkManager
         controller.playerName = message.playerName;
         controller.playerCharIdleString = message.serializedCharIdle;
         controller.playerCharRunString = message.serializedCharRun;
+        controller.playerProjectileString = message.serializedProjectile;
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);
