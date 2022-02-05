@@ -44,7 +44,8 @@ public class SetupMenu : MonoBehaviour
         seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
         loadingText.SetActive(false);
 
-        GetImportedCharModelAfterAwake();
+        // commented out since was causing long load times upon startup due to import inefficiencies
+        //GetImportedCharModelAfterAwake();
     }
 
     private void GetImportedCharModelAfterAwake()
