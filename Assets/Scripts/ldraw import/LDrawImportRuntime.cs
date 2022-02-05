@@ -31,9 +31,8 @@ public class LDrawImportRuntime : MonoBehaviour
 
     private void Awake()
     {
-        LoadMeshes();
+        //LoadMeshes(); // commented out until a more efficient load/search method is developed as this method is slower than generating new meshes every time.
         LoadModels();
-
     }
 
     public void LoadMeshes()
