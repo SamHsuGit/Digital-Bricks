@@ -15,7 +15,6 @@ TABLE OF CONTENTS
 	Lighting
 	Saved Settings
 	UI
-	AI
 	DEBUG
 
 INPUT HANDLER
@@ -173,9 +172,6 @@ SAVED SETTINGS
 		InvertX
 
 UI
-	
-
-AI
 	
 
 DEBUG
