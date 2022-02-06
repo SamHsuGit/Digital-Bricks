@@ -9,8 +9,8 @@ public static class Structure
         {
             case 0:
                 return MakeBaseVBOImport(position);
-            case 1:
-                return MakeProcGenVBOImport(position);
+            //case 1:
+            //    return MakeProcGenVBOImport(position);
             case 2:
                 return MakeTree(position, minTrunkHeight, maxTrunkHeight, minFloraRadius, maxFloraRadius);
             case 3:
@@ -112,19 +112,6 @@ public static class Structure
         byte blockID = 25;
         ReserveSpaceVBO(queue, position, xRadius, zRadius);
         queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
-        return queue;
-    }
-
-    static Queue<VoxelMod> MakeProcGenVBOImport(Vector3 position)
-    {
-        Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        //int xRadius = LDrawImportRuntime.Instance.procGenObSizeX / 2;
-        //int zRadius = LDrawImportRuntime.Instance.procGenObSizeZ / 2;
-        //xRadius += 1; // safety boundary in case import is offset by 1 block
-        //zRadius += 1; // safety boundary in case import is offset by 1 block
-        //byte blockID = 26;
-        //ReserveSpaceVBO(queue, position, xRadius, zRadius);
-        //queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
         return queue;
     }
 
@@ -436,14 +423,5 @@ public static class Structure
             return blockID;
         else
             return 0;
-    }
-
-    // used bc we can only call Random.Range() from main thread and we want same 'random' pattern every time
-    public static byte GetRandomBlockID(Vector3 position, float scale, byte zero, byte one)
-    {
-        if (Mathf.Clamp(Noise.Get2DPerlin(new Vector2(position.y, position.x), 1, scale), 0, 1) > 0.5f)
-            return zero;
-        else
-            return one;
     }
 }

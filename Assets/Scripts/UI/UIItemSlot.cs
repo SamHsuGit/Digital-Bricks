@@ -71,7 +71,6 @@ public class UIItemSlot : MonoBehaviour
         if (itemSlot != null)
             itemSlot.unLinkUISlot();
     }
-
 }
 
 public class ItemSlot

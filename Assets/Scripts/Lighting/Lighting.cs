@@ -4,7 +4,6 @@ using UnityEngine;
 [ExecuteAlways]
 public class Lighting : MonoBehaviour
 {
-    //References
     [SerializeField] private Light sun;
     [SerializeField] private Light moon;
     [SerializeField] private LightingPreset sunProperties;
@@ -21,11 +20,10 @@ public class Lighting : MonoBehaviour
 
     Controller controller;
 
-    //Variables
     [SerializeField, Range(0, 24)] public float timeOfDay = 6.01f;
     public float maxFogDensity = 0.005f;
 
-    //NOTE: MacOS requires Gamma Color Space. Cannot use Linear.
+    //NOTE: MacBook Air requires Gamma Color Space. Cannot use Linear.
 
     private void Update()
     {

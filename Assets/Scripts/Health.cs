@@ -4,11 +4,9 @@ using UnityEngine;
 using Mirror;
 public class Health : NetworkBehaviour
 {
-    // public references
     public AudioSource death;
     public PhysicMaterial physicMaterial;
 
-    // public variables
     public int minPieces = 1; // chars must have at least 1 piece
     public int maxPieces = 500; // limited based on performance of min pc spec model load time
     public int minBaseMoveSpeed = 0; // larger builds are essentially immovable
@@ -17,20 +15,16 @@ public class Health : NetworkBehaviour
     public int maxAnimSpeed = 8;
     public int jumpHungerThreshold = 160; // Minecraft jumpHungerThreshold = 40
     public int blockHungerThreshold = 320; // Minecraft blockHungerThreshold = 320
-    [SyncVar(hook = nameof(UpdateHP))] public float hp;
+    [SyncVar(hook = nameof(UpdateHP))] public float hp; // uses hp SyncVar hook to syncronize # pieces an object has across all online players when hp value changes
     public int hpMax;
     public float piecesRbMass = 0.0001f;
     public int jumpCounter = 0;
     public int blockCounter = 0;
     public bool isAlive = false;
 
-    // private variables
     private int brickCount;
-    //float lavaHurtRate = 2f;
-    //float nextTimeToLavaHurt = 0f;
     int lastPlayerPos = 0;
 
-    // private references
     Controller controller;
     PlayerVoxelCollider voxelCollider;
     GameObject ob;
@@ -82,16 +76,6 @@ public class Health : NetworkBehaviour
 
     void CountPieces(GameObject _ob)
     {
-        //foreach (Transform child in _ob.transform) // recursively adds parts to list of parts to count as health
-        //{
-        //    // PLAYER PIECES MUST TAGGED AS LEGO PIECE AND BE ACTIVE AND HAVE MESH RENDERER TO BE COUNTED TOWARDS HP
-        //    if (child.gameObject.layer == 10 && child.gameObject.activeSelf && child.gameObject.GetComponent<MeshRenderer>() != null)
-        //    {
-        //        brickCount++;
-        //        modelPieces.Add(child.gameObject); // add to list of pieces
-        //    }
-        //    CountPieces(child.gameObject);
-        //}
         brickCount = _ob.transform.GetChild(0).childCount;
     }
 
@@ -113,8 +97,6 @@ public class Health : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        //UpdateHP(); // uses hp SyncVar hook to syncronize # pieces an object has across all online players when hp value changes
-
         if (gameObject.layer == 11) // if it is a player
         {
             Hunger();
@@ -127,23 +109,6 @@ public class Health : NetworkBehaviour
                 else
                     Respawn();
             }
-
-            //// only if voxelCollider component exists
-            //if (voxelCollider != null)
-            //{
-            //    // hurt if touching lava (WIP, BROKEN)
-            //    if (voxelCollider.PlayerIsTouchingBlockID(5) && Time.time >= nextTimeToLavaHurt)
-            //    {
-            //        nextTimeToLavaHurt = Time.time + 1f / lavaHurtRate;
-
-            //        if (Settings.OnlinePlay && hasAuthority)
-            //            CmdEditSelfHealth(-1);
-            //        if (!Settings.OnlinePlay)
-            //            EditSelfHealth(-1);
-            //        if(gameObject.layer == 11) // if it is a player
-            //            PlayHurtSound();
-            //    }
-            //}
         }
         else if(gameObject.tag != "Enemy") // if not a player or enemy object
         {
@@ -323,23 +288,4 @@ public class Health : NetworkBehaviour
         }
     }
 
-}
-
-public static class TransformDeepChildExtension
-{
-    //Breadth-first search
-    public static Transform FindDeepChild(this Transform aParent, string aName)
-    {
-        Queue<Transform> queue = new Queue<Transform>();
-        queue.Enqueue(aParent);
-        while (queue.Count > 0)
-        {
-            var c = queue.Dequeue();
-            if (c.name == aName)
-                return c;
-            foreach (Transform t in c)
-                queue.Enqueue(t);
-        }
-        return null;
-    }
 }

@@ -467,7 +467,7 @@ public class SceneObject : NetworkBehaviour
         if (ob.GetComponent<BoxCollider>() != null)
             ob.GetComponent<BoxCollider>().enabled = true;
         ob.SetActive(true);
-        if (type != 0 && ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
+        if (type != 0 && type !=2 && ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
             ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         ob.transform.rotation = Quaternion.LookRotation(transform.forward); // orient forwards in direction of camera
         ob.transform.parent = transform;

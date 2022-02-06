@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LDraw;
-using UnityEngine.SceneManagement;
 using System.IO;
 
 public class LDrawImportRuntime : MonoBehaviour
@@ -229,6 +227,4 @@ public class LDrawImportRuntime : MonoBehaviour
                 ElevateMeshRendererChildren(child.gameObject);
         }
     }
-
-    private const string PathToModels = "Assets/ldraw/parts/"; // not currently used???
 }

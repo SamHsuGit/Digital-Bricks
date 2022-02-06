@@ -274,7 +274,7 @@ public class Chunk
         }
     }
 
-    public void CreateMesh()
+    public void CreateMesh() // UNKNOWN ERRORS PERSIST IN THIS FUNCTION, NOT SURE WHY...
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray(); // code is not threadsafe, being modified by other threads... but vertices appeared locked for all modifications and still failed...

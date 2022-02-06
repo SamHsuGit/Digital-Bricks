@@ -89,21 +89,6 @@ public class World : MonoBehaviour
         // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
         undrawVoxelBoundObjects = false;
         undrawVoxels = false;
-        //if (SettingsStatic.LoadedSettings.graphicsQuality  == 2)
-        //{
-        //    undrawVoxelBoundObjects = false;
-        //    undrawVoxels = false;
-        //}
-        //else if(SettingsStatic.LoadedSettings.graphicsQuality == 1)
-        //{
-        //    undrawVoxelBoundObjects = false;
-        //    undrawVoxels = false;
-        //}
-        //else if(SettingsStatic.LoadedSettings.graphicsQuality == 0)
-        //{
-        //    undrawVoxelBoundObjects = false;
-        //    undrawVoxels = false;
-        //}
 
         playerCount = 0;
 
@@ -205,6 +190,7 @@ public class World : MonoBehaviour
         worldData = SaveSystem.LoadWorld(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed);
         WorldDataOverrides(SettingsStatic.LoadedSettings.planetNumber);
 
+        // Spawns a imported base.ldr at world origin
         blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
 
         if (Settings.OnlinePlay)
@@ -221,12 +207,6 @@ public class World : MonoBehaviour
         worldPlayer.transform.position = spawnPosition;
 
         PlayerJoined(worldPlayer);
-
-        //if (chunksToDrawQueue.Count > 0)
-        //    lock (chunksToDrawQueue)
-        //    {
-        //        chunksToDrawQueue.Dequeue().CreateMesh();
-        //    }
 
         if (multithreading)
         {
@@ -399,7 +379,7 @@ public class World : MonoBehaviour
             {
                 tick = 0;
                 saving = true;
-                //Debug.Log("Saved Game: " + System.DateTime.Now);
+                Debug.Log("Saved Game: " + System.DateTime.Now);
                 SaveSystem.SaveWorld(Instance.worldData);
             }
             else
@@ -755,6 +735,7 @@ public class World : MonoBehaviour
         // Set biome to the one with the strongest weight.
         Biome biome = biomes[strongestBiomeIndex];
 
+        //// DISABLED TERRAIN SMOOTHING
         //// Get the average of the heights.
         //sumOfHeights /= count;
         //int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);

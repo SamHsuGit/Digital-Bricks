@@ -23,7 +23,6 @@ public class ErrorMenu : MonoBehaviour
     {
         buttonSound.Play();
         Application.Quit();
-        //SceneManager.LoadScene(0);
     }
 }
 

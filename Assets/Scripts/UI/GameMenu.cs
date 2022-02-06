@@ -37,7 +37,6 @@ public class GameMenu : MonoBehaviour
     Health health;
     CustomNetworkManager customNetworkManager;
 
-    // Components
     UnityEngine.Rendering.Universal.UniversalAdditionalCameraData uac;
 
     private void Awake()
@@ -59,7 +58,6 @@ public class GameMenu : MonoBehaviour
         lookSpeedSlider.value = SettingsStatic.LoadedSettings.lookSpeed;
         lookAccelerationSlider.value = SettingsStatic.LoadedSettings.lookAccel;
         fovSlider.value = SettingsStatic.LoadedSettings.fov;
-        //graphicsQualityDropdown.value = SettingsStatic.LoadedSettings.graphicsQuality;
         fullScreenToggle.isOn = SettingsStatic.LoadedSettings.fullscreen;
         invertYToggle.isOn = SettingsStatic.LoadedSettings.invertY;
         invertXToggle.isOn = SettingsStatic.LoadedSettings.invertX;
@@ -208,14 +206,6 @@ public class GameMenu : MonoBehaviour
     {
         SettingsStatic.LoadedSettings.fov = value;
         playerCamera.GetComponent<Camera>().fieldOfView = value;
-    }
-
-    public void SetGraphicsQuality(int qualityIndex)
-    {
-        //if (optionsMenuCanvasGroup.alpha == 1) // added this condition since this was accidentally playing when player spawned
-        //    buttonSound.Play();
-        //QualitySettings.SetQualityLevel(qualityIndex);
-        //SettingsStatic.LoadedSettings.graphicsQuality = qualityIndex;
     }
 
     public void SetFullScreen (bool value)

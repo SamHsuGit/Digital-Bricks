@@ -8,7 +8,6 @@ public class DebugScreen : MonoBehaviour
     public GameObject player;
 
     Text text;
-    Controller controller;
 
     float frameRate;
     float timer;
@@ -16,11 +15,9 @@ public class DebugScreen : MonoBehaviour
     int halfWorldSizeInVoxels;
     int halfWorldSizeInChunks;
     
-
     void Start()
     {
         text = GetComponent<Text>();
-        controller = player.GetComponent<Controller>();
 
         halfWorldSizeInVoxels = VoxelData.WorldSizeInVoxels / 2;
         halfWorldSizeInChunks = VoxelData.WorldSizeInChunks / 2;

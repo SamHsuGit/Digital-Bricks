@@ -15,7 +15,6 @@ public class PlayerVoxelCollider : MonoBehaviour
     World world;
     CapsuleCollider cc;
     Controller controller;
-    CharacterController charController;
     public Vector3 center;
     public float halfColliderHeight;
     public int stepHeight;
@@ -24,7 +23,6 @@ public class PlayerVoxelCollider : MonoBehaviour
 
     public bool isPlayer = false;
     public bool isCamera = false;
-    public bool isAI = false;
 
     private float gravity = -9.8f * 3; // multiply to account for scaled geometry
     private float verticalMomentum = 0;
@@ -32,8 +30,6 @@ public class PlayerVoxelCollider : MonoBehaviour
     public float length;
     public float height;
     public bool playerChunkIsActive;
-
-    List<Vector3> checkPositions = new List<Vector3>();
 
     byte[] adjacentVoxelIDs;
 
@@ -52,7 +48,6 @@ public class PlayerVoxelCollider : MonoBehaviour
         if (isPlayer)
         {
             controller = GetComponent<Controller>();
-            charController = GetComponent<CharacterController>();
             //set initial char size
             if (gameObject.GetComponent<CapsuleCollider>() != null)
             {
@@ -76,23 +71,6 @@ public class PlayerVoxelCollider : MonoBehaviour
             stepHeight = 1;
             colliderOffset = 1;
         }
-        else if (isAI)
-        {
-            charController = GetComponent<CharacterController>();
-            if (gameObject.GetComponent<CapsuleCollider>() != null)
-            {
-                cc = gameObject.GetComponent<CapsuleCollider>();
-                width = cc.radius * 2;
-                height = cc.height;
-                length = cc.radius * 2;
-
-                halfColliderHeight = height / 2;
-                stepHeight = 1;
-                colliderOffset = 1;
-                stepUpOffset = new Vector3(0, stepHeight, 0);
-                maxJumps = 2;
-            }
-        }
     }
 
     public Vector3 CalculateVelocity(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
@@ -103,21 +81,12 @@ public class PlayerVoxelCollider : MonoBehaviour
         Vector3 velocityPlayer;
         //playerChunkIsActive = PlayerInActiveChunk();
 
-        //if (isGrounded && transform.position.y % 1 != 0)
-        //    transform.Translate(new Vector3(0, 1 - transform.position.y % 1, 0)); // ensures elevation is a whole number (no longer needed as we are using colliders)
-
         if (cc != null)
             center = cc.transform.position + cc.center; // cache current center of collider position
 
-        // updated once per frame update, while PlayerIsTouchingBlockID can be called by other scripts (multiple times per frame update. This reduces calls to GetVoxel).
-        adjacentVoxelIDs = GetAdjacentVoxelIDs();
-
         // reset jumps when grounded
-        //if (playerChunkIsActive)
-        {
-            if (isGrounded || (isPlayer && controller.isGrounded))
-                currentJumps = 0;
-        }
+        if (isGrounded || (isPlayer && controller.isGrounded))
+            currentJumps = 0;
 
         // can jump off sides of objects
         if (isPlayer && (front || back || left || right))
@@ -150,110 +119,7 @@ public class PlayerVoxelCollider : MonoBehaviour
         // Apply vertical momentum (falling/jumping).
         velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
 
-        //isGrounded = CheckGrounded(velocityPlayer.y);
-
-        //Vector3 oldVelocity = velocityPlayer;
-        //// horizontal collision detection
-        //if (isMoving && velocityPlayer.z > 0 && front || velocityPlayer.z < 0 && back)
-        //{
-        //    velocityPlayer.z = 0;
-        //}
-        //if (isMoving && velocityPlayer.x > 0 && right || velocityPlayer.x < 0 && left)
-        //{
-        //    velocityPlayer.x = 0;
-        //}
-        // vertical collision detection
-        //if (velocityPlayer.y < 0 && controller.isGrounded)
-        //{
-        //    velocityPlayer.y = 0;
-        //}
-        //else if (velocityPlayer.y > 0)
-        //{
-        //    velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
-        //}
-        //// step collision detection
-        //if (isMoving && isGrounded && isSprinting && stepDetected && CheckIfPlayerCanStepUp())
-        //{
-        //    // move this gameobject up slightly to get up steps
-        //    charController.enabled = false;
-        //    transform.position += stepUpOffset;
-        //    charController.enabled = true;
-        //    velocityPlayer = oldVelocity;
-        //}
-
-        checkPositions = CalculateCheckPositions(velocityPlayer.y);
-
         return velocityPlayer;
-    }
-
-    public bool PlayerInActiveChunk()
-    {
-        if (World.Instance.worldLoaded)
-        {
-            ChunkCoord currentPlayerChunkCoord = World.Instance.GetChunkFromVector3(transform.position).coord;
-            if (World.Instance.chunks[currentPlayerChunkCoord].isActive && World.Instance.chunks.ContainsKey(currentPlayerChunkCoord)) // only do voxel collision detection if player is in an active chunk
-            {
-                //Debug.Log(currentPlayerChunkCoord.x + ", " + currentPlayerChunkCoord.z + " is active");
-                return true;
-            }
-            else
-                return false;
-        }
-        return false;
-    }
-
-    public bool CheckIfPlayerCanStepUp()
-    {
-        if (!BlockDetected(center.x, center.y - halfColliderHeight + stepHeight, center.z + length / 2) && // check bottom cross
-            !BlockDetected(center.x, center.y - halfColliderHeight + stepHeight, center.z - length / 2) &&
-            !BlockDetected(center.x + width / 2, center.y - halfColliderHeight + stepHeight, center.z) &&
-            !BlockDetected(center.x - width / 2, center.y - halfColliderHeight + stepHeight, center.z) &&
-            !BlockDetected(center.x + width / 2, center.y - halfColliderHeight + stepHeight, center.z + length / 2) && // check bottom corners
-            !BlockDetected(center.x - width / 2, center.y - halfColliderHeight + stepHeight, center.z - length / 2) &&
-            !BlockDetected(center.x - width / 2, center.y - halfColliderHeight + stepHeight, center.z + length / 2) &&
-            !BlockDetected(center.x + width / 2, center.y - halfColliderHeight + stepHeight, center.z - length / 2) &&
-            !BlockDetected(center.x, center.y, center.z + length / 2) && // check middle cross
-            !BlockDetected(center.x, center.y, center.z - length / 2) &&
-            !BlockDetected(center.x - width / 2, center.y, center.z) &&
-            !BlockDetected(center.x - width / 2, center.y, center.z) &&
-            !BlockDetected(center.x + width / 2, center.y, center.z + length / 2) && // check middle corners
-            !BlockDetected(center.x - width / 2, center.y, center.z - length / 2) &&
-            !BlockDetected(center.x - width / 2, center.y, center.z + length / 2) &&
-            !BlockDetected(center.x + width / 2, center.y, center.z - length / 2) &&
-            !BlockDetected(center.x, center.y + halfColliderHeight + 1, center.z + length / 2) && // check top cross
-            !BlockDetected(center.x, center.y + halfColliderHeight + 1, center.z - length / 2) &&
-            !BlockDetected(center.x + width / 2, center.y + halfColliderHeight + 1, center.z) &&
-            !BlockDetected(center.x - width / 2, center.y + halfColliderHeight + 1, center.z) &&
-            !BlockDetected(center.x + width / 2, center.y + halfColliderHeight + 1, center.z + length / 2) && // check top corners
-            !BlockDetected(center.x - width / 2, center.y + halfColliderHeight + 1, center.z - length / 2) &&
-            !BlockDetected(center.x - width / 2, center.y + halfColliderHeight + 1, center.z + length / 2) &&
-            !BlockDetected(center.x + width / 2, center.y + halfColliderHeight + 1, center.z - length / 2)
-            )
-            return true;
-        else
-            return false;
-    }
-
-    List<Vector3> CalculateCheckPositions(float yVelocity)
-    {
-        checkPositions = new List<Vector3>();
-
-        // adds top check position
-        checkPositions.Add(new Vector3(center.x, center.y + Mathf.FloorToInt(halfColliderHeight) + colliderOffset + yVelocity, center.z)); // top
-        
-        // adds front, back, left, right for multiple levels in the character model (works bottom to top).
-        for (int y = -Mathf.FloorToInt(halfColliderHeight); y < Mathf.FloorToInt(halfColliderHeight); y++)
-        {
-            checkPositions.Add(new Vector3(center.x, center.y + y + yVelocity, center.z + length / 2 + colliderOffset)); // front
-            checkPositions.Add(new Vector3(center.x, center.y + y + yVelocity, center.z - length / 2 - colliderOffset)); // back
-            checkPositions.Add(new Vector3(center.x - width / 2 - colliderOffset, center.y + y + yVelocity, center.z)); // left
-            checkPositions.Add(new Vector3(center.x + width / 2 + colliderOffset, center.y + y + yVelocity, center.z)); // right
-        }
-
-        // adds bottom check position
-        checkPositions.Add(new Vector3(center.x, center.y - Mathf.FloorToInt(halfColliderHeight) - colliderOffset + yVelocity, center.z)); // bottom
-
-        return checkPositions;
     }
 
     public Vector3 CalculateVelocityCamera(float horizontal, float vertical, bool isSprinting)
@@ -285,15 +151,6 @@ public class PlayerVoxelCollider : MonoBehaviour
         }
 
         return velocityCamera;
-    }
-
-    // helps traverse blocky terrain
-    public bool BlockDetected(float xCheck, float yCheck, float zCheck)
-    {
-        if (world.CheckForVoxel(new Vector3(xCheck, yCheck, zCheck)))
-            return true;
-        else
-            return false;
     }
 
     public bool CheckGrounded(float downSpeed) // checks in cross pattern
@@ -341,22 +198,6 @@ public class PlayerVoxelCollider : MonoBehaviour
         else
         {
             return upSpeed;
-        }
-    }
-
-    public bool stepDetected // checks in cross pattern
-    {
-        get
-        {
-            if (
-                world.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) || // front bottom
-                world.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) || // back bottom
-                world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z)) || // left bottom
-                world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z))    // right bottom
-                )
-                return true;
-            else
-                return false;
         }
     }
 
@@ -427,23 +268,5 @@ public class PlayerVoxelCollider : MonoBehaviour
             }
         }
         return isTouching;
-    }
-
-    public byte[] GetAdjacentVoxelIDs() // only called once per frame update while PlayerIsTouchingBlockID can be called multiple times per frame update to minimize the calls to GetVoxel.
-    {
-        byte[] adjacentVoxelIDs = new byte[checkPositions.Count];
-
-        for (int i = 0; i < adjacentVoxelIDs.Length; i++) // for all adjacent voxels
-        {
-            if (!World.Instance.CheckForVoxel(checkPositions[i])) // if voxel to check is not solid (e.g. air) or there is no voxel, then skip this position
-            {
-                adjacentVoxelIDs[i] = 0;
-                continue;
-            }
-
-            // uses getVoxel for most accurate voxelstate
-            adjacentVoxelIDs[i] = World.Instance.GetVoxelState(new Vector3(Mathf.FloorToInt(checkPositions[i].x), Mathf.FloorToInt(checkPositions[i].y), Mathf.FloorToInt(checkPositions[i].z))).id;
-        }
-        return adjacentVoxelIDs;
     }
 }

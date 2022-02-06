@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -24,7 +23,6 @@ public static class SaveSystem
         stream.Close();
 
         string[] savedPlayerNames = new string[World.Instance.players.Count];
-        //int playerInstance = 1;
 
         // for all players (except world player dummy), save player stats (splitscreen play saves only stats of last player who joined)
         for (int i = 1; i < World.Instance.players.Count; i++)
@@ -36,16 +34,6 @@ public static class SaveSystem
                 int[] playerStats = GetPlayerStats(player, i); // save player stats
 
                 formatter = new BinaryFormatter();
-
-                //for (int j = 0; j < savedPlayerNames.Length; j++)
-                //{
-                //    if (playerSaveName == savedPlayerNames[j])
-                //    {
-                //        playerInstance++; // increment playerInstance
-                //    }
-                //}
-
-                //playerSaveName = playerSaveName + playerInstance; // add instance number to player name
 
                 stream = new FileStream(savePath + playerSaveName + ".stats", FileMode.Create);
 

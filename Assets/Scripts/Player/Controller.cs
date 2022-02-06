@@ -24,7 +24,6 @@ public class Controller : NetworkBehaviour
     public bool isGrounded;
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
     public bool isSprinting;
-    [SyncVar] public bool isHolding = false;
     public bool photoMode = false;
     public bool options = false;
     public float checkIncrement = 0.1f;
@@ -35,7 +34,6 @@ public class Controller : NetworkBehaviour
     public byte blockID;
     public float baseAnimRate = 2;
     public float animRate = 2;
-    //[SyncVar] public int day = 1;
 
     [SerializeField] float lookVelocity = 1f;
 
@@ -46,7 +44,6 @@ public class Controller : NetworkBehaviour
     public GameObject backgroundMask;
     public AudioSource brickPickUp;
     public AudioSource brickPlaceDown;
-    public AudioSource brickMove;
     public AudioSource eat;
     public AudioSource crystal;
     public AudioSource mushroom;
@@ -96,7 +93,7 @@ public class Controller : NetworkBehaviour
     CustomNetworkManager customNetworkManager;
     GameObject undefinedPrefabToSpawn;
     RaycastHit raycastHit;
-    GameObject heldOb;
+    GameObject hitOb;
     Rigidbody heldObRb;
 
     //Initializers & Constants
@@ -109,7 +106,6 @@ public class Controller : NetworkBehaviour
     float maxLookVelocity = 5f;
     float maxCamAngle = 90f;
     float minCamAngle = -90f;
-    //bool wasDaytime = true;
     bool daytime = true;
     float nextTimeToAnim = 0;
     List<Material> cachedMaterials = new List<Material>();
@@ -117,9 +113,6 @@ public class Controller : NetworkBehaviour
     void Awake()
     {
         NamePlayer();
-
-        isHolding = false;
-        ToggleLights(isHolding);
 
         world = World.Instance;
         physicMaterial = world.physicMaterial;
@@ -343,28 +336,6 @@ public class Controller : NetworkBehaviour
             Destroy(mat); // Unity makes a clone of the Material every time GetComponent().material is used. Cache it and destroy it in OnDestroy to prevent a memory leak.
     }
 
-    //private void OnControllerColliderHit(ControllerColliderHit hit)
-    //{
-    //    //hazards hurt player
-    //    if (hit.gameObject.tag == "Hazard")
-    //        health.EditSelfHealth(-1);
-
-    //    GameObject ob = hit.collider.gameObject;
-    //    // if touches a LegoPiece
-    //    if (ob.GetComponent<Brick>() != null) // if is a lego brick
-    //    {
-    //        int obBlockID;
-    //        if (System.Int32.TryParse(ob.name.Substring(6, 2), out obBlockID)) // Assumes the voxel prefabs are named with syntax: "Voxel_##"
-    //        {
-    //            if (blockID != 25) // cannot pickup procGen.ldr (imported VBO)
-    //            {
-    //                PutAwayBrick((byte)obBlockID); // try to add item to toolbar
-    //                Destroy(ob); // destroy LegoPiece
-    //            }
-    //        }
-    //    }
-    //}
-
     private void OnCollisionEnter(Collision collision)
     {
         // hazards hurt player
@@ -452,13 +423,12 @@ public class Controller : NetworkBehaviour
             charObIdle.SetActive(false);
             charObRun.SetActive(false);
 
-            //bool isInActiveChunk = voxelCollider.playerChunkIsActive;
             // IF PRESSED GRAB
-            if (!holdingGrab && inputHandler.grab)// && isInActiveChunk)
+            if (!holdingGrab && inputHandler.grab)
                 PressedGrab();
 
             // IF HOLDING GRAB
-            if (holdingGrab && inputHandler.grab)// && isInActiveChunk)
+            if (holdingGrab && inputHandler.grab)
                 HoldingGrab();
 
             // IF PRESSED SHOOT
@@ -466,7 +436,7 @@ public class Controller : NetworkBehaviour
                 pressedShoot();
 
             // IF RELEASED GRAB
-            if (holdingGrab && !inputHandler.grab)// && isInActiveChunk)
+            if (holdingGrab && !inputHandler.grab)
                 ReleasedGrab();
             
             positionCursorBlocks();
@@ -478,61 +448,19 @@ public class Controller : NetworkBehaviour
 
             Animate();
         }
-
-        if (Settings.OnlinePlay)
-            CmdToggleLights(isHolding);
-        else
-            ToggleLights(isHolding);
     }
 
-    //public void CalculateCurrentDay()
+    //[Command]
+    //void CmdActivateChunks()
     //{
-        
-    //    if (!wasDaytime && daytime) // if turns daytime
-    //    {
-    //        day++;
-    //        wasDaytime = true;
-    //    }
-
-    //    if (wasDaytime && !daytime) // if turns nighttime, start next wave
-    //    {
-    //        wasDaytime = false;
-    //    }
+    //    RpcActivateChunks();
     //}
 
-    [Command]
-    void CmdActivateChunks()
-    {
-        RpcActivateChunks();
-    }
-
-    [ClientRpc]
-    void RpcActivateChunks()
-    {
-        World.Instance.ActivateChunks();
-    }
-
-    [Command]
-    public void CmdToggleLights(bool lightsOn)
-    {
-        RpcToggleLights(lightsOn);
-    }
-
-    [ClientRpc]
-    public void RpcToggleLights(bool lightsOn)
-    {
-        ToggleLights(lightsOn);
-    }
-
-    public void ToggleLights(bool lightsOn)
-    {
-        //foreach (GameObject ob in lightGameObjects)
-        //{
-        //    ob.SetActive(lightsOn); // toggle lights on/off based on state of bool
-        //}
-        //if (typeChar == 1 && tool[typeTool] != null)
-        //    tool[typeTool].SetActive(lightsOn); // toggle tool on/off based on state of bool
-    }
+    //[ClientRpc]
+    //void RpcActivateChunks()
+    //{
+    //    World.Instance.ActivateChunks();
+    //}
 
     public void pressedShoot()
     {
@@ -564,7 +492,7 @@ public class Controller : NetworkBehaviour
                 heldObRb.useGravity = true;
                 heldObRb.detectCollisions = true;
             }
-            heldOb = null;
+            hitOb = null;
             heldObRb = null;
         }
         else if (shootPos.gameObject.activeSelf) // IF SHOT WORLD (NOT HELD) VOXEL
@@ -589,51 +517,6 @@ public class Controller : NetworkBehaviour
             SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
             SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
         }
-        //else if ((typeTool == 0 || isHolding) && Time.time >= gun.nextTimeToFire) // if not shooting world voxels or holding voxel and is holding weapon that is not melee type, spawn projectile
-        //{
-        //    int typePrefab;
-        //    int type;
-
-        //    if (typeTool == 0) // brick1x1
-        //    {
-        //        typePrefab = 2; // projectile
-        //        type = typeProjectile;
-        //    }
-        //    else if (typeTool >= 32 && typeTool <= 43) // shield
-        //    {
-        //        return;
-        //    }
-        //    else if (typeTool >= 55 && typeTool <= 77) // melee weapon
-        //    {
-        //        return;
-        //    }
-        //    else if (typeTool >= 78 && typeTool <= 81) // bows
-        //    {
-        //        typePrefab = 2; // projectile
-        //        type = typeProjectile;
-        //    }
-        //    else if (typeTool >= 84 && typeTool <= 90) // laser guns
-        //    {
-        //        typePrefab = 2; // projectile
-        //        type = typeProjectile;
-        //    }
-        //    else if (typeTool >= 92 && typeTool <= 94) // magic wand/staff
-        //    {
-        //        typePrefab = 2; // projectile
-        //        type = typeProjectile;
-        //    }
-        //    else
-        //    {
-        //        typePrefab = 1; // tool
-        //        type = typeTool;
-        //    }
-        //    // spawn projectile just outside player capsule collider
-        //    Vector3 position = playerCamera.transform.position + playerCamera.transform.forward * (cc.radius + 2);
-        //    if (Settings.OnlinePlay)
-        //        CmdSpawnPreDefinedPrefab(typePrefab, type, position);
-        //    else
-        //        SpawnPreDefinedPrefab(typePrefab, type, position);
-        //}
     }
 
     void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
@@ -667,10 +550,10 @@ public class Controller : NetworkBehaviour
         bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, reach, 11); // ignore player layer
         if (hitCollider) // IF HIT COLLIDER (can be rb or chunk)
         {
-            heldOb = raycastHit.transform.gameObject;
+            hitOb = raycastHit.transform.gameObject;
             holdingGrab = true;
 
-            if (removePos.gameObject.activeSelf && heldOb.tag != "voxelRb" && heldOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
+            if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
             {
                 blockID = World.Instance.GetVoxelState(removePos.position).id;
                 if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
@@ -684,9 +567,9 @@ public class Controller : NetworkBehaviour
                 else
                     UpdateShowGrabObject(holdingGrab, blockID);
             }
-            if (heldOb.GetComponent<Rigidbody>() != null) // if rigidbody
+            if (hitOb.GetComponent<Rigidbody>() != null) // if ob has rigidbody (and collider)
             {
-                heldObRb = heldOb.GetComponent<Rigidbody>();
+                heldObRb = hitOb.GetComponent<Rigidbody>();
                 heldObRb.isKinematic = false;
                 heldObRb.velocity = Vector3.zero;
                 heldObRb.angularVelocity = Vector3.zero;
@@ -749,10 +632,7 @@ public class Controller : NetworkBehaviour
     {
         if (heldObRb != null) // IF NON-VOXEL RB
         {
-            //if (heldOb.GetComponent<BoxCollider>() != null) // try to center voxel (WIP)
-            //    heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f - heldOb.GetComponent<BoxCollider>().center);
-            //else
-                heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f);
+            heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f);
         }
         else if (grabbedPrefab != null) // IF HOLDING VOXEL
         {
@@ -760,7 +640,6 @@ public class Controller : NetworkBehaviour
             {
                     grabbedPrefab.transform.position = placePos.position; // move instance to position where it would attach
                     grabbedPrefab.transform.rotation = placePos.rotation;
-                //brickMove.Play(); // Does not work for some reason
             }
             else // IF HOLDING VOXEL
             {
@@ -776,17 +655,17 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        if(grabbedPrefab != null || (heldOb != null && heldOb.tag == "voxelRb")) // IF HOLDING VOXEL OR VOXEL RB
+        if(grabbedPrefab != null || (hitOb != null && hitOb.tag == "voxelRb")) // IF HOLDING VOXEL OR VOXEL RB
         {
-            if (heldOb != null && heldOb.tag == "voxelRb") // If voxel Rb
+            if (hitOb != null && hitOb.tag == "voxelRb") // If voxel Rb
             {
-                blockID = (byte)heldOb.GetComponent<SceneObject>().typeVoxel; //determine type of voxel to store back in inventory
-                Destroy(heldOb); // destroy the gameobject as it has been 'stored' in inventory
+                blockID = (byte)hitOb.GetComponent<SceneObject>().typeVoxel; //determine type of voxel to store back in inventory
+                Destroy(hitOb); // destroy the gameobject as it has been 'stored' in inventory
 
                 //reset heldOb and heldObRb properties
                 heldObRb.useGravity = true;
                 heldObRb.detectCollisions = true;
-                heldOb = null;
+                hitOb = null;
                 heldObRb = null;
             }
             else
@@ -805,12 +684,12 @@ public class Controller : NetworkBehaviour
             else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
                 PutAwayBrick(blockID);
         }
-        else if (heldOb != null && heldObRb != null) // IF HOLDING NON-VOXEL OBJECT
+        else if (hitOb != null && heldObRb != null) // IF HOLDING NON-VOXEL OBJECT
         {
             //reset heldOb and heldObRb properties
             heldObRb.useGravity = true;
             heldObRb.detectCollisions = true;
-            heldOb = null;
+            hitOb = null;
             heldObRb = null;
         }
     }
@@ -911,22 +790,11 @@ public class Controller : NetworkBehaviour
         {
             // spawn projectile where camera is looking
             if (Settings.OnlinePlay)
-                CmdSpawnPreDefinedPrefab(2, 4, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+                CmdSpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
             else
-                SpawnPreDefinedPrefab(2, 4, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+                SpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
 
             TakeFromCurrentSlot(1);
-        }
-        //else if (!World.Instance.activateNewChunks) // if player presses use button and entire world not loaded
-        //{
-        //    if (!Settings.OnlinePlay)
-        //        World.Instance.ActivateChunks(); // activate the rest of the world chunks
-        //    else
-        //        CmdActivateChunks();
-        //}
-        else
-        {
-            isHolding = !isHolding; // toggle lights
         }
     }
 
@@ -959,15 +827,22 @@ public class Controller : NetworkBehaviour
                 ob.tag = "voxelRb";
                 sceneObject.controller = this;
                 break;
-            //case 1: // IF TOOL
-            //    sceneObject.typeTool = item;
-            //    if (typeTool >= 44 && typeTool <= 55) // throwing knives, blades, axes
-            //        ob.tag = "Hazard";
-            //    break;
             case 2: // IF PROJECTILE
                 sceneObject.projectile[0] = LDrawImportRuntime.Instance.projectileOb;
                 sceneObject.typeProjectile = item;
                 ob.tag = "Hazard";
+                sceneObject.SetEquippedItem(type, item); // set the child object on the server
+                GameObject childOb = ob.transform.GetChild(1).gameObject; // get the projectile (clone) object
+                GameObject deepChildOb = childOb.transform.GetChild(0).GetChild(0).gameObject; // get the deep child of the projectile object to get correct collider
+                BoxCollider deepChildObBc = deepChildOb.GetComponent<BoxCollider>();
+                childOb.GetComponent<BoxCollider>().enabled = false;
+                deepChildObBc.enabled = false;
+                BoxCollider sceneObBc = ob.AddComponent<BoxCollider>();
+                float childScale = childOb.transform.localScale.x;
+                childOb.transform.Rotate(0, 0, 180);
+                sceneObBc.size = deepChildObBc.size * childScale;
+                sceneObBc.center = deepChildObBc.center * childScale;
+                sceneObBc.material = physicMaterial;
                 break;
             case 3: // IF VOXEL BIT
                 sceneObject.typeVoxelBit = item;
@@ -1145,52 +1020,6 @@ public class Controller : NetworkBehaviour
         placePos.gameObject.SetActive(false);
     }
 
-    //public void ReshapeCollider()
-    //{
-    //    if (typeChar == 0)
-    //    {
-    //        if (!inputHandler.sprint)
-    //        {
-    //            CCShapeNormal(cc, 0);
-    //            voxelCollider.width = colliderRadius * 2;
-    //            voxelCollider.height = colliderHeight;
-    //            voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - (cc.height / 2));
-    //            if (!photoMode)
-    //            {
-    //                playerCamera.transform.localPosition = Vector3.zero;
-    //                playerCameraVoxelCollider.enabled = true;
-    //            }
-    //            charController.center = cc.center;
-    //            charController.radius = cc.radius;
-    //            charController.height = cc.height;
-    //        }
-    //        else // ALT MODE
-    //        {
-    //            CCShapeAlternate(cc, 0);
-    //            voxelCollider.width = colliderRadius * 2;
-    //            voxelCollider.height = colliderRadius * 2;
-    //            voxelCollider.halfColliderHeight = Mathf.Abs(cc.center.y - cc.radius);
-    //            if (!photoMode)
-    //            {
-    //                playerCamera.transform.localPosition = new Vector3(0, -5.5f, 0);
-    //                playerCameraVoxelCollider.enabled = false;
-    //            }
-    //            charController.center = cc.center;
-    //            charController.radius = cc.radius;
-    //            charController.height = cc.radius;
-    //        }
-    //    }
-
-    //    switch (typeChar)
-    //    {
-    //        case 0:
-    //            CheckObjectAbove();
-    //            break;
-    //        case 1:
-    //            break;
-    //    }
-    //}
-
     void CCShapeAlternate(CapsuleCollider cc, float offset)
     {
         cc.direction = 2;
@@ -1206,17 +1035,6 @@ public class Controller : NetworkBehaviour
         cc.height = colliderHeight + offset;
         cc.center = Vector3.zero;
     }
-
-    //void CheckObjectAbove()
-    //{
-    //    RaycastHit hit;
-
-    //    Physics.Raycast(transform.position, Vector3.up, out hit, colliderHeight * 0.5f - 0.1f);
-
-    //    // keep the player in alt mode if there is an object above to prevent getting stuck under platforms
-    //    if (hit.transform != null && hit.transform.gameObject.layer != 12)
-    //        inputHandler.sprint = true;
-    //}
 
     bool CheckGroundedCollider()
     {
@@ -1260,7 +1078,7 @@ public class Controller : NetworkBehaviour
         }
 
         if (charController.enabled)
-            charController.Move(velocityPlayer);
+            charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
         //transform.Translate(velocityPlayer, Space.World);
 
         Vector2 rotation = CalculateRotation();
@@ -1351,26 +1169,6 @@ public class Controller : NetworkBehaviour
                 charObRun.SetActive(false);
             }
         }
-
-        //// set animation speed of walk anim to match normalized speed of character.
-        //if (!photoMode)
-        //{
-        //    animator.SetFloat("Speed", velocityPlayer.magnitude * 3f);
-        //    animator.SetBool("isMoving", isMoving);
-        //    animator.SetBool("isGrounded", voxelCollider.isGrounded);
-        //}
-
-        //switch (typeChar)
-        //{
-        //    case 0:
-        //        animator.SetBool("isSprinting", inputHandler.sprint);
-        //        break;
-        //    case 1:
-        //        animator.SetBool("isHolding", isHolding);
-        //        if(isHolding)
-        //            animator.SetBool("isMelee", inputHandler.shoot);
-        //        break;
-        //}
     }
 
     public void RequestSaveWorld()
