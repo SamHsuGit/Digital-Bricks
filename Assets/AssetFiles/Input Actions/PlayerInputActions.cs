@@ -143,6 +143,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Touched"",
+                    ""type"": ""Button"",
+                    ""id"": ""365f7c25-7810-4208-aad5-62c5741b050b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -506,6 +515,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""ScrollWheel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""05b74d91-52de-44c7-a3ff-7eaf480504c3"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Touch"",
+                    ""action"": ""Touched"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1139,6 +1159,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Actions_TogglePhotoMode = m_Actions.FindAction("TogglePhotoMode", throwIfNotFound: true);
         m_Actions_ToggleControls = m_Actions.FindAction("ToggleControls", throwIfNotFound: true);
         m_Actions_Navigate = m_Actions.FindAction("Navigate", throwIfNotFound: true);
+        m_Actions_Touched = m_Actions.FindAction("Touched", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1223,6 +1244,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_TogglePhotoMode;
     private readonly InputAction m_Actions_ToggleControls;
     private readonly InputAction m_Actions_Navigate;
+    private readonly InputAction m_Actions_Touched;
     public struct ActionsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1240,6 +1262,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @TogglePhotoMode => m_Wrapper.m_Actions_TogglePhotoMode;
         public InputAction @ToggleControls => m_Wrapper.m_Actions_ToggleControls;
         public InputAction @Navigate => m_Wrapper.m_Actions_Navigate;
+        public InputAction @Touched => m_Wrapper.m_Actions_Touched;
         public InputActionMap Get() { return m_Wrapper.m_Actions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1288,6 +1311,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Navigate.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigate;
                 @Navigate.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigate;
                 @Navigate.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigate;
+                @Touched.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTouched;
+                @Touched.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTouched;
+                @Touched.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTouched;
             }
             m_Wrapper.m_ActionsActionsCallbackInterface = instance;
             if (instance != null)
@@ -1331,6 +1357,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Navigate.started += instance.OnNavigate;
                 @Navigate.performed += instance.OnNavigate;
                 @Navigate.canceled += instance.OnNavigate;
+                @Touched.started += instance.OnTouched;
+                @Touched.performed += instance.OnTouched;
+                @Touched.canceled += instance.OnTouched;
             }
         }
     }
@@ -1500,6 +1529,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnTogglePhotoMode(InputAction.CallbackContext context);
         void OnToggleControls(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
+        void OnTouched(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

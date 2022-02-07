@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4188041, g: 0.30753577, b: 0.12964812, a: 1}
+  m_IndirectSpecularColor: {r: 0.6594636, g: 0.5593778, b: 0.36470485, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -671,6 +671,7 @@ MonoBehaviour:
   loadingBackground: {fileID: 4378316389117323991}
   baseOb: {fileID: 0}
   customNetworkManager: {fileID: 2040320121199351589}
+  season: 0
   planets:
   - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
   - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}
@@ -1230,6 +1231,7 @@ MonoBehaviour:
     blockIDDeadForest: 0
     blockIDHugeTree: 0
     blockIDMountain: 0
+    hasAtmosphere: 0
     isAlive: 1
     biomes: 
     blockIDTreeLeavesWinter: 0
@@ -2018,6 +2020,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
@@ -2310,7 +2313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5717714097373800373
 Transform:
   m_ObjectHideFlags: 0

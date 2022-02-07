@@ -41,6 +41,7 @@ public class Controller : NetworkBehaviour
     public GameObject charModelOrigin;
     public GameObject gameMenu;
     public GameObject nametag;
+    public GameObject xrRig;
     public GameObject backgroundMask;
     public AudioSource brickPickUp;
     public AudioSource brickPlaceDown;
@@ -128,7 +129,6 @@ public class Controller : NetworkBehaviour
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
         charController = GetComponent<CharacterController>();
         customNetworkManager = World.Instance.customNetworkManager;
-        projectile = LDrawImportRuntime.Instance.projectileOb;
 
         health.isAlive = true;
 
@@ -138,6 +138,28 @@ public class Controller : NetworkBehaviour
         holdPos = holdPosPrefab.transform;
 
         CinematicBars.SetActive(false);
+
+        if (Settings.IsMobilePlatform)
+        {
+            gameMenu.SetActive(false);
+            playerCamera.SetActive(false);
+            charModelOrigin.SetActive(false);
+            nametag.SetActive(false);
+            xrRig.SetActive(true);
+
+            GetComponent<Rigidbody>().isKinematic = true;
+            cc.enabled = false;
+            charController.enabled = false;
+            inputHandler.enabled = false;
+            health.enabled = false;
+            gun.enabled = false;
+            voxelCollider.enabled = false;
+            this.enabled = false;
+        }
+        else
+        {
+            projectile = LDrawImportRuntime.Instance.projectileOb;
+        }
     }
 
     void NamePlayer()

@@ -48,6 +48,7 @@ public static class SettingsStatic
 public class Settings
 {
     // private static variables
+    private static bool isMobilePlatform = false;
     private static bool worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
     private static bool networkPlay = false;
 
@@ -77,6 +78,12 @@ public class Settings
 
     [Header("Player Customization")]
     public string playerName;
+
+    public static bool IsMobilePlatform
+    {
+        get { return isMobilePlatform; }
+        set { isMobilePlatform = value; }
+    }
 
     public static bool WorldLoaded
     {

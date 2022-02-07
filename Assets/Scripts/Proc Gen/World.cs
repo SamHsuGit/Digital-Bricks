@@ -193,7 +193,10 @@ public class World : MonoBehaviour
         WorldDataOverrides(SettingsStatic.LoadedSettings.planetNumber);
 
         // Spawns a imported base.ldr at world origin
-        blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
+        if (Settings.IsMobilePlatform)
+            blocktypes[25].voxelBoundObject = new GameObject();
+        else
+            blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
 
         if (Settings.OnlinePlay)
         {
@@ -751,8 +754,11 @@ public class World : MonoBehaviour
         // Use perlin noise function for more varied height
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
 
-        if (xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
-            modifications.Enqueue(Structure.GenerateMajorFlora(0, globalPos, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
+        if (!Settings.IsMobilePlatform)
+        {
+            if (xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
+                modifications.Enqueue(Structure.GenerateMajorFlora(0, globalPos, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
+        }
 
         /* BASIC TERRAIN PASS */
 
