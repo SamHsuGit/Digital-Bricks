@@ -21,6 +21,7 @@ MonoBehaviour:
   blockIDDeadForest: 23
   blockIDHugeTree: 23
   blockIDMountain: 23
+  hasAtmosphere: 1
   isAlive: 0
   biomes: 0000000001000000020000000300000004000000
   blockIDTreeLeavesWinter: 4

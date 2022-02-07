@@ -19,6 +19,7 @@ public class WorldData
     public byte blockIDDeadForest;
     public byte blockIDHugeTree;
     public byte blockIDMountain;
+    public bool hasAtmosphere;
     public bool isAlive; // controls if the world is hospitable to flora
     public int[] biomes;
     public byte blockIDTreeLeavesWinter;

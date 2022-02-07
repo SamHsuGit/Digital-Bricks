@@ -21,6 +21,7 @@ public class World : MonoBehaviour
     public CustomNetworkManager customNetworkManager;
 
     [Header("World Generation Values")]
+    public int season;
     public Planet[] planets;
     public Biome[] biomes;
     public int solidGroundHeight = 20;
@@ -78,6 +79,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         Random.InitState(SettingsStatic.LoadedSettings.seed);
         //if (Settings.OnlinePlay && isClientOnly && hasAuthority) // if client only, request worldData and seed from host
         //{
@@ -277,6 +279,7 @@ public class World : MonoBehaviour
             worldData.blockIDDeadForest = planet.blockIDDeadForest;
             worldData.blockIDHugeTree = planet.blockIDHugeTree;
             worldData.blockIDMountain = planet.blockIDMountain;
+            worldData.hasAtmosphere = planet.hasAtmosphere;
             worldData.isAlive = planet.isAlive; // controls if the world is hospitable to flora
             worldData.biomes = planet.biomes; // controls which biomes the world has
             worldData.blockIDTreeLeavesWinter = planet.blockIDTreeLeavesWinter;
@@ -323,11 +326,16 @@ public class World : MonoBehaviour
             worldData.blockIDDeadForest = (byte)Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDHugeTree = (byte)Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDMountain = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            //int generateFlora = Random.Range(0, 1);
-            //if (generateFlora == 0)
-            //    worldData.isAlive = false; // controls if the world is hospitable to flora
-            //else
-                worldData.isAlive = true; // controls if the world is hospitable to flora
+            if (worldData.distToStar < 2 || worldData.distToStar > 5) // if distToStar is too close or far (too hot/cold)
+            {
+                worldData.hasAtmosphere = false; // world has no atmosphere
+                worldData.isAlive = false; // world inhospitable to flora
+            }
+            else
+            {
+                worldData.hasAtmosphere = true; // world has atmosphere
+                worldData.isAlive = true; // world is hospitable to flora
+            }
             worldData.biomes = new int[] {0, 1, 2, 3, 4, 5, 6}; // controls which biomes the world has
             worldData.blockIDTreeLeavesWinter = (byte)Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDTreeLeavesSpring = (byte)Random.Range(minRandBlockID, maxRandBlockID);
@@ -755,7 +763,7 @@ public class World : MonoBehaviour
             return 0;
         else if (yGlobalPos == terrainHeight) // if surface block
         {
-            if (Mathf.CeilToInt(System.DateTime.Now.Month / 3f) == 1)
+            if (season == 1)
                 voxelValue = worldData.blockIDTreeLeavesWinter; // snow for winter season
             else
                 voxelValue = biome.surfaceBlock;

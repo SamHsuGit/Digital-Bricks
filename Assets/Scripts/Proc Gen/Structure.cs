@@ -49,7 +49,7 @@ public static class Structure
             return blockID;
         else
         {
-            switch (Mathf.CeilToInt(System.DateTime.Now.Month / 3f)) // Calculate current season based on system date
+            switch (World.Instance.season) // Calculate current season based on system date
             {
                 case 1:
                     byte winter = World.Instance.worldData.blockIDTreeLeavesWinter;

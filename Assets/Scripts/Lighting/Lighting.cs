@@ -102,7 +102,7 @@ public class Lighting : MonoBehaviour
         RenderSettings.reflectionIntensity = reflectionIntensity;
 
         // SET DAY OR NIGHT BASED ON TIME
-        if (!World.Instance.worldData.isAlive)
+        if (!World.Instance.worldData.hasAtmosphere)
         {
             SetSpace();
         }

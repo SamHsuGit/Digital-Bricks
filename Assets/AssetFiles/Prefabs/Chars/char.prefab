@@ -439,7 +439,6 @@ MonoBehaviour:
   isGrounded: 0
   isMoving: 0
   isSprinting: 0
-  isHolding: 0
   photoMode: 0
   options: 0
   checkIncrement: 0.1
@@ -457,7 +456,6 @@ MonoBehaviour:
   backgroundMask: {fileID: 6861918821474845234}
   brickPickUp: {fileID: 166922554488734142}
   brickPlaceDown: {fileID: 5380431484282571642}
-  brickMove: {fileID: 1444523263182546139}
   eat: {fileID: 1788483323922948149}
   crystal: {fileID: 3781011122355421660}
   mushroom: {fileID: 1630218556807955101}
@@ -590,7 +588,6 @@ MonoBehaviour:
   colliderOffset: 1
   isPlayer: 1
   isCamera: 0
-  isAI: 0
   width: 0
   length: 0
   height: 0

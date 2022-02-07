@@ -17,6 +17,7 @@ public class Planet : ScriptableObject
     public byte blockIDHugeTree;
     public byte blockIDMountain;
     [Header("Flora Attributes")]
+    public bool hasAtmosphere;
     public bool isAlive; // controls if the world is hospitable to flora
     public int[] biomes; // controls which biomes the world has
     public byte blockIDTreeLeavesWinter;
