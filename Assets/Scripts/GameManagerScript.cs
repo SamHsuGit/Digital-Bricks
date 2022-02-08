@@ -38,7 +38,7 @@ public class GameManagerScript : MonoBehaviour
             playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = playerPrefabs[0]; //SettingsStatic.LoadedSettings.playerTypeChar];
             LOCAL.SetActive(true);
         }
-        if (Application.isMobilePlatform)
+        if (!Application.isMobilePlatform)
         {
             Settings.IsMobilePlatform = true;
             LDrawImporterRuntime.SetActive(false);

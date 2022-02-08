@@ -9,7 +9,6 @@ public class Chunk
     public GameObject chunkObject;
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
-    Mesh mesh;
     MeshCollider col;
 
     int vertexIndex = 0;
@@ -301,12 +300,15 @@ public class Chunk
         
         meshFilter.mesh = mesh;
 
-        if (col == null)
-            col = chunkObject.AddComponent<MeshCollider>();
-        else
-            col = chunkObject.GetComponent<MeshCollider>();
-        col.sharedMesh = mesh;
-        col.material = World.Instance.physicMaterial;
+        if(!Settings.IsMobilePlatform)
+        {
+            if (col == null)
+                col = chunkObject.AddComponent<MeshCollider>();
+            else
+                col = chunkObject.GetComponent<MeshCollider>();
+            col.sharedMesh = mesh;
+            col.material = World.Instance.physicMaterial;
+        }
     }
 
     void AddTexture(int textureID)
