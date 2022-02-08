@@ -98,6 +98,7 @@ public class PlayerVoxelCollider : MonoBehaviour
             verticalMomentum = baseJumpForce;
             currentJumps++;
         }
+        currentJumps = 0; // allow flying by reseting jumps every frame
 
         // Affect vertical momentum with gravity.
         if (verticalMomentum > gravity)
