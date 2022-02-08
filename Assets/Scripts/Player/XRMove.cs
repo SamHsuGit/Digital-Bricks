@@ -8,7 +8,7 @@ public class XRMove : MonoBehaviour
     Rigidbody rb;
     public bool touched = false;
     public GameObject playerCamera;
-    public float moveForce;
+    public float moveForce = 0.1f;
 
     private PlayerInputActions touchControls;
 

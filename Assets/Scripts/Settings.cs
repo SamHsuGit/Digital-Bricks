@@ -34,9 +34,20 @@ public static class SettingsStatic
         settings.timeOfDay = 6.01f;
         settings.playerName = "PlayerName";
 
-        if (File.Exists(Application.streamingAssetsPath + "/settings.cfg"))
+        string path;
+        if (Application.isMobilePlatform)
         {
-            string JsonImport = File.ReadAllText(Application.streamingAssetsPath + "/settings.cfg");
+            path = Application.persistentDataPath + "/settings.cfg";
+            //path = Application.dataPath.Substring(0, Application.dataPath.Length - 5);
+            //path = path.Substring(0, path.LastIndexOf('/'));
+            //path = path + "/Documents";
+        }
+        else
+            path = Application.streamingAssetsPath + "/settings.cfg";
+
+        if (File.Exists(path))
+        {
+            string JsonImport = File.ReadAllText(path);
             settings = JsonUtility.FromJson<Settings>(JsonImport);
         }
 

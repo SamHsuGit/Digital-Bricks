@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SpatialTracking;
 public class Controller : NetworkBehaviour
 {
     public Player player;
@@ -41,7 +42,6 @@ public class Controller : NetworkBehaviour
     public GameObject charModelOrigin;
     public GameObject gameMenu;
     public GameObject nametag;
-    public GameObject xrRig;
     public GameObject backgroundMask;
     public AudioSource brickPickUp;
     public AudioSource brickPlaceDown;
@@ -141,23 +141,26 @@ public class Controller : NetworkBehaviour
 
         if (Settings.IsMobilePlatform)
         {
-            gameMenu.SetActive(false);
-            playerCamera.SetActive(false);
-            charModelOrigin.SetActive(false);
-            nametag.SetActive(false);
-            xrRig.SetActive(true);
+            GetComponent<XRMove>().enabled = true;
+            playerCamera.transform.parent.GetComponent<TrackedPoseDriver>().enabled = true;
+            world.PlayerJoined(gameObject);
 
+            gameMenu.SetActive(true);
+            playerCamera.SetActive(true);
+            charModelOrigin.SetActive(false);
+            nametag.SetActive(true);
             GetComponent<Rigidbody>().isKinematic = true;
             cc.enabled = false;
             charController.enabled = false;
-            inputHandler.enabled = false;
+            inputHandler.enabled = true;
             health.enabled = false;
             gun.enabled = false;
             voxelCollider.enabled = false;
-            this.enabled = false;
         }
         else
         {
+            GetComponent<XRMove>().enabled = false;
+            playerCamera.transform.parent.GetComponent<TrackedPoseDriver>().enabled = false;
             projectile = LDrawImportRuntime.Instance.projectileOb;
         }
     }
@@ -181,7 +184,7 @@ public class Controller : NetworkBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        if (!Settings.OnlinePlay)
+        if (!Settings.OnlinePlay & !Settings.IsMobilePlatform)
         {
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
 
@@ -440,10 +443,12 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        if (!photoMode && !options) // IF NOT IN OPTIONS OR PHOTO MODE
+        if (!photoMode && !options && !Settings.IsMobilePlatform) // IF NOT IN OPTIONS OR PHOTO MODE
         {
-            charObIdle.SetActive(false);
-            charObRun.SetActive(false);
+            if(charObIdle != null)
+                charObIdle.SetActive(false);
+            if(charObRun != null)
+                charObRun.SetActive(false);
 
             // IF PRESSED GRAB
             if (!holdingGrab && inputHandler.grab)

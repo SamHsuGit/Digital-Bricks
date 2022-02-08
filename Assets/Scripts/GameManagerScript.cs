@@ -43,8 +43,8 @@ public class GameManagerScript : MonoBehaviour
             Settings.IsMobilePlatform = true;
             LDrawImporterRuntime.SetActive(false);
         }
-        //else
-        //    LDrawImporterRuntime.SetActive(true);
+        else
+            LDrawImporterRuntime.SetActive(true);
 
     }
 }

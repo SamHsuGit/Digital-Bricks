@@ -67,7 +67,7 @@ public class World : MonoBehaviour
 
     List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
-    Dictionary<Player, Controller> controllers = new Dictionary<Player, Controller>();
+    Dictionary<Player, GameObject> controllers = new Dictionary<Player, GameObject>();
     List<Player> _players = new List<Player>();
     List<ChunkCoord> _playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> _playerLastChunkCoords = new List<ChunkCoord>();
@@ -94,7 +94,7 @@ public class World : MonoBehaviour
 
         playerCount = 0;
 
-        // lowest acceptable viewDistance is 1
+        // lowest acceptable drawDistance is 1
         if (SettingsStatic.LoadedSettings.drawDistance < 1)
             SettingsStatic.LoadedSettings.drawDistance = 1;
 
@@ -151,7 +151,7 @@ public class World : MonoBehaviour
         else
             player = playerGameObject.GetComponent<Controller>().player;
 
-        controllers.Add(player, player.playerGameObject.GetComponent<Controller>());
+        controllers.Add(player, player.playerGameObject);
 
         // Set player position from save file
         if (IsVoxelInWorld(player.spawnPosition)) // if the player position is in world
@@ -194,7 +194,7 @@ public class World : MonoBehaviour
 
         // Spawns a imported base.ldr at world origin
         if (Settings.IsMobilePlatform)
-            blocktypes[25].voxelBoundObject = new GameObject();
+            blocktypes[25].voxelBoundObject = null;
         else
             blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
 
@@ -369,7 +369,10 @@ public class World : MonoBehaviour
     public void LoadWorld()
     {
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
-        loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
+        if (Settings.IsMobilePlatform)
+            loadDistance = 1;
+        else
+            loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
         LOD0threshold = 1; // Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 0.333f);
 
         for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
@@ -446,7 +449,7 @@ public class World : MonoBehaviour
             // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
             if (_players[i].playerGameObject != worldPlayer && _players[i].playerGameObject != null && _players.Count == _playerChunkCoords.Count)
             {
-                _playerChunkCoords[i] = GetChunkCoordFromVector3(controllers[_players[i]].playerCamera.transform.position); // get the current chunkCoords for given player camera
+                _playerChunkCoords[i] = GetChunkCoordFromVector3(controllers[_players[i]].transform.position); // get the current chunkCoords for given player camera
 
                 // Only update the chunks if the player has moved from the chunk they were previously on.
                 if (!_playerChunkCoords[i].Equals(_playerLastChunkCoords[i]))
