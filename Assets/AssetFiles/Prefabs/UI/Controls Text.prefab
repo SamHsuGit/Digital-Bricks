@@ -77,33 +77,28 @@ MonoBehaviour:
     Sprint = Left Shift (Left
     Bumper)
 
-    Attack = Left Mouse Button (Right Trigger)
-
-    Use = E (Xbox X)
+    Shoot/Use = Left Mouse Button (Right Trigger)
 
 
-    Grab
-    = Hold Right Mouse Button (Left Trigger)
+    Grab = Hold
+    Right Mouse Button (Left Trigger)
 
-    Store Item = Release Grab while
-    aimed at air
+    Store Item = Release Grab while aimed
+    at air
 
     Unstore Item = Hold Grab while aimed at air
 
-    Cycle Slots
-    = Mouse Scroll/Arrow Keys (D-Pad)
-
-    Drop Item = Q (Xbox B)
+    Cycle Slots = Mouse
+    Scroll/Arrow Keys (D-Pad)
 
 
-    Options =
-    Esc (Start)
+    Options = Esc (Start)
 
 
-    Photo Mode = Tab (Select)
+    Unlock Camera = Tab
+    (Select)
 
-    Depth of Field = Arrow Keys
-    (D-Pad) in photo mode'
+    Depth of Field = Arrow Keys (D-Pad) with unlocked camera'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
