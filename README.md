@@ -1,5 +1,5 @@
-# BrickFormers
-A Fan-Made LEGO Game
+# LDPlay
+A Fan-Made LEGO Sandbox
 
 Samuel Hsu 2021
 
@@ -19,9 +19,3 @@ Grygory Dyadichenko - LDraw Importer (MIT License): https://github.com/Nox7atra/
 vis2k Mirror (MIT License): https://github.com/vis2k/Mirror
 
 Unity (Personal License)
-
-Unity Packages:
-
-Unity Input System
-
-Universal RP

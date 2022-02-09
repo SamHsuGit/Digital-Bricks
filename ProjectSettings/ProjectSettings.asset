@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Sam Hsu
-  productName: BrickFormers
+  productName: LDPlay
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -164,8 +164,8 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Standalone: com.SamHsu.BrickFormers
-    iPhone: com.SamHsu.BrickFormers
+    Standalone: com.SamHsu.LDPlay
+    iPhone: com.SamHsu.LDPlay
   buildNumber:
     Standalone: 0
     iPhone: 0
@@ -684,14 +684,14 @@ PlayerSettings:
     Standalone: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: BrickFormers
+  metroPackageName: LDPlay
   metroPackageVersion: 0.42.0.0
   metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: "@ikc\x7F8ai"
   metroCertificateSubject: Sam Hsu
   metroCertificateIssuer: Sam Hsu
   metroCertificateNotAfter: 004dcf2dc1ced801
-  metroApplicationDescription: BrickFormers
+  metroApplicationDescription: LDPlay
   wsaImages:
     65636: Assets/AssetFiles/Images/Logo/LogoBlack50x50.png
     65661: Assets/AssetFiles/Images/Logo/LogoBlack63x63.png
