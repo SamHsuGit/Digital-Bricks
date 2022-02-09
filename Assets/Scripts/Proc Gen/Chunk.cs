@@ -300,7 +300,7 @@ public class Chunk
         
         meshFilter.mesh = mesh;
 
-        if(!Settings.IsMobilePlatform)
+        if(World.Instance.chunkMeshColliders)
         {
             if (col == null)
                 col = chunkObject.AddComponent<MeshCollider>();

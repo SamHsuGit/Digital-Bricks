@@ -64,24 +64,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Use"",
-                    ""type"": ""Button"",
-                    ""id"": ""c40df4f2-6d1d-4f9c-bf62-e487a3d80e7e"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Drop"",
-                    ""type"": ""Button"",
-                    ""id"": ""f2f49fb2-c78b-43a4-a4e6-f184f982b186"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Shoot"",
                     ""type"": ""Button"",
                     ""id"": ""880cb55b-ff88-494f-a381-7ac8bf565c9a"",
@@ -460,50 +442,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""29912b14-c909-48ba-91ea-b45621e0d8ae"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Drop"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e004c6fe-03e6-445b-b28f-5dc139b4243c"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Drop"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8cfdc60a-7c42-413b-9a15-7ee7465744aa"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Use"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5ee66dbc-5c5d-4905-8fc2-a85879704bda"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Use"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1150,8 +1088,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Actions_Look = m_Actions.FindAction("Look", throwIfNotFound: true);
         m_Actions_ScrollWheel = m_Actions.FindAction("ScrollWheel", throwIfNotFound: true);
         m_Actions_Grab = m_Actions.FindAction("Grab", throwIfNotFound: true);
-        m_Actions_Use = m_Actions.FindAction("Use", throwIfNotFound: true);
-        m_Actions_Drop = m_Actions.FindAction("Drop", throwIfNotFound: true);
         m_Actions_Shoot = m_Actions.FindAction("Shoot", throwIfNotFound: true);
         m_Actions_Jump = m_Actions.FindAction("Jump", throwIfNotFound: true);
         m_Actions_Sprint = m_Actions.FindAction("Sprint", throwIfNotFound: true);
@@ -1235,8 +1171,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_Look;
     private readonly InputAction m_Actions_ScrollWheel;
     private readonly InputAction m_Actions_Grab;
-    private readonly InputAction m_Actions_Use;
-    private readonly InputAction m_Actions_Drop;
     private readonly InputAction m_Actions_Shoot;
     private readonly InputAction m_Actions_Jump;
     private readonly InputAction m_Actions_Sprint;
@@ -1253,8 +1187,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Actions_Look;
         public InputAction @ScrollWheel => m_Wrapper.m_Actions_ScrollWheel;
         public InputAction @Grab => m_Wrapper.m_Actions_Grab;
-        public InputAction @Use => m_Wrapper.m_Actions_Use;
-        public InputAction @Drop => m_Wrapper.m_Actions_Drop;
         public InputAction @Shoot => m_Wrapper.m_Actions_Shoot;
         public InputAction @Jump => m_Wrapper.m_Actions_Jump;
         public InputAction @Sprint => m_Wrapper.m_Actions_Sprint;
@@ -1284,12 +1216,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Grab.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnGrab;
                 @Grab.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnGrab;
                 @Grab.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnGrab;
-                @Use.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnUse;
-                @Use.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnUse;
-                @Use.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnUse;
-                @Drop.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
-                @Drop.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
-                @Drop.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
                 @Shoot.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
@@ -1330,12 +1256,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Grab.started += instance.OnGrab;
                 @Grab.performed += instance.OnGrab;
                 @Grab.canceled += instance.OnGrab;
-                @Use.started += instance.OnUse;
-                @Use.performed += instance.OnUse;
-                @Use.canceled += instance.OnUse;
-                @Drop.started += instance.OnDrop;
-                @Drop.performed += instance.OnDrop;
-                @Drop.canceled += instance.OnDrop;
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
@@ -1520,8 +1440,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnGrab(InputAction.CallbackContext context);
-        void OnUse(InputAction.CallbackContext context);
-        void OnDrop(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);

@@ -12,6 +12,8 @@ public class World : MonoBehaviour
     public bool saving = false;
     public bool undrawVoxelBoundObjects = false;
     public bool undrawVoxels = false;
+    public bool VBOs = true;
+    public bool chunkMeshColliders = true;
 
     public GameObject mainCameraGameObject;
     public Lighting globalLighting;
@@ -79,6 +81,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         Random.InitState(SettingsStatic.LoadedSettings.seed);
         //if (Settings.OnlinePlay && isClientOnly && hasAuthority) // if client only, request worldData and seed from host
@@ -95,8 +98,8 @@ public class World : MonoBehaviour
         playerCount = 0;
 
         // lowest acceptable drawDistance is 1
-        if (SettingsStatic.LoadedSettings.drawDistance < 1)
-            SettingsStatic.LoadedSettings.drawDistance = 1;
+        if (SettingsStatic.LoadedSettings.viewDistance < 1)
+            SettingsStatic.LoadedSettings.viewDistance = 1;
 
         studRenderDistanceInChunks = 1; // keep studs render distance lower than viewDistance to avoid errors.
         //Debug.Log("viewDist = " + SettingsStatic.LoadedSettings.viewDistance);
@@ -178,8 +181,8 @@ public class World : MonoBehaviour
         if (firstLoadDrawDistance < loadDistance) // checks to ensure that firstLoadDrawDistance is at least as large as loadDistance
             firstLoadDrawDistance = loadDistance;
 
-        //if(playerGameObject != worldPlayer)
-            FirstCheckDrawDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // used to help draw the world faster upon scene start for first player
+        //if(playerGameObject != worldPlayer) // doesn't make a difference in load times
+            FirstCheckDrawDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
 
         playerCount++;
         //Debug.Log("Player Joined");
@@ -196,12 +199,14 @@ public class World : MonoBehaviour
         if (Settings.IsMobilePlatform)
             blocktypes[25].voxelBoundObject = null;
         else
+        {
             blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
 
-        if (Settings.OnlinePlay)
-        {
-            customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.baseOb);
-            customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.projectileOb);
+            if (Settings.OnlinePlay)
+            {
+                customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.baseOb);
+                customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.projectileOb);
+            }
         }
 
         LoadWorld();
@@ -228,7 +233,6 @@ public class World : MonoBehaviour
         }
 
         Settings.WorldLoaded = true;
-        mainCamera = mainCameraGameObject.GetComponent<Camera>();
         mainCamera.enabled = false;
     }
 
@@ -370,9 +374,11 @@ public class World : MonoBehaviour
     {
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
         if (Settings.IsMobilePlatform)
+        {
             loadDistance = 1;
+        }
         else
-            loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
+            loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
         LOD0threshold = 1; // Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 0.333f);
 
         for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
@@ -455,7 +461,7 @@ public class World : MonoBehaviour
                 if (!_playerChunkCoords[i].Equals(_playerLastChunkCoords[i]))
                 {
                     CheckDrawDistance(_playerChunkCoords[i], i); // re-draw chunks
-                    CheckObDrawDist(_playerChunkCoords[i], i); // re-draw studs
+                    CheckVBODrawDist(_playerChunkCoords[i], i); // re-draw studs
                 }
             }
 
@@ -513,6 +519,7 @@ public class World : MonoBehaviour
             //if (!activateNewChunks && chunks.ContainsKey(c) && chunks[c].isActive)
             //    AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
             //else if (activateNewChunks)
+            if(VBOs)
                 AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
         }
 
@@ -535,12 +542,13 @@ public class World : MonoBehaviour
             foreach (ChunkCoord c in copyOfChunksToDrawObjectsList)
             {
                 //if(activateNewChunks) // only undraw if out of tutorial mode
+                if (VBOs)
                     RemoveObjectsFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
             }
         }
     }
 
-    void CheckObDrawDist(ChunkCoord playerChunkCoord, int playerIndex)
+    void CheckVBODrawDist(ChunkCoord playerChunkCoord, int playerIndex)
     {
         players[playerIndex].chunksToAddVBO.Clear();
 
@@ -573,9 +581,9 @@ public class World : MonoBehaviour
         }
 
         // Loop through all chunks currently within view distance of the player.
-        for (int x = playerChunkCoord.x - SettingsStatic.LoadedSettings.drawDistance; x < playerChunkCoord.x + SettingsStatic.LoadedSettings.drawDistance; x++)
+        for (int x = playerChunkCoord.x - SettingsStatic.LoadedSettings.viewDistance; x < playerChunkCoord.x + SettingsStatic.LoadedSettings.viewDistance; x++)
         {
-            for (int z = playerChunkCoord.z - SettingsStatic.LoadedSettings.drawDistance; z < playerChunkCoord.z + SettingsStatic.LoadedSettings.drawDistance; z++)
+            for (int z = playerChunkCoord.z - SettingsStatic.LoadedSettings.viewDistance; z < playerChunkCoord.z + SettingsStatic.LoadedSettings.viewDistance; z++)
             {
                 ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
 

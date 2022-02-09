@@ -38,8 +38,8 @@ public class SetupMenu : MonoBehaviour
         Application.targetFrameRate = 60;
         
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
-        worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.drawDistance;
-        worldRenderText.text = SettingsStatic.LoadedSettings.drawDistance.ToString();
+        worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
+        worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
         seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
         loadingText.SetActive(false);
@@ -102,7 +102,7 @@ public class SetupMenu : MonoBehaviour
     public void SaveSettings()
     {
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
-        SettingsStatic.LoadedSettings.drawDistance = (int)worldRenderDistanceSlider.value;
+        SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
 
         try
         {
@@ -130,9 +130,6 @@ public class SetupMenu : MonoBehaviour
         if (Application.isMobilePlatform)
         {
             path = Application.persistentDataPath + "/settings.cfg";
-            //path = Application.dataPath.Substring(0, Application.dataPath.Length - 5);
-            //path = path.Substring(0, path.LastIndexOf('/'));
-            //path = path + "/Documents/settings.cfg";
         }
         else
             path = Application.streamingAssetsPath + "/settings.cfg";

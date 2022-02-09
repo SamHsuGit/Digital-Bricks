@@ -13,11 +13,13 @@ public class GameManagerScript : MonoBehaviour
     public GameObject PlayerManagerNetwork;
     public GameObject LOCAL;
     public GameObject globalLighting;
-    public GameObject world;
+    public GameObject worldOb;
     public GameObject LDrawImporterRuntime;
+    private World world;
 
     void Awake()
     {
+        world = worldOb.GetComponent<World>();
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
 
         if (!Settings.OnlinePlay)
@@ -25,7 +27,7 @@ public class GameManagerScript : MonoBehaviour
 
         if (Settings.OnlinePlay) // order of events is important for network ids to be generated correctly
         {
-            world.SetActive(false); // later enabled by NetworkMenu
+            worldOb.SetActive(false); // later enabled by NetworkMenu
             NETWORK.SetActive(true);
             PlayerManagerNetwork.SetActive(true);
             LOCAL.SetActive(false);
@@ -34,7 +36,7 @@ public class GameManagerScript : MonoBehaviour
         {
             NETWORK.SetActive(false);
             PlayerManagerNetwork.SetActive(false);
-            world.SetActive(true);
+            worldOb.SetActive(true);
             playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = playerPrefabs[0]; //SettingsStatic.LoadedSettings.playerTypeChar];
             LOCAL.SetActive(true);
         }
@@ -42,9 +44,14 @@ public class GameManagerScript : MonoBehaviour
         {
             Settings.IsMobilePlatform = true;
             LDrawImporterRuntime.SetActive(false);
+            world.chunkMeshColliders = false;
+            world.VBOs = false;
         }
         else
+        {
             LDrawImporterRuntime.SetActive(true);
-
+            world.chunkMeshColliders = true;
+            world.VBOs = true;
+        }
     }
 }

@@ -35,6 +35,7 @@ public class Controller : NetworkBehaviour
     public byte blockID;
     public float baseAnimRate = 2;
     public float animRate = 2;
+    public bool fpsView = true;
 
     [SerializeField] float lookVelocity = 1f;
 
@@ -390,7 +391,10 @@ public class Controller : NetworkBehaviour
         }
 
         if (options)
+        {
+            fpsView = true;
             gameMenuComponent.OnOptions();
+        }
         else if (!options)
             gameMenuComponent.ReturnToGame();
     }
@@ -420,7 +424,6 @@ public class Controller : NetworkBehaviour
             if (typeChar == 1)
             {
                 charController.enabled = false;
-                playerCamera.transform.localPosition = Vector3.zero; // reset camera to FPS view
                 charController.enabled = true;
             }
         }
@@ -445,11 +448,6 @@ public class Controller : NetworkBehaviour
 
         if (!photoMode && !options && !Settings.IsMobilePlatform) // IF NOT IN OPTIONS OR PHOTO MODE
         {
-            if(charObIdle != null)
-                charObIdle.SetActive(false);
-            if(charObRun != null)
-                charObRun.SetActive(false);
-
             // IF PRESSED GRAB
             if (!holdingGrab && inputHandler.grab)
                 PressedGrab();
@@ -472,9 +470,17 @@ public class Controller : NetworkBehaviour
         else if (photoMode && !options)
         {
             MoveCamera(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
-
-            Animate();
         }
+        
+        if (fpsView)
+        {
+            if (charObIdle != null)
+                charObIdle.SetActive(false);
+            if (charObRun != null)
+                charObRun.SetActive(false);
+        }
+        else
+            Animate();
     }
 
     //[Command]
@@ -494,7 +500,24 @@ public class Controller : NetworkBehaviour
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
             return;
 
-        if (holdingGrab) // IF HOLDING SOMETHING
+        // if has mushroom, and health is not max and the selected slot has a stack
+        if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 32 && health.hp < health.hpMax)
+        {
+            // remove qty 1 from stack
+            health.RequestEditSelfHealth(1);
+            eat.Play();
+            TakeFromCurrentSlot(1);
+        }
+        else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
+        {
+            // spawn projectile where camera is looking
+            if (Settings.OnlinePlay)
+                CmdSpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+            else
+                SpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+            TakeFromCurrentSlot(1);
+        }
+        else if (holdingGrab) // IF HOLDING SOMETHING
         {
             holdingGrab = false;
             reticle.SetActive(true);
@@ -563,6 +586,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
+    // not used since shooting voxels can accomplish same thing
     public void DropItemsInSlot()
     {
         if (!options && !photoMode && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS OR PHOTO MODE AND ITEM IN SLOT
@@ -794,35 +818,6 @@ public class Controller : NetworkBehaviour
         // if after removing qty 1 from stack, qty = 0, then remove the stack from the slot
         if (toolbar.slots[toolbar.slotIndex].itemSlot.stack.amount == 0)
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
-    }
-
-    public void Use()
-    {
-        if (options || photoMode) // IF NOT IN OPTIONS OR PHOTO MODE
-            return;
-        
-        Vector3 pos = removePos.position;
-
-        byte blockID = World.Instance.GetVoxelState(pos).id;
-
-        // else if block is mushroom, and health is not max and the selected slot has a stack 
-        if (blockID == 32 && health.hp < health.hpMax)
-        {
-            // remove qty 1 from stack
-            health.RequestEditSelfHealth(1);
-            eat.Play();
-            RemoveVoxel(pos);
-        }
-        else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
-        {
-            // spawn projectile where camera is looking
-            if (Settings.OnlinePlay)
-                CmdSpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
-            else
-                SpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
-
-            TakeFromCurrentSlot(1);
-        }
     }
 
     [Command]
@@ -1167,6 +1162,19 @@ public class Controller : NetworkBehaviour
     public void TogglePhotoMode()
     {
         photoMode = !photoMode;
+        if (photoMode)
+            fpsView = false;
+
+        Vector3 camLocalPos = playerCamera.transform.localPosition;
+        if (camLocalPos.z >= 0)
+        {
+            playerCamera.transform.localPosition = Vector3.zero; // reset camera to FPS view if camera gets in front of player
+            fpsView = true;
+        }
+        if(camLocalPos.y < - cc.height / 2 || camLocalPos.y > cc.height / 2)
+        {
+            playerCamera.transform.localPosition = new Vector3(camLocalPos.x, 0, camLocalPos.z); // keep camera within reasonable range
+        }
     }
 
     public void ToggleOptions()

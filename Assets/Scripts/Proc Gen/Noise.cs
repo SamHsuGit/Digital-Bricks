@@ -8,7 +8,19 @@ public static class Noise
     {
         offset += SettingsStatic.LoadedSettings.seed; // make entire world generation affected by single seed
 
-        return Mathf.PerlinNoise((position.x + 0.1f) / VoxelData.ChunkWidth * scale + offset, (position.y + 0.1f) / VoxelData.ChunkWidth * scale + offset);
+        float y = 0;
+        // purpose of 0.1f is to make not a whole number since all positions will be whole numbers
+        y = Mathf.PerlinNoise((position.x + 0.1f) / VoxelData.ChunkWidth * scale + offset, (position.y + 0.1f) / VoxelData.ChunkWidth * scale + offset);
+
+        // multi-octave perlin noise is too resource intensive to be used
+        //float[] octaveFrequencies = new float[] { 1.0f, 1.5f };
+        //float[] octaveAmplitudes = new float[] { 1.0f, 0.9f };
+        //for (int i = 0; i < octaveFrequencies.Length;i++)
+        //{
+        //    y += octaveAmplitudes[i] * Mathf.PerlinNoise(octaveFrequencies[i] * (position.x + 0.1f) / VoxelData.ChunkWidth * scale + offset, octaveFrequencies[i] * (position.y + 0.1f) / VoxelData.ChunkWidth * scale + offset);
+        //}
+
+        return y;
     }
 
     public static bool Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
@@ -32,7 +44,6 @@ public static class Noise
             return true;
         else
             return false;
-
     }
 
 }

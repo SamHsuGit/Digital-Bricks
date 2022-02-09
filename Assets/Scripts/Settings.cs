@@ -21,7 +21,7 @@ public static class SettingsStatic
         Settings settings = new Settings();
 
         settings.ipAddress = "localhost";
-        settings.drawDistance = 3;
+        settings.viewDistance = 3;
         settings.volume = 0.5f;
         settings.lookSpeed = 0.1f;
         settings.lookAccel = 0.1f;
@@ -38,9 +38,6 @@ public static class SettingsStatic
         if (Application.isMobilePlatform)
         {
             path = Application.persistentDataPath + "/settings.cfg";
-            //path = Application.dataPath.Substring(0, Application.dataPath.Length - 5);
-            //path = path.Substring(0, path.LastIndexOf('/'));
-            //path = path + "/Documents";
         }
         else
             path = Application.streamingAssetsPath + "/settings.cfg";
@@ -68,7 +65,7 @@ public class Settings
 
     [Header("Performance")]
     // NOTE: viewDistance is a radius, just like in Minecraft.
-    public int drawDistance; // loadDistance = viewDistance * 3.33 to reduce lag by ensuring player is always moving in loaded chunks
+    public int viewDistance; // loadDistance = viewDistance * 3.33 to reduce lag by ensuring player is always moving in loaded chunks
 
     [Header("Controls")]
     [Range(0.0001f, 1f)]

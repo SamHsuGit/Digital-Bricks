@@ -199,7 +199,7 @@ public static class SaveSystem
         }
     }
 
-    public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (slow)
+    public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (SLOW)
     {
         string chunkName = position.x + "-" + position.y;
 

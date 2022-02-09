@@ -94,10 +94,25 @@ public class Gun : NetworkBehaviour
             {
                 if (World.Instance.baseObPieces[i] == hit.transform.gameObject)
                 {
+                    Vector3 pos = hit.transform.position;
+                    
                     if (Settings.OnlinePlay)
+                    {
                         CmdBreakBaseObPiece(i);
+                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                    }
                     else
+                    {
+                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
                         BreakBaseObPiece(i);
+                    }
+                        
                 }
             }
         }

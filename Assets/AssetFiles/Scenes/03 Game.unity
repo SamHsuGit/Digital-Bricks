@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.6594636, g: 0.5593778, b: 0.36470485, a: 1}
+  m_IndirectSpecularColor: {r: 0.6594637, g: 0.55937785, b: 0.36470497, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -411,6 +411,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4378316388154271987}
     - target: {fileID: 5523944444626184378, guid: 0d567e6f36b33804f9faf5bda9cd6993, type: 3}
+      propertyPath: worldOb
+      value: 
+      objectReference: {fileID: 2841459445815596870}
+    - target: {fileID: 5523944444626184378, guid: 0d567e6f36b33804f9faf5bda9cd6993, type: 3}
       propertyPath: worldLocal
       value: 
       objectReference: {fileID: 0}
@@ -665,6 +669,8 @@ MonoBehaviour:
   saving: 0
   undrawVoxelBoundObjects: 0
   undrawVoxels: 0
+  VBOs: 1
+  chunkMeshColliders: 1
   mainCameraGameObject: {fileID: 5717714097373800335}
   globalLighting: {fileID: 2529205028307385179}
   loadingText: {fileID: 4378316389117323992}
