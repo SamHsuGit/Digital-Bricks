@@ -243,4 +243,4 @@ MonoBehaviour:
   ambientIntensity: 1
   reflectionIntensity: 1
   timeOfDay: 6.01
-  maxFogDensity: 0.00125
+  maxFogDensity: 0.01

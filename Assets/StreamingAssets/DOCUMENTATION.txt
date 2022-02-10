@@ -39,7 +39,7 @@ CONTROLLER
 		Shoot (Left click)
 		Grab (Right click)
 		Options (Escape Key, Start Button toggles on/off)
-		PhotoMode (Tab Key, Select Button toggles on/off)
+		Cycle CamMode (Tab Key, Select Button)
 		Show Controls (Y key, Y button toggles on/off)
 	Animations:
 		Defined procedurally based on 2 imported keyframes for charIdle.ldr and charRun.ldr

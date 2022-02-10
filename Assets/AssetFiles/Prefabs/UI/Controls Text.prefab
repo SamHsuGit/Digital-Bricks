@@ -89,16 +89,27 @@ MonoBehaviour:
     Unstore Item = Hold Grab while aimed at air
 
     Cycle Slots = Mouse
-    Scroll/Arrow Keys (D-Pad)
+    Scroll/Arrow Keys (D-Pad) Left/Right
+
+    Cycle Creative Slot = Arrow Keys (D-Pad)
+    Up/Down
 
 
     Options = Esc (Start)
 
 
-    Unlock Camera = Tab
-    (Select)
+    Change Camera Mode = Tab (Select)
 
-    Depth of Field = Arrow Keys (D-Pad) with unlocked camera'
+    Third
+    Person Camera:
+
+    Zoom = Mouse Scroll Wheel
+
+
+    Third Person & Free Camera:
+
+    Depth
+    of Field = Arrow Keys (D-Pad)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

@@ -259,7 +259,7 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
-        m_TargetAssemblyTypeName: PlayerInputHandlerLocal, Assembly-CSharp
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
         m_MethodName: OnScrollWheel
         m_Mode: 0
         m_Arguments:
@@ -276,7 +276,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3963772888375218276}
         m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: TogglePhotoMode
+        m_MethodName: ToggleCamMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -307,9 +307,21 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
-        m_TargetAssemblyTypeName: InputHandlerLocal, Assembly-CSharp
-        m_MethodName: OnNavigate
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnNavigateUp
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: toggleNavigate
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -326,9 +338,21 @@ MonoBehaviour:
     m_ActionName: Actions/Touched[/Simulated Touchscreen/primaryTouch/press]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3963772888375218276}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: ResetCamera
+      - m_Target: {fileID: 4390896333885380563}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnNavigateDown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: toggleNavigate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -338,8 +362,64 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 542cd5eb-98fc-46f3-91e8-b0c80dbbff1e
-    m_ActionName: Actions/Reset Camera[/Keyboard/tab]
+    m_ActionId: 7a85eab4-4c9a-4c5b-9999-8d73de906c4a
+    m_ActionName: Actions/NavigateDown[/Keyboard/downArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4390896333885380563}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnNavigateLeft
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: toggleNavigate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8a292e9b-34a2-4f04-913f-10df962f2c6b
+    m_ActionName: Actions/NavigateLeft[/Keyboard/leftArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4390896333885380563}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnNavigateRight
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: toggleNavigate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e4769cf2-c7fc-46f0-8721-5455d87481a4
+    m_ActionName: Actions/NavigateRight[/Keyboard/rightArrow]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Actions
@@ -359,14 +439,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move: {x: 0, y: 0}
   look: {x: 0, y: 0}
-  navigate: {x: 0, y: 0}
+  navUp: 0
+  navDown: 0
+  navLeft: 0
+  navRight: 0
   scrollWheel: {x: 0, y: 0}
   jump: 0
   sprint: 0
   grab: 0
   shoot: 0
-  togglePhotoMode: 0
-  toggleControls: 0
 --- !u!114 &3963772888375218276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,17 +509,18 @@ MonoBehaviour:
   isGrounded: 0
   isMoving: 0
   isSprinting: 0
-  photoMode: 0
   options: 0
   checkIncrement: 0.1
-  reach: 4
+  grabDist: 4
+  tpsDist: 0
   maxFocusDistance: 2
   focusDistanceIncrement: 0.03
   holdingGrab: 0
   blockID: 0
   baseAnimRate: 2
   animRate: 2
-  fpsView: 1
+  camMode: 1
+  setCamMode: 0
   lookVelocity: 1
   charModelOrigin: {fileID: 6156733249479519148}
   gameMenu: {fileID: 5290477769798018415}
@@ -513,7 +595,6 @@ MonoBehaviour:
   fireRate: 2
   impactForce: 0.01
   damage: 3
-  range: 2
   nextTimeToFire: 0
   sphereCastRadius: 0.1
   fpsCam: {fileID: 6534775095329473395}

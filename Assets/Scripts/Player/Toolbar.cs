@@ -9,6 +9,8 @@ public class Toolbar : MonoBehaviour
     public UIItemSlot[] slots;
     public RectTransform highlight;
     public int slotIndex = 0;
+    public byte blockIndex = 2;
+    public bool setNavigate = false;
 
     CanvasGroup optionsMenuCanvasGroup;
     InputHandler inputHandler;
@@ -29,6 +31,17 @@ public class Toolbar : MonoBehaviour
             UIItemSlot s = slots[i - 2];
             ItemSlot slot = new ItemSlot(s, null);
         }
+
+        blockIndex = 2;
+        // reset player creative slot
+        slots[0].itemSlot.EmptySlot();
+        ItemStack stack = new ItemStack(blockIndex, 2);
+        slots[0].itemSlot.InsertStack(stack);
+    }
+
+    public void toggleNavigate()
+    {
+        setNavigate = true;
     }
 
     private void Update()
@@ -36,15 +49,15 @@ public class Toolbar : MonoBehaviour
         if (player == null)
             return;
 
-        if(optionsMenuCanvasGroup.alpha != 1)
+        if(optionsMenuCanvasGroup.alpha != 1 && (setNavigate || inputHandler.scrollWheel != Vector2.zero))
         {
-            if (inputHandler.navigate != Vector2.zero || inputHandler.scrollWheel != Vector2.zero)
-            {
-                if (inputHandler.navigate.x < 0 || inputHandler.navigate.y < 0 || inputHandler.scrollWheel.y > 0)
-                    slotIndex--;
-                if (inputHandler.navigate.x > 0 || inputHandler.navigate.y > 0 || inputHandler.scrollWheel.y < 0)
-                    slotIndex++;
-            }
+            if (setNavigate)
+                setNavigate = false;
+
+            if (inputHandler.navLeft || inputHandler.scrollWheel.y > 0)
+                slotIndex--;
+            if (inputHandler.navRight || inputHandler.scrollWheel.y < 0)
+                slotIndex++;
 
             if (slotIndex > slots.Length - 1)
                 slotIndex = 0;
@@ -52,6 +65,32 @@ public class Toolbar : MonoBehaviour
                 slotIndex = slots.Length - 1;
 
             highlight.position = slots[slotIndex].slotIcon.transform.position;
+            
+            if (slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
+            {
+                if (inputHandler.navUp)
+                {
+                    blockIndex++;
+                }
+                if (inputHandler.navDown)
+                {
+                    blockIndex--;
+                }
+                
+                if (blockIndex > World.Instance.blocktypes.Length - 1) // limit blockIndex to range of defined blocks
+                    blockIndex = (byte)(World.Instance.blocktypes.Length - 1);
+                if (blockIndex < 2) // cannot select air or barrier blocks
+                    blockIndex = 2;
+                if (blockIndex == 25 || blockIndex == 26 && inputHandler.navUp) // cannot select reserved blocktypes 25 and 26
+                    blockIndex = 27;
+                if (blockIndex == 25 || blockIndex == 26 && inputHandler.navDown) // cannot select reserved blocktypes 25 and 26
+                    blockIndex = 24;
+
+                slots[slotIndex].itemSlot.EmptySlot();
+                ItemStack stack = new ItemStack(blockIndex, blockIndex);
+                slots[slotIndex].itemSlot.InsertStack(stack);
+            }
+            
         }
     }
 

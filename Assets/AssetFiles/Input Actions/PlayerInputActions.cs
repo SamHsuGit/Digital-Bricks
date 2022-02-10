@@ -100,7 +100,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""TogglePhotoMode"",
+                    ""name"": ""ToggleCamMode"",
                     ""type"": ""Button"",
                     ""id"": ""b40ffc2f-fe48-4be8-8049-5ae3fea38100"",
                     ""expectedControlType"": ""Button"",
@@ -118,9 +118,36 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Navigate"",
+                    ""name"": ""NavigateUp"",
                     ""type"": ""Button"",
                     ""id"": ""b141e51c-1a69-4696-a587-7e2d14e554aa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NavigateDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""7a85eab4-4c9a-4c5b-9999-8d73de906c4a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NavigateLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a292e9b-34a2-4f04-913f-10df962f2c6b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NavigateRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""e4769cf2-c7fc-46f0-8721-5455d87481a4"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -342,7 +369,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""TogglePhotoMode"",
+                    ""action"": ""ToggleCamMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -353,7 +380,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""TogglePhotoMode"",
+                    ""action"": ""ToggleCamMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -380,68 +407,24 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Keyboard"",
-                    ""id"": ""17d55f6b-953a-4dcd-a0da-2d309eb67c1d"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""ac3bb5e5-e37f-47dd-826f-0bf97ed69ddb"",
+                    ""name"": """",
+                    ""id"": ""fc48f034-d06a-4e0c-86ae-23b44b792b0e"",
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Navigate"",
+                    ""action"": ""NavigateUp"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""73c5d2cd-0eac-4e1d-a706-612e5eb9c2e8"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""7f740035-d08a-489b-b95b-51bf6d185bb7"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""ee84c057-957d-4565-bf00-3ad5123de35e"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d7853351-8486-420a-a96d-42c0cb40ea6c"",
-                    ""path"": ""<Gamepad>/dpad"",
+                    ""id"": ""6e048f6e-34eb-413a-b531-671ef5b81942"",
+                    ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Navigate"",
+                    ""action"": ""NavigateUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -464,6 +447,72 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Touch"",
                     ""action"": ""Touched"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c396c8d0-9fe9-4875-bd4c-a9de3f76eb92"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""NavigateDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""12fce3ec-7b1a-45a2-85f2-17d9c592eefc"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""NavigateDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f5bc4207-e73c-4fb6-a7a4-4185fb6ec996"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""NavigateLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ac289710-fcfc-4532-ae2c-1eb9c1b0f10f"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""NavigateLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49dcd685-579b-4632-b501-e4d6470710ae"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""NavigateRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d05a3722-22c9-493a-97a1-2ac37e31a0c9"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""NavigateRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1092,9 +1141,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Actions_Jump = m_Actions.FindAction("Jump", throwIfNotFound: true);
         m_Actions_Sprint = m_Actions.FindAction("Sprint", throwIfNotFound: true);
         m_Actions_ToggleOptions = m_Actions.FindAction("ToggleOptions", throwIfNotFound: true);
-        m_Actions_TogglePhotoMode = m_Actions.FindAction("TogglePhotoMode", throwIfNotFound: true);
+        m_Actions_ToggleCamMode = m_Actions.FindAction("ToggleCamMode", throwIfNotFound: true);
         m_Actions_ToggleControls = m_Actions.FindAction("ToggleControls", throwIfNotFound: true);
-        m_Actions_Navigate = m_Actions.FindAction("Navigate", throwIfNotFound: true);
+        m_Actions_NavigateUp = m_Actions.FindAction("NavigateUp", throwIfNotFound: true);
+        m_Actions_NavigateDown = m_Actions.FindAction("NavigateDown", throwIfNotFound: true);
+        m_Actions_NavigateLeft = m_Actions.FindAction("NavigateLeft", throwIfNotFound: true);
+        m_Actions_NavigateRight = m_Actions.FindAction("NavigateRight", throwIfNotFound: true);
         m_Actions_Touched = m_Actions.FindAction("Touched", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1175,9 +1227,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_Jump;
     private readonly InputAction m_Actions_Sprint;
     private readonly InputAction m_Actions_ToggleOptions;
-    private readonly InputAction m_Actions_TogglePhotoMode;
+    private readonly InputAction m_Actions_ToggleCamMode;
     private readonly InputAction m_Actions_ToggleControls;
-    private readonly InputAction m_Actions_Navigate;
+    private readonly InputAction m_Actions_NavigateUp;
+    private readonly InputAction m_Actions_NavigateDown;
+    private readonly InputAction m_Actions_NavigateLeft;
+    private readonly InputAction m_Actions_NavigateRight;
     private readonly InputAction m_Actions_Touched;
     public struct ActionsActions
     {
@@ -1191,9 +1246,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Actions_Jump;
         public InputAction @Sprint => m_Wrapper.m_Actions_Sprint;
         public InputAction @ToggleOptions => m_Wrapper.m_Actions_ToggleOptions;
-        public InputAction @TogglePhotoMode => m_Wrapper.m_Actions_TogglePhotoMode;
+        public InputAction @ToggleCamMode => m_Wrapper.m_Actions_ToggleCamMode;
         public InputAction @ToggleControls => m_Wrapper.m_Actions_ToggleControls;
-        public InputAction @Navigate => m_Wrapper.m_Actions_Navigate;
+        public InputAction @NavigateUp => m_Wrapper.m_Actions_NavigateUp;
+        public InputAction @NavigateDown => m_Wrapper.m_Actions_NavigateDown;
+        public InputAction @NavigateLeft => m_Wrapper.m_Actions_NavigateLeft;
+        public InputAction @NavigateRight => m_Wrapper.m_Actions_NavigateRight;
         public InputAction @Touched => m_Wrapper.m_Actions_Touched;
         public InputActionMap Get() { return m_Wrapper.m_Actions; }
         public void Enable() { Get().Enable(); }
@@ -1228,15 +1286,24 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @ToggleOptions.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleOptions;
                 @ToggleOptions.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleOptions;
                 @ToggleOptions.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleOptions;
-                @TogglePhotoMode.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTogglePhotoMode;
-                @TogglePhotoMode.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTogglePhotoMode;
-                @TogglePhotoMode.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTogglePhotoMode;
+                @ToggleCamMode.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleCamMode;
+                @ToggleCamMode.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleCamMode;
+                @ToggleCamMode.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleCamMode;
                 @ToggleControls.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleControls;
                 @ToggleControls.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleControls;
                 @ToggleControls.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnToggleControls;
-                @Navigate.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigate;
-                @Navigate.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigate;
-                @Navigate.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigate;
+                @NavigateUp.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateUp;
+                @NavigateUp.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateUp;
+                @NavigateUp.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateUp;
+                @NavigateDown.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateDown;
+                @NavigateDown.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateDown;
+                @NavigateDown.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateDown;
+                @NavigateLeft.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateLeft;
+                @NavigateLeft.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateLeft;
+                @NavigateLeft.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateLeft;
+                @NavigateRight.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateRight;
+                @NavigateRight.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateRight;
+                @NavigateRight.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNavigateRight;
                 @Touched.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTouched;
                 @Touched.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTouched;
                 @Touched.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnTouched;
@@ -1268,15 +1335,24 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @ToggleOptions.started += instance.OnToggleOptions;
                 @ToggleOptions.performed += instance.OnToggleOptions;
                 @ToggleOptions.canceled += instance.OnToggleOptions;
-                @TogglePhotoMode.started += instance.OnTogglePhotoMode;
-                @TogglePhotoMode.performed += instance.OnTogglePhotoMode;
-                @TogglePhotoMode.canceled += instance.OnTogglePhotoMode;
+                @ToggleCamMode.started += instance.OnToggleCamMode;
+                @ToggleCamMode.performed += instance.OnToggleCamMode;
+                @ToggleCamMode.canceled += instance.OnToggleCamMode;
                 @ToggleControls.started += instance.OnToggleControls;
                 @ToggleControls.performed += instance.OnToggleControls;
                 @ToggleControls.canceled += instance.OnToggleControls;
-                @Navigate.started += instance.OnNavigate;
-                @Navigate.performed += instance.OnNavigate;
-                @Navigate.canceled += instance.OnNavigate;
+                @NavigateUp.started += instance.OnNavigateUp;
+                @NavigateUp.performed += instance.OnNavigateUp;
+                @NavigateUp.canceled += instance.OnNavigateUp;
+                @NavigateDown.started += instance.OnNavigateDown;
+                @NavigateDown.performed += instance.OnNavigateDown;
+                @NavigateDown.canceled += instance.OnNavigateDown;
+                @NavigateLeft.started += instance.OnNavigateLeft;
+                @NavigateLeft.performed += instance.OnNavigateLeft;
+                @NavigateLeft.canceled += instance.OnNavigateLeft;
+                @NavigateRight.started += instance.OnNavigateRight;
+                @NavigateRight.performed += instance.OnNavigateRight;
+                @NavigateRight.canceled += instance.OnNavigateRight;
                 @Touched.started += instance.OnTouched;
                 @Touched.performed += instance.OnTouched;
                 @Touched.canceled += instance.OnTouched;
@@ -1444,9 +1520,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnToggleOptions(InputAction.CallbackContext context);
-        void OnTogglePhotoMode(InputAction.CallbackContext context);
+        void OnToggleCamMode(InputAction.CallbackContext context);
         void OnToggleControls(InputAction.CallbackContext context);
-        void OnNavigate(InputAction.CallbackContext context);
+        void OnNavigateUp(InputAction.CallbackContext context);
+        void OnNavigateDown(InputAction.CallbackContext context);
+        void OnNavigateLeft(InputAction.CallbackContext context);
+        void OnNavigateRight(InputAction.CallbackContext context);
         void OnTouched(InputAction.CallbackContext context);
     }
     public interface IUIActions

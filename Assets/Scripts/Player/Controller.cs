@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SpatialTracking;
+using UnityEngine.Animations;
 public class Controller : NetworkBehaviour
 {
     public Player player;
@@ -10,7 +11,6 @@ public class Controller : NetworkBehaviour
     [Header("GameObject Arrays")]
     public GameObject[] voxels;
 
-    int typeChar = 1;
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdleString;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRunString;
@@ -25,17 +25,18 @@ public class Controller : NetworkBehaviour
     public bool isGrounded;
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
     public bool isSprinting;
-    public bool photoMode = false;
     public bool options = false;
     public float checkIncrement = 0.1f;
-    public float reach = 4f; // defines how far player can reach to grab/place voxels
+    public float grabDist = 4f; // defines how far player can reach to grab/place voxels
+    public float tpsDist;
     public float maxFocusDistance = 2f;
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public byte blockID;
     public float baseAnimRate = 2;
     public float animRate = 2;
-    public bool fpsView = true;
+    public int camMode = 1;
+    public bool setCamMode = false;
 
     [SerializeField] float lookVelocity = 1f;
 
@@ -77,6 +78,8 @@ public class Controller : NetworkBehaviour
     GameObject grabbedPrefab;
 
     //Components
+    GameObject playerCameraOrigin;
+    LookAtConstraint lookAtConstraint;
     CapsuleCollider cc;
     BoxCollider bc;
     PlayerVoxelCollider voxelCollider;
@@ -125,6 +128,8 @@ public class Controller : NetworkBehaviour
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
         gameMenuComponent = gameMenu.GetComponent<GameMenu>();
+        playerCameraOrigin = playerCamera.transform.parent.gameObject;
+        lookAtConstraint = playerCamera.GetComponent<LookAtConstraint>();
         playerCameraBoxCollider = playerCamera.GetComponent<BoxCollider>();
         playerCameraVoxelCollider = playerCamera.GetComponent<PlayerVoxelCollider>();
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
@@ -302,8 +307,8 @@ public class Controller : NetworkBehaviour
         nametag.transform.localPosition = new Vector3(0, colliderCenter.y + colliderHeight * 0.55f, 0);
 
         // set reach and gun range procedurally based on imported char model size
-        reach = cc.radius * 2f * 6f;
-        gun.range = reach * 10f;
+        grabDist = cc.radius * 2f * 6f;
+        tpsDist = -cc.radius * 4;
     }
 
     public void SetName(string oldName, string newName) // update the player visuals using the SyncVars pushed from the server to clients
@@ -373,30 +378,15 @@ public class Controller : NetworkBehaviour
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
-        if (!photoMode && !options)
-        {
-            playerHUD.SetActive(true);
-            CinematicBars.SetActive(false);
-
-            if(Settings.OnlinePlay)
-                nametag.SetActive(true);
-        }
-        else if (photoMode && !options)
-        {
-            playerHUD.SetActive(false);
-            CinematicBars.SetActive(true);
-
-            if (Settings.OnlinePlay)
-                nametag.SetActive(false);
-        }
-
         if (options)
         {
-            fpsView = true;
             gameMenuComponent.OnOptions();
         }
         else if (!options)
             gameMenuComponent.ReturnToGame();
+
+        if (setCamMode)
+            SetCamMode();
     }
 
     void FixedUpdate()
@@ -416,71 +406,91 @@ public class Controller : NetworkBehaviour
 
         isGrounded = CheckGroundedCollider();
 
-        // if not in photo mode
-        if (!photoMode)
+        if (Settings.IsMobilePlatform)
+            camMode = 3;
+
+        if (!options)
         {
-            playerCameraBoxCollider.enabled = false;
-            playerCameraVoxelCollider.enabled = false;
-            if (typeChar == 1)
+            switch (camMode)
             {
-                charController.enabled = false;
-                charController.enabled = true;
+                case 1: // FIRST PERSON CAMERA
+                    {
+                        if (charObIdle != null)
+                            charObIdle.SetActive(false);
+                        if (charObRun != null)
+                            charObRun.SetActive(false);
+
+                        // IF PRESSED GRAB
+                        if (!holdingGrab && inputHandler.grab)
+                            PressedGrab();
+
+                        // IF HOLDING GRAB
+                        if (holdingGrab && inputHandler.grab)
+                            HoldingGrab();
+
+                        // IF PRESSED SHOOT
+                        if (inputHandler.shoot)
+                            pressedShoot();
+
+                        // IF RELEASED GRAB
+                        if (holdingGrab && !inputHandler.grab)
+                            ReleasedGrab();
+
+                        positionCursorBlocks();
+
+                        lookAtConstraint.constraintActive = false;
+                        MovePlayer(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
+                        break;
+                    }
+                case 2: // THIRD PERSON CAMERA
+                    {
+                        SetDOF();
+                        SetTPSDist();
+
+                        lookAtConstraint.constraintActive = true;
+                        MovePlayer();
+
+                        Animate();
+                        break;
+                    }
+                case 3: // PHOTO MODE
+                    {
+                        SetDOF();
+
+                        lookAtConstraint.constraintActive = false;
+                        MoveCamera(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
+                        break;
+                    }
             }
         }
-        else
+    }
+
+    void SetTPSDist()
+    {
+        if (inputHandler.scrollWheel.y > 0)
+            tpsDist++;
+        if (inputHandler.scrollWheel.y < 0)
+            tpsDist--;
+        if (tpsDist >= 0)
+            tpsDist = -1;
+        playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist);
+    }
+
+    public void SetDOF()
+    {
+        // allow adjustments for DoF
+        float focusDistance = worldPPFXSetValues.depthOfField.focusDistance.value;
+
+        if (inputHandler.navRight || inputHandler.navUp)
         {
-            playerCameraBoxCollider.enabled = true;
-            playerCameraVoxelCollider.enabled = true;
-
-            float focusDistance = worldPPFXSetValues.depthOfField.focusDistance.value;
-
-            if (inputHandler.navigate.x > 0 || inputHandler.navigate.y > 0)
-            {
-                if (focusDistance + inputHandler.navigate.x < maxFocusDistance || focusDistance + inputHandler.navigate.y < maxFocusDistance)
-                    worldPPFXSetValues.depthOfField.focusDistance.value += focusDistanceIncrement;
-            }
-            else if (inputHandler.navigate.x < 0 || inputHandler.navigate.y < 0)
-            {
-                if (focusDistance - inputHandler.navigate.x > 0 || focusDistance - inputHandler.navigate.y > 0)
-                    worldPPFXSetValues.depthOfField.focusDistance.value -= focusDistanceIncrement;
-            }
+            if (focusDistance + focusDistanceIncrement < maxFocusDistance || focusDistance + focusDistanceIncrement < maxFocusDistance)
+                worldPPFXSetValues.depthOfField.focusDistance.value += focusDistanceIncrement;
         }
-
-        if (!photoMode && !options && !Settings.IsMobilePlatform) // IF NOT IN OPTIONS OR PHOTO MODE
+        else if (inputHandler.navLeft || inputHandler.navDown)
         {
-            // IF PRESSED GRAB
-            if (!holdingGrab && inputHandler.grab)
-                PressedGrab();
-
-            // IF HOLDING GRAB
-            if (holdingGrab && inputHandler.grab)
-                HoldingGrab();
-
-            // IF PRESSED SHOOT
-            if (inputHandler.shoot)
-                pressedShoot();
-
-            // IF RELEASED GRAB
-            if (holdingGrab && !inputHandler.grab)
-                ReleasedGrab();
-            
-            positionCursorBlocks();
-            MovePlayer(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
+            if (focusDistance - focusDistanceIncrement > 0 || focusDistance - focusDistanceIncrement > 0)
+                worldPPFXSetValues.depthOfField.focusDistance.value -= focusDistanceIncrement;
         }
-        else if (photoMode && !options)
-        {
-            MoveCamera(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
-        }
-        
-        if (fpsView)
-        {
-            if (charObIdle != null)
-                charObIdle.SetActive(false);
-            if (charObRun != null)
-                charObRun.SetActive(false);
-        }
-        else
-            Animate();
     }
 
     //[Command]
@@ -498,6 +508,9 @@ public class Controller : NetworkBehaviour
     public void pressedShoot()
     {
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
+            return;
+
+        if (toolbar.slotIndex == 0) // cannot do this function from first slot (creative)
             return;
 
         // if has mushroom, and health is not max and the selected slot has a stack
@@ -589,7 +602,7 @@ public class Controller : NetworkBehaviour
     // not used since shooting voxels can accomplish same thing
     public void DropItemsInSlot()
     {
-        if (!options && !photoMode && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS OR PHOTO MODE AND ITEM IN SLOT
+        if (!options && camMode == 1 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
     }
 
@@ -598,7 +611,7 @@ public class Controller : NetworkBehaviour
         if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
             return;
 
-        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, reach, 11); // ignore player layer
+        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabDist, 11); // ignore player layer
         if (hitCollider) // IF HIT COLLIDER (can be rb or chunk)
         {
             hitOb = raycastHit.transform.gameObject;
@@ -628,12 +641,13 @@ public class Controller : NetworkBehaviour
                 heldObRb.detectCollisions = true;
             }
         }
-        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // IF NOT HIT COLLIDER AND TOOLBAR HAS STACK
+        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // IF HIT COLLIDER AND TOOLBAR HAS STACK
         {
             holdingGrab = true;
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-            TakeFromCurrentSlot(1);
+            if(toolbar.slotIndex != 0) // do not reduce item count from first slot (creative)
+                TakeFromCurrentSlot(1);
             reticle.SetActive(false);
 
             if (Settings.OnlinePlay)
@@ -749,7 +763,7 @@ public class Controller : NetworkBehaviour
     {
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
         {
-            for (int i = 0; i < toolbar.slots.Length; i++) // for all slots in toolbar
+            for (int i = 1; i < toolbar.slots.Length; i++) // for all slots in toolbar except first slot
             {
                 if (toolbar.slots[i].itemSlot.stack != null && toolbar.slots[i].itemSlot.stack.id == blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
                 {
@@ -1015,7 +1029,7 @@ public class Controller : NetworkBehaviour
         float step = checkIncrement;
         Vector3 lastPos = new Vector3();
 
-        while (step < reach) // All position cursor blocks must be within same loop or causes lag where multiple loops cannot be run at same time (else use a coroutine)
+        while (step < grabDist) // All position cursor blocks must be within same loop or causes lag where multiple loops cannot be run at same time (else use a coroutine)
         {
             Vector3 pos = playerCamera.transform.position + (playerCamera.transform.forward * step);
 
@@ -1099,13 +1113,32 @@ public class Controller : NetworkBehaviour
             health.jumpCounter++;
         }
 
-        if (charController.enabled)
-            charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
-        //transform.Translate(velocityPlayer, Space.World);
+        if(camMode == 1)
+        {
+            if (charController.enabled)
+                charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
+                                                     //transform.Translate(velocityPlayer, Space.World);
 
-        Vector2 rotation = CalculateRotation();
-        playerCamera.transform.localEulerAngles = new Vector3(rotation.y, 0f, 0f);
-        gameObject.transform.localEulerAngles = new Vector3(0f, rotation.x, 0f);
+            Vector2 rotation = CalculateRotation();
+            playerCamera.transform.localEulerAngles = new Vector3(rotation.y, 0f, 0f);
+            gameObject.transform.localEulerAngles = new Vector3(0f, rotation.x, 0f);
+        }
+        else if(camMode == 2)
+        {
+            if (isMoving)
+                gameObject.transform.eulerAngles = new Vector3(0f, playerCameraOrigin.transform.rotation.eulerAngles.y, 0f);
+
+            // moves player object forwards
+            if (charController.enabled)
+                charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
+
+            // rotate cameraOrigin around player model (LookAtConstraint ensures camera always faces center)
+            Vector2 rotation = CalculateRotation();
+            playerCameraOrigin.transform.eulerAngles = new Vector3(rotation.y, rotation.x, 0f);
+
+            if (isMoving) // if is moving, rotate char model to face same direction as camera
+                charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0);
+        }
     }
 
     public void MoveCamera()
@@ -1159,22 +1192,75 @@ public class Controller : NetworkBehaviour
         return new Vector2(rotationX, rotationY);
     }
 
-    public void TogglePhotoMode()
+    public void ToggleCamMode()
     {
-        photoMode = !photoMode;
-        if (photoMode)
-            fpsView = false;
+        if (options) // cannot toggle while in options menu
+            return;
 
-        Vector3 camLocalPos = playerCamera.transform.localPosition;
-        if (camLocalPos.z >= 0)
+        setCamMode = !setCamMode; // checked for in update loop
+    }
+
+    void SetCamMode()
+    {
+        camMode++;
+
+        if (camMode < 1 || camMode > 3)
+            camMode = 1;
+
+        switch (camMode)
         {
-            playerCamera.transform.localPosition = Vector3.zero; // reset camera to FPS view if camera gets in front of player
-            fpsView = true;
+            case 1: // FIRST PERSON CAMERA MODE
+                {
+                    playerHUD.SetActive(true);
+                    CinematicBars.SetActive(false);
+
+                    if (Settings.OnlinePlay)
+                        nametag.SetActive(false);
+
+                    playerCameraBoxCollider.enabled = false;
+                    playerCameraVoxelCollider.enabled = false;
+                    charController.enabled = false;
+                    charController.enabled = true;
+
+                    playerCamera.transform.localPosition = Vector3.zero; // reset camera position
+                    playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face forwards
+                    break;
+                }
+            case 2: // THIRD PERSON CAMERA MODE
+                {
+                    playerHUD.SetActive(false);
+                    CinematicBars.SetActive(true);
+
+                    if (Settings.OnlinePlay)
+                        nametag.SetActive(false);
+
+                    playerCameraBoxCollider.enabled = false;
+                    playerCameraVoxelCollider.enabled = false;
+                    charController.enabled = false;
+                    charController.enabled = true;
+
+                    playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist); // move camera behind character over shoulder
+                    playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face fowards
+                    break;
+                }
+            case 3: // PHOTO MODE
+                {
+                    playerHUD.SetActive(false);
+                    CinematicBars.SetActive(true);
+
+                    if (Settings.OnlinePlay)
+                        nametag.SetActive(true);
+
+                    playerCameraBoxCollider.enabled = true;
+                    playerCameraVoxelCollider.enabled = true;
+                    charController.enabled = false;
+                    charController.enabled = true;
+
+                    playerCameraOrigin.transform.localEulerAngles = Vector3.zero; // reset camera origin rotation
+                    break;
+                }
         }
-        if(camLocalPos.y < - cc.height / 2 || camLocalPos.y > cc.height / 2)
-        {
-            playerCamera.transform.localPosition = new Vector3(camLocalPos.x, 0, camLocalPos.z); // keep camera within reasonable range
-        }
+        setCamMode = false;
     }
 
     public void ToggleOptions()

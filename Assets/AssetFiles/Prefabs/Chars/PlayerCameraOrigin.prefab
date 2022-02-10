@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 277097101524814864}
   - component: {fileID: 3570308340087810390}
   - component: {fileID: 5837534075999922057}
+  - component: {fileID: 3782845778497714195}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -222,6 +223,25 @@ MonoBehaviour:
   length: 0
   height: 0
   playerChunkIsActive: 0
+--- !u!1183024399 &3782845778497714195
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277097101524814871}
+  m_Enabled: 1
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_IsContraintActive: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 1528517879950106}
+    weight: 1
 --- !u!1001 &1431858569894724802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -320,6 +340,10 @@ PrefabInstance:
     - target: {fileID: 2659652615801086346, guid: edd4e1974f87c774d8f247bc3238b025, type: 3}
       propertyPath: m_Material
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770926933294977763, guid: edd4e1974f87c774d8f247bc3238b025, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3119184827885408358, guid: edd4e1974f87c774d8f247bc3238b025, type: 3}
       propertyPath: m_RootOrder

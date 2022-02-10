@@ -14,8 +14,8 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 1, g: 0.9603379, b: 0.6698454, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 1, g: 1, b: 1, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.0012499914
   m_LinearFogStart: 0
@@ -553,7 +553,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
       propertyPath: maxFogDensity
-      value: 0.00125
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 8640391040969436245, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
       propertyPath: m_Name

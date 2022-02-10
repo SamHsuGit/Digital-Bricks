@@ -8,7 +8,6 @@ public class Gun : NetworkBehaviour
     public float fireRate = 2f;
     public float impactForce = 0.01f;
     public int damage = 3;
-    public float range = 2f;
     public float nextTimeToFire = 0f;
     public float sphereCastRadius = 0.1f;
 
@@ -41,7 +40,7 @@ public class Gun : NetworkBehaviour
         target = null; // reset target
         target = FindTarget(); // get target gameObject
 
-        if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && !controller.photoMode)
+        if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && controller.camMode == 1)
         {
             if (inputHandler.shoot)
             {
@@ -58,7 +57,7 @@ public class Gun : NetworkBehaviour
         image.color = Color.HSVToRGB(0, 0, 50, true);
 
         //if hit something
-        if (Physics.SphereCast(fpsCam.transform.position, sphereCastRadius, fpsCam.transform.forward, out hit, range))
+        if (Physics.SphereCast(fpsCam.transform.position, sphereCastRadius, fpsCam.transform.forward, out hit, controller.grabDist))
         {
             if (hit.transform.GetComponent<Health>() != null)
                 target = hit.transform.GetComponent<Health>();
