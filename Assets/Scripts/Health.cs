@@ -246,7 +246,6 @@ public class Health : NetworkBehaviour
             {
                 if (i >= hp && modelPartsList[i].activeSelf) // if modelPart index >= hp and not hidden, hide it
                 {
-                    modelPartsList[i].SetActive(false); // hide original object
                     if (modelPartsList[i].GetComponent<BoxCollider>() != null)
                     {
                         controller.SpawnObject(4, 0, modelPartsList[i].transform.position, modelPartsList[i]); // spawn a copy of the character model piece that was shot
@@ -266,6 +265,7 @@ public class Health : NetworkBehaviour
                         controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
                         controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
                     }
+                    modelPartsList[i].SetActive(false); // hide original object
                 }
             }
         }
