@@ -73,9 +73,27 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""d8864d24-f971-4c48-8d97-f72fb4267cf1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""cdf8cf83-8323-4c3f-be6d-4e197affbdbd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""3e11c553-8e6e-4277-9b6c-65045a98fa53"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -165,17 +183,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": """",
-                    ""id"": ""1da70865-9d1d-4bf3-9da4-59bad81d2ba4"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""WASD"",
                     ""id"": ""0065a1dc-30d6-4bf4-8b51-afd72d63e05e"",
                     ""path"": ""Dpad"",
@@ -192,7 +199,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -214,7 +221,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -225,10 +232,32 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1da70865-9d1d-4bf3-9da4-59bad81d2ba4"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone"",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6edc07a1-7359-4015-bdd1-060a19f19afd"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse;Touch"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
@@ -243,12 +272,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6edc07a1-7359-4015-bdd1-060a19f19afd"",
-                    ""path"": ""<Pointer>/delta"",
+                    ""id"": ""10f7cb09-8153-4e85-a344-01c29eeeacc8"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse;Touch"",
-                    ""action"": ""Look"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -265,12 +294,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""10f7cb09-8153-4e85-a344-01c29eeeacc8"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""id"": ""220390b4-c172-4723-bf9b-626a057a2be6"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Shoot"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -287,12 +316,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""220390b4-c172-4723-bf9b-626a057a2be6"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""id"": ""fe4603cb-9706-4c62-bffa-4c5a45a7acad"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Jump"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -303,17 +332,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Sprint"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""fe4603cb-9706-4c62-bffa-4c5a45a7acad"",
-                    ""path"": ""<Keyboard>/shift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -342,17 +360,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""65441acc-39c9-4350-8a5c-54be7aa15fa6"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Grab"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ee3507f7-ec74-4fa4-9edc-8b951cfa02a4"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
@@ -364,12 +371,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c7165efe-3a5f-48ec-aaea-90c525b54777"",
-                    ""path"": ""<Gamepad>/select"",
+                    ""id"": ""65441acc-39c9-4350-8a5c-54be7aa15fa6"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""ToggleCamMode"",
+                    ""action"": ""Grab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -380,6 +387,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ToggleCamMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c7165efe-3a5f-48ec-aaea-90c525b54777"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""ToggleCamMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -513,6 +531,50 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""NavigateRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2700f68a-a1b8-4744-bd10-a2071b241a12"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51282e1b-ef69-4c32-b786-f1fdb590ca3c"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ada4d2ac-73af-4a7b-9672-67c0f10ce1fe"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d352c633-d7ad-4cba-a103-234e76fdf852"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1138,7 +1200,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Actions_ScrollWheel = m_Actions.FindAction("ScrollWheel", throwIfNotFound: true);
         m_Actions_Grab = m_Actions.FindAction("Grab", throwIfNotFound: true);
         m_Actions_Shoot = m_Actions.FindAction("Shoot", throwIfNotFound: true);
+        m_Actions_Drop = m_Actions.FindAction("Drop", throwIfNotFound: true);
         m_Actions_Jump = m_Actions.FindAction("Jump", throwIfNotFound: true);
+        m_Actions_Crouch = m_Actions.FindAction("Crouch", throwIfNotFound: true);
         m_Actions_Sprint = m_Actions.FindAction("Sprint", throwIfNotFound: true);
         m_Actions_ToggleOptions = m_Actions.FindAction("ToggleOptions", throwIfNotFound: true);
         m_Actions_ToggleCamMode = m_Actions.FindAction("ToggleCamMode", throwIfNotFound: true);
@@ -1224,7 +1288,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_ScrollWheel;
     private readonly InputAction m_Actions_Grab;
     private readonly InputAction m_Actions_Shoot;
+    private readonly InputAction m_Actions_Drop;
     private readonly InputAction m_Actions_Jump;
+    private readonly InputAction m_Actions_Crouch;
     private readonly InputAction m_Actions_Sprint;
     private readonly InputAction m_Actions_ToggleOptions;
     private readonly InputAction m_Actions_ToggleCamMode;
@@ -1243,7 +1309,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @ScrollWheel => m_Wrapper.m_Actions_ScrollWheel;
         public InputAction @Grab => m_Wrapper.m_Actions_Grab;
         public InputAction @Shoot => m_Wrapper.m_Actions_Shoot;
+        public InputAction @Drop => m_Wrapper.m_Actions_Drop;
         public InputAction @Jump => m_Wrapper.m_Actions_Jump;
+        public InputAction @Crouch => m_Wrapper.m_Actions_Crouch;
         public InputAction @Sprint => m_Wrapper.m_Actions_Sprint;
         public InputAction @ToggleOptions => m_Wrapper.m_Actions_ToggleOptions;
         public InputAction @ToggleCamMode => m_Wrapper.m_Actions_ToggleCamMode;
@@ -1277,9 +1345,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Shoot.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
+                @Drop.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
+                @Drop.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
+                @Drop.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
                 @Jump.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
+                @Crouch.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnCrouch;
+                @Crouch.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnCrouch;
+                @Crouch.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnCrouch;
                 @Sprint.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
@@ -1326,9 +1400,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Crouch.started += instance.OnCrouch;
+                @Crouch.performed += instance.OnCrouch;
+                @Crouch.canceled += instance.OnCrouch;
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
@@ -1517,7 +1597,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnGrab(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnDrop(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnToggleOptions(InputAction.CallbackContext context);
         void OnToggleCamMode(InputAction.CallbackContext context);

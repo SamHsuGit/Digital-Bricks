@@ -33,6 +33,7 @@ public static class SettingsStatic
         settings.seed = 5;
         settings.timeOfDay = 6.01f;
         settings.playerName = "PlayerName";
+        settings.flight = false;
 
         string path;
         if (Application.isMobilePlatform)
@@ -86,6 +87,7 @@ public class Settings
 
     [Header("Player Customization")]
     public string playerName;
+    public bool flight;
 
     public static bool IsMobilePlatform
     {

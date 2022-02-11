@@ -420,6 +420,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e4769cf2-c7fc-46f0-8721-5455d87481a4
     m_ActionName: Actions/NavigateRight[/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3963772888375218276}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: DropItemsInSlot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d8864d24-f971-4c48-8d97-f72fb4267cf1
+    m_ActionName: Actions/Drop[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4390896333885380563}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnCrouch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3e11c553-8e6e-4277-9b6c-65045a98fa53
+    m_ActionName: Actions/Crouch[/Keyboard/ctrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Actions
@@ -445,6 +477,7 @@ MonoBehaviour:
   navRight: 0
   scrollWheel: {x: 0, y: 0}
   jump: 0
+  crouch: 0
   sprint: 0
   grab: 0
   shoot: 0
@@ -565,8 +598,6 @@ MonoBehaviour:
   physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
   minPieces: 1
   maxPieces: 500
-  minBaseMoveSpeed: 0
-  maxBaseMoveSpeed: 5
   minAnimSpeed: 2
   maxAnimSpeed: 8
   jumpHungerThreshold: 160
@@ -614,8 +645,8 @@ Rigidbody:
   m_Mass: 0.0001
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0

@@ -7,7 +7,7 @@ public class Gun : NetworkBehaviour
 {
     public float fireRate = 2f;
     public float impactForce = 0.01f;
-    public int damage = 3;
+    private int damage = 1;
     public float nextTimeToFire = 0f;
     public float sphereCastRadius = 0.1f;
 
@@ -98,21 +98,19 @@ public class Gun : NetworkBehaviour
                     if (Settings.OnlinePlay)
                     {
                         CmdBreakBaseObPiece(i);
-                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                        controller.CmdSpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
                     }
                     else
                     {
-                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                        controller.SpawnPreDefinedPrefab(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
                         BreakBaseObPiece(i);
-                    }
-                        
-                }
+                    }                }
             }
         }
         else if (target != null) // if target was found

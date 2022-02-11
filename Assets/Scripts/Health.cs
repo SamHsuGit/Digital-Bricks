@@ -9,10 +9,8 @@ public class Health : NetworkBehaviour
 
     public int minPieces = 1; // chars must have at least 1 piece
     public int maxPieces = 500; // limited based on performance of min pc spec model load time
-    public int minBaseMoveSpeed = 0; // larger builds are essentially immovable
-    public int maxBaseMoveSpeed = 5; // smaller builds have faster speeds
-    public int minAnimSpeed = 2;
-    public int maxAnimSpeed = 8;
+    private int minBaseMoveSpeed = 1; // min speed
+    private int maxBaseMoveSpeed = 5; // max speed
     public int jumpHungerThreshold = 160; // Minecraft jumpHungerThreshold = 40
     public int blockHungerThreshold = 320; // Minecraft blockHungerThreshold = 320
     [SyncVar(hook = nameof(UpdateHP))] public float hp; // uses hp SyncVar hook to syncronize # pieces an object has across all online players when hp value changes
@@ -58,9 +56,19 @@ public class Health : NetworkBehaviour
         if (gameObject.layer == 10) // if this object is a single lego Piece
             brickCount = 1;
         else if (isAlive)
-            CountPieces(controller.charObIdle);
+        {
+            int idle = CountPieces(controller.charObIdle);
+            int run = CountPieces(controller.charObRun);
+            if (idle == run)
+                brickCount = idle;
+            else
+                ErrorMessage.Show("# pieces must be same for 'charIdle.ldr' and 'charRun.ldr'");
+            AddToPiecesList(controller.charObIdle);
+        }
         else
-            CountPieces(gameObject);
+        {
+            brickCount = CountPieces(gameObject);
+        }
 
         hpMax = brickCount;
         hp = hpMax;
@@ -68,19 +76,41 @@ public class Health : NetworkBehaviour
         if (isAlive)
         {
             voxelCollider.baseWalkSpeed = CalculateBaseMoveSpeed(hpMax); // calculate base move speed based on # pieces (already counted in health hpMax)
-            controller.baseAnimRate = (maxAnimSpeed - minAnimSpeed) / (CalculateBaseMoveSpeed(minPieces) - CalculateBaseMoveSpeed(maxPieces)) * voxelCollider.baseWalkSpeed + minAnimSpeed; // function of base move speed
+            controller.baseAnimRate = 9f; // animation speed is fixed regardless of # of pieces
             voxelCollider.baseSprintSpeed = 2 * voxelCollider.baseWalkSpeed;
             lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
         }  
     }
 
-    void CountPieces(GameObject _ob)
+    int CountPieces(GameObject _ob)
     {
-        brickCount = _ob.transform.GetChild(0).childCount;
+        return _ob.transform.GetChild(0).childCount;
+    }
+
+    void AddToPiecesList(GameObject _ob)
+    {
+        GameObject submodel = _ob.transform.GetChild(0).gameObject;
+        foreach(Transform child in submodel.transform)
+        {
+            modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
+        }
+
+        //// PLAYER PIECES MUST TAGGED AS LEGO PIECE (layer 10) AND BE ACTIVE AND HAVE MESH RENDERER TO BE COUNTED TOWARDS HP
+        //foreach (Transform child in _ob.transform)
+        //{
+        //    MeshRenderer mr = child.gameObject.GetComponent<MeshRenderer>();
+        //    if(child.gameObject.layer == 10 && child.gameObject.activeSelf && mr != null && mr.enabled)
+        //    {
+        //        modelPieces.Add(child.gameObject); // add to list of pieces
+        //    }
+        //    AddToPiecesList(child.gameObject); // recursively check child of child objects if should add to pieces list
+        //}
     }
 
     public float CalculateBaseMoveSpeed(int pieces)
     {
+        //return maxBaseMoveSpeed; // override to make all objects move the same speed (max speed)
+
         float moveSpeed;
 
         if (pieces > maxPieces)
@@ -88,9 +118,13 @@ public class Health : NetworkBehaviour
         else if (pieces < minPieces)
             pieces = minPieces;
 
-        moveSpeed = -1 * (float)(maxBaseMoveSpeed - minBaseMoveSpeed) / (maxPieces - minPieces) * pieces + maxBaseMoveSpeed;
+        if (!SettingsStatic.LoadedSettings.flight)
+            moveSpeed = -1 * (float)(maxBaseMoveSpeed - minBaseMoveSpeed) / (maxPieces - minPieces) * pieces + maxBaseMoveSpeed; // negative slope (more pieces less speed)
+        else
+            moveSpeed = maxBaseMoveSpeed; // if flight enabled, use max speed
+
         if (moveSpeed < 0)
-            moveSpeed = 0;
+            moveSpeed = minBaseMoveSpeed;
 
         return moveSpeed;
     }
@@ -210,47 +244,31 @@ public class Health : NetworkBehaviour
         {
             for (int i = 0; i < modelPartsList.Count; i++) // for all modelParts
             {
-                if (i >= hp && modelPartsList[i].GetComponent<MeshRenderer>() != null && modelPartsList[i].GetComponent<MeshRenderer>().enabled) // if modelPart index >= hp and not hidden, hide it
+                if (i >= hp && modelPartsList[i].activeSelf) // if modelPart index >= hp and not hidden, hide it
                 {
-                    GameObject obToSpawn = modelPartsList[i];
-                    SpawnCopyRb(obToSpawn);
-                    mr = obToSpawn.GetComponent<MeshRenderer>();
-                    mr.enabled = false;
-                    if(obToSpawn.GetComponent<BoxCollider>() != null)
+                    modelPartsList[i].SetActive(false); // hide original object
+                    if (modelPartsList[i].GetComponent<BoxCollider>() != null)
                     {
-                        BoxCollider bc = obToSpawn.GetComponent<BoxCollider>();
-                        bc.enabled = false;
+                        controller.SpawnObject(4, 0, modelPartsList[i].transform.position, modelPartsList[i]); // spawn a copy of the character model piece that was shot
+                    }
+                    Vector3 pos = modelPartsList[i].transform.position;
+                    if (Settings.OnlinePlay)
+                    {
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                    }
+                    else
+                    {
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
                     }
                 }
             }
         }
-    }
-
-    public void SpawnCopyRb(GameObject _obToSpawn)
-    {
-        // make a new object copy
-        ob = Instantiate(_obToSpawn, _obToSpawn.transform);
-        ob.GetComponent<MeshRenderer>().enabled = true;
-
-        for (int j = 0; j < ob.transform.childCount; j++)// if copy of part has any children gameObjects, destroy them
-            Destroy(ob.transform.GetChild(j).gameObject);
-
-        // unparent copy from original mesh (stops anims)
-        // assumes the parts are ordered such that children have smaller numbers than parent objects
-        ob.transform.parent = null;
-
-        // add various components to copied object
-        Rigidbody rb = ob.AddComponent<Rigidbody>();
-        rb.mass = piecesRbMass;
-        BoxCollider bc = ob.AddComponent<BoxCollider>();
-        bc.material = physicMaterial;
-        if (Settings.OnlinePlay)
-        {
-            if(ob.GetComponent<NetworkIdentity>() == null)
-                ob.AddComponent<NetworkIdentity>();
-        }
-
-        Destroy(ob, 5); // destroy newly created parts after 5 seconds to clean up scene
     }
 
     [Command]
@@ -283,8 +301,7 @@ public class Health : NetworkBehaviour
 
         for (int i = 0; i < modelPieces.Count; i++)
         {
-            if(modelPieces[i].GetComponent<MeshRenderer>() != null)
-                modelPieces[i].GetComponent<MeshRenderer>().enabled = true; // unhide all original objects
+            modelPieces[i].SetActive(true); // unhide all original objects
         }
     }
 

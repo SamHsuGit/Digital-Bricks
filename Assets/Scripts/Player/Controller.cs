@@ -33,8 +33,8 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public byte blockID;
-    public float baseAnimRate = 2;
-    public float animRate = 2;
+    public float baseAnimRate = 2; // health script overrides this
+    public float animRate = 2; // health script overrides this
     public int camMode = 1;
     public bool setCamMode = false;
 
@@ -81,6 +81,7 @@ public class Controller : NetworkBehaviour
     GameObject playerCameraOrigin;
     LookAtConstraint lookAtConstraint;
     CapsuleCollider cc;
+    Rigidbody rb;
     BoxCollider bc;
     PlayerVoxelCollider voxelCollider;
     Animator animator;
@@ -122,6 +123,8 @@ public class Controller : NetworkBehaviour
         world = World.Instance;
         physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         inputHandler = GetComponent<InputHandler>();
         health = GetComponent<Health>();
         gun = GetComponent<Gun>();
@@ -155,7 +158,7 @@ public class Controller : NetworkBehaviour
             playerCamera.SetActive(true);
             charModelOrigin.SetActive(false);
             nametag.SetActive(true);
-            GetComponent<Rigidbody>().isKinematic = true;
+            rb.isKinematic = true;
             cc.enabled = false;
             charController.enabled = false;
             inputHandler.enabled = true;
@@ -193,9 +196,8 @@ public class Controller : NetworkBehaviour
         if (!Settings.OnlinePlay & !Settings.IsMobilePlatform)
         {
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
-
             // Import character model idle pose
-            charObIdle = LDrawImportRuntime.Instance.charObIdle;
+            charObIdle = Instantiate(LDrawImportRuntime.Instance.charObIdle);
             charObIdle.SetActive(true);
             charObIdle.transform.parent = charModelOrigin.transform;
             bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
@@ -203,7 +205,8 @@ public class Controller : NetworkBehaviour
             charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
 
             // Import character model run pose
-            charObRun = LDrawImportRuntime.Instance.charObRun;
+            charObRun = new GameObject();
+            charObRun = Instantiate(LDrawImportRuntime.Instance.charObRun);
             charObRun.SetActive(false);
             charObRun.transform.parent = charModelOrigin.transform;
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
@@ -415,9 +418,9 @@ public class Controller : NetworkBehaviour
             {
                 case 1: // FIRST PERSON CAMERA
                     {
-                        if (charObIdle != null)
+                        if (charObIdle != null && charObIdle.activeSelf)
                             charObIdle.SetActive(false);
-                        if (charObRun != null)
+                        if (charObRun != null && charObRun.activeSelf)
                             charObRun.SetActive(false);
 
                         // IF PRESSED GRAB
@@ -444,17 +447,29 @@ public class Controller : NetworkBehaviour
                     }
                 case 2: // THIRD PERSON CAMERA
                     {
+                        if (charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.flight)
+                        {
+                            charObIdle.SetActive(true);
+                            charObRun.SetActive(false);
+                        }
+
                         SetDOF();
                         SetTPSDist();
 
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
-                        Animate();
+                        if(!SettingsStatic.LoadedSettings.flight && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
+                            Animate();
                         break;
                     }
                 case 3: // PHOTO MODE
                     {
+                        if (charObIdle != null && !charObIdle.activeSelf)
+                            charObIdle.SetActive(true);
+                        if (charObRun != null && charObRun.activeSelf)
+                            charObRun.SetActive(false);
+
                         SetDOF();
 
                         lookAtConstraint.constraintActive = false;
@@ -525,9 +540,9 @@ public class Controller : NetworkBehaviour
         {
             // spawn projectile where camera is looking
             if (Settings.OnlinePlay)
-                CmdSpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+                CmdSpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
             else
-                SpawnPreDefinedPrefab(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+                SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
             TakeFromCurrentSlot(1);
         }
         else if (holdingGrab) // IF HOLDING SOMETHING
@@ -575,10 +590,10 @@ public class Controller : NetworkBehaviour
             GameObject hitObject = gun.hit.transform.gameObject;
             Destroy(gun.hit.transform.gameObject);
             Vector3 pos = hitObject.transform.position;
-            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-            SpawnPreDefinedPrefab(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
         }
     }
 
@@ -590,19 +605,19 @@ public class Controller : NetworkBehaviour
         if (Settings.OnlinePlay && hasAuthority)
         {
             CmdEditVoxel(position, 0, true); // destroy voxel at position (online play)
-            CmdSpawnPreDefinedPrefab(0, blockID, position);
+            CmdSpawnObject(0, blockID, position);
         }
         else
         {
             EditVoxel(position, 0, true); // destroy voxel at position
-            SpawnPreDefinedPrefab(0, blockID, position);
+            SpawnObject(0, blockID, position);
         }
     }
 
-    // not used since shooting voxels can accomplish same thing
+    // needed to empty slot with many pieces all at once instead of manually removing one by one
     public void DropItemsInSlot()
     {
-        if (!options && camMode == 1 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
+        if (!options && camMode == 1 && toolbar.slotIndex != 0 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
     }
 
@@ -835,12 +850,12 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSpawnPreDefinedPrefab(int type, int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
+    public void CmdSpawnObject(int type, int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
     {
-        SpawnPreDefinedPrefab(type, item, pos);
+        SpawnObject(type, item, pos);
     }
 
-    public void SpawnPreDefinedPrefab(int type, int item, Vector3 pos)
+    public void SpawnObject(int type, int item, Vector3 pos, GameObject obToSpawn = null)
     {
         GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
         Rigidbody rb;
@@ -852,10 +867,12 @@ public class Controller : NetworkBehaviour
         rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
-        sceneObject.SetEquippedItem(type, item); // set the child object on the server
+        GameObject childOb;
+        BoxCollider sceneObBc;
         switch (type)
         {
             case 0: // IF VOXEL
+                sceneObject.SetEquippedItem(type, item); // set the child object on the server
                 sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
                 BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                 VoxelBc.material = physicMaterial;
@@ -865,28 +882,51 @@ public class Controller : NetworkBehaviour
                 break;
             case 2: // IF PROJECTILE
                 sceneObject.projectile[0] = LDrawImportRuntime.Instance.projectileOb;
-                sceneObject.typeProjectile = item;
+                sceneObject.typeProjectile = item; // should be 0 for first item in array
                 ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                GameObject childOb = ob.transform.GetChild(1).gameObject; // get the projectile (clone) object
+                childOb = ob.transform.GetChild(1).gameObject; // get the projectile (clone) object
                 GameObject deepChildOb = childOb.transform.GetChild(0).GetChild(0).gameObject; // get the deep child of the projectile object to get correct collider
-                BoxCollider deepChildObBc = deepChildOb.GetComponent<BoxCollider>();
-                childOb.GetComponent<BoxCollider>().enabled = false;
-                deepChildObBc.enabled = false;
-                BoxCollider sceneObBc = ob.AddComponent<BoxCollider>();
-                float childScale = childOb.transform.localScale.x;
-                childOb.transform.Rotate(0, 0, 180);
-                sceneObBc.size = deepChildObBc.size * childScale;
-                sceneObBc.center = deepChildObBc.center * childScale;
-                sceneObBc.material = physicMaterial;
+                if(deepChildOb.GetComponent<BoxCollider>() != null)
+                {
+                    BoxCollider deepChildObBc = deepChildOb.GetComponent<BoxCollider>();
+                    childOb.GetComponent<BoxCollider>().enabled = false;
+                    deepChildObBc.enabled = false;
+                    sceneObBc = ob.AddComponent<BoxCollider>();
+                    float childScale = childOb.transform.localScale.x;
+                    childOb.transform.Rotate(0, 0, 180);
+                    sceneObBc.size = deepChildObBc.size * childScale;
+                    sceneObBc.center = deepChildObBc.center * childScale;
+                    sceneObBc.material = physicMaterial;
+                }
                 break;
             case 3: // IF VOXEL BIT
+                sceneObject.SetEquippedItem(type, item); // set the child object on the server
                 sceneObject.typeVoxelBit = item;
                 BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();
                 voxelBitBc.material = physicMaterial;
                 voxelBitBc.center = new Vector3(0, -.047f, 0);
                 voxelBitBc.size = new Vector3(0.5f, 0.3f, 0.5f);
                 ob.tag = "voxelBit";
+                break;
+            case 4: // IF GAMEOBJECT REFERENCE
+                if(obToSpawn != null)
+                {
+                    sceneObject.undefinedPrefab = new GameObject[] { obToSpawn };
+                    sceneObject.typeUndefinedPrefab = item; // should be 0 for first item in array
+                    sceneObject.SetEquippedItem(type, item); // set the child object on the server
+                    ob.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
+                    childOb = ob.transform.GetChild(0).gameObject;
+                    if(childOb.GetComponent<BoxCollider>() != null)
+                    {
+                        BoxCollider childObBc = childOb.GetComponent<BoxCollider>();
+                        childObBc.enabled = false;
+                        sceneObBc = ob.AddComponent<BoxCollider>();
+                        sceneObBc.size = childObBc.size;
+                        sceneObBc.center = childObBc.center;
+                        sceneObBc.material = physicMaterial;
+                    }
+                }
                 break;
         }
 
@@ -1106,7 +1146,7 @@ public class Controller : NetworkBehaviour
 
         velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 
-        if (inputHandler.jump)
+        if (!SettingsStatic.LoadedSettings.flight && inputHandler.jump)
         {
             isGrounded = false;
             inputHandler.jump = false;
@@ -1117,7 +1157,6 @@ public class Controller : NetworkBehaviour
         {
             if (charController.enabled)
                 charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
-                                                     //transform.Translate(velocityPlayer, Space.World);
 
             Vector2 rotation = CalculateRotation();
             playerCamera.transform.localEulerAngles = new Vector3(rotation.y, 0f, 0f);
@@ -1126,7 +1165,7 @@ public class Controller : NetworkBehaviour
         else if(camMode == 2)
         {
             if (isMoving)
-                gameObject.transform.eulerAngles = new Vector3(0f, playerCameraOrigin.transform.rotation.eulerAngles.y, 0f);
+                gameObject.transform.eulerAngles = new Vector3(0f, playerCameraOrigin.transform.rotation.eulerAngles.y, 0f); // rotate gameobject to face same y direction as camera
 
             // moves player object forwards
             if (charController.enabled)
@@ -1136,8 +1175,15 @@ public class Controller : NetworkBehaviour
             Vector2 rotation = CalculateRotation();
             playerCameraOrigin.transform.eulerAngles = new Vector3(rotation.y, rotation.x, 0f);
 
-            if (isMoving) // if is moving, rotate char model to face same direction as camera
-                charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0);
+            if (isMoving) // if is moving
+                charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0); // rotate char model to face same y direction as camera
+        }
+        if(camMode != 3 && SettingsStatic.LoadedSettings.flight)
+        {
+            if (charController.enabled && inputHandler.jump)
+                charController.Move(Vector3.up * 0.5f);
+            if (charController.enabled && inputHandler.crouch)
+                charController.Move(Vector3.down * 0.5f);
         }
     }
 

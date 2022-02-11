@@ -443,7 +443,7 @@ public class SceneObject : NetworkBehaviour
                 }
             case 1:
                 {
-                    array = tool;
+                    array = tool; // not currently used
                     break;
                 }
             case 2:
@@ -467,7 +467,7 @@ public class SceneObject : NetworkBehaviour
         if (ob.GetComponent<BoxCollider>() != null)
             ob.GetComponent<BoxCollider>().enabled = true;
         ob.SetActive(true);
-        if (type != 0 && type !=2 && ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f))
+        if (type == 3 && ob.transform.localScale != new Vector3(2.5f, 2.5f, 2.5f)) // adjust scale for voxelBits
             ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         ob.transform.rotation = Quaternion.LookRotation(transform.forward); // orient forwards in direction of camera
         ob.transform.parent = transform;
@@ -475,17 +475,20 @@ public class SceneObject : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS
     {
-        if(collisions < 4) // only count a few collisions not all
+        if(gameObject.tag == "voxelRB")
         {
-            collisions++;
-            if (gameObject.tag == "voxelRb" && controller != null && collisions > 2) // after a few collisions break into pieces
+            if (collisions < 4) // only count a few collisions not all
             {
-                Vector3 pos = transform.position;
-                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                controller.SpawnPreDefinedPrefab(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                Destroy(gameObject);
+                collisions++;
+                if (controller != null && collisions > 2) // after a few collisions break into pieces
+                {
+                    Vector3 pos = transform.position;
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                    Destroy(gameObject);
+                }
             }
         }
     }

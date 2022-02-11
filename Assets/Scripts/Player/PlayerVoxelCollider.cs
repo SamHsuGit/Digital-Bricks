@@ -84,25 +84,28 @@ public class PlayerVoxelCollider : MonoBehaviour
         if (cc != null)
             center = cc.transform.position + cc.center; // cache current center of collider position
 
-        // reset jumps when grounded
-        if (isGrounded || (isPlayer && controller.isGrounded))
-            currentJumps = 0;
-
-        // can jump off sides of objects
-        if (isPlayer && (front || back || left || right))
-            currentJumps = 0;
-
-        // apply jump force
-        if (jumpRequest && currentJumps < maxJumps)
+        if (!SettingsStatic.LoadedSettings.flight)
         {
-            verticalMomentum = baseJumpForce;
-            currentJumps++;
-        }
-        currentJumps = 0; // allow flying by reseting jumps every frame
+            // reset jumps when grounded
+            if (isGrounded || (isPlayer && controller.isGrounded))
+                currentJumps = 0;
 
-        // Affect vertical momentum with gravity.
-        if (verticalMomentum > gravity)
-            verticalMomentum += Time.fixedDeltaTime * gravity;
+            // can jump off sides of objects
+            if (isPlayer && (front || back || left || right))
+                currentJumps = 0;
+
+            // apply jump force
+            if (jumpRequest && currentJumps < maxJumps)
+            {
+                verticalMomentum = baseJumpForce;
+                currentJumps++;
+            }
+            currentJumps = 0; // allow flying by reseting jumps every frame
+
+            // Affect vertical momentum with gravity if flight not enabled
+            if (verticalMomentum > gravity)
+                verticalMomentum += Time.fixedDeltaTime * gravity;
+        }
 
         // if we're running on road, increase road multiplier.
         int roadFactor;
@@ -117,8 +120,11 @@ public class PlayerVoxelCollider : MonoBehaviour
         else
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadFactor;
 
-        // Apply vertical momentum (falling/jumping).
-        velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
+        if (!SettingsStatic.LoadedSettings.flight)
+        {
+            // Apply vertical momentum (falling/jumping).
+            velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
+        }
 
         return velocityPlayer;
     }

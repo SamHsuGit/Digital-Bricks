@@ -10,6 +10,7 @@ public class SetupMenu : MonoBehaviour
     public GameObject menuElements;
     public GameObject loadingText;
     public TMP_InputField playerNameInputField;
+    public Toggle toggleFlight;
     public TMP_InputField planetInputField;
     public TMP_InputField seedInputField;
     public GameObject charObIdle;
@@ -38,6 +39,7 @@ public class SetupMenu : MonoBehaviour
         Application.targetFrameRate = 60;
         
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
+        toggleFlight.isOn = SettingsStatic.LoadedSettings.flight;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
@@ -65,12 +67,16 @@ public class SetupMenu : MonoBehaviour
     private void Update()
     {
         modelsObjectToSpin.transform.Rotate(new Vector3(0, 1, 0));
-
     }
 
     public void SetRenderDistance()
     {
         worldRenderText.text = worldRenderDistanceSlider.value.ToString();
+    }
+
+    public void SetFlightEnabled()
+    {
+        buttonSound.Play();
     }
 
     public void Splitscreen()
@@ -102,6 +108,7 @@ public class SetupMenu : MonoBehaviour
     public void SaveSettings()
     {
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
+        SettingsStatic.LoadedSettings.flight = toggleFlight.isOn;
         SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
 
         try
