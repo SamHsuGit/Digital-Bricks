@@ -538,11 +538,7 @@ public class Controller : NetworkBehaviour
         }
         else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
         {
-            // spawn projectile where camera is looking
-            //if (Settings.OnlinePlay)
-            //    CmdSpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
-            //else
-                SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+            SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
             TakeFromCurrentSlot(1);
         }
         else if (holdingGrab) // IF HOLDING SOMETHING
@@ -602,16 +598,8 @@ public class Controller : NetworkBehaviour
         if (blockID == 0 || blockID == 1 || blockID == 26) // if the blockID at position is air or barrier blocks, then skip to next position
             return;
 
-        //if (Settings.OnlinePlay && hasAuthority)
-        //{
-        //    CmdEditVoxel(position, 0, true); // destroy voxel at position (online play)
-        //    CmdSpawnObject(0, blockID, position);
-        //}
-        //else
-        {
-            EditVoxel(position, 0, true); // destroy voxel at position
-            SpawnObject(0, blockID, position);
-        }
+        EditVoxel(position, 0, true); // destroy voxel at position
+        SpawnObject(0, blockID, position);
     }
 
     // needed to empty slot with many pieces all at once instead of manually removing one by one
@@ -848,12 +836,6 @@ public class Controller : NetworkBehaviour
         if (toolbar.slots[toolbar.slotIndex].itemSlot.stack.amount == 0)
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
     }
-
-    //[Command]
-    //public void CmdSpawnObject(int type, int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
-    //{
-    //    SpawnObject(type, item, pos);
-    //}
 
     public void SpawnObject(int type, int item, Vector3 pos, GameObject obToSpawn = null)
     {

@@ -28,7 +28,6 @@ public class Health : NetworkBehaviour
     GameObject ob;
     public List<GameObject> modelPieces;
     readonly SyncList<GameObject> modelPiecesSyncList = new SyncList<GameObject>();
-    MeshRenderer mr;
 
     void Awake()
     {
@@ -244,28 +243,26 @@ public class Health : NetworkBehaviour
         {
             for (int i = 0; i < modelPartsList.Count; i++) // for all modelParts
             {
-                if (i >= hp && modelPartsList[i].activeSelf) // if modelPart index >= hp and not hidden, hide it
+                GameObject obToSpawn = modelPartsList[i];
+                if (i >= hp && obToSpawn.activeSelf) // if modelPart index >= hp and not hidden, hide it
                 {
-                    if (modelPartsList[i].GetComponent<BoxCollider>() != null)
+                    if (obToSpawn.GetComponent<BoxCollider>() != null)
                     {
-                        controller.SpawnObject(4, 0, modelPartsList[i].transform.position, modelPartsList[i]); // spawn a copy of the character model piece that was shot
+                        controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn); // spawn a copy of the character model piece that was shot
                     }
-                    Vector3 pos = modelPartsList[i].transform.position;
-                    //if (Settings.OnlinePlay)
-                    //{
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                    //}
-                    //else
+                    Vector3 pos = obToSpawn.transform.position;
                     {
                         controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
                         controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
                         controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
                         controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
                     }
-                    modelPartsList[i].SetActive(false); // hide original object
+
+                    // turn off components, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
+                    if (obToSpawn.GetComponent<MeshRenderer>() != null)
+                        obToSpawn.GetComponent<MeshRenderer>().enabled = false;
+                    if (obToSpawn.GetComponent<BoxCollider>() != null)
+                        obToSpawn.GetComponent<BoxCollider>().enabled = false;
                 }
             }
         }
@@ -299,9 +296,14 @@ public class Health : NetworkBehaviour
 
         hp = hpMax;
 
+        // turn on components again, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
         for (int i = 0; i < modelPieces.Count; i++)
         {
-            modelPieces[i].SetActive(true); // unhide all original objects
+            GameObject ob = modelPieces[i];
+            if (ob.GetComponent<MeshRenderer>() != null)
+                ob.GetComponent<MeshRenderer>().enabled = true;
+            if (ob.GetComponent<BoxCollider>() != null)
+                ob.GetComponent<BoxCollider>().enabled = true;
         }
     }
 
