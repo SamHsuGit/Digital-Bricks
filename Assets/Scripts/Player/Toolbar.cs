@@ -105,8 +105,8 @@ public class Toolbar : MonoBehaviour
                 byte blockID = slots[slotIndexValue].itemSlot.stack.id;
                 if(!Settings.OnlinePlay)
                     controller.SpawnObject(0, blockID, position);
-                else
-                    controller.CmdSpawnObject(0, blockID, position);
+                //else
+                //    controller.CmdSpawnObject(0, blockID, position);
             }
             slots[slotIndexValue].itemSlot.EmptySlot();
         }

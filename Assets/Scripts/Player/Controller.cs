@@ -539,9 +539,9 @@ public class Controller : NetworkBehaviour
         else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
         {
             // spawn projectile where camera is looking
-            if (Settings.OnlinePlay)
-                CmdSpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
-            else
+            //if (Settings.OnlinePlay)
+            //    CmdSpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+            //else
                 SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
             TakeFromCurrentSlot(1);
         }
@@ -602,12 +602,12 @@ public class Controller : NetworkBehaviour
         if (blockID == 0 || blockID == 1 || blockID == 26) // if the blockID at position is air or barrier blocks, then skip to next position
             return;
 
-        if (Settings.OnlinePlay && hasAuthority)
-        {
-            CmdEditVoxel(position, 0, true); // destroy voxel at position (online play)
-            CmdSpawnObject(0, blockID, position);
-        }
-        else
+        //if (Settings.OnlinePlay && hasAuthority)
+        //{
+        //    CmdEditVoxel(position, 0, true); // destroy voxel at position (online play)
+        //    CmdSpawnObject(0, blockID, position);
+        //}
+        //else
         {
             EditVoxel(position, 0, true); // destroy voxel at position
             SpawnObject(0, blockID, position);
@@ -849,11 +849,11 @@ public class Controller : NetworkBehaviour
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
     }
 
-    [Command]
-    public void CmdSpawnObject(int type, int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
-    {
-        SpawnObject(type, item, pos);
-    }
+    //[Command]
+    //public void CmdSpawnObject(int type, int item, Vector3 pos) // cannot pass in GameObjects to Commands... causes error
+    //{
+    //    SpawnObject(type, item, pos);
+    //}
 
     public void SpawnObject(int type, int item, Vector3 pos, GameObject obToSpawn = null)
     {
@@ -942,56 +942,56 @@ public class Controller : NetworkBehaviour
         Destroy(ob, 30); // clean up objects after 30 seconds
     }
 
-    [Command]
-    public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
-    {
-        SpawnUndefinedPrefab(option, pos);
-    }
+    //[Command]
+    //public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
+    //{
+    //    SpawnUndefinedPrefab(option, pos);
+    //}
 
-    public void SpawnUndefinedPrefab(int option, Vector3 pos)
-    {
-        switch (option)
-        {
-            case 0:
-                undefinedPrefabToSpawn = LDrawImportRuntime.Instance.projectileOb;
-                undefinedPrefabToSpawn.tag = "Hazard";
-                break;
-        }
-        GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
-        ob.transform.Rotate(new Vector3(180, 0, 0));
-        ob.SetActive(true);
+    //public void SpawnUndefinedPrefab(int option, Vector3 pos)
+    //{
+    //    switch (option)
+    //    {
+    //        case 0:
+    //            undefinedPrefabToSpawn = LDrawImportRuntime.Instance.projectileOb;
+    //            undefinedPrefabToSpawn.tag = "Hazard";
+    //            break;
+    //    }
+    //    GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
+    //    ob.transform.Rotate(new Vector3(180, 0, 0));
+    //    ob.SetActive(true);
 
-        if(option == 0 && ob.GetComponent<BoxCollider>() != null) // IF PROJECTILE
-        {
-            BoxCollider bc = ob.GetComponent<BoxCollider>();
-            bc.enabled = true;
-            bc.material = physicMaterial;
-        }
+    //    if(option == 0 && ob.GetComponent<BoxCollider>() != null) // IF PROJECTILE
+    //    {
+    //        BoxCollider bc = ob.GetComponent<BoxCollider>();
+    //        bc.enabled = true;
+    //        bc.material = physicMaterial;
+    //    }
 
-        Rigidbody rb = ob.AddComponent<Rigidbody>();
-        float mass = gameObject.GetComponent<Health>().piecesRbMass;
-        rb.mass = mass;
-        rb.isKinematic = false;
-        rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
-        ob.AddComponent<Health>();
-        if (Settings.OnlinePlay)
-        {
-            if (ob.GetComponent<NetworkIdentity>() == null)
-                ob.AddComponent<NetworkIdentity>();
-            if (ob.GetComponent<NetworkTransform>() == null) // DISABLED (Chose to use Rb instead?) Network transform base error?
-                ob.AddComponent<NetworkTransform>();
-        }
-        MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
+    //    Rigidbody rb = ob.AddComponent<Rigidbody>();
+    //    float mass = gameObject.GetComponent<Health>().piecesRbMass;
+    //    rb.mass = mass;
+    //    rb.isKinematic = false;
+    //    rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
+    //    ob.AddComponent<Health>();
+    //    if (Settings.OnlinePlay)
+    //    {
+    //        if (ob.GetComponent<NetworkIdentity>() == null)
+    //            ob.AddComponent<NetworkIdentity>();
+    //        if (ob.GetComponent<NetworkTransform>() == null) // DISABLED (Chose to use Rb instead?) Network transform base error?
+    //            ob.AddComponent<NetworkTransform>();
+    //    }
+    //    MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
 
-        int count = 0;
-        for (int i = 0; i < mrs.Length; i++)
-            if (mrs[i].gameObject.transform.childCount > 0)
-                count++;
-        ob.GetComponent<Health>().hp = count;
-        rb.mass = rb.mass + 2 * mass * count;
-        if (Settings.OnlinePlay)
-            customNetworkManager.SpawnNetworkOb(ob); // no assetId or sceneId???
-    }
+    //    int count = 0;
+    //    for (int i = 0; i < mrs.Length; i++)
+    //        if (mrs[i].gameObject.transform.childCount > 0)
+    //            count++;
+    //    ob.GetComponent<Health>().hp = count;
+    //    rb.mass = rb.mass + 2 * mass * count;
+    //    if (Settings.OnlinePlay)
+    //        customNetworkManager.SpawnNetworkOb(ob); // no assetId or sceneId???
+    //}
 
     void RemoveVoxel(Vector3 pos)
     {
