@@ -19,6 +19,7 @@ public class Health : NetworkBehaviour
     public int jumpCounter = 0;
     public int blockCounter = 0;
     public bool isAlive = false;
+    public bool playerGroundedFirstTime = false;
 
     private int brickCount;
     int lastPlayerPos = 0;
@@ -162,6 +163,12 @@ public class Health : NetworkBehaviour
 
     public void Hunger()
     {
+        // controller must be grounded to start counting against hunger
+        if (!playerGroundedFirstTime && controller.isGrounded)
+            playerGroundedFirstTime = true;
+        if (!playerGroundedFirstTime)
+            return;
+
         // https://gaming.stackexchange.com/questions/30618/does-the-hunger-meter-decrease-at-a-constant-rate
         // Minecraft: if player walked more than 800 blocks cause hunger
         if (gameObject.transform.position.magnitude - lastPlayerPos > 800)
