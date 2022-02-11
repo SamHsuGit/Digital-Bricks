@@ -606,7 +606,6 @@ MonoBehaviour:
   jumpCounter: 0
   blockCounter: 0
   isAlive: 0
-  playerGroundedFirstTime: 0
   modelPieces: []
 --- !u!114 &3324826297497535085
 MonoBehaviour:

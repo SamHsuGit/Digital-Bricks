@@ -248,7 +248,8 @@ public class Health : NetworkBehaviour
                 {
                     if (obToSpawn.GetComponent<BoxCollider>() != null)
                     {
-                        controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn); // spawn a copy of the character model piece that was shot
+                        //controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn); // spawn a copy of the character model piece that was shot (WIP)
+                        //SpawnCopyRb(obToSpawn); // (replaced)
                     }
 
                     // turn off components, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
