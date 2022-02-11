@@ -19,7 +19,6 @@ public class Health : NetworkBehaviour
     public int jumpCounter = 0;
     public int blockCounter = 0;
     public bool isAlive = false;
-    public bool playerGroundedFirstTime = false;
 
     private int brickCount;
     int lastPlayerPos = 0;
@@ -134,7 +133,7 @@ public class Health : NetworkBehaviour
     {
         if (gameObject.layer == 11) // if it is a player
         {
-            Hunger();
+            //Hunger(); // Disabled (causes hp issues upon spawning which breaks online multiplayer)
 
             // Respawn
             if (hp < 1)
@@ -225,15 +224,6 @@ public class Health : NetworkBehaviour
     // runs from gun script when things are shot, runs in this script when object falls below certain height
     public void UpdateHP(float oldValue, float newValue)
     {
-        // controller must be grounded first time
-        if (!playerGroundedFirstTime && controller.isGrounded)
-            playerGroundedFirstTime = true;
-        if (!playerGroundedFirstTime)
-        {
-            hp = hpMax;
-            return;
-        }
-
         hp = newValue;
         SetModelPieceVisibility(modelPieces);
     }
@@ -313,7 +303,6 @@ public class Health : NetworkBehaviour
         {
             modelPieces[i].SetActive(true); // unhide all original objects
         }
-        playerGroundedFirstTime = false;
     }
 
 }
