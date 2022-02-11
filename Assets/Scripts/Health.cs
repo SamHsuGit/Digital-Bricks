@@ -250,13 +250,6 @@ public class Health : NetworkBehaviour
                     {
                         controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn); // spawn a copy of the character model piece that was shot
                     }
-                    //Vector3 pos = obToSpawn.transform.position;
-                    //{
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                    //}
 
                     // turn off components, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
                     if (obToSpawn.GetComponent<MeshRenderer>() != null)
@@ -266,6 +259,33 @@ public class Health : NetworkBehaviour
                 }
             }
         }
+    }
+
+    public void SpawnCopyRb(GameObject _obToSpawn)
+    {
+        // make a new object copy
+        ob = Instantiate(_obToSpawn, _obToSpawn.transform);
+        ob.GetComponent<MeshRenderer>().enabled = true;
+
+        for (int j = 0; j < ob.transform.childCount; j++)// if copy of part has any children gameObjects, destroy them
+            Destroy(ob.transform.GetChild(j).gameObject);
+
+        // unparent copy from original mesh (stops anims)
+        // assumes the parts are ordered such that children have smaller numbers than parent objects
+        ob.transform.parent = null;
+
+        // add various components to copied object
+        Rigidbody rb = ob.AddComponent<Rigidbody>();
+        rb.mass = piecesRbMass;
+        BoxCollider bc = ob.AddComponent<BoxCollider>();
+        bc.material = physicMaterial;
+        if (Settings.OnlinePlay)
+        {
+            if (ob.GetComponent<NetworkIdentity>() == null)
+                ob.AddComponent<NetworkIdentity>();
+        }
+
+        Destroy(ob, 30); // destroy newly created parts after 30 seconds to clean up scene
     }
 
     [Command]

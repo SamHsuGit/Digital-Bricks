@@ -902,7 +902,7 @@ public class Controller : NetworkBehaviour
                     if(childOb.GetComponent<BoxCollider>() != null)
                     {
                         BoxCollider childObBc = childOb.GetComponent<BoxCollider>();
-                        childObBc.enabled = false;
+                        //childObBc.enabled = false;
                         sceneObBc = ob.AddComponent<BoxCollider>();
                         sceneObBc.size = childObBc.size;
                         sceneObBc.center = childObBc.center;
