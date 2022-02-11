@@ -163,12 +163,6 @@ public class Health : NetworkBehaviour
 
     public void Hunger()
     {
-        // controller must be grounded to start counting against hunger
-        if (!playerGroundedFirstTime && controller.isGrounded)
-            playerGroundedFirstTime = true;
-        if (!playerGroundedFirstTime)
-            return;
-
         // https://gaming.stackexchange.com/questions/30618/does-the-hunger-meter-decrease-at-a-constant-rate
         // Minecraft: if player walked more than 800 blocks cause hunger
         if (gameObject.transform.position.magnitude - lastPlayerPos > 800)
@@ -231,8 +225,17 @@ public class Health : NetworkBehaviour
     // runs from gun script when things are shot, runs in this script when object falls below certain height
     public void UpdateHP(float oldValue, float newValue)
     {
+        // controller must be grounded first time
+        if (!playerGroundedFirstTime && controller.isGrounded)
+            playerGroundedFirstTime = true;
+        if (!playerGroundedFirstTime)
+        {
+            hp = hpMax;
+            return;
+        }
+
         hp = newValue;
-        hpLogicAlive(modelPieces);
+        SetModelPieceVisibility(modelPieces);
     }
 
     public void PlayHurtSound()
@@ -240,7 +243,7 @@ public class Health : NetworkBehaviour
         death.Play();
     }
 
-    void hpLogicAlive(List<GameObject> modelPartsList)
+    void SetModelPieceVisibility(List<GameObject> modelPartsList)
     {
         if (hp > hpMax)
             hp = hpMax;
@@ -310,6 +313,7 @@ public class Health : NetworkBehaviour
         {
             modelPieces[i].SetActive(true); // unhide all original objects
         }
+        playerGroundedFirstTime = false;
     }
 
 }
