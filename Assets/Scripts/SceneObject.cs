@@ -478,7 +478,7 @@ public class SceneObject : NetworkBehaviour
         if (collisions < 4) // only count a few collisions not all
         {
             collisions++;
-            if (gameObject.tag == "voxelRB" && controller != null && collisions > 2) // after a few collisions break into pieces
+            if (gameObject.tag == "voxelRb" && controller != null && collisions > 2) // after a few collisions break into pieces
             {
                 Vector3 pos = transform.position;
                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
