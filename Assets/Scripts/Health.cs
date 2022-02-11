@@ -250,13 +250,13 @@ public class Health : NetworkBehaviour
                     {
                         controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn); // spawn a copy of the character model piece that was shot
                     }
-                    Vector3 pos = obToSpawn.transform.position;
-                    {
-                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                    }
+                    //Vector3 pos = obToSpawn.transform.position;
+                    //{
+                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                    //}
 
                     // turn off components, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
                     if (obToSpawn.GetComponent<MeshRenderer>() != null)
