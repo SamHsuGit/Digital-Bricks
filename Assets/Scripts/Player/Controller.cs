@@ -867,7 +867,7 @@ public class Controller : NetworkBehaviour
                 sceneObject.typeProjectile = item; // should be 0 for first item in array
                 ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                childOb = ob.transform.GetChild(1).gameObject; // get the projectile (clone) object
+                childOb = ob.transform.GetChild(0).gameObject; // get the projectile (clone) object
                 GameObject deepChildOb = childOb.transform.GetChild(0).GetChild(0).gameObject; // get the deep child of the projectile object to get correct collider
                 if(deepChildOb.GetComponent<BoxCollider>() != null)
                 {
