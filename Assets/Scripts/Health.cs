@@ -246,12 +246,12 @@ public class Health : NetworkBehaviour
                 GameObject obToSpawn = modelPartsList[i];
                 if (i >= hp && obToSpawn.GetComponent<MeshRenderer>() != null && obToSpawn.GetComponent<MeshRenderer>().enabled) // if modelPart index >= hp and not hidden, hide it
                 {
-                    // spawn voxel bits
-                    Vector3 pos = obToSpawn.transform.position;
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                    //// spawn voxel bits
+                    //Vector3 pos = obToSpawn.transform.position;
+                    //controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                    //controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                    //controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                    //controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
 
                     if (obToSpawn.GetComponent<BoxCollider>() != null)
                     {
@@ -314,7 +314,7 @@ public class Health : NetworkBehaviour
 
         // Drop items out of toolbar slot
         Toolbar toolbar = controller.toolbar;
-        for (int i = 0; i < toolbar.slots.Length; i++)
+        for (int i = 1; i < toolbar.slots.Length; i++) // empty all but first slot
             toolbar.DropItemsFromSlot(i);
 
         // spawn player at last save point
