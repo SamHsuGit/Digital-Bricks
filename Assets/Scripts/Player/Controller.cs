@@ -863,22 +863,21 @@ public class Controller : NetworkBehaviour
                 sceneObject.controller = this;
                 break;
             case 2: // IF PROJECTILE
-                //sceneObject.projectile[0] = LDrawImportRuntime.Instance.projectileOb; // (WIP) causes online multiplayer error for some reason
+                sceneObject.projectile[0] = LDrawImportRuntime.Instance.projectileOb; // (WIP) causes online multiplayer error for some reason
                 sceneObject.typeProjectile = item; // should be 0 for first item in array
                 ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // set the child object on the server
+
+                // WIP cannot assume importd projectile is only 1 piece (need to create combined box collider)
                 childOb = ob.transform.GetChild(0).gameObject; // get the projectile (clone) object
-                GameObject deepChildOb = childOb.transform.GetChild(0).GetChild(0).gameObject; // get the deep child of the projectile object to get correct collider
-                if(deepChildOb.GetComponent<BoxCollider>() != null)
+                if (childOb.GetComponent<BoxCollider>() != null)
                 {
-                    BoxCollider deepChildObBc = deepChildOb.GetComponent<BoxCollider>();
+                    BoxCollider childObBc = childOb.GetComponent<BoxCollider>();
                     childOb.GetComponent<BoxCollider>().enabled = false;
-                    deepChildObBc.enabled = false;
                     sceneObBc = ob.AddComponent<BoxCollider>();
                     float childScale = childOb.transform.localScale.x;
-                    childOb.transform.Rotate(0, 0, 180);
-                    sceneObBc.size = deepChildObBc.size * childScale;
-                    sceneObBc.center = deepChildObBc.center * childScale;
+                    sceneObBc.size = childObBc.size * childScale;
+                    sceneObBc.center = childObBc.center * childScale;
                     sceneObBc.material = physicMaterial;
                 }
                 break;
