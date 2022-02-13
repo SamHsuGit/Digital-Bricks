@@ -246,7 +246,6 @@ public class Health : NetworkBehaviour
                 GameObject obToSpawn = modelPartsList[i];
                 if (i >= hp && obToSpawn.GetComponent<MeshRenderer>() != null && obToSpawn.GetComponent<MeshRenderer>().enabled) // if modelPart index >= hp and not hidden, hide it
                 {
-                    //controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
                     // spawn voxel bits
                     Vector3 pos = obToSpawn.transform.position;
                     controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
