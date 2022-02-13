@@ -23,6 +23,7 @@ public class LDrawImportRuntime : MonoBehaviour
     public int baseObSizeZ;
     public int baseObSizeY;
     public float scale = 0.025f;
+    public bool modelsLoaded = false;
 
     public static LDrawImportRuntime Instance { get { return _instance; } }
     private static LDrawImportRuntime _instance;
@@ -52,35 +53,74 @@ public class LDrawImportRuntime : MonoBehaviour
         ldrawConfigRuntime.SetFilePaths();
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
-        // imports models and hides upon world load to be instantiated later
+        // imports models, caches, and hides upon world load to be instantiated later
         charObIdle = ImportLDrawLocal("charIdle", Vector3.zero, false); // char is not static (i.e. isStatic = false)
+        //RemoveSubmodelEmpty(charObIdle);
         charObRun = ImportLDrawLocal("charRun", Vector3.zero, false); // char is not static (i.e. isStatic = false)
+        //RemoveSubmodelEmpty(charObRun);
         baseOb = ImportLDrawLocal("base", new Vector3(0, -10000, 0), true);
+        //RemoveSubmodelEmpty(baseOb);
         projectileOb = ImportLDrawLocal("projectile", new Vector3(0,-10000,0), true);
+        //RemoveSubmodelEmpty(projectileOb);
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
         baseObSizeZ = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.z / 40) + 1;
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
+
+        modelsLoaded = true;
+    }
+
+    void RemoveSubmodelEmpty(GameObject _modelOb) // WIP
+    {
+        GameObject submodel = _modelOb.transform.GetChild(0).gameObject;
+        if (submodel.name.Contains("-submodel")) // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
+        {
+            foreach (Transform child in submodel.transform)
+                child.parent = _modelOb.transform; // set parent to modelOb
+            Destroy(submodel.transform.gameObject); // destroy submodel
+        }
     }
 
     public GameObject ImportLDrawLocal(string fileName, Vector3 pos, bool isStatic)
     {
         var model = LDrawModelRuntime.Create(GetCurrentPart(fileName), GetSerializedPart(fileName), true);
         modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
-        return ConfigureModelOb(modelOb, pos, isStatic);
+        modelOb = ConfigureModelOb(modelOb, pos, isStatic);
+
+        return modelOb;
     }
 
     public GameObject ImportLDrawOnline(string fileName, string commandString, Vector3 pos, bool isStatic)
     {
-        var model = LDrawModelRuntime.Create(fileName, commandString, false);
-        modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
-        modelOb.name = fileName;
+        if(modelsLoaded) // if models already loaded, do not need to load again, just used cached model
+        {
+            switch (fileName)
+            {
+                case "charIdle":
+                    return charObIdle;
+                case "charRun":
+                    return charObRun;
+                case "base":
+                    return baseOb;
+                case "projectile":
+                    return projectileOb;
+            }
+            ErrorMessage.Show("unrecognized .ldr filename");
+            return null;
+        }
+        else
+        {
+            var model = LDrawModelRuntime.Create(fileName, commandString, false);
+            modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+            modelOb.name = fileName;
 
-        if (modelOb.transform.GetChild(0).name.Contains("-submodel")) // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
-            Destroy(modelOb.transform.GetChild(0).transform.gameObject);
+            modelOb = ConfigureModelOb(modelOb, pos, isStatic);
 
-        return ConfigureModelOb(modelOb, pos, isStatic);
+            //RemoveSubmodelEmpty(modelOb);
+
+            return modelOb;
+        }
     }
 
     public string ReadFileToString(string fileName)

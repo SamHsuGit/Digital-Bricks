@@ -538,7 +538,7 @@ public class Controller : NetworkBehaviour
         }
         else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
         {
-            SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius);
+            SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4);
             TakeFromCurrentSlot(1);
         }
         else if (holdingGrab) // IF HOLDING SOMETHING
@@ -920,7 +920,7 @@ public class Controller : NetworkBehaviour
             customNetworkManager.SpawnNetworkOb(ob);
         }
         //ob.layer = 10; (was causing bugs with picking up rigidbody objects after spawned)
-        //Destroy(ob, 30); // clean up objects after 30 seconds
+        Destroy(ob, 30); // clean up objects after 30 seconds
     }
 
     //[Command]

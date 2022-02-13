@@ -41,7 +41,7 @@ public class Health : NetworkBehaviour
     {
         base.OnStartServer();
 
-        if (!isAlive)
+        if (!isAlive && modelPieces.Count != 0)
         {
             for (int i = 0; i < modelPieces.Count; i++)
                 modelPiecesSyncList.Add(modelPieces[i]);
@@ -54,19 +54,17 @@ public class Health : NetworkBehaviour
         modelPieces = new List<GameObject>();
         if (gameObject.layer == 10) // if this object is a single lego Piece
             brickCount = 1;
-        else if (isAlive)
+        else if (isAlive && gameObject == controller.gameObject && controller.charObIdle != null && controller.charObRun != null)
         {
-            int idle = CountPieces(controller.charObIdle);
-            int run = CountPieces(controller.charObRun);
-            if (idle == run)
-                brickCount = idle;
-            else
+            int idle = SimpleCountCheck(controller.charObIdle);
+            int run = SimpleCountCheck(controller.charObRun);
+            if (idle != run)
                 ErrorMessage.Show("# pieces must be same for 'charIdle.ldr' and 'charRun.ldr'");
             AddToPiecesList(controller.charObIdle);
         }
         else
         {
-            brickCount = CountPieces(gameObject);
+            AddToPiecesList(gameObject);
         }
 
         hpMax = brickCount;
@@ -81,29 +79,30 @@ public class Health : NetworkBehaviour
         }  
     }
 
-    int CountPieces(GameObject _ob)
+    int SimpleCountCheck(GameObject _ob)
     {
         return _ob.transform.GetChild(0).childCount;
     }
 
     void AddToPiecesList(GameObject _ob)
     {
-        GameObject submodel = _ob.transform.GetChild(0).gameObject;
-        foreach(Transform child in submodel.transform)
+        if (_ob.transform.GetChild(0).gameObject.name.Contains("-submodel"))
         {
-            modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
+            GameObject submodel = _ob.transform.GetChild(0).gameObject;
+            foreach (Transform child in submodel.transform)
+            {
+                modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
+                brickCount++;
+            }
         }
-
-        //// PLAYER PIECES MUST TAGGED AS LEGO PIECE (layer 10) AND BE ACTIVE AND HAVE MESH RENDERER TO BE COUNTED TOWARDS HP
-        //foreach (Transform child in _ob.transform)
-        //{
-        //    MeshRenderer mr = child.gameObject.GetComponent<MeshRenderer>();
-        //    if(child.gameObject.layer == 10 && child.gameObject.activeSelf && mr != null && mr.enabled)
-        //    {
-        //        modelPieces.Add(child.gameObject); // add to list of pieces
-        //    }
-        //    AddToPiecesList(child.gameObject); // recursively check child of child objects if should add to pieces list
-        //}
+        else
+        {
+            foreach (Transform child in _ob.transform)
+            {
+                modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
+                brickCount++;
+            }
+        }
     }
 
     public float CalculateBaseMoveSpeed(int pieces)
@@ -142,11 +141,6 @@ public class Health : NetworkBehaviour
                 else
                     Respawn();
             }
-        }
-        else if(gameObject.tag != "Enemy") // if not a player or enemy object
-        {
-            if (hp < 1)
-                Destroy(gameObject);
         }
 
         if (transform.position.y < -20 && hp > 0) // hurt if falling below world
@@ -238,7 +232,6 @@ public class Health : NetworkBehaviour
             hp = hpMax;
         if (hp < 0)
             hp = 0;
-
         if (modelPartsList.Count > 1)
         {
             for (int i = 0; i < modelPartsList.Count; i++) // for all modelParts
@@ -246,12 +239,12 @@ public class Health : NetworkBehaviour
                 GameObject obToSpawn = modelPartsList[i];
                 if (i >= hp && obToSpawn.GetComponent<MeshRenderer>() != null && obToSpawn.GetComponent<MeshRenderer>().enabled) // if modelPart index >= hp and not hidden, hide it
                 {
-                    //// spawn voxel bits
-                    //Vector3 pos = obToSpawn.transform.position;
-                    //controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    //controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    //controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    //controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                    // spawn voxel bits
+                    Vector3 pos = obToSpawn.transform.position;
+                    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
 
                     if (obToSpawn.GetComponent<BoxCollider>() != null)
                     {
