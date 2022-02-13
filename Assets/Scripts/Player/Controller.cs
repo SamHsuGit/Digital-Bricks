@@ -920,7 +920,7 @@ public class Controller : NetworkBehaviour
             customNetworkManager.SpawnNetworkOb(ob);
         }
         //ob.layer = 10; (was causing bugs with picking up rigidbody objects after spawned)
-        Destroy(ob, 30); // clean up objects after 30 seconds
+        //Destroy(ob, 30); // clean up objects after 30 seconds
     }
 
     //[Command]

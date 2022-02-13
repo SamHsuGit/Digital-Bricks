@@ -256,7 +256,6 @@ public class Health : NetworkBehaviour
                     if (obToSpawn.GetComponent<BoxCollider>() != null)
                     {
                         //controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn); // spawn a copy of the character model piece that was shot (WIP)
-                        //SpawnCopyRb(obToSpawn); // (replaced)
                     }
 
                     // turn off components, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
@@ -267,33 +266,6 @@ public class Health : NetworkBehaviour
                 }
             }
         }
-    }
-
-    public void SpawnCopyRb(GameObject _obToSpawn)
-    {
-        // make a new object copy
-        ob = Instantiate(_obToSpawn, _obToSpawn.transform);
-        ob.GetComponent<MeshRenderer>().enabled = true;
-
-        for (int j = 0; j < ob.transform.childCount; j++)// if copy of part has any children gameObjects, destroy them
-            Destroy(ob.transform.GetChild(j).gameObject);
-
-        // unparent copy from original mesh (stops anims)
-        // assumes the parts are ordered such that children have smaller numbers than parent objects
-        ob.transform.parent = null;
-
-        // add various components to copied object
-        Rigidbody rb = ob.AddComponent<Rigidbody>();
-        rb.mass = piecesRbMass;
-        BoxCollider bc = ob.AddComponent<BoxCollider>();
-        bc.material = physicMaterial;
-        if (Settings.OnlinePlay)
-        {
-            if (ob.GetComponent<NetworkIdentity>() == null)
-                ob.AddComponent<NetworkIdentity>();
-        }
-
-        Destroy(ob, 30); // destroy newly created parts after 30 seconds to clean up scene
     }
 
     [Command]
@@ -317,7 +289,7 @@ public class Health : NetworkBehaviour
         for (int i = 1; i < toolbar.slots.Length; i++) // empty all but first slot
             toolbar.DropItemsFromSlot(i);
 
-        // spawn player at last save point
+        // teleport player to last save point (do not destroy as it breaks the multiplayer network connection)
         int[] playerStats = SaveSystem.LoadPlayerStats(gameObject, controller.playerName, World.Instance.worldData);
         Vector3 respawnPoint = new Vector3(playerStats[0], playerStats[1], playerStats[2]);
         transform.position = respawnPoint;
