@@ -54,8 +54,9 @@ public class LDrawImportRuntime : MonoBehaviour
         // imports models, caches, and hides upon world load to be instantiated later
         charObIdle = ImportLDrawLocal("charIdle", Vector3.zero, false); // char is not static (i.e. isStatic = false)
         charObRun = ImportLDrawLocal("charRun", Vector3.zero, false); // char is not static (i.e. isStatic = false)
+        projectileOb = ImportLDrawLocal("projectile", new Vector3(0, -10000, 0), false);
+
         baseOb = ImportLDrawLocal("base", new Vector3(0, -10000, 0), true);
-        projectileOb = ImportLDrawLocal("projectile", new Vector3(0,-10000,0), false);
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
@@ -72,24 +73,31 @@ public class LDrawImportRuntime : MonoBehaviour
         return _modelOb;
     }
 
-    public GameObject ImportLDrawOnline(string playerName, string fileName, string commandString, Vector3 pos, bool isStatic)
+    void RemoveSubmodelEmpty(GameObject _modelOb)
+    {
+        // gets rid of unwanted -submodel empty
+        //if (!Settings.OnlinePlay)
+        {
+            foreach (Transform child in _modelOb.transform.GetChild(0))
+                child.parent = _modelOb.transform;
+            // clumsy way of getting rid of submodel (causes issues with multiplayer. Need to figure out how to prevent this in first place). This has to occur before ConfigureModelOb
+            if (_modelOb.transform.GetChild(0).name.Contains("-submodel"))
+                Destroy(_modelOb.transform.GetChild(0).transform.gameObject);
+        }
+    }
+
+    public GameObject ImportLDrawOnline(string fileName, string commandString, Vector3 pos, bool isStatic)
     {
         // Called when other players send ldraw commands over network, rebuilds the ldraw file on client end (assumes players have different ldraw models)
-        fileName = playerName + fileName;
-
         var model = LDrawModelRuntime.Create(fileName, commandString, false);
         GameObject _modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+
+        // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place). This has to occur before ConfigureModelOb
+        if (_modelOb.transform.GetChild(0).name.Contains("-submodel"))
+            Destroy(_modelOb.transform.GetChild(0).transform.gameObject);
+
         _modelOb = ConfigureModelOb(_modelOb, pos, isStatic);
-
         _modelOb.name = fileName;
-
-        // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
-        foreach (Transform child in _modelOb.transform)
-        {
-            if (!child.name.Contains("-submodel"))
-                Destroy(child.gameObject);
-        }
-
         return _modelOb;
     }
 

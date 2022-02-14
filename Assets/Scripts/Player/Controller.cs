@@ -327,28 +327,28 @@ public class Controller : NetworkBehaviour
 
     public void SetCharIdle(string oldCharIdle, string newCharIdle)
     {
-        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName, "charIdle", newCharIdle, charModelOrigin.transform.position, false);
+        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charIdle", newCharIdle, charModelOrigin.transform.position, false);
         charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
+        charObIdle.transform.localPosition = Vector3.zero;
         charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
-
         SetPlayerColliderSettings();
     }
 
     public void SetCharRun(string oldCharRun, string newCharRun)
     {
-        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName, "charRun", newCharRun, charModelOrigin.transform.position, false);
+        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charRun", newCharRun, charModelOrigin.transform.position, false);
         charObRun.SetActive(false);
         charObRun.transform.parent = charModelOrigin.transform;
+        charObRun.transform.localPosition = Vector3.zero;
         charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
-
         SetPlayerColliderSettings();
     }
 
     public void SetProjectile(string oldProjectile, string newProjectile)
     {
-        projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName, "projectile", newProjectile, projectile.transform.position, false);
+        projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newProjectile, projectile.transform.position, false);
     }
 
     public void SetTime(float oldTime, float newTime)
@@ -886,7 +886,7 @@ public class Controller : NetworkBehaviour
                 ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // set the child object on the server
 
-                // WIP cannot assume importd projectile is only 1 piece (need to create combined box collider)
+                // WIP collider is slightly off center for some reason, has to do with LDrawImportRuntime
                 childOb = ob.transform.GetChild(0).gameObject; // get the projectile (clone) object
                 if (childOb.GetComponent<BoxCollider>() != null)
                 {

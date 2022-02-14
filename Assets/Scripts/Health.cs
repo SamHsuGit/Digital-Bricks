@@ -86,21 +86,35 @@ public class Health : NetworkBehaviour
 
     void AddToPiecesList(GameObject _ob)
     {
-        if (_ob.transform.GetChild(0).gameObject.name.Contains("-submodel"))
+        if (Settings.OnlinePlay)
         {
-            GameObject submodel = _ob.transform.GetChild(0).gameObject;
-            foreach (Transform child in submodel.transform)
+            foreach (Transform child in _ob.transform)
             {
-                modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
-                brickCount++;
+                if (!child.name.Contains("-submodel"))
+                {
+                    modelPieces.Add(child.gameObject);
+                    brickCount++;
+                }
             }
         }
         else
         {
-            foreach (Transform child in _ob.transform)
+            if (_ob.transform.GetChild(0).gameObject.name.Contains("-submodel"))
             {
-                modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
-                brickCount++;
+                GameObject submodel = _ob.transform.GetChild(0).gameObject;
+                foreach (Transform child in submodel.transform)
+                {
+                    modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
+                    brickCount++;
+                }
+            }
+            else
+            {
+                foreach (Transform child in _ob.transform)
+                {
+                    modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
+                    brickCount++;
+                }
             }
         }
     }

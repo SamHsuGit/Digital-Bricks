@@ -45,23 +45,6 @@ public class SetupMenu : MonoBehaviour
         planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
         seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
         loadingText.SetActive(false);
-
-        // commented out since was causing long load times upon startup due to import inefficiencies
-        //GetImportedCharModelAfterAwake();
-    }
-
-    private void GetImportedCharModelAfterAwake()
-    {
-        // has to occur after Awake since the importer needs time to import during awake
-        charObIdle = LDrawImportRuntime.Instance.charObIdle;
-        charObIdle.transform.parent = modelsObjectToSpin.transform;
-        modelsObjectToSpin.transform.Translate(new Vector3(0, 0, charObIdle.GetComponent<BoxCollider>().size.y * 0.025f));
-
-        charObIdle.SetActive(true);
-        charObIdle.transform.localPosition = new Vector3(0, charObIdle.GetComponent<BoxCollider>().center.y * LDrawImportRuntime.Instance.scale, 0);
-
-        Destroy(LDrawImportRuntime.Instance.baseOb);
-        Destroy(LDrawImportRuntime.Instance.projectileOb);
     }
 
     private void Update()
