@@ -106,4 +106,9 @@ public class Settings
         get { return networkPlay; }
         set {  networkPlay = value; }
     }
+
+    public static Vector3 DefaultSpawnPosition
+    {
+        get { return new Vector3(40008, 60, 40008);}
+    }
 }

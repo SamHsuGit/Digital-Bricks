@@ -82,7 +82,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
-        defaultSpawnPosition = LDrawImportRuntime.Instance.defaultSpawnPosition;
+        defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         Random.InitState(SettingsStatic.LoadedSettings.seed);
