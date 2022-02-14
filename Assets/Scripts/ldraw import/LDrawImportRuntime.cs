@@ -53,29 +53,14 @@ public class LDrawImportRuntime : MonoBehaviour
 
         // imports models, caches, and hides upon world load to be instantiated later
         charObIdle = ImportLDrawLocal("charIdle", Vector3.zero, false); // char is not static (i.e. isStatic = false)
-        //RemoveSubmodelEmpty(charObIdle);
         charObRun = ImportLDrawLocal("charRun", Vector3.zero, false); // char is not static (i.e. isStatic = false)
-        //RemoveSubmodelEmpty(charObRun);
         baseOb = ImportLDrawLocal("base", new Vector3(0, -10000, 0), true);
-        //RemoveSubmodelEmpty(baseOb);
-        projectileOb = ImportLDrawLocal("projectile", new Vector3(0,-10000,0), true);
-        //RemoveSubmodelEmpty(projectileOb);
+        projectileOb = ImportLDrawLocal("projectile", new Vector3(0,-10000,0), false);
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
         baseObSizeZ = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.z / 40) + 1;
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
-    }
-
-    void RemoveSubmodelEmpty(GameObject _modelOb) // WIP
-    {
-        GameObject submodel = _modelOb.transform.GetChild(0).gameObject;
-        if (submodel.name.Contains("-submodel")) // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
-        {
-            foreach (Transform child in submodel.transform)
-                child.parent = _modelOb.transform; // set parent to modelOb
-            Destroy(submodel.transform.gameObject); // destroy submodel
-        }
     }
 
     public GameObject ImportLDrawLocal(string fileName, Vector3 pos, bool isStatic)
@@ -97,7 +82,13 @@ public class LDrawImportRuntime : MonoBehaviour
         _modelOb = ConfigureModelOb(_modelOb, pos, isStatic);
 
         _modelOb.name = fileName;
-        //RemoveSubmodelEmpty(modelOb);
+
+        // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place).
+        foreach (Transform child in _modelOb.transform)
+        {
+            if (!child.name.Contains("-submodel"))
+                Destroy(child.gameObject);
+        }
 
         return _modelOb;
     }

@@ -193,7 +193,7 @@ public class Controller : NetworkBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        if (!Settings.OnlinePlay & !Settings.IsMobilePlatform)
+        if (!Settings.OnlinePlay && !Settings.IsMobilePlatform)
         {
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             // Import character model idle pose
@@ -205,7 +205,6 @@ public class Controller : NetworkBehaviour
             charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
 
             // Import character model run pose
-            charObRun = new GameObject();
             charObRun = Instantiate(LDrawImportRuntime.Instance.charObRun);
             charObRun.SetActive(false);
             charObRun.transform.parent = charModelOrigin.transform;
