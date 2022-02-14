@@ -241,15 +241,26 @@ public class Health : NetworkBehaviour
                 {
                     // spawn voxel bits
                     Vector3 pos = obToSpawn.transform.position;
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-
-                    if (obToSpawn.GetComponent<BoxCollider>() != null)
+                    if (Settings.OnlinePlay)
                     {
-                        //controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn); // spawn a copy of the character model piece that was shot (WIP)
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
                     }
+                    else
+                    {
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                        controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                    }
+
+                    //// spawn a copy of the character model piece that was shot (Disabled because cannot pass gameobject to server command CmdSpawnObject)
+                    //if (obToSpawn.GetComponent<BoxCollider>() != null)
+                    //{
+                    //    controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn);
+                    //}
 
                     // turn off components, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
                     if (obToSpawn.GetComponent<MeshRenderer>() != null)

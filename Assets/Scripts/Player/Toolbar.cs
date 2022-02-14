@@ -103,7 +103,10 @@ public class Toolbar : MonoBehaviour
             {
                 Vector3 position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z) + player.transform.forward * 4;
                 byte blockID = slots[slotIndexValue].itemSlot.stack.id;
-                controller.SpawnObject(0, blockID, position);
+                if(Settings.OnlinePlay)
+                    controller.CmdSpawnObject(0, blockID, position);
+                else
+                    controller.SpawnObject(0, blockID, position);
             }
             slots[slotIndexValue].itemSlot.EmptySlot();
         }

@@ -456,7 +456,7 @@ public class SceneObject : NetworkBehaviour
                     array = voxelBit;
                     break;
                 }
-            case 4:
+            case 4: // not used right now since gameobjects cannot be passed into server commands
                 {
                     array = undefinedPrefab;
                     break;
@@ -481,10 +481,20 @@ public class SceneObject : NetworkBehaviour
             if (gameObject.tag == "voxelRb" && controller != null && collisions > 2) // after a few collisions break into pieces
             {
                 Vector3 pos = transform.position;
-                controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                if (Settings.OnlinePlay)
+                {
+                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                }
+                else
+                {
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+                }
                 Destroy(gameObject);
             }
         }

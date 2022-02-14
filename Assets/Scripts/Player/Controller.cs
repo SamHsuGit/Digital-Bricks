@@ -538,7 +538,10 @@ public class Controller : NetworkBehaviour
         }
         else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
         {
-            SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4);
+            if(Settings.OnlinePlay)
+                CmdSpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4);
+            else
+                SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4);
             TakeFromCurrentSlot(1);
         }
         else if (holdingGrab) // IF HOLDING SOMETHING
@@ -586,10 +589,20 @@ public class Controller : NetworkBehaviour
             GameObject hitObject = gun.hit.transform.gameObject;
             Destroy(gun.hit.transform.gameObject);
             Vector3 pos = hitObject.transform.position;
-            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-            SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            if (Settings.OnlinePlay)
+            {
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            }
+            else
+            {
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            }
         }
     }
 
@@ -599,7 +612,10 @@ public class Controller : NetworkBehaviour
             return;
 
         EditVoxel(position, 0, true); // destroy voxel at position
-        SpawnObject(0, blockID, position);
+        if (Settings.OnlinePlay)
+            CmdSpawnObject(0, blockID, position);
+        else
+            SpawnObject(0, blockID, position);
     }
 
     // needed to empty slot with many pieces all at once instead of manually removing one by one
@@ -837,6 +853,11 @@ public class Controller : NetworkBehaviour
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
     }
 
+    public void CmdSpawnObject(int type, int item, Vector3 pos)
+    {
+        SpawnObject(type, item, pos);
+    }
+
     public void SpawnObject(int type, int item, Vector3 pos, GameObject obToSpawn = null)
     {
         GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
@@ -890,7 +911,7 @@ public class Controller : NetworkBehaviour
                 voxelBitBc.size = new Vector3(0.5f, 0.3f, 0.5f);
                 ob.tag = "voxelBit";
                 break;
-            case 4: // IF GAMEOBJECT REFERENCE
+            case 4: // IF GAMEOBJECT REFERENCE (WIP cannot pass gameobject reference into server commands, so this is not used for now)
                 if(obToSpawn != null)
                 {
                     sceneObject.undefinedPrefab = new GameObject[] { obToSpawn };
