@@ -881,7 +881,7 @@ public class Controller : NetworkBehaviour
                 sceneObject.controller = this;
                 break;
             case 2: // IF PROJECTILE
-                sceneObject.projectile[0] = LDrawImportRuntime.Instance.projectileOb;
+                sceneObject.projectile[0] = projectile;
                 sceneObject.typeProjectile = item; // should be 0 for first item in array
                 ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // set the child object on the server
