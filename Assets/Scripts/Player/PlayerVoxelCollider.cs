@@ -100,7 +100,6 @@ public class PlayerVoxelCollider : MonoBehaviour
                 verticalMomentum = baseJumpForce;
                 currentJumps++;
             }
-            currentJumps = 0; // allow flying by reseting jumps every frame
 
             // Affect vertical momentum with gravity if flight not enabled
             if (verticalMomentum > gravity)
@@ -115,7 +114,9 @@ public class PlayerVoxelCollider : MonoBehaviour
             roadFactor = 1;
 
         // if we're sprinting, use the sprint multiplier
-        if (isSprinting)
+        if(SettingsStatic.LoadedSettings.flight)
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * 3f;
+        else if (isSprinting)
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadFactor;
         else
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadFactor;

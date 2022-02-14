@@ -477,7 +477,6 @@ MonoBehaviour:
   navRight: 0
   scrollWheel: {x: 0, y: 0}
   jump: 0
-  crouch: 0
   sprint: 0
   grab: 0
   shoot: 0

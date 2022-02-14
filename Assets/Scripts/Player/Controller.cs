@@ -1188,7 +1188,7 @@ public class Controller : NetworkBehaviour
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);
-            if (charController.enabled && inputHandler.crouch)
+            if (charController.enabled && inputHandler.sprint)
                 charController.Move(Vector3.down * 0.5f);
         }
     }

@@ -72,49 +72,46 @@ MonoBehaviour:
     Look
     = Mouse (Right Stick)
 
-    Jump = Space (Xbox A)
+    Up = Space (Xbox A)
 
-    Fall (Flight) = Ctrl (Xbox
-    B)
+    Down (Flight)/Sprint = Left
+    Shift (Left Bumper)
 
-    Sprint = Left Shift (Left Bumper)
-
-    Shoot/Use = Left Mouse Button
-    (Right Trigger)
+    Shoot/Use = Left Mouse Button (Right Trigger)
 
 
-    Grab = Hold Right Mouse Button (Left Trigger)
+    Grab
+    = Hold Right Mouse Button (Left Trigger)
 
-    Store
-    Item = Release Grab while aimed at air
+    Store Item = Release Grab while
+    aimed at air
 
-    Unstore Item = Hold Grab while aimed
-    at air
+    Unstore Item = Hold Grab while aimed at air
 
-    Empty Slot = Q (Xbox X)
+    Empty Slot
+    = Q (Xbox X)
 
-    Cycle Slots = Mouse Scroll/Arrow Keys
-    (D-Pad) Left/Right
+    Cycle Slots = Mouse Scroll/Arrow Keys (D-Pad) Left/Right
 
-    Cycle Creative Slot = Arrow Keys (D-Pad) Up/Down
-
-
-    Options
-    = Esc (Start)
+    Cycle
+    Creative Slot = Arrow Keys (D-Pad) Up/Down
 
 
-    Change Camera Mode = Tab (Select)
+    Options = Esc (Start)
+
+
+    Change
+    Camera Mode = Tab (Select)
 
     Third Person Camera:
 
-    Zoom
-    = Mouse Scroll Wheel
+    Zoom = Mouse Scroll
+    Wheel
 
 
     Third Person & Free Camera:
 
-    Depth of Field =
-    Arrow Keys (D-Pad)'
+    Depth of Field = Arrow Keys (D-Pad)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

@@ -91,15 +91,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Crouch"",
-                    ""type"": ""Button"",
-                    ""id"": ""3e11c553-8e6e-4277-9b6c-65045a98fa53"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Sprint"",
                     ""type"": ""Button"",
                     ""id"": ""b4f15938-878b-4411-bf99-0df23b2a0546"",
@@ -531,28 +522,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""NavigateRight"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2700f68a-a1b8-4744-bd10-a2071b241a12"",
-                    ""path"": ""<Keyboard>/ctrl"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Crouch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""51282e1b-ef69-4c32-b786-f1fdb590ca3c"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1202,7 +1171,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Actions_Shoot = m_Actions.FindAction("Shoot", throwIfNotFound: true);
         m_Actions_Drop = m_Actions.FindAction("Drop", throwIfNotFound: true);
         m_Actions_Jump = m_Actions.FindAction("Jump", throwIfNotFound: true);
-        m_Actions_Crouch = m_Actions.FindAction("Crouch", throwIfNotFound: true);
         m_Actions_Sprint = m_Actions.FindAction("Sprint", throwIfNotFound: true);
         m_Actions_ToggleOptions = m_Actions.FindAction("ToggleOptions", throwIfNotFound: true);
         m_Actions_ToggleCamMode = m_Actions.FindAction("ToggleCamMode", throwIfNotFound: true);
@@ -1290,7 +1258,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_Shoot;
     private readonly InputAction m_Actions_Drop;
     private readonly InputAction m_Actions_Jump;
-    private readonly InputAction m_Actions_Crouch;
     private readonly InputAction m_Actions_Sprint;
     private readonly InputAction m_Actions_ToggleOptions;
     private readonly InputAction m_Actions_ToggleCamMode;
@@ -1311,7 +1278,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_Actions_Shoot;
         public InputAction @Drop => m_Wrapper.m_Actions_Drop;
         public InputAction @Jump => m_Wrapper.m_Actions_Jump;
-        public InputAction @Crouch => m_Wrapper.m_Actions_Crouch;
         public InputAction @Sprint => m_Wrapper.m_Actions_Sprint;
         public InputAction @ToggleOptions => m_Wrapper.m_Actions_ToggleOptions;
         public InputAction @ToggleCamMode => m_Wrapper.m_Actions_ToggleCamMode;
@@ -1351,9 +1317,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
-                @Crouch.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnCrouch;
-                @Crouch.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnCrouch;
-                @Crouch.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnCrouch;
                 @Sprint.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnSprint;
@@ -1406,9 +1369,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @Crouch.started += instance.OnCrouch;
-                @Crouch.performed += instance.OnCrouch;
-                @Crouch.canceled += instance.OnCrouch;
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
@@ -1599,7 +1559,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnDrop(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnCrouch(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnToggleOptions(InputAction.CallbackContext context);
         void OnToggleCamMode(InputAction.CallbackContext context);
