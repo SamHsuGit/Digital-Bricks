@@ -30,6 +30,7 @@ public class LDrawImportRuntime : MonoBehaviour
 
     private void Awake()
     {
+        modelsLoaded = false;
         //LoadMeshes(); // commented out until a more efficient load/search method is developed as this method is slower than generating new meshes every time.
         LoadModels();
     }
@@ -91,9 +92,9 @@ public class LDrawImportRuntime : MonoBehaviour
         return modelOb;
     }
 
-    public GameObject ImportLDrawOnline(string fileName, string commandString, Vector3 pos, bool isStatic)
+    public GameObject ImportLDrawOnline(string playerName, string fileName, string commandString, Vector3 pos, bool isStatic)
     {
-        if(modelsLoaded) // if models already loaded, do not need to load again, just used cached model
+        if (modelsLoaded) // if models already loaded, do not need to load again, just used cached model
         {
             switch (fileName)
             {
@@ -106,11 +107,13 @@ public class LDrawImportRuntime : MonoBehaviour
                 case "projectile":
                     return projectileOb;
             }
-            ErrorMessage.Show("unrecognized .ldr filename");
+            ErrorMessage.Show("unrecognized .ldr filename: " + fileName);
             return null;
         }
         else
         {
+            fileName = playerName + fileName;
+
             var model = LDrawModelRuntime.Create(fileName, commandString, false);
             modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
             modelOb.name = fileName;
