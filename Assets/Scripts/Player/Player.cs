@@ -44,7 +44,7 @@ public class Player
     {
         playerGameObject = null;
         name = "undefinedPlayerName";
-        spawnPosition = World.Instance.spawnPosition;
+        spawnPosition = World.Instance.defaultSpawnPosition;
         hp = 1;
         //instances = 1;
         chunksToAddVBO = new List<ChunkCoord>();

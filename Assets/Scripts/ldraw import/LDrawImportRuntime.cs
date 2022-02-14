@@ -23,11 +23,18 @@ public class LDrawImportRuntime : MonoBehaviour
     public int baseObSizeY;
     public float scale = 0.025f;
 
+    public Vector3 defaultSpawnPosition;
+    public Vector3 importPosition;
+    public float yOffset = 1000;
+
     public static LDrawImportRuntime Instance { get { return _instance; } }
     private static LDrawImportRuntime _instance;
 
     private void Awake()
     {
+        defaultSpawnPosition = new Vector3(40008, 60, 40008);
+        importPosition = new Vector3(defaultSpawnPosition.x, -yOffset, defaultSpawnPosition.z);
+
         //LoadMeshes(); // commented out until a more efficient load/search method is developed as this method is slower than generating new meshes every time.
         LoadModels();
     }
@@ -52,11 +59,10 @@ public class LDrawImportRuntime : MonoBehaviour
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models, caches, and hides upon world load to be instantiated later
-        charObIdle = ImportLDrawLocal("charIdle", Vector3.zero, false); // char is not static (i.e. isStatic = false)
-        charObRun = ImportLDrawLocal("charRun", Vector3.zero, false); // char is not static (i.e. isStatic = false)
-        projectileOb = ImportLDrawLocal("projectile", new Vector3(0, -10000, 0), false);
-
-        baseOb = ImportLDrawLocal("base", new Vector3(0, -10000, 0), true);
+        charObIdle = ImportLDrawLocal("charIdle", importPosition, false); // char is not static (i.e. isStatic = false)
+        charObRun = ImportLDrawLocal("charRun", importPosition, false); // char is not static (i.e. isStatic = false)
+        projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
+        baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
 
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;

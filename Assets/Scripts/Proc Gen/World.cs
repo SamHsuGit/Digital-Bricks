@@ -23,12 +23,13 @@ public class World : MonoBehaviour
     public CustomNetworkManager customNetworkManager;
 
     [Header("World Generation Values")]
+    public Vector3 defaultSpawnPosition;
     public int season;
     public Planet[] planets;
     public Biome[] biomes;
     public int solidGroundHeight = 20;
     public GameObject worldPlayer;
-    public Vector3 spawnPosition;
+    
     public Material blockMaterial;
     public Material blockMaterialTransparent;
     public PhysicMaterial physicMaterial;
@@ -81,6 +82,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        defaultSpawnPosition = LDrawImportRuntime.Instance.defaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         Random.InitState(SettingsStatic.LoadedSettings.seed);
@@ -166,14 +168,14 @@ public class World : MonoBehaviour
             charController.enabled = playerCharControllerActive; // reset character controller to previous state we saved earlier
         }
         else // if player pos is not in world
-            playerGameObject.transform.position = spawnPosition; // spawn at world spawn point
+            playerGameObject.transform.position = defaultSpawnPosition; // spawn at world spawn point
 
         playerChunkCoords.Add(GetChunkCoordFromVector3(playerGameObject.transform.position));
         playerLastChunkCoords.Add(playerChunkCoords[playerCount]);
 
         int firstLoadDrawDistance;
 
-        if (playerCount < 1 && playerGameObject.transform.position == spawnPosition) // for world player
+        if (playerCount < 1 && playerGameObject.transform.position == defaultSpawnPosition) // for world player
             firstLoadDrawDistance = loadDistance; // SettingsStatic.LoadedSettings.drawDistance; // first load distance is just large enough to render world for world player
         else
             firstLoadDrawDistance = loadDistance; // max value is 3 to ensure older PCs can still handle the CPU Load
@@ -195,7 +197,10 @@ public class World : MonoBehaviour
         worldData = SaveSystem.LoadWorld(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed);
         WorldDataOverrides(SettingsStatic.LoadedSettings.planetNumber);
 
-        // Spawns a imported base.ldr at world origin
+        // Spawns an imported base.ldr at world origin
+        if (worldData.planetNumber == 0 && worldData.seed == 0)
+            LDrawImportRuntime.Instance.baseOb.transform.position = LDrawImportRuntime.Instance.importPosition + new Vector3(0, LDrawImportRuntime.Instance.yOffset, 0);
+        
         if (Settings.IsMobilePlatform)
             blocktypes[25].voxelBoundObject = null;
         else
@@ -212,9 +217,9 @@ public class World : MonoBehaviour
         LoadWorld();
 
         // player default spawn position is centered above first chunk
-        spawnPosition = new Vector3(VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2, VoxelData.ChunkHeight - 5f, VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2);
+        defaultSpawnPosition = new Vector3(VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2, VoxelData.ChunkHeight - 5f, VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2);
 
-        worldPlayer.transform.position = spawnPosition;
+        worldPlayer.transform.position = defaultSpawnPosition;
 
         PlayerJoined(worldPlayer);
 
@@ -691,6 +696,10 @@ public class World : MonoBehaviour
 
         // If outside world, return air.
         if (!IsVoxelInWorld(globalPos))
+            return 0;
+
+        // seed 0 returns all air blocks to only show imported ldraw models (blank white plane)
+        if (worldData.planetNumber == 0 && worldData.seed == 0)
             return 0;
 
         // If bottom block of chunk, return barrier block

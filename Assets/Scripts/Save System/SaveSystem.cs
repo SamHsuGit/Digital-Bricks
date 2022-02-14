@@ -114,9 +114,9 @@ public static class SaveSystem
             //Debug.Log(loadPath + playerName + ".playerStats" + " not found. Creating.");
             int[] playerStats = new int[]
             {
-                Mathf.FloorToInt(World.Instance.spawnPosition.x),
-                Mathf.FloorToInt(World.Instance.spawnPosition.y),
-                Mathf.FloorToInt(World.Instance.spawnPosition.x),
+                Mathf.FloorToInt(World.Instance.defaultSpawnPosition.x),
+                Mathf.FloorToInt(World.Instance.defaultSpawnPosition.y),
+                Mathf.FloorToInt(World.Instance.defaultSpawnPosition.x),
                 player.GetComponent<Health>().hpMax,
                 0,
                 0,
