@@ -332,7 +332,6 @@ public class Controller : NetworkBehaviour
         charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
-        charObIdle.transform.localPosition = new Vector3(0, 0, 0);
         charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
 
         SetPlayerColliderSettings();
@@ -343,7 +342,6 @@ public class Controller : NetworkBehaviour
         charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName, "charRun", newCharRun, charModelOrigin.transform.position, false);
         charObRun.SetActive(false);
         charObRun.transform.parent = charModelOrigin.transform;
-        charObRun.transform.localPosition = new Vector3(0, 0, 0);
         charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
         SetPlayerColliderSettings();
@@ -399,10 +397,6 @@ public class Controller : NetworkBehaviour
         //disable virtual camera and exit from FixedUpdate if this is not the local player
         if (Settings.OnlinePlay && !isLocalPlayer)
         {
-            if (charObIdle != null && !charObIdle.activeSelf)
-                charObIdle.SetActive(true);
-            if (charObRun != null && charObRun.activeSelf)
-                charObRun.SetActive(false);
             Animate();
             playerCamera.SetActive(false);
             return;
@@ -888,7 +882,7 @@ public class Controller : NetworkBehaviour
                 sceneObject.controller = this;
                 break;
             case 2: // IF PROJECTILE
-                sceneObject.projectile[0] = LDrawImportRuntime.Instance.projectileOb; // (WIP) causes online multiplayer error for some reason
+                sceneObject.projectile[0] = projectile;
                 sceneObject.typeProjectile = item; // should be 0 for first item in array
                 ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // set the child object on the server
@@ -944,7 +938,6 @@ public class Controller : NetworkBehaviour
             ob.GetComponent<NetworkTransform>().enabled = true;
             customNetworkManager.SpawnNetworkOb(ob);
         }
-        //ob.layer = 10; (was causing bugs with picking up rigidbody objects after spawned)
         Destroy(ob, 30); // clean up objects after 30 seconds
     }
 

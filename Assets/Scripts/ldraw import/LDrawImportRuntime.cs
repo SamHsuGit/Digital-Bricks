@@ -9,7 +9,6 @@ public class LDrawImportRuntime : MonoBehaviour
     private string _CurrentPart;
     private int _CurrentIndex;
     public LDrawConfigRuntime ldrawConfigRuntime;
-    public GameObject modelOb;
 
     public GameObject charObIdle;
     public GameObject charObRun;
@@ -23,14 +22,12 @@ public class LDrawImportRuntime : MonoBehaviour
     public int baseObSizeZ;
     public int baseObSizeY;
     public float scale = 0.025f;
-    public bool modelsLoaded = false;
 
     public static LDrawImportRuntime Instance { get { return _instance; } }
     private static LDrawImportRuntime _instance;
 
     private void Awake()
     {
-        modelsLoaded = false;
         //LoadMeshes(); // commented out until a more efficient load/search method is developed as this method is slower than generating new meshes every time.
         LoadModels();
     }
@@ -68,8 +65,6 @@ public class LDrawImportRuntime : MonoBehaviour
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
         baseObSizeZ = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.z / 40) + 1;
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
-
-        modelsLoaded = true;
     }
 
     void RemoveSubmodelEmpty(GameObject _modelOb) // WIP
@@ -86,44 +81,25 @@ public class LDrawImportRuntime : MonoBehaviour
     public GameObject ImportLDrawLocal(string fileName, Vector3 pos, bool isStatic)
     {
         var model = LDrawModelRuntime.Create(GetCurrentPart(fileName), GetSerializedPart(fileName), true);
-        modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
-        modelOb = ConfigureModelOb(modelOb, pos, isStatic);
+        GameObject _modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+        _modelOb = ConfigureModelOb(_modelOb, pos, isStatic);
 
-        return modelOb;
+        return _modelOb;
     }
 
     public GameObject ImportLDrawOnline(string playerName, string fileName, string commandString, Vector3 pos, bool isStatic)
     {
-        if (modelsLoaded) // if models already loaded, do not need to load again, just used cached model
-        {
-            switch (fileName)
-            {
-                case "charIdle":
-                    return charObIdle;
-                case "charRun":
-                    return charObRun;
-                case "base":
-                    return baseOb;
-                case "projectile":
-                    return projectileOb;
-            }
-            ErrorMessage.Show("unrecognized .ldr filename: " + fileName);
-            return null;
-        }
-        else
-        {
-            fileName = playerName + fileName;
+        // Called when other players send ldraw commands over network, rebuilds the ldraw file on client end (assumes players have different ldraw models)
+        fileName = playerName + fileName;
 
-            var model = LDrawModelRuntime.Create(fileName, commandString, false);
-            modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
-            modelOb.name = fileName;
+        var model = LDrawModelRuntime.Create(fileName, commandString, false);
+        GameObject _modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
+        _modelOb = ConfigureModelOb(_modelOb, pos, isStatic);
 
-            modelOb = ConfigureModelOb(modelOb, pos, isStatic);
+        _modelOb.name = fileName;
+        //RemoveSubmodelEmpty(modelOb);
 
-            //RemoveSubmodelEmpty(modelOb);
-
-            return modelOb;
-        }
+        return _modelOb;
     }
 
     public string ReadFileToString(string fileName)
@@ -209,28 +185,29 @@ public class LDrawImportRuntime : MonoBehaviour
 
     public GameObject ConfigureModelOb(GameObject _modelOb, Vector3 pos, bool isStatic)
     {
-        modelOb.layer = 9; // add the model component to mark this object as a model
-        CombineMeshes(modelOb);
-        modelOb.transform.LocalReflect(Vector3.up);
-        modelOb.transform.position = pos; // position imported gameObject at origin, far below world
-        modelOb.SetActive(isStatic);
+        GameObject _ob = _modelOb;
+        _ob.layer = 9; // add the model component to mark this object as a model
+        CombineMeshes(_ob);
+        _ob.transform.LocalReflect(Vector3.up);
+        _ob.transform.position = pos; // position imported gameObject at origin, far below world
+        _ob.SetActive(isStatic);
 
-        ElevateMeshRendererChildren(modelOb);
+        ElevateMeshRendererChildren(_ob);
 
-        BoxCollider modelObbc = modelOb.GetComponent<BoxCollider>();
-        Transform submodel = modelOb.transform.GetChild(0);
+        BoxCollider modelObbc = _ob.GetComponent<BoxCollider>();
+        Transform submodel = _ob.transform.GetChild(0);
         float distMoveRight = -modelObbc.center.x;
         float distMoveUp = Mathf.Abs(modelObbc.size.y / 2 - Mathf.Abs(modelObbc.center.y));
         float distMoveForward = -modelObbc.center.z;
         submodel.transform.position += new Vector3(-distMoveRight, distMoveUp, distMoveForward); // ensures imported model is always centered above 0 plane
         modelObbc.center += new Vector3(distMoveRight, -distMoveUp, distMoveForward); // move box collider by same distance
 
-        modelOb.transform.localScale = new Vector3(scale, scale, scale); // rescale imported object to match voxel size
-        modelOb.isStatic = isStatic;
+        _ob.transform.localScale = new Vector3(scale, scale, scale); // rescale imported object to match voxel size
+        _ob.isStatic = isStatic;
         if (!isStatic)
             modelObbc.enabled = false;
 
-        return modelOb;
+        return _ob;
     }
 
     public void CombineMeshes(GameObject go)
