@@ -399,6 +399,10 @@ public class Controller : NetworkBehaviour
         //disable virtual camera and exit from FixedUpdate if this is not the local player
         if (Settings.OnlinePlay && !isLocalPlayer)
         {
+            if (charObIdle != null && !charObIdle.activeSelf)
+                charObIdle.SetActive(true);
+            if (charObRun != null && charObRun.activeSelf)
+                charObRun.SetActive(false);
             Animate();
             playerCamera.SetActive(false);
             return;
