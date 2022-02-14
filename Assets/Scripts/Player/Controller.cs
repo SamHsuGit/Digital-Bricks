@@ -14,7 +14,8 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdleString;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRunString;
-    [SyncVar(hook = nameof(SetProjectile))] public string playerProjectileString;
+    //[SyncVar(hook = nameof(SetProjectile))] public string playerProjectileString;
+    [SyncVar] public string playerProjectileString;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
     [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
@@ -313,7 +314,7 @@ public class Controller : NetworkBehaviour
         tpsDist = -cc.radius * 4;
     }
 
-    public void SetName(string oldName, string newName) // update the player visuals using the SyncVars pushed from the server to clients
+    public void SetName(string oldValue, string newValue) // update the player visuals using the SyncVars pushed from the server to clients
     {
         if (playerName == null)
         {
@@ -321,13 +322,13 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        playerName = newName;
-        nametag.GetComponent<TextMesh>().text = newName;
+        playerName = newValue;
+        nametag.GetComponent<TextMesh>().text = newValue;
     }
 
-    public void SetCharIdle(string oldCharIdle, string newCharIdle)
+    public void SetCharIdle(string oldValue, string newValue)
     {
-        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charIdle", newCharIdle, charModelOrigin.transform.position, false);
+        charObIdle = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charIdle", newValue, charModelOrigin.transform.position, false);
         charObIdle.SetActive(true);
         charObIdle.transform.parent = charModelOrigin.transform;
         bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
@@ -336,9 +337,9 @@ public class Controller : NetworkBehaviour
         SetPlayerColliderSettings();
     }
 
-    public void SetCharRun(string oldCharRun, string newCharRun)
+    public void SetCharRun(string oldValue, string newValue)
     {
-        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charRun", newCharRun, charModelOrigin.transform.position, false);
+        charObRun = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "charRun", newValue, charModelOrigin.transform.position, false);
         charObRun.SetActive(false);
         charObRun.transform.parent = charModelOrigin.transform;
         charObRun.transform.localPosition = Vector3.zero;
@@ -346,19 +347,19 @@ public class Controller : NetworkBehaviour
         SetPlayerColliderSettings();
     }
 
-    public void SetProjectile(string oldProjectile, string newProjectile)
+    //public void SetProjectile(string oldValue, string newValue)
+    //{
+    //    projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
+    //}
+
+    public void SetTime(float oldValue, float newValue)
     {
-        projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newProjectile, projectile.transform.position, false);
+        timeOfDay = newValue;
     }
 
-    public void SetTime(float oldTime, float newTime)
+    public void SetIsMoving(bool oldValue, bool newValue)
     {
-        timeOfDay = newTime;
-    }
-
-    public void SetIsMoving(bool oldIsMoving, bool newIsMoving)
-    {
-        isMoving = newIsMoving;
+        isMoving = newValue;
     }
 
     private void OnDestroy()
@@ -881,7 +882,10 @@ public class Controller : NetworkBehaviour
                 sceneObject.controller = this;
                 break;
             case 2: // IF PROJECTILE
-                sceneObject.projectile[0] = projectile;
+                if (Settings.OnlinePlay)
+                    sceneObject.projectileString = playerProjectileString;
+                else
+                    sceneObject.projectile[0] = projectile;
                 sceneObject.typeProjectile = item; // should be 0 for first item in array
                 ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // set the child object on the server

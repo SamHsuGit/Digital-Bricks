@@ -73,19 +73,6 @@ public class LDrawImportRuntime : MonoBehaviour
         return _modelOb;
     }
 
-    void RemoveSubmodelEmpty(GameObject _modelOb)
-    {
-        // gets rid of unwanted -submodel empty
-        //if (!Settings.OnlinePlay)
-        {
-            foreach (Transform child in _modelOb.transform.GetChild(0))
-                child.parent = _modelOb.transform;
-            // clumsy way of getting rid of submodel (causes issues with multiplayer. Need to figure out how to prevent this in first place). This has to occur before ConfigureModelOb
-            if (_modelOb.transform.GetChild(0).name.Contains("-submodel"))
-                Destroy(_modelOb.transform.GetChild(0).transform.gameObject);
-        }
-    }
-
     public GameObject ImportLDrawOnline(string fileName, string commandString, Vector3 pos, bool isStatic)
     {
         // Called when other players send ldraw commands over network, rebuilds the ldraw file on client end (assumes players have different ldraw models)
@@ -93,8 +80,12 @@ public class LDrawImportRuntime : MonoBehaviour
         GameObject _modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
 
         // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place). This has to occur before ConfigureModelOb
-        if (_modelOb.transform.GetChild(0).name.Contains("-submodel"))
-            Destroy(_modelOb.transform.GetChild(0).transform.gameObject);
+        foreach(Transform child in _modelOb.transform)
+        {
+            if (child.gameObject.name.Contains("-submodel"))
+                Destroy(child.gameObject);
+        }
+        
 
         _modelOb = ConfigureModelOb(_modelOb, pos, isStatic);
         _modelOb.name = fileName;
