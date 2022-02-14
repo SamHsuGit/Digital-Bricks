@@ -14,8 +14,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdleString;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRunString;
-    //[SyncVar(hook = nameof(SetProjectile))] public string playerProjectileString;
-    [SyncVar] public string playerProjectileString;
+    [SyncVar(hook = nameof(SetProjectile))] public string playerProjectileString;
     [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
     [SyncVar] public int seed; // all clients can see server syncVar seed to check against
     [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
@@ -347,10 +346,10 @@ public class Controller : NetworkBehaviour
         SetPlayerColliderSettings();
     }
 
-    //public void SetProjectile(string oldValue, string newValue)
-    //{
-    //    projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
-    //}
+    public void SetProjectile(string oldValue, string newValue)
+    {
+        projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
+    }
 
     public void SetTime(float oldValue, float newValue)
     {
@@ -457,8 +456,13 @@ public class Controller : NetworkBehaviour
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
-                        if(!SettingsStatic.LoadedSettings.flight && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
+                        if (!SettingsStatic.LoadedSettings.flight && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
                             Animate();
+                        else
+                        {
+                            charObIdle.SetActive(true);
+                            charObRun.SetActive(false);
+                        }
                         break;
                     }
                 case 3: // PHOTO MODE
@@ -634,7 +638,16 @@ public class Controller : NetworkBehaviour
             hitOb = raycastHit.transform.gameObject;
             holdingGrab = true;
 
-            if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
+            if (hitOb.GetComponent<Rigidbody>() != null) // if ob has rigidbody (and collider)
+            {
+                heldObRb = hitOb.GetComponent<Rigidbody>();
+                heldObRb.isKinematic = false;
+                heldObRb.velocity = Vector3.zero;
+                heldObRb.angularVelocity = Vector3.zero;
+                heldObRb.useGravity = false;
+                heldObRb.detectCollisions = true;
+            }
+            else if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
             {
                 blockID = World.Instance.GetVoxelState(removePos.position).id;
                 if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
@@ -647,15 +660,6 @@ public class Controller : NetworkBehaviour
                     CmdUpdateGrabObject(holdingGrab, blockID);
                 else
                     UpdateShowGrabObject(holdingGrab, blockID);
-            }
-            if (hitOb.GetComponent<Rigidbody>() != null) // if ob has rigidbody (and collider)
-            {
-                heldObRb = hitOb.GetComponent<Rigidbody>();
-                heldObRb.isKinematic = false;
-                heldObRb.velocity = Vector3.zero;
-                heldObRb.angularVelocity = Vector3.zero;
-                heldObRb.useGravity = false;
-                heldObRb.detectCollisions = true;
             }
         }
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // IF HIT COLLIDER AND TOOLBAR HAS STACK
@@ -888,7 +892,7 @@ public class Controller : NetworkBehaviour
                     sceneObject.projectile[0] = projectile;
                 sceneObject.typeProjectile = item; // should be 0 for first item in array
                 ob.tag = "Hazard";
-                sceneObject.SetEquippedItem(type, item); // set the child object on the server
+                sceneObject.SetEquippedItem(type, item); // update the child object on the server
 
                 // WIP collider is slightly off center for some reason, has to do with LDrawImportRuntime
                 childOb = ob.transform.GetChild(0).gameObject; // get the projectile (clone) object

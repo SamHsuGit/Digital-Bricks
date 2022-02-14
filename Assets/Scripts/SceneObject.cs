@@ -412,6 +412,7 @@ public class SceneObject : NetworkBehaviour
     {
         GameObject ob = LDrawImportRuntime.Instance.ImportLDrawOnline("projectile", newValue, Vector3.zero, false);
         projectile[0] = ob;
+        StartCoroutine(ChangeEquipment(2, 0));
     }
 
     void SetVoxelBitInt(int oldValue, int newValue)
