@@ -90,8 +90,8 @@ public class Settings
 
     public static bool IsMobilePlatform
     {
-        get { return Application.isMobilePlatform; }
-        //get { return true; } // for testing mobile on pc editor
+        //get { return Application.isMobilePlatform; }
+        get { return true; } // for testing mobile on pc editor
     }
 
     public static bool WorldLoaded
