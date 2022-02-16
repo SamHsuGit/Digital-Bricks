@@ -7,7 +7,7 @@ public class XRMove : MonoBehaviour
 {
     public bool touched = false;
     public GameObject playerCamera;
-    public float moveForce = 1f;
+    private float moveForce = 1f;
 
     public World world;
 
