@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 
 public class XRMove : MonoBehaviour
 {
-    Rigidbody rb;
     public bool touched = false;
     public GameObject playerCamera;
     public float moveForce = 0.1f;
+
+    public World world;
 
     private PlayerInputActions touchControls;
 
@@ -31,7 +32,8 @@ public class XRMove : MonoBehaviour
     {
         touchControls.Actions.Touched.started += ctx => StartTouch(ctx);
         touchControls.Actions.Touched.canceled += ctx => EndTouch(ctx);
-        rb = GetComponent<Rigidbody>();
+
+        world.PlayerJoined(gameObject);
     }
 
     private void StartTouch(InputAction.CallbackContext context)
@@ -48,6 +50,5 @@ public class XRMove : MonoBehaviour
     {
         if (touched)
             transform.Translate(playerCamera.transform.forward * moveForce);
-        //rb.AddForce(playerCamera.transform.forward * moveForce, ForceMode.Impulse);
     }
 }

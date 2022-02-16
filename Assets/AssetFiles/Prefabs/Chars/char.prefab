@@ -29,7 +29,6 @@ GameObject:
   - component: {fileID: 1444523263182546139}
   - component: {fileID: 4441129712410841954}
   - component: {fileID: 6141708116575622459}
-  - component: {fileID: 3244742094836971452}
   m_Layer: 11
   m_Name: char
   m_TagString: Untagged
@@ -1618,21 +1617,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: -0.45, z: 0}
---- !u!114 &3244742094836971452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4673335178978187722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a95c8bb5c693747c69a96ae1ffde0fc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  touched: 0
-  playerCamera: {fileID: 6534775095329473398}
-  moveForce: 0.3
 --- !u!1001 &2006931272366879335
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2834,10 +2818,6 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: 3845e21ad5f59fb4996c7fc759075f1a
       objectReference: {fileID: 0}
-    - target: {fileID: 5606494903954192710, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5617087469920260541, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_Layer
       value: 11
@@ -3049,10 +3029,6 @@ PrefabInstance:
     - target: {fileID: 6677231458568265890, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_AssetId
       value: 3845e21ad5f59fb4996c7fc759075f1a
-      objectReference: {fileID: 0}
-    - target: {fileID: 6707258683715399811, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6766839429750803283, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_Layer

@@ -57,7 +57,6 @@ public static class SettingsStatic
 public class Settings
 {
     // private static variables
-    private static bool isMobilePlatform = false;
     private static bool worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
     private static bool networkPlay = false;
 
@@ -91,8 +90,8 @@ public class Settings
 
     public static bool IsMobilePlatform
     {
-        get { return isMobilePlatform; }
-        set { isMobilePlatform = value; }
+        get { return Application.isMobilePlatform; }
+        //get { return true; } // for testing mobile on pc editor
     }
 
     public static bool WorldLoaded
@@ -109,6 +108,8 @@ public class Settings
 
     public static Vector3 DefaultSpawnPosition
     {
-        get { return new Vector3(40008, 60, 40008);}
-    }
+        // player default spawn position is centered above first chunk
+        //new Vector3(40008, 60, 40008);
+        get { return new Vector3(VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2, VoxelData.ChunkHeight - 5f, VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2); }
+}
 }

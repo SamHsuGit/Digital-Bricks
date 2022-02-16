@@ -67,10 +67,11 @@ public class World : MonoBehaviour
     private int loadDistance;
     private int LOD0threshold;
     private int studRenderDistanceInChunks; // acts as a radius like drawDistance
+    int firstPlayerIndex;
 
     List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
-    Dictionary<Player, GameObject> controllers = new Dictionary<Player, GameObject>();
+    Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
     List<Player> _players = new List<Player>();
     List<ChunkCoord> _playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> _playerLastChunkCoords = new List<ChunkCoord>();
@@ -82,6 +83,10 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        if (!Settings.IsMobilePlatform)
+            firstPlayerIndex = 1;
+        else
+            firstPlayerIndex = 0;
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
@@ -153,13 +158,20 @@ public class World : MonoBehaviour
             player = new Player(playerGameObject, "WorldPlayer");
             players.Add(player);
         }
-        else
+        else if (!Settings.IsMobilePlatform)
+        {
             player = playerGameObject.GetComponent<Controller>().player;
+        }
+        else
+        {
+            player = new Player(playerGameObject, "VR Player");
+            players.Add(player);
+        }
 
-        controllers.Add(player, player.playerGameObject);
+        playerGameObjects.Add(player, player.playerGameObject);
 
         // Set player position from save file
-        if (IsVoxelInWorld(player.spawnPosition)) // if the player position is in world
+        if (!Settings.IsMobilePlatform && IsVoxelInWorld(player.spawnPosition)) // if the player position is in world
         {
             CharacterController charController = playerGameObject.GetComponent<CharacterController>();
             bool playerCharControllerActive = charController.enabled; // save active state of player character controller to reset to old value after teleport
@@ -216,9 +228,6 @@ public class World : MonoBehaviour
 
         LoadWorld();
 
-        // player default spawn position is centered above first chunk
-        defaultSpawnPosition = new Vector3(VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2, VoxelData.ChunkHeight - 5f, VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2);
-
         worldPlayer.transform.position = defaultSpawnPosition;
 
         PlayerJoined(worldPlayer);
@@ -238,7 +247,8 @@ public class World : MonoBehaviour
         }
 
         Settings.WorldLoaded = true;
-        mainCamera.enabled = false;
+        if(!Settings.IsMobilePlatform)
+            mainCamera.enabled = false;
     }
 
     public int GetGalaxy(int planetNumber)
@@ -378,12 +388,7 @@ public class World : MonoBehaviour
     public void LoadWorld()
     {
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
-        if (Settings.IsMobilePlatform)
-        {
-            loadDistance = 1;
-        }
-        else
-            loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
+        loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
         LOD0threshold = 1; // Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 0.333f);
 
         for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
@@ -445,7 +450,7 @@ public class World : MonoBehaviour
         _playerChunkCoords = playerChunkCoords;
         _playerLastChunkCoords = playerLastChunkCoords;
 
-        for (int i = 1; i < _players.Count; i++) // for all players (not including world player, thus start at 1)
+        for (int i = firstPlayerIndex; i < _players.Count; i++) // for all players
         {
             // if the player disconnected, remove their gameobject from the dictionary and go to the next dictionary value
             if (_players[i] == null)//|| playerChunkCoords.Count > 1 && player.Key == worldPlayer)
@@ -453,15 +458,17 @@ public class World : MonoBehaviour
                 _players.RemoveAt(i);
                 _playerChunkCoords.RemoveAt(i);
                 _playerLastChunkCoords.RemoveAt(i);
-                //Debug.Log("Player Quit");
+                //ebug.Log("Player Quit");
                 continue;
             }
 
             // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
             if (_players[i].playerGameObject != worldPlayer && _players[i].playerGameObject != null && _players.Count == _playerChunkCoords.Count)
             {
-                _playerChunkCoords[i] = GetChunkCoordFromVector3(controllers[_players[i]].transform.position); // get the current chunkCoords for given player camera
+                _playerChunkCoords[i] = GetChunkCoordFromVector3(playerGameObjects[_players[i]].transform.position); // get the current chunkCoords for given player camera
 
+                //Debug.Log("_playerChunkCoords = " + _playerChunkCoords[playerCount - 1].x + ", " + _playerChunkCoords[playerCount - 1].z);
+                //Debug.Log("_playerLastChunkCoords = " + _playerLastChunkCoords[playerCount - 1].x + " , " + _playerLastChunkCoords[playerCount - 1].z);
                 // Only update the chunks if the player has moved from the chunk they were previously on.
                 if (!_playerChunkCoords[i].Equals(_playerLastChunkCoords[i]))
                 {
@@ -774,11 +781,8 @@ public class World : MonoBehaviour
         // Use perlin noise function for more varied height
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
 
-        if (!Settings.IsMobilePlatform)
-        {
-            if (xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
-                modifications.Enqueue(Structure.GenerateMajorFlora(0, globalPos, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
-        }
+        if (xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
+            modifications.Enqueue(Structure.GenerateMajorFlora(0, globalPos, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
 
         /* BASIC TERRAIN PASS */
 

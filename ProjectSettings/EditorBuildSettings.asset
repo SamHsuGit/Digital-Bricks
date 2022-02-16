@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/AssetFiles/Scenes/04 Error.unity
     guid: fb81fff4923ed914d8d32bd4a2251e4c
+  - enabled: 1
+    path: Assets/AssetFiles/Scenes/05 VR.unity
+    guid: 3c8acd64a23089148988c1c3a912ebe4
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 64bf3d08b4d41044db675234603b956e, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: ab93531cacbabdb4e84353a72fc81722, type: 2}

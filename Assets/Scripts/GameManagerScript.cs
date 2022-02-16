@@ -40,18 +40,8 @@ public class GameManagerScript : MonoBehaviour
             playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = playerPrefabs[0]; //SettingsStatic.LoadedSettings.playerTypeChar];
             LOCAL.SetActive(true);
         }
-        if (Application.isMobilePlatform)
-        {
-            Settings.IsMobilePlatform = true;
-            LDrawImporterRuntime.SetActive(false);
-            world.chunkMeshColliders = false;
-            world.VBOs = false;
-        }
-        else
-        {
-            LDrawImporterRuntime.SetActive(true);
-            world.chunkMeshColliders = true;
-            world.VBOs = true;
-        }
+        LDrawImporterRuntime.SetActive(true);
+        world.chunkMeshColliders = true;
+        world.VBOs = true;
     }
 }

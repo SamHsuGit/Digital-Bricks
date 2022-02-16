@@ -148,30 +148,7 @@ public class Controller : NetworkBehaviour
 
         CinematicBars.SetActive(false);
 
-        if (Settings.IsMobilePlatform)
-        {
-            GetComponent<XRMove>().enabled = true;
-            playerCamera.transform.parent.GetComponent<TrackedPoseDriver>().enabled = true;
-            world.PlayerJoined(gameObject);
-
-            gameMenu.SetActive(true);
-            playerCamera.SetActive(true);
-            charModelOrigin.SetActive(false);
-            nametag.SetActive(true);
-            rb.isKinematic = true;
-            cc.enabled = false;
-            charController.enabled = false;
-            inputHandler.enabled = true;
-            health.enabled = false;
-            gun.enabled = false;
-            voxelCollider.enabled = false;
-        }
-        else
-        {
-            GetComponent<XRMove>().enabled = false;
-            playerCamera.transform.parent.GetComponent<TrackedPoseDriver>().enabled = false;
-            projectile = LDrawImportRuntime.Instance.projectileOb;
-        }
+        projectile = LDrawImportRuntime.Instance.projectileOb;
     }
 
     void NamePlayer()
@@ -193,7 +170,7 @@ public class Controller : NetworkBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        if (!Settings.OnlinePlay && !Settings.IsMobilePlatform)
+        if (!Settings.OnlinePlay)
         {
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
             // Import character model idle pose
@@ -405,9 +382,6 @@ public class Controller : NetworkBehaviour
         daytime = World.Instance.globalLighting.daytime;
 
         isGrounded = CheckGroundedCollider();
-
-        if (Settings.IsMobilePlatform)
-            camMode = 3;
 
         if (!options)
         {

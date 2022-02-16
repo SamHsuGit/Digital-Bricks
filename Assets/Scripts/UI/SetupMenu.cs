@@ -69,7 +69,10 @@ public class SetupMenu : MonoBehaviour
         menuElements.SetActive(false);
         loadingText.SetActive(true);
         SaveSettings();
-        SceneManager.LoadScene(3);
+        if (!Settings.IsMobilePlatform)
+            SceneManager.LoadScene(3);
+        else
+            SceneManager.LoadScene(5);
     }
 
     public void Online()
@@ -78,7 +81,10 @@ public class SetupMenu : MonoBehaviour
         Settings.OnlinePlay = true;
         menuElements.SetActive(false);
         SaveSettings();
-        SceneManager.LoadScene(3);
+        if (!Settings.IsMobilePlatform)
+            SceneManager.LoadScene(3);
+        else
+            SceneManager.LoadScene(5);
     }
 
     public void Back()

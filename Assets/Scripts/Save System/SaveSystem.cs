@@ -56,24 +56,24 @@ public static class SaveSystem
             Mathf.FloorToInt(player.transform.position.y + 1), // add 1 unit to ensure player is not inside ground
             Mathf.FloorToInt(player.transform.position.z),
             Mathf.FloorToInt(player.GetComponent<Health>().hp),
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
+            0, // slot 1 qty (CREATIVE SLOT)
+            0, // slot 1 blockID (CREATIVE SLOT)
+            0, // slot 2 qty
+            0, // slot 2 blockID
+            0, // slot 3 qty
+            0, // slot 3 blockID
+            0, // slot 4 qty
+            0, // slot 4 blockID
+            0, // slot 5 qty
+            0, // slot 5 blockID
+            0, // slot 6 qty
+            0, // slot 6 blockID
+            0, // slot 7 qty
+            0, // slot 7 blockID
+            0, // slot 8 qty
+            0, // slot 8 blockID
+            0, // slot 9 qty
+            0, // slot 9 blockID
         };
         if(playerIndex > 0)
         {
@@ -112,33 +112,43 @@ public static class SaveSystem
         else // SET PLAYER STATS TO DEFAULT VALUES
         {
             //Debug.Log(loadPath + playerName + ".playerStats" + " not found. Creating.");
-            int[] playerStats = new int[]
-            {
+            int[] playerStats = GetDefaultPlayerStats(player);
+            return playerStats;
+        }
+    }
+
+    public static int[] GetDefaultPlayerStats(GameObject player)
+    {
+        int hpMax = 10;
+        if (!Settings.IsMobilePlatform)
+            hpMax = player.GetComponent<Health>().hpMax;
+        //Debug.Log(loadPath + playerName + ".playerStats" + " not found. Creating.");
+        int[] stats = new int[]
+        {
                 Mathf.FloorToInt(World.Instance.defaultSpawnPosition.x),
                 Mathf.FloorToInt(World.Instance.defaultSpawnPosition.y),
                 Mathf.FloorToInt(World.Instance.defaultSpawnPosition.x),
-                player.GetComponent<Health>().hpMax,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-            };
-            return playerStats;
-        }
+                hpMax,
+                0, // slot 1 qty (CREATIVE SLOT)
+                0, // slot 1 blockID (CREATIVE SLOT)
+                0, // slot 2 qty
+                0, // slot 2 blockID
+                0, // slot 3 qty
+                0, // slot 3 blockID
+                0, // slot 4 qty
+                0, // slot 4 blockID
+                0, // slot 5 qty
+                0, // slot 5 blockID
+                0, // slot 6 qty
+                0, // slot 6 blockID
+                0, // slot 7 qty
+                0, // slot 7 blockID
+                0, // slot 8 qty
+                0, // slot 8 blockID
+                0, // slot 9 qty
+                0, // slot 9 blockID
+        };
+        return stats;
     }
 
     public static void SaveChunks(WorldData world)

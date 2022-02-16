@@ -16,23 +16,30 @@ public class Player
         playerGameObject = player;
         name = _name;
 
-        int[] playerStats = SaveSystem.LoadPlayerStats(player, name, World.Instance.worldData); // load current player stats from save file
+        int[] playerStats;
+        if (!Settings.IsMobilePlatform)
+            playerStats = SaveSystem.LoadPlayerStats(player, name, World.Instance.worldData); // load current player stats from save file
+        else
+            playerStats = SaveSystem.GetDefaultPlayerStats(playerGameObject);
 
         spawnPosition = new Vector3(playerStats[0], playerStats[1], playerStats[2]); // get player spawn position (move up by 1 to prevent player from glitching thru world???)
 
-        // Set player health
-        if (playerStats[3] > player.GetComponent<Health>().hpMax)
-            player.GetComponent<Health>().hp = player.GetComponent<Health>().hpMax;
-        else
-            player.GetComponent<Health>().hp = playerStats[3];
-
-        // Set player inventory
-        for (int i = 4; i < 22; i += 2)
+        if (!Settings.IsMobilePlatform)
         {
-            if (playerStats[i] != 0)
+            // Set player health
+            if (playerStats[3] > player.GetComponent<Health>().hpMax)
+                player.GetComponent<Health>().hp = player.GetComponent<Health>().hpMax;
+            else
+                player.GetComponent<Health>().hp = playerStats[3];
+
+            // Set player inventory
+            for (int i = 6; i < 22; i += 2) // start at 6 instead of 4 to skip over creative inventory slots (was causing spawn issues after saving)
             {
-                ItemStack stack = new ItemStack((byte)playerStats[i], playerStats[i + 1]);
-                player.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.InsertStack(stack);
+                if (playerStats[i] != 0)
+                {
+                    ItemStack stack = new ItemStack((byte)playerStats[i], playerStats[i + 1]);
+                    player.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.InsertStack(stack);
+                }
             }
         }
 
