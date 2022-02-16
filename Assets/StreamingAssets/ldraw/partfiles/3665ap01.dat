@@ -1,7 +1,7 @@
-0 Slope Brick 45  2 x  1 Inverted without Inner Stopper Ring with  2 Black Rectangles Pattern
+0 Slope Brick 45  2 x  1 Inverted with  2 Black Rectangles Pattern
 0 Name: 3665ap01.dat
 0 Author: Michael Heidemann [mikeheide]
-0 !LDRAW_ORG Part UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -10,7 +10,6 @@
 0 !HISTORY 2010-07-05 [PTadmin] Official Update 2010-02
 0 !HISTORY 2016-01-11 [PTadmin] Renamed from 3665p01
 0 !HISTORY 2016-01-14 [MMR1988] Removed t-juntions, deleted trailing zeros
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3665as01.dat
 0 // Pattern

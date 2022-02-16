@@ -1,7 +1,7 @@
 0 Brick  2 x  2 x  3.333 Octagonal
 0 Name: 6037.dat
 0 Author: James Jessiman
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part 
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -11,7 +11,6 @@
 0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
 0 !HISTORY 2014-11-21 [roland] Auto-corrected with libfix version of LDCad 1.4
 0 !HISTORY 2016-01-02 [MMR1988] BFC'ed, used more prims
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 stug-2x2.dat
 1 16 10 0 10 5.543277 0 -2.296101 0 -1 0 2.296101 0 5.543277 1-8chrd.dat

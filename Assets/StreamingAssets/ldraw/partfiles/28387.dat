@@ -1,7 +1,7 @@
 0 Slide  6 x  6 x  6 Quarter Turn Left Down Going
 0 Name: 28387.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Part UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -10,7 +10,6 @@
 
 0 !HISTORY 2018-01-09 {LEGO Digital Designer} Original part shape
 0 !HISTORY 2018-01-12 [Philo] File preparation for LDraw Parts Tracker
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 4 16 -10 -116.046 30 10 -72 30 10 -120 30 -3.57 -120 30
 3 16 10 -72 30 -10 -116.046 30 -10 -72 30

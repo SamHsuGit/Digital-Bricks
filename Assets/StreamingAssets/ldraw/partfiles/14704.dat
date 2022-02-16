@@ -1,15 +1,13 @@
 0 Plate  1 x  2 with Socket Joint-8 with Friction Centre
 0 Name: 14704.dat
 0 Author: Tim Gould [timgould]
-0 !LDRAW_ORG Part UPDATE 2017-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
 0 !CATEGORY Hinge
 
 0 !HISTORY 2014-03-22 [MagFors] adapted to updated socket primitive
-0 !HISTORY 2017-12-30 [PTadmin] Official Update 2017-01
 
 1 16 0 4 0 1 0 0 0 -1 0 0 0 1 stud3.dat
 0 BFC INVERTNEXT
@@ -49,4 +47,4 @@
 1 16 -15 4 -10 0 0 -5 -4 0 0 0 2 0 rect3.dat
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 stug2-1x2.dat
 
-1 16 0 4 -20 1 0 0 0 1 0 0 0 1 joint8socket1.dat
+1 16 0 4 -20 1 0 0 0 1 0 0 0 1 joint-8-socket-frica.dat

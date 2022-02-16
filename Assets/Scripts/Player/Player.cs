@@ -24,22 +24,19 @@ public class Player
 
         spawnPosition = new Vector3(playerStats[0], playerStats[1], playerStats[2]); // get player spawn position (move up by 1 to prevent player from glitching thru world???)
 
+        // Set player health
         if (!Settings.IsMobilePlatform)
         {
-            // Set player health
-            if (playerStats[3] > player.GetComponent<Health>().hpMax)
-                player.GetComponent<Health>().hp = player.GetComponent<Health>().hpMax;
-            else
-                player.GetComponent<Health>().hp = playerStats[3];
-
-            // Set player inventory
-            for (int i = 6; i < 22; i += 2) // start at 6 instead of 4 to skip over creative inventory slots (was causing spawn issues after saving)
+            if(player.GetComponent<Health>() != null)
             {
-                if (playerStats[i] != 0)
-                {
-                    ItemStack stack = new ItemStack((byte)playerStats[i], playerStats[i + 1]);
-                    player.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.InsertStack(stack);
-                }
+                Health health = player.GetComponent<Health>();
+                int hpMax = health.hpMax;
+                
+                if (playerStats[3] > hpMax) // if saved health is more than max calculated hp (based on # pieces)
+                    health.hp = hpMax; // health is equal to calculated
+                else
+                    hp = playerStats[3];// otherwise set hp and health.hp to saved value
+                hp = health.hp; // regardless, player hp set equal to health.hp after setting value
             }
         }
 

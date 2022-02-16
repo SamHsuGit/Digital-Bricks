@@ -1,0 +1,29 @@
+0 End 1 for cloth 94318
+0 Name: s\94318s06.dat
+0 Author: Frank Engel [lostcontinent]
+0 Subpart6 for 94318.dat
+0 !LDRAW_ORG Unofficial_Subpart 
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 !HISTORY 2015-01-30 [lostcontinent] BFC compliant
+
+2 0 55 0 -100 64 0 -100
+2 0 55 86 -100 64 86 -100
+2 0 64 0 -100 64 86 -100
+0 // Side1Quads
+4 16 55 0 -100 64 0 -100 64 86 -100 55 86 -100
+0 // Top
+4 16 55 0 -100 55 0 -99.2 64 0 -99.2 64 0 -100
+0 // Bottom
+4 16 55 86 -99.2 55 86 -100 64 86 -100 64 86 -99.2
+0 // 2nd layer
+2 0 55 0 -99.2 64 0 -99.2
+2 0 55 86 -99.2 64 86 -99.2
+2 0 64 0 -99.2 64 86 -99.2
+0 // Side1Quads
+4 16 64 0 -99.2 55 0 -99.2 55 86 -99.2 64 86 -99.2
+0 // Endquad
+4 16 64 0 -100 64 0 -99.2 64 86 -99.2 64 86 -100
+0

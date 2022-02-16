@@ -1,14 +1,12 @@
 0 Cylinder Quarter  2 x  2 x  5 with  1 x  1 Cutout
 0 Name: 30987.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Part UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS Panel, Macaroni
-
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 1 16 0 0 0 40 0 0 0 1 0 0 0 -40 48\1-4edge.dat
 1 16 0 0 0 0 0 40 0 1 0 -40 0 0 48\1-8chrd.dat

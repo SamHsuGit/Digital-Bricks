@@ -1,0 +1,20 @@
+0 Stud Underside Baseplate
+0 Name: studbp1.dat
+0 Author: J.C. Tchang [tchang]
+0 !LDRAW_ORG Unofficial_Primitive
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2009-12-02 [tchang] For Hight Quality Underside Baseplate
+0 !HISTORY 2010-04-04 [tchang] Rename t16i3333 to t01i3333
+
+1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4ndis.dat
+0 //
+1 16 0 -2 0 4 0 0 0 -1 0 0 0 4 4-4disc.dat
+1 16 0 -2 0 4 0 0 0 1 0 0 0 4 4-4edge.dat
+0 BFC INVERTNEXT
+1 16 0 -2 0 4 0 0 0 4 0 0 0 4 4-4cyli.dat
+1 16 0 2 0 6 0 0 0 6 0 0 0 6 t01i3333.dat
+1 16 0 4 0 6 0 0 0 -1 0 0 0 6 4-4ndis.dat
+0 //

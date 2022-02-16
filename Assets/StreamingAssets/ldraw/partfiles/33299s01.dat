@@ -1,13 +1,14 @@
-0 ~Technic Beam  3 x  0.5 Liftarm with Boss and Pin - Common Sections
+0 ~Technic Beam  3 x  0.5 Liftarm with Boss and Pin Common
 0 Name: s\33299s01.dat
-0 Author: Santeri Piippo [arezey]
-0 !LDRAW_ORG Subpart UPDATE 2020-03
+0 Author: Orion Pobursky [OrionP]
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
+0 !HISTORY 2004-10-31 [guyvivan] Made BFC compliant
+0 !HISTORY 2009-05-02 [PTadmin] Official Update 2009-01
 0 !HISTORY 2013-06-01 [arezey] Subfiled from 33299.dat, fixed bleed-ins at the boss axlehole and pin
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
 
 2 24 -6 0 36.662 -6 10 36.662
 2 24 6 10 36.662 6 0 36.662

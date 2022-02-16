@@ -1,0 +1,15 @@
+0 ~Wheel Rim  6.4 x 11 with  8 Y-Shaped Spokes -  1/2 Spoke - Front Side
+0 Name: s\93595s03.dat
+0 Author: Massimo Maso [Sirio]
+0 !LDRAW_ORG Unofficial_Subpart
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+4 0 3 -9.3 -8 2.6 -12.5 -8 1.4 -12.7 -8 2 -6.3 -8
+3 0 1 -5.1 -8 0 -5 -8 1.913 -4.62 -8
+3 0 1.6 -5.4 -8 1 -5.1 -8 1.913 -4.62 -8
+4 0 2 -6.3 -8 1.6 -5.4 -8 1.913 -4.62 -8 3.553 -8.578 -8
+3 0 3 -9.3 -8 2 -6.3 -8 3.553 -8.578 -8
+4 16 0 -13.9 -8 0 -13 -8 1.4 -12.7 -8 2.6 -12.5 -8
+4 16 5.319 -12.842 -8 0 -13.9 -8 2.6 -12.5 -8 4.975 -12.01 -8

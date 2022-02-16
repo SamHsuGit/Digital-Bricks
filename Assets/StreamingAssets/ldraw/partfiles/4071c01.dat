@@ -1,0 +1,20 @@
+0 _Fabuland Door with Red Frame (Shortcut)
+0 Name: 4071c01.dat
+0 Author: Imre Papp [ipapp@geometria.hu]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+0 !CATEGORY Door
+0 !HISTORY 2009-05-06 [Eldar] Part 4071b.dat was renamed to 4072.dat, Name Changed, BFCed
+0 !HISTORY 2009-06-07 [Eldar] Change door color to 16
+
+
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 4071.dat
+0 // door closed
+1 16 48 84 -14.5 1 0 0 0 1 0 0 0 1 4072.dat
+0 // door half open
+0 // 1 16 48 84 -14.5 0.707 0 -0.707 0 1 0 0.707 0 0.707 4072.dat
+0 // door fully open
+0 // 1 16 48 84 -14.5 0 0 -1 0 1 0 1 0 0 4072.dat
+0

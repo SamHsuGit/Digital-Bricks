@@ -1,0 +1,11 @@
+0 Stud with Small Offset Hole at x =  2, y = -6 (Fast-Draw)
+0 Name: 8\stud19a.dat
+0 Author: Magnus Forsberg [MagFors]
+0 !LDRAW_ORG Unofficial_8_Primitive
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 8\stud.dat
+4 16 6 0 6 -6 0 6 -6 0 -8 6 0 -8
+4 16 0 4 -4 4 4 -4 4 4 -8 0 4 -8

@@ -1,12 +1,10 @@
-0 ~Constraction Limb  5 with Split Leg - Quarter
+0 ~Technic Constraction Beam  5 with 1B1S with Split Leg - Quarter
 0 Name: s\20474s01.dat
 0 Author: Magnus Forsberg [MagFors]
-0 !LDRAW_ORG Subpart UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 3 16 9.341 -9.246 18.975 0 -12.336 14.475 7.748 -11.094 15.956
 3 16 9.341 -9.246 18.975 0 -9.246 18.975 0 -12.336 14.475

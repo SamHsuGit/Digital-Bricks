@@ -1,7 +1,7 @@
 0 Tile  2 x  2 with Black Chest X-Ray and Broken Rib Pattern
 0 Name: 3068bp8d.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Part UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -9,8 +9,6 @@
 0 !KEYWORDS Collectible Minifigures, Series 6, Surgeon
 0 !KEYWORDS Bricklink 3068bpb0435
 0 !CMDLINE -c43
-
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3068bs01.dat
 4 0 -18 0 18 -18 0 12.8 -14.3 0 12.2 -11.6 0 18

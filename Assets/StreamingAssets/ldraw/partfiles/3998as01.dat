@@ -1,12 +1,10 @@
 0 ~Tow Crane  2 x  4 x  3 Hook Common Geometry
 0 Name: s\3998as01.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Subpart UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 0 BFC INVERTNEXT
 1 16 -8 0 0 0 16 0 -1.37766 0 3.32596 3.32596 0 1.37766 5-8cylo.dat

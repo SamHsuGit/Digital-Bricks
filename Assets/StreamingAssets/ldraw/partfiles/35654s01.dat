@@ -1,12 +1,10 @@
 0 ~Bar  1 x  4 x  2.5 Half
 0 Name: s\35654s01.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Subpart UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 0 // Circumference
 1 16 -17 -.111 5.322 -3 0 0 0 0 -2.881 0 -1 0 rect.dat

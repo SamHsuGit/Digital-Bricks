@@ -1,0 +1,12 @@
+0 _Minifig Shield Round Bowed with Bullseye w/ Star Pattern [320]
+0 Name: 6005161.dat
+0 Author: Philippe Hurbain [Philo]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 // This file is a "shortcut" with the correct number for the actual
+0 // colouring of the part (Dark Red).
+
+1 320 0 0 0 1 0 0 0 1 0 0 0 1 10532.dat

@@ -1,12 +1,10 @@
 0 ~Boat Keel - Top Part, Quarter
 0 Name: s\u9305s01.dat
 0 Author: Max Martin Richter [MMR1988]
-0 !LDRAW_ORG Subpart UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 0 // outside hull
 

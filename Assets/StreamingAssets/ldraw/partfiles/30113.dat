@@ -1,7 +1,7 @@
 0 Minifig Headdress Indian Buffalo Horned
 0 Name: 30113.dat
-0 Author: Willy Tschager [Holly-Wood]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 Author: Willy Tschager [Holly_Wood]
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -10,9 +10,8 @@
 0 !KEYWORDS west, wild west, western, american nativ, shaman, witch doctor, medicine man
 0 !KEYWORDS set 6748, 2845, 6718, 6763, 6766, 5392, 5317
 
-0 !HISTORY 2010-09-10 {LEGO Universe Team} Original part shape
-0 !HISTORY 2016-02-07 [Holly-Wood] File preparation for LDraw Parts Tracker
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
+0 !HISTORY 2010-09-10 {The LEGO Universe Team} Original part shape
+0 !HISTORY 2016-02-07 [Holly_Wood] File preparation for LDraw Parts Tracker
 
 2 24 1.143 19.728 12.93 0 19.726 13
 2 24 3.746 19.635 12.433 1.143 19.728 12.93

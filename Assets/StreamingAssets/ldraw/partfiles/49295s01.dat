@@ -1,12 +1,10 @@
 0 ~Tyre for Wheel 14 x 80 with  4 Spokes with Integral Tyre
 0 Name: s\49295s01.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Subpart UPDATE 2020-03
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
 
 1 16 0 0 0 0.99786 0.0654 0 -0.0654 0.99786 0 0 0 1 s\49295s02.dat
 1 16 0 0 0 0.99786 0.0654 0 -0.0654 0.99786 0 0 0 -1 s\49295s02.dat

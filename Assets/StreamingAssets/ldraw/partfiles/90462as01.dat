@@ -1,7 +1,7 @@
 0 ~Minifig Headdress Nemes Type 2 Half without Front Surface (Obsolete)
 0 Name: s\90462as01.dat
 0 Author: Stan Isachenko [angmarec]
-0 !LDRAW_ORG Subpart UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -11,7 +11,6 @@
 0 !HISTORY 2011-11-01 [MagFors] Added edge lines, subparted for patterned surface
 0 !HISTORY 2011-12-29 [PTadmin] Official Update 2011-02
 0 !HISTORY 2016-03-02 [PTadmin] Obsoletised due to position error
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 3 16 0 0 -11.863 4.54 0 -10.96 0 6.067 -13.217
 3 16 5.826 6.065 -11.635 0 6.067 -13.217 4.54 0 -10.96

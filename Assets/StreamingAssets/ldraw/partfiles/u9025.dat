@@ -1,12 +1,13 @@
 0 ~Electric  4.5V Battery Box  7 x 11 x  3.333 Lid
 0 Name: u9025.dat
 0 Author: Michael Heidemann [mikeheide]
-0 !LDRAW_ORG Part UPDATE 2011-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2011-07-25 [PTadmin] Official Update 2011-01
+0 !HISTORY 2013-03-29 [MagFors] Changed colour 383 to 494 (real metal)
 
 0 // Internal details not yet ready
 
@@ -172,11 +173,13 @@
 1 16 0 20 36 0 0 8 0 1 0 8 0 0 4-4edge.dat
 1 16 0 12 36 0 0 2 0 8 0 2 0 0 4-4con4.dat
 1 16 0 12 36 0 0 10 0 1 0 10 0 0 4-4edge.dat
-1 383 0 16 36 0 0 2.5 0 1 0 2.5 0 0 4-4edge.dat
-1 383 0 16 36 0 0 2.5 0 -1 0 2.5 0 0 4-4ring1.DAT
-1 383 0 12 36 0 0 2.5 0 1 0 2.5 0 0 4-4edge.dat
+
+1 494 0 16 36 0 0 2.5 0 1 0 2.5 0 0 4-4edge.dat
+1 494 0 16 36 0 0 2.5 0 -1 0 2.5 0 0 4-4ring1.DAT
+1 494 0 12 36 0 0 2.5 0 1 0 2.5 0 0 4-4edge.dat
 0 BFC INVERTNEXT
-1 383 0 12 36 0 0 2.5 0 4 0 2.5 0 0 4-4cyli.dat
+1 494 0 12 36 0 0 2.5 0 4 0 2.5 0 0 4-4cyli.dat
+
 2 24 66 26 106 54 26 106
 2 24 62 26 102 54 26 102
 2 24 54 26 102 54 26 106

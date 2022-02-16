@@ -1,0 +1,33 @@
+0 Electric Record and Play Brick 16 x 10 x  4
+0 Name: 45341.dat
+0 Author: Philippe Hurbain [Philo]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2009-02-06 [Philo] Creation
+
+0 // Top
+1 16 0 0 0 0 0 1 0 1 0 -1 0 0 s\45341s02.dat
+0 // Fake PCB
+1 2 -4 25 0 0 0 115 0 2 0 -75 0 0 box.dat
+0 // Bottom
+1 8 0 92 0 0 0 1 0 1 0 -1 0 0 s\45341s01.dat
+0 // Battery lid
+1 8 60 92 0 0 0 1 0 1 0 -1 0 0 s\45341s03.dat
+0 // Trans-red button
+1 36 -40 2 0 0 0 20 0 -1 0 -20 0 0 4-4cylc.dat
+1 36 -40 -1 0 0 0 18 0 1 0 -18 0 0 4-4disc.dat
+1 36 -40 -1 0 0 0 18 0 1 0 -18 0 0 4-4edge.dat
+1 36 -40 1 0 0 0 2 0 -2 0 -2 0 0 4-4con9.dat
+0 // Trans-green button
+1 34 0 0 0 0 0 1 0 1 0 -1 0 0 s\45341s04.dat
+0 // shafts
+1 15 -100 66 -100 0 1 0 -1 0 0 0 0 1 47157.dat
+1 15 -100 66 100 0 -1 0 -1 0 0 0 0 -1 47157.dat
+1 34 160 42 0 0 0 -1 -1 0 0 0 1 0 47157.dat
+0 // Power switch
+1 0 -126 91 8 0 0 6 0 1 0 -16 0 0 box.dat
+1 0 -126 92 10 0 0 6 0 4 0 -4 0 0 box5.dat
+0 //

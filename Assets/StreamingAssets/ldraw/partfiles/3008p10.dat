@@ -1,7 +1,7 @@
 0 Brick  1 x  8 with Red "SNACK BAR" Pattern
 0 Name: 3008p10.dat
 0 Author: Steffen [Steffen]
-0 !LDRAW_ORG Part UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -9,7 +9,6 @@
 0 !CMDLINE -c15
 
 0 !HISTORY 2019-05-28 [Darats] Pattern Rework
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 0 // Font: "Caslon Black EF"
 

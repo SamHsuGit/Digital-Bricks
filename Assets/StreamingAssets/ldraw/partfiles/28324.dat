@@ -1,12 +1,10 @@
 0 Car Base  4 x 12 x  0.667 with Side Flanges
 0 Name: 28324.dat
 0 Author: Massimo Maso [Sirio]
-0 !LDRAW_ORG Part UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 0 // Central lowered part
 0 // Primitives

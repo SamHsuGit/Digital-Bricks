@@ -1,22 +1,19 @@
 0 ~Electric Light and Sound Brick  4 x 12 x  2 Laser Drill Base (Needs Work)
 0 Name: 30346.dat
 0 Author: Jude Parrill [theJudeAbides]
-0 !LDRAW_ORG Part UPDATE 2020-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
-
-0 BFC CERTIFY CCW
 
 0 !KEYWORDS Rock Raiders
 
-0 !HISTORY 2002-03-28 [Xanthra47]     Original Part Shape
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2002-03-28 [Xanthra47] Original Part Shape
 0 !HISTORY 2013-09-02 [theJudeAbides] Moved to separate file, fixed, BFCed
-0 !HISTORY 2018-02-07 [Steffen]       moved button to separate file, replaced stud
-0 !HISTORY 2020-09-05 [PTadmin] Official Update 2020-02
 
 0 // TODO: Fix battery-box/inner-area to be more accurate.
 
 0 // Main Body - Exterior
-
 1 16 0 52 40 0 0 1 0 -1 0 -1 0 0 stug4-1x7.dat
 0 BFC INVERTNEXT
 1 16 0 56 40 0 0 16 0 -4 0 -76 0 0 box5.dat
@@ -57,6 +54,27 @@
 2 24 -36 16 -20 -20 0 -20
 1 16 0 0 -30 20 0 0 0 1 0 0 0 10 rect.dat
 1 16 0 28 -40 -20 0 0 0 0 28 0 1 0 rect3.dat
+1 256 0 -1 -37.5 0 0 10.5 1 0 0 0 1 0 rect.dat
+1 256 12 -1 -36 -1.5 -1 0 0 0 1 -1.5 0 0 rect2p.dat
+1 256 13.5 -1 -30 0 -1 0 0 0 1 -4.5 0 0 rect.dat
+1 256 12 -1 -24 -1.5 -1 0 0 0 1 1.5 0 0 rect2p.dat
+1 256 0 -1 -22.5 10.5 0 0 0 0 1 0 -1 0 rect.dat
+1 256 -12 -1 -24 1.5 1 0 0 0 1 1.5 0 0 rect2p.dat
+1 256 -13.5 -1 -30 0 1 0 0 0 1 4.5 0 0 rect.dat
+1 256 -12 -1 -36 -1.5 1 0 0 0 1 1.5 0 0 rect2p.dat
+4 256 9.5 -3 -36.5 -9.5 -3 -36.5 -10.5 -2 -37.5 10.5 -2 -37.5
+1 256 11.5 -2.5 -35.5 -1.5 0 -0.5 0 1 -0.5 -1.5 0 0.5 rect3.dat
+4 256 13.5 -2 -34.5 13.5 -2 -25.5 12.5 -3 -26.5 12.5 -3 -33.5
+2 24 12.5 -3 -33.5 12.5 -3 -26.5
+1 256 11.5 -2.5 -24.5 -1.5 0 -0.5 0 1 -0.5 1.5 0 -0.5 rect3.dat
+4 256 -9.5 -3 -23.5 9.5 -3 -23.5 10.5 -2 -22.5 -10.5 -2 -22.5
+1 256 -11.5 -2.5 -24.5 1.5 0 0.5 0 1 -0.5 1.5 0 -0.5 rect3.dat
+4 256 -13.5 -2 -25.5 -13.5 -2 -34.5 -12.5 -3 -33.5 -12.5 -3 -26.5
+2 24 -12.5 -3 -26.5 -12.5 -3 -33.5
+1 256 -11.5 -2.5 -35.5 1.5 0 0.5 0 1 -0.5 -1.5 0 0.5 rect3.dat
+4 256 9.5 -3 -36.5 12.5 -3 -33.5 12.5 -3 -26.5 9.5 -3 -23.5
+1 256 0 -3 -30 9.5 0 0 0 1 0 0 0 6.5 rect2p.dat
+4 256 -9.5 -3 -23.5 -12.5 -3 -26.5 -12.5 -3 -33.5 -9.5 -3 -36.5
 
 0 // Main Body - Interior (Battery Area) [Needs Work]
 3 16 20 0 -20 36 16 -20 32 16 -20
@@ -172,8 +190,7 @@
 4 16 -10 10 -124 -7 17 -124 -4 14 -124 -4 10 -124
 4 16 -7 3 -124 -10 10 -124 -4 10 -124 -4 6 -124
 4 16 0 0 -124 -7 3 -124 -4 6 -124 0 6 -124
-1 16 0 10 -124 1 0 0 0 0 -1 0 1 0 stud2a.dat
-1 16 0 10 -124 6 0 0 0 0 -6 0 1 0 4-4edge.dat
+1 16 0 10 -124 1 0 0 0 0 -1 0 1 0 stud2.dat
 1 47 0 10 -125 0 0 4 4 0 0 0 -4 0 4-8sphe.DAT
 0 BFC INVERTNEXT
 1 16 -10 40 -124 0 0 6 6 0 0 0 24 0 4-4cylo.dat

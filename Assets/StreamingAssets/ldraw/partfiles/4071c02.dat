@@ -1,0 +1,17 @@
+0 _Door  2 x  6 x  7 with Four Panes with Yellow Frame (Shortcut)
+0 Name: 4071c02.dat
+0 Author: Steffen [Steffen]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY  2009-05-04  [Steffen]  created
+0 !HISTORY  2009-06-07  [Steffen]  Change door color to 16
+0 !HISTORY  2009-10-29  [Steffen]  used 4071.dat, renamed to match it
+
+
+1 14 0 0 0 1 0 0 0 1 0 0 0 1 4071.dat
+1 16 48 84 -14.5 1 0 0 0 1 0 0 0 1 4072.dat
+0
+

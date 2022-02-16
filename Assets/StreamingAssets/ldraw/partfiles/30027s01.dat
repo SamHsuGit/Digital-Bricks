@@ -1,12 +1,10 @@
 0 ~Wheel Rim  8 x  8 for Wheel Holding Pin - Main
 0 Name: s\30027s01.dat
 0 Author: Magnus Forsberg [MagFors]
-0 !LDRAW_ORG Subpart UPDATE 2018-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2018-01-30 [PTadmin] Official Update 2018-01
 
 1 16 0 0 0 0 0 4 4 0 0 0 -1 0 4-4edge.dat
 0 BFC INVERTNEXT

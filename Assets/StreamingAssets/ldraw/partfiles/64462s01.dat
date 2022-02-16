@@ -1,12 +1,10 @@
 0 ~Container Box  3 x  8 x  6.667 Bar with Reinforcement - Half
 0 Name: s\64462s01.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Subpart UPDATE 2020-03
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
 
 0 // Bar
 

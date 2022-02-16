@@ -1,14 +1,12 @@
 0 Brick  1 x  4 with Tan Shapes And Metallic Gold Eagle Pattern
 0 Name: 3010pzn.dat
 0 Author: Vincent Messenet [Cheenzo]
-0 !LDRAW_ORG Part UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS brickheadz, bricklink 3010pb222, set 41599, wonder woman
-
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3010s01.dat
 

@@ -1,7 +1,7 @@
 0 Sticker  1.1 x  3.8 with Hieroglyphs
 0 Name: 4613908n.dat
 0 Author: Christian Neumann [Wesley]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 !HELP place at 0 10 -20 1 0 0 0 0.7071 -0.7071 0 0.7071 0.7071 on 3037.dat
@@ -11,8 +11,6 @@
 0 !KEYWORDS Pharaoh's Quest, Set 7327
 
 0 !CMDLINE -c19
-
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 -0.25 0 38 0 0 0 0.25 0 0 0 11 box5-12.dat
 4 72 5.14 -0.25 -6.34 6.05 -0.25 -6.09 5.61 -0.25 -5.55 4.37 -0.25 -5.35

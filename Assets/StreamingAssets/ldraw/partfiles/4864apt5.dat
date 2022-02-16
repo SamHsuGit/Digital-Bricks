@@ -1,12 +1,10 @@
 0 Panel  1 x  2 x  2 with Solid Studs with Black "5" Speed Stripes Pattern
 0 Name: 4864apt5.dat
 0 Author: Max Martin Richter [MMR1988]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\4864s01.dat
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 stug-1x2.dat

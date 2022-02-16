@@ -1,12 +1,10 @@
 0 ~Car Base  4 x  8 x  1.333 with Studs on Side - Side and End
 0 Name: s\30837s02.dat
 0 Author: Magnus Forsberg [MagFors]
-0 !LDRAW_ORG Subpart UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 4 16 -36 32 -20 -20 32 -16 20 32 -16 36 32 -20
 0 BFC INVERTNEXT

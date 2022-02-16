@@ -1,12 +1,10 @@
 0 ~Train Track Roller Coaster Ramp  4 x 16 x  6 S-Shape Lower Rail
 0 Name: s\26559s01.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Subpart UPDATE 2019-03
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2019-12-27 [PTadmin] Official Update 2019-03
 
 3 16 -130.745 -144 24.721 -102.98 -120.539 24.721 -99.5371 -124.868 26.3042
 3 16 -99.5371 -124.868 26.3042 -156.399 -173.919 26.3042 -130.745 -144 24.721
@@ -172,6 +170,13 @@
 2 24 140 -10.5876 21 140 -8 21
 2 24 140 -8 21 135.5 -8 21
 3 16 140 -10.5876 24.721 140 -2.24 22.5 160 -15.531 26.304
+0 // Inlined: 1 16 -150 -144 0 1 0 0 0 1 0 0 0 1 s\34738s01.dat
+0 // ~Train Track Roller Coaster Ramp End Piece
+0 // Name: s\34738s01.dat
+0 // Author: Philippe Hurbain [Philo]
+0 // !LDRAW_ORG Unofficial_Subpart
+0 // !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 // 0 BFC CERTIFY CCW
 3 16 -144 -136 16 -144 -136 20 -140 -136 20
 4 16 -144 -136 20 -144 -136 16 -156 -136 16 -160 -136 20
 1 16 -142 -138.5 23.55 0 0 2 -2.5 -1 0 3.55 0 0 rect3.dat

@@ -1,12 +1,10 @@
 0 Glass for Window  1 x  2 x  2 with Tan Gothic Ornament Pattern
 0 Name: 60601p01.dat
 0 Author: Ulrich Röder [UR]
-0 !LDRAW_ORG Part UPDATE 2019-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2019-09-09 [PTadmin] Official Update 2019-02
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\60601s01.dat
 

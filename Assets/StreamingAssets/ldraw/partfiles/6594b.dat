@@ -1,7 +1,7 @@
 0 ~Tyre 28/ 38 x 28 VR Tread Quarter
 0 Name: s\6594b.dat
 0 Author: Jeff Boen [onyx]
-0 !LDRAW_ORG Subpart UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -11,7 +11,6 @@
 0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
 0 !HISTORY 2014-11-21 [roland] Auto-corrected with libfix version of LDCad 1.4
 0 !HISTORY 2015-01-19 [Philo] Rebuilt from Onyx initial design
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 2 24 62 3 -19 62 3 -25
 2 24 60 3 -19 60 3 -29

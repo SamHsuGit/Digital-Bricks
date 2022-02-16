@@ -1,0 +1,18 @@
+0 Animal Dinosaur Tyrannosaurus Rex (Complete)
+0 Name: 30457c01.dat
+0 Author: Stan Isachenko [angmarec]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Adventures, Studio
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 76409.DAT
+0 // head
+1 16 0 -19.096 -85.71 1 0 0 0 0.766 -0.643 0 0.643 0.766 30459.dat
+0 // arms
+1 16 19.805 32.074 -61.5434 1 0 0 0 0.5 -0.866 0 0.866 0.5 6128.dat
+1 16 -19.805 32.074 -61.543 1 0 0 0 0.5 -0.866 0 0.866 0.5 6127.dat
+0 // tail
+1 16 0 49.5 70 1 0 0 0 1 0 0 0 1 30456.dat

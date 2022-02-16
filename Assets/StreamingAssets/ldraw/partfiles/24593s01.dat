@@ -1,12 +1,10 @@
 0 ~Cylinder Half  2 x  4 x  2 with  1 x  2 Cutout
 0 Name: s\24593s01.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Subpart UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 2 24 -20 48 0 -40 48 0
 2 24 -20 40 0 -36 40 0

@@ -1,12 +1,10 @@
 0 Plate  4 x  8 without Corners
 0 Name: 68297.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Part UPDATE 2020-03
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
 
 4 16 76 8 1.65 76 8 36 80 8 40 80 8 0
 4 16 -80 8 40 -76 8 36 -76 8 1.65 -80 8 0

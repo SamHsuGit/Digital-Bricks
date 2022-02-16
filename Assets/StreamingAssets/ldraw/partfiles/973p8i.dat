@@ -1,7 +1,7 @@
 0 Minifig Torso with Construction Safety Vest with Reflective Stripes Pattern
 0 Name: 973p8i.dat
 0 Author: Earnest J. Banbury [Banbury]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -13,7 +13,6 @@
 0 !HISTORY 2014-06-21 [PTadmin] Official Update 2014-01
 0 !HISTORY 2015-10-31 [MagFors] Corrected blue and silver colour
 0 !HISTORY 2015-11-03 [MMR1988] Optimized vertices
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\973s01.dat
 1 0 0 -4 0 4.243 0 -4.243 0 -8 0 -4.243 0 -4.243 1-4cyli.dat

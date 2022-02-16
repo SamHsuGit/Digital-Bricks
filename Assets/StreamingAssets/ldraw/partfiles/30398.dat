@@ -1,14 +1,12 @@
 0 Tipper Drum  4 x  4 x  5 with Two Pins
 0 Name: 30398.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !CATEGORY Vehicle
-
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 26.889 0 11 0 0 0 -26.8889 0 0 0 11 48\4-4con2.dat
 1 16 0 34.222 0 3 0 0 0 -7.33333 0 0 0 3 48\4-4con11.dat

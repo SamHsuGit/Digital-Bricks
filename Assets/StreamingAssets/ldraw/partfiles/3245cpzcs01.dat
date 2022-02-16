@@ -1,12 +1,10 @@
 0 ~Brick  1 x  2 x  2 with Red Bow Tie, White Shirt and Yellow Trim Pattern - Half
 0 Name: s\3245cpzcs01.dat
 0 Author: Vincent Messenet [Cheenzo]
-0 !LDRAW_ORG Subpart UPDATE 2020-03
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
 
 4 14 -12.6 5.7 -10 -11.8 5.7 -10 -15 .5 -10 -19.5 .5 -10
 3 14 -12.6 5.7 -10 -19.5 .5 -10 -13.8 6 -10

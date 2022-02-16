@@ -1,14 +1,12 @@
 0 Brick  1 x  8 with Red Thin "KIOSK" Pattern
 0 Name: 3008p0n.dat
 0 Author: Tore Eriksson [Tore_Eriksson]
-0 !LDRAW_ORG Part UPDATE 2018-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
-
-0 BFC CERTIFY CW
 
 0 !KEYWORDS BrickLink 3008px4
 
-0 !HISTORY 2018-01-30 [PTadmin] Official Update 2018-01
+0 BFC CERTIFY CW
 
 1 16  0 0 0  1 0 0  0 1 0  0 0 1  s\3008s01.dat
 

@@ -1,14 +1,12 @@
 0 Wheel Rim 42 x 62 with 10 Spokes and  3 Pegholes
 0 Name: 23800.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Part UPDATE 2018-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS Porsche, set 42056
-
-0 !HISTORY 2018-01-30 [PTadmin] Official Update 2018-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\23800s01.dat
 1 16 0 0 0 1 0 0 0 -1 0 0 0 1 s\23800s01.dat

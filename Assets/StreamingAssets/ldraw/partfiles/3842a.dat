@@ -1,7 +1,7 @@
 0 Minifig Helmet Classic with Thin Chin Guard and Visor Dimples
 0 Name: 3842a.dat
 0 Author: Willy Tschager [Holly-Wood]
-0 !LDRAW_ORG Part UPDATE 2017-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CW
@@ -18,7 +18,6 @@
 0 !HISTORY 2009-09-03 [PTadmin] Official Update 2009-02
 0 !HISTORY 2012-10-02 [Steffen] BFC rationalisation
 0 !HISTORY 2016-02-22 [Holly-Wood] Fixed pivot, fixed chin guard height, added cond. lines, subparted
-0 !HISTORY 2017-12-30 [PTadmin] Official Update 2017-01
 
 0 // Top Inside
 

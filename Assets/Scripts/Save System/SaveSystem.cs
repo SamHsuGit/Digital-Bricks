@@ -56,24 +56,24 @@ public static class SaveSystem
             Mathf.FloorToInt(player.transform.position.y + 1), // add 1 unit to ensure player is not inside ground
             Mathf.FloorToInt(player.transform.position.z),
             Mathf.FloorToInt(player.GetComponent<Health>().hp),
-            0, // slot 1 qty (CREATIVE SLOT)
             0, // slot 1 blockID (CREATIVE SLOT)
-            0, // slot 2 qty
+            0, // slot 1 qty (CREATIVE SLOT)
             0, // slot 2 blockID
-            0, // slot 3 qty
+            0, // slot 2 qty
             0, // slot 3 blockID
-            0, // slot 4 qty
+            0, // slot 3 qty
             0, // slot 4 blockID
-            0, // slot 5 qty
+            0, // slot 4 qty
             0, // slot 5 blockID
-            0, // slot 6 qty
+            0, // slot 5 qty
             0, // slot 6 blockID
-            0, // slot 7 qty
+            0, // slot 6 qty
             0, // slot 7 blockID
-            0, // slot 8 qty
+            0, // slot 7 qty
             0, // slot 8 blockID
-            0, // slot 9 qty
+            0, // slot 8 qty
             0, // slot 9 blockID
+            0, // slot 9 qty
         };
         if(playerIndex > 0)
         {
@@ -129,24 +129,24 @@ public static class SaveSystem
                 Mathf.FloorToInt(World.Instance.defaultSpawnPosition.y),
                 Mathf.FloorToInt(World.Instance.defaultSpawnPosition.x),
                 hpMax,
-                0, // slot 1 qty (CREATIVE SLOT)
                 0, // slot 1 blockID (CREATIVE SLOT)
-                0, // slot 2 qty
+                0, // slot 1 qty (CREATIVE SLOT)
                 0, // slot 2 blockID
-                0, // slot 3 qty
+                0, // slot 2 qty
                 0, // slot 3 blockID
-                0, // slot 4 qty
+                0, // slot 3 qty
                 0, // slot 4 blockID
-                0, // slot 5 qty
+                0, // slot 4 qty
                 0, // slot 5 blockID
-                0, // slot 6 qty
+                0, // slot 5 qty
                 0, // slot 6 blockID
-                0, // slot 7 qty
+                0, // slot 6 qty
                 0, // slot 7 blockID
-                0, // slot 8 qty
+                0, // slot 7 qty
                 0, // slot 8 blockID
-                0, // slot 9 qty
+                0, // slot 8 qty
                 0, // slot 9 blockID
+                0, // slot 9 qty
         };
         return stats;
     }

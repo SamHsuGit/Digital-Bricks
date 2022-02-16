@@ -1,14 +1,12 @@
 0 Brick  1 x  3 with Green and Blue Stripe and Cargo Logo Pattern
 0 Name: 3622p03.dat
 0 Author: Tomas Kralicek [RabbiT_CZ]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS Bricklink 3622pb008
-
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3622s01.dat
 3 16 -17.68 10.86 -10 -28.6 10.84 -10 -17.78 11.6 -10

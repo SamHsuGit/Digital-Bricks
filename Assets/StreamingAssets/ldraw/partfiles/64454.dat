@@ -1,12 +1,10 @@
 0 Container Box  3 x  8 x  6.667 - Back
 0 Name: 64454.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Part UPDATE 2020-03
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\64454s01.dat
 1 16 50 0 20 0 0 -1 0 1 0 1 0 0 stug2-1x2.dat

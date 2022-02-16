@@ -1,0 +1,14 @@
+0 ~Axle Steel  6 x 104 with Two Wheels  5.5 x 20 with 10 Spokes
+0 Name: u9187c01.dat
+0 Author: Magnus Forsberg [MagFors]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !CATEGORY Vehicle
+0 !KEYWORDS Fabuland, Chassis  8 x  6
+
+1 494 0 0 0 1 0 0 0 1 0 0 0 1 u9187.dat
+1 16 46 0 0 1 0 0 0 1 0 0 0 1 683.dat
+1 16 -46 0 0 -1 0 0 0 1 0 0 0 -1 683.dat

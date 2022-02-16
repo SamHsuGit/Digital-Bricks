@@ -1,7 +1,7 @@
 0 Homemaker Stove  4 x  4 x  3
 0 Name: 841.dat
 0 Author: Arne Hackstein
-0 !LDRAW_ORG Part UPDATE 2017-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -12,7 +12,6 @@
 0 !HISTORY 2014-11-21 [roland]  Auto-corrected with libfix version of LDCad 1.4
 0 !HISTORY 2015-01-22 [Steffen] BFCed, used stugs, closed gaps
 0 !HISTORY 2015-02-05 [MagFors] Subfiled the hinge, corrected box primitives
-0 !HISTORY 2017-12-30 [PTadmin] Official Update 2017-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 stug-4x4.dat
 1 16 0 56 0 1 0 0 0 -4 0 0 0 1 stug4-3x3.dat

@@ -1,7 +1,7 @@
 0 Tyre 30/ 42 x 28 R Balloon
 0 Name: 32180.dat
 0 Author: Ian Reid [Ian_Reid]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -9,7 +9,6 @@
 0 !KEYWORDS Technic, 56 x 30
 
 0 !HISTORY 2015-01-21 [Philo] Adapted to new rim shape
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 0 BFC INVERTNEXT
 1 16 0 0 -24 0 0 32 32 0 0 0 -4 0 48\4-4cylo.dat

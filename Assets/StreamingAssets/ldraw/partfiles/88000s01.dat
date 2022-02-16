@@ -1,14 +1,13 @@
 0 ~Plate  2 x  4 with 2 Studs with Curved, Beveled Sides - Quarter
 0 Name: s\88000s01.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Subpart UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2010-12-31 [PTadmin] Official Update 2010-03
 0 !HISTORY 2014-02-01 [MMR1988] Removed t-junctions, saved some lines
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 4 16 2.249 0 13.758 2 7 17.75 0 7 17.75 0 0 13.75
 4 16 2 7 17.75 2.062 7 16.752 0 7 16.75 0 7 17.75

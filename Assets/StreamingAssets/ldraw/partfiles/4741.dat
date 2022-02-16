@@ -1,7 +1,7 @@
 0 Window  4 x  4 x  6 Outward Sloping
 0 Name: 4741.dat
 0 Author: Jaco van der Molen [Jaco]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part 
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -15,7 +15,6 @@
 0 !HISTORY 2010-07-05 [PTadmin] Official Update 2010-02
 0 !HISTORY 2014-11-21 [roland] Auto-corrected with libfix version of LDCad 1.4
 0 !HISTORY 2016-06-03 [Holly-Wood] Closed gap, fixed T-junction, fixed overlap
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 20 68 -60 1 0 0 0 -2 0 0 0 1 stud3.dat
 1 16 0 68 -60 1 0 0 0 -2 0 0 0 1 stud3.dat

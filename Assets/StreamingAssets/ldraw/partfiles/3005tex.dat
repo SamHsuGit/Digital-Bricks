@@ -1,0 +1,7 @@
+0 Brick 1 x 1
+0 Name: 3005tex.dat
+0 Author: Tore Eriksson [Tore_Eriksson]
+0 BFC CERTIFY CW
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3005s01.dat
+1 16 0 12 -10 10 0 0 0 -0 -12 0 1 0 recttex.dat
+0

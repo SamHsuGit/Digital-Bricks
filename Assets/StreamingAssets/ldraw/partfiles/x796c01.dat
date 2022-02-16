@@ -1,0 +1,17 @@
+0 Electric Motor Unit  6 x 18 x  4 with Black Bottom
+0 Name: x796c01.dat
+0 Author: Chris Dee [cwdee]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+0 !KEYWORDS Manas, set 8539
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 x796.dat
+1 0 20 -96 0 1 0 0 0 1 0 0 0 1 u9270.dat
+1 14 180 -54 0 1 0 0 0 1 0 0 0 1 u9271.dat
+1 462 -180 -54 0 -1 0 0 0 1 0 0 0 1 u9271.dat
+1 0 -20 -96 0 1 0 0 0 1 0 0 0 1 u9272.dat
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 u9273.dat
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 x797.dat
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 23325.dat

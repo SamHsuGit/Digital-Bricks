@@ -1,7 +1,7 @@
 0 Tile  2 x  2 with Red Apple with Blossom, Stem and Green Leaf Pattern
 0 Name: 3068bpfj.dat
 0 Author: Steffen [Steffen]
-0 !LDRAW_ORG Part UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -9,8 +9,6 @@
 0 !KEYWORDS Bricklink 3068bpb0050, Scala, set 308, set 310
 
 0 !CMDLINE -c14
-
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3068bs01.dat
 4 0 -6.1 0 -14 -6.8 0 -14.9 -6.3 0 -15.2 -5.8 0 -14.6

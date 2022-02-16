@@ -1,0 +1,14 @@
+0 ~Cylinder  2 x  2 x  2 Robot Body with SW Astromech Pattern Centre Panel Background
+0 Name: s\30361dps6s07.dat
+0 Author: John Troxler [Gargan]
+0 !LDRAW_ORG Unofficial_Subpart
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 -0.9 5 -19.818 0 0 -1.3 -1.3 0 0 0 1 0.258 1-4ndis.dat
+1 16 -0.9 8.2 -19.818 -1.3 0 0 0 0 1.3 0.258 1 0 1-4ndis.dat
+3 16 -2.2 3.7 -19.559 -0.9 3.7 -19.818 -2.2 3.4 -19.559
+4 16 -0.9 10.3 -19.818 -0.9 9.5 -19.818 -2.2 9.5 -19.559 -2.2 10.3 -19.559
+4 16 -0.9 9.5 -19.818 -0.9 10.3 -19.818 0 10.3 -19.997 0 9.5 -19.997
+4 16 -2.2 3.4 -19.559 -0.9 3.7 -19.818 0 3.7 -19.997 0 3.4 -19.997

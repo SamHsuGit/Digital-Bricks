@@ -1,14 +1,12 @@
 0 Brick  1 x  2 x  2 without Understud with Check Shirt, Blue Jacket and Dark Red Undershirt Pattern
 0 Name: 3245cpz3.dat
 0 Author: Vincent Messenet [Cheenzo]
-0 !LDRAW_ORG Part UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS BrickLink 3245cpb073, BrickHeadz, Set 41611, Marty McFly, Back to the Future
-
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3245cs01.dat
 

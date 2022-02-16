@@ -1,0 +1,12 @@
+0 ~Electric Technic Motor Steel Axle
+0 Name: s\6216md.dat
+0 Author: Chris Dee [cwdee]
+0 !LDRAW_ORG Unofficial_Subpart
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS 4.5V, 12V, Rotor
+
+1 16 0 26 -59 2 0 0 0 0 2 0 106 0 4-4cylc.dat
+1 16 0 26 47 -2 0 0 0 0 2 0 -1 0 4-4disc.dat

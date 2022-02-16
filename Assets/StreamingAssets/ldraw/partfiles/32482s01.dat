@@ -1,0 +1,17 @@
+0 ~Technic Balljoint with Axle
+0 Name: s\32482s01.dat
+0 Author: Robert Sexton [rhsexton]
+0 !LDRAW_ORG Unofficial_Subpart
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 !HISTORY 2004-03-14 [Steffen] BFCed
+0 !HISTORY 2010-10-25 [cwdee] Optimised to use axlesphe primitive
+
+1 16 0 0 -40 12.81 0 0 0 12.81 0 0 0 12.81 8-8sphe.dat
+1 16 0 0 -9 1 0 0 0 0 1 0 1 0 axlehol2.dat
+1 16 0 0 -9 1 0 0 0 0 1 0 1 0 axlehol9.dat
+1 16 0 0 -40 1 0 0 0 0 1 0 -1 0 axlesphe.dat
+1 16 0 0 -9 1 0 0 0 0 1 0 -18.19 0 axlehol8.dat
+

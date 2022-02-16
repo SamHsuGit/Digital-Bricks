@@ -1,12 +1,11 @@
-0 ~Constraction Shell  2.5 x  3 x  8 Flat without Front Surface
+0 ~Technic Constraction Shell  8L Flat - without Front Surface
 0 Name: s\90636s01.dat
 0 Author: Magnus Forsberg [MagFors]
-0 !LDRAW_ORG Subpart UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\90636s02.dat
 1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\90636s02.dat
@@ -14,7 +13,7 @@
 1 16 0 -50 -23.5 0 0 -1 -1 0 0 0 1 0 s\90640s05.dat
 0 // ball clip
 1 16 0 0 0 1 0 0 0 0 1 0 -1 0 s\90640s03.dat
-
+0 //
 0 BFC INVERTNEXT
 1 16 0 -60 -20 4.5 0 0 0 0 4.5 0 -4 0 4-4cylo.dat
 1 16 0 -60 -20 4.5 0 0 0 0 4.5 0 -1 0 4-4ndis.dat

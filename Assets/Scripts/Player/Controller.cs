@@ -1302,7 +1302,7 @@ public class Controller : NetworkBehaviour
             if (isMoving)
             {
                 if (isSprinting)
-                    animRate = baseAnimRate * 2f;
+                    animRate = baseAnimRate; // animate same but here provides option to increase anim rate
                 else
                     animRate = baseAnimRate;
 

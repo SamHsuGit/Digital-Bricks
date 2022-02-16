@@ -1,15 +1,12 @@
-0 ~Container Book Spine 16 x  6 with 4 Pegholes and 16 x  4 Studs - 1/4
+0 ~Container Book Spine 16 x  6 with 4 Pegholes and 16 x  4 Studs, Quarter
 0 Name: s\65200s01.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Subpart UPDATE 2020-03
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
-
 0 // Rib Center
-
 1 16 -42.5 8 10.1 -2.5 0 0 0 -1 0 0 0 1.6 rect2p.dat
 1 16 -45 -6 11.7 0 0 -14 14 0 0 0 -3.2 0 3-16cylo.dat
 1 16 -58.12485 -1.59895 10.1 0 0 -.19025 0 -1 -.95675 -1.6 0 0 rect3.dat

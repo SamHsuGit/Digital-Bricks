@@ -1,15 +1,12 @@
-0 ~Minifig Food Pie - Cream Filling
+0 ~Minifig Food Pie - Cream filling
 0 Name: s\93568s01.dat
 0 Author: Willy Tschager [Holly-Wood]
-0 !LDRAW_ORG Subpart UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
-
 0 // Edges
-
 2 24 -1.847 -20.921 -1.501 -2.906 -20.669 -.403
 2 24 -2.906 -20.669 -.403 -3.206 -20.484 1.081
 2 24 -3.206 -20.484 1.081 -2.988 -20.358 2.348

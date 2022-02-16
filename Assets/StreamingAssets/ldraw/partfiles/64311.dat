@@ -1,16 +1,15 @@
-0 Constraction Connector  7 x  2 with Double Angled Ball Sockets and Perpendicular Axle/Pin Holes
+0 Technic Constraction Beam  7 x  2 Perpendicular with 2S3P and Open Axle Holes
 0 Name: 64311.dat
 0 Author: Santeri Piippo [arezey]
-0 !LDRAW_ORG Part UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
-0 !HISTORY 2010-03-08 [arezey] Original work
+0 !HISTORY 2010-03-08 [Arezey] Original work
 0 !HISTORY 2013-08-14 {LEGO Digital Designer} Original part shape
 0 !HISTORY 2016-04-16 [MagFors] Reworked for LDraw Parts Tracker using LDD data
 0 !HISTORY 2016-06-26 [MagFors] Changed description
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 1 16 0 0 60 1 0 0 0 1 0 0 0 1 s\89650s01.dat
 1 16 0 0 -60 -1 0 0 0 1 0 0 0 -1 s\89650s01.dat

@@ -1,14 +1,12 @@
 0 Cockpit  4 x 10 x  4.333 with Three Holes on Bottom and 2 Pin Holes on Each Side
 0 Name: 44665.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Part UPDATE 2020-03
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS Tie-Fighter, Submarine, Juniors
-
-0 !HISTORY 2020-12-29 [PTadmin] Official Update 2020-03
 
 0 // Bottom
 4 16 -40 104 -40 -36 104 -36 36 104 -36 40 104 -40

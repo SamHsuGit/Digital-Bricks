@@ -9,11 +9,11 @@ public class Health : NetworkBehaviour
 
     public int minPieces = 1; // chars must have at least 1 piece
     public int maxPieces = 500; // limited based on performance of min pc spec model load time
-    private int minBaseMoveSpeed = 1; // min speed
-    private int maxBaseMoveSpeed = 5; // max speed
+    private int minBaseMoveSpeed = 5; // min speed
+    private int maxBaseMoveSpeed = 100; // max speed
     public int jumpHungerThreshold = 160; // Minecraft jumpHungerThreshold = 40
     public int blockHungerThreshold = 320; // Minecraft blockHungerThreshold = 320
-    [SyncVar(hook = nameof(UpdateHP))] public float hp; // uses hp SyncVar hook to syncronize # pieces an object has across all online players when hp value changes
+    [SyncVar(hook = nameof(UpdateHP))] public int hp; // uses hp SyncVar hook to syncronize # pieces an object has across all online players when hp value changes
     public int hpMax;
     public float piecesRbMass = 0.0001f;
     public int jumpCounter = 0;
@@ -131,7 +131,7 @@ public class Health : NetworkBehaviour
             pieces = minPieces;
 
         if (!SettingsStatic.LoadedSettings.flight)
-            moveSpeed = -1 * (float)(maxBaseMoveSpeed - minBaseMoveSpeed) / (maxPieces - minPieces) * pieces + maxBaseMoveSpeed; // negative slope (more pieces less speed)
+            moveSpeed = 1 * (float)(maxBaseMoveSpeed - minBaseMoveSpeed) / (maxPieces - minPieces) * pieces + minBaseMoveSpeed; // positive slope (y intercept min speed) more pieces more speed
         else
             moveSpeed = maxBaseMoveSpeed; // if flight enabled, use max speed
 
@@ -229,7 +229,7 @@ public class Health : NetworkBehaviour
     }
 
     // runs from gun script when things are shot, runs in this script when object falls below certain height
-    public void UpdateHP(float oldValue, float newValue)
+    public void UpdateHP(int oldValue, int newValue)
     {
         hp = newValue;
         SetModelPieceVisibility(modelPieces);

@@ -1,7 +1,7 @@
 0 Tile  2 x  2 Round with Black and Dark Bluish Grey Grid Pattern
 0 Name: 4150ps4.dat
 0 Author: Matt Schild [mschild]
-0 !LDRAW_ORG Part UPDATE 2017-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -17,7 +17,6 @@
 0 !HISTORY 2009-10-07 [anathema] BFC'd; improved pattern
 0 !HISTORY 2011-07-25 [PTadmin] Official Update 2011-01
 0 !HISTORY 2016-01-30 [Darats] Use 14769p06 subpart; changed description
-0 !HISTORY 2017-12-30 [PTadmin] Official Update 2017-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\4150s01.dat
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\14769p06s01.dat

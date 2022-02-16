@@ -1,7 +1,7 @@
 0 Train Track  9V Points Lever
 0 Name: 2866.dat
-0 Author: Ludo Soete [ludo]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 Author: Soete Ludo [ludo]
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -10,10 +10,9 @@
 
 0 !HISTORY 2012-09-09 [Steffen] uploaded to PT from LUGNET, BFCed, rotated by 90 degrees
 0 !HISTORY 2016-01-02 [MMR1988] Added condlines, used more prims
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
+
 
 0 // scharnier punt links
-
 1 16 10 0 0 0 -7.25 0 0 0 6.25 6.25 0 0 4-4cylc.dat
 1 16 13.875 0 0 0 -3.875 0 0 0 2.5 2.5 0 0 4-4cylc.dat
 

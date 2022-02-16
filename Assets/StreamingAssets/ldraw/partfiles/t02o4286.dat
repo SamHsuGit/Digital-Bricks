@@ -1,14 +1,14 @@
 0 Torus Outside  1 x 0.4286 x 0.5
 0 Name: t02o4286.dat
 0 Author: J.C. Tchang [tchang]
-0 !LDRAW_ORG Primitive UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Primitive
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2010-03-20 [tchang] Generate with Primitive Generator
 0 !HISTORY 2013-09-14 [MMR1988] Regenerated with PrimGen2
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
+
 
 0 // Major Radius: 7
 0 // Tube(Minor) Radius: 3

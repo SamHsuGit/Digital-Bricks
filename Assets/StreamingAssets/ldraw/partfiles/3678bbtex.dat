@@ -1,0 +1,8 @@
+0 Slope Brick 65 2 x 2 x 2 Back
+0 Name: 3678bftex.dat
+0 Author: Andy Westrate [westrate]
+0 BFC CERTIFY CCW
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3678bs01.dat
+1 16 0 24 10 -20 0 0 0 0 -24 0 -1 0 recttex.dat
+1 16 0 22 -20 20 0 0 0 0.413804 -21.999989 0 0.910366 10.000016 slopetexnull.dat
+0

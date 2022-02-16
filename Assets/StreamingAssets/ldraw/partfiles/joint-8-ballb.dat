@@ -1,0 +1,18 @@
+0 Ball Joint-8 with Straight Bar with groove
+0 Name: joint-8-ballb.dat
+0 Author: Owen Burgoyne [C3POwen]
+0 !LDRAW_ORG Unofficial_Primitive
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2014-01-06 [timgould] Renamed part
+0 !HISTORY 2014-01-05 [timgould] Brought in work on ball from C3POwen
+0 !HISTORY 2014-12-02 [MMR1988] Used 4-4cyl19sph40
+
+1 16 0 0 8 4 0 0 0 0 4 0 -1 0 4-4edge.dat
+1 16 0 0 10 4 0 0 0 0 -4 0 -2 0 4-4cyli.dat
+1 16 0 0 8 0.2 0 0 0 0 -0.2 0 1 0 4-4rin19.dat
+1 16 0 0 8 3.8 0 0 0 0 -3.8 0 1 0 4-4edge.dat
+1 16 0 0 0 0 0 -5 5 0 0 0 -5 0 4-4cyl19sph40.dat
+1 16 0 0 0 8 0 0 0 8 0 0 0 8 8-8sphe.dat

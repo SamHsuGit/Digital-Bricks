@@ -1,7 +1,7 @@
 0 Minifig Helmet Classic with Thick Chin Guard
 0 Name: 3842c.dat
 0 Author: Willy Tschager [Holly-Wood]
-0 !LDRAW_ORG Part UPDATE 2019-03
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CW
@@ -17,7 +17,6 @@
 0 !HISTORY 2009-09-03 [PTadmin] Official Update 2009-02
 0 !HISTORY 2012-10-02 [Steffen] BFC rationalisation
 0 !HISTORY 2016-02-22 [Holly-Wood] Fixed chin guard height, added cond. lines, subparted
-0 !HISTORY 2019-12-27 [PTadmin] Official Update 2019-03
 
 0 // Top Inside
 1 16 0 -4 0 1 0 0 0 -1 0 0 0 1 stud4.dat

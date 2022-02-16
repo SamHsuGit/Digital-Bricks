@@ -1,14 +1,13 @@
 0 Wheel Rim 10 x 14 with Fake Bolts and  6 Spokes
 0 Name: 11208.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Part UPDATE 2017-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2013-08-14 {LEGO Digital Designer} Original part shape
 0 !HISTORY 2015-01-22 [Philo] File preparation for LDraw Parts Tracker
-0 !HISTORY 2017-12-30 [PTadmin] Official Update 2017-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\11208s01.dat
 1 16 0 0 0 0.5 -0.86603 0 0.86603 0.5 0 0 0 1 s\11208s01.dat

@@ -1,7 +1,7 @@
 0 Hinge Arm 2 Finger
 0 Name: arm1.dat
 0 Author: James Jessiman
-0 !LDRAW_ORG Primitive UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Primitive
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
@@ -11,7 +11,6 @@
 0 !HISTORY 2007-06-24 [PTadmin] Header formatted for Contributor Agreement
 0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
 0 !HISTORY 2014-01-05 [MMR1988] Reworked to match 16 sided primitives
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 0 0 -7.07107 0 7.07107 7.07107 0 7.07107 0 1 0 1-4chrd.dat
 1 16 0 0 0 -7.07107 0 7.07107 7.07107 0 7.07107 0 1 0 1-4edge.dat

@@ -1,14 +1,15 @@
-0 Constraction Limb  3 x  7 Bent 53.13
+0 Technic Constraction Knee Beam  3 x  7 Bent 53.13 with 1S1B1A1P
 0 Name: 87796.dat
 0 Author: Magnus Forsberg [MagFors]
-0 !LDRAW_ORG Part UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Part
+
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2013-08-14 {LEGO Digital Designer} Original part shape
 0 !HISTORY 2016-04-22 [MagFors] File preparation for LDraw Parts Tracker
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
+
 
 1 16 -10 0 -20 0 20 0 -1 0 0 0 0 1 axlehol4.dat
 1 16 -10 0 -10 0 20 0 -1 0 0 0 0 1 npeghol4.dat

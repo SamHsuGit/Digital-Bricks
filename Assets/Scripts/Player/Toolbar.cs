@@ -9,7 +9,7 @@ public class Toolbar : MonoBehaviour
     public UIItemSlot[] slots;
     public RectTransform highlight;
     public int slotIndex = 0;
-    public byte blockIndex = 2;
+    public byte creativeBlockID = 2;
     public bool setNavigate = false;
 
     CanvasGroup optionsMenuCanvasGroup;
@@ -18,6 +18,12 @@ public class Toolbar : MonoBehaviour
 
     private void Awake()
     {
+        for (byte i = 2; i < 11; i++)
+        {
+            UIItemSlot s = slots[i - 2];
+            ItemSlot slot = new ItemSlot(s, null);
+        }
+
         optionsMenuCanvasGroup = optionsMenu.GetComponent<CanvasGroup>();
         inputHandler = player.GetComponent<InputHandler>();
         controller = player.GetComponent<Controller>();
@@ -25,18 +31,49 @@ public class Toolbar : MonoBehaviour
 
     private void Start()
     {
-        
-        for (byte i = 2; i < 11; i++)
-        {
-            UIItemSlot s = slots[i - 2];
-            ItemSlot slot = new ItemSlot(s, null);
-        }
+        SetInventoryFromSave();
+    }
 
-        blockIndex = 2;
-        // reset player creative slot
-        slots[0].itemSlot.EmptySlot();
-        ItemStack stack = new ItemStack(blockIndex, 2);
-        slots[0].itemSlot.InsertStack(stack);
+    private void SetInventoryFromSave() // moved from player to Toolbar to ensure the slots exist before trying to set inventory from save
+    {
+        int[] playerStats;
+        if (!Settings.IsMobilePlatform)
+            playerStats = SaveSystem.LoadPlayerStats(player, controller.playerName, World.Instance.worldData); // load current player stats from save file
+        else
+            playerStats = SaveSystem.GetDefaultPlayerStats(player);
+
+        // Set player inventory
+        for (int i = 4; i < 22; i += 2)
+        {
+            int slotIndex = (i - 4) / 2;
+            UIItemSlot slot = controller.toolbar.slots[slotIndex];
+            int blockID = playerStats[i];
+            int qty = playerStats[i + 1];
+
+            if (blockID != 0)
+            {
+                ItemStack stack = new ItemStack((byte)blockID, qty);
+                if (slot.itemSlot.HasItem)
+                    slot.itemSlot.EmptySlot();
+                slot.itemSlot.InsertStack(stack);
+
+                // for creative slot, set slot index to saved blockID
+                if (slotIndex == 0)
+                    creativeBlockID = (byte)blockID; // set creative slot to saved value
+            }
+            else
+            {
+                // for creative slot and blockID < 2
+                if (slotIndex == 0 && blockID < 2)
+                {
+                    // if no saved blockID, then set creative slot to blockID 2
+                    creativeBlockID = 2;
+                    ItemStack creativeStack = new ItemStack(creativeBlockID, creativeBlockID);
+                    slot.itemSlot.EmptySlot();
+                    slot.itemSlot.InsertStack(creativeStack);
+                }
+            }
+        }
     }
 
     public void toggleNavigate()
@@ -70,24 +107,24 @@ public class Toolbar : MonoBehaviour
             {
                 if (inputHandler.navUp)
                 {
-                    blockIndex++;
+                    creativeBlockID++;
                 }
                 if (inputHandler.navDown)
                 {
-                    blockIndex--;
+                    creativeBlockID--;
                 }
                 
-                if (blockIndex > World.Instance.blocktypes.Length - 1) // limit blockIndex to range of defined blocks
-                    blockIndex = (byte)(World.Instance.blocktypes.Length - 1);
-                if (blockIndex < 2) // cannot select air or barrier blocks
-                    blockIndex = 2;
-                if (blockIndex == 25 || blockIndex == 26 && inputHandler.navUp) // cannot select reserved blocktypes 25 and 26
-                    blockIndex = 27;
-                if (blockIndex == 25 || blockIndex == 26 && inputHandler.navDown) // cannot select reserved blocktypes 25 and 26
-                    blockIndex = 24;
+                if (creativeBlockID > World.Instance.blocktypes.Length - 1) // limit blockIndex to range of defined blocks
+                    creativeBlockID = (byte)(World.Instance.blocktypes.Length - 1);
+                if (creativeBlockID < 2) // cannot select air or barrier blocks
+                    creativeBlockID = 2;
+                if (creativeBlockID == 25 || creativeBlockID == 26 && inputHandler.navUp) // cannot select reserved blocktypes 25 and 26
+                    creativeBlockID = 27;
+                if (creativeBlockID == 25 || creativeBlockID == 26 && inputHandler.navDown) // cannot select reserved blocktypes 25 and 26
+                    creativeBlockID = 24;
 
                 slots[slotIndex].itemSlot.EmptySlot();
-                ItemStack stack = new ItemStack(blockIndex, blockIndex);
+                ItemStack stack = new ItemStack(creativeBlockID, creativeBlockID);
                 slots[slotIndex].itemSlot.InsertStack(stack);
             }
             

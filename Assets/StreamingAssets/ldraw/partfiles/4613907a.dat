@@ -1,7 +1,7 @@
 0 Sticker  3.4 x  1.8 with Hieroglyphs and Anubis Head (Left Half)
 0 Name: 4613907a.dat
 0 Author: Christian Neumann [Wesley]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 !HELP place at 0 36 10 -1 0 0 0 0 -1 0 -1 0 on 87544.dat
@@ -9,8 +9,6 @@
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS Pharaoh's Quest, Set 7327
-
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 -0.25 0 18 0 0 0 0.25 0 0 0 34 box5-12.dat
 4 272 -14.45 -0.25 28.5 -15.5 -0.25 27.7 -15.25 -0.25 27.45 -14.2 -0.25 28.05

@@ -1,7 +1,7 @@
 0 Bike 3 Wheel Motorcycle Forks 
 0 Name: 30189.dat
 0 Author: Paul Easter [pneaster]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CW
@@ -16,8 +16,7 @@
 0 !HISTORY 2007-06-07 [PTadmin] Header formatted for Contributor Agreement
 0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
 0 !HISTORY 2015-03-08 [MagFors] Removed ~ from the description, changed category
-0 !HISTORY 2016-06-16 [legolijntje] Fixed a few edgelines
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
+0 !HISTORY 2016-06-16 [Legolijntje] Fixed a few edgelines
 
 1 16 0 -12 0 3.536 0 -3.536 0 1 0 3.536 0 3.536 1-4disc.dat
 1 16 0 -12 0 3.536 0 -3.536 0 4 0 3.536 0 3.536 1-4cyli.dat

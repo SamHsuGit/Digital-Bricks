@@ -1,13 +1,11 @@
-0 Tile  1 x  1 Round with Black "5" Coin Pattern
+0 Tile  1 x  1 Round with 5 Mark Coin Pattern
 0 Name: 98138p0i.dat
 0 Author: Heiko Jelnikar [KlotzKiste]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\98138s01.dat
 1 16 0 0 0 9 0 0 0 1 0 0 0 9 4-4ering.dat
@@ -583,7 +581,7 @@
 4 0 -6.69 0 -2.54 -6.86 0 -1.84 -7.09 0 -2.33 -6.88 0 -3.09
 4 0 -6.88 0 -3.09 -7.09 0 -2.33 -7.27 0 -2.87 -6.96 0 -3.66
 3 0 -7.27 0 -2.87 -7.37 0 -3.38 -6.96 0 -3.66
-4 0 -6.9 0 -4.21 -6.96 0 -3.66 -7.37 0 -3.38 -7.27 0 -4.86
+4 0 -6.9 0 -4.21 -6.96 0 -3.7 -7.37 0 -3.38 -7.27 0 -4.86
 4 0 -8.08 0 -3.34 -7.27 0 -4.86 -7.37 0 -3.38 -7.67 0 -2.98
 4 0 -8.08 0 -3.34 -7.67 0 -2.98 -7.88 0 -2.5 -8.57 0 -1.71
 3 0 -8.57 0 -1.71 -7.88 0 -2.5 -7.98 0 -2.009

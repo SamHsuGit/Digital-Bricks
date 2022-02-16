@@ -1,16 +1,16 @@
 0 ~Cross-Cut Pin for Electric Plug (Type 2) Twin or Single (Needs Work)
 0 Name: u9018.dat
 0 Author: Guy Vivan [guyvivan]
-0 !LDRAW_ORG Part UPDATE 2020-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !CATEGORY Electric
 
+0 !HISTORY 2004-10-23 [GuyVivan] initial version
 0 !HISTORY 2011-07-13 [Steffen]  added needs-work note, retitled
 0 !HISTORY 2012-05-03 [Steffen]  origin correction of pin
-0 !HISTORY 2020-09-05 [PTadmin] Official Update 2020-02
 
 0 // Needs work: Despite their titles and current implementation suggest that,
 0 //             it is unclear if parts u9018.dat, u9019.dat, u9134.dat, u9146.dat

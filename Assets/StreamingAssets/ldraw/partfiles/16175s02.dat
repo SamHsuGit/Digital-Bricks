@@ -1,14 +1,13 @@
-0 ~Minifig Construction Helmet with Hair Short - Hair
+0 ~Minifig Construction Helmet with Hair Short
 0 Name: s\16175s02.dat
 0 Author: Magnus Forsberg [MagFors]
-0 !LDRAW_ORG Subpart UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2014-05-16 {LEGO Digital Designer} Original part shape
 0 !HISTORY 2015-11-15 [MagFors] File preparation for LDraw Parts Tracker
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 3 16 14.3 8.272 -4.645 14.367 5.5 -4.759 11.924 8.058 -7.334
 3 16 14.367 5.5 -4.759 10.953 5.5 -7.196 11.924 8.058 -7.334

@@ -1,14 +1,12 @@
 0 Duplo Arch  2 x 10 x  2
 0 Name: 51704.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Part UPDATE 2018-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !CATEGORY Arch
-
-0 !HISTORY 2018-01-30 [PTadmin] Official Update 2018-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\51704s01.dat
 4 16 -120 96 -40 -120 48 -40 -200 48 -40 -200 96 -40

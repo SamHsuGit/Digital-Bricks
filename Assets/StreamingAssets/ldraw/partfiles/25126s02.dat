@@ -1,14 +1,13 @@
 0 ~Minifig Baby Body Hand
 0 Name: s\25126s02.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Subpart UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2016-10-05 {LEGO Digital Designer} Original part shape
 0 !HISTORY 2016-10-12 [Philo] File preparation for LDraw Parts Tracker
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 4 16 11.497 -19.038 -8.253 9.959 -18.518 -8.564 9.959 -20.372 -8.564 11.497 -20.372 -8.253
 3 16 8.8973 -16.156 -9.2213 8.636 -20.372 -9.447 9.391 -17.66 -8.891

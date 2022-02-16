@@ -1,16 +1,14 @@
 0 Brick  1 x  8 with Chrome Gold "721" Pattern
 0 Name: 3008p0c.dat
 0 Author: Steffen [Steffen]
-0 !LDRAW_ORG Part UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
-0 !KEYWORDS set 721, train
-
 0 !CMDLINE -c0
 
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
+0 !KEYWORDS set 721, train
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3008s01.dat
 

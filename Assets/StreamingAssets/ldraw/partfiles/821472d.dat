@@ -1,14 +1,12 @@
 0 Sticker  3.75 x  1.6 with Red and Blue "28" on White Background with Vertical Blue Line (Right)
 0 Name: 821472d.dat
 0 Author: Damien Roux [Darats]
-0 !LDRAW_ORG Part UPDATE 2016-01
+0 !LDRAW_ORG Unofficial_Part
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !KEYWORDS Set 5521
-
-0 !HISTORY 2016-12-31 [PTadmin] Official Update 2016-01
 
 0 // Top
 1 4 0 -0.25 0 0.25 0 0 0 1 0 0 0 0.25 s\821472as01.dat

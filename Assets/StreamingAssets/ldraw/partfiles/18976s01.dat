@@ -1,12 +1,11 @@
 0 ~Wheel Rim 11 x 18 with Vented Disc Brake -  1/4
 0 Name: s\18976s01.dat
 0 Author: Magnus Forsberg [MagFors]
-0 !LDRAW_ORG Subpart UPDATE 2017-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
-0 !HISTORY 2017-12-30 [PTadmin] Official Update 2017-01
 
 0 // slot
 0 BFC INVERTNEXT

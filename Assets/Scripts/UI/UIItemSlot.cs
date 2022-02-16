@@ -12,13 +12,6 @@ public class UIItemSlot : MonoBehaviour
     public Image slotIcon;
     public Text slotAmount;
 
-    GameObject world;
-
-    private void Awake()
-    {
-        world = GameObject.Find("World");
-    }
-
     public bool HasItem
     {
         get
@@ -49,7 +42,7 @@ public class UIItemSlot : MonoBehaviour
     {
         if (itemSlot != null && itemSlot.HasItem)
         {
-            slotIcon.sprite = world.GetComponent<World>().blocktypes[itemSlot.stack.id].icon;
+            slotIcon.sprite = World.Instance.blocktypes[itemSlot.stack.id].icon;
             slotAmount.text = itemSlot.stack.amount.ToString();
             slotIcon.enabled = true;
             slotAmount.enabled = true;

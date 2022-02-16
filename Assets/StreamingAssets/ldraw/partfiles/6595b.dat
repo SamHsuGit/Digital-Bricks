@@ -1,17 +1,18 @@
 0 ~Wheel 25 x 28 VR with 35mm Diameter Rear Rim without Axle Hole
 0 Name: s\6595b.dat
 0 Author: Jeff Boen [onyx]
-0 !LDRAW_ORG Subpart UPDATE 2019-01
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
+
+0 !KEYWORDS 49.6 x 28 VR
 
 0 !HISTORY 1999-05-24 [PTadmin] Official Update 1999-04
 0 !HISTORY 2007-09-10 [PTadmin] Header formatted for Contributor Agreement
 0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
 0 !HISTORY 2014-11-21 [roland] Auto-corrected with libfix version of LDCad 1.4
 0 !HISTORY 2015-01-13 [Philo] Rebuilt with primitives
-0 !HISTORY 2019-06-28 [PTadmin] Official Update 2019-01
 
 1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\6595a.dat
 1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\6595a.dat

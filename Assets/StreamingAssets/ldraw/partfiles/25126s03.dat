@@ -1,14 +1,13 @@
 0 ~Minifig Baby Body Half
 0 Name: s\25126s03.dat
 0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Subpart UPDATE 2018-02
+0 !LDRAW_ORG Unofficial_Subpart
 0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
 
 0 !HISTORY 2016-10-05 {LEGO Digital Designer} Original part shape
 0 !HISTORY 2016-10-12 [Philo] File preparation for LDraw Parts Tracker
-0 !HISTORY 2018-12-08 [PTadmin] Official Update 2018-02
 
 4 16 10 -11.968 10 7.909 -24 6.994 9.7546 -13.2833 -7.7989 9.884 -12.532 -7.892
 3 16 9.0423 -17.4196 -7.2864 9.7546 -13.2833 -7.7989 7.909 -24 6.994

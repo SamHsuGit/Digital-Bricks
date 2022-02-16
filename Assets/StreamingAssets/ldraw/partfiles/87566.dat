@@ -1,0 +1,24 @@
+0 Minifig Torso Grievous
+0 Name: 87566.dat
+0 Author: Stan Isachenko [angmarec]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Star Wars, General Grievous
+
+0 !HISTORY 2011-11-01 {LEGO Digital Designer} Original part shape
+0 !HISTORY 2011-11-22 [angmarec] File preparation for LDraw Parts Tracker
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\87566s01.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\87566s01.dat
+1 16 5.625 0 0 0 8.75 0 0 0 4 4 0 0 4-4cyli.dat
+1 16 -5.625 0 0 0 -8.75 0 0 0 4 -4 0 0 4-4cyli.dat
+1 16 5.625 0 0 0 8.75 0 0 0 4 4 0 0 4-4edge.dat
+1 16 14.375 0 0 0 8.75 0 0 0 4 4 0 0 4-4edge.dat
+1 16 -5.625 0 0 0 8.75 0 0 0 4 4 0 0 4-4edge.dat
+1 16 -14.375 0 0 0 8.75 0 0 0 4 4 0 0 4-4edge.dat
+1 16 -4.375 -40 0 0 8.75 0 0 0 4 4 0 0 4-4cyli.dat
+1 16 -4.375 -40 0 0 8.75 0 0 0 4 4 0 0 4-4edge.dat
+1 16 4.375 -40 0 0 8.75 0 0 0 4 4 0 0 4-4edge.dat
