@@ -257,6 +257,9 @@ public class World : MonoBehaviour
 
     public void InitSinglePlayers()
     {
+        if (Settings.Platform == 2) // mobile singleplayer (would not load scene, decided to keep as separate scene)
+            return;
+
         if (Settings.OnlinePlay) // network online multiplayer
         {
             if (Settings.Platform == 1) // console singleplayer network play
@@ -264,11 +267,11 @@ public class World : MonoBehaviour
                 XRRigPrefab.SetActive(false);
                 charPrefab.SetActive(false);
             }
-            else if (Settings.Platform == 2) // mobile singleplayer network play
-            {
-                XRRigPrefab.SetActive(true);
-                charPrefab.SetActive(false);
-            }
+            //else if (Settings.Platform == 2) // mobile singleplayer network play (would not load scene, decided to keep as separate scene)
+            //{
+            //    XRRigPrefab.SetActive(true);
+            //    charPrefab.SetActive(false);
+            //}
             else // pc singleplayer network play
             {
                 XRRigPrefab.SetActive(false);
@@ -287,11 +290,11 @@ public class World : MonoBehaviour
                 //XRRigPrefab.SetActive(false); // set in GameManager
                 //charPrefab.SetActive(false); // set in GameManager
             }
-            else if (Settings.Platform == 2) // mobile singleplayer
-            {
-                XRRigPrefab.SetActive(true);
-                charPrefab.SetActive(false);
-            }
+            //else if (Settings.Platform == 2) // mobile singleplayer (would not load scene, decided to keep as separate scene)
+            //{
+            //    XRRigPrefab.SetActive(true);
+            //    charPrefab.SetActive(false);
+            //}
             else if (Settings.Platform == 0 && Settings.SinglePlayer) // pc singleplayer
             {
                 XRRigPrefab.SetActive(false);

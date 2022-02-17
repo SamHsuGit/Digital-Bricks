@@ -65,7 +65,10 @@ public class SetupMenu : MonoBehaviour
         menuElements.SetActive(false);
         loadingText.SetActive(true);
         SaveSettings();
-        SceneManager.LoadScene(3);
+        if (Settings.Platform == 2)
+            SceneManager.LoadScene(5); // mobile loads smaller scene
+        else
+            SceneManager.LoadScene(3);
     }
 
     public void Splitscreen()
@@ -79,7 +82,10 @@ public class SetupMenu : MonoBehaviour
         menuElements.SetActive(false);
         loadingText.SetActive(true);
         SaveSettings();
-        SceneManager.LoadScene(3);
+        if (Settings.Platform == 2)
+            SceneManager.LoadScene(5); // mobile loads smaller scene
+        else
+            SceneManager.LoadScene(3);
     }
 
     public void Online()
@@ -92,7 +98,10 @@ public class SetupMenu : MonoBehaviour
         Settings.SinglePlayer = true;
         menuElements.SetActive(false);
         SaveSettings();
-        SceneManager.LoadScene(3);
+        if (Settings.Platform == 2)
+            SceneManager.LoadScene(5); // mobile loads smaller scene
+        else
+            SceneManager.LoadScene(3);
     }
 
     public void Back()
