@@ -17,7 +17,7 @@ public class Player
         name = _name;
 
         int[] playerStats;
-        if (!Settings.IsMobilePlatform)
+        if (Settings.Platform != 2)
             playerStats = SaveSystem.LoadPlayerStats(player, name, World.Instance.worldData); // load current player stats from save file
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(playerGameObject);
@@ -25,7 +25,7 @@ public class Player
         spawnPosition = new Vector3(playerStats[0], playerStats[1], playerStats[2]); // get player spawn position (move up by 1 to prevent player from glitching thru world???)
 
         // Set player health
-        if (!Settings.IsMobilePlatform)
+        if (Settings.Platform != 2)
         {
             if(player.GetComponent<Health>() != null)
             {

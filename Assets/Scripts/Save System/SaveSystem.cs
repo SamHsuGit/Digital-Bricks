@@ -120,7 +120,7 @@ public static class SaveSystem
     public static int[] GetDefaultPlayerStats(GameObject player)
     {
         int hpMax = 10;
-        if (!Settings.IsMobilePlatform)
+        if (Settings.Platform != 2)
             hpMax = player.GetComponent<Health>().hpMax;
         //Debug.Log(loadPath + playerName + ".playerStats" + " not found. Creating.");
         int[] stats = new int[]

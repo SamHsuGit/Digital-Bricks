@@ -14,7 +14,9 @@ public class NetworkMenu : MonoBehaviour
     public GameObject background;
     public GameObject world;
     public GameObject loadingText;
+    public GameObject gameManagerObject;
 
+    GameManagerScript gameManager;
     NetworkManager manager;
     CanvasGroup networkMenuElementsCanvasGroup;
 
@@ -28,6 +30,7 @@ public class NetworkMenu : MonoBehaviour
         networkMenuElementsCanvasGroup.interactable = true;
         networkAddressInputField.text = SettingsStatic.LoadedSettings.ipAddress;
         background.GetComponent<CanvasGroup>().alpha = 1;
+        gameManager = gameManagerObject.GetComponent<GameManagerScript>();
     }
 
     public void OnHostClient()
@@ -55,6 +58,7 @@ public class NetworkMenu : MonoBehaviour
         }
 
         StatusLabels();
+        gameManager.Setup();
         world.SetActive(true);
     }
 
@@ -80,6 +84,7 @@ public class NetworkMenu : MonoBehaviour
         }
 
         StatusLabels();
+        gameManager.Setup();
         world.SetActive(true);
     }
 
@@ -88,29 +93,6 @@ public class NetworkMenu : MonoBehaviour
         buttonSound.Play();
         SaveSettings();
         SceneManager.LoadScene(2);
-    }
-
-    // Removed button since I did not want to share my IP address with internet
-    public void OnClientConnectToEvent()
-    {
-        SaveSettings();
-
-        if (!NetworkClient.active)
-        {
-            // Client + IP
-            manager.StartClient();
-            networkAddressInputField.text = "myPublicIPAddress";
-            manager.networkAddress = networkAddressInputField.text;
-        }
-        else
-        {
-            // Connecting
-            connectionStatus.text = "Connecting to " + manager.networkAddress + "..";
-        }
-
-        StatusLabels();
-        networkMenuElementsCanvasGroup.alpha = 0;
-        networkMenuElementsCanvasGroup.interactable = false;
     }
 
     // Used to host servers without actually adding a player
@@ -144,6 +126,7 @@ public class NetworkMenu : MonoBehaviour
         }
 
         StatusLabels();
+        gameManager.Setup();
         world.SetActive(true);
     }
 

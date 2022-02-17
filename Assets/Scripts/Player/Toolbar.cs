@@ -37,7 +37,7 @@ public class Toolbar : MonoBehaviour
     private void SetInventoryFromSave() // moved from player to Toolbar to ensure the slots exist before trying to set inventory from save
     {
         int[] playerStats;
-        if (!Settings.IsMobilePlatform)
+        if (Settings.Platform != 2)
             playerStats = SaveSystem.LoadPlayerStats(player, controller.playerName, World.Instance.worldData); // load current player stats from save file
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(player);

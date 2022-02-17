@@ -43,7 +43,7 @@ public class PlayerVoxelCollider : MonoBehaviour
     {
         // called when this gameObject is created
         if (isPlayer)
-            world.PlayerJoined(gameObject);
+            world.JoinPlayer(gameObject);
 
         if (isPlayer)
         {

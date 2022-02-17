@@ -77,8 +77,6 @@ public class GameMenu : MonoBehaviour
 
     private void Update()
     {
-        UpdateHP();
-
         CheckSplitscreenCanvasRenderMode();
 
         if (World.Instance.saving)
@@ -87,9 +85,9 @@ public class GameMenu : MonoBehaviour
             autoSaveIcon.SetActive(false);
     }
 
-    void UpdateHP()
+    public void UpdateHP()
     {
-        hpSlider.value = health.hp / health.hpMax;
+        hpSlider.value = (float)health.hp / (float)health.hpMax;
     }
 
     void CheckSplitscreenCanvasRenderMode()

@@ -13,16 +13,11 @@ public class SetupMenu : MonoBehaviour
     public Toggle toggleFlight;
     public TMP_InputField planetInputField;
     public TMP_InputField seedInputField;
-    public GameObject charObIdle;
     public GameObject modelsObjectToSpin;
     
     public Slider worldRenderDistanceSlider;
     public TextMeshProUGUI worldRenderText;
 
-    public Slider colorSlider;
-    public Dropdown colorSelector;
-    public Dropdown typeSelector;
-    public Material[] playerMaterials;
     public AudioSource buttonSound;
 
     public int index;
@@ -62,29 +57,42 @@ public class SetupMenu : MonoBehaviour
         buttonSound.Play();
     }
 
+    public void SinglePlayer()
+    {
+        buttonSound.Play();
+        Settings.OnlinePlay = false;
+        Settings.SinglePlayer = true;
+        menuElements.SetActive(false);
+        loadingText.SetActive(true);
+        SaveSettings();
+        SceneManager.LoadScene(3);
+    }
+
     public void Splitscreen()
     {
         buttonSound.Play();
         Settings.OnlinePlay = false;
+        if (Settings.Platform == 2) // mobile has no option for splitscreen
+            Settings.SinglePlayer = true;
+        else
+            Settings.SinglePlayer = false;
         menuElements.SetActive(false);
         loadingText.SetActive(true);
         SaveSettings();
-        if (!Settings.IsMobilePlatform)
-            SceneManager.LoadScene(3);
-        else
-            SceneManager.LoadScene(5);
+        SceneManager.LoadScene(3);
     }
 
     public void Online()
     {
         buttonSound.Play();
-        Settings.OnlinePlay = true;
+        if (Settings.Platform == 2) // mobile cannot go online
+            Settings.OnlinePlay = false;
+        else
+            Settings.OnlinePlay = true;
+        Settings.SinglePlayer = true;
         menuElements.SetActive(false);
         SaveSettings();
-        if (!Settings.IsMobilePlatform)
-            SceneManager.LoadScene(3);
-        else
-            SceneManager.LoadScene(5);
+        SceneManager.LoadScene(3);
     }
 
     public void Back()

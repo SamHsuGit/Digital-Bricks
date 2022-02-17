@@ -86,8 +86,7 @@ public class CustomNetworkManager : NetworkManager
     {
         base.OnClientConnect(conn);
 
-        // worldPlayer used to spawn player before world is loaded?
-        world.GetComponent<World>().worldPlayer.transform.position = GetStartPosition().position;
+        //world.GetComponent<World>().defaultSpawnPosition = GetStartPosition().position; // not used to set default Spawn pos in settings
 
         ClientToServerMessage clientMessage;
 
@@ -111,8 +110,9 @@ public class CustomNetworkManager : NetworkManager
     {
         // playerPrefab is the one assigned in the inspector in Network
         // Manager but you can use different prefabs per race for example
-        Transform startPos = GetStartPosition();
-        playerGameObject = Instantiate(charPrefab, startPos.position, startPos.rotation);
+        //Transform startPos = GetStartPosition(); // not used to set default Spawn pos in settings
+        Vector3 startPos = world.GetComponent<World>().defaultSpawnPosition;
+        playerGameObject = Instantiate(charPrefab, startPos, Quaternion.identity);
 
         Controller controller = playerGameObject.GetComponent<Controller>();
 

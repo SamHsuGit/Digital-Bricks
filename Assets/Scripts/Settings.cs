@@ -59,6 +59,7 @@ public class Settings
     // private static variables
     private static bool worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
     private static bool networkPlay = false;
+    private static bool singlePlayer = true;
 
     [Header("Game Data")]
     public string ipAddress;
@@ -88,12 +89,6 @@ public class Settings
     public string playerName;
     public bool flight;
 
-    public static bool IsMobilePlatform
-    {
-        get { return Application.isMobilePlatform; }
-        //get { return true; } // for testing mobile on pc editor
-    }
-
     public static bool WorldLoaded
     {
         get { return worldLoaded; }
@@ -104,6 +99,34 @@ public class Settings
     {
         get { return networkPlay; }
         set {  networkPlay = value; }
+    }
+
+    public static bool SinglePlayer
+    {
+        get { return singlePlayer; }
+        set { singlePlayer = value; }
+    }
+
+    public static int Platform
+    {
+        // available gameplay options
+        // pc singleplayer
+        // pc network
+        // console splitscreen
+        // console network
+        // mobile singleplayer
+        // mobile network
+        get
+        {
+            //return 1; // console
+            //return 2; // mobile
+            if (Application.isMobilePlatform)
+                return 2;
+            else if (Application.isConsolePlatform)
+                return 1;
+            else
+                return 0; // then must be pc
+        }
     }
 
     public static Vector3 DefaultSpawnPosition

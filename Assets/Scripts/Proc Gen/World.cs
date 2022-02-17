@@ -61,6 +61,8 @@ public class World : MonoBehaviour
     public Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
     public string appPath;
     public WorldData worldData;
+    public GameObject XRRigPrefab;
+    public GameObject charPrefab;
 
     private static World _instance;
     private static bool multithreading = true;
@@ -83,7 +85,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
-        if (!Settings.IsMobilePlatform)
+        if (Settings.Platform != 2)
             firstPlayerIndex = 1;
         else
             firstPlayerIndex = 0;
@@ -149,7 +151,7 @@ public class World : MonoBehaviour
     //    SettingsStatic.LoadedSettings.seed = seed;
     //}
 
-    public void PlayerJoined(GameObject playerGameObject)
+    public void JoinPlayer(GameObject playerGameObject)
     {
         Player player;
 
@@ -158,7 +160,7 @@ public class World : MonoBehaviour
             player = new Player(playerGameObject, "WorldPlayer");
             players.Add(player);
         }
-        else if (!Settings.IsMobilePlatform)
+        else if (Settings.Platform != 2)
         {
             player = playerGameObject.GetComponent<Controller>().player;
         }
@@ -171,7 +173,7 @@ public class World : MonoBehaviour
         playerGameObjects.Add(player, player.playerGameObject);
 
         // Set player position from save file
-        if (!Settings.IsMobilePlatform && IsVoxelInWorld(player.spawnPosition)) // if the player position is in world
+        if (Settings.Platform != 2 && IsVoxelInWorld(player.spawnPosition)) // if the player position is in world
         {
             CharacterController charController = playerGameObject.GetComponent<CharacterController>();
             bool playerCharControllerActive = charController.enabled; // save active state of player character controller to reset to old value after teleport
@@ -213,7 +215,7 @@ public class World : MonoBehaviour
         if (worldData.planetNumber == 0 && worldData.seed == 0)
             LDrawImportRuntime.Instance.baseOb.transform.position = LDrawImportRuntime.Instance.importPosition + new Vector3(0, LDrawImportRuntime.Instance.yOffset, 0);
         
-        if (Settings.IsMobilePlatform)
+        if (Settings.Platform == 2)
             blocktypes[25].voxelBoundObject = null;
         else
         {
@@ -230,7 +232,7 @@ public class World : MonoBehaviour
 
         worldPlayer.transform.position = defaultSpawnPosition;
 
-        PlayerJoined(worldPlayer);
+        JoinPlayer(worldPlayer);
 
         if (multithreading)
         {
@@ -246,9 +248,62 @@ public class World : MonoBehaviour
             loadingBackground.GetComponent<CanvasGroup>().alpha = 0;
         }
 
-        Settings.WorldLoaded = true;
-        if(!Settings.IsMobilePlatform)
+        if(Settings.Platform != 2)
             mainCamera.enabled = false;
+
+        Settings.WorldLoaded = true;
+        InitSinglePlayers();
+    }
+
+    public void InitSinglePlayers()
+    {
+        if (Settings.OnlinePlay) // network online multiplayer
+        {
+            if (Settings.Platform == 1) // console singleplayer network play
+            {
+                XRRigPrefab.SetActive(false);
+                charPrefab.SetActive(false);
+            }
+            else if (Settings.Platform == 2) // mobile singleplayer network play
+            {
+                XRRigPrefab.SetActive(true);
+                charPrefab.SetActive(false);
+            }
+            else // pc singleplayer network play
+            {
+                XRRigPrefab.SetActive(false);
+                charPrefab.SetActive(false);
+            }
+        }
+        else
+        {
+            if(Settings.Platform == 1 && Settings.SinglePlayer) // console singleplayer
+            {
+                XRRigPrefab.SetActive(false);
+                charPrefab.SetActive(true);
+            }
+            if (Settings.Platform == 1 && !Settings.SinglePlayer) // console splitscreen
+            {
+                //XRRigPrefab.SetActive(false); // set in GameManager
+                //charPrefab.SetActive(false); // set in GameManager
+            }
+            else if (Settings.Platform == 2) // mobile singleplayer
+            {
+                XRRigPrefab.SetActive(true);
+                charPrefab.SetActive(false);
+            }
+            else if (Settings.Platform == 0 && Settings.SinglePlayer) // pc singleplayer
+            {
+                XRRigPrefab.SetActive(false);
+                charPrefab.SetActive(true);
+            }
+            else if (Settings.Platform == 0 && !Settings.SinglePlayer) // pc splitscreen
+            {
+                //XRRigPrefab.SetActive(false); // set in GameManager
+                //charPrefab.SetActive(false); // set in GameManager
+            }
+        }
+        
     }
 
     public int GetGalaxy(int planetNumber)
@@ -781,7 +836,7 @@ public class World : MonoBehaviour
         // Use perlin noise function for more varied height
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
 
-        if (!Settings.IsMobilePlatform && xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
+        if (Settings.Platform != 2 && xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
             modifications.Enqueue(Structure.GenerateMajorFlora(0, globalPos, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
 
         /* BASIC TERRAIN PASS */
@@ -885,7 +940,7 @@ public class World : MonoBehaviour
                                 VBOorientation.eulerAngles = new Vector3(180, 0, 0); // if VBOImport then flip right side up
                             }
                             GameObject VBO;
-                            if (blockID == 25 && !Settings.IsMobilePlatform)
+                            if (blockID == 25 && Settings.Platform != 2)
                             {
                                 baseOb = blocktypes[blockID].voxelBoundObject;
                                 if (Settings.OnlinePlay)

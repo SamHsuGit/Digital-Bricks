@@ -232,6 +232,7 @@ public class Health : NetworkBehaviour
     public void UpdateHP(int oldValue, int newValue)
     {
         hp = newValue;
+        controller.gameMenu.GetComponent<GameMenu>().UpdateHP();
         SetModelPieceVisibility(modelPieces);
     }
 

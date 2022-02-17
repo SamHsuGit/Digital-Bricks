@@ -33,7 +33,7 @@ public class XRMove : MonoBehaviour
         touchControls.Actions.Touched.started += ctx => StartTouch(ctx);
         touchControls.Actions.Touched.canceled += ctx => EndTouch(ctx);
 
-        world.PlayerJoined(gameObject);
+        world.JoinPlayer(gameObject);
     }
 
     private void StartTouch(InputAction.CallbackContext context)
