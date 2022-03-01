@@ -16,7 +16,7 @@ MonoBehaviour:
   offset: 1231
   scale: 0.06
   terrainHeight: 80
-  terrainScale: 0.1
+  terrainScale: 0.08
   surfaceBlock: 4
   placeFlora: 1
   flora:

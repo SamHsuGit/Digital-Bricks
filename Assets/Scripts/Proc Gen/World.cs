@@ -83,6 +83,8 @@ public class World : MonoBehaviour
     Thread ChunkRedrawThread;
     Camera mainCamera;
 
+    float chunkHeightFactor;
+
     private void Awake()
     {
         if (Settings.Platform != 2)
@@ -125,6 +127,8 @@ public class World : MonoBehaviour
         appPath = Application.persistentDataPath;
         //activateNewChunks = false;
         firstChunkCoord = new ChunkCoord(VoxelData.WorldSizeInChunks / 2, VoxelData.WorldSizeInChunks / 2);
+
+        chunkHeightFactor = (float)VoxelData.ChunkHeight / 96f; // proportionally adjust biome terrain height when chunkHeight is adjusted (heights were calibrated at chunkHeight = 96)
     }
 
     //[Command]
@@ -836,9 +840,8 @@ public class World : MonoBehaviour
         //sumOfHeights /= count;
         //int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
 
-        // Use perlin noise function for more varied height
-        int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
-
+        // Use perlin noise function for more varied height (use chunkHeightFactor to adjust for height of chunk which can change for testing purposes to keep load times under 15 seconds)
+        int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * chunkHeightFactor * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
         if (Settings.Platform != 2 && xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
             modifications.Enqueue(Structure.GenerateMajorFlora(0, globalPos, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
 
@@ -867,7 +870,7 @@ public class World : MonoBehaviour
         {
             foreach (Lode lode in biome.lodes)
             {
-                if (yGlobalPos > lode.minHeight && yGlobalPos < lode.maxHeight && yGlobalPos < terrainHeight)
+                if (yGlobalPos > lode.minHeight && yGlobalPos < VoxelData.ChunkHeight && yGlobalPos < terrainHeight) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
                     if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold))
                         voxelValue = lode.blockID;
             }
