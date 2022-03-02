@@ -69,7 +69,7 @@ public class WorldData
         seed = wD.seed;
     }
 
-    public ChunkData RequestChunk (Vector2Int coord, bool create)
+    public ChunkData RequestChunk (Vector2Int coord)
     {
         ChunkData c;
 
@@ -79,13 +79,9 @@ public class WorldData
             {
                 c = chunks[coord];
             }
-            else if (!create) // If it doesn't exist and we haven't asked it to be created, return null.
+            else // If it doesn't exist, create the chunk then return it.
             {
-                return null;
-            }
-            else // If it doesn't exist and we asked it to be created, create the chunk then return it (slow to load from file).
-            {
-                LoadChunkFromFile(coord); // (THIS IS SLOW/EXPENSIVE)
+                LoadChunkFromFile(coord);
                 c = chunks[coord];
             }
         }
@@ -93,20 +89,21 @@ public class WorldData
         return c;
     }
 
-    public void LoadChunkFromFile(Vector2Int coord)
+    public void LoadChunkFromFile(Vector2Int coord) // assumes chunks.ContainsKey(coord) = false
     {
-        if (chunks.ContainsKey(coord))
-            return;
-
-        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed, coord); // (THIS IS SLOW/EXPENSIVE)
+        // attempt to load the chunk from memory (checks if file exists)
+        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed, coord); // can be slow if loading lots of chunks from memory?
         if (chunk != null)
         {
             chunks.Add(coord, chunk);
             return;
         }
-
-        chunks.Add(coord, new ChunkData(coord));
-        chunks[coord].Populate();
+        else
+        {
+            // generate new chunk data using the GetVoxel procGen algorithm
+            chunks.Add(coord, new ChunkData(coord));
+            chunks[coord].Populate();
+        }
     }
 
     bool IsVoxelInWorld(Vector3 pos)
@@ -134,7 +131,7 @@ public class WorldData
         z *= VoxelData.ChunkWidth;
 
         // Check if the chunk exists. If not, create it.
-        ChunkData chunk = RequestChunk(new Vector2Int(x, z), true);
+        ChunkData chunk = RequestChunk(new Vector2Int(x, z));
 
         // Then create a Vector3Int with the position of our voxel *within* the chunk.
         Vector3Int voxel = new Vector3Int((int)(pos.x -x),(int)pos.y, (int)(pos.z - z));
@@ -159,7 +156,7 @@ public class WorldData
         z *= VoxelData.ChunkWidth;
 
         // Check if the chunk exists. If not, create it.
-        ChunkData chunk = RequestChunk(new Vector2Int(x, z), true);
+        ChunkData chunk = RequestChunk(new Vector2Int(x, z));
 
         // Then create a Vector3Int with the position of our voxel *within* the chunk.
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));

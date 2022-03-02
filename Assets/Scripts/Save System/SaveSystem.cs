@@ -212,7 +212,6 @@ public static class SaveSystem
     public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (SLOW)
     {
         string chunkName = position.x + "-" + position.y;
-
         string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
 
         if (File.Exists(loadPath))
@@ -224,7 +223,7 @@ public static class SaveSystem
             stream.Close();
             return chunkData;
         }
-
-        return null;   
+        else
+            return null;   
     }
 }

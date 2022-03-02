@@ -49,7 +49,7 @@ public class Chunk
         chunkObject.tag = "Chunk";
         position = chunkObject.transform.position;
 
-        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
+        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z));
 
         lock (World.Instance.ChunkDrawThreadLock)
         {

@@ -456,7 +456,7 @@ public class World : MonoBehaviour
         for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
         {
             for (int z = (VoxelData.WorldSizeInChunks / 2) - loadDistance; z < (VoxelData.WorldSizeInChunks / 2) + loadDistance; z++)
-                worldData.LoadChunkFromFile(new Vector2Int(x, z));
+                worldData.RequestChunk(new Vector2Int(x, z));
         }
     }
 
@@ -771,45 +771,33 @@ public class World : MonoBehaviour
         if (worldData.planetNumber == 0 && worldData.seed == 0)
             return 0;
 
-        // If bottom block of chunk, return barrier block
-        if (yGlobalPos == 0)
-            return 0; // Disabled to allow players to fall thru world as unbreakable barrier blocks break immersion)
-
         // Lava/Water level (DO NOT MAKE VOXEL BOUND OBJECT, SIGNIFICANTLY SLOWS DOWN GAME)
         if (yGlobalPos == 1)
-        {
-            //if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.2f) > 0.2f) // determines if water or lava
-            //    return 21; // water
-            //else
-                return worldData.blockIDcore; // planet core block (e.g. lava)
-        }
+            return worldData.blockIDcore; // planet core block (e.g. lava)
 
-        // If between certain height range, return clouds.
-        if (yGlobalPos > VoxelData.ChunkHeight - 15 && yGlobalPos < VoxelData.ChunkHeight - 10)
-        {
-            // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
-            if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
-            {
-                if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.6f)) // light cloud cover
-                    return 4; // blocktype = cloud
-                else
-                    return 0; // blocktype = air
-            }
-            else
-            {
-                if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.4f)) // dense cloud cover
-                    return 4; // blocktype = cloud
-                else
-                    return 0; // blocktype = air
-            }
-        }
+        //// If between certain height range, return clouds.
+        //if (yGlobalPos > VoxelData.ChunkHeight - 15 && yGlobalPos < VoxelData.ChunkHeight - 10)
+        //{
+        //    // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
+        //    if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
+        //    {
+        //        if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.6f)) // light cloud cover
+        //            return 4; // blocktype = cloud
+        //        else
+        //            return 0; // blocktype = air
+        //    }
+        //    else
+        //    {
+        //        if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.4f)) // dense cloud cover
+        //            return 4; // blocktype = cloud
+        //        else
+        //            return 0; // blocktype = air
+        //    }
+        //}
 
         /* BIOME SELECTION PASS */
-        //float sumOfHeights = 0f;
-        //int count = 0;
         float strongestWeight = 0f;
         int strongestBiomeIndex = 0;
-
         foreach (int biomeIndex in worldData.biomes)
         {
             float weight = Noise.Get2DPerlin(xzCoords, biomes[biomeIndex].offset, biomes[biomeIndex].scale);
@@ -820,25 +808,10 @@ public class World : MonoBehaviour
                 strongestWeight = weight;
                 strongestBiomeIndex = biomeIndex;
             }
-
-            //// Get the height of the terrain (for the current biome) and multiply it by its weight.
-            //float height = biomes[i].terrainHeight * Noise.Get2DPerlin(xzCoords, 0, biomes[i].terrainScale) * weight;
-
-            //// If the height value is greater than 0 add it to the sum of heights.
-            //if (height > 0)
-            //{
-            //    sumOfHeights += height;
-            //    count++;
-            //}
         }
-
         // Set biome to the one with the strongest weight.
         Biome biome = biomes[strongestBiomeIndex];
-
-        //// DISABLED TERRAIN SMOOTHING
-        //// Get the average of the heights.
-        //sumOfHeights /= count;
-        //int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
+        //Biome biome = biomes[0];
 
         // Use perlin noise function for more varied height (use chunkHeightFactor to adjust for height of chunk which can change for testing purposes to keep load times under 15 seconds)
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * chunkHeightFactor * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
@@ -876,12 +849,12 @@ public class World : MonoBehaviour
             }
         }
 
-        /* MAJOR FLORA PASS */
+        /* MAJOR FLORA/STRUCTURES PASS */
         if (worldData.isAlive && biome.placeFlora) // only place flora on worlds marked isAlive
         {
             for (int i = 0; i < biome.flora.Length; i++) // for all floras
             {
-                if (yGlobalPos == terrainHeight)
+                if (yGlobalPos == terrainHeight) // only place flora/structures on top of land
                 {
                     if (Noise.Get2DPerlin(xzCoords, 0, biome.flora[i].floraZoneScale) > biome.flora[i].floraZoneThreshold)
                     {

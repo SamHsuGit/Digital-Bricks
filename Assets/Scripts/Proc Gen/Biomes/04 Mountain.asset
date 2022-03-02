@@ -18,7 +18,7 @@ MonoBehaviour:
   terrainHeight: 80
   terrainScale: 0.1
   surfaceBlock: 3
-  placeFlora: 1
+  placeFlora: 0
   flora: []
   lodes:
   - nodeName: Crystals
