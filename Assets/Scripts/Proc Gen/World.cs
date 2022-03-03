@@ -878,7 +878,7 @@ public class World : MonoBehaviour
         }
 
         /* MAJOR FLORA/STRUCTURES PASS */
-        if (worldData.isAlive && biome.placeFlora) // only place flora on worlds marked isAlive
+        if (biome == biomes[11] || (worldData.isAlive && biome.placeFlora)) // only place flora on worlds marked isAlive or if biome is monolith
         {
             for (int i = 0; i < biome.flora.Length; i++) // for all floras
             {

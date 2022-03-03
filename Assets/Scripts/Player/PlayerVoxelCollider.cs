@@ -115,7 +115,7 @@ public class PlayerVoxelCollider : MonoBehaviour
 
         // if we're sprinting, use the sprint multiplier
         if(SettingsStatic.LoadedSettings.flight)
-            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * 3f;
+            velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * 0.1f;
         else if (isSprinting)
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadFactor;
         else

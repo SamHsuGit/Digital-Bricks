@@ -28,6 +28,12 @@ public class DebugScreen : MonoBehaviour
     {
         Vector3 playerPos = player.transform.position;
         Vector2 playerPosXZ = new Vector2(playerPos.x, playerPos.z);
+        string biomeName;
+        if (World.Instance.worldData.isAlive)
+            biomeName = World.Instance.biomes[World.Instance.GetBiome(World.Instance.GetTemperature(playerPosXZ), World.Instance.GetRainfall(playerPosXZ))].biomeName;
+        else
+            biomeName = World.Instance.biomes[World.Instance.biomes.Length - 1].biomeName;
+
         if (World.Instance.worldLoaded && World.Instance.GetChunkFromVector3(playerPos) != null) // don't do this unless the world is loaded and player is in a chunk
         {
             string debugText = frameRate + " fps";
@@ -36,7 +42,7 @@ public class DebugScreen : MonoBehaviour
             debugText += "\n";
             debugText += "Chunk: " + (World.Instance.GetChunkFromVector3(playerPos).coord.x - halfWorldSizeInChunks) + " / " + (World.Instance.GetChunkFromVector3(playerPos).coord.z - halfWorldSizeInChunks);
             debugText += "\n";
-            debugText += "Biome: " + World.Instance.biomes[World.Instance.GetBiome(World.Instance.GetTemperature(playerPosXZ), World.Instance.GetRainfall(playerPosXZ))].biomeName;
+            debugText += "Biome: " + biomeName;
             debugText += "\n";
             debugText += "Y = Show Controls";
 
