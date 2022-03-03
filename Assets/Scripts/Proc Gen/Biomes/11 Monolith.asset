@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: 11 Monolith
   m_EditorClassIdentifier: 
   biomeName: Monolith
-  offset: 3125
-  scale: 0.06
+  offset: 1200
+  scale: 0.08
   terrainHeight: 80
-  terrainScale: 0.08
+  terrainScale: 0.2
   surfaceBlock: 2
   placeFlora: 1
   flora:

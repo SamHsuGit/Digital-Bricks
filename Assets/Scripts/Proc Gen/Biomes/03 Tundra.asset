@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 03 Tundra
   m_EditorClassIdentifier: 
   biomeName: Tundra
-  offset: 111
-  scale: 0.07
+  offset: 444
+  scale: 0.08
   terrainHeight: 80
   terrainScale: 0.08
   surfaceBlock: 4

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: 10 Swamp
   m_EditorClassIdentifier: 
   biomeName: Swamp
-  offset: 1231
-  scale: 0.06
+  offset: 1100
+  scale: 0.08
   terrainHeight: 80
-  terrainScale: 0.08
+  terrainScale: 0.01
   surfaceBlock: 15
   placeFlora: 1
   flora:

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: 06 Taiga
   m_EditorClassIdentifier: 
   biomeName: Taiga
-  offset: 111
-  scale: 0.07
+  offset: 777
+  scale: 0.08
   terrainHeight: 80
-  terrainScale: 0.08
+  terrainScale: 0.2
   surfaceBlock: 4
   placeFlora: 1
   flora:

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: 08 Fall Forest2
   m_EditorClassIdentifier: 
   biomeName: Fall Forest
-  offset: 2222
-  scale: 0.07
+  offset: 999
+  scale: 0.08
   terrainHeight: 80
-  terrainScale: 0.08
+  terrainScale: 0.2
   surfaceBlock: 28
   placeFlora: 1
   flora:
