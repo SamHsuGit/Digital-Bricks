@@ -796,25 +796,25 @@ public class World : MonoBehaviour
         if (yGlobalPos == 1)
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
-        //// If between certain height range, return clouds.
-        //if (yGlobalPos > VoxelData.ChunkHeight - 15 && yGlobalPos < VoxelData.ChunkHeight - 10)
-        //{
-        //    // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
-        //    if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
-        //    {
-        //        if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.6f)) // light cloud cover
-        //            return 4; // blocktype = cloud
-        //        else
-        //            return 0; // blocktype = air
-        //    }
-        //    else
-        //    {
-        //        if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.4f)) // dense cloud cover
-        //            return 4; // blocktype = cloud
-        //        else
-        //            return 0; // blocktype = air
-        //    }
-        //}
+        // If between certain height range, return clouds.
+        if (yGlobalPos > VoxelData.ChunkHeight - 15 && yGlobalPos < VoxelData.ChunkHeight - 10)
+        {
+            // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
+            if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
+            {
+                if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.6f)) // light cloud cover
+                    return 4; // blocktype = cloud
+                else
+                    return 0; // blocktype = air
+            }
+            else
+            {
+                if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.4f)) // dense cloud cover
+                    return 4; // blocktype = cloud
+                else
+                    return 0; // blocktype = air
+            }
+        }
 
         /* BIOME SELECTION PASS */
         //float strongestWeight = 0f;

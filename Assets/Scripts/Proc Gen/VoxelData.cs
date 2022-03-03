@@ -5,7 +5,7 @@ using UnityEngine;
 public static class VoxelData
 {
 	public static readonly int ChunkWidth = 16; // Lego World Chunk = 32x32 studs = 16x16 blocks
-	public static readonly int ChunkHeight = 256; // original Minecraft World Height Limit = 128, found that a smaller chunkHeight is needed to reduce world load times to under 15 seconds
+	public static readonly int ChunkHeight = 96; // original Minecraft World Height Limit = 128, found that a smaller chunkHeight is needed to reduce world load times to under 15 seconds
 	public static readonly int WorldSizeInChunks = 5000; // Lego Worlds "Medium" world size = 100x100 chunks, 5000x16 = 80,000 bricks (meters) long / 25 mps = 3,200s to fly across world (1,600s from center to border)
 	public static readonly float voxelWidth = 1.0f;
 	public static readonly float voxelHeight = 1.0f;
