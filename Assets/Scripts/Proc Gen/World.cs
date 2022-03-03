@@ -913,6 +913,13 @@ public class World : MonoBehaviour
     {
         // based on https://minecraft.fandom.com/wiki/Biome
 
+        // From https://minecraft.fandom.com/wiki/Anvil_file_format
+        // Minecraft Biomes are saved per X,Z column, rather than being calculated on the fly, which means they can be altered by tools
+        // This is useful for map makers. It also prevents bugs where features don't match the biome after changing the terrain algorithm. (Also known as "Biome Shifting").
+        // Each Minecraft chunk has a 16×16 byte array with biome IDs called "Biomes".
+        // If this array is missing it is filled when the game starts, as well any - 1 values in the array.
+        // The converter source provided for developers doesn't include any biome sources, however.
+
         if (rainfall > 0 && rainfall < 0.25f) // (dry)
         {
             if (temperature > 0.75f && temperature < 1.0f) // (freezing)

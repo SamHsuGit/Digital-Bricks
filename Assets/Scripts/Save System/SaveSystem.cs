@@ -4,6 +4,27 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 
+// NOTES
+// https://minecraft.fandom.com/wiki/Chunk_format
+// https://wiki.vg/NBT
+// https://gaming.stackexchange.com/questions/263816/what-is-the-average-disk-storage-size-of-a-minecraft-chunk#:~:text=This%20format%20stores%20each%20block,chunk%20area%20per%20mcanvil%2Dfile.
+//Each voxel has a voxelState byte (8 bits = 2^8 = 256 blockIDs)
+//Each Chunk has 16x16x96 voxels = 24,576 bytes
+//Therefore, each chunk file should be only 24 KB (actual is 361 KB for 96 chunkHeight, 961 KB for 256 chunkHeight, 15 times larger, perhaps due to Unity Serialization and no compression
+//Would chunk data compression slow down performance?
+//Condense memory usage using run length encoding? Is list of bytes more performant than byte array?
+//World data = dictionary <Vector2Int, chunkData>
+//ChunkData map = (3D Byte Array) Byte[16, 96, 16]
+//VoxelState = (byte)(0 - 256) blockID
+
+//Minecraft Optimizations:
+//Minecraft uses Named Binary Tag Format to efficiently store binary data related to chunks in region files
+//Minecraft Chunks were originally stored as individual ".dat" files with the chunk position encoded in Base36
+//MCRegion began storing groups of 32×32 chunks in individual ".mcr" files with coordinates in Base10 to reduce disk usage by cutting down on the number of file handles Minecraft had open at once (because Minecraft is constantly reading/writing to world data as it saves in run-time and ran up against a hard limit of 1024 open handles)
+//Minecraft Anvil Format changed the max build height to 256 and empty sections were no longer saved or loaded to disk
+//max # Block IDs was increased to 4096 (was 256) by adding a 4-bit data layer (similar to how meta data is stored).
+//Minecraft Block ordering was been changed from XZY to YZX in order to improve compression.
+
 public static class SaveSystem
 {
     public static void SaveWorld(WorldData world)
