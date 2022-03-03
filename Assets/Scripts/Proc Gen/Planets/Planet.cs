@@ -10,12 +10,18 @@ public class Planet : ScriptableObject
     [Header("Surface Attributes")]
     public byte blockIDsubsurface;
     public byte blockIDcore;
-    public byte blockIDForest;
-    public byte blockIDGrasslands;
-    public byte blockIDDesert;
-    public byte blockIDDeadForest;
-    public byte blockIDHugeTree;
-    public byte blockIDMountain;
+    public byte blockIDBiome00;
+    public byte blockIDBiome01;
+    public byte blockIDBiome02;
+    public byte blockIDBiome03;
+    public byte blockIDBiome04;
+    public byte blockIDBiome05;
+    public byte blockIDBiome06;
+    public byte blockIDBiome07;
+    public byte blockIDBiome08;
+    public byte blockIDBiome09;
+    public byte blockIDBiome10;
+    public byte blockIDBiome11;
     [Header("Flora Attributes")]
     public bool hasAtmosphere;
     public bool isAlive; // controls if the world is hospitable to flora

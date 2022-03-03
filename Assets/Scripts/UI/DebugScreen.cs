@@ -26,13 +26,17 @@ public class DebugScreen : MonoBehaviour
 
     void Update()
     {
-        if (World.Instance.worldLoaded && World.Instance.GetChunkFromVector3(player.transform.position) != null) // don't do this unless the world is loaded and player is in a chunk
+        Vector3 playerPos = player.transform.position;
+        Vector2 playerPosXZ = new Vector2(playerPos.x, playerPos.z);
+        if (World.Instance.worldLoaded && World.Instance.GetChunkFromVector3(playerPos) != null) // don't do this unless the world is loaded and player is in a chunk
         {
             string debugText = frameRate + " fps";
             debugText += "\n";
-            debugText += "XYZ: " + (Mathf.FloorToInt(player.transform.position.x) - halfWorldSizeInVoxels) + " / " + Mathf.FloorToInt(player.transform.position.y) + " / " + (Mathf.FloorToInt(player.transform.position.z) - halfWorldSizeInVoxels);
+            debugText += "XYZ: " + (Mathf.FloorToInt(playerPos.x) - halfWorldSizeInVoxels) + " / " + Mathf.FloorToInt(playerPos.y) + " / " + (Mathf.FloorToInt(playerPos.z) - halfWorldSizeInVoxels);
             debugText += "\n";
-            debugText += "Chunk: " + (World.Instance.GetChunkFromVector3(player.transform.position).coord.x - halfWorldSizeInChunks) + " / " + (World.Instance.GetChunkFromVector3(player.transform.position).coord.z - halfWorldSizeInChunks);
+            debugText += "Chunk: " + (World.Instance.GetChunkFromVector3(playerPos).coord.x - halfWorldSizeInChunks) + " / " + (World.Instance.GetChunkFromVector3(playerPos).coord.z - halfWorldSizeInChunks);
+            debugText += "\n";
+            debugText += "Biome: " + World.Instance.biomes[World.Instance.GetBiome(World.Instance.GetTemperature(playerPosXZ), World.Instance.GetRainfall(playerPosXZ))].biomeName;
             debugText += "\n";
             debugText += "Y = Show Controls";
 

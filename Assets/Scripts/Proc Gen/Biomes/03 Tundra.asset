@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 01 Grassland
+  m_Name: 03 Tundra
   m_EditorClassIdentifier: 
-  biomeName: 01 Grassland
-  offset: 2222
+  biomeName: Tundra
+  offset: 111
   scale: 0.07
   terrainHeight: 80
   terrainScale: 0.08
-  surfaceBlock: 27
+  surfaceBlock: 4
   placeFlora: 1
   flora:
-  - name: Small Mushroom
-    floraIndex: 7
+  - name: Grass
+    floraIndex: 6
     floraZoneScale: 1.3
     floraZoneThreshold: 0.7
     floraPlacementScale: 15
@@ -30,16 +30,6 @@ MonoBehaviour:
     maxHeight: 0
     minRadius: 0
     maxRadius: 0
-  - name: Tree
-    floraIndex: 2
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
-    minHeight: 7
-    maxHeight: 13
-    minRadius: 4
-    maxRadius: 6
   lodes:
   - nodeName: Crystals
     blockID: 30

@@ -15,15 +15,21 @@ MonoBehaviour:
   distToStar: 8
   blockIDsubsurface: 18
   blockIDcore: 18
-  blockIDForest: 18
-  blockIDGrasslands: 18
-  blockIDDesert: 18
-  blockIDDeadForest: 18
-  blockIDHugeTree: 18
-  blockIDMountain: 18
+  blockIDBiome00: 18
+  blockIDBiome01: 18
+  blockIDBiome02: 18
+  blockIDBiome03: 18
+  blockIDBiome04: 18
+  blockIDBiome05: 18
+  blockIDBiome06: 18
+  blockIDBiome07: 18
+  blockIDBiome08: 18
+  blockIDBiome09: 18
+  blockIDBiome10: 18
+  blockIDBiome11: 18
   hasAtmosphere: 1
   isAlive: 0
-  biomes: 0000000001000000020000000300000004000000
+  biomes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
   blockIDTreeLeavesWinter: 4
   blockIDTreeLeavesSpring: 29
   blockIDTreeLeavesSummer: 29

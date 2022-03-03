@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 00 Forest
+  m_Name: 10 Swamp
   m_EditorClassIdentifier: 
-  biomeName: 00 Forest
-  offset: 111
-  scale: 0.07
+  biomeName: Swamp
+  offset: 1231
+  scale: 0.06
   terrainHeight: 80
   terrainScale: 0.08
-  surfaceBlock: 28
+  surfaceBlock: 15
   placeFlora: 1
   flora:
   - name: Small Mushroom
@@ -30,16 +30,16 @@ MonoBehaviour:
     maxHeight: 0
     minRadius: 0
     maxRadius: 0
-  - name: Evergreen
-    floraIndex: 10
+  - name: Giant Mushroom
+    floraIndex: 4
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.1
+    floraZoneThreshold: 0.6
     floraPlacementScale: 15
-    floraPlacementThreshold: 0.81
-    minHeight: 13
-    maxHeight: 30
-    minRadius: 5
-    maxRadius: 10
+    floraPlacementThreshold: 0.83
+    minHeight: 2
+    maxHeight: 15
+    minRadius: 1
+    maxRadius: 6
   lodes:
   - nodeName: Crystals
     blockID: 30

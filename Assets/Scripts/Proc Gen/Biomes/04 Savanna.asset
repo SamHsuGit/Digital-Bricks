@@ -10,36 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 02 Desert
+  m_Name: 04 Savanna
   m_EditorClassIdentifier: 
-  biomeName: 02 Desert
-  offset: 3333
+  biomeName: Savanna
+  offset: 2222
   scale: 0.07
   terrainHeight: 80
-  terrainScale: 0.01
-  surfaceBlock: 9
+  terrainScale: 0.08
+  surfaceBlock: 12
   placeFlora: 1
   flora:
-  - name: Cactus
-    floraIndex: 3
+  - name: Grass
+    floraIndex: 6
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: TreeSavanna
+    floraIndex: 15
     floraZoneScale: 1.06
     floraZoneThreshold: 0.6
     floraPlacementScale: 8
     floraPlacementThreshold: 0.83
     minHeight: 7
     maxHeight: 13
-    minRadius: 1
-    maxRadius: 1
-  - name: Column
-    floraIndex: 13
-    floraZoneScale: 1.1
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 5
-    floraPlacementThreshold: 0.8
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
+    minRadius: 4
+    maxRadius: 6
   lodes:
   - nodeName: Crystals
     blockID: 30

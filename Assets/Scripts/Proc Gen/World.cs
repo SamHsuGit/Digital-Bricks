@@ -14,6 +14,9 @@ public class World : MonoBehaviour
     public bool undrawVoxels = false;
     public bool VBOs = true;
     public bool chunkMeshColliders = true;
+    public float temperature;
+    public float rainfall;
+    public Biome biome;
 
     public GameObject mainCameraGameObject;
     public Lighting globalLighting;
@@ -357,12 +360,18 @@ public class World : MonoBehaviour
 
             worldData.blockIDsubsurface = planet.blockIDsubsurface;
             worldData.blockIDcore = planet.blockIDcore;
-            worldData.blockIDForest = planet.blockIDForest;
-            worldData.blockIDGrasslands = planet.blockIDGrasslands;
-            worldData.blockIDDesert = planet.blockIDDesert;
-            worldData.blockIDDeadForest = planet.blockIDDeadForest;
-            worldData.blockIDHugeTree = planet.blockIDHugeTree;
-            worldData.blockIDMountain = planet.blockIDMountain;
+            worldData.blockIDBiome00 = planet.blockIDBiome00;
+            worldData.blockIDBiome01 = planet.blockIDBiome01;
+            worldData.blockIDBiome02 = planet.blockIDBiome02;
+            worldData.blockIDBiome03 = planet.blockIDBiome03;
+            worldData.blockIDBiome04 = planet.blockIDBiome04;
+            worldData.blockIDBiome05 = planet.blockIDBiome05;
+            worldData.blockIDBiome06 = planet.blockIDBiome06;
+            worldData.blockIDBiome07 = planet.blockIDBiome07;
+            worldData.blockIDBiome08 = planet.blockIDBiome08;
+            worldData.blockIDBiome09 = planet.blockIDBiome09;
+            worldData.blockIDBiome10 = planet.blockIDBiome10;
+            worldData.blockIDBiome11 = planet.blockIDBiome11;
             worldData.hasAtmosphere = planet.hasAtmosphere;
             worldData.isAlive = planet.isAlive; // controls if the world is hospitable to flora
             worldData.biomes = planet.biomes; // controls which biomes the world has
@@ -404,12 +413,18 @@ public class World : MonoBehaviour
             // Default ProcGen values based on seed
             worldData.blockIDsubsurface = (byte)Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDcore = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDForest = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDGrasslands = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDDesert = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDDeadForest = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDHugeTree = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDMountain = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome00 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome01 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome02 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome03 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome04 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome05 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome06 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome07 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome08 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome09 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome10 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome11 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
             if (worldData.distToStar < 2 || worldData.distToStar > 5) // if distToStar is too close or far (too hot/cold)
             {
                 worldData.hasAtmosphere = false; // world has no atmosphere
@@ -439,12 +454,18 @@ public class World : MonoBehaviour
             worldData.blockIDColumn = (byte)Random.Range(minRandBlockID, maxRandBlockID);
         }
 
-        biomes[0].surfaceBlock = worldData.blockIDForest;
-        biomes[1].surfaceBlock = worldData.blockIDGrasslands;
-        biomes[2].surfaceBlock = worldData.blockIDDesert;
-        biomes[3].surfaceBlock = worldData.blockIDDeadForest;
-        biomes[4].surfaceBlock = worldData.blockIDHugeTree;
-        biomes[5].surfaceBlock = worldData.blockIDMountain;
+        biomes[0].surfaceBlock = worldData.blockIDBiome00;
+        biomes[1].surfaceBlock = worldData.blockIDBiome01;
+        biomes[2].surfaceBlock = worldData.blockIDBiome02;
+        biomes[3].surfaceBlock = worldData.blockIDBiome03;
+        biomes[4].surfaceBlock = worldData.blockIDBiome04;
+        biomes[5].surfaceBlock = worldData.blockIDBiome05;
+        biomes[6].surfaceBlock = worldData.blockIDBiome06;
+        biomes[7].surfaceBlock = worldData.blockIDBiome07;
+        biomes[8].surfaceBlock = worldData.blockIDBiome08;
+        biomes[9].surfaceBlock = worldData.blockIDBiome09;
+        biomes[10].surfaceBlock = worldData.blockIDBiome10;
+        biomes[11].surfaceBlock = worldData.blockIDBiome11;
     }
 
     public void LoadWorld()
@@ -456,7 +477,7 @@ public class World : MonoBehaviour
         for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
         {
             for (int z = (VoxelData.WorldSizeInChunks / 2) - loadDistance; z < (VoxelData.WorldSizeInChunks / 2) + loadDistance; z++)
-                worldData.RequestChunk(new Vector2Int(x, z));
+                worldData.LoadChunkFromFile(new Vector2Int(x, z));
         }
     }
 
@@ -796,22 +817,29 @@ public class World : MonoBehaviour
         //}
 
         /* BIOME SELECTION PASS */
-        float strongestWeight = 0f;
-        int strongestBiomeIndex = 0;
-        foreach (int biomeIndex in worldData.biomes)
-        {
-            float weight = Noise.Get2DPerlin(xzCoords, biomes[biomeIndex].offset, biomes[biomeIndex].scale);
+        //float strongestWeight = 0f;
+        //int strongestBiomeIndex = 0;
+        //foreach (int biomeIndex in worldData.biomes)
+        //{
+        //    float weight = Noise.Get2DPerlin(xzCoords, biomes[biomeIndex].offset, biomes[biomeIndex].scale); // for some reason this takes a lot of processing power (runs 4 times)
 
-            // Keep track of which weight is strongest.
-            if (weight > strongestWeight)
-            {
-                strongestWeight = weight;
-                strongestBiomeIndex = biomeIndex;
-            }
-        }
-        // Set biome to the one with the strongest weight.
-        Biome biome = biomes[strongestBiomeIndex];
-        //Biome biome = biomes[0];
+        //    // Keep track of which weight is strongest.
+        //    if (weight > strongestWeight)
+        //    {
+        //        strongestWeight = weight;
+        //        strongestBiomeIndex = biomeIndex;
+        //    }
+        //}
+        //// Set biome to the one with the strongest weight.
+        //Biome biome = biomes[strongestBiomeIndex];
+
+        temperature = GetTemperature(xzCoords);
+        rainfall = GetRainfall(xzCoords);
+
+        if (!worldData.isAlive)
+            biome = biomes[11];
+        else
+            biome = biomes[GetBiome(temperature, rainfall)];
 
         // Use perlin noise function for more varied height (use chunkHeightFactor to adjust for height of chunk which can change for testing purposes to keep load times under 15 seconds)
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * chunkHeightFactor * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
@@ -827,9 +855,9 @@ public class World : MonoBehaviour
             return 0;
         else if (yGlobalPos == terrainHeight) // if surface block
         {
-            if (season == 1)
-                voxelValue = worldData.blockIDTreeLeavesWinter; // snow for winter season
-            else
+            //if (season == 1)
+            //    voxelValue = worldData.blockIDTreeLeavesWinter; // snow for winter season (DISABLED since we have winter biomes)
+            //else
                 voxelValue = biome.surfaceBlock;
         }
         else // must be subsurface block
@@ -869,6 +897,66 @@ public class World : MonoBehaviour
         }
 
         return voxelValue;
+    }
+
+    public float GetTemperature(Vector2 _xzCoords)
+    {
+        return Noise.Get2DPerlin(_xzCoords, 6666, 0.06f);
+    }
+
+    public float GetRainfall(Vector2 _xzCoords)
+    {
+        return Noise.Get2DPerlin(_xzCoords, 2222, 0.07f);
+    }
+
+    public int GetBiome(float temperature, float rainfall)
+    {
+        // based on https://minecraft.fandom.com/wiki/Biome
+
+        if (rainfall > 0 && rainfall < 0.25f) // (dry)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 0;
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 1;
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 2;
+            else // assumes value is between 0f and 0.25f (hot)
+                return 3;
+        }
+        else if (rainfall > 0.25f && rainfall < 0.5f) // (temperate)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 4;
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 5;
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 6;
+            else // assumes value is between 0f and 0.25f (hot)
+                return 3;
+        }
+        else if (rainfall > 0.5f && rainfall < 0.75f) // (damp)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 7;
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 8;
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 6;
+            else // assumes value is between 0f and 0.25f (hot)
+                return 3;
+        }
+        else // assumes value is between 0.75f and 1f (wet)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 9;
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 10;
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 6;
+            else // assumes value is between 0f and 0.25f (hot)
+                return 3;
+        }
     }
 
     public void AddObjectsToChunk(ChunkCoord chunkCoord)
