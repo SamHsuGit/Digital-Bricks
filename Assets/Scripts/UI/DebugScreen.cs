@@ -30,7 +30,7 @@ public class DebugScreen : MonoBehaviour
         Vector2 playerPosXZ = new Vector2(playerPos.x, playerPos.z);
         string biomeName;
         if (World.Instance.worldData.isAlive)
-            biomeName = World.Instance.biomes[World.Instance.GetBiome(World.Instance.GetTemperature(playerPosXZ), World.Instance.GetRainfall(playerPosXZ))].biomeName;
+            biomeName = World.Instance.biomes[World.Instance.GetBiome(World.Instance.GetTemperature(playerPosXZ), World.Instance.GetHumidity(playerPosXZ))].biomeName;
         else
             biomeName = World.Instance.biomes[World.Instance.biomes.Length - 1].biomeName;
 

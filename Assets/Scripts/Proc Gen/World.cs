@@ -15,10 +15,16 @@ public class World : MonoBehaviour
     public bool VBOs = true;
     public bool chunkMeshColliders = true;
 
+    public Vector2[] continentalnessSplinePoints;
+
     // Cached Perlin Noise Map Values
     public int terrainHeight = 0; // defines height of terrain
-    public float temperature = 0; // defines biome
-    public float rainfall = 0; // defines biome + cloud density
+    public bool isAir = false; // used for 3D Perlin Noise pass
+    public float c = 0; // continentalness, defines distance from ocean
+    public float e = 0; // erosion, defines how mountainous the terrain is
+    public float pv = 0; // peaks and valleys
+    public float t = 0; // temperature, defines biome
+    public float h = 0; // humidity, defines biome + cloud density
     public float fertility = 0; // defines surfaceOb size
     public float percolation = 0; // defines surfaceOb size
     public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers)
@@ -140,6 +146,14 @@ public class World : MonoBehaviour
         firstChunkCoord = new ChunkCoord(VoxelData.WorldSizeInChunks / 2, VoxelData.WorldSizeInChunks / 2);
 
         chunkHeightFactor = (float)VoxelData.ChunkHeight / 96f; // proportionally adjust biome terrain height when chunkHeight is adjusted (heights were calibrated at chunkHeight = 96)
+
+        continentalnessSplinePoints = new Vector2[] 
+        {
+            new Vector2(-1.0f, 50f), 
+            new Vector2(0.3f, 100f), 
+            new Vector2(0.4f, 150f), 
+            new Vector2(1.0f, 150f)
+        };
     }
 
     //[Command]
@@ -803,13 +817,13 @@ public class World : MonoBehaviour
         if (yGlobalPos == 1)
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
-        rainfall = GetRainfall(xzCoords); // used to determine cloud density
+        h = GetHumidity(xzCoords); // used to determine cloud density
 
         // If between certain height range, return clouds.
         if (yGlobalPos > VoxelData.ChunkHeight - 15 && yGlobalPos < VoxelData.ChunkHeight - 10)
         {
             // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
-            if (rainfall > 0.2f) // determines if cloud cover is dense or not
+            if (h > 0.2f) // determines if cloud cover is dense or not
             {
                 if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.6f)) // light cloud cover
                     return 4; // blocktype = cloud
@@ -826,14 +840,16 @@ public class World : MonoBehaviour
         }
 
         /* BIOME SELECTION PASS */
-        temperature = GetTemperature(xzCoords); // used temperature and rainfall to determine biome instead of running 2DPerlin Noise for each biome (expensive)
+        t = GetTemperature(xzCoords); // used temperature and humidity to determine biome instead of running 2DPerlin Noise for each biome (expensive)
         if (!worldData.isAlive)
             biome = biomes[11];
         else
-            biome = biomes[GetBiome(temperature, rainfall)];
+            biome = biomes[GetBiome(t, h)];
 
         // Use perlin noise function for more varied height (use chunkHeightFactor to adjust for height of chunk which can change for testing purposes to keep load times under 15 seconds)
-        int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * chunkHeightFactor * Noise.Get2DPerlin(new Vector2(xzCoords.x, xzCoords.y), 0, biome.terrainScale)) + solidGroundHeight;
+        terrainHeight = GetTerrainHeightOld(xzCoords);
+        isAir = GetTerrainBool(xzCoords); //redo get terrain height to be a function of continentalness
+
         if (Settings.Platform != 2 && xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
             modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, fertility)); // make base at center of first chunk at terrain height
 
@@ -974,12 +990,84 @@ public class World : MonoBehaviour
         return voxelValue;
     }
 
+    public int GetTerrainHeightOld(Vector2 _xzCoords)
+    {
+        return Mathf.FloorToInt(biome.terrainHeight * chunkHeightFactor * Noise.Get2DPerlin(_xzCoords, 0, biome.terrainScale)) + solidGroundHeight;
+    }
+
+    public bool GetTerrainBool(Vector2 _xzCoords)
+    {
+        float terrainHeightC = GetTerrainHeightC(_xzCoords);
+        float terrainHeightE = GetTerrainHeightE(_xzCoords);
+        float terrainHeightPV = GetTerrainHeightPV(_xzCoords);
+
+        
+        // heightOffset
+        // squashing factor (low squashing factor exposes 3D noise)
+        // input continentalness, erosion, peaks & valleys --> output terrainHeight and terrainScale independent of biome
+        return Noise.Get3DPerlin(_xzCoords, biome.terrainHeight, biome.terrainScale, 0.6f);
+    }
+
+    public float GetC(Vector2 _xzCoords)
+    {
+        // generate 2D Perlin Noise value for continentalness based on xzCorods
+        return Noise.Get2DPerlin(_xzCoords, 0, 0.08f);
+    }
+
+    public float GetTerrainHeightC(Vector2 _xzCoords)
+    {
+        c = GetC(_xzCoords);
+
+        // figure out which spline points the continentalness is between
+        // use the corresponding linearly interpolated value in that range to return a terrain height
+
+        float _terrainHeight = 1f; // function of spline points on graph
+
+        return _terrainHeight;
+    }
+
+    public float GetE(Vector2 _xzCoords)
+    {
+        // generate 2D Perlin Noise value for erosion based on xzCorods
+        return Noise.Get2DPerlin(_xzCoords, 0, 0.08f);
+    }
+
+    public float GetTerrainHeightE(Vector2 _xzCoords)
+    {
+        float e = GetE(_xzCoords);
+
+        // figure out which spline points the erosion is between
+        // use the corresponding linearly interpolated value in that range to return a terrain height
+
+        float _terrainHeight = 1f; // function of spline points on graph
+
+        return _terrainHeight;
+    }
+
+    public float GetPV(Vector2 _xzCoords)
+    {
+        // generate 2D Perlin Noise value for pv based on xzCorods
+        return Noise.Get2DPerlin(_xzCoords, 0, 0.08f);
+    }
+
+    public float GetTerrainHeightPV(Vector2 _xzCoords)
+    {
+        pv = GetPV(_xzCoords);
+
+        // figure out which spline points the pv is between
+        // use the corresponding linearly interpolated value in that range to return a terrain height
+
+        float _terrainHeight = 1f; // function of spline points on graph
+
+        return _terrainHeight;
+    }
+
     public float GetTemperature(Vector2 _xzCoords)
     {
         return Noise.Get2DPerlin(_xzCoords, 6666, 0.06f); // ideally only call this once because it is expensive to implement in update function
     }
 
-    public float GetRainfall(Vector2 _xzCoords)
+    public float GetHumidity(Vector2 _xzCoords)
     {
         return Noise.Get2DPerlin(_xzCoords, 2222, 0.07f); // ideally only call this once because it is expensive to implement in update function
     }
@@ -999,7 +1087,7 @@ public class World : MonoBehaviour
         return Noise.Get2DPerlin(_xzCoords, 321, 10f); // ideally only call this once because it is expensive to implement in update function
     }
 
-    public int GetBiome(float temperature, float rainfall)
+    public int GetBiome(float _temperature, float _humidity)
     {
         // based on https://minecraft.fandom.com/wiki/Biome
 
@@ -1010,46 +1098,46 @@ public class World : MonoBehaviour
         // If this array is missing it is filled when the game starts, as well any - 1 values in the array.
         // The converter source provided for developers doesn't include any biome sources, however.
 
-        if (rainfall > 0 && rainfall < 0.25f) // (dry)
+        if (_humidity > 0 && _humidity < 0.25f) // (dry)
         {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
                 return 0;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
                 return 1;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
                 return 2;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
         }
-        else if (rainfall > 0.25f && rainfall < 0.5f) // (temperate)
+        else if (_humidity > 0.25f && _humidity < 0.5f) // (temperate)
         {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
                 return 4;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
                 return 5;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
                 return 6;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
         }
-        else if (rainfall > 0.5f && rainfall < 0.75f) // (damp)
+        else if (_humidity > 0.5f && _humidity < 0.75f) // (damp)
         {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
                 return 7;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
                 return 8;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
                 return 6;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
         }
         else // assumes value is between 0.75f and 1f (wet)
         {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
                 return 9;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
                 return 10;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
                 return 6;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
