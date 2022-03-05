@@ -16,10 +16,66 @@ MonoBehaviour:
   offset: 1200
   scale: 0.08
   terrainHeight: 80
-  terrainScale: 0.2
+  terrainScale: 0.12
   surfaceBlock: 2
   placeFlora: 1
-  flora:
+  smallStructures:
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  mediumStructures:
+  - name: Boulder
+    floraIndex: 17
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  largeStructures:
+  - name: HoneyComb
+    floraIndex: 11
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.8
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.3
+    minHeight: 13
+    maxHeight: 30
+    minRadius: 0
+    maxRadius: 0
+  - name: Monolith
+    floraIndex: 5
+    floraZoneScale: 1.2
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 5
+    floraPlacementThreshold: 0.88
+    minHeight: 1
+    maxHeight: 30
+    minRadius: 0
+    maxRadius: 0
+  smallFlora: []
+  mediumFlora: []
+  largeFlora: []
+  XLFlora:
   - name: HoneyComb
     floraIndex: 11
     floraZoneScale: 1.3

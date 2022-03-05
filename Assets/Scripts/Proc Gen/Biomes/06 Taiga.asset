@@ -16,12 +16,75 @@ MonoBehaviour:
   offset: 777
   scale: 0.08
   terrainHeight: 80
-  terrainScale: 0.2
+  terrainScale: 0.12
   surfaceBlock: 4
   placeFlora: 1
-  flora:
-  - name: Bamboo
-    floraIndex: 9
+  smallStructures:
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Grass
+    floraIndex: 6
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  mediumStructures:
+  - name: Boulder
+    floraIndex: 17
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  largeStructures:
+  - name: Column
+    floraIndex: 13
+    floraZoneScale: 1.1
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 5
+    floraPlacementThreshold: 0.8
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  smallFlora:
+  - name: Grass
+    floraIndex: 6
     floraZoneScale: 1.3
     floraZoneThreshold: 0.7
     floraPlacementScale: 15
@@ -36,9 +99,72 @@ MonoBehaviour:
     floraZoneThreshold: 0.1
     floraPlacementScale: 15
     floraPlacementThreshold: 0.81
-    minHeight: 13
+    minHeight: 7
     maxHeight: 30
-    minRadius: 5
+    minRadius: 2
+    maxRadius: 10
+  mediumFlora:
+  - name: Flower
+    floraIndex: 9
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Evergreen
+    floraIndex: 10
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.1
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
+    minHeight: 7
+    maxHeight: 30
+    minRadius: 2
+    maxRadius: 10
+  largeFlora:
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.1
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Evergreen
+    floraIndex: 10
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.1
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
+    minHeight: 7
+    maxHeight: 30
+    minRadius: 2
+    maxRadius: 10
+  XLFlora:
+  - name: SmallMushroom
+    floraIndex: 7
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Evergreen
+    floraIndex: 10
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.1
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
+    minHeight: 7
+    maxHeight: 30
+    minRadius: 2
     maxRadius: 10
   lodes:
   - nodeName: Crystals

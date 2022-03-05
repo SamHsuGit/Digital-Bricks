@@ -19,8 +19,50 @@ MonoBehaviour:
   terrainScale: 0.01
   surfaceBlock: 13
   placeFlora: 1
-  flora:
-  - name: Huge Tree
+  smallStructures:
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Grass
+    floraIndex: 6
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  mediumStructures:
+  - name: Boulder
+    floraIndex: 17
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  largeStructures:
+  - name: HugeTree
     floraIndex: 12
     floraZoneScale: 20
     floraZoneThreshold: 0.9
@@ -30,17 +72,91 @@ MonoBehaviour:
     maxHeight: 50
     minRadius: 0
     maxRadius: 0
+  - name: Rock
+    floraIndex: 16
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  smallFlora:
+  - name: Grass
+    floraIndex: 6
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
   - name: Tree
     floraIndex: 2
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 5
+    maxHeight: 13
+    minRadius: 2
+    maxRadius: 6
+  mediumFlora:
+  - name: Flower
+    floraIndex: 9
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Tree
+    floraIndex: 2
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 5
+    maxHeight: 13
+    minRadius: 2
+    maxRadius: 6
+  largeFlora:
+  - name: SmallMushroom
+    floraIndex: 7
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.5
+    floraZoneThreshold: 0.7
     floraPlacementScale: 15
-    floraPlacementThreshold: 0.85
-    minHeight: 8
-    maxHeight: 10
-    minRadius: 10
-    maxRadius: 10
-  - name: Small Mushroom
+    floraPlacementThreshold: 0.78
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: Tree
+    floraIndex: 2
+    floraZoneScale: 1.06
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 8
+    floraPlacementThreshold: 0.83
+    minHeight: 5
+    maxHeight: 13
+    minRadius: 2
+    maxRadius: 6
+  XLFlora:
+  - name: HugeTree
+    floraIndex: 12
+    floraZoneScale: 20
+    floraZoneThreshold: 0.9
+    floraPlacementScale: 1
+    floraPlacementThreshold: 0.89
+    minHeight: 50
+    maxHeight: 50
+    minRadius: 0
+    maxRadius: 0
+  - name: SmallMushroom
     floraIndex: 7
     floraZoneScale: 1.3
     floraZoneThreshold: 0.7

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Structure
 {
-    public static Queue<VoxelMod> GenerateMajorFlora (int index, Vector3 position, int minTrunkHeight, int maxTrunkHeight, int minFloraRadius, int maxFloraRadius)
+    public static Queue<VoxelMod> GenerateSurfaceOb (int index, Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float _fertility)
     {
         switch (index)
         {
@@ -12,34 +12,40 @@ public static class Structure
             //case 1:
             //    return MakeProcGenVBOImport(position);
             case 2:
-                return MakeTree(position, minTrunkHeight, maxTrunkHeight, minFloraRadius, maxFloraRadius);
+                return MakeTree(position, minHeight, maxHeight, minRadius, maxRadius, _fertility);
             case 3:
-                return MakeCacti(position, minTrunkHeight, maxTrunkHeight);
+                return MakeCacti(position, minHeight, maxHeight, _fertility);
             case 4:
-                return MakeMushroomLarge(position, minTrunkHeight, maxTrunkHeight, minFloraRadius, maxFloraRadius);
+                return MakeMushroomLarge(position, minHeight, maxHeight, minRadius, maxRadius, _fertility);
             case 5:
-                return MakeMonolith(position, minTrunkHeight, maxTrunkHeight);
+                return MakeMonolith(position, minHeight, maxHeight, _fertility);
             case 6:
                 return MakeGrass(position);
             case 7:
                 return MakeMushroomSmall(position);
             case 8:
-                return MakeBamboo(position, minTrunkHeight, maxTrunkHeight);
+                return MakeBamboo(position, minHeight, maxHeight, _fertility);
             case 9:
                 return MakeFlower(position);
             case 10:
-                return MakeEvergreen(position, minTrunkHeight, maxTrunkHeight);
+                return MakeEvergreen(position, minHeight, maxHeight, _fertility);
             case 11:
-                return MakeHoneyComb(position, minTrunkHeight, maxTrunkHeight);
+                return MakeHoneyComb(position, minHeight, maxHeight, _fertility);
             case 12:
-                return MakeHugeTree(position, minTrunkHeight, maxTrunkHeight);
+                return MakeHugeTree(position);
             case 13:
                 return MakeColumn(position);
             case 14:
-                return MakeTreeFall(position, minTrunkHeight, maxTrunkHeight, minFloraRadius, maxFloraRadius);
+                return MakeTreeFall(position, minHeight, maxHeight, minRadius, maxRadius, _fertility);
             case 15:
-                return MakeTreeSavanna(position, minTrunkHeight, maxTrunkHeight, minFloraRadius, maxFloraRadius);
+                return MakeTreeSavanna(position, minHeight, maxHeight, _fertility);
             case 16:
+                return MakeRock(position);
+            case 17:
+                return MakeBoulder(position, _fertility);
+            case 18:
+                return MakeShrub(position, _fertility);
+            case 19:
                 return MakeTestRainbow(position);
         }
         return new Queue<VoxelMod>();
@@ -133,17 +139,17 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeTree(Vector3 position, int minTrunkHeight, int maxTrunkHeight, int minFloraRadius, int maxFloraRadius)
+    static Queue<VoxelMod> MakeTree(Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float _fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        int height = (int)(maxHeight * _fertility);
+        if (height < minHeight)
+            height = minHeight;
 
-        int radius = (int)(maxFloraRadius * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (radius < minFloraRadius)
-            radius = minFloraRadius;
+        int radius = (int)(maxRadius * _fertility);
+        if (radius < minRadius)
+            radius = minRadius;
 
         for (int i = 1; i < height; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDTreeTrunk)); // trunk
@@ -154,7 +160,7 @@ public static class Structure
             {
                 for (int z = -radius; z < radius; z++)
                 {
-                    byte blockID = PorousBlocks(maxFloraRadius, position, new Vector3(x,y,z), World.Instance.worldData.blockIDTreeLeavesSummer, 0.515f); // leaves
+                    byte blockID = PorousBlocks(maxRadius, position, new Vector3(x,y,z), World.Instance.worldData.blockIDTreeLeavesSummer, 0.515f); // leaves
 
                     if (blockID == 0)
                         queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), blockID));
@@ -167,17 +173,17 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeTreeFall(Vector3 position, int minTrunkHeight, int maxTrunkHeight, int minFloraRadius, int maxFloraRadius)
+    static Queue<VoxelMod> MakeTreeFall(Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float _fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        int height = (int)(maxHeight * _fertility);
+        if (height < minHeight)
+            height = minHeight;
 
-        int radius = (int)(maxFloraRadius * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (radius < minFloraRadius)
-            radius = minFloraRadius;
+        int radius = (int)(maxRadius * _fertility);
+        if (radius < minRadius)
+            radius = minRadius;
 
         for (int i = 1; i < height; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDTreeTrunk)); // trunk
@@ -188,7 +194,7 @@ public static class Structure
             {
                 for (int z = -radius; z < radius; z++)
                 {
-                    byte blockID = PorousBlocks(maxFloraRadius, position, new Vector3(x, y, z), World.Instance.worldData.blockIDTreeLeavesSummer, 0.515f); // leaves
+                    byte blockID = PorousBlocks(maxRadius, position, new Vector3(x, y, z), World.Instance.worldData.blockIDTreeLeavesSummer, 0.515f); // leaves
 
                     if (blockID == 0)
                         queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), blockID));
@@ -201,49 +207,31 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeTreeSavanna(Vector3 position, int minTrunkHeight, int maxTrunkHeight, int minFloraRadius, int maxFloraRadius)
+    static Queue<VoxelMod> MakeTreeSavanna(Vector3 position, int minHeight, int maxHeight, float _fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
-
-        int radius = (int)(maxFloraRadius * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (radius < minFloraRadius)
-            radius = minFloraRadius;
+        int height = (int)(maxHeight * _fertility);
+        if (height < minHeight)
+            height = minHeight;
 
         for (int i = 1; i < height; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDTreeTrunk)); // trunk
-
-        //for (int y = 0; y < 7; y++) // disabled leaves for savanna tree
-        //{
-        //    for (int x = -radius; x < radius; x++)
-        //    {
-        //        for (int z = -radius; z < radius; z++)
-        //        {
-        //            byte blockID = PorousBlocks(maxFloraRadius, position, new Vector3(x, y, z), World.Instance.worldData.blockIDTreeLeavesSummer, 0.515f); // leaves
-
-        //            if (blockID == 0)
-        //                queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), blockID));
-        //            else
-        //                queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), PorousBlocks(radius, position, new Vector3(x, y, z), World.Instance.worldData.blockIDTreeLeavesSummer, 0.515f)));
-        //        }
-        //    }
-        //}
+        for (int i = 1; i < height; i++)
+            queue.Enqueue(new VoxelMod(new Vector3(position.x + 1, position.y + i + height / 2, position.z), World.Instance.worldData.blockIDTreeTrunk)); // trunk
 
         return queue;
     }
 
-    static Queue<VoxelMod> MakeCacti(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
+    static Queue<VoxelMod> MakeCacti(Vector3 position, int minHeight, int maxHeight, float _fertility)
     {
 
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 23456f, 2f));
+        int height = (int)(maxHeight * _fertility);
 
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        if (height < minHeight)
+            height = minHeight;
 
         for (int i = 1; i <= height; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDCacti)); // cacti
@@ -266,18 +254,17 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeMushroomLarge(Vector3 position, int minTrunkHeight, int maxTrunkHeight, int minFloraRadius, int maxFloraRadius)
+    static Queue<VoxelMod> MakeMushroomLarge(Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float _fertility)
     {
-
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        int height = (int)(maxHeight * _fertility);
+        if (height < minHeight)
+            height = minHeight;
 
-        int radius = (int)(maxFloraRadius * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (radius < minFloraRadius)
-            radius = minFloraRadius;
+        int radius = (int)(maxRadius * _fertility);
+        if (radius < minRadius)
+            radius = minRadius;
 
         for (int i = 1; i < height + radius - 1; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDMushroomLargeStem)); // trunk
@@ -296,16 +283,15 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeMonolith(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
+    static Queue<VoxelMod> MakeMonolith(Vector3 position, int minHeight, int maxHeight, float _fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        int height = (int)(maxHeight * _fertility);
+        if (height < minHeight)
+            height = minHeight;
 
         int radius = Mathf.FloorToInt(height / 3);
-
         if (radius < 1)
             radius = 1;
 
@@ -323,32 +309,71 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeGrass(Vector3 position)
+    static Queue<VoxelMod> MakeRock(Vector3 position)
+    {
+        Queue<VoxelMod> queue = new Queue<VoxelMod>();
+        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), World.Instance.worldData.blockIDsubsurface)); // large black block
+        return queue;
+    }
+
+    static Queue<VoxelMod> MakeBoulder(Vector3 position, float _fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), 31)); // grass
+        int height = (int)(3 * _fertility);
+        int radius = (int)(5 * _fertility);
 
+        for (int x = -radius; x < radius; x++)
+        {
+            for (int y = 1; y < height; y++)
+            {
+                for (int z = -radius; z < radius; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + y, position.z + z), World.Instance.worldData.blockIDsubsurface)); // large black block
+                }
+            }
+        }
+
+        return queue;
+    }
+
+    static Queue<VoxelMod> MakeShrub(Vector3 position, float _fertility)
+    {
+        Queue<VoxelMod> queue = new Queue<VoxelMod>();
+
+        int height = (int)(2 * _fertility);
+        int radius = (int)(3 * _fertility);
+
+        for (int x = -radius; x < radius; x++)
+        {
+            for (int y = 1; y < height; y++)
+            {
+                for (int z = -radius; z < radius; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + y, position.z + z), World.Instance.worldData.blockIDEvergreenLeaves)); // small shrub
+                }
+            }
+        }
+        return queue;
+    }
+
+    static Queue<VoxelMod> MakeGrass(Vector3 position)
+    {
+        Queue<VoxelMod> queue = new Queue<VoxelMod>();
+        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), 31)); // grass
         return queue;
     }
     static Queue<VoxelMod> MakeMushroomSmall(Vector3 position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-
         queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), 32)); // mushroomSmall
-
         return queue;
     }
 
-    static Queue<VoxelMod> MakeBamboo(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
+    static Queue<VoxelMod> MakeBamboo(Vector3 position, int minHeight, int maxHeight, float _fertility)
     {
-
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 23456f, 2f));
-
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        int height = (int)(10 * _fertility);
 
         for (int i = 1; i <= height; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 33)); // bamboo
@@ -359,19 +384,17 @@ public static class Structure
     static Queue<VoxelMod> MakeFlower(Vector3 position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-
         queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), 34)); // flower
-
         return queue;
     }
 
-    static Queue<VoxelMod> MakeEvergreen(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
+    static Queue<VoxelMod> MakeEvergreen(Vector3 position, int minHeight, int maxHeight, float _fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        int height = (int)(maxHeight * _fertility);
+        if (height < minHeight)
+            height = minHeight;
 
         int radius = Mathf.CeilToInt(height / 5);
 
@@ -403,13 +426,13 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeHoneyComb(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
+    static Queue<VoxelMod> MakeHoneyComb(Vector3 position, int minHeight, int maxHeight, float _fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
+        int height = (int)(maxHeight * _fertility);
+        if (height < minHeight)
+            height = minHeight;
 
         for (int i = 1; i < height; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), World.Instance.worldData.blockIDHoneyComb)); // trunk
@@ -417,15 +440,12 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeHugeTree(Vector3 position, int minTrunkHeight, int maxTrunkHeight)
+    static Queue<VoxelMod> MakeHugeTree(Vector3 position)
     {
         position = new Vector3(position.x, position.y + 1, position.z); // ensure the large trees are above the ground
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxTrunkHeight * Noise.Get2DPerlin(new Vector2(position.x, position.z), 250f, 3f));
-        if (height < minTrunkHeight)
-            height = minTrunkHeight;
-
+        int height = 50;
         int radius = Mathf.FloorToInt(height * 0.9f);
 
         for (int y = 0; y < Mathf.FloorToInt(height * 0.6f); y++)

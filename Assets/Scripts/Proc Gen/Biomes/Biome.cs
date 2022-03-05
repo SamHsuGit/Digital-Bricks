@@ -11,7 +11,13 @@ public class Biome : ScriptableObject
     public float terrainScale;
     public byte surfaceBlock; // this value is changed by other scripts depending on planet
     public bool placeFlora = true;
-    public Flora[] flora;
+    public SurfaceOb[] smallStructures; // for best performance do not add more than 2 values
+    public SurfaceOb[] mediumStructures; // for best performance do not add more than 2 values
+    public SurfaceOb[] largeStructures; // for best performance do not add more than 2 values
+    public SurfaceOb[] smallFlora; // for best performance do not add more than 2 values
+    public SurfaceOb[] mediumFlora; // for best performance do not add more than 2 values
+    public SurfaceOb[] largeFlora; // for best performance do not add more than 2 values
+    public SurfaceOb[] XLFlora; // for best performance do not add more than 1 value
     public Lode[] lodes;
 }
 
@@ -28,7 +34,7 @@ public class Lode
 }
 
 [System.Serializable]
-public class Flora
+public class SurfaceOb
 {
     public string name;
     public int floraIndex;
