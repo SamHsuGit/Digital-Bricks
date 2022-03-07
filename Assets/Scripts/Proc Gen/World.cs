@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Threading;
 using Mirror;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
 
 public class World : MonoBehaviour
 {
@@ -20,16 +19,19 @@ public class World : MonoBehaviour
     public Vector2[] peaksAndValleysSplinePoints;
 
     // Cached Perlin Noise Map Values
-    public int terrainHeight = 0; // defines height of terrain
+    public float terrainHeightPercentChunk; // defines height of terrain as percentage of total chunkHeight
+    public int terrainHeightVoxels = 0; // defines height of terrain in voxels
     public bool isAir = false; // used for 3D Perlin Noise pass
     public float continentalness = 0; // continentalness, defines distance from ocean
     public float erosion = 0; // erosion, defines how mountainous the terrain is
     public float peaksAndValleys = 0; // peaks and valleys
-    public float t = 0; // temperature, defines biome
-    public float h = 0; // humidity, defines biome + cloud density
+    public float temperature = 0; // temperature, defines biome
+    public float humidity = 0; // humidity, defines biome + cloud density
     public float fertility = 0; // defines surfaceOb size
     public float percolation = 0; // defines surfaceOb size
     public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers)
+    public float seaLevelThreshold = 0.34f;
+    public int cloudHeight;
 
     public int surfaceObType = 0;
     public Biome biome;
@@ -46,7 +48,7 @@ public class World : MonoBehaviour
     public int season;
     public Planet[] planets;
     public Biome[] biomes;
-    public int solidGroundHeight = 20;
+    public int heightOffset = 20;
     public GameObject worldPlayer;
     
     public Material blockMaterial;
@@ -149,42 +151,42 @@ public class World : MonoBehaviour
 
         chunkHeightFactor = (float)VoxelData.ChunkHeight / 96f; // proportionally adjust biome terrain height when chunkHeight is adjusted (heights were calibrated at chunkHeight = 96)
 
-        continentalnessSplinePoints = new Vector2[] 
+        cloudHeight = VoxelData.ChunkHeight - 15;
+
+        continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
         {
-            new Vector2(0.00f, 1.00f), 
-            new Vector2(0.09f, 0.01f), 
-            new Vector2(0.34f, 0.01f), 
+            new Vector2(0.00f, 0.00f),
+            new Vector2(seaLevelThreshold, 0.01f),
             new Vector2(0.38f, 0.35f),
-            new Vector2(0.51f, 0.35f),
+            new Vector2(0.51f, 0.40f),
             new Vector2(0.52f, 0.70f),
             new Vector2(0.73f, 0.76f),
             new Vector2(1.00f, 1.00f),
         };
 
-        erosionSplinePoints = new Vector2[]
+        erosionSplinePoints = new Vector2[] // low erosion = peaks
         {
             new Vector2(0.00f, 1.00f),
             new Vector2(0.10f, 0.70f),
             new Vector2(0.30f, 0.50f),
             new Vector2(0.35f, 0.55f),
             new Vector2(0.40f, 0.11f),
-            new Vector2(0.60f, 0.10f),
             new Vector2(0.70f, 0.10f),
             new Vector2(0.72f, 0.30f),
             new Vector2(0.80f, 0.30f),
             new Vector2(0.82f, 0.10f),
             new Vector2(0.90f, 0.05f),
-            new Vector2(1.00f, 0.05f),
+            new Vector2(1.00f, 0.04f),
         };
 
-        peaksAndValleysSplinePoints = new Vector2[]
+        peaksAndValleysSplinePoints = new Vector2[] // high peaks and valley = high peaks
         {
             new Vector2(0.05f, 0.00f),
             new Vector2(0.10f, 0.10f),
             new Vector2(0.35f, 0.31f),
             new Vector2(0.50f, 0.32f),
             new Vector2(0.68f, 0.54f),
-            new Vector2(0.90f, 0.60f),
+            new Vector2(0.90f, 0.80f),
             new Vector2(1.00f, 1.00f),
         };
     }
@@ -850,13 +852,14 @@ public class World : MonoBehaviour
         if (yGlobalPos == 1)
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
-        h = GetHumidity(xzCoords); // used to determine cloud density
+        humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome (call only once, expensive)
+        temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome (call only once, expensive)
 
-        // If between certain height range, return clouds.
-        if (yGlobalPos > VoxelData.ChunkHeight - 15 && yGlobalPos < VoxelData.ChunkHeight - 10)
+        // If between certain height range, return clouds. TODO optimize to use 2D Perlin Noise as we don't need 3D perlin noise for this
+        if (yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
         {
             // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
-            if (h > 0.2f) // determines if cloud cover is dense or not
+            if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
             {
                 if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.6f)) // light cloud cover
                     return 4; // blocktype = cloud
@@ -873,23 +876,23 @@ public class World : MonoBehaviour
         }
 
         /* BIOME SELECTION PASS */
-        t = GetTemperature(xzCoords); // used temperature and humidity to determine biome instead of running 2DPerlin Noise for each biome (expensive)
+
         if (!worldData.isAlive)
             biome = biomes[11];
         else
-            biome = biomes[GetBiome(t, h)];
+            biome = biomes[GetBiome(temperature, humidity)];
 
         // Use perlin noise function for more varied height (use chunkHeightFactor to adjust for height of chunk which can change for testing purposes to keep load times under 15 seconds)
-        //terrainHeight = GetTerrainHeightOld(xzCoords);
+        //terrainHeightVoxels = GetTerrainHeight(xzCoords);
 
-        if (Settings.Platform != 2 && xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeight)
-            modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, fertility)); // make base at center of first chunk at terrain height
+        //if (Settings.Platform != 2 && xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeightVoxels)
+        //    modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, fertility)); // make base at center of first chunk at terrain height
 
         /* BASIC TERRAIN PASS */
         byte voxelValue = 0;
         bool subsurfaceBlock = false;
 
-        isAir = GetTerrainBool(xzCoords); // NEED TO DEBUG ALL BLOCKS ARE FALSE FOR ISAIR (SCALING IS OFF?)
+        isAir = GetIsAir(globalPos); // NEED TO DEBUG ALL BLOCKS ARE FALSE FOR ISAIR (SCALING IS OFF?)
         if (isAir)
         {
             return 0;
@@ -899,41 +902,37 @@ public class World : MonoBehaviour
             voxelValue = worldData.blockIDsubsurface;
             subsurfaceBlock = true;
         }
-            
 
-        //if (yGlobalPos > terrainHeight)
+        //if (yGlobalPos > terrainHeightVoxels)
         //    return 0;
-        //else if (yGlobalPos == terrainHeight) // if surface block
-        //{
-        //    //if (season == 1)
-        //    //    voxelValue = worldData.blockIDTreeLeavesWinter; // snow for winter season (DISABLED since we have winter biomes)
-        //    //else
-        //        voxelValue = biome.surfaceBlock;
-        //}
+        //else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // if surface block below sea level
+        //    voxelValue = worldData.blockIDcore;
+        //else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk >= seaLevelThreshold) // if surface block above sea level
+        //    voxelValue = biome.surfaceBlock;
         //else // must be subsurface block
         //{
         //    voxelValue = worldData.blockIDsubsurface;
         //    subsurfaceBlock = true;
         //}
 
-        /* LODE PASS */
-        //if (subsurfaceBlock && yGlobalPos < terrainHeight - 2)
+        ///* LODE PASS */
+        //if (subsurfaceBlock && yGlobalPos < terrainHeightVoxels - 2)
         //{
         //    foreach (Lode lode in biome.lodes)
         //    {
-        //        if (yGlobalPos > lode.minHeight && yGlobalPos < VoxelData.ChunkHeight && yGlobalPos < terrainHeight) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
+        //        if (yGlobalPos > lode.minHeight && yGlobalPos < VoxelData.ChunkHeight && yGlobalPos < terrainHeightVoxels) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
         //            if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold))
         //                voxelValue = lode.blockID;
         //    }
         //}
 
         /* MAJOR FLORA/STRUCTURES PASS */
-        //fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f); // ideally only call once (expensive)
-        //percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // ideally only call once (expensive)
-        //surfaceObType = GetSurfaceObType(percolation, fertility);
+        fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f); // ideally only call once (expensive)
+        percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // ideally only call once (expensive)
+        surfaceObType = GetSurfaceObType(percolation, fertility);
         //placementVBO = Noise.Get2DPerlin(xzCoords, 321, 10f); // ideally only call once (expensive)
 
-        //if (biome == biomes[11] || (worldData.isAlive && biome.placeFlora && yGlobalPos == terrainHeight)) // only place flora on worlds marked isAlive or if biome is monolith
+        //if (biome == biomes[11] || (worldData.isAlive && biome.placeFlora && yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk > seaLevelThreshold)) // only place flora on worlds marked isAlive or if biome is monolith
         //{
         //    switch (surfaceObType)
         //    {
@@ -1034,30 +1033,55 @@ public class World : MonoBehaviour
         return voxelValue;
     }
 
-    public int GetTerrainHeightOld(Vector2 _xzCoords)
-    {
-        return Mathf.FloorToInt(biome.terrainHeight * chunkHeightFactor * Noise.Get2DPerlin(_xzCoords, 0, biome.terrainScale)) + solidGroundHeight;
-    }
-
-    public bool GetTerrainBool(Vector2 _xzCoords)
+    public int GetTerrainHeight(Vector2 _xzCoords)
     {
         // get values for continentalness, erosion, and peaks and valleys from 3 Perlin Noise maps
         continentalness = Noise.Get2DPerlin(_xzCoords, 0, 0.08f);
-        erosion = Noise.Get2DPerlin(_xzCoords, 1, 0.01f);
-        peaksAndValleys = Noise.Get2DPerlin(_xzCoords, 2, 0.7f);
+        erosion = Noise.Get2DPerlin(_xzCoords, 1, 0.1f);
+        peaksAndValleys = Noise.Get2DPerlin(_xzCoords, 2, 0.5f);
 
         // use spline points to determine terrainHeight for each component
-        float terrainHeightC = GetTerrainHeight(continentalness, continentalnessSplinePoints);
-        float terrainHeightE = GetTerrainHeight(erosion, erosionSplinePoints);
-        float terrainHeightPV = GetTerrainHeight(peaksAndValleys, peaksAndValleysSplinePoints);
-        float threshold = (terrainHeightC + terrainHeightE + terrainHeightPV) / 3f; // average together to get final threshold
+        float continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
+        float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
+        float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
 
-        float squashingFactor = 0.01f; // 3D noise scale
+        terrainHeightPercentChunk = continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor;
+
+        int _terrainHeight = Mathf.Clamp(Mathf.FloorToInt(cloudHeight * terrainHeightPercentChunk - 0),0, cloudHeight); // multiplies by number of voxels to get height in voxels
+        return _terrainHeight;
+    }
+
+    public bool GetIsAir(Vector3 _globalPos)
+    {
+        Vector2 _xzCoords = new Vector2(_globalPos.x, _globalPos.z);
+
+        // get values for continentalness, erosion, and peaks and valleys from 3 Perlin Noise maps
+        continentalness = Noise.Get2DPerlin(_xzCoords, 0, 0.08f);
+        erosion = Noise.Get2DPerlin(_xzCoords, 1, 0.1f);
+        peaksAndValleys = Noise.Get2DPerlin(_xzCoords, 2, 0.5f);
+
+        //use spline points to determine heightOffset and squashingFactor
+        float terrainHeightC = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
+        float terrainHeightE = GetValueFromSplinePoints(erosion, erosionSplinePoints);
+        float terrainHeightPV = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
+
+        int halfChunkHeight = Mathf.FloorToInt(VoxelData.ChunkHeight / 2);
+        float threshold;
+        //float density;
+        //if (_globalPos.y > halfChunkHeight)
+        //    density = GetValueBetweenPoints(new Vector2(halfChunkHeight, 0.5f), new Vector2(VoxelData.ChunkHeight, 0), _globalPos.y); // rate of density decreases above ground
+        //else if (_globalPos.y == halfChunkHeight)
+        //    density = 0.5f; // density unchanged at mid level
+        //else
+        //    density = GetValueBetweenPoints(new Vector2(0, 0.9f), new Vector2(halfChunkHeight, 0.5f), _globalPos.y); // density increases below ground
+
+        //threshold = GetValueBetweenPoints(new Vector2(0, density), new Vector2(VoxelData.ChunkHeight, 0), _globalPos.y);
+
+        threshold = GetValueBetweenPoints(new Vector2(0, 0), new Vector2(VoxelData.ChunkHeight, 0.9f), _globalPos.y);
 
         // heightOffset
-        // squashing factor (low squashing factor exposes 3D noise)
-        // input continentalness, erosion, peaks & valleys --> output terrainHeight and terrainScale independent of biome
-        return Noise.Get3DPerlin(_xzCoords, 1234, squashingFactor, threshold);
+        // squashing factor (low squashing factor exposes 3D noise), determined by c, e, pv
+        return Noise.Get3DPerlin(_globalPos, 0, 0.1f, threshold);
     }
 
     public float GetValueBetweenPoints(Vector2 first, Vector2 last, float x)
@@ -1077,7 +1101,7 @@ public class World : MonoBehaviour
         return y;
     }
 
-    public float GetTerrainHeight(float value, Vector2[] splinePoints)
+    public float GetValueFromSplinePoints(float value, Vector2[] splinePoints)
     {
         float _terrainHeight = 0f;
 
@@ -1089,16 +1113,6 @@ public class World : MonoBehaviour
         }
 
         return _terrainHeight;
-    }
-
-    public float GetTemperature(Vector2 _xzCoords) // made into function so Debug Screen can show biome
-    {
-        return Noise.Get2DPerlin(_xzCoords, 6666, 0.06f); // ideally only call this once because it is expensive to implement in update function
-    }
-
-    public float GetHumidity(Vector2 _xzCoords) // made into function so Debug Screen can show biome
-    {
-        return Noise.Get2DPerlin(_xzCoords, 2222, 0.07f); // ideally only call this once because it is expensive to implement in update function
     }
 
     public int GetBiome(float _temperature, float _humidity)
@@ -1228,7 +1242,7 @@ public class World : MonoBehaviour
                     Vector3 globalPositionAbove = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y + 1, chunkCoord.z * VoxelData.ChunkWidth + z);
 
                     // if voxel matches Perlin noise pattern
-                    if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && placementVBO < 0.1f)
+                    if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
                     {
                         // if studs don't already exist
                         if (!studDictionary.TryGetValue(globalPositionAbove, out _))
