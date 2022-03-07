@@ -36,13 +36,13 @@ public class DebugScreen : MonoBehaviour
             debugText += "\n";
             debugText += "Chunk: " + (World.Instance.GetChunkFromVector3(playerPos).coord.x - halfWorldSizeInChunks) + " / " + (World.Instance.GetChunkFromVector3(playerPos).coord.z - halfWorldSizeInChunks);
             debugText += "\n";
-            //debugText += "Biome: " + World.Instance.biome.biomeName;
+            //debugText += "Biome: " + World.Instance.biome.biomeName; // disabled, can see this in inspector
             //debugText += "\n";
-            //debugText += "c: " + World.Instance.continentalness;
+            //debugText += "c: " + World.Instance.continentalness; // disabled, can see this in inspector
             //debugText += "\n";
-            //debugText += "e: " + World.Instance.erosion;
+            //debugText += "e: " + World.Instance.erosion; // disabled, can see this in inspector
             //debugText += "\n";
-            //debugText += "pv: " + World.Instance.peaksAndValleys;
+            //debugText += "w: " + World.Instance.weirdness; // disabled, can see this in inspector
             //debugText += "\n";
             debugText += "Y = Show Controls";
 

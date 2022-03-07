@@ -10,7 +10,6 @@ public class Biome : ScriptableObject
     public int terrainHeight;
     public float terrainScale;
     public byte surfaceBlock; // this value is changed by other scripts depending on planet
-    public bool placeFlora = true;
     public SurfaceOb[] smallStructures; // for best performance do not add more than 2 values
     public SurfaceOb[] mediumStructures; // for best performance do not add more than 2 values
     public SurfaceOb[] largeStructures; // for best performance do not add more than 2 values
