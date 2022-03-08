@@ -228,13 +228,13 @@ public class Controller : NetworkBehaviour
         timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
         seed = SettingsStatic.LoadedSettings.seed;
         version = Application.version;
-        //if(World.Instance.gameObject != null) // causes issues during online play when World is not loaded yet when server is started
-        //{
-        //    for (int i = 0; i < World.Instance.players.Count; i++)
-        //    {
-        //        playerNames.Add(World.Instance.players[i].name);
-        //    }
-        //}
+        if (World.Instance.gameObject != null) // causes issues during online play when World is not yet loaded and server is started
+        {
+            for (int i = 0; i < World.Instance.players.Count; i++)
+            {
+                playerNames.Add(World.Instance.players[i].name);
+            }
+        }
     }
 
     public override void OnStartClient()
