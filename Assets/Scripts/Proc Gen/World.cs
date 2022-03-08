@@ -835,6 +835,8 @@ public class World : MonoBehaviour
 
     public byte GetVoxel(Vector3 globalPos) // The main algorithm used to calculate voxels for world generation. Runs whenever voxel ids need to be calculated (modified voxels are saved to a serialized file).
     {
+        // optimize to try to answer the question (what is blockID at this position) the fastest way possible
+
         int yGlobalPos = Mathf.FloorToInt(globalPos.y);
         int xGlobalPos = Mathf.FloorToInt(globalPos.x);
         int zGlobalPos = Mathf.FloorToInt(globalPos.z);
@@ -849,7 +851,7 @@ public class World : MonoBehaviour
         if (worldData.planetNumber == 0 && worldData.seed == 0)
             return 0;
 
-        // Lava/Water level (DO NOT MAKE VOXEL BOUND OBJECT, SIGNIFICANTLY SLOWS DOWN GAME)
+        // bottom of world layer is core block (e.g. water/lava)
         if (yGlobalPos == 1)
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
@@ -873,8 +875,23 @@ public class World : MonoBehaviour
             }
         }
 
-        /* BIOME SELECTION PASS */
+        /* BASIC TERRAIN PASS */
+        byte voxelValue = 0;
+        GetTerrainHeight(xzCoords);
+        if (yGlobalPos > terrainHeightVoxels) // guarantees all blocks above terrainHeight are 0
+            return 0;
+        if (weirdness > 0.5f)
+        {
+            isAir = GetIsAir(globalPos);
+            if (isAir)
+            {
+                if (!CheckMakeBase(globalPos))
+                    return 0;
+            }
+        }
+        CheckMakeBase(globalPos);
 
+        /* BIOME SELECTION PASS */
         humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome (call only once, expensive)
         temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome (call only once, expensive)
         if (!worldData.isAlive)
@@ -882,61 +899,36 @@ public class World : MonoBehaviour
         else
             biome = biomes[GetBiome(temperature, humidity)];
 
-        /* BASIC TERRAIN PASS */
-        byte voxelValue = 0;
-        bool subsurfaceBlock = false;
-
-        // Use perlin noise function for more varied height (use chunkHeightFactor to adjust for height of chunk which can change for testing purposes to keep load times under 15 seconds)
-        GetTerrainHeight(xzCoords);
-        if (weirdness > 0.5f)
-        {
-            isAir = GetIsAir(globalPos);
-            if (isAir)
-                return 0;
-            else
-            {
-                voxelValue = worldData.blockIDsubsurface;
-                subsurfaceBlock = true;
-            }
-        }
-
-        if (Settings.Platform != 2 && xGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && zGlobalPos == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && yGlobalPos == terrainHeightVoxels)
-            modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, fertility)); // make base at center of first chunk at terrain height
-
-        if (yGlobalPos > terrainHeightVoxels)
-            return 0;
-        else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // if surface block below sea level
+        /* TERRAIN PASS */
+        if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // if surface block below sea level
             voxelValue = worldData.blockIDcore;
         else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk >= seaLevelThreshold) // if surface block above sea level
             voxelValue = biome.surfaceBlock;
         else // must be subsurface block
-        {
             voxelValue = worldData.blockIDsubsurface;
-            subsurfaceBlock = true;
-        }
 
         /* LODE PASS */
-
-        if (subsurfaceBlock && yGlobalPos < terrainHeightVoxels - 2)
+        if (yGlobalPos < terrainHeightVoxels - 5)
         {
             foreach (Lode lode in biome.lodes)
             {
                 {
-                    if (yGlobalPos > lode.minHeight && yGlobalPos < terrainHeightVoxels - 5) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
+                    if (yGlobalPos > lode.minHeight) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
                         if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold))
                             voxelValue = lode.blockID;
                 }
             }
+            return voxelValue; // if object is below terrain, do not bother running code for surface objects
         }
 
-        /* MAJOR FLORA/STRUCTURES PASS */
-        fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f); // ideally only call once (expensive)
-        percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // ideally only call once (expensive)
-        surfaceObType = GetSurfaceObType(percolation, fertility);
-        placementVBO = Noise.Get2DPerlin(xzCoords, 321, 10f); // ideally only call once (expensive)
-
-        if (biome == biomes[11] || (worldData.isAlive && yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold)) // only place flora on worlds marked isAlive or if biome is monolith
+        /* SURFACE OBJECTS PASS */
+        if ((yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
+            fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f); // ideally only call once (expensive)
+            percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // ideally only call once (expensive)
+            surfaceObType = GetSurfaceObType(percolation, fertility);
+            placementVBO = Noise.Get2DPerlin(xzCoords, 321, 10f); // ideally only call once (expensive)
+
             switch (surfaceObType)
             {
                 case 1:
@@ -1032,8 +1024,19 @@ public class World : MonoBehaviour
                     break;
             }
         }
-
         return voxelValue;
+    }
+
+    public bool CheckMakeBase(Vector3 _globalPos)
+    {
+        if (Settings.Platform != 2 && _globalPos.y == terrainHeightVoxels && _globalPos.x == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && _globalPos.z == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2))
+        {
+            modifications.Enqueue(Structure.GenerateSurfaceOb(0, _globalPos, 0, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
+            return true;
+        }
+        else
+            return false;
+            
     }
 
     public void GetTerrainHeight(Vector2 _xzCoords)
