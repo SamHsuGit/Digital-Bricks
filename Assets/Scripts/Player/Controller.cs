@@ -118,10 +118,6 @@ public class Controller : NetworkBehaviour
 
     void Awake()
     {
-        NamePlayer();
-
-        world = World.Instance;
-        physicMaterial = world.physicMaterial;
         cc = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -135,9 +131,7 @@ public class Controller : NetworkBehaviour
         lookAtConstraint = playerCamera.GetComponent<LookAtConstraint>();
         playerCameraBoxCollider = playerCamera.GetComponent<BoxCollider>();
         playerCameraVoxelCollider = playerCamera.GetComponent<PlayerVoxelCollider>();
-        worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
         charController = GetComponent<CharacterController>();
-        customNetworkManager = World.Instance.customNetworkManager;
 
         health.isAlive = true;
 
@@ -147,24 +141,18 @@ public class Controller : NetworkBehaviour
         holdPos = holdPosPrefab.transform;
 
         CinematicBars.SetActive(false);
-
-        projectile = LDrawImportRuntime.Instance.projectileOb;
-    }
-
-    void NamePlayer()
-    {
-        if (gameObject != World.Instance.worldPlayer) // Need to work out how networked players with same name get instance added to name
-        {
-            // set this object's name from saved settings so it can be modified by the world script when player joins
-            playerName = SettingsStatic.LoadedSettings.playerName;
-
-            player = new Player(gameObject, playerName); // set this player from world players
-            World.Instance.players.Add(player);
-        }
     }
 
     private void Start()
     {
+        // these must happen in start since world is not instantiated until after Awake...
+        world = World.Instance;
+        physicMaterial = world.physicMaterial;
+        customNetworkManager = world.customNetworkManager;
+        worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
+        NamePlayer();
+        projectile = LDrawImportRuntime.Instance.projectileOb;
+
         InputComponents();
 
         Cursor.visible = false;
@@ -192,6 +180,18 @@ public class Controller : NetworkBehaviour
 
             SetPlayerAttributes();
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
+        }
+    }
+
+    void NamePlayer()
+    {
+        if (world.worldPlayer != null && gameObject != world.worldPlayer) // Need to work out how networked players with same name get instance added to name
+        {
+            // set this object's name from saved settings so it can be modified by the world script when player joins
+            playerName = SettingsStatic.LoadedSettings.playerName;
+
+            player = new Player(gameObject, playerName); // set this player from world players
+            world.players.Add(player);
         }
     }
 
@@ -228,10 +228,13 @@ public class Controller : NetworkBehaviour
         timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
         seed = SettingsStatic.LoadedSettings.seed;
         version = Application.version;
-        for (int i = 0; i < World.Instance.players.Count; i++)
-        {
-            playerNames.Add(World.Instance.players[i].name);
-        }
+        //if(World.Instance.gameObject != null) // causes issues during online play when World is not loaded yet when server is started
+        //{
+        //    for (int i = 0; i < World.Instance.players.Count; i++)
+        //    {
+        //        playerNames.Add(World.Instance.players[i].name);
+        //    }
+        //}
     }
 
     public override void OnStartClient()
@@ -584,7 +587,7 @@ public class Controller : NetworkBehaviour
 
     void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
     {
-        if (blockID == 0 || blockID == 1 || blockID == 26) // if the blockID at position is air or barrier blocks, then skip to next position
+        if (blockID == 0 || blockID == 1 || blockID == 25 || blockID == 26) // if the blockID at position is air, barrier, base, procGenVBO, then skip to next position
             return;
 
         EditVoxel(position, 0, true); // destroy voxel at position
@@ -804,7 +807,7 @@ public class Controller : NetworkBehaviour
 
     void PlaceBrick(Vector3 pos)
     {
-        if (blockID != 0 && blockID != 1) // if the stored blockID is not air or barrier block
+        if (!World.Instance.CheckForVoxel(placePos.position))
         {
             if (blockID == 30)
                 crystal.Play();
@@ -1258,7 +1261,7 @@ public class Controller : NetworkBehaviour
                     CinematicBars.SetActive(true);
 
                     if (Settings.OnlinePlay)
-                        nametag.SetActive(false);
+                        nametag.SetActive(true);
 
                     playerCameraBoxCollider.enabled = false;
                     playerCameraVoxelCollider.enabled = false;

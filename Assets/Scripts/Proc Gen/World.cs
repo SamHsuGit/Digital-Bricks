@@ -13,6 +13,7 @@ public class World : MonoBehaviour
     public bool undrawVoxels = false;
     public bool VBOs = true;
     public bool chunkMeshColliders = true;
+    public bool isEarth;
 
     public Vector2[] continentalnessSplinePoints;
     public Vector2[] erosionSplinePoints;
@@ -273,18 +274,19 @@ public class World : MonoBehaviour
     private void Start()
     {
         worldLoaded = false;
+        if (SettingsStatic.LoadedSettings.planetNumber == 3) // cache result for use in GetVoxel
+            isEarth = true;
+        else
+            isEarth = false;
         worldData = SaveSystem.LoadWorld(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed);
         WorldDataOverrides(SettingsStatic.LoadedSettings.planetNumber);
 
-        // Spawns an imported base.ldr at world origin
-        if (worldData.planetNumber == 0 && worldData.seed == 0)
-            LDrawImportRuntime.Instance.baseOb.transform.position = LDrawImportRuntime.Instance.importPosition + new Vector3(0, LDrawImportRuntime.Instance.yOffset, 0);
-        
         if (Settings.Platform == 2)
             blocktypes[25].voxelBoundObject = null;
         else
         {
-            blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
+            if(LDrawImportRuntime.Instance.baseOb != null)
+                blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
 
             if (Settings.OnlinePlay)
             {
@@ -833,9 +835,11 @@ public class World : MonoBehaviour
         worldLoaded = true;
     }
 
-    public byte GetVoxel(Vector3 globalPos) // The main algorithm used to calculate voxels for world generation. Runs whenever voxel ids need to be calculated (modified voxels are saved to a serialized file).
+    public byte GetVoxel(Vector3 globalPos)
     {
-        // optimize to try to answer the question (what is blockID at this position) the fastest way possible
+        // The main algorithm used in the procedural world generation
+        // used to determine voxelID at each position in a chunk. Runs whenever voxel ids need to be calculated (only modified voxels are saved to the serialized file).
+        // optimized to try to determine blockID in the fastest way possible
 
         int yGlobalPos = Mathf.FloorToInt(globalPos.y);
         int xGlobalPos = Mathf.FloorToInt(globalPos.x);
@@ -847,9 +851,15 @@ public class World : MonoBehaviour
         if (!IsVoxelInWorld(globalPos))
             return 0;
 
-        // seed 0 returns all air blocks to only show imported ldraw models (blank white plane)
+        // planet 0, seed 0 is a blank canvas for building around the imported ldraw file
         if (worldData.planetNumber == 0 && worldData.seed == 0)
-            return 0;
+        {
+            terrainHeightVoxels = 1;
+            if (yGlobalPos == 1 && !CheckMakeBase(globalPos))
+                return 4;
+            else if (yGlobalPos > 1)
+                return 0;
+        }
 
         // bottom of world layer is core block (e.g. water/lava)
         if (yGlobalPos == 1)
@@ -939,7 +949,7 @@ public class World : MonoBehaviour
                             if (Noise.Get2DPerlin(xzCoords, 0, biome.smallStructures[i].floraPlacementScale) > biome.smallStructures[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallStructures[i].floraIndex, globalPos, biome.smallStructures[i].minHeight, +
-                                    biome.smallStructures[i].maxHeight, biome.smallStructures[i].minRadius, biome.smallStructures[i].maxRadius, fertility));
+                                    biome.smallStructures[i].maxHeight, biome.smallStructures[i].minRadius, biome.smallStructures[i].maxRadius, fertility, isEarth));
                             }
                         }
                     }
@@ -952,7 +962,7 @@ public class World : MonoBehaviour
                             if (Noise.Get2DPerlin(xzCoords, 0, biome.mediumStructures[i].floraPlacementScale) > biome.mediumStructures[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.mediumStructures[i].floraIndex, globalPos, biome.mediumStructures[i].minHeight, +
-                                    biome.mediumStructures[i].maxHeight, biome.mediumStructures[i].minRadius, biome.mediumStructures[i].maxRadius, fertility));
+                                    biome.mediumStructures[i].maxHeight, biome.mediumStructures[i].minRadius, biome.mediumStructures[i].maxRadius, fertility, isEarth));
                             }
                         }
                     }
@@ -965,7 +975,7 @@ public class World : MonoBehaviour
                             if (Noise.Get2DPerlin(xzCoords, 0, biome.largeStructures[i].floraPlacementScale) > biome.largeStructures[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.largeStructures[i].floraIndex, globalPos, biome.largeStructures[i].minHeight, +
-                                    biome.largeStructures[i].maxHeight, biome.largeStructures[i].minRadius, biome.largeStructures[i].maxRadius, fertility));
+                                    biome.largeStructures[i].maxHeight, biome.largeStructures[i].minRadius, biome.largeStructures[i].maxRadius, fertility, isEarth));
                             }
                         }
                     }
@@ -978,7 +988,7 @@ public class World : MonoBehaviour
                             if (Noise.Get2DPerlin(xzCoords, 0, biome.smallFlora[i].floraPlacementScale) > biome.smallFlora[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallFlora[i].floraIndex, globalPos, biome.smallFlora[i].minHeight, +
-                                    biome.smallFlora[i].maxHeight, biome.smallFlora[i].minRadius, biome.smallFlora[i].maxRadius, fertility));
+                                    biome.smallFlora[i].maxHeight, biome.smallFlora[i].minRadius, biome.smallFlora[i].maxRadius, fertility, isEarth));
                             }
                         }
                     }
@@ -991,7 +1001,7 @@ public class World : MonoBehaviour
                             if (Noise.Get2DPerlin(xzCoords, 0, biome.mediumFlora[i].floraPlacementScale) > biome.mediumFlora[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.mediumFlora[i].floraIndex, globalPos, biome.mediumFlora[i].minHeight, +
-                                    biome.mediumFlora[i].maxHeight, biome.mediumFlora[i].minRadius, biome.mediumFlora[i].maxRadius, fertility));
+                                    biome.mediumFlora[i].maxHeight, biome.mediumFlora[i].minRadius, biome.mediumFlora[i].maxRadius, fertility, isEarth));
                             }
                         }
                     }
@@ -1004,7 +1014,7 @@ public class World : MonoBehaviour
                             if (Noise.Get2DPerlin(xzCoords, 0, biome.largeFlora[i].floraPlacementScale) > biome.largeFlora[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.largeFlora[i].floraIndex, globalPos, biome.largeFlora[i].minHeight, +
-                                    biome.largeFlora[i].maxHeight, biome.largeFlora[i].minRadius, biome.largeFlora[i].maxRadius, fertility));
+                                    biome.largeFlora[i].maxHeight, biome.largeFlora[i].minRadius, biome.largeFlora[i].maxRadius, fertility, isEarth));
                             }
                         }
                     }
@@ -1017,7 +1027,7 @@ public class World : MonoBehaviour
                             if (Noise.Get2DPerlin(xzCoords, 0, biome.XLFlora[i].floraPlacementScale) > biome.XLFlora[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.XLFlora[i].floraIndex, globalPos, biome.XLFlora[i].minHeight, +
-                                    biome.XLFlora[i].maxHeight, biome.XLFlora[i].minRadius, biome.XLFlora[i].maxRadius, fertility));
+                                    biome.XLFlora[i].maxHeight, biome.XLFlora[i].minRadius, biome.XLFlora[i].maxRadius, fertility, isEarth));
                             }
                         }
                     }
@@ -1031,7 +1041,7 @@ public class World : MonoBehaviour
     {
         if (Settings.Platform != 2 && _globalPos.y == terrainHeightVoxels && _globalPos.x == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && _globalPos.z == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2))
         {
-            modifications.Enqueue(Structure.GenerateSurfaceOb(0, _globalPos, 0, 0, 0, 0, 0)); // make base at center of first chunk at terrain height
+            modifications.Enqueue(Structure.GenerateSurfaceOb(0, _globalPos, 0, 0, 0, 0, 0, isEarth)); // make base at center of first chunk at terrain height
             return true;
         }
         else
@@ -1360,7 +1370,7 @@ public class World : MonoBehaviour
                     // Destroy any gameObject associated with the global position or global position above
                     byte blockID = chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
 
-                    if (objectDictionary.TryGetValue(globalPosition, out _) && blockID != 25 && blockID != 26) // voxelBoundObjects but not procGen.ldr
+                    if (objectDictionary.TryGetValue(globalPosition, out _) && blockID != 25 && blockID != 26) // voxelBoundObjects but not base or procGen.ldr
                     {
                         Destroy(objectDictionary[globalPosition]);
                         objectDictionary.Remove(globalPosition);
@@ -1448,13 +1458,13 @@ public class World : MonoBehaviour
 
     public bool CheckForVoxel(Vector3 pos)
     {
-        VoxelState voxel = worldData.GetVoxel(pos);
+        VoxelState voxel = worldData.GetVoxel(pos); // gets the voxel state from saved worldData
 
         if (voxel == null)
             return false;
 
-        if (voxel.id == 26)
-            return true; // VBO placeholder to allow player to jump off of VBO
+        if (voxel.id == 25 || voxel.id == 26)
+            return true; // VBO placeholder to prevent player from replacing with a voxel
 
         if (blocktypes[voxel.id].isSolid) // gives error if the player starts outside of the world
             return true;

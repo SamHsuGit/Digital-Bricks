@@ -44,15 +44,17 @@ public class GameMenu : MonoBehaviour
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
         playerHUDCanvasGroup = playerHUD.GetComponent<CanvasGroup>();
         optionsMenuCanvasGroup = optionsMenu.GetComponent<CanvasGroup>();
-        lighting = World.Instance.globalLighting;
         controller = player.GetComponent<Controller>();
         canvas = GetComponent<Canvas>();
         health = player.GetComponent<Health>();
-        customNetworkManager = World.Instance.customNetworkManager;
     }
 
     private void Start()
     {
+        // these must happen in start since world is not instantiated until after Awake...
+        lighting = World.Instance.globalLighting;
+        customNetworkManager = World.Instance.customNetworkManager;
+
         // set settings from loaded saved file
         volumeSlider.value = SettingsStatic.LoadedSettings.volume;
         lookSpeedSlider.value = SettingsStatic.LoadedSettings.lookSpeed;

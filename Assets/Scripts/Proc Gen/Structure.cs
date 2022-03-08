@@ -3,14 +3,14 @@ using UnityEngine;
 
 public static class Structure
 {
-    public static Queue<VoxelMod> GenerateSurfaceOb (int index, Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float _fertility)
+    public static Queue<VoxelMod> GenerateSurfaceOb (int index, Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float _fertility, bool _isEarth)
     {
         switch (index)
         {
             case 0:
                 return MakeBaseVBOImport(position);
             //case 1:
-            //    return MakeProcGenVBOImport(position);
+            //    return MakeProcGenVBOImport(position); // decided not to allow VBO imports since is a performance hog, instead only spawn  imported object at base
             case 2:
                 return MakeTree(position, minHeight, maxHeight, minRadius, maxRadius, _fertility);
             case 3:
@@ -20,13 +20,22 @@ public static class Structure
             case 5:
                 return MakeMonolith(position, minHeight, maxHeight, _fertility);
             case 6:
-                return MakeGrass(position);
+                if (_isEarth)
+                    return MakeGrass(position); // only present on earth (green flora doesn't match on other planets)
+                else
+                    break;
             case 7:
-                return MakeMushroomSmall(position);
+                return MakeMushroomSmall(position); // must be present on all planets for gameplay (health)
             case 8:
-                return MakeBamboo(position, minHeight, maxHeight, _fertility);
+                if (_isEarth)
+                    return MakeBamboo(position, minHeight, maxHeight, _fertility); // only present on earth (green flora doesn't match on other planets)
+                else
+                    break;
             case 9:
-                return MakeFlower(position);
+                if (_isEarth)
+                    return MakeFlower(position); // only present on earth (green flora doesn't match on other planets)
+                else
+                    break;
             case 10:
                 return MakeEvergreen(position, minHeight, maxHeight, _fertility);
             case 11:
