@@ -198,9 +198,14 @@ public static class SaveSystem
             Directory.CreateDirectory(savePath);
 
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create);
+        FileStream stream;
 
+        stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create);
         formatter.Serialize(stream, chunk);
+        stream.Close();
+
+        stream = new FileStream(savePath + chunkName + ".chunkString", FileMode.Create);
+        formatter.Serialize(stream, chunk.EncodeChunk(chunk));
         stream.Close();
     }
 
@@ -232,18 +237,67 @@ public static class SaveSystem
 
     public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (SLOW)
     {
+        ChunkData chunk = new ChunkData();
+
         string chunkName = position.x + "-" + position.y;
         string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
+        string loadPathString = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunkString";
 
         if (File.Exists(loadPath))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath, FileMode.Open);
 
-            ChunkData chunkData = formatter.Deserialize(stream) as ChunkData;
+            chunk = formatter.Deserialize(stream) as ChunkData;
+
+            string voxels = string.Empty;
+            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            {
+                for (int y = 0; y < VoxelData.ChunkHeight; y++)
+                {
+                    for (int z = 0; z < VoxelData.ChunkWidth; z++)
+                    {
+                        voxels += chunk.stringBlockIDs[chunk.map[x, y, z].id];
+                    }
+                }
+            }
+            Debug.Log(chunk.position);
+            Debug.Log(chunk.RunLengthEncode(voxels));
+
             stream.Close();
-            return chunkData;
         }
+        else
+            chunk = null;
+
+        if (File.Exists(loadPathString))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(loadPathString, FileMode.Open);
+
+            ChunkData chunkString = new ChunkData();
+            string str = formatter.Deserialize(stream) as string;
+            chunkString = chunkString.DecodeChunk(str);
+
+            string voxelsString = string.Empty;
+
+            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            {
+                for (int y = 0; y < VoxelData.ChunkHeight; y++)
+                {
+                    for (int z = 0; z < VoxelData.ChunkWidth; z++)
+                    {
+                        voxelsString += chunkString.stringBlockIDs[chunkString.map[x, y, z].id];
+                    }
+                }
+            }
+            Debug.Log(chunkString.position);
+            Debug.Log(chunkString.RunLengthEncode(voxelsString));
+
+            stream.Close();
+        }
+
+        if (chunk != null)
+            return chunk;
         else
             return null;   
     }

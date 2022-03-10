@@ -168,6 +168,6 @@ public class WorldData
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));
 
         // Then set the voxel in our chunk.
-        return chunk.map[voxel.x, voxel.y, voxel.z];
+        return new VoxelState(chunk.map[voxel.x, voxel.y, voxel.z].id);
     }
 }

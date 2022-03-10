@@ -28,17 +28,6 @@ public class ChunkData
     public ChunkData(int _x, int _y) { x = _x; y = _y; }
     public ChunkData() { x = 0; y = 0; } // default constructor for deserialization
 
-    // Optimize Data storage (possibly slow random access) 3D byte array into 1D string with Run Length Encoding?
-    // map = 3D array of voxelstates/bytes, 1 byte = 8 bits (each voxelState = 1 byte which represents up to 2^8 (256) values)
-    // so 16x16x8x96 = 196,608 bits (196.608 kB per chunk), save file is larger than this... not sure why
-    // To share worlds over discord, need to reduce savedata to under 8 MB
-    // enables chunk strings to be sent over the network to sync world files upon start
-    // Make function Encode to encode the map values into a 1D string
-    // aaaaabbbbacaa = 5a4b1a1c2a
-    // order is predetermined to be chunk coords x,z, then voxel positions y 96-0 (top to bottom, first for chunk optimization), x 0-16 (left to right), z 0-16 (bottom to top)
-    // a = 0, b = 1, c = 2, etc.
-    // Minecraft further divides world into regions = 32x32 chunks https://docs.safe.com/fme/html/FME_Desktop_Documentation/FME_ReadersWriters/minecraft/minecraft.htm
-    // Minecraft compresses save data to reduce level.data to 2 kB?!
     [HideInInspector]
     public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
@@ -120,64 +109,92 @@ public class ChunkData
 
     public string EncodeChunk(ChunkData chunk)
     {
-        VoxelState[,,] _map = chunk.map;
-        string str;
-        str = chunk.position.x.ToString();
-        str += ",";
-        str += chunk.position.y.ToString();
-        str += ",";
-        for (int y = 0; y < VoxelData.ChunkHeight; y++)
-            str += stringBlockIDs[y];
-        str += ",";
-        for (int x = 0; x < VoxelData.ChunkWidth; x++)
-            str += stringBlockIDs[x];
-        str += ",";
-        for (int z = 0; z < VoxelData.ChunkWidth; z++)
-            str += stringBlockIDs[z];
-        str = StringTransform.RunLengthEncode(str);
+        // Optimized Data storage (possibly slow random access) 3D byte array into 1D string with Run Length Encoding
+        // map = 3D array of voxelstates/bytes, 1 byte = 8 bits (each voxelState = 1 byte which represents up to 2^8 (256) values)
+        // bytes go from 16x16x96 = 24,796 to 5,000 a roughly 20% compression?
+        // Compressing chunks from 3D byte arrays into 1D Run Length Encoded strings reduced each chunk file size from 361 KB to 5 KB
+        // so 16x16x8x96 = 196,608 bits (196.608 kB per chunk), save file was 361 KB... not sure why
+        // To share worlds over discord, need to reduce savedata to under 8 MB
+        // enables chunk strings to be sent over the network to sync world files upon start
+        // Make function Encode to encode the map values into a 1D string
+        // aaaaabbbbacaa = 5a4b1a1c2a
+        // order is predetermined to be chunk coords x,z, then voxel positions y 0-96 (bottom to top, first for chunk optimization), x 0-16 (left to right), z 0-16 (bottom to top)
+        // a = 0, b = 1, c = 2, etc.
+        // Minecraft further divides world into regions = 32x32 chunks https://docs.safe.com/fme/html/FME_Desktop_Documentation/FME_ReadersWriters/minecraft/minecraft.htm
+        // Minecraft compresses save data to reduce level.data to 2 kB?!
+
+        string str = string.Empty;
+        for (int z = 0; z < VoxelData.ChunkWidth; z++) // last does next z value
+        {
+            for (int x = 0; x < VoxelData.ChunkWidth; x++) // then does next x value
+            {
+                for (int y = 0; y < VoxelData.ChunkHeight; y++) // first runs from y = 0 to 96 at x = 0, z = 0
+                {
+                    //if(_map[x, y, z] != 0) // do not store empty voxel states but mark end of vertical slice with 0?
+                    str += stringBlockIDs[chunk.map[x, y, z].id];
+                }
+                str += ",";
+            }
+        }
+        //Debug.Log(str);
+        // example output: "dtadddddddddddddddddddaaadddddeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..."
+        // with vertical slices of chunks smashed next to each other (stores 0's)
+
+        str = chunk.position.x.ToString() + "," + chunk.position.y.ToString() + "," + RunLengthEncode(str);
+        //Debug.Log(str);
+        // example output: "1,2,1d1t1a19d3a5d1e65a,1d1t20d3a5d1e65a..."
+
         return str;
     }
 
     public ChunkData DecodeChunk(string str)
     {
-        str = StringTransform.RunLengthDecode(str);
-
+        //Debug.Log(str);
         string[] substrings = new string[] { };
         substrings = str.Split(',');
+        //Debug.Log(substrings[0]);
+        //Debug.Log(substrings[1]);
+
+        for (int i = 2; i < substrings.Length - 1; i++)
+        {
+            substrings[i] = RunLengthDecode(substrings[i]);
+            //Debug.Log(substrings[i]);
+            // example output: "dtadddddddddddddddddddaaadddddeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..."
+        }
 
         int xChunkPos = int.Parse(substrings[0]);
         int zChunkPos = int.Parse(substrings[1]);
+
+        //Debug.Log(xChunkPos);
+        //Debug.Log(zChunkPos);
         ChunkData chunk = new ChunkData(xChunkPos, zChunkPos);
 
-        VoxelState[] yVoxelStates = GetVoxelStatesFromString(substrings[2]);
-        VoxelState[] xVoxelStates = GetVoxelStatesFromString(substrings[3]);
-        VoxelState[] zVoxelStates = GetVoxelStatesFromString(substrings[4]);
-
-        for (int x = 0; x < VoxelData.ChunkWidth; x++)
+        for (int z = 0; z < VoxelData.ChunkWidth; z++)
         {
-            for (int y = 0; y < VoxelData.ChunkHeight; y++)
+            for (int x = 0; x < VoxelData.ChunkWidth; x++)
             {
-                for (int z = 0; z < VoxelData.ChunkWidth; z++)
+                for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    //map[x, y, z] = xVoxelStates[x], yVoxelStates[y], zVoxelStates[z]; // WIP
+                    chunk.map[x, y, z] = GetVoxelStateFromString(substrings[2 + y + x + z])[y];
                 }
             }
         }
         return chunk;
     }
 
-    public VoxelState[] GetVoxelStatesFromString(string str)
+    public VoxelState[] GetVoxelStateFromString(string str)
     {
-        VoxelState[] array = new VoxelState[] { };
-        for(int i = 0; i < str.Length; i++)
+        // get an array of voxelStates for all y positions for a given x and z coordinate in a chunk
+        VoxelState[] yVoxelStates = new VoxelState[str.Length];
+        for (int i = 0; i < str.Length; i++)
         {
-            for(int j = 0; j < stringBlockIDs.Length; j++)
+            for (int j = 0; j < stringBlockIDs.Length; j++)
             {
                 if (str[i].ToString().Contains(stringBlockIDs[j]))
-                    array[i] = new VoxelState(j);
+                    yVoxelStates[i] = new VoxelState((byte)j);
             }
         }
-        return array;
+        return yVoxelStates;
     }
 
     public string RunLengthEncode(string str)
@@ -196,12 +213,13 @@ public class ChunkData
                     count++;
                     i++;
                 }
-                returnValue += count;
+                if(!str[i].ToString().Contains(","))
+                    returnValue += count;
                 returnValue += str[i];
             }
             return returnValue;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ErrorMessage.Show("Exception in Run Length Encoding: " + e.Message);
             return null;
@@ -215,85 +233,18 @@ public class ChunkData
         try
         {
             string returnValue = string.Empty;
-            int n = str.Length;
-            for (int i = 0; i < n - 1; i += 2)
+            string charCount = string.Empty;
+            for (int i = 0; i < str.Length; i++)
             {
-                for (int j = 0; j < str[i]; j++)
+                if ("1234567890".Contains(str[i].ToString())) //extract repetition counter
+                    charCount += str[i];
+                else
                 {
-                    returnValue += str[i + 1];
+                    returnValue += new string(str[i], int.Parse(charCount));
+                    charCount = "";
                 }
             }
             return returnValue;
-        }
-        catch(Exception e)
-        {
-            ErrorMessage.Show("Exception in Run Length Decoding: " + e.Message);
-            return null;
-        }
-    }
-}
-
-public class StringTransform
-{
-
-    public const char EOF = '\u007F';
-    public const char ESCAPE = '\\';
-
-    public static string RunLengthEncode(string s)
-    {
-        try
-        {
-            string srle = string.Empty;
-            int ccnt = 1; //char counter
-            for (int i = 0; i < s.Length - 1; i++)
-            {
-                if (s[i] != s[i + 1] || i == s.Length - 2) //..a break in character repetition or the end of the string
-                {
-                    if (s[i] == s[i + 1] && i == s.Length - 2) //end of string condition
-                        ccnt++;
-                    srle += ccnt + ("1234567890".Contains(s[i].ToString()) ? "" + ESCAPE : "") + s[i]; //escape digits
-                    if (s[i] != s[i + 1] && i == s.Length - 2) //end of string condition
-                        srle += ("1234567890".Contains(s[i + 1].ToString()) ? "1" + ESCAPE : "") + s[i + 1];
-                    ccnt = 1; //reset char repetition counter
-                }
-                else
-                {
-                    ccnt++;
-                }
-
-            }
-            return srle;
-        }
-        catch (Exception e)
-        {
-            ErrorMessage.Show("Exception in Run Length Encoding: " + e.Message);
-            return null;
-        }
-    }
-    public static string RunLengthDecode(string s)
-    {
-        try
-        {
-            string dsrle = string.Empty
-                    , ccnt = string.Empty; //char counter
-            for (int i = 0; i < s.Length; i++)
-            {
-                if ("1234567890".Contains(s[i].ToString())) //extract repetition counter
-                {
-                    ccnt += s[i];
-                }
-                else
-                {
-                    if (s[i] == ESCAPE)
-                    {
-                        i++;
-                    }
-                    dsrle += new String(s[i], int.Parse(ccnt));
-                    ccnt = "";
-                }
-
-            }
-            return dsrle;
         }
         catch (Exception e)
         {
