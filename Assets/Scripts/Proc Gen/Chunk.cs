@@ -195,7 +195,7 @@ public class Chunk
         }
     }
 
-    VoxelState CheckVoxel(Vector3 pos)
+    public VoxelState CheckVoxel(Vector3 pos)
     {
         int x = Mathf.FloorToInt(pos.x);
         int y = Mathf.FloorToInt(pos.y);

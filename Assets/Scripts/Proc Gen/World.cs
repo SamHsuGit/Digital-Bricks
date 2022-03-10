@@ -846,6 +846,23 @@ public class World : MonoBehaviour
         int zGlobalPos = Mathf.FloorToInt(globalPos.z);
         Vector2 xzCoords = new Vector2(xGlobalPos, zGlobalPos);
 
+        //// Cannot know what chunks are surrounded without first calculating the neighboring voxels...
+        //// ignore chunks which do not touch transparent blocks
+        //VoxelState[] neighborVoxelStates = new VoxelState[] { };
+        //bool visible = false;
+        //for (int p = 0; p < 6; p++)
+        //{
+        //    Vector3 neighborPos = globalPos + VoxelData.faceChecks[p];
+        //    neighborVoxelStates[p] = GetChunkFromVector3(globalPos).CheckVoxel(neighborPos);
+        //}
+        //for(int i = 0; i < neighborVoxelStates.Length; i++) // if any face is visible, flag it
+        //{
+        //    if (neighborVoxelStates[i] != null && blocktypes[neighborVoxelStates[i].id].isTransparent)
+        //        visible = true;
+        //}
+        //if (!visible) // if none of faces are visible, return 0 (air)
+        //    return 0;
+
         /* IMMUTABLE PASS */
         // If outside world, return air.
         if (!IsVoxelInWorld(globalPos))

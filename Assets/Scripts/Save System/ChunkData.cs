@@ -37,6 +37,7 @@ public class ChunkData
 
     public void Populate()
     {
+        // currently populates all voxel data, but only needs to populate voxels which are adjacent to air
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; x++)
