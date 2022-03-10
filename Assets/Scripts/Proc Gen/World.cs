@@ -10,7 +10,7 @@ public class World : MonoBehaviour
     public int tick;
     public bool saving = false;
     public bool undrawVoxelBoundObjects = false;
-    public bool undrawVoxels = false;
+    public bool undrawVoxels = false; // does not redraw voxels if set to true...
     public bool VBOs = true;
     public bool chunkMeshColliders = true;
     public bool isEarth;
@@ -127,7 +127,7 @@ public class World : MonoBehaviour
 
         // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
         undrawVoxelBoundObjects = false;
-        undrawVoxels = false;
+        undrawVoxels = false; // does not redraw voxels if set to true...
 
         playerCount = 0;
 
