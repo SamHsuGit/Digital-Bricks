@@ -237,67 +237,69 @@ public static class SaveSystem
 
     public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (SLOW)
     {
-        ChunkData chunk = new ChunkData();
+        //ChunkData chunk = new ChunkData();
+        ChunkData chunkString = new ChunkData();
 
         string chunkName = position.x + "-" + position.y;
-        string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
+        //string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
         string loadPathString = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunkString";
 
-        if (File.Exists(loadPath))
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(loadPath, FileMode.Open);
+        //if (File.Exists(loadPath))
+        //{
+        //    BinaryFormatter formatter = new BinaryFormatter();
+        //    FileStream stream = new FileStream(loadPath, FileMode.Open);
 
-            chunk = formatter.Deserialize(stream) as ChunkData;
+        //    chunk = formatter.Deserialize(stream) as ChunkData;
 
-            string voxels = string.Empty;
-            for (int x = 0; x < VoxelData.ChunkWidth; x++)
-            {
-                for (int y = 0; y < VoxelData.ChunkHeight; y++)
-                {
-                    for (int z = 0; z < VoxelData.ChunkWidth; z++)
-                    {
-                        voxels += chunk.stringBlockIDs[chunk.map[x, y, z].id];
-                    }
-                }
-            }
-            Debug.Log(chunk.position);
-            Debug.Log(chunk.RunLengthEncode(voxels));
+        //    string voxels = string.Empty;
+        //    for (int x = 0; x < VoxelData.ChunkWidth; x++)
+        //    {
+        //        for (int y = 0; y < VoxelData.ChunkHeight; y++)
+        //        {
+        //            for (int z = 0; z < VoxelData.ChunkWidth; z++)
+        //            {
+        //                voxels += chunk.stringBlockIDs[chunk.map[x, y, z].id];
+        //            }
+        //        }
+        //    }
+        //    Debug.Log(chunk.position);
+        //    Debug.Log(chunk.RunLengthEncode(voxels));
 
-            stream.Close();
-        }
-        else
-            chunk = null;
+        //    stream.Close();
+        //}
+        //else
+        //    chunk = null;
 
         if (File.Exists(loadPathString))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPathString, FileMode.Open);
 
-            ChunkData chunkString = new ChunkData();
             string str = formatter.Deserialize(stream) as string;
             chunkString = chunkString.DecodeChunk(str);
 
-            string voxelsString = string.Empty;
+            //string voxelsString = string.Empty;
 
-            for (int x = 0; x < VoxelData.ChunkWidth; x++)
-            {
-                for (int y = 0; y < VoxelData.ChunkHeight; y++)
-                {
-                    for (int z = 0; z < VoxelData.ChunkWidth; z++)
-                    {
-                        voxelsString += chunkString.stringBlockIDs[chunkString.map[x, y, z].id];
-                    }
-                }
-            }
-            Debug.Log(chunkString.position);
-            Debug.Log(chunkString.RunLengthEncode(voxelsString));
+            //for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            //{
+            //    for (int y = 0; y < VoxelData.ChunkHeight; y++)
+            //    {
+            //        for (int z = 0; z < VoxelData.ChunkWidth; z++)
+            //        {
+            //            voxelsString += chunkString.stringBlockIDs[chunkString.map[x, y, z].id];
+            //        }
+            //    }
+            //}
+            //Debug.Log(chunkString.position);
+            //Debug.Log(chunkString.RunLengthEncode(voxelsString));
 
             stream.Close();
         }
+        else
+            chunkString = null;
 
-        if (chunk != null)
-            return chunk;
+        if (chunkString != null)
+            return chunkString;
         else
             return null;   
     }
