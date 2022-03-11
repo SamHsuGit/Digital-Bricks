@@ -252,11 +252,11 @@ public static class SaveSystem
             chunk = formatter.Deserialize(stream) as ChunkData;
 
             string voxels = string.Empty;
-            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            for (int x = 0; x < 1; x++)
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    for (int z = 0; z < VoxelData.ChunkWidth; z++)
+                    for (int z = 0; z < 1; z++)
                     {
                         voxels += chunk.stringBlockIDs[chunk.map[x, y, z].id];
                     }
@@ -280,11 +280,11 @@ public static class SaveSystem
 
             string voxelsString = string.Empty;
 
-            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            for (int x = 0; x < 1; x++)
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    for (int z = 0; z < VoxelData.ChunkWidth; z++)
+                    for (int z = 0; z < 1; z++)
                     {
                         voxelsString += chunkString.stringBlockIDs[chunkString.map[x, y, z].id];
                     }
