@@ -252,17 +252,12 @@ public static class SaveSystem
             chunk = formatter.Deserialize(stream) as ChunkData;
 
             string voxels = string.Empty;
-            for (int x = 0; x < 1; x++)
+            for (int y = 0; y < VoxelData.ChunkHeight; y++)
             {
-                for (int y = 0; y < VoxelData.ChunkHeight; y++)
-                {
-                    for (int z = 0; z < 1; z++)
-                    {
-                        voxels += chunk.stringBlockIDs[chunk.map[x, y, z].id];
-                    }
-                }
+                voxels += chunk.stringBlockIDs[chunk.map[0, y, 3].id];
             }
             Debug.Log(chunk.position);
+            //Debug.Log((chunk.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunk.position.y - VoxelData.WorldSizeInChunks / 2));
             Debug.Log(chunk.RunLengthEncode(voxels));
 
             stream.Close();
@@ -279,18 +274,12 @@ public static class SaveSystem
             chunkString = chunkString.DecodeChunk(str);
 
             string voxelsString = string.Empty;
-
-            for (int x = 0; x < 1; x++)
+            for (int y = 0; y < VoxelData.ChunkHeight; y++)
             {
-                for (int y = 0; y < VoxelData.ChunkHeight; y++)
-                {
-                    for (int z = 0; z < 1; z++)
-                    {
-                        voxelsString += chunkString.stringBlockIDs[chunkString.map[x, y, z].id];
-                    }
-                }
+                voxelsString += chunkString.stringBlockIDs[chunkString.map[0, y, 3].id];
             }
-            Debug.Log(chunkString.position);
+            //Debug.Log(chunkString.position);
+            //Debug.Log((chunkString.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunkString.position.y - VoxelData.WorldSizeInChunks / 2));
             Debug.Log(chunkString.RunLengthEncode(voxelsString));
 
             stream.Close();
