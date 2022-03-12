@@ -237,58 +237,58 @@ public static class SaveSystem
 
     public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (SLOW)
     {
+        //ChunkData chunkOld = new ChunkData();
         ChunkData chunk = new ChunkData();
-        ChunkData chunkString = new ChunkData();
 
         string chunkName = position.x + "-" + position.y;
-        string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
-        string loadPathString = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunkString";
+        //string loadPathOld = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
+        string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunkString";
+
+        //if (File.Exists(loadPathOld)) // non run length encoded
+        //{
+        //    BinaryFormatter formatter = new BinaryFormatter();
+        //    FileStream stream = new FileStream(loadPathOld, FileMode.Open);
+
+        //    chunkOld = formatter.Deserialize(stream) as ChunkData;
+
+        //    //string voxelsOld = string.Empty;
+        //    //for (int y = 0; y < VoxelData.ChunkHeight; y++)
+        //    //{
+        //    //    voxelsOld += chunkOld.stringBlockIDs[chunkOld.map[0, y, 3].id];
+        //    //}
+        //    //Debug.Log(chunkOld.position);
+        //    //Debug.Log((chunk.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunk.position.y - VoxelData.WorldSizeInChunks / 2));
+        //    //Debug.Log(chunkOld.RunLengthEncode(voxelsOld));
+
+        //    stream.Close();
+        //}
+        //else
+        //    chunkOld = null;
 
         if (File.Exists(loadPath))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath, FileMode.Open);
 
-            chunk = formatter.Deserialize(stream) as ChunkData;
+            string str = formatter.Deserialize(stream) as string;
+            chunk = chunk.DecodeChunk(str);
 
-            string voxels = string.Empty;
-            for (int y = 0; y < VoxelData.ChunkHeight; y++)
-            {
-                voxels += chunk.stringBlockIDs[chunk.map[0, y, 3].id];
-            }
-            Debug.Log(chunk.position);
-            //Debug.Log((chunk.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunk.position.y - VoxelData.WorldSizeInChunks / 2));
-            Debug.Log(chunk.RunLengthEncode(voxels));
+            //string voxels = string.Empty;
+            //for (int y = 0; y < VoxelData.ChunkHeight; y++)
+            //{
+            //    voxels += chunk.stringBlockIDs[chunk.map[0, y, 3].id];
+            //}
+            //Debug.Log(chunkString.position);
+            //Debug.Log((chunkString.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunkString.position.y - VoxelData.WorldSizeInChunks / 2));
+            //Debug.Log(chunk.RunLengthEncode(voxelsString));
 
             stream.Close();
         }
         else
             chunk = null;
 
-        if (File.Exists(loadPathString))
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(loadPathString, FileMode.Open);
-
-            string str = formatter.Deserialize(stream) as string;
-            chunkString = chunkString.DecodeChunk(str);
-
-            string voxelsString = string.Empty;
-            for (int y = 0; y < VoxelData.ChunkHeight; y++)
-            {
-                voxelsString += chunkString.stringBlockIDs[chunkString.map[0, y, 3].id];
-            }
-            //Debug.Log(chunkString.position);
-            //Debug.Log((chunkString.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunkString.position.y - VoxelData.WorldSizeInChunks / 2));
-            Debug.Log(chunkString.RunLengthEncode(voxelsString));
-
-            stream.Close();
-        }
-        else
-            chunkString = null;
-
-        if (chunkString != null)
-            return chunkString;
+        if (chunk != null)
+            return chunk;
         else
             return null;   
     }

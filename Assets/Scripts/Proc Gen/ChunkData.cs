@@ -169,10 +169,9 @@ public class ChunkData
         //Debug.Log(zChunkPos);
         ChunkData chunk = new ChunkData(xChunkPos, zChunkPos);
 
-        string voxelString = string.Empty;
+        //string voxelString = string.Empty;
         //Debug.Log(substrings[0]);
         //Debug.Log(substrings[1]);
-        Debug.Log("looking for " + RunLengthEncode(substrings[50]));
         for (int z = 0; z < VoxelData.ChunkWidth; z++)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; x++)
@@ -180,10 +179,10 @@ public class ChunkData
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
                     chunk.map[x, y, z] = GetVoxelStateFromString(substrings[2 + x + 16 * z])[y];
-                    voxelString += stringBlockIDs[GetVoxelStateFromString(substrings[2 + x  + 16 * z])[y].id]; // need to revise this formula
+                    //voxelString += stringBlockIDs[GetVoxelStateFromString(substrings[2 + x  + 16 * z])[y].id]; // need to revise this formula
                 }
-                Debug.Log("stubstring[" + x + z + "] = " + RunLengthEncode(voxelString));
-                voxelString = string.Empty;
+                //Debug.Log("stubstring[" + x + z + "] = " + RunLengthEncode(voxelString));
+                //voxelString = string.Empty;
             }
         }
         return chunk;
