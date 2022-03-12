@@ -180,7 +180,7 @@ public class ChunkData
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
                     chunk.map[x, y, z] = GetVoxelStateFromString(substrings[2 + x + z])[y];
-                    voxelString += stringBlockIDs[GetVoxelStateFromString(substrings[2 + x * z])[y].id]; // need to revise this formula
+                    voxelString += stringBlockIDs[GetVoxelStateFromString(substrings[2 + x  + 16 * z])[y].id]; // need to revise this formula
                 }
                 Debug.Log("stubstring[" + x + z + "] = " + RunLengthEncode(voxelString));
                 voxelString = string.Empty;
