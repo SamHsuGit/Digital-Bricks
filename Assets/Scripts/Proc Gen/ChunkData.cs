@@ -130,18 +130,15 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++) // first runs from y = 0 to 96 at x = 0, z = 0
                 {
-                    //if(_map[x, y, z] != 0) // do not store empty voxel states but mark end of vertical slice with 0?
                     str += stringBlockIDs[chunk.map[x, y, z].id];
                 }
                 str += ",";
             }
         }
-        //Debug.Log(str);
         // example output: "dtadddddddddddddddddddaaadddddeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..."
         // with vertical slices of chunks smashed next to each other (stores 0's)
 
         str = chunk.position.x.ToString() + "," + chunk.position.y.ToString() + "," + RunLengthEncode(str);
-        //Debug.Log(str);
         // example output: "1,2,1d1t1a19d3a5d1e65a,1d1t20d3a5d1e65a..."
 
         return str;
@@ -149,29 +146,20 @@ public class ChunkData
 
     public ChunkData DecodeChunk(string str)
     {
-        //Debug.Log(str);
         string[] substrings = new string[] { };
         substrings = str.Split(',');
-        //Debug.Log(substrings[0]);
-        //Debug.Log(substrings[1]);
 
         for (int i = 2; i < substrings.Length - 1; i++)
         {
             substrings[i] = RunLengthDecode(substrings[i]);
-            //Debug.Log(substrings[i]);
             // example output: "dtadddddddddddddddddddaaadddddeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..."
         }
 
         int xChunkPos = int.Parse(substrings[0]);
         int zChunkPos = int.Parse(substrings[1]);
 
-        //Debug.Log(xChunkPos);
-        //Debug.Log(zChunkPos);
         ChunkData chunk = new ChunkData(xChunkPos, zChunkPos);
 
-        //string voxelString = string.Empty;
-        //Debug.Log(substrings[0]);
-        //Debug.Log(substrings[1]);
         for (int z = 0; z < VoxelData.ChunkWidth; z++)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; x++)
@@ -179,10 +167,7 @@ public class ChunkData
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
                     chunk.map[x, y, z] = GetVoxelStateFromString(substrings[2 + x + 16 * z])[y];
-                    //voxelString += stringBlockIDs[GetVoxelStateFromString(substrings[2 + x  + 16 * z])[y].id]; // need to revise this formula
                 }
-                //Debug.Log("stubstring[" + x + z + "] = " + RunLengthEncode(voxelString));
-                //voxelString = string.Empty;
             }
         }
         return chunk;

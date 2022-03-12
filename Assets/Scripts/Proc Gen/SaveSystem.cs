@@ -201,10 +201,6 @@ public static class SaveSystem
         FileStream stream;
 
         stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create);
-        formatter.Serialize(stream, chunk);
-        stream.Close();
-
-        stream = new FileStream(savePath + chunkName + ".chunkString", FileMode.Create);
         formatter.Serialize(stream, chunk.EncodeChunk(chunk));
         stream.Close();
     }
@@ -215,7 +211,6 @@ public static class SaveSystem
 
         if (File.Exists(loadPath + _planetNumber + "-" + _seed + ".worldData"))
         {
-            //Debug.Log(worldName + " found. Loading from save.");
 
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath + _planetNumber + "-" + _seed + ".worldData", FileMode.Open);
@@ -226,7 +221,6 @@ public static class SaveSystem
         }
         else
         {
-            //Debug.Log(worldName + " not found. Creating new world.");
 
             WorldData world = new WorldData(_planetNumber, _seed);
             SaveWorld(world);
@@ -237,33 +231,10 @@ public static class SaveSystem
 
     public static ChunkData LoadChunk(int _planetNumber, int _seed, Vector2Int position) // loads chunks from file (SLOW)
     {
-        //ChunkData chunkOld = new ChunkData();
         ChunkData chunk = new ChunkData();
 
         string chunkName = position.x + "-" + position.y;
-        //string loadPathOld = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
-        string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunkString";
-
-        //if (File.Exists(loadPathOld)) // non run length encoded
-        //{
-        //    BinaryFormatter formatter = new BinaryFormatter();
-        //    FileStream stream = new FileStream(loadPathOld, FileMode.Open);
-
-        //    chunkOld = formatter.Deserialize(stream) as ChunkData;
-
-        //    //string voxelsOld = string.Empty;
-        //    //for (int y = 0; y < VoxelData.ChunkHeight; y++)
-        //    //{
-        //    //    voxelsOld += chunkOld.stringBlockIDs[chunkOld.map[0, y, 3].id];
-        //    //}
-        //    //Debug.Log(chunkOld.position);
-        //    //Debug.Log((chunk.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunk.position.y - VoxelData.WorldSizeInChunks / 2));
-        //    //Debug.Log(chunkOld.RunLengthEncode(voxelsOld));
-
-        //    stream.Close();
-        //}
-        //else
-        //    chunkOld = null;
+        string loadPath = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
 
         if (File.Exists(loadPath))
         {
@@ -272,15 +243,6 @@ public static class SaveSystem
 
             string str = formatter.Deserialize(stream) as string;
             chunk = chunk.DecodeChunk(str);
-
-            //string voxels = string.Empty;
-            //for (int y = 0; y < VoxelData.ChunkHeight; y++)
-            //{
-            //    voxels += chunk.stringBlockIDs[chunk.map[0, y, 3].id];
-            //}
-            //Debug.Log(chunkString.position);
-            //Debug.Log((chunkString.position.x - VoxelData.WorldSizeInChunks / 2) + ", " + (chunkString.position.y - VoxelData.WorldSizeInChunks / 2));
-            //Debug.Log(chunk.RunLengthEncode(voxelsString));
 
             stream.Close();
         }
