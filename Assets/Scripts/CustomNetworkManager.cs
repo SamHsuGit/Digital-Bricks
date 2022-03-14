@@ -53,7 +53,7 @@ public class CustomNetworkManager : NetworkManager
             chunksServer = chunksServerCombinedString,
         };
         NetworkServer.SendToAll(hostMessage);
-
+        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
 
         worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from client
@@ -81,6 +81,29 @@ public class CustomNetworkManager : NetworkManager
         conn.Send(clientMessage);
 
         worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from server
+    }
+
+    void OnReceiveHostMessage(ServerToClientMessage message)
+    {
+        // these values need to be synced to world before controller is activated bc world is activated before controller
+        World world = worldOb.GetComponent<World>();
+        Debug.Log("replace " + world.planetNumber + " with " + message.planetNumberServer + " to get: ");
+        world.planetNumber = message.planetNumberServer; // preset world planetNumber
+        Debug.Log(world.planetNumber);
+        world.seed = message.seedServer; // preset world seed
+        world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
+        if (message.chunksServer != null)
+        {
+            string[] serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
+
+            // tell world to draw chunks from server
+            for (int i = 0; i < serverChunks.Length; i++)
+            {
+                ChunkData chunk = new ChunkData();
+                chunk = chunk.DecodeChunk(serverChunks[i]);
+                world.worldData.chunks.Add(chunk.position, chunk);
+            }
+        }
     }
 
     void OnCreateCharacter(NetworkConnection conn, ClientToServerMessage message)
