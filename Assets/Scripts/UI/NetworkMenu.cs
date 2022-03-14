@@ -12,7 +12,7 @@ public class NetworkMenu : MonoBehaviour
     public GameObject networkMenuElements;
     public AudioSource buttonSound;
     public GameObject background;
-    public GameObject world;
+    public GameObject worldOb;
     public GameObject loadingText;
     public GameObject gameManagerObject;
 
@@ -73,6 +73,7 @@ public class NetworkMenu : MonoBehaviour
         if (!NetworkClient.active)
         {
             // Client + IP
+            NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
             manager.StartClient();
             manager.networkAddress = networkAddressInputField.text;
         }
@@ -84,6 +85,27 @@ public class NetworkMenu : MonoBehaviour
 
         StatusLabels();
         gameManager.Setup(); // activate ldraw importer, etc.
+    }
+
+    void OnReceiveHostMessage(ServerToClientMessage message)
+    {
+        // these values need to be synced to world before controller is activated bc world is activated before controller
+        World world = worldOb.GetComponent<World>();
+        world.planetNumber = message.planetNumberServer; // preset world planetNumber
+        world.seed = message.seedServer; // preset world seed
+        world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
+        if (message.chunksServer != null)
+        {
+            string[] serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
+
+            // tell world to draw chunks from server
+            for (int i = 0; i < serverChunks.Length; i++)
+            {
+                ChunkData chunk = new ChunkData();
+                chunk = chunk.DecodeChunk(serverChunks[i]);
+                world.worldData.chunks.Add(chunk.position, chunk);
+            }
+        }
     }
 
     public void Back()

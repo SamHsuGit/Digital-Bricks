@@ -59,27 +59,6 @@ public class CustomNetworkManager : NetworkManager
         worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from client
     }
 
-    void OnReceiveHostMessage(ServerToClientMessage message)
-    {
-        // these values need to be synced to world before controller is activated bc world is activated before controller
-        World world = worldOb.GetComponent<World>();
-        world.planetNumber = message.planetNumberServer; // preset world planetNumber
-        world.seed = message.seedServer; // preset world seed
-        world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
-        if (message.chunksServer != null)
-        {
-            string[] serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
-
-            // tell world to draw chunks from server
-            for (int i = 0; i < serverChunks.Length; i++)
-            {
-                ChunkData chunk = new ChunkData();
-                chunk = chunk.DecodeChunk(serverChunks[i]);
-                world.worldData.chunks.Add(chunk.position, chunk);
-            }
-        }
-    }
-
     public void SpawnNetworkOb(GameObject ob)
     {
         NetworkServer.Spawn(ob);
@@ -88,8 +67,6 @@ public class CustomNetworkManager : NetworkManager
     public override void OnClientConnect(NetworkConnection conn) // happens before controller is instantiated
     {
         base.OnClientConnect(conn);
-
-        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
 
         ClientToServerMessage clientMessage;
 
