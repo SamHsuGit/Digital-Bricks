@@ -25,7 +25,7 @@ public class GameManagerScript : MonoBehaviour
             Setup();
         else
         {
-            worldOb.SetActive(false); // later enabled by NetworkMenu when player selects host or join
+            worldOb.SetActive(false); // later enabled by CustomNetworkManager when player selects host or join
             NETWORK.SetActive(true); // activate NetworkMenu where player selects host or join
             PlayerManagerNetwork.SetActive(true);
 

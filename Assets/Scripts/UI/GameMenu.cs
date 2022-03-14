@@ -149,7 +149,7 @@ public class GameMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.timeOfDay = lighting.timeOfDay; // only write this value when saving instead of every frame update
 
         string jsonExport = JsonUtility.ToJson(SettingsStatic.LoadedSettings);
-        File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
+        File.WriteAllText(Settings.AppPath + "/settings.cfg", jsonExport);
         SettingsStatic.LoadSettings();
     }
 

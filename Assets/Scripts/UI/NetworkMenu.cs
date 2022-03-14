@@ -85,7 +85,7 @@ public class NetworkMenu : MonoBehaviour
 
         StatusLabels();
         gameManager.Setup(); // activate ldraw importer, etc.
-        world.SetActive(true); // activate world generation in customNetworkManager
+        //world.SetActive(true); // activate world generation in customNetworkManager
     }
 
     public void Back()
@@ -127,7 +127,7 @@ public class NetworkMenu : MonoBehaviour
 
         StatusLabels();
         gameManager.Setup();
-        world.SetActive(true);
+        //world.SetActive(true); // activate world generation in customNetworkManager
     }
 
     public void OnChangeNetworkAddress()
@@ -162,6 +162,6 @@ public class NetworkMenu : MonoBehaviour
     {
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
         string jsonExport = JsonUtility.ToJson(SettingsStatic.LoadedSettings);
-        File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
+        File.WriteAllText(Settings.AppPath + "/settings.cfg", jsonExport);
     }
 }

@@ -55,6 +55,8 @@ public class CustomNetworkManager : NetworkManager
         NetworkServer.SendToAll(hostMessage);
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
+
+        world.SetActive(true); // only activate world after sending/receiving all messages to/from client
     }
 
     
