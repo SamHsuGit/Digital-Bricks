@@ -58,12 +58,6 @@ public class CustomNetworkManager : NetworkManager
         worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from client
     }
 
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        
-    }
-
     public void SpawnNetworkOb(GameObject ob)
     {
         NetworkServer.Spawn(ob);
