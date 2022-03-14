@@ -533,9 +533,12 @@ MonoBehaviour:
   playerCharIdleString: 
   playerCharRunString: 
   playerProjectileString: 
-  timeOfDay: 6.0066667
-  seed: 0
-  version: 
+  timeOfDayServer: 6.01
+  planetNumberServer: 0
+  seedServer: 0
+  serverBaseString: 
+  chunkListServer: []
+  versionServer: 
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0

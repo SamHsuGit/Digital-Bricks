@@ -22,7 +22,7 @@ public class Controller : NetworkBehaviour
     [SyncVar] public int seedServer;
     [SyncVar] public string serverBaseString;
     public List<string> chunkListServer;
-    public SyncList<string> chunkSyncListServer;
+    readonly public SyncList<string> chunkSyncListServer = new SyncList<string>();
     [SyncVar] public string versionServer;
     readonly public SyncList<string> playerNamesServer = new SyncList<string>();
 
@@ -120,7 +120,7 @@ public class Controller : NetworkBehaviour
     float minCamAngle = -90f;
     bool daytime = true;
     float nextTimeToAnim = 0;
-    List<Material> cachedMaterials = new List<Material>();
+    //List<Material> cachedMaterials = new List<Material>();
 
     void Awake()
     {
@@ -234,10 +234,6 @@ public class Controller : NetworkBehaviour
         timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
-        serverBaseString = LDrawImportRuntime.Instance.ReadFileToString("base.ldr");
-        chunkListServer = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
-        for (int i = 0; i < chunkListServer.Count; i++)
-            chunkSyncListServer.Add(chunkListServer[i]);
         versionServer = Application.version;
         if (World.Instance.gameObject != null) // causes issues during online play when World is not yet loaded and server is started
         {
@@ -246,6 +242,11 @@ public class Controller : NetworkBehaviour
                 playerNamesServer.Add(World.Instance.players[i].name);
             }
         }
+
+        serverBaseString = LDrawImportRuntime.Instance.ReadFileToString("base.ldr");
+        chunkListServer = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
+        for (int i = 0; i < chunkListServer.Count; i++)
+            chunkSyncListServer.Add(chunkListServer[i]);
     }
 
     public override void OnStartClient()
@@ -257,7 +258,7 @@ public class Controller : NetworkBehaviour
 
         // GAME LOAD VALIDATION FOR ONLINE PLAY
         if (Application.version != versionServer) // if client version does not match server version, show error.
-            ErrorMessage.Show("Error: Version mismatch. Client game version must match host. Disconnecting Client.");
+            ErrorMessage.Show("Error: Version mismatch. " + Application.version + " != " + versionServer + ". Client game version must match host. Disconnecting Client.");
 
         if (isClientOnly) // check new client playername against existing server player names to ensure it is unique for savegame purposes
         {
@@ -370,11 +371,11 @@ public class Controller : NetworkBehaviour
         isMoving = newValue;
     }
 
-    private void OnDestroy()
-    {
-        foreach(Material mat in cachedMaterials)
-            Destroy(mat); // Unity makes a clone of the Material every time GetComponent().material is used. Cache it and destroy it in OnDestroy to prevent a memory leak.
-    }
+    //private void OnDestroy()
+    //{
+    //    foreach(Material mat in cachedMaterials)
+    //        Destroy(mat); // Unity makes a clone of the Material every time GetComponent().material is used. Cache it and destroy it in OnDestroy to prevent a memory leak.
+    //}
 
     private void OnCollisionEnter(Collision collision)
     {

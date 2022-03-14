@@ -260,14 +260,16 @@ public static class SaveSystem
         List<string> strArray = new List<string>();
 
         string path = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/";
-        foreach (string file in Directory.GetFiles(path))
+        if(File.Exists(path))
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(path + file + ".chunk", FileMode.Open);
-            strArray.Add(formatter.Deserialize(stream) as string);
-            stream.Close();
+            foreach (string file in Directory.GetFiles(path))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                FileStream stream = new FileStream(path + file + ".chunk", FileMode.Open);
+                strArray.Add(formatter.Deserialize(stream) as string);
+                stream.Close();
+            }
         }
-        
         return strArray;
     }
 }
