@@ -79,10 +79,10 @@ public class LDrawImportRuntime : MonoBehaviour
         return _modelOb;
     }
 
-    public GameObject ImportLDrawOnline(string fileName, string commandString, Vector3 pos, bool isStatic)
+    public GameObject ImportLDrawOnline(string name, string commandString, Vector3 pos, bool isStatic)
     {
         // Called when other players send ldraw commands over network, rebuilds the ldraw file on client end (assumes players have different ldraw models)
-        var model = LDrawModelRuntime.Create(fileName, commandString, false);
+        var model = LDrawModelRuntime.Create(name, commandString, false);
         GameObject _modelOb = model.CreateMeshGameObject(ldrawConfigRuntime.ScaleMatrix);
 
         // clumsy way of getting rid of unwanted imported object (need to figure out how to prevent this in first place). This has to occur before ConfigureModelOb
@@ -94,7 +94,7 @@ public class LDrawImportRuntime : MonoBehaviour
         
 
         _modelOb = ConfigureModelOb(_modelOb, pos, isStatic);
-        _modelOb.name = fileName;
+        _modelOb.name = name;
         return _modelOb;
     }
 

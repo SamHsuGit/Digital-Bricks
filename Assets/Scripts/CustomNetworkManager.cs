@@ -12,42 +12,6 @@ public struct ClientToServerMessage : NetworkMessage
     public string serializedProjectile;
 }
 
-// https://mirror-networking.gitbook.io/docs/guides/communications/network-messages
-// https://mirror-networking.gitbook.io/docs/guides/data-types
-// Mirror can only serialize classes as long as each field has a supported data type...
-// Mirror does not support complex data types such as Dictionaries and lists, must implement serialization/deserialization methods yourself...
-//public struct HostMessage : NetworkMessage
-//{
-//    //public List<ChunkData> modifiedChunks;
-//    //public List<VoxelState[,,]> mapList;
-//}
-
-//public static class ChunkDataReaderWriter
-//{
-//    public static void WriteChunkData(this NetworkWriter writer, ChunkData chunkData)
-//    {
-//        writer.WriteInt(chunkData);
-//    }
-
-//    public static ChunkData ReadChunkData(this NetworkReader reader)
-//    {
-//        return new ChunkData(reader.ReadInt());
-//    }
-//}
-
-//public static class VoxelStatReaderWriter
-//{
-//    public static void WriteVoxelState(this NetworkWriter writer, VoxelState voxelState)
-//    {
-//        writer.WriteByte(voxelState);
-//    }
-
-//    public static VoxelState ReadVoxelState(this NetworkReader reader)
-//    {
-//        return new VoxelState(reader.WriteByte());
-//    }
-//}
-
 public class CustomNetworkManager : NetworkManager
 {
     public GameObject world;
@@ -57,22 +21,6 @@ public class CustomNetworkManager : NetworkManager
     public override void OnStartServer()
     {
         base.OnStartServer();
-
-        //HostMessage hostMessage;
-
-        // create a list of voxelMaps for modified chunks to send in message to clients
-        //List<VoxelState[,,]> mapListForMessage = new List<VoxelState[,,]>();
-        //for (int i = 0; i < World.Instance.worldData.modifiedChunks.Count; i++)
-        //{
-        //    mapListForMessage[i] = World.Instance.worldData.modifiedChunks[i].map;
-        //}
-
-        // send the clients a message containing the world data so that users do not have to manually share files before each game
-        //hostMessage = new HostMessage
-        //{
-        //    //modifiedChunks = World.Instance.worldData.modifiedChunks,
-        //    //mapList = mapListForMessage
-        //};
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
     }

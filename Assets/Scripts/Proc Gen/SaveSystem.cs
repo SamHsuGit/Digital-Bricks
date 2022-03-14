@@ -254,4 +254,20 @@ public static class SaveSystem
         else
             return null;   
     }
+
+    public static List<string> LoadChunkFromFile(int _planetNumber, int _seed)
+    {
+        List<string> strArray = new List<string>();
+
+        string path = World.Instance.appPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/";
+        foreach (string file in Directory.GetFiles(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path + file + ".chunk", FileMode.Open);
+            strArray.Add(formatter.Deserialize(stream) as string);
+            stream.Close();
+        }
+        
+        return strArray;
+    }
 }

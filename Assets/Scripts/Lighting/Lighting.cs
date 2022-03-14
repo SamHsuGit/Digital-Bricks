@@ -31,7 +31,7 @@ public class Lighting : MonoBehaviour
         {
             if(controller == null)
                 controller = World.Instance.players[1].playerGameObject.GetComponent<Controller>();
-            timeOfDay = controller.timeOfDay;
+            timeOfDay = controller.timeOfDayServer;
         }
 
         if (sunProperties == null)
@@ -61,7 +61,7 @@ public class Lighting : MonoBehaviour
         daytime = CheckDaytime(timeOfDay);
 
         if (Settings.OnlinePlay && World.Instance.playerCount > 1 && World.Instance.players[1].playerGameObject != null) // if player is created, write variable to player syncVar
-            controller.timeOfDay = timeOfDay;
+            controller.timeOfDayServer = timeOfDay;
     }
 
     public bool CheckDaytime(float _timeOfDay)

@@ -15,10 +15,16 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdleString;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRunString;
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectileString;
-    [SyncVar(hook = nameof(SetTime))] public float timeOfDay = 6.01f; // all clients use server timeOfDay which is loaded from host client
-    [SyncVar] public int seed; // all clients can see server syncVar seed to check against
-    [SyncVar] public string version = "0.0.0.0"; // all clients can see server syncVar version to check against
-    readonly public SyncList<string> playerNames = new SyncList<string>(); // all clients can see server SyncList playerNames to check against
+
+    // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
+    [SyncVar(hook = nameof(SetTime))] public float timeOfDayServer = 6.01f;
+    [SyncVar] public int planetNumberServer;
+    [SyncVar] public int seedServer;
+    [SyncVar] public string serverBaseString;
+    public List<string> chunkListServer;
+    public SyncList<string> chunkSyncListServer;
+    [SyncVar] public string versionServer;
+    readonly public SyncList<string> playerNamesServer = new SyncList<string>();
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -160,7 +166,7 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
+            timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
             // Import character model idle pose
             charObIdle = Instantiate(LDrawImportRuntime.Instance.charObIdle);
             charObIdle.SetActive(true);
@@ -225,14 +231,19 @@ public class Controller : NetworkBehaviour
         base.OnStartServer();
 
         // SET SERVER VALUES FROM HOST CLIENT
-        timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
-        seed = SettingsStatic.LoadedSettings.seed;
-        version = Application.version;
+        timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
+        planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
+        seedServer = SettingsStatic.LoadedSettings.seed;
+        serverBaseString = LDrawImportRuntime.Instance.ReadFileToString("base.ldr");
+        chunkListServer = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
+        for (int i = 0; i < chunkListServer.Count; i++)
+            chunkSyncListServer.Add(chunkListServer[i]);
+        versionServer = Application.version;
         if (World.Instance.gameObject != null) // causes issues during online play when World is not yet loaded and server is started
         {
             for (int i = 0; i < World.Instance.players.Count; i++)
             {
-                playerNames.Add(World.Instance.players[i].name);
+                playerNamesServer.Add(World.Instance.players[i].name);
             }
         }
     }
@@ -242,22 +253,40 @@ public class Controller : NetworkBehaviour
         base.OnStartClient();
 
         // SET CLIENT SYNCVAR FROM SERVER
-        SetTime(timeOfDay, timeOfDay);
+        SetTime(timeOfDayServer, timeOfDayServer);
 
         // GAME LOAD VALIDATION FOR ONLINE PLAY
-        if (Application.version != version) // if client version does not match server version, show error.
+        if (Application.version != versionServer) // if client version does not match server version, show error.
             ErrorMessage.Show("Error: Version mismatch. Client game version must match host. Disconnecting Client.");
-
-        if (SettingsStatic.LoadedSettings.seed != seed)
-            ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
 
         if (isClientOnly) // check new client playername against existing server player names to ensure it is unique for savegame purposes
         {
-            foreach (string name in playerNames)
+            foreach (string name in playerNamesServer)
             {
                 if (SettingsStatic.LoadedSettings.playerName == name)
                     ErrorMessage.Show("Error: Non-Unique Player Name. Client name already exists on server. Player names must be unique. Disconnecting Client.");
             }
+        }
+
+        // use planetNumber from server
+        SettingsStatic.LoadedSettings.planetNumber = planetNumberServer;
+        //if (SettingsStatic.LoadedSettings.planetNumber != planetNumberServer)
+        //    ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
+
+        // use seed from server
+        SettingsStatic.LoadedSettings.seed = seedServer;
+        //if (SettingsStatic.LoadedSettings.seed != seedServer)
+        //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
+
+        // import base from server
+        LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", serverBaseString, LDrawImportRuntime.Instance.importPosition, true);
+
+        // import chunks from server
+        for(int i = 0; i < chunkSyncListServer.Count; i++)
+        {
+            ChunkData chunk = new ChunkData();
+            chunk = chunk.DecodeChunk(chunkSyncListServer[i]);
+            world.worldData.chunks.Add(chunk.position, chunk);
         }
 
         SetPlayerAttributes();
@@ -333,7 +362,7 @@ public class Controller : NetworkBehaviour
 
     public void SetTime(float oldValue, float newValue)
     {
-        timeOfDay = newValue;
+        timeOfDayServer = newValue;
     }
 
     public void SetIsMoving(bool oldValue, bool newValue)
@@ -381,7 +410,7 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        timeOfDay = World.Instance.globalLighting.timeOfDay; // update time of day from lighting component
+        timeOfDayServer = World.Instance.globalLighting.timeOfDay; // update time of day from lighting component
         daytime = World.Instance.globalLighting.daytime;
 
         isGrounded = CheckGroundedCollider();
