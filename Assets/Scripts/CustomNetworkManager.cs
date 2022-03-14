@@ -25,12 +25,11 @@ public class CustomNetworkManager : NetworkManager
     public GameObject worldOb;
     public GameObject charPrefab;
     GameObject playerGameObject;
+    public ServerToClientMessage hostMessage;
 
     public override void OnStartServer() // happens before controller is instantiated
     {
         base.OnStartServer();
-
-        ServerToClientMessage hostMessage;
 
         int planetNumber = SettingsStatic.LoadedSettings.planetNumber;
         int seed = SettingsStatic.LoadedSettings.seed;
@@ -62,7 +61,7 @@ public class CustomNetworkManager : NetworkManager
     public override void OnStartClient()
     {
         base.OnStartClient();
-        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
+        
     }
 
     public void SpawnNetworkOb(GameObject ob)
@@ -73,6 +72,8 @@ public class CustomNetworkManager : NetworkManager
     public override void OnClientConnect(NetworkConnection conn) // happens before controller is instantiated
     {
         base.OnClientConnect(conn);
+        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
+        NetworkServer.SendToAll(hostMessage);
 
         ClientToServerMessage clientMessage;
 
