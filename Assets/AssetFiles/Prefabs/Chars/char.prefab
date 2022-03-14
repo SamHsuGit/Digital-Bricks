@@ -483,10 +483,9 @@ MonoBehaviour:
   playerCharRun: 
   playerProjectile: 
   timeOfDayServer: 6.01
+  versionServer: 
   planetNumberServer: 0
   seedServer: 0
-  serverBaseString: 
-  versionServer: 
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0

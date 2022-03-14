@@ -21,6 +21,12 @@ public class GameManagerScript : MonoBehaviour
 
     void Awake()
     {
+        world = worldOb.GetComponent<World>();
+
+        // these values are set immediately and overwritten later if necessary to match server properties
+        world.planetNumber = SettingsStatic.LoadedSettings.planetNumber;
+        world.seed = SettingsStatic.LoadedSettings.seed;
+
         if (!Settings.OnlinePlay)
             Setup();
         else
@@ -40,7 +46,6 @@ public class GameManagerScript : MonoBehaviour
         // network (pc = 0, console = 1)
         // mobile singleplayer
 
-        world = worldOb.GetComponent<World>();
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
 
         if (!Settings.OnlinePlay)
@@ -55,6 +60,7 @@ public class GameManagerScript : MonoBehaviour
         else
         {
             LDrawImporterRuntime.SetActive(true); // activated by NetworkMenu for online play
+            world.baseOb = LDrawImportRuntime.Instance.baseOb; // value set initially right after ldraw importer actiavated, may be overridden by customNetworkManager to sync clients to server
             world.chunkMeshColliders = true; // values set ahead of world gameObject activation
             world.VBOs = true; // values set ahead of world gameObject activation
         }

@@ -269,13 +269,13 @@ public class Controller : NetworkBehaviour
                     ErrorMessage.Show("Error: Non-Unique Player Name. Client name already exists on server. Player names must be unique. Disconnecting Client.");
             }
 
-            // check if planet number from local machine matches server
-            if (world.planetNumber != planetNumberServer)
-                ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
+            //// check if planet number from local machine matches server
+            //if (world.planetNumber != planetNumberServer)
+            //    ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
 
-            // use seed from local machine maches server
-            if (world.seed != seedServer)
-                ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
+            //// use seed from local machine maches server
+            //if (world.seed != seedServer)
+            //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
         }
 
         SetPlayerAttributes();

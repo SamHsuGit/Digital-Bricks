@@ -63,8 +63,8 @@ public class CustomNetworkManager : NetworkManager
     {
         // these values need to be synced to world before controller is activated bc world is activated before controller
         World world = worldOb.GetComponent<World>();
-        world.planetNumber = message.planetNumberServer; // override loaded settings
-        world.seed = message.seedServer; // override loaded settings
+        world.planetNumber = message.planetNumberServer; // preset world planetNumber
+        world.seed = message.seedServer; // preset world seed
         world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
         if (message.chunksServer != null)
         {

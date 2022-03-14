@@ -244,21 +244,19 @@ public class World : MonoBehaviour
     private void Start()
     {
         worldLoaded = false;
-        planetNumber = SettingsStatic.LoadedSettings.planetNumber;
-        seed = SettingsStatic.LoadedSettings.seed;
         if (planetNumber == 3) // cache result for use in GetVoxel
             isEarth = true;
         else
             isEarth = false;
-        worldData = SaveSystem.LoadWorld(planetNumber, seed);
+        worldData = SaveSystem.LoadWorld(planetNumber, seed); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
         WorldDataOverrides(planetNumber);
 
         if (Settings.Platform == 2)
             blocktypes[25].voxelBoundObject = null;
         else
         {
-            if (baseOb == null && LDrawImportRuntime.Instance.baseOb != null) // normally set by customNetworkManager, otherwise, use local importer object
-                blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
+            blocktypes[25].voxelBoundObject = baseOb; // sets the base voxel bound object to the value set in the GameManager Script
+
             if (Settings.OnlinePlay)
             {
                 customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.baseOb);
