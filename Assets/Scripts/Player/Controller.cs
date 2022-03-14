@@ -6,6 +6,8 @@ using UnityEngine.SpatialTracking;
 using UnityEngine.Animations;
 public class Controller : NetworkBehaviour
 {
+    // NOTE: this class assumes world has already been activated
+
     public Player player;
 
     [Header("GameObject Arrays")]
@@ -18,11 +20,13 @@ public class Controller : NetworkBehaviour
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
     [SyncVar(hook = nameof(SetTime))] public float timeOfDayServer = 6.01f;
-    [SyncVar] public int planetNumberServer;
-    [SyncVar] public int seedServer;
-    [SyncVar(hook = nameof(SetBase))] public string serverBaseString;
     [SyncVar] public string versionServer;
     readonly public SyncList<string> playerNamesServer = new SyncList<string>();
+
+    // These server values cannot be set in controller since world is activated before controller, merely included here to check states match
+    [SyncVar] public int planetNumberServer;
+    [SyncVar] public int seedServer;
+
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -118,7 +122,7 @@ public class Controller : NetworkBehaviour
     float minCamAngle = -90f;
     bool daytime = true;
     float nextTimeToAnim = 0;
-    //List<Material> cachedMaterials = new List<Material>();
+    List<Material> cachedMaterials = new List<Material>();
 
     void Awake()
     {
@@ -254,44 +258,24 @@ public class Controller : NetworkBehaviour
         // SET CLIENT SYNCVAR FROM SERVER
         SetTime(timeOfDayServer, timeOfDayServer);
 
-        // GAME LOAD VALIDATION FOR ONLINE PLAY
-        if (Application.version != versionServer) // if client version does not match server version, show error.
-            ErrorMessage.Show("Error: Version mismatch. " + Application.version + " != " + versionServer + ". Client game version must match host. Disconnecting Client.");
-
-        if (isClientOnly) // check new client playername against existing server player names to ensure it is unique for savegame purposes
+        if (isClientOnly) // GAME LOAD VALIDATION FOR ONLINE PLAY
         {
-            foreach (string name in playerNamesServer)
+            if (Application.version != versionServer) // if client version does not match server version, show error.
+                ErrorMessage.Show("Error: Version mismatch. " + Application.version + " != " + versionServer + ". Client game version must match host. Disconnecting Client.");
+
+            foreach (string name in playerNamesServer) // check new client playername against existing server player names to ensure it is unique for savegame purposes
             {
                 if (SettingsStatic.LoadedSettings.playerName == name)
                     ErrorMessage.Show("Error: Non-Unique Player Name. Client name already exists on server. Player names must be unique. Disconnecting Client.");
             }
-        }
 
-        //// use planetNumber from server
-        ////SettingsStatic.LoadedSettings.planetNumber = planetNumberServer; // WIP does not sync at correct time... need to sync world value?
-        //if (SettingsStatic.LoadedSettings.planetNumber != planetNumberServer)
-        //    ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
+            // check if planet number from local machine matches server
+            if (world.planetNumber != planetNumberServer)
+                ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
 
-        //// use seed from server
-        ////SettingsStatic.LoadedSettings.seed = seedServer; // WIP does not sync at correct time... need to sync world value?
-        //if (SettingsStatic.LoadedSettings.seed != seedServer)
-        //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
-
-        // import base from server
-        // WIP does not sync at correct time... need to sync world value?
-        //LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", serverBaseString, LDrawImportRuntime.Instance.importPosition, true);
-
-        if(Settings.serverChunks != null)
-        {
-            string[] serverChunks = Settings.serverChunks.Split(';'); // splits individual chunk strings using ';' char delimiter
-
-            // tell world to draw chunks from server
-            for (int i = 0; i < serverChunks.Length; i++)
-            {
-                ChunkData chunk = new ChunkData();
-                chunk = chunk.DecodeChunk(serverChunks[i]);
-                world.worldData.chunks.Add(chunk.position, chunk);
-            }
+            // use seed from local machine maches server
+            if (world.seed != seedServer)
+                ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
         }
 
         SetPlayerAttributes();
@@ -327,8 +311,9 @@ public class Controller : NetworkBehaviour
         tpsDist = -cc.radius * 4;
     }
 
-    public void SetName(string oldValue, string newValue) // update the player visuals using the SyncVars pushed from the server to clients
+    public void SetName(string oldValue, string newValue)
     {
+        // update the player name using the SyncVar pushed from the server to clients
         if (playerName == null)
         {
             Debug.Log("No string found for playerName");
@@ -360,12 +345,6 @@ public class Controller : NetworkBehaviour
         SetPlayerColliderSettings();
     }
 
-    public void SetBase (string oldValue, string newValue)
-    {
-        world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
-        world.blocktypes[25].voxelBoundObject = world.baseOb;
-    }
-
     public void SetProjectile(string oldValue, string newValue)
     {
         projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
@@ -381,11 +360,11 @@ public class Controller : NetworkBehaviour
         isMoving = newValue;
     }
 
-    //private void OnDestroy()
-    //{
-    //    foreach(Material mat in cachedMaterials)
-    //        Destroy(mat); // Unity makes a clone of the Material every time GetComponent().material is used. Cache it and destroy it in OnDestroy to prevent a memory leak.
-    //}
+    private void OnDestroy()
+    {
+        foreach (Material mat in cachedMaterials)
+            Destroy(mat); // Unity makes a clone of the Material every time GetComponent().material is used. Cache it and destroy it in OnDestroy to prevent a memory leak.
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -527,18 +506,6 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    //[Command]
-    //void CmdActivateChunks()
-    //{
-    //    RpcActivateChunks();
-    //}
-
-    //[ClientRpc]
-    //void RpcActivateChunks()
-    //{
-    //    World.Instance.ActivateChunks();
-    //}
-
     public void pressedShoot()
     {
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
@@ -637,9 +604,11 @@ public class Controller : NetworkBehaviour
             SpawnObject(0, blockID, position);
     }
 
-    // needed to empty slot with many pieces all at once instead of manually removing one by one
+    
     public void DropItemsInSlot()
     {
+        // this function is needed to able to empty slot with many pieces all at once (otherwise players would need to manually remove blocks one at a time)
+
         if (!options && camMode == 1 && toolbar.slotIndex != 0 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
     }
@@ -965,57 +934,6 @@ public class Controller : NetworkBehaviour
         Destroy(ob, 30); // clean up objects after 30 seconds
     }
 
-    //[Command]
-    //public void CmdSpawnUndefinedPrefab(int option, Vector3 pos)
-    //{
-    //    SpawnUndefinedPrefab(option, pos);
-    //}
-
-    //public void SpawnUndefinedPrefab(int option, Vector3 pos)
-    //{
-    //    switch (option)
-    //    {
-    //        case 0:
-    //            undefinedPrefabToSpawn = LDrawImportRuntime.Instance.projectileOb;
-    //            undefinedPrefabToSpawn.tag = "Hazard";
-    //            break;
-    //    }
-    //    GameObject ob = Instantiate(undefinedPrefabToSpawn, new Vector3(pos.x + 0.5f, pos.y + undefinedPrefabToSpawn.GetComponent<BoxCollider>().size.y / 40 + 0.5f, pos.z + 0.5f), Quaternion.identity);
-    //    ob.transform.Rotate(new Vector3(180, 0, 0));
-    //    ob.SetActive(true);
-
-    //    if(option == 0 && ob.GetComponent<BoxCollider>() != null) // IF PROJECTILE
-    //    {
-    //        BoxCollider bc = ob.GetComponent<BoxCollider>();
-    //        bc.enabled = true;
-    //        bc.material = physicMaterial;
-    //    }
-
-    //    Rigidbody rb = ob.AddComponent<Rigidbody>();
-    //    float mass = gameObject.GetComponent<Health>().piecesRbMass;
-    //    rb.mass = mass;
-    //    rb.isKinematic = false;
-    //    rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
-    //    ob.AddComponent<Health>();
-    //    if (Settings.OnlinePlay)
-    //    {
-    //        if (ob.GetComponent<NetworkIdentity>() == null)
-    //            ob.AddComponent<NetworkIdentity>();
-    //        if (ob.GetComponent<NetworkTransform>() == null) // DISABLED (Chose to use Rb instead?) Network transform base error?
-    //            ob.AddComponent<NetworkTransform>();
-    //    }
-    //    MeshRenderer[] mrs = ob.transform.GetComponentsInChildren<MeshRenderer>();
-
-    //    int count = 0;
-    //    for (int i = 0; i < mrs.Length; i++)
-    //        if (mrs[i].gameObject.transform.childCount > 0)
-    //            count++;
-    //    ob.GetComponent<Health>().hp = count;
-    //    rb.mass = rb.mass + 2 * mass * count;
-    //    if (Settings.OnlinePlay)
-    //        customNetworkManager.SpawnNetworkOb(ob); // no assetId or sceneId???
-    //}
-
     void RemoveVoxel(Vector3 pos)
     {
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
@@ -1058,8 +976,10 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public Vector3[] GetVoxelPositionsInVolume(Vector3 center, int width) // DISABLED would allow players to edit more than 1 voxel at a time causing block duplication (breaks gameplay)
+    public Vector3[] GetVoxelPositionsInVolume(Vector3 center, int width)
     {
+        // DISABLED would allow players to edit more than 1 voxel at a time causing block duplication(breaks gameplay)
+
         if (width % 2 == 0) // if even number, round up to nearest odd number
             width += 1;
 
@@ -1373,8 +1293,9 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSaveWorld() // tells the server to save the world (moved here since the gameMenu cannot have a network identity).
+    public void CmdSaveWorld()
     {
+        // tells the server to save the world (moved here since the gameMenu cannot have a network identity).
         // server host and clients must save world before clients disconnect
         SaveWorld(World.Instance.worldData);
 

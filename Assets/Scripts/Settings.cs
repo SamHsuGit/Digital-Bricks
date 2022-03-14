@@ -56,8 +56,6 @@ public class Settings
     // private static variables
     private static bool _worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
     private static bool _networkPlay = false;
-    private static string _serverBaseString;
-    private static string _serverChunkStringList;
     private static string _appPath;
 
     [Header("Game Data")]
@@ -87,18 +85,6 @@ public class Settings
     [Header("Player Customization")]
     public string playerName;
     public bool flight;
-
-    public static string serverBase
-    {
-        get { return _serverBaseString; }
-        set { serverBase = value; }
-    }
-
-    public static string serverChunks
-    {
-        get { return _serverChunkStringList; }
-        set { _serverChunkStringList = value; }
-    }
 
     public static bool WorldLoaded
     {

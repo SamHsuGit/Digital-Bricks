@@ -1389,6 +1389,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2841459445815596870}
     - target: {fileID: 5936758643800811229, guid: 9a28e02f1d09101449f7e7ae8d58d0f8, type: 3}
+      propertyPath: worldOb
+      value: 
+      objectReference: {fileID: 2841459445815596870}
+    - target: {fileID: 5936758643800811229, guid: 9a28e02f1d09101449f7e7ae8d58d0f8, type: 3}
       propertyPath: charPrefab
       value: 
       objectReference: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}

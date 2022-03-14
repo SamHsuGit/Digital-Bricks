@@ -13,6 +13,9 @@ public class World : MonoBehaviour
     public bool undrawVoxels = false; // does not redraw voxels if set to true...
     public bool VBOs = true;
     public bool chunkMeshColliders = true;
+    public int planetNumber;
+    public int seed;
+    public GameObject baseOb;
     public bool isEarth;
 
     public Vector2[] continentalnessSplinePoints;
@@ -37,12 +40,11 @@ public class World : MonoBehaviour
 
     public int surfaceObType = 0;
     public Biome biome;
-
     public GameObject mainCameraGameObject;
     public Lighting globalLighting;
     public GameObject loadingText;
     public GameObject loadingBackground;
-    public GameObject baseOb;
+    
     public CustomNetworkManager customNetworkManager;
 
     [Header("World Generation Values")]
@@ -242,20 +244,21 @@ public class World : MonoBehaviour
     private void Start()
     {
         worldLoaded = false;
-        if (SettingsStatic.LoadedSettings.planetNumber == 3) // cache result for use in GetVoxel
+        planetNumber = SettingsStatic.LoadedSettings.planetNumber;
+        seed = SettingsStatic.LoadedSettings.seed;
+        if (planetNumber == 3) // cache result for use in GetVoxel
             isEarth = true;
         else
             isEarth = false;
-        worldData = SaveSystem.LoadWorld(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed);
-        WorldDataOverrides(SettingsStatic.LoadedSettings.planetNumber);
+        worldData = SaveSystem.LoadWorld(planetNumber, seed);
+        WorldDataOverrides(planetNumber);
 
         if (Settings.Platform == 2)
             blocktypes[25].voxelBoundObject = null;
         else
         {
-            if(LDrawImportRuntime.Instance.baseOb != null)
+            if (baseOb == null && LDrawImportRuntime.Instance.baseOb != null) // normally set by customNetworkManager, otherwise, use local importer object
                 blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb;
-
             if (Settings.OnlinePlay)
             {
                 customNetworkManager.spawnPrefabs.Add(LDrawImportRuntime.Instance.baseOb);

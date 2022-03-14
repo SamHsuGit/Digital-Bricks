@@ -22,7 +22,7 @@ public struct ClientToServerMessage : NetworkMessage
 
 public class CustomNetworkManager : NetworkManager
 {
-    public GameObject world;
+    public GameObject worldOb;
     public GameObject charPrefab;
     GameObject playerGameObject;
 
@@ -56,10 +56,29 @@ public class CustomNetworkManager : NetworkManager
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
 
-        world.SetActive(true); // only activate world after sending/receiving all messages to/from client
+        worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from client
     }
 
-    
+    void OnReceiveHostMessage(ServerToClientMessage message)
+    {
+        // these values need to be synced to world before controller is activated bc world is activated before controller
+        World world = worldOb.GetComponent<World>();
+        world.planetNumber = message.planetNumberServer; // override loaded settings
+        world.seed = message.seedServer; // override loaded settings
+        world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
+        if (message.chunksServer != null)
+        {
+            string[] serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
+
+            // tell world to draw chunks from server
+            for (int i = 0; i < serverChunks.Length; i++)
+            {
+                ChunkData chunk = new ChunkData();
+                chunk = chunk.DecodeChunk(serverChunks[i]);
+                world.worldData.chunks.Add(chunk.position, chunk);
+            }
+        }
+    }
 
     public void SpawnNetworkOb(GameObject ob)
     {
@@ -84,20 +103,7 @@ public class CustomNetworkManager : NetworkManager
         };
         conn.Send(clientMessage);
 
-        world.SetActive(true); // only activate world after sending/receiving all messages to/from server
-    }
-
-    public override void OnClientDisconnect(NetworkConnection conn)
-    {
-        base.OnClientDisconnect(conn);
-    }
-
-    void OnReceiveHostMessage(ServerToClientMessage message)
-    {
-        SettingsStatic.LoadedSettings.planetNumber = message.planetNumberServer; // override loaded settings
-        SettingsStatic.LoadedSettings.seed = message.seedServer; // override loaded settings
-        Settings.serverBase = message.baseServer; // store value so it can be set later at correct time (after ldrawimporter is activated)
-        Settings.serverChunks = message.chunksServer; // stores chunksList string for later use when world is set to active
+        worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from server
     }
 
     void OnCreateCharacter(NetworkConnection conn, ClientToServerMessage message)
@@ -105,7 +111,7 @@ public class CustomNetworkManager : NetworkManager
         // playerPrefab is the one assigned in the inspector in Network
         // Manager but you can use different prefabs per race for example
         //Transform startPos = GetStartPosition(); // not used to set default Spawn pos in settings
-        Vector3 startPos = world.GetComponent<World>().defaultSpawnPosition;
+        Vector3 startPos = worldOb.GetComponent<World>().defaultSpawnPosition;
         playerGameObject = Instantiate(charPrefab, startPos, Quaternion.identity);
 
         Controller controller = playerGameObject.GetComponent<Controller>();
@@ -119,5 +125,10 @@ public class CustomNetworkManager : NetworkManager
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);
+    }
+
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        base.OnClientDisconnect(conn);
     }
 }

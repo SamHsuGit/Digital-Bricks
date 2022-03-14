@@ -59,7 +59,6 @@ public class NetworkMenu : MonoBehaviour
 
         StatusLabels();
         gameManager.Setup(); // activate ldraw importer, etc.
-        //world.SetActive(true); // activate world generation in customNetworkManager
     }
 
     public void OnClientOnly()
@@ -85,7 +84,6 @@ public class NetworkMenu : MonoBehaviour
 
         StatusLabels();
         gameManager.Setup(); // activate ldraw importer, etc.
-        //world.SetActive(true); // activate world generation in customNetworkManager
     }
 
     public void Back()
@@ -127,7 +125,6 @@ public class NetworkMenu : MonoBehaviour
 
         StatusLabels();
         gameManager.Setup();
-        //world.SetActive(true); // activate world generation in customNetworkManager
     }
 
     public void OnChangeNetworkAddress()
