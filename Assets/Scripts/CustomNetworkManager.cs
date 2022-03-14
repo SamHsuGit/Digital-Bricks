@@ -81,6 +81,8 @@ public class CustomNetworkManager : NetworkManager
             projectile = FileSystemExtension.ReadFileToString("projectile.ldr"),
         };
         conn.Send(clientMessage);
+
+        world.SetActive(true); // only activate world after sending/receiving all messages to/from server
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)

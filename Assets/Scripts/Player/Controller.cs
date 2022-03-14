@@ -196,15 +196,15 @@ public class Controller : NetworkBehaviour
 
             player = new Player(gameObject, playerName); // set this player from world players
             world.players.Add(player);
-            CmdAddPlayerName(playerName);
+            //CmdAddPlayerName(playerName);
         }
     }
 
-    [Command]
-    void CmdAddPlayerName(string _playerName)
-    {
-        playerNamesServer.Add(_playerName);
-    }
+    //[Command]
+    //void CmdAddPlayerName(string _playerName)
+    //{
+    //    playerNamesServer.Add(_playerName);
+    //}
 
     void InputComponents()
     {
@@ -240,11 +240,11 @@ public class Controller : NetworkBehaviour
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
         versionServer = Application.version;
-        //if(world != null && world.players.Count != 0)
-        //{
-        //    for (int i = 0; i < world.players.Count; i++)
-        //        playerNamesServer.Add(world.players[i].name); // causes issues during online play when World is not yet loaded and server is started
-        //}
+        if (world != null && world.players.Count != 0)
+        {
+            for (int i = 0; i < world.players.Count; i++)
+                playerNamesServer.Add(world.players[i].name); // causes issues during online play when World is not yet loaded and server is started
+        }
     }
 
     public override void OnStartClient() // happens after world is instantiated
