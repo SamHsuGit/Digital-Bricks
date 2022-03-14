@@ -271,13 +271,13 @@ public class Controller : NetworkBehaviour
 
         // use planetNumber from server
         SettingsStatic.LoadedSettings.planetNumber = planetNumberServer;
-        //if (SettingsStatic.LoadedSettings.planetNumber != planetNumberServer)
-        //    ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
+        if (SettingsStatic.LoadedSettings.planetNumber != planetNumberServer)
+            ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
 
         // use seed from server
         SettingsStatic.LoadedSettings.seed = seedServer;
-        //if (SettingsStatic.LoadedSettings.seed != seedServer)
-        //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
+        if (SettingsStatic.LoadedSettings.seed != seedServer)
+            ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
 
         // import base from server
         LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", serverBaseString, LDrawImportRuntime.Instance.importPosition, true);
