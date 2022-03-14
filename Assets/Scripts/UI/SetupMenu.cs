@@ -124,10 +124,10 @@ public class SetupMenu : MonoBehaviour
         string path;
         if (Application.isMobilePlatform)
         {
-            path = Application.persistentDataPath + "/settings.cfg";
+            path = Settings.AppPath + "/settings.cfg";
         }
         else
-            path = Application.streamingAssetsPath + "/settings.cfg";
+            path = Settings.AppPath + "/settings.cfg";
         File.WriteAllText(path, jsonExport);
     }
 }

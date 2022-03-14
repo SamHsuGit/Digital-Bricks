@@ -38,10 +38,10 @@ public static class SettingsStatic
         string path;
         if (Application.isMobilePlatform)
         {
-            path = Application.persistentDataPath + "/settings.cfg";
+            path = Settings.AppPath + "/settings.cfg";
         }
         else
-            path = Application.streamingAssetsPath + "/settings.cfg";
+            path = Settings.AppPath + "/settings.cfg";
 
         if (File.Exists(path))
         {
@@ -57,10 +57,11 @@ public static class SettingsStatic
 public class Settings
 {
     // private static variables
-    private static bool worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
-    private static bool networkPlay = false;
-    private static string serverBaseString;
-    private static string[] serverChunkStringList;
+    private static bool _worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
+    private static bool _networkPlay = false;
+    private static string _serverBaseString;
+    private static string _serverChunkStringList;
+    private static string _appPath;
 
     [Header("Game Data")]
     public string ipAddress;
@@ -92,26 +93,26 @@ public class Settings
 
     public static string serverBase
     {
-        get { return serverBaseString; }
+        get { return _serverBaseString; }
         set { serverBase = value; }
     }
 
-    public static string[] serverChunks
+    public static string serverChunks
     {
-        get { return serverChunkStringList; }
-        set { serverChunkStringList = value; }
+        get { return _serverChunkStringList; }
+        set { _serverChunkStringList = value; }
     }
 
     public static bool WorldLoaded
     {
-        get { return worldLoaded; }
-        set { worldLoaded = value; }
+        get { return _worldLoaded; }
+        set { _worldLoaded = value; }
     }
 
     public static bool OnlinePlay
     {
-        get { return networkPlay; }
-        set {  networkPlay = value; }
+        get { return _networkPlay; }
+        set {  _networkPlay = value; }
     }
 
     public static int Platform
@@ -141,5 +142,43 @@ public class Settings
         // player default spawn position is centered above first chunk
         //new Vector3(40008, 60, 40008);
         get { return new Vector3(VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2, VoxelData.ChunkHeight - 5f, VoxelData.WorldSizeInVoxels / 2f + VoxelData.ChunkWidth / 2); }
+    }
+
+    public static string BasePartsPath
+    {
+        get { return Application.streamingAssetsPath + "/ldraw/partfiles/"; }
+    }
+
+    public static string ModelsPath
+    {
+        get { return Application.streamingAssetsPath + "/ldraw/models/"; }
+    }
+
+    public static string ColorConfigPath
+    {
+        get { return Application.streamingAssetsPath + "/ldraw/LDConfig.ldr"; }
+    }
+
+    public static string AppPath
+    {
+        get { return _appPath; }
+        set { _appPath = value; }
+    }
 }
+
+public static class FileSystemExtension
+{
+    public static string ReadFileToString(string fileName)
+    {
+        string path = Settings.ModelsPath + fileName;
+        if (!File.Exists(path))
+            ErrorMessage.Show("File not found: " + path);
+
+        StreamReader reader = new StreamReader(path);
+        string result = reader.ReadToEnd();
+        reader.Close();
+
+        return result;
+    }
+
 }

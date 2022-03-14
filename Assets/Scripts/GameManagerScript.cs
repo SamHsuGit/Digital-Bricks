@@ -25,14 +25,15 @@ public class GameManagerScript : MonoBehaviour
             Setup();
         else
         {
-            worldOb.SetActive(false); // later enabled by NetworkMenu
-            NETWORK.SetActive(true);
+            worldOb.SetActive(false); // later enabled by NetworkMenu when player selects host or join
+            NETWORK.SetActive(true); // activate NetworkMenu where player selects host or join
             PlayerManagerNetwork.SetActive(true);
-            LOCAL.SetActive(false);
+
+            LOCAL.SetActive(false); // not needed for online play (i.e. cannot do splitscreen/online play at same time)
         }
     }
 
-    public void Setup()
+    public void Setup() // called by NetworkMenu for online play
     {
         // valid gameplay modes
         // splitscreen (pc = 0, console = 1)
@@ -53,9 +54,9 @@ public class GameManagerScript : MonoBehaviour
         }
         else
         {
-            LDrawImporterRuntime.SetActive(true);
-            world.chunkMeshColliders = true;
-            world.VBOs = true;
+            LDrawImporterRuntime.SetActive(true); // activated by NetworkMenu for online play
+            world.chunkMeshColliders = true; // values set ahead of world gameObject activation
+            world.VBOs = true; // values set ahead of world gameObject activation
         }
 
         if (Settings.OnlinePlay) // network online multiplayer

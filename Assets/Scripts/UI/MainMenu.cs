@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
+        Settings.AppPath = Application.persistentDataPath;
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
         versionText.text = Application.version;
         Screen.fullScreen = SettingsStatic.LoadedSettings.fullscreen;

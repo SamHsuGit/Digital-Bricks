@@ -12,9 +12,6 @@ namespace LDraw
     [CreateAssetMenu(fileName = "LDrawConfigRuntime", menuName = "Scriptables/LDrawConfigRuntime", order = 1)]
     public class LDrawConfigRuntime : ScriptableObject
     {
-        [SerializeField] public string _BasePartsPath;
-        [SerializeField] public string _ModelsPath;
-        [SerializeField] public string _ColorConfigPath;
         [SerializeField] private string _MaterialsPath;
         [SerializeField] private string _MeshesPath;
         [SerializeField] private float _Scale;
@@ -108,13 +105,13 @@ namespace LDraw
             PrepareModels();
             ParseColors();
             _Parts = new Dictionary<string, string>();
-            var files = Directory.GetFiles(_BasePartsPath, "*.*", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(Settings.BasePartsPath, "*.*", SearchOption.AllDirectories);
 
             foreach (var file in files)
             {
                 if (!file.Contains(".meta"))
                 {
-                    string fileName = file.Replace(_BasePartsPath, "").Split('.')[0];
+                    string fileName = file.Replace(Settings.BasePartsPath, "").Split('.')[0];
                    
                     if (fileName.Contains("\\"))
                        fileName = fileName.Split('\\')[1];
@@ -128,7 +125,7 @@ namespace LDraw
         {
             _MainColors = new Dictionary<int, Material>();
 
-            using (StreamReader reader = new StreamReader(_ColorConfigPath))
+            using (StreamReader reader = new StreamReader(Settings.ColorConfigPath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -159,7 +156,7 @@ namespace LDraw
         {
             _ModelFileNames = new Dictionary<string, string>();
             //Debug.Log("SEARCHING FOR MODELS IN " + _ModelsPath);
-            var files = Directory.GetFiles(_ModelsPath, "*.*", SearchOption.AllDirectories); // MacOS cannot search all directories with Directory.GetFiles so put all ldraw part files into same directory
+            var files = Directory.GetFiles(Settings.ModelsPath, "*.*", SearchOption.AllDirectories); // MacOS cannot search all directories with Directory.GetFiles so put all ldraw part files into same directory
             _Models = new Dictionary<string, string>();
             foreach (var file in files)
             {
@@ -251,16 +248,8 @@ namespace LDraw
         }
         private static LDrawConfigRuntime _Instance;
 
-        public void SetFilePaths()
-        {
-            _BasePartsPath = Application.streamingAssetsPath + "/ldraw/partfiles/";
-            _ModelsPath = Application.streamingAssetsPath + "/ldraw/models/";
-            _ColorConfigPath = Application.streamingAssetsPath + "/ldraw/LDConfig.ldr";
-        }
-
         private void OnEnable()
         {
-            SetFilePaths();
             InitParts();
         }
 

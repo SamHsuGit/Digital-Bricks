@@ -58,8 +58,8 @@ public class NetworkMenu : MonoBehaviour
         }
 
         StatusLabels();
-        gameManager.Setup();
-        world.SetActive(true);
+        gameManager.Setup(); // activate ldraw importer, etc.
+        world.SetActive(true); // activate world generation
     }
 
     public void OnClientOnly()
@@ -84,8 +84,8 @@ public class NetworkMenu : MonoBehaviour
         }
 
         StatusLabels();
-        gameManager.Setup();
-        world.SetActive(true);
+        gameManager.Setup(); // activate ldraw importer, etc.
+        world.SetActive(true); // activate world generation
     }
 
     public void Back()

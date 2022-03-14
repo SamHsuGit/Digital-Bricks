@@ -55,7 +55,6 @@ public class LDrawImportRuntime : MonoBehaviour
         else
             _instance = this;
 
-        ldrawConfigRuntime.SetFilePaths();
         _ModelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models, caches, and hides upon world load to be instantiated later
@@ -96,19 +95,6 @@ public class LDrawImportRuntime : MonoBehaviour
         _modelOb = ConfigureModelOb(_modelOb, pos, isStatic);
         _modelOb.name = name;
         return _modelOb;
-    }
-
-    public string ReadFileToString(string fileName)
-    {
-        string path = LDrawImportRuntime.Instance.ldrawConfigRuntime._ModelsPath + fileName;
-        if (!File.Exists(path))
-            ErrorMessage.Show("File not found: " + path);
-
-        StreamReader reader = new StreamReader(path);
-        string result = reader.ReadToEnd();
-        reader.Close();
-
-        return result;
     }
 
     public string GetCurrentPart(string fileName)

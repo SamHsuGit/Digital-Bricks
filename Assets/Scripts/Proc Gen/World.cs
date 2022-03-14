@@ -82,7 +82,6 @@ public class World : MonoBehaviour
     public object ChunkListThreadLock = new object();
     public Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
     public Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
-    public string appPath;
     public WorldData worldData;
     public GameObject XRRigPrefab;
     public GameObject charPrefab;
@@ -141,7 +140,6 @@ public class World : MonoBehaviour
         else
             _instance = this;
 
-        appPath = Application.persistentDataPath;
         //activateNewChunks = false;
         firstChunkCoord = new ChunkCoord(VoxelData.WorldSizeInChunks / 2, VoxelData.WorldSizeInChunks / 2);
 
@@ -458,21 +456,22 @@ public class World : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Settings.OnlinePlay)
-        {
-            saving = false;
+        // disabled autosave feature
+        //if (Settings.OnlinePlay)
+        //{
+        //    saving = false;
 
-            // AutoSave feature every hour
-            if (tick > 50 * 60 * 60 * 24) // 1 sec = 50 ticks, 60 sec = 1 min, 60 min = 1 hr, 24 hr = 1 day (save every day for server maintenance)
-            {
-                tick = 0;
-                saving = true;
-                Debug.Log("Saved Game: " + System.DateTime.Now);
-                SaveSystem.SaveWorld(Instance.worldData);
-            }
-            else
-                tick++;
-        }
+        //    // AutoSave feature every hour
+        //    if (tick > 50 * 60 * 60 * 24) // 1 sec = 50 ticks, 60 sec = 1 min, 60 min = 1 hr, 24 hr = 1 day (save every day for server maintenance)
+        //    {
+        //        tick = 0;
+        //        saving = true;
+        //        Debug.Log("Saved Game: " + System.DateTime.Now);
+        //        SaveSystem.SaveWorld(Instance.worldData);
+        //    }
+        //    else
+        //        tick++;
+        //}
     }
 
     public void ActivateChunks()

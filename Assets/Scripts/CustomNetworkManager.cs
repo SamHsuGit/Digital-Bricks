@@ -49,13 +49,15 @@ public class CustomNetworkManager : NetworkManager
         {
             planetNumberServer = planetNumber,
             seedServer = seed,
-            baseServer = LDrawImportRuntime.Instance.ReadFileToString("base.ldr"),
+            baseServer = FileSystemExtension.ReadFileToString("base.ldr"),
             chunksServer = chunksServerCombinedString,
         };
         NetworkServer.SendToAll(hostMessage);
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
     }
+
+    
 
     public void SpawnNetworkOb(GameObject ob)
     {
@@ -74,9 +76,9 @@ public class CustomNetworkManager : NetworkManager
         clientMessage = new ClientToServerMessage
         {
             playerName = SettingsStatic.LoadedSettings.playerName,
-            charIdle = LDrawImportRuntime.Instance.ReadFileToString("charIdle.ldr"),
-            charRun = LDrawImportRuntime.Instance.ReadFileToString("charRun.ldr"),
-            projectile = LDrawImportRuntime.Instance.ReadFileToString("projectile.ldr"),
+            charIdle = FileSystemExtension.ReadFileToString("charIdle.ldr"),
+            charRun = FileSystemExtension.ReadFileToString("charRun.ldr"),
+            projectile = FileSystemExtension.ReadFileToString("projectile.ldr"),
         };
         conn.Send(clientMessage);
     }
@@ -90,9 +92,8 @@ public class CustomNetworkManager : NetworkManager
     {
         SettingsStatic.LoadedSettings.planetNumber = message.planetNumberServer; // override loaded settings
         SettingsStatic.LoadedSettings.seed = message.seedServer; // override loaded settings
-        Settings.serverBase = message.baseServer;
-        LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true);
-        Settings.serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
+        Settings.serverBase = message.baseServer; // store value so it can be set later at correct time (after ldrawimporter is activated)
+        Settings.serverChunks = message.chunksServer; // stores chunksList string for later use when world is set to active
     }
 
     void OnCreateCharacter(NetworkConnection conn, ClientToServerMessage message)

@@ -196,6 +196,7 @@ public class Controller : NetworkBehaviour
 
             player = new Player(gameObject, playerName); // set this player from world players
             world.players.Add(player);
+            playerNamesServer.Add(playerName);
         }
     }
 
@@ -233,13 +234,11 @@ public class Controller : NetworkBehaviour
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
         versionServer = Application.version;
-        if (World.Instance.gameObject != null) // causes issues during online play when World is not yet loaded and server is started
-        {
-            for (int i = 0; i < World.Instance.players.Count; i++)
-            {
-                playerNamesServer.Add(World.Instance.players[i].name);
-            }
-        }
+        //if(world != null && world.players.Count != 0)
+        //{
+        //    for (int i = 0; i < world.players.Count; i++)
+        //        playerNamesServer.Add(world.players[i].name); // causes issues during online play when World is not yet loaded and server is started
+        //}
     }
 
     public override void OnStartClient() // happens after world is instantiated
@@ -276,12 +275,17 @@ public class Controller : NetworkBehaviour
         // WIP does not sync at correct time... need to sync world value?
         //LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", serverBaseString, LDrawImportRuntime.Instance.importPosition, true);
 
-        // tell world to draw chunks from server
-        for (int i = 0; i < Settings.serverChunks.Length; i++)
+        if(Settings.serverChunks != null)
         {
-            ChunkData chunk = new ChunkData();
-            chunk = chunk.DecodeChunk(Settings.serverChunks[i]);
-            world.worldData.chunks.Add(chunk.position, chunk);
+            string[] serverChunks = Settings.serverChunks.Split(';'); // splits individual chunk strings using ';' char delimiter
+
+            // tell world to draw chunks from server
+            for (int i = 0; i < serverChunks.Length; i++)
+            {
+                ChunkData chunk = new ChunkData();
+                chunk = chunk.DecodeChunk(serverChunks[i]);
+                world.worldData.chunks.Add(chunk.position, chunk);
+            }
         }
 
         SetPlayerAttributes();
