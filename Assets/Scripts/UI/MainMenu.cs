@@ -12,9 +12,9 @@ public class MainMenu : MonoBehaviour
     private void Awake()
     {
         if (Settings.Platform == 2)
-            Settings.AppPath = Application.dataPath;
+            Settings.AppSaveDataPath = Application.dataPath;
         else
-            Settings.AppPath = Application.persistentDataPath;
+            Settings.AppSaveDataPath = Application.persistentDataPath;
 
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
         versionText.text = Application.version;

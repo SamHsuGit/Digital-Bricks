@@ -120,14 +120,6 @@ public class SetupMenu : MonoBehaviour
         }
 
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
-        string jsonExport = JsonUtility.ToJson(SettingsStatic.LoadedSettings);
-        string path;
-        if (Application.isMobilePlatform)
-        {
-            path = Settings.AppPath + "/settings.cfg";
-        }
-        else
-            path = Settings.AppPath + "/settings.cfg";
-        File.WriteAllText(path, jsonExport);
+        FileSystemExtension.SaveSettings();
     }
 }

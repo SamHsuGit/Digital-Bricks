@@ -148,8 +148,7 @@ public class GameMenu : MonoBehaviour
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
         SettingsStatic.LoadedSettings.timeOfDay = lighting.timeOfDay; // only write this value when saving instead of every frame update
 
-        string jsonExport = JsonUtility.ToJson(SettingsStatic.LoadedSettings);
-        File.WriteAllText(Settings.AppPath + "/settings.cfg", jsonExport);
+        FileSystemExtension.SaveSettings();
         SettingsStatic.LoadSettings();
     }
 

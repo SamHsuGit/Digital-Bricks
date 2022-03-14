@@ -30,7 +30,7 @@ public static class SaveSystem
     public static void SaveWorld(WorldData world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = Settings.AppPath + "/saves/" + world.planetNumber + "-" + world.seed + "/";
+        string savePath = Settings.AppSaveDataPath + "/saves/" + world.planetNumber + "-" + world.seed + "/";
 
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
@@ -117,7 +117,7 @@ public static class SaveSystem
 
     public static int[] LoadPlayerStats(GameObject player, string playerName, WorldData world)
     {
-        string loadPath = Settings.AppPath + "/saves/" + world.planetNumber + "-" + world.seed + "/";
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + world.planetNumber + "-" + world.seed + "/";
 
         if (File.Exists(loadPath + playerName + ".stats")) // IF PLAYER STATS FOUND
         {
@@ -192,7 +192,7 @@ public static class SaveSystem
         string chunkName = chunk.position.x + "-" + chunk.position.y;
 
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = Settings.AppPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/";
+        string savePath = Settings.AppSaveDataPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/";
 
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
@@ -207,7 +207,7 @@ public static class SaveSystem
 
     public static WorldData LoadWorld(int _planetNumber, int _seed) // loads world upon game start in world script
     {
-        string loadPath = Settings.AppPath + "/saves/" + _planetNumber + "-" + _seed + "/";
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetNumber + "-" + _seed + "/";
 
         if (File.Exists(loadPath + _planetNumber + "-" + _seed + ".worldData"))
         {
@@ -234,7 +234,7 @@ public static class SaveSystem
         ChunkData chunk = new ChunkData();
 
         string chunkName = position.x + "-" + position.y;
-        string loadPath = Settings.AppPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/" + chunkName + ".chunk";
 
         if (File.Exists(loadPath))
         {
@@ -259,7 +259,7 @@ public static class SaveSystem
     {
         List<string> strArray = new List<string>();
 
-        string path = Settings.AppPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/";
+        string path = Settings.AppSaveDataPath + "/saves/" + _planetNumber + "-" + _seed + "/chunks/";
         if(Directory.Exists(path))
         {
             foreach (string file in Directory.GetFiles(path))

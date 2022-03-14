@@ -40,7 +40,7 @@ public class NetworkMenu : MonoBehaviour
         loadingText.SetActive(true); // in order for this text to show before world load, would need to change scene before loading next scene with world (like Setup Menu for Splitscreen)
 
         buttonSound.Play();
-        SaveSettings();
+        FileSystemExtension.SaveSettings();
 
         if (!NetworkClient.active)
         {
@@ -69,7 +69,7 @@ public class NetworkMenu : MonoBehaviour
         loadingText.SetActive(true); // in order for this text to show before world load, would need to change scene before loading next scene with world (like Setup Menu for Splitscreen)
 
         buttonSound.Play();
-        SaveSettings();
+        FileSystemExtension.SaveSettings();
 
         if (!NetworkClient.active)
         {
@@ -91,7 +91,7 @@ public class NetworkMenu : MonoBehaviour
     public void Back()
     {
         buttonSound.Play();
-        SaveSettings();
+        FileSystemExtension.SaveSettings();
         SceneManager.LoadScene(2);
     }
 
@@ -103,7 +103,7 @@ public class NetworkMenu : MonoBehaviour
         loadingText.SetActive(true); // in order for this text to show before world load, would need to change scene before loading next scene with world (like Setup Menu for Splitscreen)
 
         buttonSound.Play();
-        SaveSettings();
+        FileSystemExtension.SaveSettings();
 
         if (!NetworkClient.active)
         {
@@ -156,12 +156,5 @@ public class NetworkMenu : MonoBehaviour
         {
             connectionStatus.text = "Client connected to " + manager.networkAddress + " via " + Transport.activeTransport;
         }
-    }
-
-    public void SaveSettings()
-    {
-        // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
-        string jsonExport = JsonUtility.ToJson(SettingsStatic.LoadedSettings);
-        File.WriteAllText(Settings.AppPath + "/settings.cfg", jsonExport);
     }
 }

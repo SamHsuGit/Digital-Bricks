@@ -30,19 +30,16 @@ public static class SettingsStatic
         settings.invertX = false;
         settings.fullscreen = true;
         settings.planetNumber = 3;
-        settings.seed = 5;
+        settings.seed = 1;
         settings.timeOfDay = 6.01f;
         settings.playerName = "PlayerName";
         settings.flight = false;
 
         string path;
-        if (Application.isMobilePlatform)
-        {
-            path = Settings.AppPath + "/settings.cfg";
-        }
+        if (Settings.Platform == 2)
+            path = Settings.AppSaveDataPath + "/settings.cfg";
         else
-            path = Settings.AppPath + "/settings.cfg";
-
+            path = Application.streamingAssetsPath + "/settings.cfg";
         if (File.Exists(path))
         {
             string JsonImport = File.ReadAllText(path);
@@ -159,7 +156,7 @@ public class Settings
         get { return Application.streamingAssetsPath + "/ldraw/LDConfig.ldr"; }
     }
 
-    public static string AppPath
+    public static string AppSaveDataPath
     {
         get { return _appPath; }
         set { _appPath = value; }
@@ -179,6 +176,21 @@ public static class FileSystemExtension
         reader.Close();
 
         return result;
+    }
+
+    public static void SaveSettings()
+    {
+        SaveStringToFile(JsonUtility.ToJson(SettingsStatic.LoadedSettings));
+    }
+
+    public static void SaveStringToFile(string jsonExport)
+    {
+        string path;
+        if (Settings.Platform == 2)
+            path = Settings.AppSaveDataPath + "/settings.cfg";
+        else
+            path = Application.streamingAssetsPath + "/settings.cfg";
+        File.WriteAllText(path, jsonExport);
     }
 
 }
