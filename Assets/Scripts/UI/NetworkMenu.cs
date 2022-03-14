@@ -91,7 +91,9 @@ public class NetworkMenu : MonoBehaviour
     {
         // these values need to be synced to world before controller is activated bc world is activated before controller
         World world = worldOb.GetComponent<World>();
+        Debug.Log("replace " + world.planetNumber + " with " + message.planetNumberServer + " to get: ");
         world.planetNumber = message.planetNumberServer; // preset world planetNumber
+        Debug.Log(world.planetNumber);
         world.seed = message.seedServer; // preset world seed
         world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
         if (message.chunksServer != null)
