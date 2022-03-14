@@ -270,20 +270,22 @@ public class Controller : NetworkBehaviour
         }
 
         // use planetNumber from server
-        SettingsStatic.LoadedSettings.planetNumber = planetNumberServer;
+        //SettingsStatic.LoadedSettings.planetNumber = planetNumberServer; // WIP does not sync at correct time... need to sync world value?
         if (SettingsStatic.LoadedSettings.planetNumber != planetNumberServer)
             ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
 
         // use seed from server
-        SettingsStatic.LoadedSettings.seed = seedServer;
+        //SettingsStatic.LoadedSettings.seed = seedServer; // WIP does not sync at correct time... need to sync world value?
         if (SettingsStatic.LoadedSettings.seed != seedServer)
             ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
 
         // import base from server
+        // WIP does not sync at correct time... need to sync world value?
         LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", serverBaseString, LDrawImportRuntime.Instance.importPosition, true);
 
         // import chunks from server
-        for(int i = 0; i < chunkSyncListServer.Count; i++)
+        // WIP does not sync correctly
+        for (int i = 0; i < chunkSyncListServer.Count; i++)
         {
             ChunkData chunk = new ChunkData();
             chunk = chunk.DecodeChunk(chunkSyncListServer[i]);
