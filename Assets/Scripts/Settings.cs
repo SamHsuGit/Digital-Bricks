@@ -59,7 +59,8 @@ public class Settings
     // private static variables
     private static bool worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
     private static bool networkPlay = false;
-    private static bool singlePlayer = true;
+    private static string serverBaseString;
+    private static string[] serverChunkStringList;
 
     [Header("Game Data")]
     public string ipAddress;
@@ -89,6 +90,18 @@ public class Settings
     public string playerName;
     public bool flight;
 
+    public static string serverBase
+    {
+        get { return serverBaseString; }
+        set { serverBase = value; }
+    }
+
+    public static string[] serverChunks
+    {
+        get { return serverChunkStringList; }
+        set { serverChunkStringList = value; }
+    }
+
     public static bool WorldLoaded
     {
         get { return worldLoaded; }
@@ -99,12 +112,6 @@ public class Settings
     {
         get { return networkPlay; }
         set {  networkPlay = value; }
-    }
-
-    public static bool SinglePlayer
-    {
-        get { return singlePlayer; }
-        set { singlePlayer = value; }
     }
 
     public static int Platform

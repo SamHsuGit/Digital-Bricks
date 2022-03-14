@@ -12,17 +12,15 @@ public class Controller : NetworkBehaviour
     public GameObject[] voxels;
 
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
-    [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdleString;
-    [SyncVar(hook = nameof(SetCharRun))] public string playerCharRunString;
-    [SyncVar(hook = nameof(SetProjectile))] public string playerProjectileString;
+    [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
+    [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;
+    [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
     [SyncVar(hook = nameof(SetTime))] public float timeOfDayServer = 6.01f;
     [SyncVar] public int planetNumberServer;
     [SyncVar] public int seedServer;
-    [SyncVar] public string serverBaseString;
-    public List<string> chunkListServer;
-    readonly public SyncList<string> chunkSyncListServer = new SyncList<string>();
+    [SyncVar(hook = nameof(SetBase))] public string serverBaseString;
     [SyncVar] public string versionServer;
     readonly public SyncList<string> playerNamesServer = new SyncList<string>();
 
@@ -226,7 +224,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public override void OnStartServer()
+    public override void OnStartServer() // happens after world is instantiated
     {
         base.OnStartServer();
 
@@ -242,14 +240,9 @@ public class Controller : NetworkBehaviour
                 playerNamesServer.Add(World.Instance.players[i].name);
             }
         }
-
-        serverBaseString = LDrawImportRuntime.Instance.ReadFileToString("base.ldr");
-        chunkListServer = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
-        for (int i = 0; i < chunkListServer.Count; i++)
-            chunkSyncListServer.Add(chunkListServer[i]);
     }
 
-    public override void OnStartClient()
+    public override void OnStartClient() // happens after world is instantiated
     {
         base.OnStartClient();
 
@@ -269,26 +262,25 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        // use planetNumber from server
-        //SettingsStatic.LoadedSettings.planetNumber = planetNumberServer; // WIP does not sync at correct time... need to sync world value?
-        if (SettingsStatic.LoadedSettings.planetNumber != planetNumberServer)
-            ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
+        //// use planetNumber from server
+        ////SettingsStatic.LoadedSettings.planetNumber = planetNumberServer; // WIP does not sync at correct time... need to sync world value?
+        //if (SettingsStatic.LoadedSettings.planetNumber != planetNumberServer)
+        //    ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
 
-        // use seed from server
-        //SettingsStatic.LoadedSettings.seed = seedServer; // WIP does not sync at correct time... need to sync world value?
-        if (SettingsStatic.LoadedSettings.seed != seedServer)
-            ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
+        //// use seed from server
+        ////SettingsStatic.LoadedSettings.seed = seedServer; // WIP does not sync at correct time... need to sync world value?
+        //if (SettingsStatic.LoadedSettings.seed != seedServer)
+        //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
 
         // import base from server
         // WIP does not sync at correct time... need to sync world value?
-        LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", serverBaseString, LDrawImportRuntime.Instance.importPosition, true);
+        //LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", serverBaseString, LDrawImportRuntime.Instance.importPosition, true);
 
-        // import chunks from server
-        // WIP does not sync correctly
-        for (int i = 0; i < chunkSyncListServer.Count; i++)
+        // tell world to draw chunks from server
+        for (int i = 0; i < Settings.serverChunks.Length; i++)
         {
             ChunkData chunk = new ChunkData();
-            chunk = chunk.DecodeChunk(chunkSyncListServer[i]);
+            chunk = chunk.DecodeChunk(Settings.serverChunks[i]);
             world.worldData.chunks.Add(chunk.position, chunk);
         }
 
@@ -356,6 +348,12 @@ public class Controller : NetworkBehaviour
         charObRun.transform.localPosition = Vector3.zero;
         charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
         SetPlayerColliderSettings();
+    }
+
+    public void SetBase (string oldValue, string newValue)
+    {
+        world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        world.blocktypes[25].voxelBoundObject = world.baseOb;
     }
 
     public void SetProjectile(string oldValue, string newValue)
@@ -896,7 +894,7 @@ public class Controller : NetworkBehaviour
                 break;
             case 2: // IF PROJECTILE
                 if (Settings.OnlinePlay)
-                    sceneObject.projectileString = playerProjectileString;
+                    sceneObject.projectileString = playerProjectile;
                 else
                     sceneObject.projectile[0] = projectile;
                 sceneObject.typeProjectile = item; // should be 0 for first item in array

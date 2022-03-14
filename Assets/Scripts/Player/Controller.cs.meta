@@ -1,38 +1,9 @@
 fileFormatVersion: 2
-guid: d5b227d4b37b4f6428ea53b770183837
+guid: cd8b7334a49688944bdc837e47ebde1b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - modelPrefab: {instanceID: 0}
-  - gameMenu: {instanceID: 0}
-  - nametag: {instanceID: 0}
-  - backgroundMask: {instanceID: 0}
-  - brickPickUp: {instanceID: 0}
-  - brickPlaceDown: {instanceID: 0}
-  - brickMove: {instanceID: 0}
-  - eat: {instanceID: 0}
-  - crystal: {instanceID: 0}
-  - mushroom: {instanceID: 0}
-  - shootBricks: {instanceID: 0}
-  - playerCamera: {instanceID: 0}
-  - removePosPrefab: {instanceID: 0}
-  - shootPosPrefab: {instanceID: 0}
-  - placePosPrefab: {instanceID: 0}
-  - holdPosPrefab: {instanceID: 0}
-  - toolbar: {instanceID: 0}
-  - playerHUD: {instanceID: 0}
-  - CinematicBars: {instanceID: 0}
-  - creativeInventoryWindow: {instanceID: 0}
-  - cursorSlot: {instanceID: 0}
-  - reticle: {instanceID: 0}
-  - projectile: {instanceID: 0}
-  - brick1x1: {fileID: 267288310360540051, guid: d229d2f59f0200441867e7b107224ae4, type: 3}
-  - arrow: {fileID: 964914632239637472, guid: 0e9ba101960990c4aa9caba04cb3e370, type: 3}
-  - laser: {fileID: 964914632239637472, guid: a050bc80579b89b4aa23d8f5b470f46f, type: 3}
-  - Enemy00: {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
-  - Enemy01: {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
-  - sceneObjectPrefab: {fileID: 267288310360540051, guid: 04bb5ef7f14330842b6b88d9be1ec42b, type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

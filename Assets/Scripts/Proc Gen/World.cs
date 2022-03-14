@@ -118,12 +118,6 @@ public class World : MonoBehaviour
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         Random.InitState(SettingsStatic.LoadedSettings.seed);
-        //if (Settings.OnlinePlay && isClientOnly && hasAuthority) // if client only, request worldData and seed from host
-        //{
-        //    // https://mirror-networking.gitbook.io/docs/guides/data-types
-        //    CmdRequestWorldData(); // (Mirror cannot send Lists for modifiedChunks, would need to write custom extension to NetworkWriter and NetworkReader)
-        //    CmdRequestSeed();
-        //}
 
         // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
         undrawVoxelBoundObjects = false;
@@ -192,30 +186,6 @@ public class World : MonoBehaviour
             new Vector2(1.00f, 1.00f),
         };
     }
-
-    //[Command]
-    //void CmdRequestWorldData()
-    //{
-    //    RpcSetWorldData(World.Instance.worldData); // send worldData from server host to all clients
-    //}
-
-    //[ClientRpc]
-    //void RpcSetWorldData(WorldData worldData)
-    //{
-    //    World.Instance.worldData = worldData;
-    //}
-
-    //[Command]
-    //void CmdRequestSeed()
-    //{
-    //    RpcSetSeed(SettingsStatic.LoadedSettings.seed);
-    //}
-
-    //[ClientRpc]
-    //void RpcSetSeed(int seed)
-    //{
-    //    SettingsStatic.LoadedSettings.seed = seed;
-    //}
 
     public void JoinPlayer(GameObject playerGameObject)
     {
@@ -319,61 +289,6 @@ public class World : MonoBehaviour
             mainCamera.enabled = false;
 
         Settings.WorldLoaded = true;
-        InitSinglePlayers();
-    }
-
-    public void InitSinglePlayers()
-    {
-        if (Settings.Platform == 2) // mobile singleplayer (would not load scene, decided to keep as separate scene)
-            return;
-
-        if (Settings.OnlinePlay) // network online multiplayer
-        {
-            if (Settings.Platform == 1) // console singleplayer network play
-            {
-                XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(false);
-            }
-            //else if (Settings.Platform == 2) // mobile singleplayer network play (would not load scene, decided to keep as separate scene)
-            //{
-            //    XRRigPrefab.SetActive(true);
-            //    charPrefab.SetActive(false);
-            //}
-            else // pc singleplayer network play
-            {
-                XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(false);
-            }
-        }
-        else
-        {
-            if(Settings.Platform == 1 && Settings.SinglePlayer) // console singleplayer
-            {
-                XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(true);
-            }
-            if (Settings.Platform == 1 && !Settings.SinglePlayer) // console splitscreen
-            {
-                //XRRigPrefab.SetActive(false); // set in GameManager
-                //charPrefab.SetActive(false); // set in GameManager
-            }
-            //else if (Settings.Platform == 2) // mobile singleplayer (would not load scene, decided to keep as separate scene)
-            //{
-            //    XRRigPrefab.SetActive(true);
-            //    charPrefab.SetActive(false);
-            //}
-            else if (Settings.Platform == 0 && Settings.SinglePlayer) // pc singleplayer
-            {
-                XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(true);
-            }
-            else if (Settings.Platform == 0 && !Settings.SinglePlayer) // pc splitscreen
-            {
-                //XRRigPrefab.SetActive(false); // set in GameManager
-                //charPrefab.SetActive(false); // set in GameManager
-            }
-        }
-        
     }
 
     public int GetGalaxy(int planetNumber)

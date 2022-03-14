@@ -4,12 +4,20 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.IO;
 
+public struct ServerToClientMessage : NetworkMessage
+{
+    public int planetNumberServer;
+    public int seedServer;
+    public string baseServer;
+    public string chunksServer;
+}
+
 public struct ClientToServerMessage : NetworkMessage
 {
     public string playerName;
-    public string serializedCharIdle;
-    public string serializedCharRun;
-    public string serializedProjectile;
+    public string charIdle;
+    public string charRun;
+    public string projectile;
 }
 
 public class CustomNetworkManager : NetworkManager
@@ -18,9 +26,33 @@ public class CustomNetworkManager : NetworkManager
     public GameObject charPrefab;
     GameObject playerGameObject;
 
-    public override void OnStartServer()
+    public override void OnStartServer() // happens before controller is instantiated
     {
         base.OnStartServer();
+
+        ServerToClientMessage hostMessage;
+
+        int planetNumber = SettingsStatic.LoadedSettings.planetNumber;
+        int seed = SettingsStatic.LoadedSettings.seed;
+
+        // encode the list of chunkStrings into a single string that is auto-serialized by mirror
+        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumber, seed);
+        string chunksServerCombinedString = string.Empty;
+        for (int i = 0; i < chunksList.Count; i++)
+        {
+            chunksServerCombinedString += chunksList[i];
+            chunksServerCombinedString += ';'; // has to be a single char to be able to split later on client side
+        }
+
+        // send the clients a message containing the world data so that users do not have to manually share files before each game
+        hostMessage = new ServerToClientMessage
+        {
+            planetNumberServer = planetNumber,
+            seedServer = seed,
+            baseServer = LDrawImportRuntime.Instance.ReadFileToString("base.ldr"),
+            chunksServer = chunksServerCombinedString,
+        };
+        NetworkServer.SendToAll(hostMessage);
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
     }
@@ -30,11 +62,11 @@ public class CustomNetworkManager : NetworkManager
         NetworkServer.Spawn(ob);
     }
 
-    public override void OnClientConnect(NetworkConnection conn)
+    public override void OnClientConnect(NetworkConnection conn) // happens before controller is instantiated
     {
         base.OnClientConnect(conn);
 
-        //world.GetComponent<World>().defaultSpawnPosition = GetStartPosition().position; // not used to set default Spawn pos in settings
+        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
 
         ClientToServerMessage clientMessage;
 
@@ -42,9 +74,9 @@ public class CustomNetworkManager : NetworkManager
         clientMessage = new ClientToServerMessage
         {
             playerName = SettingsStatic.LoadedSettings.playerName,
-            serializedCharIdle = LDrawImportRuntime.Instance.ReadFileToString("charIdle.ldr"),
-            serializedCharRun = LDrawImportRuntime.Instance.ReadFileToString("charRun.ldr"),
-            serializedProjectile = LDrawImportRuntime.Instance.ReadFileToString("projectile.ldr"),
+            charIdle = LDrawImportRuntime.Instance.ReadFileToString("charIdle.ldr"),
+            charRun = LDrawImportRuntime.Instance.ReadFileToString("charRun.ldr"),
+            projectile = LDrawImportRuntime.Instance.ReadFileToString("projectile.ldr"),
         };
         conn.Send(clientMessage);
     }
@@ -52,6 +84,15 @@ public class CustomNetworkManager : NetworkManager
     public override void OnClientDisconnect(NetworkConnection conn)
     {
         base.OnClientDisconnect(conn);
+    }
+
+    void OnReceiveHostMessage(ServerToClientMessage message)
+    {
+        SettingsStatic.LoadedSettings.planetNumber = message.planetNumberServer; // override loaded settings
+        SettingsStatic.LoadedSettings.seed = message.seedServer; // override loaded settings
+        Settings.serverBase = message.baseServer;
+        LDrawImportRuntime.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true);
+        Settings.serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
     }
 
     void OnCreateCharacter(NetworkConnection conn, ClientToServerMessage message)
@@ -67,9 +108,9 @@ public class CustomNetworkManager : NetworkManager
         // Apply data from the message however appropriate for your game
         // Typically a Player would be a component you write with syncvars or properties
         controller.playerName = message.playerName;
-        controller.playerCharIdleString = message.serializedCharIdle;
-        controller.playerCharRunString = message.serializedCharRun;
-        controller.playerProjectileString = message.serializedProjectile;
+        controller.playerCharIdle = message.charIdle;
+        controller.playerCharRun = message.charRun;
+        controller.playerProjectile = message.projectile;
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);

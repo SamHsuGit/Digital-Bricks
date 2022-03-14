@@ -34,13 +34,10 @@ public class GameManagerScript : MonoBehaviour
 
     public void Setup()
     {
-        // available gameplay options
-        // pc singleplayer
-        // pc network
-        // console splitscreen
-        // console network
+        // valid gameplay modes
+        // splitscreen (pc = 0, console = 1)
+        // network (pc = 0, console = 1)
         // mobile singleplayer
-        // mobile network
 
         world = worldOb.GetComponent<World>();
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
@@ -65,59 +62,33 @@ public class GameManagerScript : MonoBehaviour
         {
             // order of events is important for network ids to be generated correctly
 
-            if (Settings.Platform == 1) // console singleplayer network play
-            {
-                XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(false);
-            }
-            else if (Settings.Platform == 2) // mobile singleplayer network play
+            if (Settings.Platform == 2) // mobile singleplayer network play
             {
                 XRRigPrefab.SetActive(true);
                 charPrefab.SetActive(false);
             }
-            else // pc singleplayer network play
+            else // console (1) and pc (0) singleplayer network play
             {
                 XRRigPrefab.SetActive(false);
                 charPrefab.SetActive(false);
             }
         }
-        else // local singleplayer
+        else // local
         {
             NETWORK.SetActive(false);
             PlayerManagerNetwork.SetActive(false);
 
             worldOb.SetActive(true);
 
-            if (Settings.Platform == 1 && Settings.SinglePlayer) // console singleplayer
+            if (Settings.Platform == 2) // mobile singleplayer
             {
                 LOCAL.SetActive(false);
-                //XRRigPrefab.SetActive(false); // set in world
-                //charPrefab.SetActive(true); // set in world
             }
-            if (Settings.Platform == 1) // console splitscreen
+            else // console (1) and pc (0) splitscreen
             {
                 XRRigPrefab.SetActive(false);
                 charPrefab.SetActive(false);
-                playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = charPrefab; //SettingsStatic.LoadedSettings.playerTypeChar];
-                LOCAL.SetActive(true);
-            }
-            else if (Settings.Platform == 2) // mobile singleplayer
-            {
-                LOCAL.SetActive(false);
-                //XRRigPrefab.SetActive(true); // set in world
-                //charPrefab.SetActive(false); // set in world
-            }
-            else if (Settings.Platform == 0 && Settings.SinglePlayer) // pc singleplayer
-            {
-                LOCAL.SetActive(false);
-                //XRRigPrefab.SetActive(false); // set in world
-                //charPrefab.SetActive(true); // set in world
-            }
-            else if (Settings.Platform == 0 && !Settings.SinglePlayer) // pc splitscreen
-            {
-                XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(false);
-                playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = charPrefab; //SettingsStatic.LoadedSettings.playerTypeChar];
+                playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = charPrefab;
                 LOCAL.SetActive(true);
             }
         }

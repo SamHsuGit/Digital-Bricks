@@ -57,31 +57,15 @@ public class SetupMenu : MonoBehaviour
         buttonSound.Play();
     }
 
-    public void SinglePlayer()
+    public void Local()
     {
         buttonSound.Play();
-        Settings.OnlinePlay = false;
-        Settings.SinglePlayer = true;
         menuElements.SetActive(false);
-        loadingText.SetActive(true);
         SaveSettings();
-        if (Settings.Platform == 2)
-            SceneManager.LoadScene(5); // mobile loads smaller scene
-        else
-            SceneManager.LoadScene(3);
-    }
 
-    public void Splitscreen()
-    {
-        buttonSound.Play();
         Settings.OnlinePlay = false;
-        if (Settings.Platform == 2) // mobile has no option for splitscreen
-            Settings.SinglePlayer = true;
-        else
-            Settings.SinglePlayer = false;
-        menuElements.SetActive(false);
         loadingText.SetActive(true);
-        SaveSettings();
+
         if (Settings.Platform == 2)
             SceneManager.LoadScene(5); // mobile loads smaller scene
         else
@@ -91,13 +75,11 @@ public class SetupMenu : MonoBehaviour
     public void Online()
     {
         buttonSound.Play();
-        if (Settings.Platform == 2) // mobile cannot go online
-            Settings.OnlinePlay = false;
-        else
-            Settings.OnlinePlay = true;
-        Settings.SinglePlayer = true;
         menuElements.SetActive(false);
         SaveSettings();
+
+        Settings.OnlinePlay = true;
+
         if (Settings.Platform == 2)
             SceneManager.LoadScene(5); // mobile loads smaller scene
         else
