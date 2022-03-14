@@ -53,10 +53,16 @@ public class CustomNetworkManager : NetworkManager
             chunksServer = chunksServerCombinedString,
         };
         NetworkServer.SendToAll(hostMessage);
-        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
+        
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
 
         worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from client
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
     }
 
     public void SpawnNetworkOb(GameObject ob)
