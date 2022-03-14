@@ -196,8 +196,14 @@ public class Controller : NetworkBehaviour
 
             player = new Player(gameObject, playerName); // set this player from world players
             world.players.Add(player);
-            playerNamesServer.Add(playerName);
+            CmdAddPlayerName(playerName);
         }
+    }
+
+    [Command]
+    void CmdAddPlayerName(string _playerName)
+    {
+        playerNamesServer.Add(_playerName);
     }
 
     void InputComponents()
