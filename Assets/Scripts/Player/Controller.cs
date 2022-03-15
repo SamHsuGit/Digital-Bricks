@@ -299,12 +299,15 @@ public class Controller : NetworkBehaviour
             //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
         }
 
+        SetName(playerName, playerName);
+
         //Force client to get latest values of syncVars before loading world???
         SetPlanetNumberServer(planetNumberServer, planetNumberServer);
         SetSeedServer(seedServer, seedServer);
         SetBaseServer(baseServer, baseServer);
         SetChunksServer(chunksServer, chunksServer);
         customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
+        
     }
 
     void SetPlayerColliderSettings()
@@ -357,10 +360,9 @@ public class Controller : NetworkBehaviour
         {
             ChunkData chunk = new ChunkData();
             chunk = chunk.DecodeChunk(serverChunks[i]);
-            if (world.worldData.chunks.ContainsKey(chunk.position)) // if chunk already included in list, remove before adding new version
-                world.worldData.chunks.Remove(chunk.position);
-            world.worldData.chunks.Add(chunk.position, chunk);
+            world.worldData.modifiedChunks.Add(chunk); // add chunk to list of chunks to be saved
         }
+        SaveWorld(world.worldData); // save chunks to disk before loading world
     }
 
     public void SetName(string oldValue, string newValue)
