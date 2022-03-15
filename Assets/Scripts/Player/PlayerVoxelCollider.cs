@@ -36,13 +36,11 @@ public class PlayerVoxelCollider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // called when this gameObject is created
-        if (isPlayer)
-            controller.world.JoinPlayer(gameObject);
-
         if (isPlayer)
         {
             controller = GetComponent<Controller>();
+            controller.world.JoinPlayer(gameObject);
+
             //set initial char size
             if (gameObject.GetComponent<CapsuleCollider>() != null)
             {
