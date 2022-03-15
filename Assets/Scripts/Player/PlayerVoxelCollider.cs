@@ -33,17 +33,12 @@ public class PlayerVoxelCollider : MonoBehaviour
 
     byte[] adjacentVoxelIDs;
 
-    private void Awake()
-    {
-        world = World.Instance;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
         // called when this gameObject is created
         if (isPlayer)
-            world.JoinPlayer(gameObject);
+            controller.world.JoinPlayer(gameObject);
 
         if (isPlayer)
         {

@@ -75,11 +75,11 @@ public class Controller : NetworkBehaviour
     public GameObject sceneObjectPrefab;
     public GameObject charObIdle;
     public GameObject charObRun;
+    public World world;
 
     Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
     Vector3 velocityPlayer;
-    private World world;
     private Transform removePos;
     private Transform shootPos;
     private Transform placePos;
