@@ -52,7 +52,7 @@ public class CustomNetworkManager : NetworkManager
             chunksServer = chunksServerCombinedString,
         };
         NetworkServer.SendToAll(hostMessage);
-        
+
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
 
         worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from client
@@ -63,11 +63,15 @@ public class CustomNetworkManager : NetworkManager
         NetworkServer.Spawn(ob);
     }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
+    }
+
     public override void OnClientConnect(NetworkConnection conn) // happens before controller is instantiated
     {
         base.OnClientConnect(conn);
-        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
-        NetworkServer.SendToAll(hostMessage);
 
         ClientToServerMessage clientMessage;
 
