@@ -486,6 +486,8 @@ MonoBehaviour:
   versionServer: 
   planetNumberServer: 0
   seedServer: 0
+  baseServer: 
+  chunksServer: 
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0

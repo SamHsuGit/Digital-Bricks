@@ -299,15 +299,11 @@ public class Controller : NetworkBehaviour
 
         SetPlayerAttributes();
         //Force client to get latest values of syncVars before loading world???
-
+        SetPlanetNumberServer(planetNumberServer, planetNumberServer);
+        SetSeedServer(seedServer, seedServer);
+        SetBaseServer(baseServer, baseServer);
+        SetChunksServer(chunksServer, chunksServer);
         customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
-    }
-
-    [Command]
-    public void CmdSendServerMessage()
-    {
-        Debug.Log("Message Sent");
-        NetworkServer.SendToAll(customNetworkManager.hostMessage); // WIP send message only to connection that requested this
     }
 
     void SetPlayerAttributes()
