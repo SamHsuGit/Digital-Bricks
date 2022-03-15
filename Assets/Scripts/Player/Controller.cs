@@ -24,8 +24,8 @@ public class Controller : NetworkBehaviour
     readonly public SyncList<string> playerNamesServer = new SyncList<string>();
 
     // These server values cannot be set in controller since world is activated before controller, merely included here to check states match
-    [SyncVar] public int planetNumberServer;
-    [SyncVar] public int seedServer;
+    [SyncVar(hook = nameof(SetPlanetNumberServer))] public int planetNumberServer;
+    [SyncVar(hook = nameof(SetSeedServer))] public int seedServer;
     [SyncVar(hook = nameof(SetBaseServer))] public string baseServer;
     [SyncVar(hook = nameof(SetChunksServer))] public string chunksServer;
 
@@ -340,10 +340,22 @@ public class Controller : NetworkBehaviour
         tpsDist = -cc.radius * 4;
     }
 
-    public void SetBaseServer(string oldValue, string newValue)
+    public void SetPlanetNumberServer(int oldValue, int newValue)
     {
         customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
-        customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        customNetworkManager.worldOb.GetComponent<World>().planetNumber = newValue;
+    }
+
+    public void SetSeedServer(int oldValue, int newValue)
+    {
+        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
+        customNetworkManager.worldOb.GetComponent<World>().seed = newValue;
+    }
+
+    public void SetBaseServer(string oldValue, string newValue)
+    {
+        //customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
+        //customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
     }
 
     public void SetChunksServer(string oldValue, string newValue)
