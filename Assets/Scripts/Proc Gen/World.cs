@@ -118,7 +118,7 @@ public class World : MonoBehaviour
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
-        Random.InitState(SettingsStatic.LoadedSettings.seed);
+        Random.InitState(seed);
 
         // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
         undrawVoxelBoundObjects = false;

@@ -26,7 +26,8 @@ public class Controller : NetworkBehaviour
     // These server values cannot be set in controller since world is activated before controller, merely included here to check states match
     [SyncVar] public int planetNumberServer;
     [SyncVar] public int seedServer;
-
+    [SyncVar(hook = nameof(SetBaseServer))] public string baseServer;
+    [SyncVar(hook = nameof(SetChunksServer))] public string chunksServer;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -241,8 +242,21 @@ public class Controller : NetworkBehaviour
 
         // SET SERVER VALUES FROM HOST CLIENT
         timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
+        
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
+
+        baseServer = FileSystemExtension.ReadFileToString("base.ldr");
+        // encode the list of chunkStrings into a single string that is auto-serialized by mirror
+        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
+        string chunksServerCombinedString = string.Empty;
+        for (int i = 0; i < chunksList.Count; i++)
+        {
+            chunksServerCombinedString += chunksList[i];
+            chunksServerCombinedString += ';'; // has to be a single char to be able to split later on client side
+        }
+        chunksServer = chunksServerCombinedString;
+
         versionServer = Application.version;
         if (world != null && world.players.Count != 0)
         {
@@ -257,8 +271,8 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartClient();
         customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
-        if (Settings.OnlinePlay && isLocalPlayer)
-            CmdSendServerMessage(); // set values for planetNumber, seed, baseOb, chunks from server
+        //if (Settings.OnlinePlay && isLocalPlayer)
+        //    CmdSendServerMessage(); // set values for planetNumber, seed, baseOb, chunks from server
 
         // SET CLIENT SYNCVAR FROM SERVER
         SetTime(timeOfDayServer, timeOfDayServer);
@@ -284,8 +298,9 @@ public class Controller : NetworkBehaviour
         }
 
         SetPlayerAttributes();
-        
-        //customNetworkManager.InitWorld();
+        //Force client to get latest values of syncVars before loading world???
+
+        customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
     }
 
     [Command]
@@ -323,6 +338,26 @@ public class Controller : NetworkBehaviour
         // set reach and gun range procedurally based on imported char model size
         grabDist = cc.radius * 2f * 6f;
         tpsDist = -cc.radius * 4;
+    }
+
+    public void SetBaseServer(string oldValue, string newValue)
+    {
+        World.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+    }
+
+    public void SetChunksServer(string oldValue, string newValue)
+    {
+        string[] serverChunks = newValue.Split(';'); // splits individual chunk strings using ';' char delimiter
+
+        // tell world to draw chunks from server
+        for (int i = 0; i < serverChunks.Length - 1; i++)
+        {
+            ChunkData chunk = new ChunkData();
+            chunk = chunk.DecodeChunk(serverChunks[i]);
+            if (World.Instance.worldData.chunks.ContainsKey(chunk.position)) // if chunk already included in list, remove before adding new version
+                World.Instance.worldData.chunks.Remove(chunk.position);
+            World.Instance.worldData.chunks.Add(chunk.position, chunk);
+        }
     }
 
     public void SetName(string oldValue, string newValue)
