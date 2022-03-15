@@ -6,22 +6,22 @@ namespace LDraw
 	{
 		public static Matrix4x4 MultiplyVectorsTransposed(Vector4 vector, Vector4 transposeVector)
 		{
-		
-			float[] vectorPoints = new[] {vector.x, vector.y, vector.z, vector.w},
+
+			float[] vectorPoints = new[] { vector.x, vector.y, vector.z, vector.w },
 				transposedVectorPoints = new[]
 					{transposeVector.x, transposeVector.y, transposeVector.z, transposeVector.w};
 			int matrixDimension = vectorPoints.Length;
 			float[] values = new float[matrixDimension * matrixDimension];
-		
+
 			for (int i = 0; i < matrixDimension; i++)
 			{
 				for (int j = 0; j < matrixDimension; j++)
 				{
 					values[i + j * matrixDimension] = vectorPoints[i] * transposedVectorPoints[j];
 				}
-		
+
 			}
-		
+
 			return new Matrix4x4(
 				new Vector4(values[0], values[1], values[2], values[3]),
 				new Vector4(values[4], values[5], values[6], values[7]),
@@ -29,7 +29,7 @@ namespace LDraw
 				new Vector4(values[12], values[13], values[14], values[15])
 			);
 		}
-		
+
 		public static Vector3 ExtractPosition(this Matrix4x4 matrix)
 		{
 			Vector3 position;
@@ -38,22 +38,22 @@ namespace LDraw
 			position.z = matrix.m23;
 			return position;
 		}
-		
+
 		public static Quaternion ExtractRotation(this Matrix4x4 matrix)
 		{
 			Vector3 forward;
 			forward.x = matrix.m02;
 			forward.y = matrix.m12;
 			forward.z = matrix.m22;
-		
+
 			Vector3 upwards;
 			upwards.x = matrix.m01;
 			upwards.y = matrix.m11;
 			upwards.z = matrix.m21;
-		
+
 			return Quaternion.LookRotation(forward, upwards);
 		}
-		
+
 		public static Vector3 ExtractScale(this Matrix4x4 matrix)
 		{
 			Vector3 scale;
@@ -81,7 +81,7 @@ namespace LDraw
 				new Vector4(matrix.m03 * number, matrix.m13 * number, matrix.m23 * number, matrix.m33 * number)
 			);
 		}
-		
+
 		public static Matrix4x4 DivideByNumber(this Matrix4x4 matrix, float number)
 		{
 			return new Matrix4x4(
@@ -91,7 +91,7 @@ namespace LDraw
 				new Vector4(matrix.m03 / number, matrix.m13 / number, matrix.m23 / number, matrix.m33 / number)
 			);
 		}
-		
+
 		public static Matrix4x4 Plus(this Matrix4x4 matrix, Matrix4x4 matrixToAdding)
 		{
 			return new Matrix4x4(
@@ -105,7 +105,7 @@ namespace LDraw
 					matrix.m23 + matrixToAdding.m23, matrix.m33 + matrix.m33)
 			);
 		}
-		
+
 		public static Matrix4x4 Minus(this Matrix4x4 matrix, Matrix4x4 matrixToMinus)
 		{
 			return new Matrix4x4(

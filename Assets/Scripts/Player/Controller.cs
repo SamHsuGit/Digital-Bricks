@@ -354,7 +354,7 @@ public class Controller : NetworkBehaviour
             chunk = chunk.DecodeChunk(serverChunks[i]);
             world.worldData.modifiedChunks.Add(chunk); // add chunk to list of chunks to be saved
         }
-        SaveWorld(world.worldData); // save chunks to disk before loading world
+        SaveWorld(world.worldData, false); // save chunks to disk before loading world
     }
 
     public void SetName(string oldValue, string newValue)
@@ -1327,36 +1327,36 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public void RequestSaveWorld()
+    public void RequestSaveWorld(bool savePlayerData)
     {
         if (Settings.OnlinePlay && hasAuthority)
         {
-            CmdSaveWorld();
-            SaveWorld(World.Instance.worldData);
+            CmdSaveWorld(savePlayerData);
+            SaveWorld(World.Instance.worldData, savePlayerData);
         }
         else
-            SaveWorld(World.Instance.worldData);
+            SaveWorld(World.Instance.worldData, savePlayerData);
     }
 
     [Command]
-    public void CmdSaveWorld()
+    public void CmdSaveWorld(bool savePlayerData)
     {
         // tells the server to save the world (moved here since the gameMenu cannot have a network identity).
         // server host and clients must save world before clients disconnect
-        SaveWorld(World.Instance.worldData);
+        SaveWorld(World.Instance.worldData, savePlayerData);
 
-        RpcSaveWorld(World.Instance.worldData); // tell clients to save world so they don't have to re-share world files before playing again.
+        RpcSaveWorld(World.Instance.worldData, savePlayerData); // tell clients to save world so they don't have to re-share world files before playing again.
     }
 
     [ClientRpc]
-    public void RpcSaveWorld(WorldData worldData)
+    public void RpcSaveWorld(WorldData worldData, bool savePlayerData)
     {
         // server host and clients must save world before clients disconnect
-        SaveWorld(worldData);
+        SaveWorld(worldData, savePlayerData);
     }
 
-    public void SaveWorld(WorldData worldData)
+    public void SaveWorld(WorldData worldData, bool savePlayerData)
     {
-        SaveSystem.SaveWorld(worldData, world);
+        SaveSystem.SaveWorld(worldData, world, savePlayerData);
     }
 }

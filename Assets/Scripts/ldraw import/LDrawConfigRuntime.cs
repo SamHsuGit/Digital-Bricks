@@ -10,40 +10,40 @@ namespace LDraw
     [CreateAssetMenu(fileName = "LDrawConfigRuntime", menuName = "Scriptables/LDrawConfigRuntime", order = 1)]
     public class LDrawConfigRuntime : ScriptableObject
     {
-        [SerializeField] private string materialsPath;
-        [SerializeField] private string meshesPath;
-        [SerializeField] private float scale;
-        [SerializeField] private Material defaultOpaqueMaterial;
-        [SerializeField] private Material defaultTransparentMaterial;
-        private Dictionary<string, string> parts;
-        private Dictionary<string, string> models;
-        
-        private Dictionary<int, Material> mainColors;
-        private Dictionary<string, Material> customColors;
-        private Dictionary<string, string> modelFileNames;
+        [SerializeField] private string _MaterialsPath;
+        [SerializeField] private string _MeshesPath;
+        [SerializeField] private float _Scale;
+        [SerializeField] private Material _DefaultOpaqueMaterial;
+        [SerializeField] private Material _DefaultTransparentMaterial;
+        private Dictionary<string, string> _Parts;
+        private Dictionary<string, string> _Models;
+
+        private Dictionary<int, Material> _MainColors;
+        private Dictionary<string, Material> _CustomColors;
+        private Dictionary<string, string> _ModelFileNames;
         public Material[] materials;
         public Matrix4x4 ScaleMatrix
         {
-            get { return Matrix4x4.Scale(new Vector3(scale, scale, scale)); }
+            get { return Matrix4x4.Scale(new Vector3(_Scale, _Scale, _Scale)); }
         }
 
         public Material GetColoredMaterial(int code)
         {
-            return mainColors[code];
+            return _MainColors[code];
         }
         public Material GetColoredMaterial(string colorString)
         {
-            if (customColors.ContainsKey(colorString))
-                return customColors[colorString];
+            if (_CustomColors.ContainsKey(colorString))
+                return _CustomColors[colorString];
 
             for (int i = 0; i < materials.Length; i++)
             {
                 if (colorString == materials[i].name)
-                    customColors.Add(colorString, materials[i]);
+                    _CustomColors.Add(colorString, materials[i]);
                 else
                 {
-                    var mat = new Material(defaultOpaqueMaterial);
-                    customColors.Add(colorString, mat);
+                    var mat = new Material(_DefaultOpaqueMaterial);
+                    _CustomColors.Add(colorString, mat);
                 }
             }
 
@@ -55,27 +55,27 @@ namespace LDraw
             //else
             //{
             //    var mat = new Material(_DefaultOpaqueMaterial);
-                 
+
             //    mat.name = colorString;
             //    Color color;
             //    if (ColorUtility.TryParseHtmlString(colorString, out color))
             //        mat.color = color;
-                            
+
             //    AssetDatabase.CreateAsset(mat, path);
             //    AssetDatabase.SaveAssets();
             //    _CustomColors.Add(colorString, mat);
             //}
 
-            return customColors[colorString];
+            return _CustomColors[colorString];
         }
         public string[] ModelFileNames
         {
-            get { return modelFileNames.Keys.ToArray(); }
+            get { return _ModelFileNames.Keys.ToArray(); }
         }
 
         public string GetModelByFileName(string modelFileName)
         {
-            return modelFileNames[modelFileName];
+            return _ModelFileNames[modelFileName];
         }
         public string GetSerializedPart(string name) // returns the name of the part from the file
         {
@@ -87,8 +87,8 @@ namespace LDraw
                 {
                     name = name.Substring(3, name.Length);
                 }
-           
-                var serialized = parts.ContainsKey(name) ? File.ReadAllText(parts[name]) : models[name]; 
+
+                var serialized = _Parts.ContainsKey(name) ? File.ReadAllText(_Parts[name]) : _Models[name];
                 return serialized;
             }
             catch
@@ -99,10 +99,10 @@ namespace LDraw
         }
 
         public void InitParts() // makes a list of parts in the ldraw file
-        { 
+        {
             PrepareModels();
             ParseColors();
-            parts = new Dictionary<string, string>();
+            _Parts = new Dictionary<string, string>();
             var files = Directory.GetFiles(Settings.BasePartsPath, "*.*", SearchOption.AllDirectories);
 
             foreach (var file in files)
@@ -110,18 +110,18 @@ namespace LDraw
                 if (!file.Contains(".meta"))
                 {
                     string fileName = file.Replace(Settings.BasePartsPath, "").Split('.')[0];
-                   
+
                     if (fileName.Contains("\\"))
-                       fileName = fileName.Split('\\')[1];
-                    if (!parts.ContainsKey(fileName))
-                        parts.Add(fileName, file);
+                        fileName = fileName.Split('\\')[1];
+                    if (!_Parts.ContainsKey(fileName))
+                        _Parts.Add(fileName, file);
                 }
             }
         }
 
         private void ParseColors()
         {
-            mainColors = new Dictionary<int, Material>();
+            _MainColors = new Dictionary<int, Material>();
 
             using (StreamReader reader = new StreamReader(Settings.ColorConfigPath))
             {
@@ -139,11 +139,11 @@ namespace LDraw
                         {
                             if (args[2] == materials[i].name) // if the material name matches a material in the materials array
                             {
-                                mainColors.Add(int.Parse(args[4]), materials[i]); // add the material to the dictionary
+                                _MainColors.Add(int.Parse(args[4]), materials[i]); // add the material to the dictionary
                                 matched = true;
                             }
                         }
-                        if(!matched)
+                        if (!matched)
                             ErrorMessage.Show("Error: Material not found: " + args[2]);
                     }
                 }
@@ -152,10 +152,10 @@ namespace LDraw
 
         private void PrepareModels()
         {
-            modelFileNames = new Dictionary<string, string>();
+            _ModelFileNames = new Dictionary<string, string>();
             //Debug.Log("SEARCHING FOR MODELS IN " + _ModelsPath);
             var files = Directory.GetFiles(Settings.ModelsPath, "*.*", SearchOption.AllDirectories); // MacOS cannot search all directories with Directory.GetFiles so put all ldraw part files into same directory
-            models = new Dictionary<string, string>();
+            _Models = new Dictionary<string, string>();
             foreach (var file in files)
             {
                 using (StreamReader reader = new StreamReader(file))
@@ -169,29 +169,29 @@ namespace LDraw
                         Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
                         line = regex.Replace(line, " ").Trim();
                         var args = line.Split(' ');
-                        if (args.Length  > 1 && args[1] == "FILE")
+                        if (args.Length > 1 && args[1] == "FILE")
                         {
-                           
+
                             filename = GetFileName(args, 2);
                             if (isFirst)
                             {
-                                modelFileNames.Add(Path.GetFileNameWithoutExtension(file), filename);
+                                _ModelFileNames.Add(Path.GetFileNameWithoutExtension(file), filename);
                                 isFirst = false;
                             }
-                            
-                            if(models.ContainsKey(filename))
+
+                            if (_Models.ContainsKey(filename))
                                 filename = String.Empty;
                             else
-                                models.Add(filename, String.Empty);
+                                _Models.Add(filename, String.Empty);
                         }
 
                         if (!string.IsNullOrEmpty(filename))
                         {
-                            models[filename] += line + "\n";
+                            _Models[filename] += line + "\n";
                         }
-                    } 
+                    }
                 }
-                
+
             }
         }
 
@@ -241,7 +241,7 @@ namespace LDraw
             {
                 name += args[i] + ' ';
             }
-         
+
             return Path.GetExtension(name).Trim();
         }
         private static LDrawConfigRuntime _Instance;
@@ -251,6 +251,7 @@ namespace LDraw
             InitParts();
         }
 
+        private const string ConfigPath = "Assets/Scripts/ldraw import/LDrawConfigRuntime.asset"; // currently not used in runtime as an object reference was used instead
         public const int DefaultMaterialCode = 16;
     }
 }

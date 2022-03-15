@@ -14,10 +14,10 @@ namespace LDraw
 
         public static LDrawModelRuntime Create(string name, string pathOrCommandString, bool isPath)
         {
-            if (models.ContainsKey(name)) return models[name];
+            if (_models.ContainsKey(name)) return _models[name];
             var model = new LDrawModelRuntime();
             model.Init(name, pathOrCommandString, isPath);
-          
+
             return model;
         }
 
@@ -25,14 +25,14 @@ namespace LDraw
 
         #region fields and properties
 
-        private string name;
-        private List<LDrawCommandRuntime> commands;
-        private List<string> subModels;
-        private static Dictionary<string, LDrawModelRuntime> models = new Dictionary<string, LDrawModelRuntime>();
-        
+        private string _Name;
+        private List<LDrawCommandRuntime> _Commands;
+        private List<string> _SubModels;
+        private static Dictionary<string, LDrawModelRuntime> _models = new Dictionary<string, LDrawModelRuntime>();
+
         public string Name
         {
-            get { return name; }
+            get { return _Name; }
         }
         #endregion
 
@@ -50,9 +50,9 @@ namespace LDraw
 
         public List<LDrawCommandRuntime> GetCommandsFromPath(string fileName, string path) // gets commands from a local path
         {
-            name = fileName;
+            _Name = fileName;
             //Debug.Log(_Name);
-            commands = new List<LDrawCommandRuntime>();
+            _Commands = new List<LDrawCommandRuntime>();
             using (StringReader reader = new StringReader(path))
             {
                 string line;
@@ -65,17 +65,17 @@ namespace LDraw
                     {
                         var command = LDrawCommandRuntime.DeserializeCommand(line, this);
                         if (command != null)
-                            commands.Add(command);
+                            _Commands.Add(command);
                     }
                 }
             }
 
-            return commands;
+            return _Commands;
         }
 
         public List<LDrawCommandRuntime> GetCommandsFromString(string commandString) // gets commands from serialized string of commands
         {
-            commands = new List<LDrawCommandRuntime>();
+            _Commands = new List<LDrawCommandRuntime>();
             using (StringReader reader = new StringReader(commandString))
             {
                 string line;
@@ -88,36 +88,36 @@ namespace LDraw
                     {
                         var command = LDrawCommandRuntime.DeserializeCommand(line, this);
                         if (command != null)
-                            commands.Add(command);
+                            _Commands.Add(command);
                     }
                 }
             }
 
-            return commands;
+            return _Commands;
         }
 
         public void AddToModels(string name)
         {
-            if (!models.ContainsKey(name))
+            if (!_models.ContainsKey(name))
             {
-                models.Add(name, this);
+                _models.Add(name, this);
             }
         }
 
         public GameObject CreateMeshGameObject(Matrix4x4 trs, Material mat = null, Transform parent = null)
         {
-            if (commands.Count == 0) return null;
-            GameObject go = new GameObject(name);
+            if (_Commands.Count == 0) return null;
+            GameObject go = new GameObject(_Name);
 
             var triangles = new List<int>();
             var verts = new List<Vector3>();
 
-            for (int i = 0; i < commands.Count; i++)
+            for (int i = 0; i < _Commands.Count; i++)
             {
-                var sfCommand = commands[i] as LDrawSubFileRuntime;
+                var sfCommand = _Commands[i] as LDrawSubFileRuntime;
                 if (sfCommand == null)
                 {
-                    commands[i].PrepareMeshData(triangles, verts);
+                    _Commands[i].PrepareMeshData(triangles, verts);
                 }
                 else
                 {
@@ -159,10 +159,10 @@ namespace LDraw
             return go;
         }
 
-        public void CombineMeshes(GameObject go)
+        public void CombineMeshes(GameObject _go)
         {
             // Combine the submeshes into one optimized mesh
-            MeshFilter[] meshFilters = go.GetComponentsInChildren<MeshFilter>();
+            MeshFilter[] meshFilters = _go.GetComponentsInChildren<MeshFilter>();
             CombineInstance[] combine = new CombineInstance[meshFilters.Length];
             int i = 0;
             while (i < meshFilters.Length)
@@ -174,14 +174,14 @@ namespace LDraw
             }
 
             // apply to parent object
-            go.transform.GetComponent<MeshFilter>().sharedMesh = new Mesh();
-            go.transform.GetComponent<MeshFilter>().sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // supports up to 4 billion vertices
+            _go.transform.GetComponent<MeshFilter>().sharedMesh = new Mesh();
+            _go.transform.GetComponent<MeshFilter>().sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // supports up to 4 billion vertices
             //if (_go.transform.GetComponent<MeshFilter>().sharedMesh.vertexCount > 65535)
             //    ErrorMessage.Show("Error: Ldraw model too large to combine meshes.");
-            go.transform.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine, true);
-            go.transform.gameObject.SetActive(true);
+            _go.transform.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine, true);
+            _go.transform.gameObject.SetActive(true);
 
-            BoxCollider bc = go.AddComponent<BoxCollider>();
+            BoxCollider bc = _go.AddComponent<BoxCollider>();
             bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z)); // avoids negative values for box collider scale
             bc.center = new Vector3(bc.center.x, bc.center.y, bc.center.z); // recenter box collider
             bc.material = LDrawImportRuntime.Instance.physicMaterial;
@@ -204,10 +204,10 @@ namespace LDraw
             // Found compiling the meshes is actually slower on some machines, so chose to comment this out for now until better load/search method developed.
             //mesh = GetMesh(_Name);
             //if (mesh != null) return mesh;
-          
+
             mesh = new Mesh();
-      
-            mesh.name = name;
+
+            mesh.name = _Name;
             var frontVertsCount = verts.Count;
             //backface
             verts.AddRange(verts);
@@ -226,21 +226,21 @@ namespace LDraw
             }
             triangles.AddRange(tris);
             //end backface
-            
+
             mesh.SetVertices(verts);
             mesh.SetTriangles(triangles, 0);
-            
+
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             //LDrawConfigRuntime.Instance.SaveMesh(mesh);
             return mesh;
         }
-  
+
         #endregion
 
         private LDrawModelRuntime()
         {
-            // default constructor
+
         }
     }
 }

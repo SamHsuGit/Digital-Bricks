@@ -6,7 +6,7 @@ using System.Threading;
 
 public static class SaveSystem
 {
-    public static void SaveWorld(WorldData worldData, World world)
+    public static void SaveWorld(WorldData worldData, World world, bool savePlayerData)
     {
         // Set our save location and make sure we have a saves folder ready to go.
         string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetNumber + "-" + worldData.seed + "/";
@@ -22,25 +22,28 @@ public static class SaveSystem
         formatter.Serialize(stream, worldData);
         stream.Close();
 
-        string[] savedPlayerNames = new string[world.players.Count];
-
-        // for all players (except world player dummy), save player stats (splitscreen play saves only stats of last player who joined)
-        for (int i = 1; i < World.Instance.players.Count; i++)
+        if (savePlayerData)
         {
-            if (World.Instance.players[i].playerGameObject != null) // check if client's left before host saved if so, cannot save their data
+            string[] savedPlayerNames = new string[world.players.Count];
+
+            // for all players (except world player dummy), save player stats (splitscreen play saves only stats of last player who joined)
+            for (int i = 1; i < world.players.Count; i++)
             {
-                GameObject player = World.Instance.players[i].playerGameObject;
-                string playerSaveName = player.GetComponent<Controller>().playerName;
-                int[] playerStats = GetPlayerStats(player, i); // save player stats
+                if (world.players[i].playerGameObject != null) // check if client's left before host saved if so, cannot save their data
+                {
+                    GameObject player = world.players[i].playerGameObject;
+                    string playerSaveName = player.GetComponent<Controller>().playerName;
+                    int[] playerStats = GetPlayerStats(player, i); // save player stats
 
-                formatter = new BinaryFormatter();
+                    formatter = new BinaryFormatter();
 
-                stream = new FileStream(savePath + playerSaveName + ".stats", FileMode.Create);
+                    stream = new FileStream(savePath + playerSaveName + ".stats", FileMode.Create);
 
-                formatter.Serialize(stream, playerStats);
-                stream.Close();
+                    formatter.Serialize(stream, playerStats);
+                    stream.Close();
 
-                savedPlayerNames[i] = player.GetComponent<Controller>().playerName;
+                    savedPlayerNames[i] = player.GetComponent<Controller>().playerName;
+                }
             }
         }
 
@@ -206,7 +209,7 @@ public static class SaveSystem
         {
 
             WorldData worldData = new WorldData(planetNumber, seed);
-            SaveWorld(worldData, World.Instance);
+            SaveWorld(worldData, World.Instance, true);
 
             return worldData;
         }
