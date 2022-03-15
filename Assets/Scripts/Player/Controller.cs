@@ -342,13 +342,14 @@ public class Controller : NetworkBehaviour
 
     public void SetBaseServer(string oldValue, string newValue)
     {
-        //customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
+        customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
     }
 
     public void SetChunksServer(string oldValue, string newValue)
     {
         string[] serverChunks = newValue.Split(';'); // splits individual chunk strings using ';' char delimiter
-
+        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         World world = customNetworkManager.worldOb.GetComponent<World>();
 
         // tell world to draw chunks from server
