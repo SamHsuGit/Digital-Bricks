@@ -66,7 +66,7 @@ public class WorldData
     public WorldData() // default constructor for deserialization
     {
         planetNumber = 3;
-        seed = 1234;
+        seed = 1;
     }
 
     public WorldData(WorldData wD)

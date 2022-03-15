@@ -116,7 +116,7 @@ public class SetupMenu : MonoBehaviour
         }
         catch (System.FormatException)
         {
-            SettingsStatic.LoadedSettings.seed = 5;
+            SettingsStatic.LoadedSettings.seed = 1; // default value
         }
 
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start

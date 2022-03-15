@@ -132,6 +132,8 @@ public class Controller : NetworkBehaviour
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
 
+        NamePlayer();
+
         physicMaterial = world.physicMaterial;
         customNetworkManager = world.customNetworkManager;
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
@@ -164,9 +166,6 @@ public class Controller : NetworkBehaviour
 
     private void Start()
     {
-        // this must happen in start since world is not instantiated until after Awake...
-        NamePlayer();
-
         InputComponents();
 
         Cursor.visible = false;
@@ -302,10 +301,10 @@ public class Controller : NetworkBehaviour
         SetName(playerName, playerName);
 
         //Force client to get latest values of syncVars before loading world???
-        SetPlanetNumberServer(planetNumberServer, planetNumberServer);
-        SetSeedServer(seedServer, seedServer);
-        SetBaseServer(baseServer, baseServer);
-        SetChunksServer(chunksServer, chunksServer);
+        //SetPlanetNumberServer(planetNumberServer, planetNumberServer);
+        //SetSeedServer(seedServer, seedServer);
+        //SetBaseServer(baseServer, baseServer);
+        //SetChunksServer(chunksServer, chunksServer);
         customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
         
     }
