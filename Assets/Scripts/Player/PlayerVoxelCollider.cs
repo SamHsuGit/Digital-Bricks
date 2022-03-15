@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerVoxelCollider : MonoBehaviour
 {
-    
     public float baseWalkSpeed;
     public float baseSprintSpeed;
     public float baseJumpForce = 15f;
@@ -254,7 +252,7 @@ public class PlayerVoxelCollider : MonoBehaviour
         }
     }
 
-    public bool PlayerIsTouchingBlockID(byte _blockID)
+    public bool PlayerIsTouchingBlockID(byte blockID)
     {
         bool isTouching = false;
 
@@ -263,7 +261,7 @@ public class PlayerVoxelCollider : MonoBehaviour
             for (int i = 0; i < adjacentVoxelIDs.Length; i++) // for all check positions around player
             {
                 // uses getVoxel for most accurate voxelstate
-                if (_blockID == adjacentVoxelIDs[i]) // if any of the voxel ids matches the id we are looking for, then mark as touching
+                if (blockID == adjacentVoxelIDs[i]) // if any of the voxel ids matches the id we are looking for, then mark as touching
                     isTouching = true;
             }
         }

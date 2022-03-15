@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
 using UnityEngine.InputSystem;
-using Mirror;
 
 public class GameManagerScript : MonoBehaviour
 {

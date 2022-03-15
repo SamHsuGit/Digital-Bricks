@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Structure
 {
-    public static Queue<VoxelMod> GenerateSurfaceOb (int index, Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float _fertility, bool _isEarth)
+    public static Queue<VoxelMod> GenerateSurfaceOb (int index, Vector3 position, int minHeight, int maxHeight, int minRadius, int maxRadius, float fertility, bool isEarth)
     {
         switch (index)
         {
@@ -12,48 +12,48 @@ public static class Structure
             //case 1:
             //    return MakeProcGenVBOImport(position); // decided not to allow VBO imports since is a performance hog, instead only spawn  imported object at base
             case 2:
-                return MakeTree(position, minHeight, maxHeight, minRadius, maxRadius, _fertility);
+                return MakeTree(position, minHeight, maxHeight, minRadius, maxRadius, fertility);
             case 3:
-                return MakeCacti(position, minHeight, maxHeight, _fertility);
+                return MakeCacti(position, minHeight, maxHeight, fertility);
             case 4:
-                return MakeMushroomLarge(position, minHeight, maxHeight, minRadius, maxRadius, _fertility);
+                return MakeMushroomLarge(position, minHeight, maxHeight, minRadius, maxRadius, fertility);
             case 5:
-                return MakeMonolith(position, minHeight, maxHeight, _fertility);
+                return MakeMonolith(position, minHeight, maxHeight, fertility);
             case 6:
-                if (_isEarth)
+                if (isEarth)
                     return MakeGrass(position); // only present on earth (green flora doesn't match on other planets)
                 else
                     break;
             case 7:
                 return MakeMushroomSmall(position); // must be present on all planets for gameplay (health)
             case 8:
-                if (_isEarth)
-                    return MakeBamboo(position, minHeight, maxHeight, _fertility); // only present on earth (green flora doesn't match on other planets)
+                if (isEarth)
+                    return MakeBamboo(position, fertility); // only present on earth (green flora doesn't match on other planets)
                 else
                     break;
             case 9:
-                if (_isEarth)
+                if (isEarth)
                     return MakeFlower(position); // only present on earth (green flora doesn't match on other planets)
                 else
                     break;
             case 10:
-                return MakeEvergreen(position, minHeight, maxHeight, _fertility);
+                return MakeEvergreen(position, minHeight, maxHeight, fertility);
             case 11:
-                return MakeHoneyComb(position, minHeight, maxHeight, _fertility);
+                return MakeHoneyComb(position, minHeight, maxHeight, fertility);
             case 12:
                 return MakeHugeTree(position);
             case 13:
                 return MakeColumn(position);
             case 14:
-                return MakeTreeFall(position, minHeight, maxHeight, minRadius, maxRadius, _fertility);
+                return MakeTreeFall(position, minHeight, maxHeight, minRadius, maxRadius, fertility);
             case 15:
-                return MakeTreeSavanna(position, minHeight, maxHeight, _fertility);
+                return MakeTreeSavanna(position, minHeight, maxHeight, fertility);
             case 16:
                 return MakeRock(position);
             case 17:
-                return MakeBoulder(position, _fertility);
+                return MakeBoulder(position, fertility);
             case 18:
-                return MakeShrub(position, _fertility);
+                return MakeShrub(position, fertility);
             case 19:
                 return MakeTestRainbow(position);
         }
@@ -72,17 +72,17 @@ public static class Structure
             {
                 case 1:
                     byte winter = World.Instance.worldData.blockIDTreeLeavesWinter;
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, winter, winter, winter, winter); // Winter (Season1)
+                    return GetMixedBlockID(treePosition, voxelPosition, winter, winter, winter, winter); // Winter (Season1)
                 case 2:
                     byte spring = World.Instance.worldData.blockIDTreeLeavesSpring;
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, spring, spring, spring, spring); // Spring (Season 2)
+                    return GetMixedBlockID(treePosition, voxelPosition, spring, spring, spring, spring); // Spring (Season 2)
                 case 3:
                     byte summer = World.Instance.worldData.blockIDTreeLeavesSummer;
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, summer, summer, summer, summer); // Summer (Season 3)
+                    return GetMixedBlockID(treePosition, voxelPosition, summer, summer, summer, summer); // Summer (Season 3)
                 case 4:
                     byte fall1 = World.Instance.worldData.blockIDTreeLeavesFall1;
                     byte fall2 = World.Instance.worldData.blockIDTreeLeavesFall2;
-                    return GetMixedBlockID(floraRadius, treePosition, voxelPosition, fall1, fall2, fall1, fall2); // Fall (Season 4)
+                    return GetMixedBlockID(treePosition, voxelPosition, fall1, fall2, fall1, fall2); // Fall (Season 4)
             }
             return 0;
         }
@@ -98,11 +98,11 @@ public static class Structure
         {
             byte fall1 = World.Instance.worldData.blockIDTreeLeavesFall1;
             byte fall2 = World.Instance.worldData.blockIDTreeLeavesFall2;
-            return GetMixedBlockID(floraRadius, treePosition, voxelPosition, fall1, fall2, fall1, fall2);
+            return GetMixedBlockID(treePosition, voxelPosition, fall1, fall2, fall1, fall2);
         }
     }
 
-    public static byte GetMixedBlockID(int floraRadius, Vector3 treePosition, Vector3 voxelPosition, byte zero, byte one, byte two, byte three)
+    public static byte GetMixedBlockID(Vector3 treePosition, Vector3 voxelPosition, byte zero, byte one, byte two, byte three)
     {
         switch ((byte)Mathf.Clamp(Noise.Get2DPerlin(new Vector2(voxelPosition.x, voxelPosition.z), treePosition.x + treePosition.z, 0.8f) * 3, 0, 3))
         {
@@ -118,18 +118,18 @@ public static class Structure
         return 0;
     }
 
-    static void ReserveSpaceVBO(Queue<VoxelMod> _queue, Vector3 _position, int _xRadius, int _zRadius)
+    static void ReserveSpaceVBO(Queue<VoxelMod> queue, Vector3 position, int xRadius, int zRadius)
     {
-        for (int x = -_xRadius; x < _xRadius; x++)
+        for (int x = -xRadius; x < xRadius; x++)
         {
-            for (int z = -_zRadius; z < _zRadius; z++)
+            for (int z = -zRadius; z < zRadius; z++)
             {
-                for (int y = 0; y < VoxelData.ChunkHeight - _position.y; y++)
+                for (int y = 0; y < VoxelData.ChunkHeight - position.y; y++)
                 {
                     // + 1 to offset voxels to be aligned with center of plates
-                    _queue.Enqueue(new VoxelMod(new Vector3(_position.x + x, _position.y, _position.z + z), 3)); // make stone 'baseplate' for model to sit on
+                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y, position.z + z), 3)); // make stone 'baseplate' for model to sit on
 
-                    _queue.Enqueue(new VoxelMod(new Vector3(_position.x + x, _position.y + y + 1, _position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
+                    queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + y + 1, position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
                 }
             }
         }
@@ -346,12 +346,12 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeShrub(Vector3 position, float _fertility)
+    static Queue<VoxelMod> MakeShrub(Vector3 position, float fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(2 * _fertility);
-        int radius = (int)(3 * _fertility);
+        int height = (int)(2 * fertility);
+        int radius = (int)(3 * fertility);
 
         for (int x = -radius; x < radius; x++)
         {
@@ -379,10 +379,10 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeBamboo(Vector3 position, int minHeight, int maxHeight, float _fertility)
+    static Queue<VoxelMod> MakeBamboo(Vector3 position, float fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        int height = (int)(10 * _fertility);
+        int height = (int)(10 * fertility);
 
         for (int i = 1; i <= height; i++)
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 33)); // bamboo
@@ -435,11 +435,11 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeHoneyComb(Vector3 position, int minHeight, int maxHeight, float _fertility)
+    static Queue<VoxelMod> MakeHoneyComb(Vector3 position, int minHeight, int maxHeight, float fertility)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int height = (int)(maxHeight * _fertility);
+        int height = (int)(maxHeight * fertility);
         if (height < minHeight)
             height = minHeight;
 

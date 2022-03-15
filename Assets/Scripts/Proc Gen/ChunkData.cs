@@ -1,11 +1,40 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 public class ChunkData
 {
+    // To share worlds over discord, need to reduce savedata to under 8 MB
+    // enables chunk strings to be sent over the network to sync world files upon start
+
+    // Each voxel has a voxelState byte (8 bits = 2^8 = 256 blockIDs)
+    // Each Chunk has a 3D Byte Array called map = Byte[16, 96, 16] = 16x96x16 voxels = 24,576 bytes
+    // Therefore, each chunk file should be only 24 KB (actual is 361 KB for 96 chunkHeight, 961 KB for 256 chunkHeight, 15 times larger, perhaps due to Unity Serialization?
+
+    // Optimized Data storage (possibly slow random access) 3D byte array into 1D string with Run Length Encoding
+    // Non Run Length Encoded bytes (theoretical) = 16x16x96 = 24,796 bytes (24.8 KB)
+    // Non Run Length Encoded bytes (actual) = 361,000 bytes (361 KB)
+    // Run Length Encoded Memory Usage = 5,000 bytes (5KB) (~20% compression)
+
+
+
+    // Minecraft Optimizations:
+    // Minecraft uses Named Binary Tag Format to efficiently store binary data related to chunks in region files
+    // Minecraft Chunks were originally stored as individual ".dat" files with the chunk position encoded in Base36
+
+    // MCRegion began storing groups of 32×32 chunks in individual ".mcr" files
+    // with coordinates in Base10 to reduce disk usage by cutting down on the number of file handles Minecraft had open at once
+    // (because Minecraft is constantly reading/writing to world data as it saves in run-time and ran up against a hard limit of 1024 open handles)
+
+    // Minecraft Anvil Format changed the max build height to 256 and empty sections were no longer saved or loaded to disk
+    // max # Block IDs was increased to 4096 (was 256) by adding a 4-bit data layer (similar to how meta data is stored).
+    // Minecraft Block ordering was been changed from XZY to YZX in order to improve compression.
+
+    // Minecraft further divides world into regions = 32x32 chunks https://docs.safe.com/fme/html/FME_Desktop_Documentation/FME_ReadersWriters/minecraft/minecraft.htm
+    // Minecraft compresses save data to reduce level.data to 2 kB?!
+
+
+
     // The global position of the chunk. ie, (16, 16) NOT (1, 1). We want to be able to
     // access it as a Vector2Int, but Vector2Int's are not serialized so we won't be able
     // to save them. So we'll store them as ints.
@@ -25,7 +54,7 @@ public class ChunkData
     }
 
     public ChunkData(Vector2Int pos) { position = pos; }
-    public ChunkData(int _x, int _y) { x = _x; y = _y; }
+    public ChunkData(int x, int y) { this.x = x; this.y = y; }
     public ChunkData() { x = 0; y = 0; } // default constructor for deserialization
 
     [HideInInspector]
@@ -108,20 +137,6 @@ public class ChunkData
 
     public string EncodeChunk(ChunkData chunk)
     {
-        // Optimized Data storage (possibly slow random access) 3D byte array into 1D string with Run Length Encoding
-        // map = 3D array of voxelstates/bytes, 1 byte = 8 bits (each voxelState = 1 byte which represents up to 2^8 (256) values)
-        // bytes go from 16x16x96 = 24,796 to 5,000 a roughly 20% compression?
-        // Compressing chunks from 3D byte arrays into 1D Run Length Encoded strings reduced each chunk file size from 361 KB to 5 KB
-        // so 16x16x8x96 = 196,608 bits (196.608 kB per chunk), save file was 361 KB... not sure why
-        // To share worlds over discord, need to reduce savedata to under 8 MB
-        // enables chunk strings to be sent over the network to sync world files upon start
-        // Make function Encode to encode the map values into a 1D string
-        // aaaaabbbbacaa = 5a4b1a1c2a
-        // order is predetermined to be chunk coords x,z, then voxel positions y 0-96 (bottom to top, first for chunk optimization), x 0-16 (left to right), z 0-16 (bottom to top)
-        // a = 0, b = 1, c = 2, etc.
-        // Minecraft further divides world into regions = 32x32 chunks https://docs.safe.com/fme/html/FME_Desktop_Documentation/FME_ReadersWriters/minecraft/minecraft.htm
-        // Minecraft compresses save data to reduce level.data to 2 kB?!
-
         string str = string.Empty;
         for (int z = 0; z < VoxelData.ChunkWidth; z++) // last does next z value
         {
@@ -134,11 +149,8 @@ public class ChunkData
                 str += ",";
             }
         }
-        // example output: "dtadddddddddddddddddddaaadddddeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..."
-        // with vertical slices of chunks smashed next to each other (stores 0's)
 
         str = chunk.position.x.ToString() + "," + chunk.position.y.ToString() + "," + RunLengthEncode(str);
-        // example output: "1,2,1d1t1a19d3a5d1e65a,1d1t20d3a5d1e65a..."
 
         return str;
     }
@@ -151,7 +163,6 @@ public class ChunkData
         for (int i = 2; i < substrings.Length - 1; i++)
         {
             substrings[i] = RunLengthDecode(substrings[i]);
-            // example output: "dtadddddddddddddddddddaaadddddeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..."
         }
 
         int xChunkPos = int.Parse(substrings[0]);

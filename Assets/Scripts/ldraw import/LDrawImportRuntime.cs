@@ -1,13 +1,12 @@
+using LDraw;
 using System.Collections.Generic;
 using UnityEngine;
-using LDraw;
-using System.IO;
 
 public class LDrawImportRuntime : MonoBehaviour
 {
-    private string[] _ModelNames;
-    private string _CurrentPart;
-    private int _CurrentIndex;
+    private string[] modelNames;
+    private string currentPart;
+    private int currentIndex;
     public LDrawConfigRuntime ldrawConfigRuntime;
 
     public GameObject charObIdle;
@@ -15,7 +14,7 @@ public class LDrawImportRuntime : MonoBehaviour
     public GameObject baseOb;
     public GameObject projectileOb;
     public PhysicMaterial physicMaterial;
-    public Mesh[] _meshArray;
+    public Mesh[] meshArray;
     public Dictionary<string, Mesh> _Meshes = new Dictionary<string, Mesh>();
 
     public int baseObSizeX;
@@ -41,9 +40,9 @@ public class LDrawImportRuntime : MonoBehaviour
 
     public void LoadMeshes()
     {
-        for (int i = 0; i < _meshArray.Length; i++)
+        for (int i = 0; i < meshArray.Length; i++)
         {
-            _Meshes.Add(_meshArray[i].name, _meshArray[i]);
+            _Meshes.Add(meshArray[i].name, meshArray[i]);
         }
     }
 
@@ -55,7 +54,7 @@ public class LDrawImportRuntime : MonoBehaviour
         else
             _instance = this;
 
-        _ModelNames = ldrawConfigRuntime.ModelFileNames;
+        modelNames = ldrawConfigRuntime.ModelFileNames;
 
         // imports models, caches, and hides upon world load to be instantiated later
         charObIdle = ImportLDrawLocal("charIdle", importPosition, false); // char is not static (i.e. isStatic = false)
@@ -100,20 +99,20 @@ public class LDrawImportRuntime : MonoBehaviour
     public string GetCurrentPart(string fileName)
     {
         ldrawConfigRuntime.InitParts();
-        _ModelNames = ldrawConfigRuntime.ModelFileNames;
+        modelNames = ldrawConfigRuntime.ModelFileNames;
 
-        if (_ModelNames.Length < 1)
+        if (modelNames.Length < 1)
         {
             ErrorMessage.Show("No '.ldr' files found in 'BrickFormers - A Fan-Made Game_Data/ldraw/models/'");
             return null;
         }
 
         bool found = false;
-        for (int i = 0; i < _ModelNames.Length; i++)
+        for (int i = 0; i < modelNames.Length; i++)
         {
-            if (_ModelNames[i] == fileName)
+            if (modelNames[i] == fileName)
             {
-                _CurrentIndex = i;
+                currentIndex = i;
                 found = true;
             }
         }
@@ -125,8 +124,8 @@ public class LDrawImportRuntime : MonoBehaviour
             return null;
         }
 
-        _CurrentPart = ldrawConfigRuntime.GetModelByFileName(_ModelNames[_CurrentIndex]);
-        return _CurrentPart;
+        currentPart = ldrawConfigRuntime.GetModelByFileName(modelNames[currentIndex]);
+        return currentPart;
     }
 
     public string GetSerializedPart(string fileName)
@@ -134,20 +133,20 @@ public class LDrawImportRuntime : MonoBehaviour
         string serializedPart;
 
         ldrawConfigRuntime.InitParts();
-        _ModelNames = ldrawConfigRuntime.ModelFileNames;
+        modelNames = ldrawConfigRuntime.ModelFileNames;
 
-        if (_ModelNames.Length < 1)
+        if (modelNames.Length < 1)
         {
             ErrorMessage.Show("No '.ldr' files found in 'BrickFormers - A Fan-Made Game_Data/ldraw/models/'");
             return null;
         }
 
         bool found = false;
-        for (int i = 0; i < _ModelNames.Length; i++)
+        for (int i = 0; i < modelNames.Length; i++)
         {
-            if (_ModelNames[i] == fileName)
+            if (modelNames[i] == fileName)
             {
-                _CurrentIndex = i;
+                currentIndex = i;
                 found = true;
             }
         }
@@ -159,8 +158,8 @@ public class LDrawImportRuntime : MonoBehaviour
             return null;
         }
 
-        _CurrentPart = ldrawConfigRuntime.GetModelByFileName(_ModelNames[_CurrentIndex]);
-        serializedPart = ldrawConfigRuntime.GetSerializedPart(_CurrentPart);
+        currentPart = ldrawConfigRuntime.GetModelByFileName(modelNames[currentIndex]);
+        serializedPart = ldrawConfigRuntime.GetSerializedPart(currentPart);
 
         return serializedPart;
     }

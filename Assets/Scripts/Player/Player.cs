@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,14 +10,16 @@ public class Player
     //public int instances = 1;
     public List<ChunkCoord> chunksToAddVBO;
 
-    public Player(GameObject player, string _name) // player Constructor
+    public Player(GameObject player, string name, World world)
     {
+        // player Constructor
+
         playerGameObject = player;
-        name = _name;
+        this.name = name;
 
         int[] playerStats;
         if (Settings.Platform != 2)
-            playerStats = SaveSystem.LoadPlayerStats(player, name, World.Instance.worldData); // load current player stats from save file
+            playerStats = SaveSystem.LoadPlayerStats(player, this.name, world.worldData); // load current player stats from save file
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(playerGameObject);
 
@@ -44,8 +45,10 @@ public class Player
         chunksToAddVBO = new List<ChunkCoord>();
     }
 
-    public Player() // default constructor
+    public Player() 
     {
+        // default constructor
+
         playerGameObject = null;
         name = "undefinedPlayerName";
         spawnPosition = World.Instance.defaultSpawnPosition;

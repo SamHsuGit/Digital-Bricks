@@ -64,11 +64,11 @@ public class Lighting : MonoBehaviour
             controller.timeOfDayServer = timeOfDay;
     }
 
-    public bool CheckDaytime(float _timeOfDay)
+    public bool CheckDaytime(float timeOfDay)
     {
         bool _dayTime;
 
-        if (_timeOfDay >= 6 && _timeOfDay <= 18)
+        if (timeOfDay >= 6 && timeOfDay <= 18)
             _dayTime = true;
         else
             _dayTime = false;

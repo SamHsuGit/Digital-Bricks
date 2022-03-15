@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -101,7 +99,7 @@ public class SetupMenu : MonoBehaviour
 
         try
         {
-            int result = System.Int32.Parse(planetInputField.text); // Int32 can hold up to 2,147,483,647 numbers
+            int result = int.Parse(planetInputField.text); // Int32 can hold up to 2,147,483,647 numbers
             SettingsStatic.LoadedSettings.planetNumber = result;
         }
         catch (System.FormatException)
@@ -111,7 +109,7 @@ public class SetupMenu : MonoBehaviour
 
         try
         {
-            int result = System.Int32.Parse(seedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
+            int result = int.Parse(seedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
             SettingsStatic.LoadedSettings.seed = result;
         }
         catch (System.FormatException)

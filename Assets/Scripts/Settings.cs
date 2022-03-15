@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
@@ -20,6 +18,21 @@ public static class SettingsStatic
     {
         Settings settings = new Settings();
 
+        settings.ipAddress = "localhost";
+        settings.viewDistance = 3;
+        settings.volume = 0.5f;
+        settings.lookSpeed = 0.1f;
+        settings.lookAccel = 0.1f;
+        settings.fov = 90f;
+        settings.invertY = false;
+        settings.invertX = false;
+        settings.fullscreen = true;
+        settings.planetNumber = 3;
+        settings.seed = 1;
+        settings.timeOfDay = 6.01f;
+        settings.playerName = "PlayerName";
+        settings.flight = false;
+
         string path;
         if (Settings.Platform == 2)
             path = Settings.AppSaveDataPath + "/settings.cfg";
@@ -29,23 +42,6 @@ public static class SettingsStatic
         {
             string JsonImport = File.ReadAllText(path);
             settings = JsonUtility.FromJson<Settings>(JsonImport);
-        }
-        else // default settings if settings.cfg not found
-        {
-            settings.ipAddress = "localhost";
-            settings.viewDistance = 3;
-            settings.volume = 0.5f;
-            settings.lookSpeed = 0.1f;
-            settings.lookAccel = 0.1f;
-            settings.fov = 90f;
-            settings.invertY = false;
-            settings.invertX = false;
-            settings.fullscreen = true;
-            settings.planetNumber = 3;
-            settings.seed = 1;
-            settings.timeOfDay = 6.01f;
-            settings.playerName = "PlayerName";
-            settings.flight = false;
         }
 
         return settings;

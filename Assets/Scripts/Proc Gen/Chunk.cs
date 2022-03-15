@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,13 +28,13 @@ public class Chunk
 
     public ChunkData chunkData;
 
-    public Chunk(ChunkCoord _coord)
+    public Chunk(ChunkCoord coord)
     {
-        coord = _coord;
+        this.coord = coord;
 
         chunkObject = new GameObject();
         chunkObject.isStatic = true;
-        World.Instance.chunks.Add(coord, this);
+        World.Instance.chunks.Add(this.coord, this);
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
 
@@ -44,8 +43,8 @@ public class Chunk
         meshRenderer.materials = materials;
 
         chunkObject.transform.SetParent(World.Instance.transform);
-        chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
-        chunkObject.name = "Chunk " + coord.x + ", " + coord.z;
+        chunkObject.transform.position = new Vector3(this.coord.x * VoxelData.ChunkWidth, 0f, this.coord.z * VoxelData.ChunkWidth);
+        chunkObject.name = "Chunk " + this.coord.x + ", " + this.coord.z;
         chunkObject.tag = "Chunk";
         position = chunkObject.transform.position;
 
@@ -340,10 +339,10 @@ public class ChunkCoord
         z = 0;
     }
 
-    public ChunkCoord(int _x, int _z)
+    public ChunkCoord(int x, int z)
     {
-        x = _x;
-        z = _z;
+        this.x = x;
+        this.z = z;
     }
 
     public ChunkCoord(Vector3 pos)
@@ -374,11 +373,13 @@ public class VoxelState
 
     public VoxelState()
     {
+        // default constructor
         id = 0;
     }
 
-    public VoxelState(byte _id)
+    public VoxelState(byte id)
     {
-        id = _id;
+        // constructor
+        this.id = id;
     }
 }

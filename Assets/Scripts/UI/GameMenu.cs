@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using Mirror;
-using System.IO;
 
 public class GameMenu : MonoBehaviour
 {

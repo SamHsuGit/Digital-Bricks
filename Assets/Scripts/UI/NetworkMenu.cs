@@ -1,7 +1,6 @@
 using UnityEngine;
 using Mirror;
 using TMPro;
-using System.IO;
 using UnityEngine.SceneManagement;
 
 public class NetworkMenu : MonoBehaviour

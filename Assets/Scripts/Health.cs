@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
@@ -79,16 +78,16 @@ public class Health : NetworkBehaviour
         }  
     }
 
-    int SimpleCountCheck(GameObject _ob)
+    int SimpleCountCheck(GameObject ob)
     {
-        return _ob.transform.GetChild(0).childCount;
+        return ob.transform.GetChild(0).childCount;
     }
 
-    void AddToPiecesList(GameObject _ob)
+    void AddToPiecesList(GameObject ob)
     {
         if (Settings.OnlinePlay)
         {
-            foreach (Transform child in _ob.transform)
+            foreach (Transform child in ob.transform)
             {
                 if (!child.name.Contains("-submodel"))
                 {
@@ -99,9 +98,9 @@ public class Health : NetworkBehaviour
         }
         else
         {
-            if (_ob.transform.GetChild(0).gameObject.name.Contains("-submodel"))
+            if (ob.transform.GetChild(0).gameObject.name.Contains("-submodel"))
             {
-                GameObject submodel = _ob.transform.GetChild(0).gameObject;
+                GameObject submodel = ob.transform.GetChild(0).gameObject;
                 foreach (Transform child in submodel.transform)
                 {
                     modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
@@ -110,7 +109,7 @@ public class Health : NetworkBehaviour
             }
             else
             {
-                foreach (Transform child in _ob.transform)
+                foreach (Transform child in ob.transform)
                 {
                     modelPieces.Add(child.gameObject); // only adds the children of the submodel to the pieces list
                     brickCount++;
@@ -254,28 +253,8 @@ public class Health : NetworkBehaviour
                 GameObject obToSpawn = modelPartsList[i];
                 if (i >= hp && obToSpawn.GetComponent<MeshRenderer>() != null && obToSpawn.GetComponent<MeshRenderer>().enabled) // if modelPart index >= hp and not hidden, hide it
                 {
-                    //// spawn voxel bits (disabled since this code cannot run on clients, gave error cannot spawn objects without active server...)
-                    //Vector3 pos = obToSpawn.transform.position;
-                    //if (Settings.OnlinePlay)
-                    //{
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.CmdSpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                    //}
-                    //else
-                    //{
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    //    controller.SpawnObject(3, 3, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                    //}
-
-                    //// spawn a copy of the character model piece that was shot (Disabled because cannot pass gameobject to server command CmdSpawnObject)
-                    //if (obToSpawn.GetComponent<BoxCollider>() != null)
-                    //{
-                    //    controller.SpawnObject(4, 0, obToSpawn.transform.position, obToSpawn);
-                    //}
+                    // cannot spawn voxel bits because this code cannot run on clients, gave error cannot spawn objects without active server...
+                    // cannot spawn a copy of the character model piece that was shot because cannot pass gameobject to server command CmdSpawnObject
 
                     // turn off components, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
                     if (obToSpawn.GetComponent<MeshRenderer>() != null)

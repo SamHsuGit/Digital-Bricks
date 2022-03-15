@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class Noise
 {
     public static float Get2DPerlin(Vector2 position, float offset, float scale)
     {
-        offset += SettingsStatic.LoadedSettings.seed; // make entire world generation affected by single seed
+        offset += World.Instance.seed; // make entire world generation affected by single seed
 
-        float y = 0;
+        float y;
         // purpose of 0.1f is to make not a whole number since all positions will be whole numbers
         y = Mathf.PerlinNoise((position.x + 0.1f) / VoxelData.ChunkWidth * scale + offset, (position.y + 0.1f) / VoxelData.ChunkWidth * scale + offset);
 
@@ -25,7 +23,7 @@ public static class Noise
 
     public static bool Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
     {
-        offset += SettingsStatic.LoadedSettings.seed; // make entire world generation affected by single seed
+        offset += World.Instance.seed; // make entire world generation affected by single seed
 
         // https://www.youtube.com/watch?v=Aga0TBJkchM Carpilot on YouTube
 

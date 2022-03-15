@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -57,14 +56,16 @@ public class WorldData
             modifiedChunks.Add(chunk);
     }
 
-    public WorldData (int _planetNumber, int _seed)
+    public WorldData (int planetNumber, int seed)
     {
-        planetNumber = _planetNumber;
-        seed = _seed;
+        this.planetNumber = planetNumber;
+        this.seed = seed;
     }
 
-    public WorldData() // default constructor for deserialization
+    public WorldData()
     {
+        // default constructor for deserialization
+
         planetNumber = 3;
         seed = 1;
     }
@@ -95,8 +96,10 @@ public class WorldData
         return c;
     }
 
-    public void LoadChunkFromFile(Vector2Int coord) // assumes chunks.ContainsKey(coord) = false
+    public void LoadChunkFromFile(Vector2Int coord)
     {
+        // assumes chunks.ContainsKey(coord) = false
+
         // attempt to load the chunk from memory (checks if file exists)
         ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed, coord); // can be slow if loading lots of chunks from memory?
         if (chunk != null)

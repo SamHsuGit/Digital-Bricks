@@ -65,10 +65,10 @@ public class World : MonoBehaviour
     // public variables
     public List<Player> players = new List<Player>();
     public int playerCount = 0;
+
     // chunk draw lists and arrays
     public ChunkCoord firstChunkCoord;
     public bool firstChunkLoaded;
-    public bool activateNewChunks = true;
     public Dictionary<ChunkCoord, Chunk> chunks = new Dictionary<ChunkCoord, Chunk>();
     public Chunk[,] chunksToDrawArray = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
     public List<ChunkCoord> chunkCoordsToDrawList = new List<ChunkCoord>();
@@ -98,16 +98,14 @@ public class World : MonoBehaviour
     List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
     Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
-    List<Player> _players = new List<Player>();
-    List<ChunkCoord> _playerChunkCoords = new List<ChunkCoord>();
-    List<ChunkCoord> _playerLastChunkCoords = new List<ChunkCoord>();
+    List<Player> playersCopy = new List<Player>();
+    List<ChunkCoord> playerChunkCoordsCopy = new List<ChunkCoord>();
+    List<ChunkCoord> playerLastChunkCoordsCopy = new List<ChunkCoord>();
 
     bool applyingModifications = false;
     Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
     Thread ChunkRedrawThread;
     Camera mainCamera;
-
-    float chunkHeightFactor;
 
     private void Awake()
     {
@@ -142,10 +140,7 @@ public class World : MonoBehaviour
         else
             _instance = this;
 
-        //activateNewChunks = false;
         firstChunkCoord = new ChunkCoord(VoxelData.WorldSizeInChunks / 2, VoxelData.WorldSizeInChunks / 2);
-
-        chunkHeightFactor = (float)VoxelData.ChunkHeight / 96f; // proportionally adjust biome terrain height when chunkHeight is adjusted (heights were calibrated at chunkHeight = 96)
 
         cloudHeight = VoxelData.ChunkHeight - 15;
 
@@ -193,7 +188,7 @@ public class World : MonoBehaviour
 
         if (playerGameObject == worldPlayer)
         {
-            player = new Player(playerGameObject, "WorldPlayer");
+            player = new Player(playerGameObject, "WorldPlayer", this);
             players.Add(player);
         }
         else if (Settings.Platform != 2)
@@ -202,7 +197,7 @@ public class World : MonoBehaviour
         }
         else
         {
-            player = new Player(playerGameObject, "VR Player");
+            player = new Player(playerGameObject, "VR Player", this);
             players.Add(player);
         }
 
@@ -475,19 +470,6 @@ public class World : MonoBehaviour
         //}
     }
 
-    public void ActivateChunks()
-    {
-        chunkLoadSound.Play();
-
-        foreach (KeyValuePair<ChunkCoord, Chunk> chunk in chunks) // activate all currently loaded chunks
-        {
-            chunk.Value.isActive = true;
-            chunksToDrawList.Add(chunk.Value); // redraw all chunks
-        }
-
-        activateNewChunks = true; // tell world to set new chunks to be active (out of tutorial mode)
-    }
-
     private void Update()
     {
         if (!worldLoaded) // don't continue with main loop if world has not been loaded.
@@ -504,34 +486,34 @@ public class World : MonoBehaviour
         chunksToDrawObjectsList.Clear();
 
         // create copies of the lists to use so the original lists can be modified during the update loop (was causing errors)
-        _players = players;
-        _playerChunkCoords = playerChunkCoords;
-        _playerLastChunkCoords = playerLastChunkCoords;
+        playersCopy = players;
+        playerChunkCoordsCopy = playerChunkCoords;
+        playerLastChunkCoordsCopy = playerLastChunkCoords;
 
-        for (int i = firstPlayerIndex; i < _players.Count; i++) // for all players
+        for (int i = firstPlayerIndex; i < playersCopy.Count; i++) // for all players
         {
             // if the player disconnected, remove their gameobject from the dictionary and go to the next dictionary value
-            if (_players[i] == null)//|| playerChunkCoords.Count > 1 && player.Key == worldPlayer)
+            if (playersCopy[i] == null)//|| playerChunkCoords.Count > 1 && player.Key == worldPlayer)
             {
-                _players.RemoveAt(i);
-                _playerChunkCoords.RemoveAt(i);
-                _playerLastChunkCoords.RemoveAt(i);
+                playersCopy.RemoveAt(i);
+                playerChunkCoordsCopy.RemoveAt(i);
+                playerLastChunkCoordsCopy.RemoveAt(i);
                 //ebug.Log("Player Quit");
                 continue;
             }
 
             // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
-            if (_players[i].playerGameObject != worldPlayer && _players[i].playerGameObject != null && _players.Count == _playerChunkCoords.Count)
+            if (playersCopy[i].playerGameObject != worldPlayer && playersCopy[i].playerGameObject != null && playersCopy.Count == playerChunkCoordsCopy.Count)
             {
-                _playerChunkCoords[i] = GetChunkCoordFromVector3(playerGameObjects[_players[i]].transform.position); // get the current chunkCoords for given player camera
+                playerChunkCoordsCopy[i] = GetChunkCoordFromVector3(playerGameObjects[playersCopy[i]].transform.position); // get the current chunkCoords for given player camera
 
-                //Debug.Log("_playerChunkCoords = " + _playerChunkCoords[playerCount - 1].x + ", " + _playerChunkCoords[playerCount - 1].z);
-                //Debug.Log("_playerLastChunkCoords = " + _playerLastChunkCoords[playerCount - 1].x + " , " + _playerLastChunkCoords[playerCount - 1].z);
+                //Debug.Log("playerChunkCoordsCopy = " + playerChunkCoordsCopy[playerCount - 1].x + ", " + playerChunkCoordsCopy[playerCount - 1].z);
+                //Debug.Log("playerLastChunkCoordsCopy = " + playerLastChunkCoordsCopy[playerCount - 1].x + " , " + playerLastChunkCoordsCopy[playerCount - 1].z);
                 // Only update the chunks if the player has moved from the chunk they were previously on.
-                if (!_playerChunkCoords[i].Equals(_playerLastChunkCoords[i]))
+                if (!playerChunkCoordsCopy[i].Equals(playerLastChunkCoordsCopy[i]))
                 {
-                    CheckDrawDistance(_playerChunkCoords[i], i); // re-draw chunks
-                    CheckVBODrawDist(_playerChunkCoords[i], i); // re-draw studs
+                    CheckDrawDistance(playerChunkCoordsCopy[i], i); // re-draw chunks
+                    CheckVBODrawDist(playerChunkCoordsCopy[i], i); // re-draw studs
                 }
             }
 
@@ -663,8 +645,7 @@ public class World : MonoBehaviour
                     // Check if its in view distance, if not, mark it to be re-drawn.
                     if (chunksToDrawArray[x, z] == null) // if the chunksToDrawArray is empty at thisChunkCoord
                         chunksToDrawArray[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
-                    if(activateNewChunks)
-                        chunksToDrawArray[x, z].isInDrawDist = true;
+                    chunksToDrawArray[x, z].isInDrawDist = true;
                     chunkCoordsToDrawList.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
 
                     if(chunksToDrawList.Contains(chunksToDrawArray[x, z]))
@@ -969,11 +950,11 @@ public class World : MonoBehaviour
         return voxelValue;
     }
 
-    public bool CheckMakeBase(Vector3 _globalPos)
+    public bool CheckMakeBase(Vector3 globalPos)
     {
-        if (Settings.Platform != 2 && _globalPos.y == terrainHeightVoxels && _globalPos.x == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && _globalPos.z == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2))
+        if (Settings.Platform != 2 && globalPos.y == terrainHeightVoxels && globalPos.x == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2))
         {
-            modifications.Enqueue(Structure.GenerateSurfaceOb(0, _globalPos, 0, 0, 0, 0, 0, isEarth)); // make base at center of first chunk at terrain height
+            modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, 0, isEarth)); // make base at center of first chunk at terrain height
             return true;
         }
         else
@@ -981,61 +962,61 @@ public class World : MonoBehaviour
             
     }
 
-    public void GetTerrainHeight(Vector2 _xzCoords)
+    public void GetTerrainHeight(Vector2 xzCoords)
     {
         // get values for continentalness, erosion, and wierdness from 3 Perlin Noise maps
-        continentalness = Noise.Get2DPerlin(_xzCoords, 0, 0.08f);
-        erosion = Noise.Get2DPerlin(_xzCoords, 1, 0.1f);
-        peaksAndValleys = Noise.Get2DPerlin(_xzCoords, 2, 0.5f);
-        weirdness = Noise.Get2DPerlin(_xzCoords, 321, 0.08f);
+        continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
+        erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f);
+        peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f);
+        weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.08f);
 
         // use spline points to determine terrainHeight for each component
-        float _continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
-        float _erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
-        float _peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
+        float continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
+        float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
+        float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
 
-        terrainHeightPercentChunk = continentalness * _continentalnessFactor + erosion * _erosionFactor + peaksAndValleys * _peaksAndValleysFactor;
+        terrainHeightPercentChunk = continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor;
         terrainHeightVoxels = Mathf.Clamp(Mathf.FloorToInt(cloudHeight * terrainHeightPercentChunk - 0),0, cloudHeight); // multiplies by number of voxels to get height in voxels
     }
 
-    public bool GetIsAir(Vector3 _globalPos)
+    public bool GetIsAir(Vector3 globalPos)
     {
         // WIP, meant to be a single function for terrainHeight using 3D Perlin Noise and (3) other 2D Perlin Noise maps to determine height and squashing
         // based on https://youtu.be/CSa5O6knuwI
 
-        //GetTerrainHeight(new Vector2(_globalPos.x, _globalPos.z));
+        //GetTerrainHeight(new Vector2(globalPos.x, globalPos.z));
 
         // testing
-        //float _terrainHeight = 0.5f; // WIP terrain height seems to update based changing this value
-        //float _squashingFactor = 0.1f; // WIP squashing factor does not seem to flatten the terrain
+        //float terrainHeight = 0.5f; // WIP terrain height seems to update based changing this value
+        //float squashingFactor = 0.1f; // WIP squashing factor does not seem to flatten the terrain
 
-        //_terrainHeight = terrainHeightPercentChunk;
-        //_squashingFactor = weirdness * weirdnessFactor;
+        //terrainHeight = terrainHeightPercentChunk;
+        //squashingFactor = weirdness * weirdnessFactor;
 
-        //float _upperLimit = Mathf.Clamp(_terrainHeight + _squashingFactor, _terrainHeight, 1);
-        //float _lowerLimit = Mathf.Clamp(_terrainHeight - _squashingFactor, 0, _terrainHeight);
+        //float upperLimit = Mathf.Clamp(terrainHeight + squashingFactor, terrainHeight, 1);
+        //float lowerLimit = Mathf.Clamp(terrainHeight - squashingFactor, 0, terrainHeight);
 
-        //int _terrainHeightVoxels = Mathf.FloorToInt(_terrainHeight * cloudHeight);
-        //int _upperLimitVoxels = Mathf.FloorToInt(_upperLimit * cloudHeight);
-        //int _lowerLimitVoxels = Mathf.FloorToInt(_lowerLimit * cloudHeight);
+        //int terrainHeightVoxels = Mathf.FloorToInt(terrainHeight * cloudHeight);
+        //int upperLimitVoxels = Mathf.FloorToInt(upperLimit * cloudHeight);
+        //int lowerLimitVoxels = Mathf.FloorToInt(lowerLimit * cloudHeight);
 
-        //float _density; // density varies from 1 at bottom of chunk to 0 at top of chunk
-        //if (_globalPos.y >= cloudHeight) // density is always 0 above cloudHeight
-        //    _density = 0;
-        //else if (_globalPos.y > _upperLimitVoxels && _globalPos.y < cloudHeight) // density is always 0 above upper limit
-        //    _density = 0;
-        //else if (_globalPos.y > _terrainHeightVoxels && _globalPos.y <= _upperLimitVoxels) // density decreases above ground
-        //    _density = GetValueBetweenPoints(new Vector2(_terrainHeight, 0.5f), new Vector2(cloudHeight, 0), _globalPos.y);
-        //else if (_globalPos.y == _terrainHeightVoxels) // _terrainHeight acts as mid point where density is constant
-        //    _density = 0.5f;
-        //else if (_globalPos.y >= _lowerLimitVoxels && _globalPos.y < _terrainHeightVoxels) // density increases below ground
-        //    _density = GetValueBetweenPoints(new Vector2(0, 1), new Vector2(_terrainHeight, 0.5f), _globalPos.y);
+        //float density; // density varies from 1 at bottom of chunk to 0 at top of chunk
+        //if (globalPos.y >= cloudHeight) // density is always 0 above cloudHeight
+        //    density = 0;
+        //else if (globalPos.y > upperLimitVoxels && globalPos.y < cloudHeight) // density is always 0 above upper limit
+        //    density = 0;
+        //else if (globalPos.y > terrainHeightVoxels && globalPos.y <= upperLimitVoxels) // density decreases above ground
+        //    density = GetValueBetweenPoints(new Vector2(terrainHeight, 0.5f), new Vector2(cloudHeight, 0), globalPos.y);
+        //else if (globalPos.y == terrainHeightVoxels) // terrainHeight acts as mid point where density is constant
+        //    density = 0.5f;
+        //else if (globalPos.y >= lowerLimitVoxels && globalPos.y < terrainHeightVoxels) // density increases below ground
+        //    density = GetValueBetweenPoints(new Vector2(0, 1), new Vector2(terrainHeight, 0.5f), globalPos.y);
         //else
-        //    _density = 1; // density is always 1 below lower limit
+        //    density = 1; // density is always 1 below lower limit
 
-        //float _density = GetValueBetweenPoints(new Vector2(0, 1), new Vector2(cloudHeight, 0), _globalPos.y);
-        float _density = terrainHeightPercentChunk;
-        return Noise.Get3DPerlin(_globalPos, 0, 0.1f, _density); // scale sets size of perlin noise, high density = higher perlin noise threshold to return true (isAir)
+        //float density = GetValueBetweenPoints(new Vector2(0, 1), new Vector2(cloudHeight, 0), globalPos.y);
+        float density = terrainHeightPercentChunk;
+        return Noise.Get3DPerlin(globalPos, 0, 0.1f, density); // scale sets size of perlin noise, high density = higher perlin noise threshold to return true (isAir)
     }
 
     public float GetValueBetweenPoints(Vector2 first, Vector2 last, float x)
@@ -1057,19 +1038,19 @@ public class World : MonoBehaviour
 
     public float GetValueFromSplinePoints(float value, Vector2[] splinePoints)
     {
-        float _terrainHeight = 0f;
+        float terrainHeight = 0f;
 
         // figure out which spline points the continentalness is between
         for (int i = 0; i < splinePoints.Length - 1; i++)
         {
             if (continentalness > splinePoints[i].x && continentalness < splinePoints[i + 1].x)
-                _terrainHeight = GetValueBetweenPoints(splinePoints[i], splinePoints[i + 1], continentalness);
+                terrainHeight = GetValueBetweenPoints(splinePoints[i], splinePoints[i + 1], continentalness);
         }
 
-        return _terrainHeight;
+        return terrainHeight;
     }
 
-    public int GetBiome(float _temperature, float _humidity)
+    public int GetBiome(float temperature, float humidity)
     {
         // based on https://minecraft.fandom.com/wiki/Biome
 
@@ -1080,53 +1061,53 @@ public class World : MonoBehaviour
         // If this array is missing it is filled when the game starts, as well any - 1 values in the array.
         // The converter source provided for developers doesn't include any biome sources, however.
 
-        if (_humidity > 0 && _humidity < 0.25f) // (dry)
+        if (humidity > 0 && humidity < 0.25f) // (dry)
         {
-            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
                 return 0;
-            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
                 return 1;
-            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
                 return 2;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
         }
-        else if (_humidity > 0.25f && _humidity < 0.5f) // (temperate)
+        else if (humidity > 0.25f && humidity < 0.5f) // (temperate)
         {
-            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
                 return 4;
-            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
                 return 5;
-            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
                 return 6;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
         }
-        else if (_humidity > 0.5f && _humidity < 0.75f) // (damp)
+        else if (humidity > 0.5f && humidity < 0.75f) // (damp)
         {
-            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
                 return 7;
-            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
                 return 8;
-            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
                 return 6;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
         }
         else // assumes value is between 0.75f and 1f (wet)
         {
-            if (_temperature > 0.75f && _temperature < 1.0f) // (freezing)
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
                 return 9;
-            else if (_temperature > 0.5f && _temperature < 0.75f) // (cold)
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
                 return 10;
-            else if (_temperature > 0.25f && _temperature < 0.5f) // (warm)
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
                 return 6;
             else // assumes value is between 0f and 0.25f (hot)
                 return 3;
         }
     }
 
-    public int GetSurfaceObType(float _percolation, float _fertility)
+    public int GetSurfaceObType(float percolation, float fertility)
     {
         // based on https://minecraft.fandom.com/wiki/Biome
 
@@ -1137,46 +1118,46 @@ public class World : MonoBehaviour
         // If this array is missing it is filled when the game starts, as well any - 1 values in the array.
         // The converter source provided for developers doesn't include any biome sources, however.
 
-        if (_fertility > 0 && _fertility < 0.25f) // (barren)
+        if (fertility > 0 && fertility < 0.25f) // (barren)
         {
-            if (_percolation > 0.75f && _percolation < 1.0f) // (gravel)
+            if (percolation > 0.75f && percolation < 1.0f) // (gravel)
                 return 0;
-            else if (_percolation > 0.5f && _percolation < 0.75f) // (sand)
+            else if (percolation > 0.5f && percolation < 0.75f) // (sand)
                 return 1;
-            else if (_percolation > 0.25f && _percolation < 0.5f) // (silt)
+            else if (percolation > 0.25f && percolation < 0.5f) // (silt)
                 return 2;
             else // assumes value is between 0f and 0.25f (clay)
                 return 3;
         }
-        else if (_fertility > 0.25f && _fertility < 0.5f) // (sparse)
+        else if (fertility > 0.25f && fertility < 0.5f) // (sparse)
         {
-            if (_percolation > 0.75f && _percolation < 1.0f) // (gravel)
+            if (percolation > 0.75f && percolation < 1.0f) // (gravel)
                 return 4;
-            else if (_percolation > 0.5f && _percolation < 0.75f) // (sand)
+            else if (percolation > 0.5f && percolation < 0.75f) // (sand)
                 return 5;
-            else if (_percolation > 0.25f && _percolation < 0.5f) // (silt)
+            else if (percolation > 0.25f && percolation < 0.5f) // (silt)
                 return 5;
             else // assumes value is between 0f and 0.25f (clay)
                 return 6;
         }
-        else if (_fertility > 0.5f && _fertility < 0.75f) // (dense)
+        else if (fertility > 0.5f && fertility < 0.75f) // (dense)
         {
-            if (_percolation > 0.75f && _percolation < 1.0f) // (gravel)
+            if (percolation > 0.75f && percolation < 1.0f) // (gravel)
                 return 4;
-            else if (_percolation > 0.5f && _percolation < 0.75f) // (sand)
+            else if (percolation > 0.5f && percolation < 0.75f) // (sand)
                 return 5;
-            else if (_percolation > 0.25f && _percolation < 0.5f) // (silt)
+            else if (percolation > 0.25f && percolation < 0.5f) // (silt)
                 return 6;
             else // assumes value is between 0f and 0.25f (clay)
                 return 6;
         }
         else // assumes value is between 0.75f and 1f (fertile)
         {
-            if (_percolation > 0.75f && _percolation < 1.0f) // (gravel)
+            if (percolation > 0.75f && percolation < 1.0f) // (gravel)
                 return 5;
-            else if (_percolation > 0.5f && _percolation < 0.75f) // (sand)
+            else if (percolation > 0.5f && percolation < 0.75f) // (sand)
                 return 6;
-            else if (_percolation > 0.25f && _percolation < 0.5f) // (silt)
+            else if (percolation > 0.25f && percolation < 0.5f) // (silt)
                 return 6;
             else // assumes value is between 0f and 0.25f (clay)
                 return 7;
@@ -1254,9 +1235,9 @@ public class World : MonoBehaviour
         }
     }
 
-    public void AddToBaseChildren(GameObject _go)
+    public void AddToBaseChildren(GameObject go)
     {
-        BoxCollider[] childObs = _go.GetComponentsInChildren<BoxCollider>();
+        BoxCollider[] childObs = go.GetComponentsInChildren<BoxCollider>();
         for(int i = 0; i < childObs.Length; i++)
         {
             if(childObs[i].gameObject.layer == 10) // if layer is LegoPiece
@@ -1481,9 +1462,9 @@ public class VoxelMod
         id = 0;
     }
 
-    public VoxelMod(Vector3 _position, byte _id)
+    public VoxelMod(Vector3 position, byte id)
     {
-        position = _position;
-        id = _id;
+        this.position = position;
+        this.id = id;
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,11 +21,11 @@ public class UIItemSlot : MonoBehaviour
         }
     }
 
-    public void Link(ItemSlot _itemSlot)
+    public void Link(ItemSlot itemSlot)
     {
-        itemSlot = _itemSlot;
+        this.itemSlot = itemSlot;
         isLinked = true;
-        itemSlot.LinkUISlot(this);
+        this.itemSlot.LinkUISlot(this);
         UpdateSlot();
     }
 
@@ -73,18 +71,18 @@ public class ItemSlot
 
     public bool isCreative;
 
-    public ItemSlot(UIItemSlot _uiItemSlot)
+    public ItemSlot(UIItemSlot uiItemSlot)
     {
         stack = null;
-        uiItemSlot = _uiItemSlot;
-        uiItemSlot.Link(this);
+        this.uiItemSlot = uiItemSlot;
+        this.uiItemSlot.Link(this);
     }
 
-    public ItemSlot(UIItemSlot _uiItemSlot, ItemStack _stack)
+    public ItemSlot(UIItemSlot uiItemSlot, ItemStack stack)
     {
-        stack = _stack;
-        uiItemSlot = _uiItemSlot;
-        uiItemSlot.Link(this);
+        this.stack = stack;
+        this.uiItemSlot = uiItemSlot;
+        this.uiItemSlot.Link(this);
     }
 
     public void LinkUISlot(UIItemSlot uiSlot)
@@ -141,9 +139,9 @@ public class ItemSlot
 
     }
 
-    public void InsertStack(ItemStack _stack)
+    public void InsertStack(ItemStack stack)
     {
-        stack = _stack;
+        this.stack = stack;
         uiItemSlot.UpdateSlot();
     }
 

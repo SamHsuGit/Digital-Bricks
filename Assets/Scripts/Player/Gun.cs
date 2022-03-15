@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
-using System.Collections.Generic;
 
 public class Gun : NetworkBehaviour
 {

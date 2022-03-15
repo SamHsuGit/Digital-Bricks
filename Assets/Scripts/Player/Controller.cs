@@ -2,8 +2,8 @@ using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SpatialTracking;
 using UnityEngine.Animations;
+
 public class Controller : NetworkBehaviour
 {
     // NOTE: this class assumes world has already been activated
@@ -132,7 +132,7 @@ public class Controller : NetworkBehaviour
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
 
-        NamePlayer();
+        NamePlayer(world);
 
         physicMaterial = world.physicMaterial;
         customNetworkManager = world.customNetworkManager;
@@ -195,24 +195,17 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    void NamePlayer()
+    void NamePlayer(World world)
     {
         if (world.worldPlayer != null && gameObject != world.worldPlayer) // Need to work out how networked players with same name get instance added to name
         {
             // set this object's name from saved settings so it can be modified by the world script when player joins
             playerName = SettingsStatic.LoadedSettings.playerName;
 
-            player = new Player(gameObject, playerName); // set this player from world players
+            player = new Player(gameObject, playerName, world); // set this player from world players
             world.players.Add(player);
-            //CmdAddPlayerName(playerName);
         }
     }
-
-    //[Command]
-    //void CmdAddPlayerName(string _playerName)
-    //{
-    //    playerNamesServer.Add(_playerName);
-    //}
 
     void InputComponents()
     {
@@ -1364,6 +1357,6 @@ public class Controller : NetworkBehaviour
 
     public void SaveWorld(WorldData worldData)
     {
-        SaveSystem.SaveWorld(worldData);
+        SaveSystem.SaveWorld(worldData, world);
     }
 }
