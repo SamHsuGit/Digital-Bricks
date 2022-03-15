@@ -530,6 +530,7 @@ MonoBehaviour:
   sceneObjectPrefab: {fileID: 267288310360540051, guid: 04bb5ef7f14330842b6b88d9be1ec42b, type: 3}
   charObIdle: {fileID: 0}
   charObRun: {fileID: 0}
+  world: {fileID: 0}
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,6 +631,7 @@ MonoBehaviour:
   isGrounded: 0
   maxJumps: 0
   currentJumps: 0
+  controller: {fileID: 3963772888375218276}
   center: {x: 0, y: 0, z: 0}
   halfColliderHeight: 0
   stepHeight: 0
@@ -2834,6 +2836,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5837534075999922057, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 3963772888375218276}
     - target: {fileID: 5879235411874281841, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
       propertyPath: m_AssetId
       value: 3845e21ad5f59fb4996c7fc759075f1a

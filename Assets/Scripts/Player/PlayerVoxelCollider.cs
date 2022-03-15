@@ -14,7 +14,7 @@ public class PlayerVoxelCollider : MonoBehaviour
 
     World world;
     CapsuleCollider cc;
-    Controller controller;
+    public Controller controller;
     public Vector3 center;
     public float halfColliderHeight;
     public int stepHeight;
@@ -36,14 +36,12 @@ public class PlayerVoxelCollider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        world = controller.world;
+
         if (isPlayer)
         {
-            if(GetComponent<Controller>() != null)
-            {
-                controller = GetComponent<Controller>();
-                controller.world.JoinPlayer(gameObject);
-            }
-                
+            world.JoinPlayer(gameObject);
+
             //set initial char size
             if (gameObject.GetComponent<CapsuleCollider>() != null)
             {
