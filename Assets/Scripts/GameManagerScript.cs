@@ -59,7 +59,6 @@ public class GameManagerScript : MonoBehaviour
         }
         else
         {
-            LDrawImporterRuntime.SetActive(true); // activated by NetworkMenu for online play
             world.baseOb = LDrawImportRuntime.Instance.baseOb; // value set initially right after ldraw importer actiavated, may be overridden by customNetworkManager to sync clients to server
             world.chunkMeshColliders = true; // values set ahead of world gameObject activation
             world.VBOs = true; // values set ahead of world gameObject activation
@@ -84,6 +83,8 @@ public class GameManagerScript : MonoBehaviour
         {
             NETWORK.SetActive(false);
             PlayerManagerNetwork.SetActive(false);
+
+            LDrawImporterRuntime.SetActive(true); // activated by NetworkMenu for online play
 
             worldOb.SetActive(true);
 

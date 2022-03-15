@@ -30,7 +30,6 @@ public class CustomNetworkManager : NetworkManager
 
     public void SpawnNetworkOb(GameObject ob)
     {
-        Debug.Log("Message Sent");
         NetworkServer.Spawn(ob);
     }
 

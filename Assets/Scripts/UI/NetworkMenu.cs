@@ -15,6 +15,7 @@ public class NetworkMenu : MonoBehaviour
     public GameObject worldOb;
     public GameObject loadingText;
     public GameObject gameManagerObject;
+    public GameObject LDrawImporterRuntime;
 
     GameManagerScript gameManager;
     NetworkManager manager;
@@ -41,6 +42,8 @@ public class NetworkMenu : MonoBehaviour
 
         buttonSound.Play();
         FileSystemExtension.SaveSettings();
+
+        LDrawImporterRuntime.SetActive(true);
 
         if (!NetworkClient.active)
         {
@@ -69,6 +72,8 @@ public class NetworkMenu : MonoBehaviour
 
         buttonSound.Play();
         FileSystemExtension.SaveSettings();
+
+        LDrawImporterRuntime.SetActive(true);
 
         if (!NetworkClient.active)
         {
@@ -102,6 +107,8 @@ public class NetworkMenu : MonoBehaviour
 
         buttonSound.Play();
         FileSystemExtension.SaveSettings();
+
+        LDrawImporterRuntime.SetActive(true);
 
         if (!NetworkClient.active)
         {

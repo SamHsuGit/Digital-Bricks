@@ -127,6 +127,14 @@ public class Controller : NetworkBehaviour
 
     void Awake()
     {
+        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
+        world = customNetworkManager.worldOb.GetComponent<World>();
+        physicMaterial = world.physicMaterial;
+        customNetworkManager = world.customNetworkManager;
+        worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
+        
+        projectile = LDrawImportRuntime.Instance.projectileOb;
+
         cc = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -154,13 +162,8 @@ public class Controller : NetworkBehaviour
 
     private void Start()
     {
-        // these must happen in start since world is not instantiated until after Awake...
-        world = World.Instance;
-        physicMaterial = world.physicMaterial;
-        customNetworkManager = world.customNetworkManager;
-        worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
+        // this must happen in start since world is not instantiated until after Awake...
         NamePlayer();
-        projectile = LDrawImportRuntime.Instance.projectileOb;
 
         InputComponents();
 
@@ -263,14 +266,12 @@ public class Controller : NetworkBehaviour
             for (int i = 0; i < world.players.Count; i++)
                 playerNamesServer.Add(world.players[i].name); // causes issues during online play when World is not yet loaded and server is started
         }
-        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         customNetworkManager.InitWorld();
     }
 
     public override void OnStartClient() // happens after world is instantiated
     {
         base.OnStartClient();
-        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         //if (Settings.OnlinePlay && isLocalPlayer)
         //    CmdSendServerMessage(); // set values for planetNumber, seed, baseOb, chunks from server
 
@@ -338,30 +339,26 @@ public class Controller : NetworkBehaviour
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
     {
-        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         customNetworkManager.worldOb.GetComponent<World>().planetNumber = newValue;
     }
 
     public void SetSeedServer(int oldValue, int newValue)
     {
-        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         customNetworkManager.worldOb.GetComponent<World>().seed = newValue;
     }
 
     public void SetBaseServer(string oldValue, string newValue)
     {
-        //customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
-        //customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
     }
 
     public void SetChunksServer(string oldValue, string newValue)
     {
         string[] serverChunks = newValue.Split(';'); // splits individual chunk strings using ';' char delimiter
-        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         World world = customNetworkManager.worldOb.GetComponent<World>();
 
         // tell world to draw chunks from server
-        for (int i = 0; i < serverChunks.Length - 1; i++)
+        for (int i = 0; i < serverChunks.Length - 1; i++) // serverChunks.Length - 1 since last item is always empty after ';' char
         {
             ChunkData chunk = new ChunkData();
             chunk = chunk.DecodeChunk(serverChunks[i]);

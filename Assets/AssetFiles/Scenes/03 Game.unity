@@ -1052,6 +1052,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7794035836426201736, guid: 8899d8888b8088b4ba2beb48648697a9, type: 3}
+      propertyPath: LDrawImporterRuntime
+      value: 
+      objectReference: {fileID: 5290959122747879300}
+    - target: {fileID: 7794035836426201736, guid: 8899d8888b8088b4ba2beb48648697a9, type: 3}
       propertyPath: playerManagerNetwork
       value: 
       objectReference: {fileID: 1777242251754375484}
