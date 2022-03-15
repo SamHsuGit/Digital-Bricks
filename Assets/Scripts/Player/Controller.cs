@@ -342,7 +342,7 @@ public class Controller : NetworkBehaviour
 
     public void SetBaseServer(string oldValue, string newValue)
     {
-        customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        //customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
     }
 
     public void SetChunksServer(string oldValue, string newValue)
