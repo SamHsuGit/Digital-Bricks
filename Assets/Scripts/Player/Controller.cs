@@ -191,8 +191,7 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
             SetPlayerColliderSettings();
-
-            SetPlayerAttributes();
+            SetName(playerName, playerName);
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
         }
     }
@@ -300,18 +299,12 @@ public class Controller : NetworkBehaviour
             //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
         }
 
-        SetPlayerAttributes();
         //Force client to get latest values of syncVars before loading world???
         SetPlanetNumberServer(planetNumberServer, planetNumberServer);
         SetSeedServer(seedServer, seedServer);
         SetBaseServer(baseServer, baseServer);
         SetChunksServer(chunksServer, chunksServer);
         customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
-    }
-
-    void SetPlayerAttributes()
-    {
-        //SetName(playerName, playerName);
     }
 
     void SetPlayerColliderSettings()
