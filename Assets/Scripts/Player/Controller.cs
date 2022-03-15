@@ -342,21 +342,23 @@ public class Controller : NetworkBehaviour
 
     public void SetBaseServer(string oldValue, string newValue)
     {
-        World.Instance.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
     }
 
     public void SetChunksServer(string oldValue, string newValue)
     {
         string[] serverChunks = newValue.Split(';'); // splits individual chunk strings using ';' char delimiter
 
+        World world = customNetworkManager.worldOb.GetComponent<World>();
+
         // tell world to draw chunks from server
         for (int i = 0; i < serverChunks.Length - 1; i++)
         {
             ChunkData chunk = new ChunkData();
             chunk = chunk.DecodeChunk(serverChunks[i]);
-            if (World.Instance.worldData.chunks.ContainsKey(chunk.position)) // if chunk already included in list, remove before adding new version
-                World.Instance.worldData.chunks.Remove(chunk.position);
-            World.Instance.worldData.chunks.Add(chunk.position, chunk);
+            if (world.worldData.chunks.ContainsKey(chunk.position)) // if chunk already included in list, remove before adding new version
+                world.worldData.chunks.Remove(chunk.position);
+            world.worldData.chunks.Add(chunk.position, chunk);
         }
     }
 
