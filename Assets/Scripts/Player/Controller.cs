@@ -249,11 +249,16 @@ public class Controller : NetworkBehaviour
             for (int i = 0; i < world.players.Count; i++)
                 playerNamesServer.Add(world.players[i].name); // causes issues during online play when World is not yet loaded and server is started
         }
+        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
+        customNetworkManager.InitWorld();
     }
 
     public override void OnStartClient() // happens after world is instantiated
     {
         base.OnStartClient();
+        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
+        if (Settings.OnlinePlay && isLocalPlayer)
+            CmdSendServerMessage(); // set values for planetNumber, seed, baseOb, chunks from server
 
         // SET CLIENT SYNCVAR FROM SERVER
         SetTime(timeOfDayServer, timeOfDayServer);
@@ -279,6 +284,15 @@ public class Controller : NetworkBehaviour
         }
 
         SetPlayerAttributes();
+        
+        //customNetworkManager.InitWorld();
+    }
+
+    [Command]
+    public void CmdSendServerMessage()
+    {
+        Debug.Log("Message Sent");
+        NetworkServer.SendToAll(customNetworkManager.hostMessage); // WIP send message only to connection that requested this
     }
 
     void SetPlayerAttributes()

@@ -27,9 +27,7 @@ public class GameManagerScript : MonoBehaviour
         world.planetNumber = SettingsStatic.LoadedSettings.planetNumber;
         world.seed = SettingsStatic.LoadedSettings.seed;
 
-        if (!Settings.OnlinePlay)
-            Setup();
-        else
+        if (Settings.OnlinePlay)
         {
             worldOb.SetActive(false); // later enabled by CustomNetworkManager when player selects host or join
             NETWORK.SetActive(true); // activate NetworkMenu where player selects host or join
@@ -37,6 +35,8 @@ public class GameManagerScript : MonoBehaviour
 
             LOCAL.SetActive(false); // not needed for online play (i.e. cannot do splitscreen/online play at same time)
         }
+        else
+            Setup();
     }
 
     public void Setup() // called by NetworkMenu for online play

@@ -55,7 +55,12 @@ public class CustomNetworkManager : NetworkManager
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
 
-        worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from client
+        //InitWorld(); // only activate world after sending/receiving all messages to/from client
+    }
+
+    public void InitWorld()
+    {
+        worldOb.SetActive(true);
     }
 
     public void SpawnNetworkOb(GameObject ob)
@@ -81,13 +86,7 @@ public class CustomNetworkManager : NetworkManager
         };
         conn.Send(clientMessage);
 
-        worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from server
-    }
-
-    public void SendServerMessage()
-    {
-        Debug.Log("Message Sent");
-        NetworkServer.SendToAll(hostMessage); // WIP send message only to connection that requested this
+        InitWorld(); // only activate world after sending/receiving all messages to/from server
     }
 
     private void OnReceiveHostMessage(ServerToClientMessage message)
@@ -107,7 +106,7 @@ public class CustomNetworkManager : NetworkManager
                 string[] serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
 
                 // tell world to draw chunks from server
-                for (int i = 0; i < serverChunks.Length; i++)
+                for (int i = 0; i < serverChunks.Length - 1; i++)
                 {
                     ChunkData chunk = new ChunkData();
                     Debug.Log(serverChunks[i]);
