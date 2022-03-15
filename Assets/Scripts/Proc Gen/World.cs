@@ -451,7 +451,7 @@ public class World : MonoBehaviour
         for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
         {
             for (int z = (VoxelData.WorldSizeInChunks / 2) - loadDistance; z < (VoxelData.WorldSizeInChunks / 2) + loadDistance; z++)
-                worldData.LoadChunkFromFile(new Vector2Int(x, z));
+                worldData.RequestChunk(new Vector2Int(x, z));
         }
     }
 
