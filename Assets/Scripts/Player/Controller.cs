@@ -129,19 +129,21 @@ public class Controller : NetworkBehaviour
     {
         customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         world = customNetworkManager.worldOb.GetComponent<World>();
+        voxelCollider = GetComponent<PlayerVoxelCollider>();
+        voxelCollider.world = world;
+
         physicMaterial = world.physicMaterial;
         customNetworkManager = world.customNetworkManager;
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
         
         projectile = LDrawImportRuntime.Instance.projectileOb;
-
         cc = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
         inputHandler = GetComponent<InputHandler>();
         health = GetComponent<Health>();
         gun = GetComponent<Gun>();
-        voxelCollider = GetComponent<PlayerVoxelCollider>();
+        
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
         gameMenuComponent = gameMenu.GetComponent<GameMenu>();
         playerCameraOrigin = playerCamera.transform.parent.gameObject;

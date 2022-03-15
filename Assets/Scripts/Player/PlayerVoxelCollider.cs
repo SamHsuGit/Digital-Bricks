@@ -12,8 +12,7 @@ public class PlayerVoxelCollider : MonoBehaviour
     public int maxJumps;
     public int currentJumps;
 
-    World world;
-    CapsuleCollider cc;
+    public World world;
     public Controller controller;
     public Vector3 center;
     public float halfColliderHeight;
@@ -24,6 +23,7 @@ public class PlayerVoxelCollider : MonoBehaviour
     public bool isPlayer = false;
     public bool isCamera = false;
 
+    CapsuleCollider cc;
     private float gravity = -9.8f * 3; // multiply to account for scaled geometry
     private float verticalMomentum = 0;
     public float width;
@@ -36,8 +36,6 @@ public class PlayerVoxelCollider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        world = controller.world;
-
         if (isPlayer)
         {
             world.JoinPlayer(gameObject);
