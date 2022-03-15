@@ -309,7 +309,7 @@ public class Controller : NetworkBehaviour
 
     void SetPlayerAttributes()
     {
-        SetName(playerName, playerName);
+        //SetName(playerName, playerName);
     }
 
     void SetPlayerColliderSettings()
