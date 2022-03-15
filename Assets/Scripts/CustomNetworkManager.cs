@@ -26,6 +26,7 @@ public class CustomNetworkManager : NetworkManager
     public GameObject charPrefab;
     GameObject playerGameObject;
     public ServerToClientMessage hostMessage;
+    bool messageReceived = false;
 
     public override void OnStartServer() // happens before controller is instantiated
     {
@@ -51,7 +52,6 @@ public class CustomNetworkManager : NetworkManager
             baseServer = FileSystemExtension.ReadFileToString("base.ldr"),
             chunksServer = chunksServerCombinedString,
         };
-        NetworkServer.SendToAll(hostMessage);
 
         NetworkServer.RegisterHandler<ClientToServerMessage>(OnCreateCharacter);
 
@@ -60,18 +60,14 @@ public class CustomNetworkManager : NetworkManager
 
     public void SpawnNetworkOb(GameObject ob)
     {
+        Debug.Log("Message Sent");
         NetworkServer.Spawn(ob);
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
     }
 
     public override void OnClientConnect(NetworkConnection conn) // happens before controller is instantiated
     {
         base.OnClientConnect(conn);
+        NetworkClient.RegisterHandler<ServerToClientMessage>(OnReceiveHostMessage);
 
         ClientToServerMessage clientMessage;
 
@@ -88,26 +84,40 @@ public class CustomNetworkManager : NetworkManager
         worldOb.SetActive(true); // only activate world after sending/receiving all messages to/from server
     }
 
-    void OnReceiveHostMessage(ServerToClientMessage message)
+    public void SendServerMessage()
     {
-        // these values need to be synced to world before controller is activated bc world is activated before controller
-        World world = worldOb.GetComponent<World>();
-        Debug.Log("replace " + world.planetNumber + " with " + message.planetNumberServer + " to get: ");
-        world.planetNumber = message.planetNumberServer; // preset world planetNumber
-        Debug.Log(world.planetNumber);
-        world.seed = message.seedServer; // preset world seed
-        world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
-        if (message.chunksServer != null)
-        {
-            string[] serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
+        Debug.Log("Message Sent");
+        NetworkServer.SendToAll(hostMessage); // WIP send message only to connection that requested this
+    }
 
-            // tell world to draw chunks from server
-            for (int i = 0; i < serverChunks.Length; i++)
+    private void OnReceiveHostMessage(ServerToClientMessage message)
+    {
+        if (!messageReceived) // only receive message once upon first joining the world (had to add flag since mirror does not support sending messages to only new clients...)
+        {
+            Debug.Log("Message Received");
+            // these values need to be synced to world before controller is activated bc world is activated before controller
+            World world = worldOb.GetComponent<World>();
+            Debug.Log("replace " + world.planetNumber + " with " + message.planetNumberServer + " to get: ");
+            world.planetNumber = message.planetNumberServer; // preset world planetNumber
+            Debug.Log(world.planetNumber);
+            world.seed = message.seedServer; // preset world seed
+            world.baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", message.baseServer, LDrawImportRuntime.Instance.importPosition, true); // store value so it can be set later at correct time (after ldrawimporter is activated)
+            if (message.chunksServer != null)
             {
-                ChunkData chunk = new ChunkData();
-                chunk = chunk.DecodeChunk(serverChunks[i]);
-                world.worldData.chunks.Add(chunk.position, chunk);
+                string[] serverChunks = message.chunksServer.Split(';'); // splits individual chunk strings using ';' char delimiter
+
+                // tell world to draw chunks from server
+                for (int i = 0; i < serverChunks.Length; i++)
+                {
+                    ChunkData chunk = new ChunkData();
+                    Debug.Log(serverChunks[i]);
+                    chunk = chunk.DecodeChunk(serverChunks[i]);
+                    if (world.worldData.chunks.ContainsKey(chunk.position)) // if chunk already included in list, remove before adding new version
+                        world.worldData.chunks.Remove(chunk.position);
+                    world.worldData.chunks.Add(chunk.position, chunk);
+                }
             }
+            messageReceived = true;
         }
     }
 

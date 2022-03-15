@@ -1,7 +1,7 @@
-using Mirror;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using Mirror;
 
 public class World : MonoBehaviour
 {
@@ -243,6 +243,9 @@ public class World : MonoBehaviour
 
     private void Start()
     {
+        if (Settings.OnlinePlay)
+            customNetworkManager.SendServerMessage(); // set values for planetNumber, seed, baseOb, chunks from server
+
         worldLoaded = false;
         if (planetNumber == 3) // cache result for use in GetVoxel
             isEarth = true;
