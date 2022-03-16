@@ -498,7 +498,7 @@ public class World : MonoBehaviour
                 playersCopy.RemoveAt(i);
                 playerChunkCoordsCopy.RemoveAt(i);
                 playerLastChunkCoordsCopy.RemoveAt(i);
-                //ebug.Log("Player Quit");
+                //Debug.Log("Player Quit");
                 continue;
             }
 

@@ -127,8 +127,10 @@ public class Controller : NetworkBehaviour
 
     void Awake()
     {
-        customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
-        world = customNetworkManager.worldOb.GetComponent<World>();
+        if(Settings.OnlinePlay)
+            customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
+        world = GameObject.Find("GameManager").GetComponent<GameManagerScript>().worldOb.GetComponent<World>();
+
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
 
@@ -137,7 +139,7 @@ public class Controller : NetworkBehaviour
         physicMaterial = world.physicMaterial;
         customNetworkManager = world.customNetworkManager;
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
-        
+
         projectile = LDrawImportRuntime.Instance.projectileOb;
         cc = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
@@ -192,6 +194,8 @@ public class Controller : NetworkBehaviour
             SetPlayerColliderSettings();
             SetName(playerName, playerName);
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
+
+            world.gameObject.SetActive(true);
         }
     }
 
@@ -293,13 +297,7 @@ public class Controller : NetworkBehaviour
 
         SetName(playerName, playerName);
 
-        //Force client to get latest values of syncVars before loading world???
-        //SetPlanetNumberServer(planetNumberServer, planetNumberServer);
-        //SetSeedServer(seedServer, seedServer);
-        //SetBaseServer(baseServer, baseServer);
-        //SetChunksServer(chunksServer, chunksServer);
         customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
-        
     }
 
     void SetPlayerColliderSettings()
@@ -330,11 +328,13 @@ public class Controller : NetworkBehaviour
     public void SetPlanetNumberServer(int oldValue, int newValue)
     {
         customNetworkManager.worldOb.GetComponent<World>().planetNumber = newValue;
+        customNetworkManager.worldOb.GetComponent<World>().worldData.planetNumber = newValue;
     }
 
     public void SetSeedServer(int oldValue, int newValue)
     {
         customNetworkManager.worldOb.GetComponent<World>().seed = newValue;
+        customNetworkManager.worldOb.GetComponent<World>().worldData.seed = newValue;
     }
 
     public void SetBaseServer(string oldValue, string newValue)
@@ -354,6 +354,8 @@ public class Controller : NetworkBehaviour
             chunk = chunk.DecodeChunk(serverChunks[i]);
             world.worldData.modifiedChunks.Add(chunk); // add chunk to list of chunks to be saved
         }
+        world.worldData.planetNumber = planetNumberServer;
+        world.worldData.seed = seedServer;
         SaveWorld(world.worldData, false); // save chunks to disk before loading world
     }
 
