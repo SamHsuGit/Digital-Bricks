@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using Mirror;
@@ -109,10 +109,6 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
-        if (Settings.Platform != 2)
-            firstPlayerIndex = 1;
-        else
-            firstPlayerIndex = 0;
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
@@ -489,8 +485,7 @@ public class World : MonoBehaviour
         playersCopy = players;
         playerChunkCoordsCopy = playerChunkCoords;
         playerLastChunkCoordsCopy = playerLastChunkCoords;
-
-        for (int i = firstPlayerIndex; i < playersCopy.Count; i++) // for all players
+        for (int i = 0; i < playersCopy.Count; i++) // for all players (need to include worldplayer here since we do not know if the world player was added first or not, later check if worldplayer)
         {
             // if the player disconnected, remove their gameobject from the dictionary and go to the next dictionary value
             if (playersCopy[i] == null)//|| playerChunkCoords.Count > 1 && player.Key == worldPlayer)
@@ -1057,7 +1052,7 @@ public class World : MonoBehaviour
         // From https://minecraft.fandom.com/wiki/Anvil_file_format
         // Minecraft Biomes are saved per X,Z column, rather than being calculated on the fly, which means they can be altered by tools
         // This is useful for map makers. It also prevents bugs where features don't match the biome after changing the terrain algorithm. (Also known as "Biome Shifting").
-        // Each Minecraft chunk has a 16×16 byte array with biome IDs called "Biomes".
+        // Each Minecraft chunk has a 16Ã—16 byte array with biome IDs called "Biomes".
         // If this array is missing it is filled when the game starts, as well any - 1 values in the array.
         // The converter source provided for developers doesn't include any biome sources, however.
 
@@ -1114,7 +1109,7 @@ public class World : MonoBehaviour
         // From https://minecraft.fandom.com/wiki/Anvil_file_format
         // Minecraft Biomes are saved per X,Z column, rather than being calculated on the fly, which means they can be altered by tools
         // This is useful for map makers. It also prevents bugs where features don't match the biome after changing the terrain algorithm. (Also known as "Biome Shifting").
-        // Each Minecraft chunk has a 16×16 byte array with biome IDs called "Biomes".
+        // Each Minecraft chunk has a 16Ã—16 byte array with biome IDs called "Biomes".
         // If this array is missing it is filled when the game starts, as well any - 1 values in the array.
         // The converter source provided for developers doesn't include any biome sources, however.
 
