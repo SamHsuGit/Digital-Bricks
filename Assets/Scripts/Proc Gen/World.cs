@@ -181,20 +181,21 @@ public class World : MonoBehaviour
 
         if (playerGameObject == worldPlayer)
         {
-            player = new Player(playerGameObject, "WorldPlayer", this); // world player is needed to generate the world before the player is added
+            player = new Player(playerGameObject, "WorldPlayer"); // world player is needed to generate the world before the player is added
             players.Add(player);
-            Debug.Log("Added WorldPlayer");
+            //Debug.Log("Added WorldPlayer");
         }
         else if (Settings.Platform != 2)
         {
             player = playerGameObject.GetComponent<Controller>().player;
             players.Add(player);
-            Debug.Log("Added Player");
+            //Debug.Log("Added Player");
         }
         else
         {
-            player = new Player(playerGameObject, "VR Player", this);
+            player = new Player(playerGameObject, "VR Player");
             players.Add(player);
+            //Debug.Log("Added VR Player");
         }
 
         playerGameObjects.Add(player, player.playerGameObject);

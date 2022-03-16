@@ -132,7 +132,9 @@ public class Controller : NetworkBehaviour
             customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         world = GameObject.Find("GameManager").GetComponent<GameManagerScript>().worldOb.GetComponent<World>();
 
-        if(!Settings.OnlinePlay && !isClientOnly)
+        NamePlayer(world);
+
+        if (!Settings.OnlinePlay && !isClientOnly)
         {
             lighting = GameObject.Find("GlobalLighting").GetComponent<Lighting>();
             lighting.controller = this;
@@ -140,8 +142,6 @@ public class Controller : NetworkBehaviour
 
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
-
-        
 
         physicMaterial = world.physicMaterial;
         customNetworkManager = world.customNetworkManager;
@@ -180,13 +180,12 @@ public class Controller : NetworkBehaviour
             // set this object's name from saved settings so it can be modified by the world script when player joins
             playerName = SettingsStatic.LoadedSettings.playerName;
 
-            player = new Player(gameObject, playerName, world); // set this player from world players
+            player = new Player(gameObject, playerName); // create a new player, try to load player stats from save file
         }
     }
 
     private void Start()
     {
-        NamePlayer(world);
         world.JoinPlayer(gameObject);
 
         InputComponents();
@@ -321,19 +320,23 @@ public class Controller : NetworkBehaviour
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
     {
+        SettingsStatic.LoadedSettings.planetNumber = newValue;
         customNetworkManager.worldOb.GetComponent<World>().planetNumber = newValue;
         customNetworkManager.worldOb.GetComponent<World>().worldData.planetNumber = newValue;
     }
 
     public void SetSeedServer(int oldValue, int newValue)
     {
+        SettingsStatic.LoadedSettings.seed = newValue;
         customNetworkManager.worldOb.GetComponent<World>().seed = newValue;
         customNetworkManager.worldOb.GetComponent<World>().worldData.seed = newValue;
     }
 
     public void SetBaseServer(string oldValue, string newValue)
     {
-        customNetworkManager.worldOb.GetComponent<World>().baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        GameObject baseObject = Instantiate(LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true));
+        baseObject.transform.position = LDrawImportRuntime.Instance.importPosition;
+        customNetworkManager.worldOb.GetComponent<World>().baseOb = baseObject;
     }
 
     public void SetChunksServer(string oldValue, string newValue)

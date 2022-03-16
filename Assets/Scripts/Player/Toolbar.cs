@@ -36,7 +36,7 @@ public class Toolbar : MonoBehaviour
     {
         int[] playerStats;
         if (Settings.Platform != 2)
-            playerStats = SaveSystem.LoadPlayerStats(player, controller.playerName, World.Instance.worldData); // load current player stats from save file
+            playerStats = controller.player.playerStats; // load current player stats from save file
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(player);
 

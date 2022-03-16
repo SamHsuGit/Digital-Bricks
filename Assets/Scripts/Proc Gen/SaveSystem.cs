@@ -23,45 +23,49 @@ public static class SaveSystem
         stream.Close();
 
         if (savePlayerData)
-        {
-            string[] savedPlayerNames = new string[world.players.Count];
-
-            // for all players, save player stats (splitscreen play saves only stats of last player who joined)
-            for (int i = 0; i < world.players.Count; i++)
-            {
-                // Do not save data if client's left before host saved or if player is worldPlayer
-                if (world.players[i].playerGameObject != null && world.players[i].playerGameObject != world.worldPlayer.gameObject)
-                {
-                    GameObject player = world.players[i].playerGameObject;
-                    string playerSaveName = player.GetComponent<Controller>().playerName;
-                    int[] playerStats = GetPlayerStats(player, i); // save player stats
-
-                    formatter = new BinaryFormatter();
-
-                    stream = new FileStream(savePath + playerSaveName + ".stats", FileMode.Create);
-
-                    formatter.Serialize(stream, playerStats);
-                    stream.Close();
-
-                    savedPlayerNames[i] = player.GetComponent<Controller>().playerName;
-                }
-            }
-        }
+            SavePlayerStats(world, savePath);
 
         Thread thread = new Thread(() => SaveChunks(worldData));
         thread.Start();
     }
 
-    public static int[] GetPlayerStats(GameObject player, int playerIndex)
+    public static void SavePlayerStats(World world, string savePath)
+    {
+        string[] savedPlayerNames = new string[world.players.Count];
+
+        // for all players, save player stats (splitscreen play saves only stats of last player who joined)
+        for (int i = 0; i < world.players.Count; i++)
+        {
+            // Do not save data if client's left before host saved or if player is worldPlayer
+            if (world.players[i].playerGameObject != null && world.players[i].playerGameObject != world.worldPlayer.gameObject)
+            {
+                GameObject playerOb = world.players[i].playerGameObject;
+                string playerSaveName = playerOb.GetComponent<Controller>().playerName;
+                int[] playerStats = GetPlayerStats(playerOb); // save player stats
+
+                BinaryFormatter formatter = new BinaryFormatter();
+
+                FileStream stream = new FileStream(savePath + playerSaveName + ".stats", FileMode.Create);
+
+                formatter.Serialize(stream, playerStats);
+                stream.Close();
+
+                savedPlayerNames[i] = playerOb.GetComponent<Controller>().playerName;
+                //Debug.Log("Saved " + savedPlayerNames[i] + " stats");
+            }
+        }
+    }
+
+    public static int[] GetPlayerStats(GameObject playerGameObject)
     {
         // uses same savepath as SaveWorld
 
         int[] playerStats = new int[] // make playerstats int array
         {
-            Mathf.FloorToInt(player.transform.position.x),
-            Mathf.FloorToInt(player.transform.position.y + 1), // add 1 unit to ensure player is not inside ground
-            Mathf.FloorToInt(player.transform.position.z),
-            Mathf.FloorToInt(player.GetComponent<Health>().hp),
+            Mathf.FloorToInt(playerGameObject.transform.position.x),
+            Mathf.FloorToInt(playerGameObject.transform.position.y + 1), // add 1 unit to ensure player is not inside ground
+            Mathf.FloorToInt(playerGameObject.transform.position.z),
+            Mathf.FloorToInt(playerGameObject.GetComponent<Health>().hp),
             0, // slot 1 blockID (CREATIVE SLOT)
             0, // slot 1 qty (CREATIVE SLOT)
             0, // slot 2 blockID
@@ -81,14 +85,15 @@ public static class SaveSystem
             0, // slot 9 blockID
             0, // slot 9 qty
         };
-        if(playerIndex > 0)
+        if(playerGameObject != World.Instance.worldPlayer.gameObject) // do not save player stats for world player
         {
+            // overwrite zero place holders with values from player toolbar (includes creative slot)
             for (int i = 4; i < 22; i += 2)
             {
-                if (player.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
+                if (playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
                 {
-                    playerStats[i] = player.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.id;
-                    playerStats[i + 1] = player.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
+                    playerStats[i] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.id;
+                    playerStats[i + 1] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
                 }
                 else
                 {
@@ -100,10 +105,12 @@ public static class SaveSystem
         return playerStats;
     }
 
-    public static int[] LoadPlayerStats(GameObject player, string playerName, WorldData worldData)
+    public static int[] LoadPlayerStats(GameObject player, string playerName)
     {
-        string loadPath = Settings.AppSaveDataPath + "/saves/" + worldData.planetNumber + "-" + worldData.seed + "/";
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetNumber + "-" + SettingsStatic.LoadedSettings.seed + "/";
 
+        //Debug.Log(loadPath + playerName + ".stats");
+        //Debug.Log(File.Exists(loadPath + playerName + ".stats"));
         if (File.Exists(loadPath + playerName + ".stats")) // IF PLAYER STATS FOUND
         {
             //Debug.Log(playerName + " playerStats found. Loading from save.");
@@ -210,7 +217,7 @@ public static class SaveSystem
         {
 
             WorldData worldData = new WorldData(planetNumber, seed);
-            SaveWorld(worldData, World.Instance, true);
+            SaveWorld(worldData, World.Instance, false);
 
             return worldData;
         }

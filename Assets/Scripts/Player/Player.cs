@@ -9,21 +9,23 @@ public class Player
     public int hp;
     //public int instances = 1;
     public List<ChunkCoord> chunksToAddVBO;
+    public int[] playerStats;
 
-    public Player(GameObject player, string name, World world)
+    public Player(GameObject player, string playerName)
     {
         // player Constructor
 
         playerGameObject = player;
-        this.name = name;
+        name = playerName;
 
-        int[] playerStats;
+        //int[] playerStats;
         if (Settings.Platform != 2)
-            playerStats = SaveSystem.LoadPlayerStats(player, this.name, world.worldData); // load current player stats from save file
+            playerStats = SaveSystem.LoadPlayerStats(player, name); // load current player stats from save file
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(playerGameObject);
 
-        spawnPosition = new Vector3(playerStats[0], playerStats[1], playerStats[2]); // get player spawn position (move up by 1 to prevent player from glitching thru world???)
+        // set player position to saved position (move up by 1 to prevent player from glitching thru bottom of world)
+        spawnPosition = new Vector3(playerStats[0], playerStats[1], playerStats[2]);
 
         // Set player health
         if (Settings.Platform != 2)
@@ -45,7 +47,7 @@ public class Player
         chunksToAddVBO = new List<ChunkCoord>();
     }
 
-    public Player() 
+    public Player()
     {
         // default constructor
 
@@ -55,5 +57,6 @@ public class Player
         hp = 1;
         //instances = 1;
         chunksToAddVBO = new List<ChunkCoord>();
+        playerStats = SaveSystem.GetDefaultPlayerStats(playerGameObject);
     }
 }

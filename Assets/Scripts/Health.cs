@@ -288,7 +288,7 @@ public class Health : NetworkBehaviour
             toolbar.DropItemsFromSlot(i);
 
         // teleport player to last save point (do not destroy as it breaks the multiplayer network connection)
-        int[] playerStats = SaveSystem.LoadPlayerStats(gameObject, controller.playerName, World.Instance.worldData);
+        int[] playerStats = controller.player.playerStats;
         Vector3 respawnPoint = new Vector3(playerStats[0], playerStats[1], playerStats[2]);
         transform.position = respawnPoint;
 
