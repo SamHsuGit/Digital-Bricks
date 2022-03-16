@@ -26,10 +26,11 @@ public static class SaveSystem
         {
             string[] savedPlayerNames = new string[world.players.Count];
 
-            // for all players (except world player dummy), save player stats (splitscreen play saves only stats of last player who joined)
-            for (int i = 1; i < world.players.Count; i++)
+            // for all players, save player stats (splitscreen play saves only stats of last player who joined)
+            for (int i = 0; i < world.players.Count; i++)
             {
-                if (world.players[i].playerGameObject != null) // check if client's left before host saved if so, cannot save their data
+                // Do not save data if client's left before host saved or if player is worldPlayer
+                if (world.players[i].playerGameObject != null && world.players[i].playerGameObject != world.worldPlayer.gameObject)
                 {
                     GameObject player = world.players[i].playerGameObject;
                     string playerSaveName = player.GetComponent<Controller>().playerName;
