@@ -106,6 +106,7 @@ public class Controller : NetworkBehaviour
     CharacterController charController;
     PhysicMaterial physicMaterial;
     CustomNetworkManager customNetworkManager;
+    Lighting lighting;
     GameObject undefinedPrefabToSpawn;
     RaycastHit raycastHit;
     GameObject hitOb;
@@ -131,10 +132,16 @@ public class Controller : NetworkBehaviour
             customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
         world = GameObject.Find("GameManager").GetComponent<GameManagerScript>().worldOb.GetComponent<World>();
 
+        if(!Settings.OnlinePlay && !isClientOnly)
+        {
+            lighting = GameObject.Find("GlobalLighting").GetComponent<Lighting>();
+            lighting.controller = this;
+        }
+
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
 
-        NamePlayer(world);
+        
 
         physicMaterial = world.physicMaterial;
         customNetworkManager = world.customNetworkManager;
@@ -166,8 +173,20 @@ public class Controller : NetworkBehaviour
         CinematicBars.SetActive(false);
     }
 
+    void NamePlayer(World world)
+    {
+        if (world.worldPlayer != null && gameObject != world.worldPlayer) // Need to work out how networked players with same name get instance added to name
+        {
+            // set this object's name from saved settings so it can be modified by the world script when player joins
+            playerName = SettingsStatic.LoadedSettings.playerName;
+
+            player = new Player(gameObject, playerName, world); // set this player from world players
+        }
+    }
+
     private void Start()
     {
+        NamePlayer(world);
         world.JoinPlayer(gameObject);
 
         InputComponents();
@@ -198,27 +217,6 @@ public class Controller : NetworkBehaviour
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
 
             world.gameObject.SetActive(true);
-        }
-    }
-
-    void NamePlayer(World world)
-    {
-        if (world.worldPlayer != null && gameObject != world.worldPlayer) // Need to work out how networked players with same name get instance added to name
-        {
-            // set this object's name from saved settings so it can be modified by the world script when player joins
-            playerName = SettingsStatic.LoadedSettings.playerName;
-
-            player = new Player(gameObject, playerName, world); // set this player from world players
-            if(Settings.OnlinePlay && !isServerOnly)
-            {
-                world.players.Add(player);
-                Debug.Log("Added Player");
-            }
-            else if(!Settings.OnlinePlay)
-            {
-                Debug.Log("Added Player");
-                world.players.Add(player);
-            }
         }
     }
 

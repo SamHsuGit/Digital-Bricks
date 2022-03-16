@@ -18,7 +18,7 @@ public class Lighting : MonoBehaviour
     [SerializeField] private float ambientIntensity;
     [SerializeField] private float reflectionIntensity;
 
-    Controller controller;
+    public Controller controller;
 
     [SerializeField, Range(0, 24)] public float timeOfDay = 6.01f;
     public float maxFogDensity = 0.01f;
@@ -27,11 +27,9 @@ public class Lighting : MonoBehaviour
 
     private void Update()
     {
-        if (Settings.OnlinePlay && World.Instance.playerCount > 1 && World.Instance.players[1].playerGameObject != null) // if player is created, get variable from player syncVar
+        if (Settings.OnlinePlay && controller != null) 
         {
-            if(controller == null)
-                controller = World.Instance.players[1].playerGameObject.GetComponent<Controller>();
-            timeOfDay = controller.timeOfDayServer;
+            timeOfDay = controller.timeOfDayServer; // if online play and controller set this script's controller variable, get variable from player syncVar
         }
 
         if (sunProperties == null)
@@ -60,8 +58,8 @@ public class Lighting : MonoBehaviour
 
         daytime = CheckDaytime(timeOfDay);
 
-        if (Settings.OnlinePlay && World.Instance.playerCount > 1 && World.Instance.players[1].playerGameObject != null) // if player is created, write variable to player syncVar
-            controller.timeOfDayServer = timeOfDay;
+        if (Settings.OnlinePlay && controller != null)
+            controller.timeOfDayServer = timeOfDay; // if online play  and controller set this script's controller variable, write variable to player syncVar
     }
 
     public bool CheckDaytime(float timeOfDay)
@@ -102,7 +100,7 @@ public class Lighting : MonoBehaviour
         RenderSettings.reflectionIntensity = reflectionIntensity;
 
         // SET DAY OR NIGHT BASED ON TIME
-        if (!World.Instance.worldData.hasAtmosphere)
+        if (World.Instance != null && !World.Instance.worldData.hasAtmosphere)
         {
             SetSpace();
         }

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Mirror;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using Mirror;
 
 public class World : MonoBehaviour
 {
@@ -85,15 +85,12 @@ public class World : MonoBehaviour
     public Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
     public Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
     public WorldData worldData;
-    public GameObject XRRigPrefab;
-    public GameObject charPrefab;
 
     private static World _instance;
     private static bool multithreading = true;
     private int loadDistance;
     private int LOD0threshold;
     private int studRenderDistanceInChunks; // acts as a radius like drawDistance
-    int firstPlayerIndex;
 
     List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
@@ -180,19 +177,19 @@ public class World : MonoBehaviour
 
     public void JoinPlayer(GameObject playerGameObject)
     {
-        if (playerGameObjects.ContainsValue(playerGameObject)) // avoid adding duplicate players
-            return;
-
         Player player;
 
         if (playerGameObject == worldPlayer)
         {
-            player = new Player(playerGameObject, "WorldPlayer", this);
+            player = new Player(playerGameObject, "WorldPlayer", this); // world player is needed to generate the world before the player is added
             players.Add(player);
+            Debug.Log("Added WorldPlayer");
         }
         else if (Settings.Platform != 2)
         {
             player = playerGameObject.GetComponent<Controller>().player;
+            players.Add(player);
+            Debug.Log("Added Player");
         }
         else
         {
@@ -214,7 +211,8 @@ public class World : MonoBehaviour
         else // if player pos is not in world
             playerGameObject.transform.position = defaultSpawnPosition; // spawn at world spawn point
 
-        playerChunkCoords.Add(GetChunkCoordFromVector3(playerGameObject.transform.position));
+        ChunkCoord coord = GetChunkCoordFromVector3(playerGameObject.transform.position);
+        playerChunkCoords.Add(coord);
         playerLastChunkCoords.Add(playerChunkCoords[playerCount]);
 
         int firstLoadDrawDistance;
@@ -232,7 +230,7 @@ public class World : MonoBehaviour
 
         playerCount++;
         //Debug.Log("Player Joined");
-        //Debug.Log("Current Players: " + playerCount);
+        //Debug.Log("playerCount = " + playerCount);
     }
 
     private void Start()
@@ -262,7 +260,7 @@ public class World : MonoBehaviour
 
         worldPlayer.transform.position = defaultSpawnPosition;
 
-        JoinPlayer(worldPlayer);
+        JoinPlayer(worldPlayer); // needed to load world before player joins?
 
         if (multithreading)
         {
@@ -501,7 +499,9 @@ public class World : MonoBehaviour
             }
 
             // WIP need to debug why playersCopy.Count != playerChunkCoordsCopy.Count
-            //Debug.Log(playersCopy[i].name);
+            //Debug.Log("player " + i + " = " + playersCopy[i].name);
+            //Debug.Log(playersCopy.Count);
+            //Debug.Log(playerChunkCoordsCopy.Count);
             // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
             if (playersCopy[i].playerGameObject != worldPlayer && playersCopy[i].playerGameObject != null && playersCopy.Count == playerChunkCoordsCopy.Count)
             {

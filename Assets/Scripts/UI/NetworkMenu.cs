@@ -11,7 +11,6 @@ public class NetworkMenu : MonoBehaviour
     public GameObject networkMenuElements;
     public AudioSource buttonSound;
     public GameObject background;
-    public GameObject worldOb;
     public GameObject loadingText;
     public GameObject gameManagerObject;
     public GameObject LDrawImporterRuntime;

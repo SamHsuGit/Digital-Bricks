@@ -66,13 +66,11 @@ public class GameManagerScript : MonoBehaviour
             if (Settings.Platform == 2) // mobile singleplayer network play
             {
                 XRRigPrefab.SetActive(true);
-                charPrefab.SetActive(false);
             }
             else // console (1) and pc (0) singleplayer network play
             {
                 world.baseOb = LDrawImportRuntime.Instance.baseOb; // value set initially right after ldraw importer actiavated, may be overridden by customNetworkManager to sync clients to server
                 XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(false);
             }
         }
         else // local
@@ -80,9 +78,8 @@ public class GameManagerScript : MonoBehaviour
             NETWORK.SetActive(false);
             PlayerManagerNetwork.SetActive(false);
 
-            LDrawImporterRuntime.SetActive(true); // activated by NetworkMenu for online play
-
-            //worldOb.SetActive(true);
+            LDrawImporterRuntime.SetActive(true);
+            globalLighting.SetActive(true);
 
             if (Settings.Platform == 2) // mobile singleplayer
             {
@@ -92,7 +89,6 @@ public class GameManagerScript : MonoBehaviour
             {
                 world.baseOb = LDrawImportRuntime.Instance.baseOb;
                 XRRigPrefab.SetActive(false);
-                charPrefab.SetActive(false);
                 playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = charPrefab;
                 LOCAL.SetActive(true);
             }
