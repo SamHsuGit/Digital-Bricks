@@ -180,6 +180,9 @@ public class World : MonoBehaviour
 
     public void JoinPlayer(GameObject playerGameObject)
     {
+        if (playerGameObjects.ContainsValue(playerGameObject)) // avoid adding duplicate players
+            return;
+
         Player player;
 
         if (playerGameObject == worldPlayer)
@@ -483,7 +486,7 @@ public class World : MonoBehaviour
 
         // create copies of the lists to use so the original lists can be modified during the update loop (was causing errors)
         playersCopy = players;
-        playerChunkCoordsCopy = playerChunkCoords;
+        playerChunkCoordsCopy = playerChunkCoords; // playerChunkCoords is a placeholder so new players can join while playerChunkCoordsCopy is used in update loop
         playerLastChunkCoordsCopy = playerLastChunkCoords;
         for (int i = 0; i < playersCopy.Count; i++) // for all players (need to include worldplayer here since we do not know if the world player was added first or not, later check if worldplayer)
         {
@@ -497,11 +500,13 @@ public class World : MonoBehaviour
                 continue;
             }
 
+            // WIP need to debug why playersCopy.Count != playerChunkCoordsCopy.Count
+            //Debug.Log(playersCopy[i].name);
             // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
             if (playersCopy[i].playerGameObject != worldPlayer && playersCopy[i].playerGameObject != null && playersCopy.Count == playerChunkCoordsCopy.Count)
             {
                 playerChunkCoordsCopy[i] = GetChunkCoordFromVector3(playerGameObjects[playersCopy[i]].transform.position); // get the current chunkCoords for given player camera
-
+                
                 //Debug.Log("playerChunkCoordsCopy = " + playerChunkCoordsCopy[playerCount - 1].x + ", " + playerChunkCoordsCopy[playerCount - 1].z);
                 //Debug.Log("playerLastChunkCoordsCopy = " + playerLastChunkCoordsCopy[playerCount - 1].x + " , " + playerLastChunkCoordsCopy[playerCount - 1].z);
                 // Only update the chunks if the player has moved from the chunk they were previously on.

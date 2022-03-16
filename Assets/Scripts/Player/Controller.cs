@@ -168,6 +168,8 @@ public class Controller : NetworkBehaviour
 
     private void Start()
     {
+        world.JoinPlayer(gameObject);
+
         InputComponents();
 
         Cursor.visible = false;
@@ -207,7 +209,16 @@ public class Controller : NetworkBehaviour
             playerName = SettingsStatic.LoadedSettings.playerName;
 
             player = new Player(gameObject, playerName, world); // set this player from world players
-            world.players.Add(player);
+            if(Settings.OnlinePlay && !isServerOnly)
+            {
+                world.players.Add(player);
+                Debug.Log("Added Player");
+            }
+            else if(!Settings.OnlinePlay)
+            {
+                Debug.Log("Added Player");
+                world.players.Add(player);
+            }
         }
     }
 
@@ -258,19 +269,12 @@ public class Controller : NetworkBehaviour
         chunksServer = chunksServerCombinedString;
 
         versionServer = Application.version;
-        if (world != null && world.players.Count != 0)
-        {
-            for (int i = 0; i < world.players.Count; i++)
-                playerNamesServer.Add(world.players[i].name); // causes issues during online play when World is not yet loaded and server is started
-        }
         customNetworkManager.InitWorld();
     }
 
     public override void OnStartClient() // happens after world is instantiated
     {
         base.OnStartClient();
-        //if (Settings.OnlinePlay && isLocalPlayer)
-        //    CmdSendServerMessage(); // set values for planetNumber, seed, baseOb, chunks from server
 
         // SET CLIENT SYNCVAR FROM SERVER
         SetTime(timeOfDayServer, timeOfDayServer);
@@ -285,14 +289,6 @@ public class Controller : NetworkBehaviour
                 if (SettingsStatic.LoadedSettings.playerName == name)
                     ErrorMessage.Show("Error: Non-Unique Player Name. Client name already exists on server. Player names must be unique. Disconnecting Client.");
             }
-
-            //// check if planet number from local machine matches server
-            //if (world.planetNumber != planetNumberServer)
-            //    ErrorMessage.Show("Error: planetNumber mismatch. Client planetNumber must match host. Disconnecting Client.");
-
-            //// use seed from local machine maches server
-            //if (world.seed != seedServer)
-            //    ErrorMessage.Show("Error: Seed mismatch. Client seed must match host. Disconnecting Client.");
         }
 
         SetName(playerName, playerName);

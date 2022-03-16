@@ -36,8 +36,6 @@ public class PlayerVoxelCollider : MonoBehaviour
     {
         if (isPlayer)
         {
-            world.JoinPlayer(gameObject);
-
             //set initial char size
             if (gameObject.GetComponent<CapsuleCollider>() != null)
             {
