@@ -335,7 +335,7 @@ public class Controller : NetworkBehaviour
 
     public void SetBaseServer(string oldValue, string newValue)
     {
-        Debug.Log("Received: " + newValue);
+        Debug.Log("Received: " + newValue); // receives before sent message...
         GameObject baseObject = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
         LDrawImportRuntime.Instance.baseOb = baseObject;
         LDrawImportRuntime.Instance.CalcBaseObSize(baseObject);
