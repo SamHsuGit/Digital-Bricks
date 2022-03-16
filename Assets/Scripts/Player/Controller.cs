@@ -334,7 +334,9 @@ public class Controller : NetworkBehaviour
 
     public void SetBaseServer(string oldValue, string newValue)
     {
-        GameObject baseObject = Instantiate(LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true));
+        GameObject baseObject = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
+        LDrawImportRuntime.Instance.baseOb = baseObject;
+        LDrawImportRuntime.Instance.CalcBaseObSize();
         baseObject.transform.position = LDrawImportRuntime.Instance.importPosition;
         customNetworkManager.worldOb.GetComponent<World>().baseOb = baseObject;
     }

@@ -160,10 +160,10 @@ public class PlayerVoxelCollider : MonoBehaviour
         //    return false; // allow player to move below bottom of world chunks
 
         if (
-            world.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) ||
-            world.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) ||
-            world.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 + colliderOffset)) ||
-            world.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 - colliderOffset))
+            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 + colliderOffset)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 - colliderOffset))
            )
         {
             //Debug.Log("landed on: " + center.x + ", " + (center.y - yOffset + downSpeed) + ", " + (center.z + width / 2 - colliderOffset));
@@ -183,10 +183,10 @@ public class PlayerVoxelCollider : MonoBehaviour
             return upSpeed; // allow player to move above top of world chunks
 
         if (
-            world.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelAbove, center.z)) ||
-            world.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelAbove, center.z)) ||
-            world.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z - length / 2 + colliderOffset)) ||
-            world.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z + length / 2 - colliderOffset))
+            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelAbove, center.z)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelAbove, center.z)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z - length / 2 + colliderOffset)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z + length / 2 - colliderOffset))
            )
         {
             return 0;
@@ -202,8 +202,8 @@ public class PlayerVoxelCollider : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) ||
-                world.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset))
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) ||
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset))
                 )
                 return true;
             else
@@ -215,8 +215,8 @@ public class PlayerVoxelCollider : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) ||
-                world.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset))
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) ||
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset))
                 )
                 return true;
             else
@@ -228,8 +228,8 @@ public class PlayerVoxelCollider : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z)) ||
-                world.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z))
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z)) ||
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z))
                 )
                 return true;
             else
@@ -241,8 +241,8 @@ public class PlayerVoxelCollider : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z)) ||
-                world.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z))
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z)) ||
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z))
                 )
                 return true;
             else

@@ -62,6 +62,11 @@ public class LDrawImportRuntime : MonoBehaviour
         projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
         baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
 
+        CalcBaseObSize();
+    }
+
+    public void CalcBaseObSize()
+    {
         // Cache size of bounding box of procGenOb.ldr and base.ldr
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
         baseObSizeZ = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.z / 40) + 1;
