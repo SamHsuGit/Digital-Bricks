@@ -500,9 +500,9 @@ public class World : MonoBehaviour
             }
 
             // WIP need to debug why playersCopy.Count != playerChunkCoordsCopy.Count
-            //Debug.Log("player " + i + " = " + playersCopy[i].name);
-            //Debug.Log(playersCopy.Count);
-            //Debug.Log(playerChunkCoordsCopy.Count);
+            Debug.Log("player " + i + " = " + playersCopy[i].name);
+            Debug.Log(playersCopy.Count);
+            Debug.Log(playerChunkCoordsCopy.Count);
             // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
             if (playersCopy[i].playerGameObject != worldPlayer && playersCopy[i].playerGameObject != null && playersCopy.Count == playerChunkCoordsCopy.Count)
             {
@@ -1222,6 +1222,7 @@ public class World : MonoBehaviour
                                         baseOb.AddComponent<NetworkIdentity>();
                                 }
                                 baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
+                                Debug.Log(baseOb.name);
                                 baseOb.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
                                 AddToBaseChildren(baseOb);
                                 VBO = baseOb;

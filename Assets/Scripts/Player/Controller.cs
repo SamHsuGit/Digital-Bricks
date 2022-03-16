@@ -255,6 +255,7 @@ public class Controller : NetworkBehaviour
         seedServer = SettingsStatic.LoadedSettings.seed;
 
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
+        Debug.Log("Sent: " + baseServer);
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
         List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
         string chunksServerCombinedString = string.Empty;
@@ -334,9 +335,10 @@ public class Controller : NetworkBehaviour
 
     public void SetBaseServer(string oldValue, string newValue)
     {
+        Debug.Log("Received: " + newValue);
         GameObject baseObject = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
         LDrawImportRuntime.Instance.baseOb = baseObject;
-        LDrawImportRuntime.Instance.CalcBaseObSize();
+        LDrawImportRuntime.Instance.CalcBaseObSize(baseObject);
         baseObject.transform.position = LDrawImportRuntime.Instance.importPosition;
         customNetworkManager.worldOb.GetComponent<World>().baseOb = baseObject;
         customNetworkManager.worldOb.GetComponent<World>().blocktypes[25].voxelBoundObject = baseObject;
