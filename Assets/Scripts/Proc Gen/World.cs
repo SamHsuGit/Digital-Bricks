@@ -251,14 +251,14 @@ public class World : MonoBehaviour
         {
             if(Settings.OnlinePlay && baseObString != null)
             {
-                baseOb = Instantiate(LDrawImportRuntime.Instance.ImportLDrawOnline("base", baseObString, LDrawImportRuntime.Instance.importPosition, true)); // needs to be instantiate for client to spawn
+                baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to be instantiate for client to spawn
                 LDrawImportRuntime.Instance.baseOb = baseOb;
                 LDrawImportRuntime.Instance.CalcBaseObSize(baseOb);
                 baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
                 baseOb.SetActive(false);
             }
 
-            blocktypes[25].voxelBoundObject = baseOb; // sets the base voxel bound object to the value set in the GameManager Script
+            blocktypes[25].voxelBoundObject = LDrawImportRuntime.Instance.baseOb; // sets the base voxel bound object to the value set in the GameManager Script
 
             if (Settings.OnlinePlay)
             {
@@ -1230,10 +1230,13 @@ public class World : MonoBehaviour
                                 {
                                     if (baseOb.GetComponent<NetworkIdentity>() == null)
                                         baseOb.AddComponent<NetworkIdentity>();
+                                    //customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(baseOb); // if not already registered, register gameObject
                                 }
+                                Debug.Log("Added Base");
                                 baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                                 baseOb.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
                                 AddToBaseChildren(baseOb);
+                                baseOb.SetActive(true);
                                 VBO = baseOb;
                             }
                             else
@@ -1255,13 +1258,13 @@ public class World : MonoBehaviour
             {
                 GameObject ob = childObs[i].gameObject;
 
-                ob.transform.parent = null; // unparent as separate objects from base parent object
-                if (Settings.OnlinePlay)
-                {
-                    if (ob.GetComponent<NetworkIdentity>() == null)
-                        ob.AddComponent<NetworkIdentity>();
-                    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(ob); // if not already registered, register child gameObject
-                }
+                //ob.transform.parent = null; // unparent as separate objects from base parent object
+                //if (Settings.OnlinePlay)
+                //{
+                //    if (ob.GetComponent<NetworkIdentity>() == null)
+                //        ob.AddComponent<NetworkIdentity>();
+                //    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(ob); // if not already registered, register gameObject
+                //}
 
                 ob.tag = "BaseObPiece";
                 baseObPieces.Add(ob);

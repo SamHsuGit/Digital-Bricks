@@ -1253,7 +1253,7 @@ PrefabInstance:
     - target: {fileID: 5936758643800811229, guid: 9a28e02f1d09101449f7e7ae8d58d0f8, type: 3}
       propertyPath: spawnPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 267288310360540051, guid: 04bb5ef7f14330842b6b88d9be1ec42b, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5936758643800811229, guid: 9a28e02f1d09101449f7e7ae8d58d0f8, type: 3}
       propertyPath: spawnPrefabs.Array.data[2]
       value: 
@@ -1745,6 +1745,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 112729230156159889, guid: 2c138186b0263ea45a8eb9fad0660e99, type: 3}
+      propertyPath: sceneId
+      value: 1301162292
+      objectReference: {fileID: 0}
     - target: {fileID: 6273157275290195824, guid: 2c138186b0263ea45a8eb9fad0660e99, type: 3}
       propertyPath: m_Name
       value: World
