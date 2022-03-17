@@ -138,6 +138,7 @@ public static class Structure
     static Queue<VoxelMod> MakeBaseVBOImport(Vector3 position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
+        LDrawImportRuntime.Instance.CalcBaseObSize(LDrawImportRuntime.Instance.baseOb);
         int xRadius = LDrawImportRuntime.Instance.baseObSizeX / 2;
         int zRadius = LDrawImportRuntime.Instance.baseObSizeZ / 2;
         xRadius += 1; // safety boundary in case import is offset by 1 block
