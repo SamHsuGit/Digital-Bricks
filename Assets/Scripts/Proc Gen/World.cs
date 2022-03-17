@@ -1222,7 +1222,7 @@ public class World : MonoBehaviour
                                 VBOorientation.eulerAngles = new Vector3(180, 0, 0); // if VBOImport then flip right side up
                             }
                             GameObject VBO;
-                            if (blockID == 25 && Settings.Platform != 2)
+                            if (blockID == 25 && Settings.Platform != 2 && blocktypes[blockID].voxelBoundObject != null)
                             {
                                 baseOb = blocktypes[blockID].voxelBoundObject;
                                 if (Settings.OnlinePlay)
