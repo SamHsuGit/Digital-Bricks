@@ -145,6 +145,7 @@ public static class Structure
         byte blockID = 25;
         ReserveSpaceVBO(queue, position, xRadius, zRadius);
         queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
+        Debug.Log("placed blockID 25 placeholder");
         return queue;
     }
 

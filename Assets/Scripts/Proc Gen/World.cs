@@ -251,7 +251,6 @@ public class World : MonoBehaviour
         {
             if(Settings.OnlinePlay && baseObString != null)
             {
-                Debug.Log(baseObString);
                 baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", baseObString, LDrawImportRuntime.Instance.importPosition, true);
                 LDrawImportRuntime.Instance.baseOb = baseOb;
                 LDrawImportRuntime.Instance.CalcBaseObSize(baseOb);
@@ -1256,12 +1255,12 @@ public class World : MonoBehaviour
                 GameObject ob = childObs[i].gameObject;
 
                 ob.transform.parent = null; // unparent as separate objects from base parent object
-                //if (Settings.OnlinePlay)
-                //{
-                //    if (ob.GetComponent<NetworkIdentity>() == null)
-                //        ob.AddComponent<NetworkIdentity>();
-                //    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(ob); // if not already registered, register child gameObject
-                //}
+                if (Settings.OnlinePlay)
+                {
+                    if (ob.GetComponent<NetworkIdentity>() == null)
+                        ob.AddComponent<NetworkIdentity>();
+                    customNetworkManager.GetComponent<CustomNetworkManager>().spawnPrefabs.Add(ob); // if not already registered, register child gameObject
+                }
 
                 ob.tag = "BaseObPiece";
                 baseObPieces.Add(ob);

@@ -71,6 +71,8 @@ public class LDrawImportRuntime : MonoBehaviour
         baseObSizeX = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.x / 40) + 1;
         baseObSizeZ = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.z / 40) + 1;
         baseObSizeY = Mathf.CeilToInt(baseOb.GetComponent<BoxCollider>().size.y / 40) + 1;
+
+        Debug.Log(baseObSizeX);
     }
 
     public GameObject ImportLDrawLocal(string fileName, Vector3 pos, bool isStatic)
