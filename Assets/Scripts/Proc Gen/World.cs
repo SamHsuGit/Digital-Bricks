@@ -251,6 +251,7 @@ public class World : MonoBehaviour
         {
             if(Settings.OnlinePlay && baseObString != null)
             {
+                Debug.Log(baseObString);
                 baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", baseObString, LDrawImportRuntime.Instance.importPosition, true);
                 LDrawImportRuntime.Instance.baseOb = baseOb;
                 LDrawImportRuntime.Instance.CalcBaseObSize(baseOb);
