@@ -132,17 +132,18 @@ public class Controller : NetworkBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
         world = gameManager.worldOb.GetComponent<World>();
         lighting = gameManager.globalLighting.GetComponent<Lighting>();
+        customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
 
-        if (Settings.OnlinePlay)
-            customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
+        //if (Settings.OnlinePlay)
+        //{
+        //    if (isServer && !isClient) // only sync values from server gameObject
+        //        lighting.controller = this;
+        //}
 
         NamePlayer(world);
 
         if(!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
-
-        //if (Settings.OnlinePlay && isServer && !isClient)
-        //    lighting.controller = this;
 
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
@@ -219,12 +220,6 @@ public class Controller : NetworkBehaviour
 
             world.gameObject.SetActive(true);
         }
-        //else // if(Settings.OnlinePlay)
-        //{
-        //    // sync all client times to server time upon new client join
-        //    if (isLocalPlayer)
-        //        CmdSetTime();
-        //}
     }
 
     void InputComponents()
@@ -257,8 +252,9 @@ public class Controller : NetworkBehaviour
         base.OnStartServer();
 
         // SET SERVER VALUES FROM HOST CLIENT
+        lighting.controller = this;
         //timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
-        
+
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
 
@@ -401,20 +397,6 @@ public class Controller : NetworkBehaviour
         projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
     }
 
-    //[Command]
-    //public void CmdSetTime()
-    //{
-    //    RpcSetTime(lighting.timeOfDay); // use server time to set all client times to same value
-    //    Debug.Log("CmdSetTime");
-    //}
-
-    //[ClientRpc]
-    //public void RpcSetTime(float timeOfDayServer)
-    //{
-    //    lighting.timeOfDay = timeOfDayServer;
-    //    Debug.Log("Set lighting.timeOfDay to " + timeOfDayServer);
-    //}
-
     public void SetTime(float oldValue, float newValue)
     {
         timeOfDayServer = newValue;
@@ -457,8 +439,8 @@ public class Controller : NetworkBehaviour
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
-        if (isServerOnly)
-            timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
+        //if (isServerOnly)
+        //    timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
 
         //disable virtual camera and exit from FixedUpdate if this is not the local player
         if (Settings.OnlinePlay && !isLocalPlayer)
