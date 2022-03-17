@@ -631,6 +631,7 @@ MonoBehaviour:
   isGrounded: 0
   maxJumps: 0
   currentJumps: 0
+  world: {fileID: 0}
   controller: {fileID: 3963772888375218276}
   center: {x: 0, y: 0, z: 0}
   halfColliderHeight: 0
