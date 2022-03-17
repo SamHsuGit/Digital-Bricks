@@ -143,7 +143,7 @@ public class Controller : NetworkBehaviour
         if(!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
 
-        if (Settings.OnlinePlay && !isClientOnly)
+        if (Settings.OnlinePlay && isServer && !isClient)
             lighting.controller = this;
 
         voxelCollider = GetComponent<PlayerVoxelCollider>();
