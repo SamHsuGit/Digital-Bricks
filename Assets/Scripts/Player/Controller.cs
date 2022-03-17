@@ -279,7 +279,8 @@ public class Controller : NetworkBehaviour
 
         // SET CLIENT SYNCVAR FROM SERVER
         // run command on server to set time
-        CmdSetTime();
+        if(isLocalPlayer)
+            CmdSetTime();
         //SetTime(timeOfDayServer, timeOfDayServer);
 
         if (isClientOnly) // GAME LOAD VALIDATION FOR ONLINE PLAY
