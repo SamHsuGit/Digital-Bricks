@@ -192,7 +192,7 @@ public static class SaveSystem
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream;
 
-        stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create);
+        stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create); // overwrites any existing files by default
         formatter.Serialize(stream, chunk.EncodeChunk(chunk));
         stream.Close();
     }

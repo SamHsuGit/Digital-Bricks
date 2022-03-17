@@ -336,13 +336,7 @@ public class Controller : NetworkBehaviour
     public void SetBaseServer(string oldValue, string newValue)
     {
         Debug.Log("Received: " + newValue); // receives before sent message...
-        GameObject baseObject = LDrawImportRuntime.Instance.ImportLDrawOnline("base", newValue, LDrawImportRuntime.Instance.importPosition, true);
-        LDrawImportRuntime.Instance.baseOb = baseObject;
-        LDrawImportRuntime.Instance.CalcBaseObSize(baseObject);
-        baseObject.transform.position = LDrawImportRuntime.Instance.importPosition;
-        customNetworkManager.worldOb.GetComponent<World>().baseOb = baseObject;
-        customNetworkManager.worldOb.GetComponent<World>().blocktypes[25].voxelBoundObject = baseObject;
-        baseObject.SetActive(false);
+        customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
     }
 
     public void SetChunksServer(string oldValue, string newValue)

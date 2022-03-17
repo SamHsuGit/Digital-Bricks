@@ -15,6 +15,7 @@ public class World : MonoBehaviour
     public bool chunkMeshColliders = true;
     public int planetNumber;
     public int seed;
+    public string baseObString;
     public GameObject baseOb;
     public bool isEarth;
 
@@ -248,6 +249,10 @@ public class World : MonoBehaviour
             blocktypes[25].voxelBoundObject = null;
         else
         {
+            baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", baseObString, LDrawImportRuntime.Instance.importPosition, true);
+            LDrawImportRuntime.Instance.baseOb = baseOb;
+            LDrawImportRuntime.Instance.CalcBaseObSize(baseOb);
+            baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
             blocktypes[25].voxelBoundObject = baseOb; // sets the base voxel bound object to the value set in the GameManager Script
 
             if (Settings.OnlinePlay)
