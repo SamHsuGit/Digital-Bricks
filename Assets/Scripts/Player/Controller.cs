@@ -19,7 +19,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
-    [SyncVar(hook = nameof(SetTime))] public float timeOfDayServer = 6.01f;
+    //[SyncVar(hook = nameof(SetTime))] public float timeOfDayServer = 6.01f;
     [SyncVar] public string versionServer;
     readonly public SyncList<string> playerNamesServer = new SyncList<string>();
 
@@ -143,8 +143,8 @@ public class Controller : NetworkBehaviour
         if(!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
 
-        if (Settings.OnlinePlay && isServer && !isClient)
-            lighting.controller = this;
+        //if (Settings.OnlinePlay && isServer && !isClient)
+        //    lighting.controller = this;
 
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
@@ -199,7 +199,7 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
+            //timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
             // Import character model idle pose
             charObIdle = Instantiate(LDrawImportRuntime.Instance.charObIdle);
             charObIdle.SetActive(true);
@@ -253,7 +253,7 @@ public class Controller : NetworkBehaviour
         base.OnStartServer();
 
         // SET SERVER VALUES FROM HOST CLIENT
-        timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
+        //timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
         
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
@@ -278,7 +278,9 @@ public class Controller : NetworkBehaviour
         base.OnStartClient();
 
         // SET CLIENT SYNCVAR FROM SERVER
-        SetTime(timeOfDayServer, timeOfDayServer);
+        // run command on server to set time
+        CmdSetTime();
+        //SetTime(timeOfDayServer, timeOfDayServer);
 
         if (isClientOnly) // GAME LOAD VALIDATION FOR ONLINE PLAY
         {
@@ -397,10 +399,22 @@ public class Controller : NetworkBehaviour
         projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
     }
 
-    public void SetTime(float oldValue, float newValue)
+    [Command]
+    public void CmdSetTime()
     {
-        timeOfDayServer = newValue;
+        RpcSetTime(lighting.timeOfDay);
     }
+
+    [ClientRpc]
+    public void RpcSetTime(float timeOfDayServer)
+    {
+        lighting.timeOfDay = timeOfDayServer;
+    }
+
+    //public void SetTime(float oldValue, float newValue)
+    //{
+    //    timeOfDayServer = newValue;
+    //}
 
     public void SetIsMoving(bool oldValue, bool newValue)
     {
@@ -447,7 +461,7 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        timeOfDayServer = World.Instance.globalLighting.timeOfDay; // update time of day from lighting component
+        //timeOfDayServer = World.Instance.globalLighting.timeOfDay; // update time of day from lighting component
         daytime = World.Instance.globalLighting.daytime;
 
         isGrounded = CheckGroundedCollider();

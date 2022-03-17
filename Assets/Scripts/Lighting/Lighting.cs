@@ -18,7 +18,7 @@ public class Lighting : MonoBehaviour
     [SerializeField] private float ambientIntensity;
     [SerializeField] private float reflectionIntensity;
 
-    public Controller controller;
+    //public Controller controller;
 
     [SerializeField, Range(0, 24)] public float timeOfDay = 6.01f;
     public float maxFogDensity = 0.01f;
@@ -27,11 +27,11 @@ public class Lighting : MonoBehaviour
 
     private void Update()
     {
-        if (Settings.OnlinePlay && controller != null) 
-        {
-            Debug.Log("Update Time of Day");
-            timeOfDay = controller.timeOfDayServer; // if online play and controller set this script's controller variable, get variable from player syncVar
-        }
+        //if (Settings.OnlinePlay && controller != null) 
+        //{
+        //    Debug.Log("Update Time of Day");
+        //    timeOfDay = controller.timeOfDayServer; // if online play and controller set this script's controller variable, get variable from player syncVar
+        //}
 
         if (sunProperties == null)
             return;
@@ -59,8 +59,8 @@ public class Lighting : MonoBehaviour
 
         daytime = CheckDaytime(timeOfDay);
 
-        if (Settings.OnlinePlay && controller != null)
-            controller.timeOfDayServer = timeOfDay; // if online play  and controller set this script's controller variable, write variable to player syncVar
+        //if (Settings.OnlinePlay && controller != null)
+        //    controller.timeOfDayServer = timeOfDay; // if online play  and controller set this script's controller variable, write variable to player syncVar
     }
 
     public bool CheckDaytime(float timeOfDay)
