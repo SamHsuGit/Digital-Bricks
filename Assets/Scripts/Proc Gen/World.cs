@@ -1230,7 +1230,6 @@ public class World : MonoBehaviour
                                     if (baseOb.GetComponent<NetworkIdentity>() == null)
                                         baseOb.AddComponent<NetworkIdentity>();
                                 }
-                                Debug.Log("Added Base");
                                 baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                                 baseOb.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
                                 AddToBaseChildren(baseOb);
