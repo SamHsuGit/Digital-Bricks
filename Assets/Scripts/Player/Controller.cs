@@ -403,13 +403,15 @@ public class Controller : NetworkBehaviour
     [Command]
     public void CmdSetTime()
     {
-        RpcSetTime(lighting.timeOfDay);
+        RpcSetTime(lighting.timeOfDay); // use server time to set all client times to same value
+        Debug.Log("CmdSetTime");
     }
 
     [ClientRpc]
     public void RpcSetTime(float timeOfDayServer)
     {
         lighting.timeOfDay = timeOfDayServer;
+        Debug.Log("Set lighting.timeOfDay to " + timeOfDayServer);
     }
 
     //public void SetTime(float oldValue, float newValue)
