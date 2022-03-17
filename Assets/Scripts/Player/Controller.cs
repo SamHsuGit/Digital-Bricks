@@ -399,7 +399,7 @@ public class Controller : NetworkBehaviour
 
     public void SetTime(float oldValue, float newValue)
     {
-        timeOfDayServer = newValue;
+        lighting.timeOfDay = newValue;
     }
 
     public void SetIsMoving(bool oldValue, bool newValue)
