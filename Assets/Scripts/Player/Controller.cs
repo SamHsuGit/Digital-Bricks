@@ -87,6 +87,7 @@ public class Controller : NetworkBehaviour
     GameObject grabbedPrefab;
 
     //Components
+    GameManagerScript gameManager;
     GameObject playerCameraOrigin;
     LookAtConstraint lookAtConstraint;
     CapsuleCollider cc;
@@ -128,9 +129,14 @@ public class Controller : NetworkBehaviour
 
     void Awake()
     {
-        if(Settings.OnlinePlay)
-            customNetworkManager = GameObject.Find("PlayerManagerNetwork").GetComponent<CustomNetworkManager>();
-        world = GameObject.Find("GameManager").GetComponent<GameManagerScript>().worldOb.GetComponent<World>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
+        world = gameManager.worldOb.GetComponent<World>();
+
+        if (Settings.OnlinePlay)
+        {
+            customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
+            lighting = gameManager.globalLighting.GetComponent<Lighting>();
+        }
 
         NamePlayer(world);
 
@@ -138,16 +144,11 @@ public class Controller : NetworkBehaviour
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
 
         if (Settings.OnlinePlay && !isClientOnly)
-        {
-            lighting = GameObject.Find("GlobalLighting").GetComponent<Lighting>();
             lighting.controller = this;
-        }
 
         voxelCollider = GetComponent<PlayerVoxelCollider>();
         voxelCollider.world = world;
-
         physicMaterial = world.physicMaterial;
-        customNetworkManager = world.customNetworkManager;
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
 
         projectile = LDrawImportRuntime.Instance.projectileOb;
