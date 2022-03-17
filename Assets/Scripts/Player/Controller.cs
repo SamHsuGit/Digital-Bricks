@@ -221,6 +221,12 @@ public class Controller : NetworkBehaviour
 
             world.gameObject.SetActive(true);
         }
+        else // if(Settings.OnlinePlay)
+        {
+            // sync all client times to server time upon new client join
+            if (isLocalPlayer)
+                CmdSetTime();
+        }
     }
 
     void InputComponents()
@@ -278,9 +284,6 @@ public class Controller : NetworkBehaviour
         base.OnStartClient();
 
         // SET CLIENT SYNCVAR FROM SERVER
-        // run command on server to set time
-        if(isLocalPlayer)
-            CmdSetTime();
         //SetTime(timeOfDayServer, timeOfDayServer);
 
         if (isClientOnly) // GAME LOAD VALIDATION FOR ONLINE PLAY
