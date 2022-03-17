@@ -29,6 +29,7 @@ public class Lighting : MonoBehaviour
     {
         if (Settings.OnlinePlay && controller != null) 
         {
+            Debug.Log("Update Time of Day");
             timeOfDay = controller.timeOfDayServer; // if online play and controller set this script's controller variable, get variable from player syncVar
         }
 
