@@ -134,6 +134,8 @@ public class Controller : NetworkBehaviour
 
         NamePlayer(world);
 
+        world.baseOb = LDrawImportRuntime.Instance.baseOb; // set initial value to be overridden later by SyncVar Hook SetBaseServer
+
         if (!Settings.OnlinePlay && !isClientOnly)
         {
             lighting = GameObject.Find("GlobalLighting").GetComponent<Lighting>();

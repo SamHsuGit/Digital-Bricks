@@ -249,10 +249,14 @@ public class World : MonoBehaviour
             blocktypes[25].voxelBoundObject = null;
         else
         {
-            baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", baseObString, LDrawImportRuntime.Instance.importPosition, true);
-            LDrawImportRuntime.Instance.baseOb = baseOb;
-            LDrawImportRuntime.Instance.CalcBaseObSize(baseOb);
-            baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
+            if(Settings.OnlinePlay && baseObString != null)
+            {
+                baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("base", baseObString, LDrawImportRuntime.Instance.importPosition, true);
+                LDrawImportRuntime.Instance.baseOb = baseOb;
+                LDrawImportRuntime.Instance.CalcBaseObSize(baseOb);
+                baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
+            }
+
             blocktypes[25].voxelBoundObject = baseOb; // sets the base voxel bound object to the value set in the GameManager Script
 
             if (Settings.OnlinePlay)
@@ -1227,7 +1231,6 @@ public class World : MonoBehaviour
                                         baseOb.AddComponent<NetworkIdentity>();
                                 }
                                 baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
-                                Debug.Log(baseOb.name);
                                 baseOb.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
                                 AddToBaseChildren(baseOb);
                                 VBO = baseOb;
