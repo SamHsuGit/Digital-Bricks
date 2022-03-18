@@ -277,6 +277,8 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartClient();
 
+        RequestSaveWorld(false, true); // save chunks on server only before sending to clients
+
         // SET CLIENT SYNCVAR FROM SERVER
         //SetTime(timeOfDayServer, timeOfDayServer);
 
@@ -294,7 +296,8 @@ public class Controller : NetworkBehaviour
 
         SetName(playerName, playerName);
 
-        //customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
+        if (isClientOnly)
+            customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
     }
 
     void SetPlayerColliderSettings()
@@ -355,7 +358,6 @@ public class Controller : NetworkBehaviour
         }
         world.worldData.planetNumber = planetNumberServer;
         world.worldData.seed = seedServer;
-        CmdSaveWorld(false); // save chunks on server before sending to clients
         SaveWorld(world.worldData, false); // save chunks to disk before loading world
     }
 
@@ -1331,25 +1333,31 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public void RequestSaveWorld(bool savePlayerData)
+    public void RequestSaveWorld(bool savePlayerData, bool serverOnly)
     {
         if (Settings.OnlinePlay && hasAuthority)
         {
-            CmdSaveWorld(savePlayerData);
-            SaveWorld(World.Instance.worldData, savePlayerData);
+            CmdSaveWorld(savePlayerData, serverOnly);
+            //SaveWorld(World.Instance.worldData, savePlayerData);
         }
         else
             SaveWorld(World.Instance.worldData, savePlayerData);
     }
 
     [Command]
-    public void CmdSaveWorld(bool savePlayerData)
+    public void CmdSaveWorld(bool savePlayerData, bool serverOnly)
     {
         // tells the server to save the world (moved here since the gameMenu cannot have a network identity).
         // server host and clients must save world before clients disconnect
-        SaveWorld(World.Instance.worldData, savePlayerData);
-
-        RpcSaveWorld(World.Instance.worldData, savePlayerData); // tell clients to save world so they don't have to re-share world files before playing again.
+        if (serverOnly)
+        {
+            SaveWorld(World.Instance.worldData, savePlayerData);
+        }
+        else
+        {
+            //SaveWorld(World.Instance.worldData, savePlayerData);
+            RpcSaveWorld(World.Instance.worldData, savePlayerData); // tell clients to save world so they don't have to re-share world files before playing again.
+        }
     }
 
     [ClientRpc]

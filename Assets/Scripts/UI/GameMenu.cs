@@ -137,7 +137,7 @@ public class GameMenu : MonoBehaviour
     {
         buttonSound.Play();
         // before quit, save world
-        controller.RequestSaveWorld(true);
+        controller.RequestSaveWorld(true, false);
         // before quit, save settings
         SaveSettings();
     }
