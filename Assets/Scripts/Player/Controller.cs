@@ -141,7 +141,10 @@ public class Controller : NetworkBehaviour
         NamePlayer(world);
 
         if (Settings.OnlinePlay && isLocalPlayer)
-            RequestSaveWorld(); // Host must save when client joins
+        {
+            RequestSaveWorld(); // Server must save when client joins
+            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins
+        }
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -220,9 +223,6 @@ public class Controller : NetworkBehaviour
 
             world.gameObject.SetActive(true);
         }
-
-        if (isClientOnly)
-            customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
     }
 
     void InputComponents()
@@ -286,6 +286,9 @@ public class Controller : NetworkBehaviour
         }
 
         SetName(playerName, playerName); // called on both clients and host
+
+        if (isClientOnly)
+            customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
     }
 
     void SetPlayerColliderSettings()
