@@ -220,6 +220,9 @@ public class Controller : NetworkBehaviour
 
             world.gameObject.SetActive(true);
         }
+
+        if (isClientOnly)
+            customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
     }
 
     void InputComponents()
@@ -283,9 +286,6 @@ public class Controller : NetworkBehaviour
         }
 
         SetName(playerName, playerName); // called on both clients and host
-
-        if (isClientOnly)
-            customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
     }
 
     void SetPlayerColliderSettings()
