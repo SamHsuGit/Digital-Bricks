@@ -138,12 +138,10 @@ public class Controller : NetworkBehaviour
         world = gameManager.worldOb.GetComponent<World>();
         lighting = gameManager.globalLighting.GetComponent<Lighting>();
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
+        NamePlayer(world);
 
         if (isLocalPlayer && isClientOnly)
             RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
-
-        NamePlayer(world);
-        world.JoinPlayer(gameObject); // must NamePlayer (create player) before adding to world
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -192,7 +190,7 @@ public class Controller : NetworkBehaviour
 
     private void Start()
     {
-        
+        world.JoinPlayer(gameObject); // must NamePlayer and initialize world before this can be run
 
         InputComponents();
 
