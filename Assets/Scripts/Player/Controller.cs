@@ -443,7 +443,7 @@ public class Controller : NetworkBehaviour
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
-        if (isServer && !isClient)
+        if (Settings.OnlinePlay && !isServerOnly)
             timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
 
         //disable virtual camera and exit from FixedUpdate if this is not the local player
