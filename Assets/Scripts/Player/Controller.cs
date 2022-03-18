@@ -140,11 +140,8 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (isLocalPlayer)
-        {
-            RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
-            CmdSetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
-        }
+        RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
+        CmdSetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
