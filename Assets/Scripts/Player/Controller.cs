@@ -141,11 +141,7 @@ public class Controller : NetworkBehaviour
         NamePlayer(world);
 
         if (Settings.OnlinePlay && isLocalPlayer)
-        {
-            RequestSaveWorld(); // Server must save when client joins
-            if(hasAuthority)
-                CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins
-        }
+            RequestSaveWorld(); // Host must save when client joins
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -269,6 +265,9 @@ public class Controller : NetworkBehaviour
     public override void OnStartClient() // Only called on Client and Host
     {
         base.OnStartClient();
+
+        if (!isClientOnly)
+            SetServerChunkStringSyncVar(); // host must send latest chunks when client joins
 
         // Check if client version matches versionServer SyncVar (SyncVars are updated before OnStartClient()
         if (isClientOnly)
