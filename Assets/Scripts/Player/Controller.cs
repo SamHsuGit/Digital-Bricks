@@ -19,7 +19,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
-    [SyncVar(hook = nameof(SetTime))] public float timeOfDayServer = 6.01f;
+    [SyncVar(hook = nameof(SetTime))] public float timeOfDayServer;
     [SyncVar] public string versionServer;
     readonly public SyncList<string> playerNamesServer = new SyncList<string>();
 
