@@ -19,15 +19,15 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
-    [SyncVar(hook = nameof(SetTime))] public float timeOfDayServer;
-    [SyncVar] public string versionServer;
-    readonly public SyncList<string> playerNamesServer = new SyncList<string>();
+    [SyncVar(hook = nameof(SetTime))] private float timeOfDayServer;
+    [SyncVar] private string versionServer;
+    readonly private SyncList<string> playerNamesServer = new SyncList<string>();
 
     // These server values cannot be set in controller since world is activated before controller, merely included here to check states match
-    [SyncVar(hook = nameof(SetPlanetNumberServer))] public int planetNumberServer;
-    [SyncVar(hook = nameof(SetSeedServer))] public int seedServer;
-    [SyncVar(hook = nameof(SetBaseServer))] public string baseServer;
-    [SyncVar(hook = nameof(SetChunksServer))] public string chunksServer;
+    [SyncVar(hook = nameof(SetPlanetNumberServer))] private int planetNumberServer;
+    [SyncVar(hook = nameof(SetSeedServer))] private int seedServer;
+    [SyncVar(hook = nameof(SetBaseServer))] private string baseServer;
+    [SyncVar(hook = nameof(SetChunksServer))] private string chunksServer;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -254,7 +254,7 @@ public class Controller : NetworkBehaviour
         base.OnStartServer();
 
         // SET SERVER VALUES FROM HOST CLIENT
-        lighting.controller = this; // tells lighting to update timeOfDayServer for server only
+        //lighting.controller = this; // tells lighting to update timeOfDayServer for server only
 
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
@@ -439,8 +439,8 @@ public class Controller : NetworkBehaviour
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
-        //if (isServerOnly)
-        //    timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
+        if (isServer && !isClient)
+            timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
 
         //disable virtual camera and exit from FixedUpdate if this is not the local player
         if (Settings.OnlinePlay && !isLocalPlayer)
