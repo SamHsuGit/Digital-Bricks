@@ -140,11 +140,11 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        //if (Settings.OnlinePlay && isLocalPlayer)
-        //{
-        //    RequestSaveWorld(); // Server must save when client joins
-        //    //CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins
-        //}
+        if (Settings.OnlinePlay && isLocalPlayer)
+        {
+            RequestSaveWorld(); // Server must save when client joins
+            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins (triggers SyncVar update which occurs before OnStartClient())
+        }
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -268,12 +268,6 @@ public class Controller : NetworkBehaviour
     public override void OnStartClient() // Only called on Client and Host
     {
         base.OnStartClient();
-
-        if (!isClientOnly)
-        {
-            RequestSaveWorld(); // Host must save when client joins
-            SetServerChunkStringSyncVar(); // Host must send latest chunks when client joins
-        }
 
         // Check if client version matches versionServer SyncVar (SyncVars are updated before OnStartClient()
         if (isClientOnly)
@@ -1365,6 +1359,7 @@ public class Controller : NetworkBehaviour
     public void CmdSaveWorld()
     {
         // tells the server to make all clients (including host client) save the world (moved here since the gameMenu cannot have a network identity).
+        SetServerChunkStringSyncVar(); // server sets new syncVar upon save
         RpcSaveWorld();
     }
 
