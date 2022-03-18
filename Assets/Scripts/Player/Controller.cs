@@ -140,11 +140,8 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (isLocalPlayer && isClientOnly)
-        {
-            RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
-            CmdSetServerChunkStringSyncVar(); // Client ask server to send updated chunkStringSyncVar to clients
-        }
+        RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
+        SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -330,8 +327,8 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
     }
 
-    [Command]
-    public void CmdSetServerChunkStringSyncVar()
+    [Server]
+    public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
         List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
@@ -400,6 +397,12 @@ public class Controller : NetworkBehaviour
         projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
     }
 
+    [Server]
+    public void SetTimeOfDayServer()
+    {
+        timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
+    }
+
     public void SetTime(float oldValue, float newValue)
     {
         lighting.timeOfDay = newValue;
@@ -443,8 +446,8 @@ public class Controller : NetworkBehaviour
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
-        if (Settings.OnlinePlay && !isServerOnly)
-            timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
+        if (Settings.OnlinePlay)
+            SetTimeOfDayServer();
 
         //disable virtual camera and exit from FixedUpdate if this is not the local player
         if (Settings.OnlinePlay && !isLocalPlayer)
