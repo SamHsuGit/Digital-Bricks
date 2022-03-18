@@ -270,7 +270,8 @@ public class Controller : NetworkBehaviour
         base.OnStartClient();
 
         RequestSaveWorld(); // When client joins, requests that host saves the game
-        CmdSetServerChunkStringSyncVar();
+        if(isLocalPlayer)
+            CmdSetServerChunkStringSyncVar();
 
         // Check if client version matches versionServer SyncVar (SyncVars are updated before OnStartClient()
         if (isClientOnly)
