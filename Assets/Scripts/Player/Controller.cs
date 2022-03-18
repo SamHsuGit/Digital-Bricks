@@ -399,7 +399,8 @@ public class Controller : NetworkBehaviour
 
     public void SetTime(float oldValue, float newValue)
     {
-        lighting.timeOfDay = newValue;
+        if(isClientOnly)
+            lighting.timeOfDay = newValue;
     }
 
     public void SetIsMoving(bool oldValue, bool newValue)
