@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8519003421247165728
 RectTransform:
   m_ObjectHideFlags: 0
@@ -559,7 +559,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 5817596606150572996}
-    m_SelectOnDown: {fileID: 5189554294139989109}
+    m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -677,18 +677,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'SAVED GAMES:
-
-    All Players must have same Host World file in save file
-    location, enter same planet number
-
-
-    SAVE FILE LOCATION:
-
-    Windows: C:\Users%userprofile%\AppData\LocalLow\Sam
-    Hsu\LDPlay\saves\World"
-
-    MacOS: "~/Library/Application Support/Sam Hsu/LDPlay/saves/World"'
+  m_Text: 
 --- !u!1 &2914596668590805168
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,8 +819,9 @@ MonoBehaviour:
   networkMenuElements: {fileID: 8813322198944415223}
   buttonSound: {fileID: 3139788332195023822}
   background: {fileID: 7085100174170922114}
-  world: {fileID: 0}
   loadingText: {fileID: 3134939849204132585}
+  gameManagerObject: {fileID: 0}
+  LDrawImporterRuntime: {fileID: 0}
 --- !u!82 &3139788332195023822
 AudioSource:
   m_ObjectHideFlags: 0
