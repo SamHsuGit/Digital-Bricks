@@ -270,7 +270,7 @@ public class Controller : NetworkBehaviour
         chunksServer = chunksServerCombinedString;
 
         versionServer = Application.version;
-        //customNetworkManager.InitWorld();
+        customNetworkManager.InitWorld();
     }
 
     public override void OnStartClient() // happens after world is instantiated
@@ -294,7 +294,7 @@ public class Controller : NetworkBehaviour
 
         SetName(playerName, playerName);
 
-        customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
+        //customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
     }
 
     void SetPlayerColliderSettings()
@@ -355,6 +355,7 @@ public class Controller : NetworkBehaviour
         }
         world.worldData.planetNumber = planetNumberServer;
         world.worldData.seed = seedServer;
+        CmdSaveWorld(false); // save chunks on server before sending to clients
         SaveWorld(world.worldData, false); // save chunks to disk before loading world
     }
 
