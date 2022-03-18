@@ -140,11 +140,13 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (Settings.OnlinePlay)
+        if (Settings.OnlinePlay && hasAuthority)
         {
-            if(isLocalPlayer)
-                RequestSaveWorld(); // When client joins, requests that host saves the game
-            RequestServerSendChunks(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
+            RequestSaveWorld(); // When client joins, requests that host saves the game
+
+            // For some reason, can't get this to run on clients... (supposed to make server resend chunkStringSyncVar)
+            //if(isServer)
+                SetServerChunkStringSyncVar(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient())
         }
 
         if (!Settings.OnlinePlay)
@@ -334,13 +336,6 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
     }
 
-    [Client]
-    public void RequestServerSendChunks()
-    {
-        if(isLocalPlayer)
-            CmdSetServerChunkStringSyncVar();
-    }
-
     [Command]
     public void CmdSetServerChunkStringSyncVar()
     {
@@ -348,6 +343,7 @@ public class Controller : NetworkBehaviour
         Debug.Log("CmdSetServerChunkStringSyncVar"); // cannot get this code to run for some reason
     }
 
+    [Server]
     public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
