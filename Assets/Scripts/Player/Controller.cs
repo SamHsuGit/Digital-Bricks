@@ -142,8 +142,8 @@ public class Controller : NetworkBehaviour
 
         if (Settings.OnlinePlay && isLocalPlayer)
         {
-            RequestSaveWorld(); // Server must save when client joins
-            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
+            RequestSaveWorld(); // When client joins, requests that host saves the game
+            RequestServerSendChunks(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
         }
 
         if (!Settings.OnlinePlay)
@@ -333,11 +333,18 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
     }
 
+    [Client]
+    public void RequestServerSendChunks()
+    {
+        if (hasAuthority)
+            CmdSetServerChunkStringSyncVar();
+    }
+
     [Command]
     public void CmdSetServerChunkStringSyncVar()
     {
         SetServerChunkStringSyncVar();
-        Debug.Log("CmdSetServerChunkStringSyncVar");
+        Debug.Log("CmdSetServerChunkStringSyncVar"); // cannot get this code to run for some reason
     }
 
     public void SetServerChunkStringSyncVar()
