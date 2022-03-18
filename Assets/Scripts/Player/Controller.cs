@@ -277,7 +277,8 @@ public class Controller : NetworkBehaviour
     {
         base.OnStartClient();
 
-        RequestSaveWorld(false, true); // save chunks on server only before sending to clients
+        if(isLocalPlayer)
+            RequestSaveWorld(false, true); // save chunks on server only before sending to clients
 
         // SET CLIENT SYNCVAR FROM SERVER
         //SetTime(timeOfDayServer, timeOfDayServer);
