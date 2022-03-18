@@ -143,7 +143,7 @@ public class Controller : NetworkBehaviour
         if (Settings.OnlinePlay && isLocalPlayer)
         {
             RequestSaveWorld(); // Server must save when client joins
-            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins (triggers SyncVar update which occurs before OnStartClient())
+            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
         }
 
         if (!Settings.OnlinePlay)
@@ -260,7 +260,7 @@ public class Controller : NetworkBehaviour
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
 
-        //SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
+        SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
 
         customNetworkManager.InitWorld();
     }
