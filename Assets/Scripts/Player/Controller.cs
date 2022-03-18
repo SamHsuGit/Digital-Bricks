@@ -140,10 +140,11 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (isLocalPlayer && isClientOnly)
+        if (isLocalPlayer)
+        {
             RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
-
-        SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
+            CmdSetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
+        }
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -310,7 +311,6 @@ public class Controller : NetworkBehaviour
         tpsDist = -cc.radius * 4;
     }
 
-    [Client]
     public void SetPlanetNumberServer(int oldValue, int newValue)
     {
         SettingsStatic.LoadedSettings.planetNumber = newValue;
@@ -318,7 +318,6 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().worldData.planetNumber = newValue;
     }
 
-    [Client]
     public void SetSeedServer(int oldValue, int newValue)
     {
         SettingsStatic.LoadedSettings.seed = newValue;
@@ -332,8 +331,8 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
     }
 
-    [Server]
-    public void SetServerChunkStringSyncVar()
+    [Command]
+    public void CmdSetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
         List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
@@ -402,17 +401,14 @@ public class Controller : NetworkBehaviour
         projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
     }
 
-    [Server]
     public void SetTimeOfDayServer()
     {
         timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
     }
 
-    [Client]
     public void SetTime(float oldValue, float newValue)
     {
         lighting.timeOfDay = newValue;
-        Debug.Log("timeOfDayServerSyncVar = " + newValue);
     }
 
     public void SetIsMoving(bool oldValue, bool newValue)
