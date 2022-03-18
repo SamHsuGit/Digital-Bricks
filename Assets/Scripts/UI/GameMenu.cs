@@ -137,7 +137,7 @@ public class GameMenu : MonoBehaviour
     {
         buttonSound.Play();
         // before quit, save world
-        controller.RequestSaveWorld(true); // server host and clients must save world before clients disconnect
+        controller.RequestSaveWorld(); // server host and clients must save world before clients disconnect
         // before quit, save settings
         SaveSettings();
     }

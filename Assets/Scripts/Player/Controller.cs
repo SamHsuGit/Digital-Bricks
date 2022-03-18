@@ -127,6 +127,11 @@ public class Controller : NetworkBehaviour
     float nextTimeToAnim = 0;
     List<Material> cachedMaterials = new List<Material>();
 
+    // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
+    // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
+    // Order of SyncVars: https://mirror-networking.gitbook.io/docs/guides/synchronization/syncvars
+    // The state of SyncVars is applied to game objects on clients before OnStartClient() is called, so the state of the object is always up - to - date inside OnStartClient().
+
     void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
@@ -134,18 +139,13 @@ public class Controller : NetworkBehaviour
         lighting = gameManager.globalLighting.GetComponent<Lighting>();
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
 
-        if (isLocalPlayer)
-            RequestSaveWorld(false); // save chunks on server only before sending to clients
-
-        //if (Settings.OnlinePlay)
-        //{
-        //    if (isServer && !isClient) // only sync values from server gameObject
-        //        lighting.controller = this;
-        //}
+        if (isLocalPlayer && isClientOnly)
+            RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
 
         NamePlayer(world);
+        world.JoinPlayer(gameObject); // must NamePlayer (create player) before adding to world
 
-        if(!Settings.OnlinePlay)
+        if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
 
         voxelCollider = GetComponent<PlayerVoxelCollider>();
@@ -192,7 +192,7 @@ public class Controller : NetworkBehaviour
 
     private void Start()
     {
-        world.JoinPlayer(gameObject);
+        
 
         InputComponents();
 
@@ -201,7 +201,6 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            //timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
             // Import character model idle pose
             charObIdle = Instantiate(LDrawImportRuntime.Instance.charObIdle);
             charObIdle.SetActive(true);
@@ -250,13 +249,12 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public override void OnStartServer()
+    public override void OnStartServer() // Only called on Server and Host
     {
         base.OnStartServer();
 
         // SET SERVER VALUES FROM HOST CLIENT
-        lighting.controller = this;
-        //timeOfDayServer = SettingsStatic.LoadedSettings.timeOfDay;
+        lighting.controller = this; // tells lighting to update timeOfDayServer for server only
 
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
@@ -276,14 +274,12 @@ public class Controller : NetworkBehaviour
         customNetworkManager.InitWorld();
     }
 
-    public override void OnStartClient()
+    public override void OnStartClient() // Only called on Client and Host
     {
         base.OnStartClient();
 
-        // SET CLIENT SYNCVAR FROM SERVER
-        //SetTime(timeOfDayServer, timeOfDayServer);
-
-        if (isClientOnly) // GAME LOAD VALIDATION FOR ONLINE PLAY
+        // Check if client version matches versionServer SyncVar (SyncVars are updated before OnStartClient()
+        if (isClientOnly)
         {
             if (Application.version != versionServer) // if client version does not match server version, show error.
                 ErrorMessage.Show("Error: Version mismatch. " + Application.version + " != " + versionServer + ". Client game version must match host. Disconnecting Client.");
@@ -295,7 +291,7 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        SetName(playerName, playerName);
+        SetName(playerName, playerName); // called on both clients and host
 
         if (isClientOnly)
             customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
@@ -359,7 +355,7 @@ public class Controller : NetworkBehaviour
         }
         world.worldData.planetNumber = planetNumberServer;
         world.worldData.seed = seedServer;
-        SaveWorld(world.worldData, false); // save chunks to disk before loading world
+        SaveWorld(world.worldData); // save chunks to disk before loading world
     }
 
     public void SetName(string oldValue, string newValue)
@@ -1334,30 +1330,31 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public void RequestSaveWorld(bool savePlayerData)
+    public void RequestSaveWorld()
     {
         if (Settings.OnlinePlay && hasAuthority)
-            CmdSaveWorld(savePlayerData);
+            CmdSaveWorld();
         else
-            SaveWorld(World.Instance.worldData, savePlayerData);
+            SaveWorld(World.Instance.worldData);
     }
 
     [Command]
-    public void CmdSaveWorld(bool savePlayerData)
+    public void CmdSaveWorld()
     {
         // tells the server to make all clients (including host client) save the world (moved here since the gameMenu cannot have a network identity).
-        RpcSaveWorld(World.Instance.worldData, savePlayerData);
+        RpcSaveWorld();
     }
 
     [ClientRpc]
-    public void RpcSaveWorld(WorldData worldData, bool savePlayerData)
+    public void RpcSaveWorld()
     {
-        // server host and clients must save world before clients disconnect
-        SaveWorld(worldData, savePlayerData);
+        // tells all clients (including host client) to save the world data if they have any
+        if(World.Instance != null) // World.Instance == null for new clients that just joined
+            SaveWorld(World.Instance.worldData);
     }
 
-    public void SaveWorld(WorldData worldData, bool savePlayerData)
+    public void SaveWorld(WorldData worldData)
     {
-        SaveSystem.SaveWorld(worldData, world, savePlayerData);
+        SaveSystem.SaveWorld(worldData, world); // save specified worldData to disk (must pass in worldData since, clients set modified chunks from server)
     }
 }

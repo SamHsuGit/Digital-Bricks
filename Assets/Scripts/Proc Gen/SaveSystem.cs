@@ -6,7 +6,7 @@ using System.Threading;
 
 public static class SaveSystem
 {
-    public static void SaveWorld(WorldData worldData, World world, bool savePlayerData)
+    public static void SaveWorld(WorldData worldData, World world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
         string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetNumber + "-" + worldData.seed + "/";
@@ -22,8 +22,7 @@ public static class SaveSystem
         formatter.Serialize(stream, worldData);
         stream.Close();
 
-        if (savePlayerData)
-            SavePlayerStats(world, savePath);
+        SavePlayerStats(world, savePath);
 
         Thread thread = new Thread(() => SaveChunks(worldData));
         thread.Start();
@@ -217,7 +216,7 @@ public static class SaveSystem
         {
 
             WorldData worldData = new WorldData(planetNumber, seed);
-            SaveWorld(worldData, World.Instance, false);
+            SaveWorld(worldData, World.Instance);
 
             return worldData;
         }

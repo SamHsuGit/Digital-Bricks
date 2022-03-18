@@ -251,10 +251,9 @@ public class World : MonoBehaviour
         {
             if(Settings.OnlinePlay && baseObString != null)
             {
-                baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base)
+                baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
                 LDrawImportRuntime.Instance.baseOb = baseOb;
                 baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
-                //baseOb.SetActive(false);
             }
 
             blocktypes[25].voxelBoundObject = baseOb;

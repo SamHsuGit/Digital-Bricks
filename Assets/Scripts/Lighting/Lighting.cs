@@ -25,6 +25,12 @@ public class Lighting : MonoBehaviour
 
     //NOTE: MacBook Air requires Gamma Color Space. Cannot use Linear.
 
+    private void Awake()
+    {
+        if (!Settings.OnlinePlay)
+            timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
+    }
+
     private void FixedUpdate()
     {
         if (Settings.OnlinePlay && controller != null)
