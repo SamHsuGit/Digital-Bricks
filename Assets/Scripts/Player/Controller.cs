@@ -140,7 +140,7 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (Settings.OnlinePlay && hasAuthority)
+        if (Settings.OnlinePlay)
         {
             RequestSaveWorld(); // When client joins, requests that host saves the game
             CmdSetServerChunkStringSyncVar(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
