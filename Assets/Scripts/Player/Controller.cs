@@ -140,7 +140,9 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
+        if (isLocalPlayer && isClientOnly)
+            RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
+
         SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
 
         if (!Settings.OnlinePlay)
@@ -308,6 +310,7 @@ public class Controller : NetworkBehaviour
         tpsDist = -cc.radius * 4;
     }
 
+    [Client]
     public void SetPlanetNumberServer(int oldValue, int newValue)
     {
         SettingsStatic.LoadedSettings.planetNumber = newValue;
@@ -315,6 +318,7 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().worldData.planetNumber = newValue;
     }
 
+    [Client]
     public void SetSeedServer(int oldValue, int newValue)
     {
         SettingsStatic.LoadedSettings.seed = newValue;
@@ -322,6 +326,7 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().worldData.seed = newValue;
     }
 
+    [Client]
     public void SetBaseServer(string oldValue, string newValue)
     {
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
@@ -403,6 +408,7 @@ public class Controller : NetworkBehaviour
         timeOfDayServer = lighting.timeOfDay; // update serverTime from lighting component
     }
 
+    [Client]
     public void SetTime(float oldValue, float newValue)
     {
         lighting.timeOfDay = newValue;
