@@ -140,10 +140,11 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (isLocalPlayer)
+        if (Settings.OnlinePlay && isLocalPlayer)
         {
             RequestSaveWorld(); // Server must save when client joins
-            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins
+            if(hasAuthority)
+                CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins
         }
 
         if (!Settings.OnlinePlay)
