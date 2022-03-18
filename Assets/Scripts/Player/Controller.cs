@@ -140,8 +140,11 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
-        CmdSetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
+        if (isLocalPlayer && isClientOnly)
+        {
+            RequestSaveWorld(); // Server must save when client joins
+            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins
+        }
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -257,6 +260,8 @@ public class Controller : NetworkBehaviour
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
 
+        SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
+
         customNetworkManager.InitWorld();
     }
     
@@ -330,6 +335,11 @@ public class Controller : NetworkBehaviour
 
     [Command]
     public void CmdSetServerChunkStringSyncVar()
+    {
+        SetServerChunkStringSyncVar();
+    }
+
+    public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
         List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
