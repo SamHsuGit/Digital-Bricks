@@ -141,7 +141,10 @@ public class Controller : NetworkBehaviour
         NamePlayer(world);
 
         if (isLocalPlayer && isClientOnly)
+        {
             RequestSaveWorld(); // Client ask Server to save chunks before updating SyncVar with latest worldData
+            CmdSetServerChunkStringSyncVar(); // Client ask server to send updated chunkStringSyncVar to clients
+        }
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -252,26 +255,14 @@ public class Controller : NetworkBehaviour
         base.OnStartServer();
 
         // SET SERVER VALUES FROM HOST CLIENT
-        //lighting.controller = this; // tells lighting to update timeOfDayServer for server only
-
         planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
         seedServer = SettingsStatic.LoadedSettings.seed;
-
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
-        // encode the list of chunkStrings into a single string that is auto-serialized by mirror
-        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
-        string chunksServerCombinedString = string.Empty;
-        for (int i = 0; i < chunksList.Count; i++)
-        {
-            chunksServerCombinedString += chunksList[i];
-            chunksServerCombinedString += ';'; // has to be a single char to be able to split later on client side
-        }
-        chunksServer = chunksServerCombinedString;
-
         versionServer = Application.version;
+
         customNetworkManager.InitWorld();
     }
-
+    
     public override void OnStartClient() // Only called on Client and Host
     {
         base.OnStartClient();
@@ -339,6 +330,20 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
     }
 
+    [Command]
+    public void CmdSetServerChunkStringSyncVar()
+    {
+        // encode the list of chunkStrings into a single string that is auto-serialized by mirror
+        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
+        string chunksServerCombinedString = string.Empty;
+        for (int i = 0; i < chunksList.Count; i++)
+        {
+            chunksServerCombinedString += chunksList[i];
+            chunksServerCombinedString += ';'; // has to be a single char to be able to split later on client side
+        }
+        chunksServer = chunksServerCombinedString;
+    }
+
     public void SetChunksServer(string oldValue, string newValue)
     {
         string[] serverChunks = newValue.Split(';'); // splits individual chunk strings using ';' char delimiter
@@ -398,6 +403,7 @@ public class Controller : NetworkBehaviour
     public void SetTime(float oldValue, float newValue)
     {
         lighting.timeOfDay = newValue;
+        Debug.Log("timeOfDayServerSyncVar = " + newValue);
     }
 
     public void SetIsMoving(bool oldValue, bool newValue)
