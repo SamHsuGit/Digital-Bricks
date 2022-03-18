@@ -27,7 +27,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetPlanetNumberServer))] private int planetNumberServer;
     [SyncVar(hook = nameof(SetSeedServer))] private int seedServer;
     [SyncVar(hook = nameof(SetBaseServer))] private string baseServer;
-    [SyncVar(hook = nameof(SetChunksServer))] private string chunksServer;
+    [SyncVar(hook = nameof(SaveChunks))] private string chunksServer;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -145,8 +145,9 @@ public class Controller : NetworkBehaviour
             RequestSaveWorld(); // When client joins, requests that host saves the game
 
             // For some reason, can't get this to run on clients... (supposed to make server resend chunkStringSyncVar)
-            string tempStringServerChunks = CmdSetServerChunkStringSyncVar(); // When client joins, requests that host returns latest chunks as string (triggers SyncVar update which occurs before OnStartClient())
-            SetChunksServer(tempStringServerChunks, tempStringServerChunks); // manually sets value of new chunkString
+            CmdSetServerChunkStringSyncVar(); // When client joins, requests that host sends latest saved chunks as string (triggers SyncVar update which occurs before OnStartClient())
+            // after client sends chunksServer string SyncVar, the syncVars do not update as required to have clients then save the chunks to memory...
+            //SaveChunks(chunksServer, chunksServer);
         }
 
         if (!Settings.OnlinePlay)
@@ -337,19 +338,13 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public string CmdSetServerChunkStringSyncVar()
+    public void CmdSetServerChunkStringSyncVar()
     {
-        // encode the list of chunkStrings into a single string that is auto-serialized by mirror
-        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
-        string chunksServerCombinedString = string.Empty;
-        for (int i = 0; i < chunksList.Count; i++)
-        {
-            chunksServerCombinedString += chunksList[i];
-            chunksServerCombinedString += ';'; // has to be a single char to be able to split later on client side
-        }
-        return chunksServerCombinedString;
+        SetServerChunkStringSyncVar();
+        Debug.Log("CmdSetServerChunkStringSyncVar"); // this command doesn't fire from client for some reason...
     }
 
+    [Server]
     public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
@@ -363,7 +358,7 @@ public class Controller : NetworkBehaviour
         chunksServer = chunksServerCombinedString;
     }
 
-    public void SetChunksServer(string oldValue, string newValue)
+    public void SaveChunks(string oldValue, string newValue)
     {
         string[] serverChunks = newValue.Split(';'); // splits individual chunk strings using ';' char delimiter
         World world = customNetworkManager.worldOb.GetComponent<World>();
