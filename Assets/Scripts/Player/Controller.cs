@@ -1359,7 +1359,6 @@ public class Controller : NetworkBehaviour
     public void CmdSaveWorld()
     {
         // tells the server to make all clients (including host client) save the world (moved here since the gameMenu cannot have a network identity).
-        SetServerChunkStringSyncVar(); // server sets new syncVar upon save
         RpcSaveWorld();
     }
 
