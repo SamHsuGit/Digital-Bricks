@@ -278,7 +278,7 @@ public class Controller : NetworkBehaviour
         base.OnStartClient();
 
         // SET CLIENT SYNCVAR FROM SERVER
-        SetTime(timeOfDayServer, timeOfDayServer);
+        //SetTime(timeOfDayServer, timeOfDayServer);
 
         if (isClientOnly) // GAME LOAD VALIDATION FOR ONLINE PLAY
         {
