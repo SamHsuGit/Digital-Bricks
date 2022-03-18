@@ -143,7 +143,7 @@ public class Controller : NetworkBehaviour
         if (Settings.OnlinePlay)
         {
             RequestSaveWorld(); // When client joins, requests that host saves the game
-            CmdSetServerChunkStringSyncVar(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
+            RequestServerSendChunks(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
         }
 
         if (!Settings.OnlinePlay)
@@ -331,6 +331,13 @@ public class Controller : NetworkBehaviour
     public void SetBaseServer(string oldValue, string newValue)
     {
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
+    }
+
+    [Client]
+    public void RequestServerSendChunks()
+    {
+        if(isLocalPlayer)
+            CmdSetServerChunkStringSyncVar();
     }
 
     [Command]
