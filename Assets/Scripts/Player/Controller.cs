@@ -270,7 +270,7 @@ public class Controller : NetworkBehaviour
         chunksServer = chunksServerCombinedString;
 
         versionServer = Application.version;
-        customNetworkManager.InitWorld();
+        //customNetworkManager.InitWorld();
     }
 
     public override void OnStartClient() // happens after world is instantiated
@@ -399,8 +399,7 @@ public class Controller : NetworkBehaviour
 
     public void SetTime(float oldValue, float newValue)
     {
-        if(isClientOnly)
-            lighting.timeOfDay = newValue;
+        lighting.timeOfDay = newValue;
     }
 
     public void SetIsMoving(bool oldValue, bool newValue)
