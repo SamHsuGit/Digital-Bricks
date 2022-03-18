@@ -140,13 +140,13 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (Settings.OnlinePlay && hasAuthority)
+        if (Settings.OnlinePlay && isLocalPlayer)
         {
             RequestSaveWorld(); // When client joins, requests that host saves the game
 
             // For some reason, can't get this to run on clients... (supposed to make server resend chunkStringSyncVar)
-            //if(isServer)
-                SetServerChunkStringSyncVar(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient())
+            string tempStringServerChunks = CmdSetServerChunkStringSyncVar(); // When client joins, requests that host returns latest chunks as string (triggers SyncVar update which occurs before OnStartClient())
+            SetChunksServer(tempStringServerChunks, tempStringServerChunks); // manually sets value of new chunkString
         }
 
         if (!Settings.OnlinePlay)
@@ -337,13 +337,19 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSetServerChunkStringSyncVar()
+    public string CmdSetServerChunkStringSyncVar()
     {
-        SetServerChunkStringSyncVar();
-        Debug.Log("CmdSetServerChunkStringSyncVar"); // cannot get this code to run for some reason
+        // encode the list of chunkStrings into a single string that is auto-serialized by mirror
+        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
+        string chunksServerCombinedString = string.Empty;
+        for (int i = 0; i < chunksList.Count; i++)
+        {
+            chunksServerCombinedString += chunksList[i];
+            chunksServerCombinedString += ';'; // has to be a single char to be able to split later on client side
+        }
+        return chunksServerCombinedString;
     }
 
-    [Server]
     public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
