@@ -140,11 +140,11 @@ public class Controller : NetworkBehaviour
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
         NamePlayer(world);
 
-        if (Settings.OnlinePlay && isLocalPlayer)
-        {
-            RequestSaveWorld(); // When client joins, requests that host saves the game
-            RequestServerSendChunks(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
-        }
+        //if (Settings.OnlinePlay && isLocalPlayer)
+        //{
+        //    RequestSaveWorld(); // When client joins, requests that host saves the game
+        //    CmdSetServerChunkStringSyncVar(); // When client joins, requests that host sends latest chunks from disk (triggers SyncVar update which occurs before OnStartClient()) WHY DOESN'T THIS RUN???
+        //}
 
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
@@ -260,7 +260,7 @@ public class Controller : NetworkBehaviour
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
 
-        SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
+        //SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
 
         customNetworkManager.InitWorld();
     }
@@ -268,6 +268,9 @@ public class Controller : NetworkBehaviour
     public override void OnStartClient() // Only called on Client and Host
     {
         base.OnStartClient();
+
+        RequestSaveWorld(); // When client joins, requests that host saves the game
+        CmdSetServerChunkStringSyncVar();
 
         // Check if client version matches versionServer SyncVar (SyncVars are updated before OnStartClient()
         if (isClientOnly)
@@ -331,13 +334,6 @@ public class Controller : NetworkBehaviour
     public void SetBaseServer(string oldValue, string newValue)
     {
         customNetworkManager.worldOb.GetComponent<World>().baseObString = newValue;
-    }
-
-    [Client]
-    public void RequestServerSendChunks()
-    {
-        if (hasAuthority)
-            CmdSetServerChunkStringSyncVar();
     }
 
     [Command]
