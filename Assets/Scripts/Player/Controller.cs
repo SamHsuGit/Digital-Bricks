@@ -143,7 +143,7 @@ public class Controller : NetworkBehaviour
         if (Settings.OnlinePlay && isLocalPlayer)
         {
             RequestSaveWorld(); // Server must save when client joins
-            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins
+            CmdSetServerChunkStringSyncVar(); // Server must send latest chunks when client joins (needs to get called before World Init and triggers SyncVar update)
         }
 
         if (!Settings.OnlinePlay)
@@ -260,7 +260,7 @@ public class Controller : NetworkBehaviour
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
 
-        SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
+        //SetServerChunkStringSyncVar(); // Server sends updated chunkStringSyncVar to clients
 
         customNetworkManager.InitWorld();
     }
@@ -268,9 +268,6 @@ public class Controller : NetworkBehaviour
     public override void OnStartClient() // Only called on Client and Host
     {
         base.OnStartClient();
-
-        if (!isClientOnly)
-            SetServerChunkStringSyncVar(); // host must send latest chunks when client joins
 
         // Check if client version matches versionServer SyncVar (SyncVars are updated before OnStartClient()
         if (isClientOnly)
