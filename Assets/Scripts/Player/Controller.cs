@@ -77,55 +77,56 @@ public class Controller : NetworkBehaviour
     public GameObject charObRun;
     public World world;
 
-    Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
+    private Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
-    Vector3 velocityPlayer;
+    private Vector3 velocityPlayer;
     private Transform removePos;
     private Transform shootPos;
     private Transform placePos;
     private Transform holdPos;
-    GameObject grabbedPrefab;
+    private GameObject grabbedPrefab;
 
     //Components
-    GameManagerScript gameManager;
-    GameObject playerCameraOrigin;
-    LookAtConstraint lookAtConstraint;
-    CapsuleCollider cc;
-    Rigidbody rb;
-    BoxCollider bc;
-    PlayerVoxelCollider voxelCollider;
-    Animator animator;
-    PlayerInput playerInput;
-    InputHandler inputHandler;
-    Health health;
-    Gun gun;
-    CanvasGroup backgroundMaskCanvasGroup;
-    GameMenu gameMenuComponent;
-    BoxCollider playerCameraBoxCollider;
-    PlayerVoxelCollider playerCameraVoxelCollider;
-    PPFXSetValues worldPPFXSetValues;
-    CharacterController charController;
-    PhysicMaterial physicMaterial;
-    CustomNetworkManager customNetworkManager;
-    Lighting lighting;
-    GameObject undefinedPrefabToSpawn;
-    RaycastHit raycastHit;
-    GameObject hitOb;
-    Rigidbody heldObRb;
+    private GameManagerScript gameManager;
+    private GameObject playerCameraOrigin;
+    private LookAtConstraint lookAtConstraint;
+    private CapsuleCollider cc;
+    private Rigidbody rb;
+    private BoxCollider bc;
+    private PlayerVoxelCollider voxelCollider;
+    private Animator animator;
+    private PlayerInput playerInput;
+    private InputHandler inputHandler;
+    private Health health;
+    private Gun gun;
+    private CanvasGroup backgroundMaskCanvasGroup;
+    private GameMenu gameMenuComponent;
+    private BoxCollider playerCameraBoxCollider;
+    private PlayerVoxelCollider playerCameraVoxelCollider;
+    private PPFXSetValues worldPPFXSetValues;
+    private CharacterController charController;
+    private PhysicMaterial physicMaterial;
+    private CustomNetworkManager customNetworkManager;
+    private Lighting lighting;
+    private GameObject undefinedPrefabToSpawn;
+    private RaycastHit raycastHit;
+    private GameObject hitOb;
+    private Rigidbody heldObRb;
 
     //Initializers & Constants
-    float colliderHeight;
-    float colliderRadius;
-    Vector3 colliderCenter;
-    float sphereCastRadius;
-    float rotationY = 0f;
-    float rotationX = 0f;
-    float maxLookVelocity = 5f;
-    float maxCamAngle = 90f;
-    float minCamAngle = -90f;
-    bool daytime = true;
-    float nextTimeToAnim = 0;
-    List<Material> cachedMaterials = new List<Material>();
+    private float colliderHeight;
+    private float colliderRadius;
+    private Vector3 colliderCenter;
+    private Vector3 rayCastStart;
+    private float sphereCastRadius;
+    private float rotationY = 0f;
+    private float rotationX = 0f;
+    private float maxLookVelocity = 5f;
+    private float maxCamAngle = 90f;
+    private float minCamAngle = -90f;
+    private bool daytime = true;
+    private float nextTimeToAnim = 0;
+    private List<Material> cachedMaterials = new List<Material>();
 
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
     // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
@@ -306,7 +307,7 @@ public class Controller : NetworkBehaviour
         charController.center = colliderCenter;
 
         // position camera procedurally based on imported char model size
-        playerCamera.transform.parent.transform.localPosition = new Vector3(0, colliderCenter.y * 1.8f, 0);
+        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f;
         playerCamera.GetComponent<Camera>().nearClipPlane = 0.01f;
 
         // position nametag procedurally based on imported char model size
@@ -482,6 +483,8 @@ public class Controller : NetworkBehaviour
             {
                 case 1: // FIRST PERSON CAMERA
                     {
+                        rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
+
                         if (charObIdle != null && charObIdle.activeSelf)
                             charObIdle.SetActive(false);
                         if (charObRun != null && charObRun.activeSelf)
@@ -511,6 +514,8 @@ public class Controller : NetworkBehaviour
                     }
                 case 2: // THIRD PERSON CAMERA
                     {
+                        rayCastStart = transform.position + transform.up * colliderHeight * 0.75f + transform.forward * colliderRadius * 4;
+
                         if (charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.flight)
                         {
                             charObIdle.SetActive(true);
@@ -519,6 +524,24 @@ public class Controller : NetworkBehaviour
 
                         SetDOF();
                         SetTPSDist();
+
+                        //// IF PRESSED GRAB
+                        //if (!holdingGrab && inputHandler.grab)
+                        //    PressedGrab();
+
+                        //// IF HOLDING GRAB
+                        //if (holdingGrab && inputHandler.grab)
+                        //    HoldingGrab();
+
+                        // IF PRESSED SHOOT
+                        if (inputHandler.shoot)
+                            pressedShoot();
+
+                        //// IF RELEASED GRAB
+                        //if (holdingGrab && !inputHandler.grab)
+                        //    ReleasedGrab();
+
+                        //positionCursorBlocks();
 
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
@@ -534,6 +557,8 @@ public class Controller : NetworkBehaviour
                     }
                 case 3: // PHOTO MODE
                     {
+                        rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
+
                         if (charObIdle != null && !charObIdle.activeSelf)
                             charObIdle.SetActive(true);
                         if (charObRun != null && charObRun.activeSelf)
@@ -596,9 +621,9 @@ public class Controller : NetworkBehaviour
         else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
         {
             if(Settings.OnlinePlay)
-                CmdSpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4);
+                CmdSpawnObject(2, 0, rayCastStart);
             else
-                SpawnObject(2, 0, playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4);
+                SpawnObject(2, 0, rayCastStart);
             TakeFromCurrentSlot(1);
         }
         else if (holdingGrab) // IF HOLDING SOMETHING
@@ -919,14 +944,20 @@ public class Controller : NetworkBehaviour
 
     public void SpawnObject(int type, int item, Vector3 pos, GameObject obToSpawn = null)
     {
+        Vector3 spawnDir;
+        if (camMode == 1) // first person camera spawn object in direction camera
+            spawnDir = playerCamera.transform.forward;
+        else // all other camera modes, spawn object in direction of playerObject
+            spawnDir = transform.forward;
+
         GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
         Rigidbody rb;
 
-        ob.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward); // orient forwards in direction of camera
+        ob.transform.rotation = Quaternion.LookRotation(spawnDir); // orient forwards in direction of camera
         rb = ob.GetComponent<Rigidbody>();
         rb.mass = health.piecesRbMass;
         rb.isKinematic = false;
-        rb.velocity = playerCamera.transform.forward * 25; // give some velocity away from where player is looking
+        rb.velocity = spawnDir * 25; // give some velocity away from where player is looking
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
         GameObject childOb;
@@ -1083,7 +1114,15 @@ public class Controller : NetworkBehaviour
         float step = checkIncrement;
         Vector3 lastPos = new Vector3();
 
-        while (step < grabDist) // All position cursor blocks must be within same loop or causes lag where multiple loops cannot be run at same time (else use a coroutine)
+        // adjust distCheck based on how far the camera is from camOrigin (3rd person cam)
+        float distCheck;
+        if (camMode == 1)
+            distCheck = grabDist;
+        else
+            distCheck = (grabDist + grabDist * (playerCamera.transform.position - playerCameraOrigin.transform.position).magnitude) * 0.75f; // broken does not work
+
+        // All position cursor blocks must be within same loop or causes lag where multiple loops cannot be run at same time (else use a coroutine)
+        while (step < distCheck)
         {
             Vector3 pos = playerCamera.transform.position + (playerCamera.transform.forward * step);
 
@@ -1282,13 +1321,14 @@ public class Controller : NetworkBehaviour
                     charController.enabled = false;
                     charController.enabled = true;
 
+                    playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f;
                     playerCamera.transform.localPosition = Vector3.zero; // reset camera position
                     playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face forwards
                     break;
                 }
             case 2: // THIRD PERSON CAMERA MODE
                 {
-                    playerHUD.SetActive(false);
+                    playerHUD.SetActive(true);
                     CinematicBars.SetActive(true);
 
                     if (Settings.OnlinePlay)
@@ -1299,7 +1339,8 @@ public class Controller : NetworkBehaviour
                     charController.enabled = false;
                     charController.enabled = true;
 
-                    playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist); // move camera behind character over shoulder
+                    playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.2f;
+                    playerCamera.transform.localPosition = new Vector3(0, colliderHeight, tpsDist); // move camera behind character over shoulder
                     playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face fowards
                     break;
                 }
@@ -1341,8 +1382,13 @@ public class Controller : NetworkBehaviour
                     animRate = baseAnimRate;
 
                 nextTimeToAnim = Time.time + 1f / animRate;
-                charObIdle.SetActive(!charObIdle.activeSelf);
-                charObRun.SetActive(!charObRun.activeSelf);
+
+                charObIdle.SetActive(false);
+                charObRun.SetActive(true);
+
+                //// Toggles between run and idle state to simulate low fps animation
+                //charObIdle.SetActive(!charObIdle.activeSelf);
+                //charObRun.SetActive(!charObRun.activeSelf);
             }
             else
             {

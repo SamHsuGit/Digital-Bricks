@@ -22,6 +22,7 @@ public class Gun : NetworkBehaviour
     CanvasGroup backgroundMaskCanvasGroup;
     public RaycastHit hit;
 
+    private Vector3 sphereCastStart;
     private Image image;
 
     private void Awake()
@@ -39,7 +40,20 @@ public class Gun : NetworkBehaviour
         target = null; // reset target
         target = FindTarget(); // get target gameObject
 
-        if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && controller.camMode == 1)
+        switch (controller.camMode)
+        {
+            case 1:
+                sphereCastStart = fpsCam.transform.position;
+                break;
+            case 2:
+                sphereCastStart = controller.playerCamera.transform.parent.transform.position;
+                break;
+            case 3:
+                sphereCastStart = controller.playerCamera.transform.parent.transform.position;
+                break;
+        }
+
+        if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
         {
             if (inputHandler.shoot)
             {
@@ -56,7 +70,7 @@ public class Gun : NetworkBehaviour
         image.color = Color.HSVToRGB(0, 0, 50, true);
 
         //if hit something
-        if (Physics.SphereCast(fpsCam.transform.position, sphereCastRadius, fpsCam.transform.forward, out hit, controller.grabDist))
+        if (Physics.SphereCast(sphereCastStart, sphereCastRadius, fpsCam.transform.forward, out hit, controller.grabDist))
         {
             if (hit.transform.GetComponent<Health>() != null)
                 target = hit.transform.GetComponent<Health>();
