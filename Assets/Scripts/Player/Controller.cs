@@ -654,7 +654,7 @@ public class Controller : NetworkBehaviour
             hitOb = null;
             heldObRb = null;
         }
-        else if (shootPos.gameObject.activeSelf) // IF SHOT WORLD (NOT HELD) VOXEL
+        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
         {
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id;
