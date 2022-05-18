@@ -145,6 +145,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
@@ -162,6 +163,33 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1341741426118646166}
     m_Modifications:
+    - target: {fileID: 6976479444726254940, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
+      propertyPath: m_text
+      value: 'Procedural Generation
+
+        B3agz
+
+
+        Modelling
+
+        The
+        LDraw.org Community
+
+
+        LDraw Model Importer
+
+        Grygory Dyadichenko
+
+
+        Multiplayer
+        Networking
+
+        vis2k'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976479444726551088, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6976479446632540400, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
       propertyPath: m_Pivot.x
       value: 0

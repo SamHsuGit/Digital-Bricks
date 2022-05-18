@@ -14,7 +14,6 @@ public class GameMenu : MonoBehaviour
     public Dropdown graphicsQualityDropdown;
     public Toggle fullScreenToggle;
     public Toggle invertYToggle;
-    public Toggle invertXToggle;
     public GameObject player;
     public GameObject playerCamera;
     public AudioMixer masterAudioMixer;
@@ -61,7 +60,6 @@ public class GameMenu : MonoBehaviour
         fovSlider.value = SettingsStatic.LoadedSettings.fov;
         fullScreenToggle.isOn = SettingsStatic.LoadedSettings.fullscreen;
         invertYToggle.isOn = SettingsStatic.LoadedSettings.invertY;
-        invertXToggle.isOn = SettingsStatic.LoadedSettings.invertX;
         UpdateHP();
 
         uac = playerCamera.GetComponent<Camera>().GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
@@ -217,12 +215,6 @@ public class GameMenu : MonoBehaviour
     {
         buttonSound.Play();
         SettingsStatic.LoadedSettings.invertY = value;
-    }
-
-    public void SetInvertX(bool value)
-    {
-        buttonSound.Play();
-        SettingsStatic.LoadedSettings.invertX = value;
     }
 
     public void ToggleControls()

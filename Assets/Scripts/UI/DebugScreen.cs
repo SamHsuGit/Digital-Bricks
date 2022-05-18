@@ -42,7 +42,7 @@ public class DebugScreen : MonoBehaviour
             //debugText += "\n";
             //debugText += "w: " + World.Instance.weirdness; // disabled, can see this in inspector
             //debugText += "\n";
-            debugText += "Y = Show Controls";
+            debugText += "F3 (Xbox: Y) = Show Controls";
 
             text.text = debugText;
 

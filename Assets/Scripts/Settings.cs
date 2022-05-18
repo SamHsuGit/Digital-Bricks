@@ -25,7 +25,6 @@ public static class SettingsStatic
         settings.lookAccel = 0.1f;
         settings.fov = 90f;
         settings.invertY = false;
-        settings.invertX = false;
         settings.fullscreen = true;
         settings.planetNumber = 3;
         settings.seed = 1;
@@ -72,7 +71,6 @@ public class Settings
     public float fov;
     //public int graphicsQuality;
     public bool invertY;
-    public bool invertX;
     public bool fullscreen;
 
     [Header("World Gen")]

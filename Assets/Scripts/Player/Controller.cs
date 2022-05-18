@@ -1274,10 +1274,7 @@ public class Controller : NetworkBehaviour
             lookVelocity = 1f;
 
         // rotate camera left/right, multiply by lookVelocity so controller players get look accel
-        if (!SettingsStatic.LoadedSettings.invertX)
-            rotationX += inputHandler.look.x * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
-        else
-            rotationX += -inputHandler.look.x * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
+        rotationX += inputHandler.look.x * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
 
         // rotate camera up/down, multiply by lookVelocity so controller players get look accel
         if (!SettingsStatic.LoadedSettings.invertY)
