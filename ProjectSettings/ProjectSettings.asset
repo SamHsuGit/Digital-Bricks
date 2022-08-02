@@ -685,12 +685,12 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: LDPlay
-  metroPackageVersion: 0.50.0.0
+  metroPackageVersion: 0.53.0.0
   metroCertificatePath: Assets/WSATestCertificate.pfx
-  metroCertificatePassword: "@ikc\x7F8ai"
+  metroCertificatePassword: "@ikc\x7F8ai3"
   metroCertificateSubject: Sam Hsu
   metroCertificateIssuer: Sam Hsu
-  metroCertificateNotAfter: 004dcf2dc1ced801
+  metroCertificateNotAfter: 005963a629c5d901
   metroApplicationDescription: LDPlay
   wsaImages:
     65636: Assets/AssetFiles/Images/Logo/LogoBlack50x50.png
