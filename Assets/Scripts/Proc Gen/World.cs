@@ -446,7 +446,10 @@ public class World : MonoBehaviour
     public void LoadWorld()
     {
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
-        loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
+        if (VoxelData.WorldSizeInChunks <= 10)
+            loadDistance = SettingsStatic.LoadedSettings.viewDistance;
+        else
+            loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
         LOD0threshold = 1; // Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 0.333f);
 
         for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
@@ -771,6 +774,9 @@ public class World : MonoBehaviour
         /* IMMUTABLE PASS */
         // If outside world, return air.
         if (!IsVoxelInWorld(globalPos))
+            return 0;
+
+        if (!IsVoxelInsideBorder(globalPos)) // return air at world border to enable edges to render all faces
             return 0;
 
         // planet 0, seed 0 is a blank canvas for building around the imported ldraw file
@@ -1410,6 +1416,17 @@ public class World : MonoBehaviour
     public bool IsVoxelInWorld(Vector3 pos)
     {
         if (pos.x >= 0 && pos.x < VoxelData.WorldSizeInVoxels && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < VoxelData.WorldSizeInVoxels)
+            return true;
+        else
+            return false;
+    }
+
+    public bool IsVoxelInsideBorder(Vector3 pos)
+    {
+        if (pos.x >= 0 && pos.x <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth && pos.y >= 0 && pos.y <= VoxelData.ChunkHeight && pos.z >= 0 && pos.z <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth)
+        //if (Mathf.Abs(pos.x) >= -SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2 && pos.x <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2
+        //    && pos.y >= 0 || pos.y <= VoxelData.ChunkHeight
+        //    && pos.z >= -SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2 && pos.z <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2)
             return true;
         else
             return false;
