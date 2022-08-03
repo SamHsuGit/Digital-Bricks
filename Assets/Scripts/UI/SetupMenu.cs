@@ -97,6 +97,9 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.flight = toggleFlight.isOn;
         SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
 
+        if(SettingsStatic.LoadedSettings.worldSizeinChunks < 5) // hard limit on how many chunks can render at low end due to load and draw issues with low # of chunks
+            SettingsStatic.LoadedSettings.worldSizeinChunks = 5;
+
         try
         {
             int result = int.Parse(planetInputField.text); // Int32 can hold up to 2,147,483,647 numbers

@@ -26,6 +26,7 @@ public class Controller : NetworkBehaviour
     // These server values cannot be set in controller since world is activated before controller, merely included here to check states match
     [SyncVar(hook = nameof(SetPlanetNumberServer))] private int planetNumberServer;
     [SyncVar(hook = nameof(SetSeedServer))] private int seedServer;
+    [SyncVar(hook = nameof(SetWorldSizeInChunksServer))] private int worldSizeInChunksServer;
     [SyncVar(hook = nameof(SetBaseServer))] private string baseServer;
     [SyncVar(hook = nameof(SaveChunks))] private string chunksServer;
 
@@ -332,6 +333,12 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().worldData.seed = newValue;
     }
 
+    public void SetWorldSizeInChunksServer(int oldValue, int newValue)
+    {
+        SettingsStatic.LoadedSettings.worldSizeinChunks = newValue;
+        customNetworkManager.worldOb.GetComponent<World>().worldData.sizeInChunks = newValue;
+    }
+
     [Client]
     public void SetBaseServer(string oldValue, string newValue)
     {
@@ -349,7 +356,7 @@ public class Controller : NetworkBehaviour
     public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
-        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer);
+        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer, worldSizeInChunksServer);
         string chunksServerCombinedString = string.Empty;
         for (int i = 0; i < chunksList.Count; i++)
         {
@@ -690,7 +697,7 @@ public class Controller : NetworkBehaviour
 
     void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
     {
-        if (blockID == 0 || blockID == 1 || blockID == 25 || blockID == 26) // if the blockID at position is air, barrier, base, procGenVBO, then skip to next position
+        if (!World.Instance.IsGlobalPosInsideBorder(position) || blockID == 0 || blockID == 1 || blockID == 25 || blockID == 26) // if the blockID at position is air, barrier, base, procGenVBO, then skip to next position
             return;
 
         EditVoxel(position, 0, true); // destroy voxel at position
@@ -1208,7 +1215,7 @@ public class Controller : NetworkBehaviour
 
         if(camMode == 1)
         {
-            if (charController.enabled)
+            if (charController.enabled && World.Instance.IsGlobalPosInsideBorder(transform.position + velocityPlayer)) // keep player inside world borders
                 charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
 
             Vector2 rotation = CalculateRotation();
@@ -1221,7 +1228,7 @@ public class Controller : NetworkBehaviour
                 gameObject.transform.eulerAngles = new Vector3(0f, playerCameraOrigin.transform.rotation.eulerAngles.y, 0f); // rotate gameobject to face same y direction as camera
 
             // moves player object forwards
-            if (charController.enabled)
+            if (charController.enabled && World.Instance.IsGlobalPosInsideBorder(transform.position + velocityPlayer)) // keep player inside world borders
                 charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
 
             // rotate cameraOrigin around player model (LookAtConstraint ensures camera always faces center)

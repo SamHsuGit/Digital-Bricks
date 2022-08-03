@@ -7,6 +7,7 @@ public class WorldData
 {
     public int planetNumber;
     public int seed;
+    public int sizeInChunks;
     public int distToStar;
     public int system;
     public int galaxy;
@@ -56,10 +57,11 @@ public class WorldData
             modifiedChunks.Add(chunk);
     }
 
-    public WorldData (int planetNumber, int seed)
+    public WorldData (int planetNumber, int seed, int sizeInChunks)
     {
         this.planetNumber = planetNumber;
         this.seed = seed;
+        this.sizeInChunks = sizeInChunks;
     }
 
     public WorldData()
@@ -101,7 +103,7 @@ public class WorldData
         // assumes chunks.ContainsKey(coord) = false
 
         // attempt to load the chunk from memory (checks if file exists)
-        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed, coord); // can be slow if loading lots of chunks from memory?
+        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed, SettingsStatic.LoadedSettings.worldSizeinChunks, coord); // can be slow if loading lots of chunks from memory?
         if (chunk != null)
         {
             chunks.Add(coord, chunk);

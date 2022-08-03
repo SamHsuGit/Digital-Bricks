@@ -2,16 +2,25 @@ using UnityEngine;
 
 public static class VoxelData
 {
-	public static readonly int ChunkWidth = 16; // Lego World Chunk = 32x32 studs = 16x16 blocks
-	public static readonly int ChunkHeight = 96; // original Minecraft World Height Limit = 128, found that a smaller chunkHeight is needed to reduce world load times to under 15 seconds
-	public static readonly int WorldSizeInChunks = 5; // was 5000, reduced since limiting choices unleashes creativity. Lego Worlds "Medium" world size = 100x100 chunks, 5000x16 = 80,000 bricks (meters) long / 25 mps = 3,200s to fly across world (1,600s from center to border)
+	// Lego World Chunk = 32x32 studs = 16x16 blocks. Minecraft chunks also = 16 voxels... 16 is likely the most memory efficient chunk size.
+	public static readonly int ChunkWidth = 16;
+
+	// original Minecraft World Height Limit = 128, found that a smaller chunkHeight is needed to reduce world load times to under 15 seconds
+	public static readonly int ChunkHeight = 96;
+
+	// get this value from Settings instead of setting a static readonly int
+	// was 5000, reduced since limiting choices unleashes creativity.
+	// Lego Worlds "Medium" world size = 100x100 chunks, 5000x16 = 80,000 bricks (meters) long / 25 mps = 3,200s to fly across world (1,600s from center to border)
+	//public static readonly int WorldSizeInChunks = 5; 
+
+	// Voxel dimensions take up 1 unit of unity space and are cubic.
 	public static readonly float voxelWidth = 1.0f;
 	public static readonly float voxelHeight = 1.0f;
 	public static readonly float scale = 1.0f;
 
 	public static int WorldSizeInVoxels
 	{
-		get { return WorldSizeInChunks * ChunkWidth; }
+		get { return SettingsStatic.LoadedSettings.worldSizeinChunks * ChunkWidth; }
 	}
 
 	public static readonly int TextureAtlasSizeInBlocks = 16;

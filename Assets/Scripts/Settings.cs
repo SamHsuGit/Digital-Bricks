@@ -29,6 +29,8 @@ public static class SettingsStatic
         settings.planetNumber = 3;
         settings.seed = 1;
         settings.timeOfDay = 6.01f;
+        settings.worldSizeinChunks = 5;
+        settings.undrawVoxels = true;
         settings.playerName = "PlayerName";
         settings.flight = false;
 
@@ -77,6 +79,8 @@ public class Settings
     public int planetNumber;
     public int seed; // int yields numbers from 0 to 2,147,483,647 inclusively
     public float timeOfDay;
+    public int worldSizeinChunks;
+    public bool undrawVoxels;
 
     [Header("Player Customization")]
     public string playerName;

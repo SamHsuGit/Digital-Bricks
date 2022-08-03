@@ -71,7 +71,7 @@ public class World : MonoBehaviour
     public ChunkCoord firstChunkCoord;
     public bool firstChunkLoaded;
     public Dictionary<ChunkCoord, Chunk> chunks = new Dictionary<ChunkCoord, Chunk>();
-    public Chunk[,] chunksToDrawArray = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
+    public Chunk[,] chunksToDrawArray = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks];
     public List<ChunkCoord> chunkCoordsToDrawList = new List<ChunkCoord>();
     public Queue<Chunk> chunksToDrawQueue = new Queue<Chunk>();
     public List<Chunk> chunksToDrawList = new List<Chunk>();
@@ -112,9 +112,9 @@ public class World : MonoBehaviour
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         Random.InitState(seed);
 
-        // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
+        // initialized, reset when players join
+        undrawVoxels = false;
         undrawVoxelBoundObjects = false;
-        undrawVoxels = false; // does not redraw voxels if set to true...
 
         playerCount = 0;
 
@@ -134,7 +134,7 @@ public class World : MonoBehaviour
         else
             _instance = this;
 
-        firstChunkCoord = new ChunkCoord(VoxelData.WorldSizeInChunks / 2, VoxelData.WorldSizeInChunks / 2);
+        firstChunkCoord = new ChunkCoord(SettingsStatic.LoadedSettings.worldSizeinChunks / 2, SettingsStatic.LoadedSettings.worldSizeinChunks / 2);
 
         cloudHeight = VoxelData.ChunkHeight - 15;
 
@@ -202,7 +202,7 @@ public class World : MonoBehaviour
         playerGameObjects.Add(player, player.playerGameObject);
 
         // Set player position from save file
-        if (Settings.Platform != 2 && IsVoxelInWorld(player.spawnPosition)) // if the player position is in world
+        if (Settings.Platform != 2 && IsGlobalPosInsideBorder(player.spawnPosition)) // if the player position is in world border move to default spawn position
         {
             CharacterController charController = playerGameObject.GetComponent<CharacterController>();
             bool playerCharControllerActive = charController.enabled; // save active state of player character controller to reset to old value after teleport
@@ -233,6 +233,13 @@ public class World : MonoBehaviour
         playerCount++;
         //Debug.Log("Player Joined");
         //Debug.Log("playerCount = " + playerCount);
+
+        // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
+        if (Settings.OnlinePlay || playerCount <= 2) // for online play or singleplayer local
+            undrawVoxels = SettingsStatic.LoadedSettings.undrawVoxels; // allow user to determine if undraw voxels (true by default)
+        else
+            undrawVoxels = false; // cannot undraw voxels in local splitscreen
+        undrawVoxelBoundObjects = undrawVoxels; // set same as undrawVoxels
     }
 
     private void Start()
@@ -242,7 +249,7 @@ public class World : MonoBehaviour
             isEarth = true;
         else
             isEarth = false;
-        worldData = SaveSystem.LoadWorld(planetNumber, seed); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
+        worldData = SaveSystem.LoadWorld(planetNumber, seed, SettingsStatic.LoadedSettings.worldSizeinChunks); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
         WorldDataOverrides(planetNumber);
 
         if (Settings.Platform == 2)
@@ -446,15 +453,18 @@ public class World : MonoBehaviour
     public void LoadWorld()
     {
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
-        if (VoxelData.WorldSizeInChunks <= 10)
+        if (SettingsStatic.LoadedSettings.worldSizeinChunks < 100)
             loadDistance = SettingsStatic.LoadedSettings.viewDistance;
         else
             loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
+        //Debug.Log("WorldSizeInChunks = " + SettingsStatic.LoadedSettings.worldSizeinChunks);
+        //Debug.Log("View Distance = " + SettingsStatic.LoadedSettings.viewDistance);
+        //Debug.Log("Load Distance = " + loadDistance);
         LOD0threshold = 1; // Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 0.333f);
 
-        for (int x = (VoxelData.WorldSizeInChunks / 2) - loadDistance; x < (VoxelData.WorldSizeInChunks / 2) + loadDistance; x++)
+        for (int x = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; x < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; x++)
         {
-            for (int z = (VoxelData.WorldSizeInChunks / 2) - loadDistance; z < (VoxelData.WorldSizeInChunks / 2) + loadDistance; z++)
+            for (int z = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; z < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; z++)
                 worldData.RequestChunk(new Vector2Int(x, z));
         }
     }
@@ -773,10 +783,11 @@ public class World : MonoBehaviour
 
         /* IMMUTABLE PASS */
         // If outside world, return air.
-        if (!IsVoxelInWorld(globalPos))
+        if (!IsGlobalPosInWorld(globalPos))
             return 0;
-
-        if (!IsVoxelInsideBorder(globalPos)) // return air at world border to enable edges to render all faces
+        
+        // for small worlds, return air at world border to enable edges to render all faces
+        if (!IsGlobalPosInsideBorder(globalPos)) 
             return 0;
 
         // planet 0, seed 0 is a blank canvas for building around the imported ldraw file
@@ -1407,13 +1418,13 @@ public class World : MonoBehaviour
 
     public bool IsChunkInWorld(ChunkCoord coord)
     {
-        if (coord.x > 0 && coord.x < VoxelData.WorldSizeInChunks - 1 && coord.z > 0 && coord.z < VoxelData.WorldSizeInChunks - 1)
+        if (coord.x > 0 && coord.x < SettingsStatic.LoadedSettings.worldSizeinChunks - 1 && coord.z > 0 && coord.z < SettingsStatic.LoadedSettings.worldSizeinChunks - 1)
             return true;
         else
             return false;
     }
 
-    public bool IsVoxelInWorld(Vector3 pos)
+    public bool IsGlobalPosInWorld(Vector3 pos)
     {
         if (pos.x >= 0 && pos.x < VoxelData.WorldSizeInVoxels && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < VoxelData.WorldSizeInVoxels)
             return true;
@@ -1421,12 +1432,10 @@ public class World : MonoBehaviour
             return false;
     }
 
-    public bool IsVoxelInsideBorder(Vector3 pos)
+    public bool IsGlobalPosInsideBorder(Vector3 pos)
     {
-        if (pos.x >= 0 && pos.x <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth && pos.y >= 0 && pos.y <= VoxelData.ChunkHeight && pos.z >= 0 && pos.z <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth)
-        //if (Mathf.Abs(pos.x) >= -SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2 && pos.x <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2
-        //    && pos.y >= 0 || pos.y <= VoxelData.ChunkHeight
-        //    && pos.z >= -SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2 && pos.z <= SettingsStatic.LoadedSettings.viewDistance * VoxelData.ChunkWidth / 2)
+        ChunkCoord _newChunkCoord = GetChunkCoordFromVector3(pos);
+        if (_newChunkCoord.x > 0 && _newChunkCoord.x < SettingsStatic.LoadedSettings.worldSizeinChunks - 1 && _newChunkCoord.z > 0 && _newChunkCoord.z < SettingsStatic.LoadedSettings.worldSizeinChunks - 1)
             return true;
         else
             return false;

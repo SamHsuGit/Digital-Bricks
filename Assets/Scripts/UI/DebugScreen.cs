@@ -18,7 +18,7 @@ public class DebugScreen : MonoBehaviour
         text = GetComponent<Text>();
 
         halfWorldSizeInVoxels = VoxelData.WorldSizeInVoxels / 2;
-        halfWorldSizeInChunks = VoxelData.WorldSizeInChunks / 2;
+        halfWorldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeinChunks / 2;
 
     }
 

@@ -149,7 +149,7 @@ public class Chunk
 
     public void EditVoxel(Vector3 pos, byte newID)
     {
-        if (!World.Instance.IsVoxelInWorld(pos))
+        if (!World.Instance.IsGlobalPosInWorld(pos))
             return;
 
         if (newID == 0)
@@ -189,7 +189,8 @@ public class Chunk
 
             if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
             {
-                World.Instance.GetChunkFromVector3(currentVoxel + position).DrawChunk();
+                if(World.Instance.IsGlobalPosInsideBorder(currentVoxel + position))
+                    World.Instance.GetChunkFromVector3(currentVoxel + position).DrawChunk();
             }
         }
     }
