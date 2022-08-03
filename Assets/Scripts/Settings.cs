@@ -24,6 +24,7 @@ public static class SettingsStatic
         settings.lookSpeed = 0.1f;
         settings.lookAccel = 0.1f;
         settings.fov = 90f;
+        settings.graphicsQuality = 0;
         settings.invertY = false;
         settings.fullscreen = true;
         settings.planetNumber = 3;
@@ -32,7 +33,7 @@ public static class SettingsStatic
         settings.worldSizeinChunks = 5;
         settings.undrawVoxels = true;
         settings.playerName = "PlayerName";
-        settings.flight = false;
+        settings.creativeMode = false;
 
         string path;
         if (Settings.Platform == 2)
@@ -71,7 +72,7 @@ public class Settings
     public float lookSpeed;
     public float lookAccel;
     public float fov;
-    //public int graphicsQuality;
+    public int graphicsQuality;
     public bool invertY;
     public bool fullscreen;
 
@@ -84,7 +85,7 @@ public class Settings
 
     [Header("Player Customization")]
     public string playerName;
-    public bool flight;
+    public bool creativeMode;
 
     public static bool WorldLoaded
     {

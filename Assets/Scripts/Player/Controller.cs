@@ -523,7 +523,7 @@ public class Controller : NetworkBehaviour
                     {
                         rayCastStart = transform.position + transform.up * colliderHeight * 0.75f + transform.forward * colliderRadius * 4;
 
-                        if (charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.flight)
+                        if (charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.creativeMode)
                         {
                             charObIdle.SetActive(true);
                             charObRun.SetActive(false);
@@ -553,7 +553,7 @@ public class Controller : NetworkBehaviour
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
-                        if (!SettingsStatic.LoadedSettings.flight && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
+                        if (!SettingsStatic.LoadedSettings.creativeMode && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
                             Animate();
                         else
                         {
@@ -614,7 +614,7 @@ public class Controller : NetworkBehaviour
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
             return;
 
-        if (toolbar.slotIndex == 0) // cannot do this function from first slot (creative)
+        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
             return;
 
         // if has mushroom, and health is not max and the selected slot has a stack
@@ -710,10 +710,14 @@ public class Controller : NetworkBehaviour
     
     public void DropItemsInSlot()
     {
-        // this function is needed to able to empty slot with many pieces all at once (otherwise players would need to manually remove blocks one at a time)
+        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot run this function if creative mode and first slot selected
+            return;
 
-        if (!options && camMode == 1 && toolbar.slotIndex != 0 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
+        if (!options && camMode == 1 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
+        {
+            // this function is needed to able to empty slot with many pieces all at once (otherwise players would need to manually remove blocks one at a time)
             toolbar.DropItemsFromSlot(toolbar.slotIndex);
+        }
     }
 
     public void PressedGrab()
@@ -756,7 +760,9 @@ public class Controller : NetworkBehaviour
             holdingGrab = true;
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-            if(toolbar.slotIndex != 0) // do not reduce item count from first slot (creative)
+            if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+                TakeFromCurrentSlot(0);
+            else
                 TakeFromCurrentSlot(1);
             reticle.SetActive(false);
 
@@ -871,9 +877,15 @@ public class Controller : NetworkBehaviour
 
     void PutAwayBrick(byte blockID)
     {
+        int firstSlot;
+        if (SettingsStatic.LoadedSettings.creativeMode) // determine first slot
+            firstSlot = 1;
+        else
+            firstSlot = 0;
+
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
         {
-            for (int i = 1; i < toolbar.slots.Length; i++) // for all slots in toolbar except first slot
+            for (int i = firstSlot; i < toolbar.slots.Length; i++) // for all slots in toolbar
             {
                 if (toolbar.slots[i].itemSlot.stack != null && toolbar.slots[i].itemSlot.stack.id == blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
                 {
@@ -1206,7 +1218,7 @@ public class Controller : NetworkBehaviour
 
         velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 
-        if (!SettingsStatic.LoadedSettings.flight && inputHandler.jump)
+        if (!SettingsStatic.LoadedSettings.creativeMode && inputHandler.jump)
         {
             isGrounded = false;
             inputHandler.jump = false;
@@ -1238,7 +1250,7 @@ public class Controller : NetworkBehaviour
             if (isMoving) // if is moving
                 charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0); // rotate char model to face same y direction as camera
         }
-        if(camMode != 3 && SettingsStatic.LoadedSettings.flight)
+        if(camMode != 3 && SettingsStatic.LoadedSettings.creativeMode)
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);

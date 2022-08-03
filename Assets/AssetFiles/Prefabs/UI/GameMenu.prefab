@@ -1365,7 +1365,6 @@ MonoBehaviour:
   graphicsQualityDropdown: {fileID: 7792842065350826006}
   fullScreenToggle: {fileID: 1391849460782599793}
   invertYToggle: {fileID: 4077332918785026370}
-  invertXToggle: {fileID: 0}
   player: {fileID: 0}
   playerCamera: {fileID: 0}
   masterAudioMixer: {fileID: 24100000, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
@@ -1942,7 +1941,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -21.899994}
+  m_AnchoredPosition: {x: 0, y: -55}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1391849460782599793
@@ -1960,7 +1959,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 515848697951738424}
+    m_SelectOnUp: {fileID: 7792842065350826006}
     m_SelectOnDown: {fileID: 4077332918785026370}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -2172,7 +2171,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -175.2, y: 0}
+  m_AnchoredPosition: {x: -268, y: 0}
   m_SizeDelta: {x: 226, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1391849461501222608
@@ -3387,7 +3386,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: AVERAGE PC
+  m_Text: MEDIUM
 --- !u!1 &2926088299754635070
 GameObject:
   m_ObjectHideFlags: 0
@@ -4057,7 +4056,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -53.600006}
+  m_AnchoredPosition: {x: 0, y: -92}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4077332918785026370
@@ -5644,7 +5643,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 1732610991206421095}
-    m_SelectOnDown: {fileID: 1391849460782599793}
+    m_SelectOnDown: {fileID: 7792842065350826006}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -5887,7 +5886,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8829535018077747947
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5908,7 +5907,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -96, y: 13.970001}
+  m_AnchoredPosition: {x: 0, y: -18}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5784704188195597025
@@ -5964,7 +5963,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 1732610991206421095}
+    m_SelectOnUp: {fileID: 515848697951738424}
     m_SelectOnDown: {fileID: 1391849460782599793}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -5998,11 +5997,13 @@ MonoBehaviour:
   m_Value: 1
   m_Options:
     m_Options:
-    - m_Text: POTATO PC
+    - m_Text: LOW
       m_Image: {fileID: 0}
-    - m_Text: AVERAGE PC
+    - m_Text: MEDIUM
       m_Image: {fileID: 0}
-    - m_Text: NASA PC
+    - m_Text: HIGH
+      m_Image: {fileID: 0}
+    - m_Text: ULTRA
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6010,7 +6011,7 @@ MonoBehaviour:
       - m_Target: {fileID: 2072762906999785829}
         m_TargetAssemblyTypeName: GameMenu, Assembly-CSharp
         m_MethodName: SetGraphicsQuality
-        m_Mode: 3
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6399,7 +6400,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -150.4}
+  m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: 70, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6255212184571784462

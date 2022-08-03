@@ -8,13 +8,15 @@ public class SetupMenu : MonoBehaviour
     public GameObject menuElements;
     public GameObject loadingText;
     public TMP_InputField playerNameInputField;
-    public Toggle toggleFlight;
+    public Toggle creativeMode;
     public TMP_InputField planetInputField;
     public TMP_InputField seedInputField;
     public GameObject modelsObjectToSpin;
     
     public Slider worldRenderDistanceSlider;
+    public Slider worldSizeInChunksSlider;
     public TextMeshProUGUI worldRenderText;
+    public TextMeshProUGUI worldSizeInChunksText;
 
     public AudioSource buttonSound;
 
@@ -32,8 +34,9 @@ public class SetupMenu : MonoBehaviour
         Application.targetFrameRate = 60;
         
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
-        toggleFlight.isOn = SettingsStatic.LoadedSettings.flight;
+        creativeMode.isOn = SettingsStatic.LoadedSettings.creativeMode;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
+        worldSizeInChunksSlider.value = SettingsStatic.LoadedSettings.worldSizeinChunks;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
         seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
@@ -50,9 +53,9 @@ public class SetupMenu : MonoBehaviour
         worldRenderText.text = worldRenderDistanceSlider.value.ToString();
     }
 
-    public void SetFlightEnabled()
+    public void SetWorldSize()
     {
-        buttonSound.Play();
+        worldSizeInChunksText.text = worldSizeInChunksSlider.value.ToString();
     }
 
     public void Local()
@@ -94,8 +97,9 @@ public class SetupMenu : MonoBehaviour
     public void SaveSettings()
     {
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
-        SettingsStatic.LoadedSettings.flight = toggleFlight.isOn;
+        SettingsStatic.LoadedSettings.creativeMode = creativeMode.isOn;
         SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
+        SettingsStatic.LoadedSettings.worldSizeinChunks = (int)worldSizeInChunksSlider.value;
 
         if(SettingsStatic.LoadedSettings.worldSizeinChunks < 5) // hard limit on how many chunks can render at low end due to load and draw issues with low # of chunks
             SettingsStatic.LoadedSettings.worldSizeinChunks = 5;

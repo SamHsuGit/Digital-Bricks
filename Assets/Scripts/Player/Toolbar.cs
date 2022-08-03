@@ -61,8 +61,8 @@ public class Toolbar : MonoBehaviour
             }
             else
             {
-                // for creative slot and blockID < 2
-                if (slotIndex == 0 && blockID < 2)
+                // for creative mode and slot and blockID < 2
+                if (SettingsStatic.LoadedSettings.creativeMode && slotIndex == 0 && blockID < 2)
                 {
                     // if no saved blockID, then set creative slot to blockID 2
                     creativeBlockID = 2;
@@ -101,7 +101,7 @@ public class Toolbar : MonoBehaviour
 
             highlight.position = slots[slotIndex].slotIcon.transform.position;
             
-            if (slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
+            if (SettingsStatic.LoadedSettings.creativeMode && slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
             {
                 if (inputHandler.navUp)
                 {

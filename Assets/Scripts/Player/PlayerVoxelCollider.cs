@@ -72,7 +72,7 @@ public class PlayerVoxelCollider : MonoBehaviour
         if (cc != null)
             center = cc.transform.position + cc.center; // cache current center of collider position
 
-        if (!SettingsStatic.LoadedSettings.flight)
+        if (!SettingsStatic.LoadedSettings.creativeMode)
         {
             // reset jumps when grounded
             if (isGrounded || (isPlayer && controller.isGrounded))
@@ -102,14 +102,14 @@ public class PlayerVoxelCollider : MonoBehaviour
             roadFactor = 1;
 
         // if we're sprinting, use the sprint multiplier
-        if(SettingsStatic.LoadedSettings.flight)
+        if(SettingsStatic.LoadedSettings.creativeMode)
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * 0.1f;
         else if (isSprinting)
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadFactor;
         else
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadFactor;
 
-        if (!SettingsStatic.LoadedSettings.flight)
+        if (!SettingsStatic.LoadedSettings.creativeMode)
         {
             // Apply vertical momentum (falling/jumping).
             velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;

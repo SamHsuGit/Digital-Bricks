@@ -58,6 +58,8 @@ public class GameMenu : MonoBehaviour
         lookSpeedSlider.value = SettingsStatic.LoadedSettings.lookSpeed;
         lookAccelerationSlider.value = SettingsStatic.LoadedSettings.lookAccel;
         fovSlider.value = SettingsStatic.LoadedSettings.fov;
+        graphicsQualityDropdown.value = SettingsStatic.LoadedSettings.graphicsQuality;
+        QualitySettings.SetQualityLevel(SettingsStatic.LoadedSettings.graphicsQuality);
         fullScreenToggle.isOn = SettingsStatic.LoadedSettings.fullscreen;
         invertYToggle.isOn = SettingsStatic.LoadedSettings.invertY;
         UpdateHP();
@@ -202,6 +204,12 @@ public class GameMenu : MonoBehaviour
     {
         SettingsStatic.LoadedSettings.fov = value;
         playerCamera.GetComponent<Camera>().fieldOfView = value;
+    }
+
+    public void SetGraphicsQuality(int value)
+    {
+        SettingsStatic.LoadedSettings.graphicsQuality = value;
+        QualitySettings.SetQualityLevel(value, true);
     }
 
     public void SetFullScreen (bool value)

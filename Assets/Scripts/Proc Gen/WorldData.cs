@@ -8,6 +8,7 @@ public class WorldData
     public int planetNumber;
     public int seed;
     public int sizeInChunks;
+    public bool creative = false;
     public int distToStar;
     public int system;
     public int galaxy;

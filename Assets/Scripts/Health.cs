@@ -129,7 +129,7 @@ public class Health : NetworkBehaviour
         else if (pieces < minPieces)
             pieces = minPieces;
 
-        if (!SettingsStatic.LoadedSettings.flight)
+        if (!SettingsStatic.LoadedSettings.creativeMode)
             moveSpeed = 1 * (float)(maxBaseMoveSpeed - minBaseMoveSpeed) / (maxPieces - minPieces) * pieces + minBaseMoveSpeed; // positive slope (y intercept min speed) more pieces more speed
         else
             moveSpeed = maxBaseMoveSpeed; // if flight enabled, use max speed

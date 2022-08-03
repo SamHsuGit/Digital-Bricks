@@ -202,20 +202,25 @@ public static class SaveSystem
 
         string loadPath = Settings.AppSaveDataPath + "/saves/" + planetNumber + "-" + seed + "-" +  sizeInChunks + "/";
 
-        if (File.Exists(loadPath + planetNumber + "-" + seed + ".worldData"))
+        if (File.Exists(loadPath + planetNumber + "-" + seed + "-" + sizeInChunks + ".worldData"))
         {
 
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(loadPath + planetNumber + "-" + seed + ".worldData", FileMode.Open);
+            FileStream stream = new FileStream(loadPath + planetNumber + "-" + seed + "-" + sizeInChunks + ".worldData", FileMode.Open);
 
-            WorldData world = formatter.Deserialize(stream) as WorldData;
+            WorldData worldData = formatter.Deserialize(stream) as WorldData;
+            SettingsStatic.LoadedSettings.creativeMode = worldData.creative; // creative mode is overwritten by saved creative mode marker on worlds (cannot turn off once it is on)
+            //Debug.Log(worldData.creative);
+            FileSystemExtension.SaveSettings();
+            worldData.creative = SettingsStatic.LoadedSettings.creativeMode; // the worlds creative mode value is set from saved value
             stream.Close();
-            return new WorldData(world);
+            return new WorldData(worldData);
         }
         else
         {
 
             WorldData worldData = new WorldData(planetNumber, seed, sizeInChunks);
+            worldData.creative = SettingsStatic.LoadedSettings.creativeMode; // new worlds set value of creative mode from saved value
             SaveWorld(worldData, World.Instance);
 
             return worldData;
