@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class DebugScreen : MonoBehaviour
+public class DebugText : MonoBehaviour
 {
     public GameObject player;
 
-    Text text;
+    TextMeshProUGUI text;
 
     float frameRate;
     float timer;
@@ -15,7 +16,7 @@ public class DebugScreen : MonoBehaviour
     
     void Start()
     {
-        text = GetComponent<Text>();
+        text = GetComponent<TextMeshProUGUI>();
 
         halfWorldSizeInVoxels = VoxelData.WorldSizeInVoxels / 2;
         halfWorldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeinChunks / 2;

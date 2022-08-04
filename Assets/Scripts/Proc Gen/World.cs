@@ -71,7 +71,7 @@ public class World : MonoBehaviour
     public ChunkCoord firstChunkCoord;
     public bool firstChunkLoaded;
     public Dictionary<ChunkCoord, Chunk> chunks = new Dictionary<ChunkCoord, Chunk>();
-    public Chunk[,] chunksToDrawArray = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks];
+    public Chunk[,] chunksToDrawArray;
     public List<ChunkCoord> chunkCoordsToDrawList = new List<ChunkCoord>();
     public Queue<Chunk> chunksToDrawQueue = new Queue<Chunk>();
     public List<Chunk> chunksToDrawList = new List<Chunk>();
@@ -107,6 +107,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        chunksToDrawArray = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks]; // set size of array from saved value
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
@@ -235,7 +236,7 @@ public class World : MonoBehaviour
         //Debug.Log("playerCount = " + playerCount);
 
         // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
-        if (Settings.OnlinePlay || playerCount <= 2) // for online play or singleplayer local
+        if ((Settings.OnlinePlay || playerCount <= 2) && SettingsStatic.LoadedSettings.worldSizeinChunks > 5) // for online play or singleplayer local with larger world size
             undrawVoxels = SettingsStatic.LoadedSettings.undrawVoxels; // allow user to determine if undraw voxels (true by default)
         else
             undrawVoxels = false; // cannot undraw voxels in local splitscreen

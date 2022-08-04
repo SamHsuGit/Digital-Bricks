@@ -21,7 +21,7 @@ public class GameMenu : MonoBehaviour
     public GameObject backgroundMask;
     public GameObject playerHUD;
     public GameObject optionsMenu;
-    public GameObject debugScreen;
+    public GameObject debugText;
     public AudioSource buttonSound;
     public GameObject autoSaveIcon;
     public GameObject controlsText;
@@ -71,7 +71,7 @@ public class GameMenu : MonoBehaviour
         playerHUDCanvasGroup.interactable = true;
         optionsMenuCanvasGroup.alpha = 0;
         optionsMenuCanvasGroup.interactable = false;
-        debugScreen.SetActive(true);
+        debugText.SetActive(true);
         controlsText.SetActive(false);
         autoSaveIcon.SetActive(false);
     }
@@ -130,7 +130,7 @@ public class GameMenu : MonoBehaviour
         optionsMenuCanvasGroup.alpha = 0;
         optionsMenuCanvasGroup.interactable = false;
 
-        SaveSettings(); // Just in case players forget to hit save settings button
+        SaveSettings(); // save settings when exiting menu
     }
 
     public void Save()

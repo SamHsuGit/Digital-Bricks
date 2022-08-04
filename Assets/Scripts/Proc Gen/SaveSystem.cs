@@ -9,15 +9,20 @@ public static class SaveSystem
     public static void SaveWorld(WorldData worldData, World world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetNumber + "-" + worldData.seed + "-" + worldData.sizeInChunks + "/";
+        string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetNumber + "-" + worldData.seed + "-" + SettingsStatic.LoadedSettings.worldSizeinChunks + "/";
 
         if (!Directory.Exists(savePath))
+        {
             Directory.CreateDirectory(savePath);
-
-        //Debug.Log("Saving " + world.worldName);
+        }
 
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(savePath + worldData.planetNumber + "-" + worldData.seed + "-" + worldData.sizeInChunks + ".worldData", FileMode.Create);
+        FileStream stream = new FileStream(savePath + worldData.planetNumber + "-" + worldData.seed + "-" + SettingsStatic.LoadedSettings.worldSizeinChunks + ".worldData", FileMode.Create);
+
+        if (SettingsStatic.LoadedSettings.creativeMode)
+        {
+            worldData.survivalMode = false; // if the world is saved in creative mode, the world is marked as non-survival forever after
+        }
 
         formatter.Serialize(stream, worldData);
         stream.Close();
@@ -50,7 +55,6 @@ public static class SaveSystem
                 stream.Close();
 
                 savedPlayerNames[i] = playerOb.GetComponent<Controller>().playerName;
-                //Debug.Log("Saved " + savedPlayerNames[i] + " stats");
             }
         }
     }
@@ -86,10 +90,10 @@ public static class SaveSystem
         };
         if(playerGameObject != World.Instance.worldPlayer.gameObject) // do not save player stats for world player
         {
-            // overwrite zero place holders with values from player toolbar (includes creative slot)
+            // overwrite zero place holders with values from player toolbar if not in creative mode
             for (int i = 4; i < 22; i += 2)
             {
-                if (playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
+                if (!SettingsStatic.LoadedSettings.creativeMode && playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
                 {
                     playerStats[i] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.id;
                     playerStats[i + 1] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
@@ -108,12 +112,8 @@ public static class SaveSystem
     {
         string loadPath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetNumber + "-" + SettingsStatic.LoadedSettings.seed + "-" + SettingsStatic.LoadedSettings.worldSizeinChunks + "/";
 
-        //Debug.Log(loadPath + playerName + ".stats");
-        //Debug.Log(File.Exists(loadPath + playerName + ".stats"));
         if (File.Exists(loadPath + playerName + ".stats")) // IF PLAYER STATS FOUND
         {
-            //Debug.Log(playerName + " playerStats found. Loading from save.");
-
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath + playerName + ".stats", FileMode.Open);
 
@@ -123,7 +123,6 @@ public static class SaveSystem
         }
         else // SET PLAYER STATS TO DEFAULT VALUES
         {
-            //Debug.Log(loadPath + playerName + ".playerStats" + " not found. Creating.");
             int[] playerStats = GetDefaultPlayerStats(player);
             return playerStats;
         }
@@ -172,10 +171,8 @@ public static class SaveSystem
         foreach(ChunkData chunk in chunks)
         {
             SaveChunk(chunk, worldData.planetNumber, worldData.seed, worldData.sizeInChunks);
-            //Debug.Log("saving " + chunk.position.x + " , " + chunk.position.y);
             count++;
         }
-        //Debug.Log(count + " chunks saved.");
     }
 
     public static void SaveChunk(ChunkData chunk, int planetNumber, int seed, int sizeInChunks)
@@ -209,18 +206,16 @@ public static class SaveSystem
             FileStream stream = new FileStream(loadPath + planetNumber + "-" + seed + "-" + sizeInChunks + ".worldData", FileMode.Open);
 
             WorldData worldData = formatter.Deserialize(stream) as WorldData;
-            SettingsStatic.LoadedSettings.creativeMode = worldData.creative; // creative mode is overwritten by saved creative mode marker on worlds (cannot turn off once it is on)
-            //Debug.Log(worldData.creative);
-            FileSystemExtension.SaveSettings();
-            worldData.creative = SettingsStatic.LoadedSettings.creativeMode; // the worlds creative mode value is set from saved value
+            
             stream.Close();
             return new WorldData(worldData);
         }
         else
         {
-
             WorldData worldData = new WorldData(planetNumber, seed, sizeInChunks);
-            worldData.creative = SettingsStatic.LoadedSettings.creativeMode; // new worlds set value of creative mode from saved value
+            worldData.survivalMode = !SettingsStatic.LoadedSettings.creativeMode; // new worlds set value of creative mode from saved value
+            SettingsStatic.LoadedSettings.timeOfDay = 6.0f; // reset time of day to morning for new worlds
+            FileSystemExtension.SaveSettings();
             SaveWorld(worldData, World.Instance);
 
             return worldData;
@@ -230,7 +225,6 @@ public static class SaveSystem
     public static ChunkData LoadChunk(int planetNumber, int seed, int sizeInChunks, Vector2Int position)
     {
         // loads chunks from file (SLOW)
-
         ChunkData chunk = new ChunkData();
 
         string chunkName = position.x + "-" + position.y;

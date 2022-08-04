@@ -29,7 +29,29 @@ public class Toolbar : MonoBehaviour
 
     private void Start()
     {
-        SetInventoryFromSave();
+        if (SettingsStatic.LoadedSettings.creativeMode || !World.Instance.worldData.survivalMode)
+            EmptyAllSlots();
+        else
+            SetInventoryFromSave();
+    }
+
+    private void EmptyAllSlots()
+    {
+        for(int i = 0; i < controller.toolbar.slots.Length; i++)
+        {
+            if(SettingsStatic.LoadedSettings.creativeMode && i == 0)
+                ResetCreativeSlot();
+            else
+                controller.toolbar.slots[i].itemSlot.EmptySlot();
+        }
+    }
+
+    private void ResetCreativeSlot()
+    {
+        creativeBlockID = 2;
+        ItemStack creativeStack = new ItemStack(creativeBlockID, creativeBlockID);
+        controller.toolbar.slots[0].itemSlot.EmptySlot();
+        controller.toolbar.slots[0].itemSlot.InsertStack(creativeStack);
     }
 
     private void SetInventoryFromSave() // moved from player to Toolbar to ensure the slots exist before trying to set inventory from save
@@ -65,10 +87,7 @@ public class Toolbar : MonoBehaviour
                 if (SettingsStatic.LoadedSettings.creativeMode && slotIndex == 0 && blockID < 2)
                 {
                     // if no saved blockID, then set creative slot to blockID 2
-                    creativeBlockID = 2;
-                    ItemStack creativeStack = new ItemStack(creativeBlockID, creativeBlockID);
-                    slot.itemSlot.EmptySlot();
-                    slot.itemSlot.InsertStack(creativeStack);
+                    ResetCreativeSlot();
                 }
             }
         }

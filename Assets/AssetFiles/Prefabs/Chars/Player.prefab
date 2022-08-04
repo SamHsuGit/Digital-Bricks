@@ -30,7 +30,7 @@ GameObject:
   - component: {fileID: 4441129712410841954}
   - component: {fileID: 6141708116575622459}
   m_Layer: 11
-  m_Name: char
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3696,6 +3696,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2470313740438435334, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 4673335178978187722}
     - target: {fileID: 2506177550058932670, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
       propertyPath: m_Layer
       value: 0
