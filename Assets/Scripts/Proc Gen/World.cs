@@ -1450,6 +1450,7 @@ public class BlockType
     public bool isDrawn;
     public bool isSolid;
     public bool isTransparent;
+    public VoxelMeshData meshData;
     public Sprite icon;
     public GameObject studs;
     public GameObject voxelBoundObject;

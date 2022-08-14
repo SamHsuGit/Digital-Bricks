@@ -63,6 +63,8 @@ public static class VoxelData
 		{1, 2, 5, 6} // Right Face
 	};
 
+	public static readonly int[] revFaceCheckIndex = new int[6] { 1, 0, 3, 2, 5, 4 };
+
 	public static readonly Vector2[] voxelUvs = new Vector2[4] {
 		new Vector2 (0.0f, 0.0f),
 		new Vector2 (0.0f, 1.0f),

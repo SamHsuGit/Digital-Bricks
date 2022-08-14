@@ -202,14 +202,14 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    chunk.map[x, y, z] = GetVoxelStateFromString(substrings[2 + x + 16 * z])[y];
+                    chunk.map[x, y, z] = GetVoxelStateFromString(substrings[2 + x + 16 * z], x, y, z)[y];
                 }
             }
         }
         return chunk;
     }
 
-    public VoxelState[] GetVoxelStateFromString(string str)
+    public VoxelState[] GetVoxelStateFromString(string str, int _x, int _y, int _z)
     {
         // get an array of voxelStates for all y positions for a given x and z coordinate in a chunk
         VoxelState[] yVoxelStates = new VoxelState[str.Length];
@@ -218,7 +218,7 @@ public class ChunkData
             for (int j = 0; j < stringBlockIDs.Length; j++)
             {
                 if (str[i].ToString().Contains(stringBlockIDs[j]))
-                    yVoxelStates[i] = new VoxelState((byte)j);
+                    yVoxelStates[i] = new VoxelState((byte)j);//, this,new Vector3Int(_x, _y, _z));
             }
         }
         return yVoxelStates;

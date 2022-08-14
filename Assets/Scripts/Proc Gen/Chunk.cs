@@ -225,50 +225,74 @@ public class Chunk
         int y = Mathf.FloorToInt(pos.y);
         int z = Mathf.FloorToInt(pos.z);
 
-        byte blockID = chunkData.map[x, y, z].id;
+        VoxelState voxel = chunkData.map[x, y, z];
 
         for (int p = 0; p < 6; p++)
         {
+            //Vector3 neighborPos = pos + VoxelData.faceChecks[p];
+            //VoxelState neighborVoxelState = CheckVoxel(neighborPos);
+
+            //if (neighborVoxelState != null && World.Instance.blocktypes[neighborVoxelState.id].isTransparent)
+            //{
+            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 0]]);
+            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 1]]);
+            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 2]]);
+            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 3]]);
+
+            //    for (int i = 0; i < 4; i++)
+            //        normals.Add(VoxelData.faceChecks[p]);
+
+            //    AddTexture(World.Instance.blocktypes[voxel].GetTextureID(p));
+
+            //    if (World.Instance.blocktypes[neighborVoxelState.id].isTransparent)
+            //    {
+            //        triangles.Add(vertexIndex);
+            //        triangles.Add(vertexIndex + 1);
+            //        triangles.Add(vertexIndex + 2);
+            //        triangles.Add(vertexIndex + 2);
+            //        triangles.Add(vertexIndex + 1);
+            //        triangles.Add(vertexIndex + 3);
+            //    }
+            //    else
+            //    {
+            //        transparentTriangles.Add(vertexIndex);
+            //        transparentTriangles.Add(vertexIndex + 1);
+            //        transparentTriangles.Add(vertexIndex + 2);
+            //        transparentTriangles.Add(vertexIndex + 2);
+            //        transparentTriangles.Add(vertexIndex + 1);
+            //        transparentTriangles.Add(vertexIndex + 3);
+            //    }
+
+            //    vertexIndex += 4;
+            //}
+
             Vector3 neighborPos = pos + VoxelData.faceChecks[p];
-            VoxelState neighborVoxelState;
+            VoxelState neighbor = CheckVoxel(neighborPos);
+            //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // does not work, issues with getting positon of voxel for neighbors from saved voxel position
 
-            //if (!World.Instance.activateNewChunks)
-            //    neighborVoxelState = new VoxelState(0);
-            //else
-                neighborVoxelState = CheckVoxel(neighborPos);
-
-            if (neighborVoxelState != null && World.Instance.blocktypes[neighborVoxelState.id].isTransparent)
+            if (neighbor != null && World.Instance.blocktypes[neighbor.id].isTransparent)
             {
-                vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 0]]);
-                vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 1]]);
-                vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 2]]);
-                vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 3]]);
-
-                for (int i = 0; i < 4; i++)
-                    normals.Add(VoxelData.faceChecks[p]);
-
-                AddTexture(World.Instance.blocktypes[blockID].GetTextureID(p));
-
-                if (World.Instance.blocktypes[neighborVoxelState.id].isTransparent)
+                int faceVertCount = 0;
+                for (int i = 0; i < voxel.properties.meshData.faces[p].vertData.Length; i++)
                 {
-                    triangles.Add(vertexIndex);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 3);
+                    vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
+                    normals.Add(voxel.properties.meshData.faces[p].normal);
+                    AddTexture(voxel.properties.GetTextureID(p), voxel.properties.meshData.faces[p].vertData[i].uv);
+                    faceVertCount++;
+                }
+
+                if (!World.Instance.blocktypes[voxel.id].isTransparent)
+                {
+                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+                        triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
                 }
                 else
                 {
-                    transparentTriangles.Add(vertexIndex);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 3);
+                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+                        transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
                 }
 
-                vertexIndex += 4;
+                vertexIndex += faceVertCount;
             }
         }
     }
@@ -311,7 +335,7 @@ public class Chunk
         }
     }
 
-    void AddTexture(int textureID)
+    void AddTexture(int textureID, Vector2 uv)
     {
         float y = textureID / VoxelData.TextureAtlasSizeInBlocks;
         float x = textureID - (y * VoxelData.TextureAtlasSizeInBlocks);
@@ -321,12 +345,15 @@ public class Chunk
 
         y = 1f - y - VoxelData.NormalizedBlockTextureSize;
 
+        x += VoxelData.NormalizedBlockTextureSize * uv.x;
+        y += VoxelData.NormalizedBlockTextureSize * uv.y;
         uvs.Add(new Vector2(x, y));
-        uvs.Add(new Vector2(x, y + VoxelData.NormalizedBlockTextureSize));
-        uvs.Add(new Vector2(x + VoxelData.NormalizedBlockTextureSize, y));
-        uvs.Add(new Vector2(x + VoxelData.NormalizedBlockTextureSize, y + VoxelData.NormalizedBlockTextureSize));
-    }
 
+        //uvs.Add(new Vector2(x, y));
+        //uvs.Add(new Vector2(x, y + VoxelData.NormalizedBlockTextureSize));
+        //uvs.Add(new Vector2(x + VoxelData.NormalizedBlockTextureSize, y));
+        //uvs.Add(new Vector2(x + VoxelData.NormalizedBlockTextureSize, y + VoxelData.NormalizedBlockTextureSize));
+    }
 }
 
 public class ChunkCoord
@@ -363,24 +390,5 @@ public class ChunkCoord
             return true;
         else
             return false;
-    }
-}
-
-[HideInInspector]
-[System.Serializable]
-public class VoxelState
-{
-    public byte id; // 1 byte = 2^8 (256) unique block IDs
-
-    public VoxelState()
-    {
-        // default constructor
-        id = 0;
-    }
-
-    public VoxelState(byte id)
-    {
-        // constructor
-        this.id = id;
     }
 }
