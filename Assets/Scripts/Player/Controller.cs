@@ -261,8 +261,8 @@ public class Controller : NetworkBehaviour
         base.OnStartServer();
 
         // SET SERVER VALUES FROM HOST CLIENT
-        planetNumberServer = SettingsStatic.LoadedSettings.planetNumber;
-        seedServer = SettingsStatic.LoadedSettings.seed;
+        planetNumberServer = SettingsStatic.LoadedSettings.planetSeed;
+        seedServer = SettingsStatic.LoadedSettings.worldCoord;
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
 
@@ -321,16 +321,16 @@ public class Controller : NetworkBehaviour
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
     {
-        SettingsStatic.LoadedSettings.planetNumber = newValue;
+        SettingsStatic.LoadedSettings.planetSeed = newValue;
         customNetworkManager.worldOb.GetComponent<World>().planetNumber = newValue;
-        customNetworkManager.worldOb.GetComponent<World>().worldData.planetNumber = newValue;
+        customNetworkManager.worldOb.GetComponent<World>().worldData.planetSeed = newValue;
     }
 
     public void SetSeedServer(int oldValue, int newValue)
     {
-        SettingsStatic.LoadedSettings.seed = newValue;
+        SettingsStatic.LoadedSettings.worldCoord = newValue;
         customNetworkManager.worldOb.GetComponent<World>().seed = newValue;
-        customNetworkManager.worldOb.GetComponent<World>().worldData.seed = newValue;
+        customNetworkManager.worldOb.GetComponent<World>().worldData.worldCoord = newValue;
     }
 
     public void SetWorldSizeInChunksServer(int oldValue, int newValue)
@@ -378,8 +378,8 @@ public class Controller : NetworkBehaviour
             chunk = chunk.DecodeChunk(serverChunks[i]);
             world.worldData.modifiedChunks.Add(chunk); // add chunk to list of chunks to be saved
         }
-        world.worldData.planetNumber = planetNumberServer;
-        world.worldData.seed = seedServer;
+        world.worldData.planetSeed = planetNumberServer;
+        world.worldData.worldCoord = seedServer;
         SaveWorld(world.worldData); // save chunks to disk before loading world
     }
 

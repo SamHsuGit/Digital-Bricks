@@ -20,8 +20,8 @@ public class GameManagerScript : MonoBehaviour
         world = worldOb.GetComponent<World>();
 
         // these values are set immediately and overwritten later if necessary to match server properties
-        world.planetNumber = SettingsStatic.LoadedSettings.planetNumber;
-        world.seed = SettingsStatic.LoadedSettings.seed;
+        world.planetNumber = SettingsStatic.LoadedSettings.planetSeed;
+        world.seed = SettingsStatic.LoadedSettings.worldCoord;
 
         if (Settings.OnlinePlay)
         {

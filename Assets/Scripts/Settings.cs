@@ -27,8 +27,8 @@ public static class SettingsStatic
         settings.graphicsQuality = 0;
         settings.invertY = false;
         settings.fullscreen = true;
-        settings.planetNumber = 3;
-        settings.seed = 1;
+        settings.planetSeed = 3;
+        settings.worldCoord = 1;
         settings.timeOfDay = 6.01f;
         settings.worldSizeinChunks = 5;
         settings.undrawVoxels = true;
@@ -77,8 +77,8 @@ public class Settings
     public bool fullscreen;
 
     [Header("World Gen")]
-    public int planetNumber;
-    public int seed; // int yields numbers from 0 to 2,147,483,647 inclusively
+    public int planetSeed;
+    public int worldCoord; // int yields numbers from 0 to 2,147,483,647 inclusively
     public float timeOfDay;
     public int worldSizeinChunks;
     public bool undrawVoxels;

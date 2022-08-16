@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class WorldData
 {
-    public int planetNumber;
-    public int seed;
+    public int planetSeed;
+    public int worldCoord;
     public int sizeInChunks;
     public bool survivalMode;
     public int distToStar;
@@ -60,8 +60,8 @@ public class WorldData
 
     public WorldData (int planetNumber, int seed, int sizeInChunks)
     {
-        this.planetNumber = planetNumber;
-        this.seed = seed;
+        this.planetSeed = planetNumber;
+        this.worldCoord = seed;
         this.sizeInChunks = sizeInChunks;
     }
 
@@ -69,14 +69,14 @@ public class WorldData
     {
         // default constructor for deserialization
 
-        planetNumber = 3;
-        seed = 1;
+        planetSeed = 3;
+        worldCoord = 1;
     }
 
     public WorldData(WorldData wD)
     {
-        planetNumber = wD.planetNumber;
-        seed = wD.seed;
+        planetSeed = wD.planetSeed;
+        worldCoord = wD.worldCoord;
     }
 
     public ChunkData RequestChunk (Vector2Int coord)
@@ -104,7 +104,7 @@ public class WorldData
         // assumes chunks.ContainsKey(coord) = false
 
         // attempt to load the chunk from memory (checks if file exists)
-        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetNumber, SettingsStatic.LoadedSettings.seed, SettingsStatic.LoadedSettings.worldSizeinChunks, coord); // can be slow if loading lots of chunks from memory?
+        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetSeed, SettingsStatic.LoadedSettings.worldCoord, SettingsStatic.LoadedSettings.worldSizeinChunks, coord); // can be slow if loading lots of chunks from memory?
         if (chunk != null)
         {
             chunks.Add(coord, chunk);

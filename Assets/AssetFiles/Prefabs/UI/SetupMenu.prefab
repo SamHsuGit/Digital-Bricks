@@ -687,7 +687,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -306.6, y: 0.000015258789}
+  m_AnchoredPosition: {x: -294, y: 0.000015258789}
   m_SizeDelta: {x: 225, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1057353478050854169
@@ -752,7 +752,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1033,8 +1033,8 @@ MonoBehaviour:
   loadingText: {fileID: 6885639081249805797}
   playerNameInputField: {fileID: 6885639081722275123}
   creativeMode: {fileID: 8740281561265370809}
-  planetInputField: {fileID: 5468359553988880244}
-  seedInputField: {fileID: 6885639080844121917}
+  planetSeedInputField: {fileID: 5468359553988880244}
+  worldCoordInputField: {fileID: 6885639080844121917}
   modelsObjectToSpin: {fileID: 6885639081646905185}
   worldRenderDistanceSlider: {fileID: 6885639080702157682}
   worldSizeInChunksSlider: {fileID: 264038589438839255}
@@ -1410,7 +1410,7 @@ GameObject:
   - component: {fileID: 4019985971419277002}
   - component: {fileID: 5468359553988880244}
   m_Layer: 5
-  m_Name: Planet InputField
+  m_Name: Planet Seed InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1585,7 +1585,7 @@ GameObject:
   - component: {fileID: 7844600844817122706}
   - component: {fileID: 5868462146415159837}
   m_Layer: 5
-  m_Name: Planet Text
+  m_Name: Planet Seed Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1608,7 +1608,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -250, y: 0}
-  m_SizeDelta: {x: 91.76, y: 20}
+  m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7844600844817122706
 CanvasRenderer:
@@ -1638,7 +1638,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Planet
+  m_text: Planet Seed
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -1672,7 +1672,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2421,7 +2421,7 @@ GameObject:
   - component: {fileID: 6885639080844121919}
   - component: {fileID: 6885639080844121917}
   m_Layer: 5
-  m_Name: Seed InputField
+  m_Name: World Coord InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3019,7 +3019,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -306.6, y: 0.000015258789}
+  m_AnchoredPosition: {x: -312, y: 0.000015258789}
   m_SizeDelta: {x: 264.26, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6885639081207255980
@@ -3084,7 +3084,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -4783,7 +4783,7 @@ GameObject:
   - component: {fileID: 6885639082183399287}
   - component: {fileID: 6885639082183399286}
   m_Layer: 5
-  m_Name: Seed Text
+  m_Name: World Coord Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4806,7 +4806,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -250, y: 0}
-  m_SizeDelta: {x: 60.5, y: 20}
+  m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6885639082183399287
 CanvasRenderer:
@@ -4836,7 +4836,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Seed
+  m_text: WORLD COORD
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -4870,7 +4870,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

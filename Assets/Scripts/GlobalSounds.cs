@@ -16,7 +16,7 @@ public class GlobalSounds : MonoBehaviour
     {
         lighting = globalLighting.GetComponent<Lighting>();
 
-        if (SettingsStatic.LoadedSettings.seed == 3)
+        if (SettingsStatic.LoadedSettings.worldCoord == 3)
         {
             if (lighting.timeOfDay >= 6 && lighting.timeOfDay <= 18)
             {
@@ -39,7 +39,7 @@ public class GlobalSounds : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SettingsStatic.LoadedSettings.seed == 3)
+        if (SettingsStatic.LoadedSettings.worldCoord == 3)
         {
             previousDayTime = dayTime;
 

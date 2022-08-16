@@ -26,23 +26,25 @@ public class World : MonoBehaviour
     public Vector2[] erosionSplinePoints;
     public Vector2[] peaksAndValleysSplinePoints;
 
-    // Cached Perlin Noise Map Values
-    public float terrainHeightPercentChunk; // defines height of terrain as percentage of total chunkHeight
-    public int terrainHeightVoxels = 0; // defines height of terrain in voxels
-    public bool isAir = false; // used for 3D Perlin Noise pass
+    // Cached Perlin Noise Map Values (10 2D perlin noise, 1 3D perlin noise, minecraft 1.18 uses 3 2D (continentalness, erosion, weirdness) and 3 3D (temp/humid/caves))
     public float continentalness = 0; // continentalness, defines distance from ocean
     public float erosion = 0; // erosion, defines how mountainous the terrain is
     public float peaksAndValleys = 0; // peaks and valleys
     public float weirdness = 0; // weirdness
     public float temperature = 0; // temperature, defines biome
     public float humidity = 0; // humidity, defines biome + cloud density
-    public float fertility = 0; // defines surfaceOb size
-    public float percolation = 0; // defines surfaceOb size
-    public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers)
-    public float seaLevelThreshold = 0.34f;
-    public int cloudHeight;
+    public bool isAir = false; // used for 3D Perlin Noise pass
 
-    public int surfaceObType = 0;
+    // eventually derive these values from original perlin noise samples
+    private int terrainHeightVoxels = 0; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
+    private float terrainHeightPercentChunk; // defines height of terrain as percentage of total chunkHeight
+
+    private float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
+    private float percolation = 0; // defines surfaceOb size, eventually derive from weirdness?
+    private float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
+
+    private int surfaceObType = 0; // based on percolation and fertility
+
     public Biome biome;
     public GameObject mainCameraGameObject;
     public Lighting globalLighting;
@@ -97,6 +99,10 @@ public class World : MonoBehaviour
     private int loadDistance;
     private int LOD0threshold;
     private int studRenderDistanceInChunks; // acts as a radius like drawDistance
+
+    // hard coded values
+    private float seaLevelThreshold = 0.34f;
+    private int cloudHeight;
 
     List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
@@ -812,8 +818,8 @@ public class World : MonoBehaviour
         if (!IsGlobalPosInsideBorder(globalPos))
             return 0;
 
-        // planet 0, seed 0 is a blank canvas for building around the imported ldraw file
-        if (worldData.planetNumber == 0 && worldData.seed == 0)
+        // planetSeed 0, worldCoord 0 is a blank canvas for building around the imported ldraw file
+        if (worldData.planetSeed == 0 && worldData.worldCoord == 0)
         {
             terrainHeightVoxels = 1;
             if (yGlobalPos == 1 && !CheckMakeBase(globalPos))
@@ -847,11 +853,14 @@ public class World : MonoBehaviour
         }
 
         /* BASIC TERRAIN PASS */
+        // Adds basic terrain
         byte voxelValue = 0;
-        GetTerrainHeight(xzCoords);
+
+        GetTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
+
         if (yGlobalPos > terrainHeightVoxels) // guarantees all blocks above terrainHeight are 0
             return 0;
-        if (weirdness > 0.5f)
+        if (weirdness > 0.5f) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
@@ -863,6 +872,7 @@ public class World : MonoBehaviour
         CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
+        // Calculates biome (determines surface and subsurface blocktypes)
         humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome (call only once, expensive)
         temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome (call only once, expensive)
         if (!worldData.isAlive)
@@ -871,6 +881,8 @@ public class World : MonoBehaviour
             biome = biomes[GetBiome(temperature, humidity)];
 
         /* TERRAIN PASS */
+        // add block types determined by biome calculation
+        //TerrainHeight already calculated in Basic Terrain Pass
         if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // if surface block below sea level
             voxelValue = worldData.blockIDcore;
         else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk >= seaLevelThreshold) // if surface block above sea level
@@ -879,6 +891,7 @@ public class World : MonoBehaviour
             voxelValue = worldData.blockIDsubsurface;
 
         /* LODE PASS */
+        // add ores and underground caves
         if (yGlobalPos < terrainHeightVoxels - 5)
         {
             foreach (Lode lode in biome.lodes)
@@ -893,6 +906,7 @@ public class World : MonoBehaviour
         }
 
         /* SURFACE OBJECTS PASS */
+        // add structures like monoliths and flora like trees and plants and mushrooms
         if ((yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f); // ideally only call once (expensive)
@@ -1016,7 +1030,8 @@ public class World : MonoBehaviour
         continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f);
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f);
-        weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.08f);
+
+        weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.08f); // used to determine if landscape should be filled with large 3D holes.
 
         // use spline points to determine terrainHeight for each component
         float continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);

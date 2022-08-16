@@ -9,8 +9,8 @@ public class SetupMenu : MonoBehaviour
     public GameObject loadingText;
     public TMP_InputField playerNameInputField;
     public Toggle creativeMode;
-    public TMP_InputField planetInputField;
-    public TMP_InputField seedInputField;
+    public TMP_InputField planetSeedInputField;
+    public TMP_InputField worldCoordInputField;
     public GameObject modelsObjectToSpin;
     
     public Slider worldRenderDistanceSlider;
@@ -38,8 +38,8 @@ public class SetupMenu : MonoBehaviour
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
         worldSizeInChunksSlider.value = SettingsStatic.LoadedSettings.worldSizeinChunks;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
-        planetInputField.text = SettingsStatic.LoadedSettings.planetNumber.ToString();
-        seedInputField.text = SettingsStatic.LoadedSettings.seed.ToString();
+        planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
+        worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
         loadingText.SetActive(false);
     }
 
@@ -106,22 +106,22 @@ public class SetupMenu : MonoBehaviour
 
         try
         {
-            int result = int.Parse(planetInputField.text); // Int32 can hold up to 2,147,483,647 numbers
-            SettingsStatic.LoadedSettings.planetNumber = result;
+            int result = int.Parse(planetSeedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
+            SettingsStatic.LoadedSettings.planetSeed = result;
         }
         catch (System.FormatException)
         {
-            SettingsStatic.LoadedSettings.planetNumber = 3;
+            SettingsStatic.LoadedSettings.planetSeed = 3;
         }
 
         try
         {
-            int result = int.Parse(seedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
-            SettingsStatic.LoadedSettings.seed = result;
+            int result = int.Parse(worldCoordInputField.text); // Int32 can hold up to 2,147,483,647 numbers
+            SettingsStatic.LoadedSettings.worldCoord = result;
         }
         catch (System.FormatException)
         {
-            SettingsStatic.LoadedSettings.seed = 1; // default value
+            SettingsStatic.LoadedSettings.worldCoord = 1; // default value
         }
 
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
