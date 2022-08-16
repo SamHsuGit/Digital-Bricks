@@ -814,7 +814,7 @@ public class World : MonoBehaviour
         if (!IsGlobalPosInWorld(globalPos))
             return 0;
         
-        // for small worlds, return air at world border to enable edges to render all faces and not block camera movement
+        // for small worlds, return air outside world border to enable edges to render all faces and not block camera movement
         if (!IsGlobalPosInsideBorder(globalPos))
             return 0;
 
