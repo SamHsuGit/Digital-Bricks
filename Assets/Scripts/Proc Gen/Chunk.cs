@@ -224,7 +224,7 @@ public class Chunk
 
         chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
         World.Instance.worldData.AddToModifiedChunkList(chunkData); // save data only contains list of modified voxels, otherwise, generates using the GetVoxel algorithm.
-
+        
         lock (World.Instance.ChunkUpdateThreadLock)
         {
             World.Instance.chunksToUpdate.Insert(0, this);
