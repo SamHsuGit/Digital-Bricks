@@ -287,7 +287,7 @@ public class World : MonoBehaviour
 
         if (multithreading)
         {
-            ChunkRedrawThread = new Thread(new ThreadStart(ThreadedChunkDraw));
+            ChunkRedrawThread = new Thread(new ThreadStart(ThreadedUpdate));
             ChunkRedrawThread.Start();
         }
 
@@ -474,7 +474,7 @@ public class World : MonoBehaviour
         for (int x = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; x < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; x++)
         {
             for (int z = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; z < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; z++)
-                worldData.RequestChunk(new Vector2Int(x, z), true);
+                worldData.RequestChunk(new Vector2Int(x, z));
         }
     }
 
@@ -493,7 +493,7 @@ public class World : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // disabled autosave feature
+        ////disabled autosave feature
         //if (Settings.OnlinePlay)
         //{
         //    saving = false;
@@ -504,7 +504,7 @@ public class World : MonoBehaviour
         //        tick = 0;
         //        saving = true;
         //        Debug.Log("Saved Game: " + System.DateTime.Now);
-        //        SaveSystem.SaveWorld(Instance.worldData);
+        //        SaveSystem.SaveWorld(Instance.worldData, this);
         //    }
         //    else
         //        tick++;
@@ -721,7 +721,7 @@ public class World : MonoBehaviour
         }
     }
 
-    void ThreadedChunkDraw() // the loop where the chunk draw occurs, this operation is threaded.
+    void ThreadedUpdate() // the loop where the chunk draw occurs, this operation is threaded.
     {
         while (true)
         {
@@ -809,7 +809,7 @@ public class World : MonoBehaviour
             return 0;
         
         // for small worlds, return air at world border to enable edges to render all faces and not block camera movement
-        if (!IsGlobalPosInsideBorder(globalPos)) 
+        if (!IsGlobalPosInsideBorder(globalPos))
             return 0;
 
         // planet 0, seed 0 is a blank canvas for building around the imported ldraw file
@@ -1029,12 +1029,12 @@ public class World : MonoBehaviour
 
     public bool GetIsAir(Vector3 globalPos)
     {
-        // WIP, meant to be a single function for terrainHeight using 3D Perlin Noise and (3) other 2D Perlin Noise maps to determine height and squashing
-        // based on https://youtu.be/CSa5O6knuwI
+        //// Broken, eventually turn this into a single function for terrainHeight using 3D Perlin Noise and (3) other 2D Perlin Noise maps to determine height and squashing?
+        //// based on https://youtu.be/CSa5O6knuwI
 
         //GetTerrainHeight(new Vector2(globalPos.x, globalPos.z));
 
-        // testing
+        //// testing
         //float terrainHeight = 0.5f; // WIP terrain height seems to update based changing this value
         //float squashingFactor = 0.1f; // WIP squashing factor does not seem to flatten the terrain
 
@@ -1101,7 +1101,6 @@ public class World : MonoBehaviour
     public int GetBiome(float temperature, float humidity)
     {
         // based on https://minecraft.fandom.com/wiki/Biome
-
         // From https://minecraft.fandom.com/wiki/Anvil_file_format
         // Minecraft Biomes are saved per X,Z column, rather than being calculated on the fly, which means they can be altered by tools
         // This is useful for map makers. It also prevents bugs where features don't match the biome after changing the terrain algorithm. (Also known as "Biome Shifting").
@@ -1158,7 +1157,6 @@ public class World : MonoBehaviour
     public int GetSurfaceObType(float percolation, float fertility)
     {
         // based on https://minecraft.fandom.com/wiki/Biome
-
         // From https://minecraft.fandom.com/wiki/Anvil_file_format
         // Minecraft Biomes are saved per X,Z column, rather than being calculated on the fly, which means they can be altered by tools
         // This is useful for map makers. It also prevents bugs where features don't match the biome after changing the terrain algorithm. (Also known as "Biome Shifting").

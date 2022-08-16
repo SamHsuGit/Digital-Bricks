@@ -19,7 +19,6 @@ public class ChunkData
     // Run Length Encoded Memory Usage = 5,000 bytes (5KB) (~20% compression)
 
 
-
     // Minecraft Optimizations:
     // Minecraft uses Named Binary Tag Format to efficiently store binary data related to chunks in region files
     // Minecraft Chunks were originally stored as individual ".dat" files with the chunk position encoded in Base36
@@ -34,7 +33,6 @@ public class ChunkData
 
     // Minecraft further divides world into regions = 32x32 chunks https://docs.safe.com/fme/html/FME_Desktop_Documentation/FME_ReadersWriters/minecraft/minecraft.htm
     // Minecraft compresses save data to reduce level.data to 2 kB?!
-
 
 
     // The global position of the chunk. ie, (16, 16) NOT (1, 1). We want to be able to

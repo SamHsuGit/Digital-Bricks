@@ -50,7 +50,7 @@ public class Chunk
         chunkObject.tag = "Chunk";
         position = chunkObject.transform.position;
 
-        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
+        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z));
         chunkData.chunk = this;
 
         // when chunk is first created loop through all voxels in chunk and if they can be active, add to list
@@ -362,11 +362,6 @@ public class Chunk
         x += VoxelData.NormalizedBlockTextureSize * uv.x;
         y += VoxelData.NormalizedBlockTextureSize * uv.y;
         uvs.Add(new Vector2(x, y));
-
-        //uvs.Add(new Vector2(x, y));
-        //uvs.Add(new Vector2(x, y + VoxelData.NormalizedBlockTextureSize));
-        //uvs.Add(new Vector2(x + VoxelData.NormalizedBlockTextureSize, y));
-        //uvs.Add(new Vector2(x + VoxelData.NormalizedBlockTextureSize, y + VoxelData.NormalizedBlockTextureSize));
     }
 }
 
