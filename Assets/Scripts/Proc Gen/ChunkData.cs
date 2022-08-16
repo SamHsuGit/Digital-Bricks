@@ -4,6 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public class ChunkData
 {
+    // ChunkData was created to load data separately before chunks are created to create an efficient load time.
+
     // To share worlds over discord, need to reduce savedata to under 8 MB
     // enables chunk strings to be sent over the network to sync world files upon start
 
@@ -57,6 +59,8 @@ public class ChunkData
     public ChunkData(int x, int y) { this.x = x; this.y = y; }
     public ChunkData() { x = 0; y = 0; } // default constructor for deserialization
 
+    [System.NonSerialized] public Chunk chunk;
+
     [HideInInspector]
     public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
@@ -69,10 +73,56 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(new Vector3(x + position.x, y, z + position.y)));
+                    Vector3 voxelGlobalPos = new Vector3(x + position.x, y, z + position.y);
+
+                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x,y,z));
                 }
             }
         }
+    }
+
+    public void ModifyVoxel(Vector3Int pos, byte _id, int direction)
+    {
+
+        // If we've somehow tried to change a block for the same block, just return.
+        if (map[pos.x, pos.y, pos.z].id == _id)
+            return;
+
+        // Cache voxels for easier code.
+        VoxelState voxel = map[pos.x, pos.y, pos.z];
+        BlockType newVoxel = World.Instance.blocktypes[_id];
+
+        // Cache the old opacity value.
+        //byte oldOpacity = voxel.properties.opacity;
+
+        // Set voxel to new ID.
+        voxel.id = _id;
+        //voxel.orientation = direction;
+
+        //// If the opacity values of the voxel have changed and the voxel above is in direct sunlight
+        //// (or is above the world) recast light from that voxel downwards.
+        //if (voxel.properties.opacity != oldOpacity &&
+        //    (pos.y == VoxelData.ChunkHeight - 1 || map[pos.x, pos.y + 1, pos.z].light == 15))
+        //{
+        //    Lighting.CastNaturalLight(this, pos.x, pos.z, pos.y + 1);
+        //}
+
+        if (voxel.properties.isActive && BlockBehavior.Active(voxel))
+            voxel.chunkData.chunk.AddActiveVoxel(voxel);
+        for (int i = 0; i < 6; i++)
+        {
+            if (voxel.neighbors[i] != null)
+                if (voxel.neighbors[i].properties.isActive && BlockBehavior.Active(voxel.neighbors[i]))
+                    voxel.neighbors[i].chunkData.chunk.AddActiveVoxel(voxel.neighbors[i]);
+        }
+
+        // Add this ChunkData to the modified chunks list.
+        World.Instance.worldData.AddToModifiedChunkList(this);
+
+        // If we have a chunk attached, add that for updating.
+        if (chunk != null)
+            World.Instance.activeChunks.Add(chunk.coord);
+
     }
 
     public string[] stringBlockIDs = new string[]
@@ -218,7 +268,7 @@ public class ChunkData
             for (int j = 0; j < stringBlockIDs.Length; j++)
             {
                 if (str[i].ToString().Contains(stringBlockIDs[j]))
-                    yVoxelStates[i] = new VoxelState((byte)j);//, this,new Vector3Int(_x, _y, _z));
+                    yVoxelStates[i] = new VoxelState((byte)j, this,new Vector3Int(_x, _y, _z));
             }
         }
         return yVoxelStates;

@@ -18,6 +18,8 @@ public static class VoxelData
 	public static readonly float voxelHeight = 1.0f;
 	public static readonly float scale = 1.0f;
 
+	public static float tickLength = 1f;
+
 	public static int WorldSizeInVoxels
 	{
 		get { return SettingsStatic.LoadedSettings.worldSizeinChunks * ChunkWidth; }

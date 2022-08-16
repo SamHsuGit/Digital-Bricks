@@ -28,13 +28,15 @@ public class Chunk
 
     public ChunkData chunkData;
 
+    List<VoxelState> activeVoxels = new List<VoxelState>();
+
     public Chunk(ChunkCoord coord)
     {
         this.coord = coord;
 
         chunkObject = new GameObject();
         chunkObject.isStatic = true;
-        World.Instance.chunks.Add(this.coord, this);
+        World.Instance.chunksDict.Add(this.coord, this);
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
 
@@ -48,11 +50,26 @@ public class Chunk
         chunkObject.tag = "Chunk";
         position = chunkObject.transform.position;
 
-        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z));
+        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
+        chunkData.chunk = this;
 
-        lock (World.Instance.ChunkDrawThreadLock)
+        // when chunk is first created loop through all voxels in chunk and if they can be active, add to list
+        for (int y = 0; y < VoxelData.ChunkHeight; y++)
         {
-            World.Instance.chunksToDrawList.Add(this);
+            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            {
+                for (int z = 0; z < VoxelData.ChunkWidth; z++)
+                {
+                    VoxelState voxel = chunkData.map[x, y, z];
+                    if (voxel.properties.isActive) // Only runs for certain behavior blocks marked as active (i.e. grass, furnaces)
+                        AddActiveVoxel(voxel);
+                }
+            }
+        }
+
+        lock (World.Instance.ChunkUpdateThreadLock)
+        {
+            World.Instance.chunksToUpdate.Add(this);
 
             //if (coord.x == World.Instance.firstChunkCoord.x && coord.z == World.Instance.firstChunkCoord.z) //always show first chunk
             //    isActive = true;
@@ -63,7 +80,19 @@ public class Chunk
         }
     }
 
-    public void DrawChunk() // are all references of this function locked to be threadsafe since they modify the array of vertices, triangles, normals?
+    public void TickUpdate()
+    {
+        Debug.Log(chunkObject.name + " currently has " + activeVoxels.Count + " active blocks.");
+        for (int i = activeVoxels.Count - 1; i > -1; i--)
+        {
+            if (!BlockBehavior.Active(activeVoxels[i]))
+                RemoveActiveVoxel(activeVoxels[i]);
+            else
+                BlockBehavior.Behave(activeVoxels[i]);
+        }
+    }
+
+    public void UpdateChunk() // are all references of this function locked to be threadsafe since they modify the array of vertices, triangles, normals?
     {
         ClearMeshData();
 
@@ -79,7 +108,27 @@ public class Chunk
             }
         }
 
-        World.Instance.chunksToDrawQueue.Enqueue(this);
+        World.Instance.chunksToDraw.Enqueue(this);
+    }
+
+    public void AddActiveVoxel (VoxelState voxel)
+    {
+        if (!activeVoxels.Contains(voxel)) // Make sure voxel isn't already in list.
+        {
+            activeVoxels.Add(voxel);
+        }
+    }
+
+    public void RemoveActiveVoxel(VoxelState voxel)
+    {
+        for (int i = 0; i < activeVoxels.Count; i++)
+        {
+            if(activeVoxels[i] == voxel)
+            {
+                activeVoxels.RemoveAt(i);
+                return;
+            }
+        }
     }
 
     void ClearMeshData()
@@ -169,12 +218,16 @@ public class Chunk
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
+        // Added in https://www.youtube.com/watch?v=DjQ6yFRuZ7Q but is broken, does not allow player to modify voxels so commented out, instead use old code below
+        //chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, 0); // write new block ID to chunkData 
+        //UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+
         chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
         World.Instance.worldData.AddToModifiedChunkList(chunkData); // save data only contains list of modified voxels, otherwise, generates using the GetVoxel algorithm.
 
-        lock (World.Instance.ChunkDrawThreadLock)
+        lock (World.Instance.ChunkUpdateThreadLock)
         {
-            World.Instance.chunksToDrawList.Insert(0, this);
+            World.Instance.chunksToUpdate.Insert(0, this);
             UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
         }
     }
@@ -190,7 +243,7 @@ public class Chunk
             if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
             {
                 if(World.Instance.IsGlobalPosInsideBorder(currentVoxel + position))
-                    World.Instance.GetChunkFromVector3(currentVoxel + position).DrawChunk();
+                    World.Instance.GetChunkFromVector3(currentVoxel + position).UpdateChunk();
             }
         }
     }
@@ -229,46 +282,7 @@ public class Chunk
 
         for (int p = 0; p < 6; p++)
         {
-            //Vector3 neighborPos = pos + VoxelData.faceChecks[p];
-            //VoxelState neighborVoxelState = CheckVoxel(neighborPos);
-
-            //if (neighborVoxelState != null && World.Instance.blocktypes[neighborVoxelState.id].isTransparent)
-            //{
-            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 0]]);
-            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 1]]);
-            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 2]]);
-            //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 3]]);
-
-            //    for (int i = 0; i < 4; i++)
-            //        normals.Add(VoxelData.faceChecks[p]);
-
-            //    AddTexture(World.Instance.blocktypes[voxel].GetTextureID(p));
-
-            //    if (World.Instance.blocktypes[neighborVoxelState.id].isTransparent)
-            //    {
-            //        triangles.Add(vertexIndex);
-            //        triangles.Add(vertexIndex + 1);
-            //        triangles.Add(vertexIndex + 2);
-            //        triangles.Add(vertexIndex + 2);
-            //        triangles.Add(vertexIndex + 1);
-            //        triangles.Add(vertexIndex + 3);
-            //    }
-            //    else
-            //    {
-            //        transparentTriangles.Add(vertexIndex);
-            //        transparentTriangles.Add(vertexIndex + 1);
-            //        transparentTriangles.Add(vertexIndex + 2);
-            //        transparentTriangles.Add(vertexIndex + 2);
-            //        transparentTriangles.Add(vertexIndex + 1);
-            //        transparentTriangles.Add(vertexIndex + 3);
-            //    }
-
-            //    vertexIndex += 4;
-            //}
-
-            Vector3 neighborPos = pos + VoxelData.faceChecks[p];
-            VoxelState neighbor = CheckVoxel(neighborPos);
-            //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // does not work, issues with getting positon of voxel for neighbors from saved voxel position
+            VoxelState neighbor = chunkData.map[x, y, z].neighbors[p];
 
             if (neighbor != null && World.Instance.blocktypes[neighbor.id].isTransparent)
             {

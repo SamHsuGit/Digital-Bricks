@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -18,7 +19,9 @@ public class World : MonoBehaviour
     public string baseObString;
     public GameObject baseOb;
     public bool isEarth;
+    public bool ticksEnabled = true;
 
+    // use spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
     public Vector2[] continentalnessSplinePoints;
     public Vector2[] erosionSplinePoints;
     public Vector2[] peaksAndValleysSplinePoints;
@@ -70,17 +73,19 @@ public class World : MonoBehaviour
     // chunk draw lists and arrays
     public ChunkCoord firstChunkCoord;
     public bool firstChunkLoaded;
-    public Dictionary<ChunkCoord, Chunk> chunks = new Dictionary<ChunkCoord, Chunk>();
-    public Chunk[,] chunksToDrawArray;
-    public List<ChunkCoord> chunkCoordsToDrawList = new List<ChunkCoord>();
-    public Queue<Chunk> chunksToDrawQueue = new Queue<Chunk>();
-    public List<Chunk> chunksToDrawList = new List<Chunk>();
-    public List<ChunkCoord> previousChunksToDrawList = new List<ChunkCoord>();
-    public List<ChunkCoord> chunksToDrawObjectsList = new List<ChunkCoord>();
-    public List<ChunkCoord> copyOfChunksToDrawObjectsList = new List<ChunkCoord>();
+    public Dictionary<ChunkCoord, Chunk> chunksDict = new Dictionary<ChunkCoord, Chunk>();
+    public Chunk[,] chunks;
+    public List<ChunkCoord> activeChunks = new List<ChunkCoord>();
+    public List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>();
+    public List<ChunkCoord> activeChunksObjectsList = new List<ChunkCoord>();
+    public List<ChunkCoord> activeChunksObjectsListCopy = new List<ChunkCoord>();
+
+    public List<Chunk> chunksToUpdate = new List<Chunk>();
+    public Queue<Chunk> chunksToDraw = new Queue<Chunk>();
+
     public List<GameObject> baseObPieces = new List<GameObject>();
 
-    public object ChunkDrawThreadLock = new object();
+    public object ChunkUpdateThreadLock = new object();
     public object ChunkLoadThreadLock = new object();
     public object ChunkListThreadLock = new object();
     public Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
@@ -107,7 +112,7 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
-        chunksToDrawArray = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks]; // set size of array from saved value
+        chunks = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks]; // set size of array from saved value
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
@@ -139,6 +144,7 @@ public class World : MonoBehaviour
 
         cloudHeight = VoxelData.ChunkHeight - 15;
 
+        // define spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
         continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
         {
             new Vector2(0.00f, 0.00f),
@@ -229,7 +235,7 @@ public class World : MonoBehaviour
             firstLoadDrawDistance = loadDistance;
 
         //if(playerGameObject != worldPlayer) // doesn't make a difference in load times
-            FirstCheckDrawDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
+            FirstCheckViewDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
 
         playerCount++;
         //Debug.Log("Player Joined");
@@ -297,6 +303,8 @@ public class World : MonoBehaviour
             mainCamera.enabled = false;
 
         Settings.WorldLoaded = true;
+
+        //StartCoroutine(Tick()); // caused exception when trying to access activeChunks while it was being modified so commented out
     }
 
     public int GetGalaxy(int planetNumber)
@@ -466,9 +474,22 @@ public class World : MonoBehaviour
         for (int x = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; x < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; x++)
         {
             for (int z = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; z < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; z++)
-                worldData.RequestChunk(new Vector2Int(x, z));
+                worldData.RequestChunk(new Vector2Int(x, z), true);
         }
     }
+
+    //IEnumerator Tick()
+    //{
+    //    while (ticksEnabled)
+    //    {
+    //        foreach(ChunkCoord c in activeChunks) // throws exception: "Collection was modified; enumeration operation may not execute."
+    //        {
+    //            chunks[c.x, c.z].TickUpdate();
+    //        }
+
+    //        yield return new WaitForSeconds(VoxelData.tickLength);
+    //    }
+    //}
 
     private void FixedUpdate()
     {
@@ -502,8 +523,8 @@ public class World : MonoBehaviour
         //    chunkCoordsToDrawList.Clear();
         //}
 
-        copyOfChunksToDrawObjectsList = new List<ChunkCoord>(chunksToDrawObjectsList);
-        chunksToDrawObjectsList.Clear();
+        activeChunksObjectsListCopy = new List<ChunkCoord>(activeChunksObjectsList);
+        activeChunksObjectsList.Clear();
 
         // create copies of the lists to use so the original lists can be modified during the update loop (was causing errors)
         playersCopy = players;
@@ -535,16 +556,16 @@ public class World : MonoBehaviour
                 // Only update the chunks if the player has moved from the chunk they were previously on.
                 if (!playerChunkCoordsCopy[i].Equals(playerLastChunkCoordsCopy[i]))
                 {
-                    CheckDrawDistance(playerChunkCoordsCopy[i], i); // re-draw chunks
+                    CheckViewDistance(playerChunkCoordsCopy[i], i); // re-draw chunks
                     CheckVBODrawDist(playerChunkCoordsCopy[i], i); // re-draw studs
                 }
             }
 
-            if (chunksToDrawQueue.Count > 0)
+            if (chunksToDraw.Count > 0)
             {
-                lock (chunksToDrawQueue)
+                lock (chunksToDraw)
                 {
-                    chunksToDrawQueue.Dequeue().CreateMesh();
+                    chunksToDraw.Dequeue().CreateMesh();
                 }
             }
 
@@ -553,9 +574,9 @@ public class World : MonoBehaviour
                 if (!applyingModifications)
                     ApplyModifications();
 
-                if (chunksToDrawList.Count > 0)
+                if (chunksToUpdate.Count > 0)
                 {
-                    DrawChunks();
+                    UpdateChunks();
                 }
             }
         }
@@ -584,12 +605,12 @@ public class World : MonoBehaviour
         {
             foreach (ChunkCoord c in p.chunksToAddVBO)
             {
-                if (!chunksToDrawObjectsList.Contains(c))
-                    chunksToDrawObjectsList.Add(c); // complile master list of chunks to draw objects
+                if (!activeChunksObjectsList.Contains(c))
+                    activeChunksObjectsList.Add(c); // complile master list of chunks to draw objects
             }
         }
 
-        foreach (ChunkCoord c in chunksToDrawObjectsList)
+        foreach (ChunkCoord c in activeChunksObjectsList)
         {
             //if (!activateNewChunks && chunks.ContainsKey(c) && chunks[c].isActive)
             //    AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
@@ -598,10 +619,10 @@ public class World : MonoBehaviour
                 AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
         }
 
-        foreach (ChunkCoord c in chunksToDrawObjectsList)
+        foreach (ChunkCoord c in activeChunksObjectsList)
         {
-            if (copyOfChunksToDrawObjectsList.Contains(c))
-                copyOfChunksToDrawObjectsList.Remove(c);
+            if (activeChunksObjectsListCopy.Contains(c))
+                activeChunksObjectsListCopy.Remove(c);
         }
 
         if (undrawVoxelBoundObjects)
@@ -614,7 +635,7 @@ public class World : MonoBehaviour
             // Add all player list values into master list (avoid duplicates)
             // create objects in master list
             // destroy objects in copy of master list
-            foreach (ChunkCoord c in copyOfChunksToDrawObjectsList)
+            foreach (ChunkCoord c in activeChunksObjectsListCopy)
             {
                 //if(activateNewChunks) // only undraw if out of tutorial mode
                 if (VBOs)
@@ -644,15 +665,15 @@ public class World : MonoBehaviour
         }
     }
 
-    void CheckDrawDistance(ChunkCoord playerChunkCoord, int playerIndex)
+    void CheckViewDistance(ChunkCoord playerChunkCoord, int playerIndex)
     {
         playerLastChunkCoords[playerIndex] = playerChunkCoord;
 
-        // if set to undrawVoxels, undraw chunks to save memory (Disabled until we can find a way to remove far away chunks selectively)
+        // if toggled, undraw chunks to save memory
         if (undrawVoxels)
         {
-            previousChunksToDrawList = new List<ChunkCoord>(chunkCoordsToDrawList);
-            chunkCoordsToDrawList.Clear();
+            previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
+            activeChunks.Clear();
         }
 
         // Loop through all chunks currently within view distance of the player.
@@ -666,36 +687,36 @@ public class World : MonoBehaviour
                 if (IsChunkInWorld(thisChunkCoord))
                 {
                     // Check if its in view distance, if not, mark it to be re-drawn.
-                    if (chunksToDrawArray[x, z] == null) // if the chunksToDrawArray is empty at thisChunkCoord
-                        chunksToDrawArray[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
-                    chunksToDrawArray[x, z].isInDrawDist = true;
-                    chunkCoordsToDrawList.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
+                    if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
+                        chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
+                    chunks[x, z].isInDrawDist = true;
+                    activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
 
-                    if(chunksToDrawList.Contains(chunksToDrawArray[x, z]))
+                    if(chunksToUpdate.Contains(chunks[x, z]))
                     {
-                        chunksToDrawList[chunksToDrawList.IndexOf(chunksToDrawArray[x, z])].isInStructDrawDist = false; // mark as outside LOD0
+                        chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = false; // mark as outside LOD0
                         if (x > playerChunkCoord.x - LOD0threshold && x < playerChunkCoord.x + LOD0threshold && z > playerChunkCoord.z - LOD0threshold && z < playerChunkCoord.z + LOD0threshold)
-                            chunksToDrawList[chunksToDrawList.IndexOf(chunksToDrawArray[x, z])].isInStructDrawDist = true; // mark as inside LOD0
+                            chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = true; // mark as inside LOD0
                     }
                 }
 
                 // if this chunk coord is in the previous list, remove it so it doesn't get undrawn
-                for (int i = 0; i < previousChunksToDrawList.Count; i++)
+                for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
-                    if (previousChunksToDrawList[i].Equals(thisChunkCoord))
+                    if (previouslyActiveChunks[i].Equals(thisChunkCoord))
                     {
-                        previousChunksToDrawList.RemoveAt(i);
+                        previouslyActiveChunks.RemoveAt(i);
                     }
                 }
             }
         }
 
         // Any chunks left in the previousActiveChunks list are no longer in the player's view distance, so loop through and mark to un-draw them.
-        foreach (ChunkCoord c in previousChunksToDrawList)
+        foreach (ChunkCoord c in previouslyActiveChunks)
         {
-            if (chunksToDrawArray[c.x, c.z] != null)
+            if (chunks[c.x, c.z] != null)
             {
-                chunksToDrawArray[c.x, c.z].isInDrawDist = false; // marks chunks to be un-drawn
+                chunks[c.x, c.z].isInDrawDist = false; // marks chunks to be un-drawn
             }
         }
     }
@@ -707,25 +728,25 @@ public class World : MonoBehaviour
             if (!applyingModifications)
                 ApplyModifications();
 
-            if (chunksToDrawList.Count > 0)
-                DrawChunks();
+            if (chunksToUpdate.Count > 0)
+                UpdateChunks();
         }
     }
 
     // called during the threaded chunk draw
-    void DrawChunks()
+    void UpdateChunks()
     {
-        lock (ChunkDrawThreadLock)
+        lock (ChunkUpdateThreadLock)
         {
-            chunksToDrawList[0].DrawChunk(); // draw previous chunks
+            chunksToUpdate[0].UpdateChunk(); // draw previous chunks
 
-            if (!chunkCoordsToDrawList.Contains(chunksToDrawList[0].coord)) // if the chunkCoordsToDrawList does not contain the chunkToDrawList
-                chunkCoordsToDrawList.Add(chunksToDrawList[0].coord); // add it to chunkCoordsToDrawList at end of list
-            chunksToDrawList.RemoveAt(0); // remove previously drawn chunk from start of list
+            if (!activeChunks.Contains(chunksToUpdate[0].coord)) // if the activeChunks does not contain the chunksToUpdate
+                activeChunks.Add(chunksToUpdate[0].coord); // add it to activeChunks at end of list
+            chunksToUpdate.RemoveAt(0); // remove previously drawn chunk from start of list
         }
     }
 
-    void FirstCheckDrawDistance(ChunkCoord playerChunkCoord, int playerIndex, int firstDrawDistance) // used to load a larger portion of the world upon scene start for first player
+    void FirstCheckViewDistance(ChunkCoord playerChunkCoord, int playerIndex, int firstDrawDistance) // used to load a larger portion of the world upon scene start for first player
     {
         playerLastChunkCoords[playerIndex] = playerChunkCoord;
 
@@ -739,17 +760,17 @@ public class World : MonoBehaviour
                 if (IsChunkInWorld(thisChunkCoord))
                 {
                     // Check if its in view distance, if not, mark it to be re-drawn.
-                    if (chunksToDrawArray[x, z] == null) // if the chunksToDrawArray is empty at thisChunkCoord
+                    if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
                     {
-                        chunksToDrawArray[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
+                        chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
                     }
-                    chunkCoordsToDrawList.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
+                    activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
                 }
             }
         }
 
-        for(int i = 0; i < chunksToDrawList.Count; i++)
-            chunksToDrawList[i].DrawChunk(); // draw previous chunks during first world draw
+        for(int i = 0; i < chunksToUpdate.Count; i++)
+            chunksToUpdate[i].UpdateChunk(); // draw previous chunks during first world draw
 
         worldLoaded = true;
     }
@@ -1204,16 +1225,16 @@ public class World : MonoBehaviour
                     Vector3 globalPositionAbove = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y + 1, chunkCoord.z * VoxelData.ChunkWidth + z);
 
                     // if voxel matches Perlin noise pattern
-                    if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
+                    if (blocktypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
                     {
                         // if studs don't already exist
                         if (!studDictionary.TryGetValue(globalPositionAbove, out _))
                         {
                             // if voxel is solid, and voxel above is air, and voxel is not barrier block
-                            if (blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].isSolid && chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y + 1, z].id == 0 && chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id != 1)
+                            if (blocktypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].isSolid && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y + 1, z].id == 0 && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id != 1)
                             {
                                 // add studs
-                                studDictionary.Add(globalPositionAbove, Instantiate(blocktypes[chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs, globalPositionAbove, Quaternion.identity));
+                                studDictionary.Add(globalPositionAbove, Instantiate(blocktypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs, globalPositionAbove, Quaternion.identity));
                             }
                         }
                         else
@@ -1222,7 +1243,7 @@ public class World : MonoBehaviour
                         }
                     }
 
-                    byte blockID = chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
+                    byte blockID = chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
 
                     // if voxel has an object defined
                     if (blocktypes[blockID].voxelBoundObject != null)
@@ -1308,7 +1329,7 @@ public class World : MonoBehaviour
                     Vector3 globalPositionAbove = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y + 1, chunkCoord.z * VoxelData.ChunkWidth + z);
 
                     // Destroy any gameObject associated with the global position or global position above
-                    byte blockID = chunksToDrawArray[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
+                    byte blockID = chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
 
                     if (objectDictionary.TryGetValue(globalPosition, out _) && blockID != 25 && blockID != 26) // voxelBoundObjects but not base or procGen.ldr
                     {
@@ -1393,7 +1414,7 @@ public class World : MonoBehaviour
     {
         int x = Mathf.FloorToInt(pos.x / VoxelData.ChunkWidth);
         int z = Mathf.FloorToInt(pos.z / VoxelData.ChunkWidth);
-        return chunksToDrawArray[x, z];
+        return chunks[x, z];
     }
 
     public bool CheckForVoxel(Vector3 pos)
@@ -1452,6 +1473,7 @@ public class BlockType
     public bool isTransparent;
     public VoxelMeshData meshData;
     public Sprite icon;
+    public bool isActive;
     public GameObject studs;
     public GameObject voxelBoundObject;
 

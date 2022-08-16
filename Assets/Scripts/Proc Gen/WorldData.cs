@@ -79,7 +79,7 @@ public class WorldData
         seed = wD.seed;
     }
 
-    public ChunkData RequestChunk (Vector2Int coord)
+    public ChunkData RequestChunk (Vector2Int coord, bool createNewChunk)
     {
         ChunkData c;
 
@@ -89,11 +89,13 @@ public class WorldData
             {
                 c = chunks[coord];
             }
-            else // If it doesn't exist, create the chunk then return it.
+            else if (createNewChunk) // If it doesn't exist, create the chunk then return it.
             {
                 LoadChunkFromFile(coord);
                 c = chunks[coord];
             }
+            else
+                c = null;
         }
 
         return c;
@@ -143,14 +145,13 @@ public class WorldData
         z *= VoxelData.ChunkWidth;
 
         // Check if the chunk exists. If not, create it.
-        ChunkData chunk = RequestChunk(new Vector2Int(x, z));
+        ChunkData chunk = RequestChunk(new Vector2Int(x, z), true);
 
         // Then create a Vector3Int with the position of our voxel *within* the chunk.
         Vector3Int voxel = new Vector3Int((int)(pos.x -x),(int)pos.y, (int)(pos.z - z));
 
         // Then set the voxel in our chunk.
-        chunk.map[voxel.x, voxel.y, voxel.z].id = value;
-        //AddToModifiedChunkList(chunk); // DO NOT NEED TO SAVE ALL CHUNKS WITH STRUCTURES, GAME CAN GENERATE UPON START
+        chunk.ModifyVoxel(voxel, value, 0);
     }
 
     public VoxelState GetVoxel(Vector3 pos)
@@ -168,12 +169,15 @@ public class WorldData
         z *= VoxelData.ChunkWidth;
 
         // Check if the chunk exists. If not, create it.
-        ChunkData chunk = RequestChunk(new Vector2Int(x, z));
+        ChunkData chunk = RequestChunk(new Vector2Int(x, z), false);
+
+        if (chunk == null)
+            return null;
 
         // Then create a Vector3Int with the position of our voxel *within* the chunk.
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));
 
         // Then set the voxel in our chunk.
-        return new VoxelState(chunk.map[voxel.x, voxel.y, voxel.z].id);//, chunk, voxel);
+        return chunk.map[voxel.x, voxel.y, voxel.z];
     }
 }
