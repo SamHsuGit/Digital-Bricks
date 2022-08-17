@@ -88,7 +88,7 @@ public class ChunkData
 
         // Cache voxels for easier code.
         VoxelState voxel = map[pos.x, pos.y, pos.z];
-        BlockType newVoxel = World.Instance.blocktypes[_id];
+        BlockType newVoxel = World.Instance.blockTypes[_id];
 
         // Cache the old opacity value.
         //byte oldOpacity = voxel.properties.opacity;

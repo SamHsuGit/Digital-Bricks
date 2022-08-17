@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 public class PPFXSetValues : MonoBehaviour
 {
     public World world;
-    public DepthOfField depthOfField;
+    [HideInInspector] public DepthOfField depthOfField;
 
     VolumeProfile volumeProfile;
     private void Awake()

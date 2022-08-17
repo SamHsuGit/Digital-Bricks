@@ -64,7 +64,7 @@ public class World : MonoBehaviour
     public Material blockMaterial;
     public Material blockMaterialTransparent;
     public PhysicMaterial physicMaterial;
-    public BlockType[] blocktypes;
+    public BlockType[] blockTypes;
     public GameObject[] voxelPrefabs;
     public AudioSource chunkLoadSound;
 
@@ -266,7 +266,7 @@ public class World : MonoBehaviour
         WorldDataOverrides(planetNumber);
 
         if (Settings.Platform == 2)
-            blocktypes[25].voxelBoundObject = null;
+            blockTypes[25].voxelBoundObject = null;
         else
         {
             if(Settings.OnlinePlay && baseObString != null)
@@ -276,7 +276,7 @@ public class World : MonoBehaviour
                 baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
             }
 
-            blocktypes[25].voxelBoundObject = baseOb;
+            blockTypes[25].voxelBoundObject = baseOb;
 
             if (Settings.OnlinePlay)
             {
@@ -1238,16 +1238,16 @@ public class World : MonoBehaviour
                     Vector3 globalPositionAbove = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y + 1, chunkCoord.z * VoxelData.ChunkWidth + z);
 
                     // if voxel matches Perlin noise pattern
-                    if (blocktypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
+                    if (blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
                     {
                         // if studs don't already exist
                         if (!studDictionary.TryGetValue(globalPositionAbove, out _))
                         {
                             // if voxel is solid, and voxel above is air, and voxel is not barrier block
-                            if (blocktypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].isSolid && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y + 1, z].id == 0 && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id != 1)
+                            if (blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].isSolid && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y + 1, z].id == 0 && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id != 1)
                             {
                                 // add studs
-                                studDictionary.Add(globalPositionAbove, Instantiate(blocktypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs, globalPositionAbove, Quaternion.identity));
+                                studDictionary.Add(globalPositionAbove, Instantiate(blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs, globalPositionAbove, Quaternion.identity));
                             }
                         }
                         else
@@ -1259,7 +1259,7 @@ public class World : MonoBehaviour
                     byte blockID = chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
 
                     // if voxel has an object defined
-                    if (blocktypes[blockID].voxelBoundObject != null)
+                    if (blockTypes[blockID].voxelBoundObject != null)
                     {
                         // if objects don't already exist
                         if (!objectDictionary.TryGetValue(globalPosition, out _))
@@ -1273,21 +1273,21 @@ public class World : MonoBehaviour
                                 VBOorientation.eulerAngles = new Vector3(180, 0, 0); // if VBOImport then flip right side up
                             }
                             GameObject VBO;
-                            if (blockID == 25 && Settings.Platform != 2 && blocktypes[blockID].voxelBoundObject != null)
+                            if (blockID == 25 && Settings.Platform != 2 && blockTypes[blockID].voxelBoundObject != null)
                             {
-                                baseOb = blocktypes[blockID].voxelBoundObject;
+                                baseOb = blockTypes[blockID].voxelBoundObject;
                                 if (Settings.OnlinePlay)
                                 {
                                     if (baseOb.GetComponent<NetworkIdentity>() == null)
                                         baseOb.AddComponent<NetworkIdentity>();
                                 }
-                                baseOb = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
+                                baseOb = Instantiate(blockTypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                                 baseOb.GetComponent<BoxCollider>().enabled = false; // disable large VBO Box collider used to add placeholder voxels for world procGen
                                 AddToBaseChildren(baseOb);
                                 VBO = baseOb;
                             }
                             else
-                                VBO = Instantiate(blocktypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
+                                VBO = Instantiate(blockTypes[blockID].voxelBoundObject, VBOPosition, VBOorientation);
                             objectDictionary.Add(globalPosition, VBO);
                         }
                     }
@@ -1325,8 +1325,8 @@ public class World : MonoBehaviour
     public void AddObjectsToVoxel(Vector3 pos, byte id)
     {
         // if voxel has an object defined, then add object to voxel
-        if (blocktypes[id].voxelBoundObject != null)
-            objectDictionary.Add(pos, Instantiate(blocktypes[id].voxelBoundObject, pos, Quaternion.identity));
+        if (blockTypes[id].voxelBoundObject != null)
+            objectDictionary.Add(pos, Instantiate(blockTypes[id].voxelBoundObject, pos, Quaternion.identity));
     }
 
     public void RemoveObjectsFromChunk(ChunkCoord chunkCoord)
@@ -1440,7 +1440,7 @@ public class World : MonoBehaviour
         if (voxel.id == 25 || voxel.id == 26)
             return true; // VBO placeholder to prevent player from replacing with a voxel
 
-        if (blocktypes[voxel.id].isSolid) // gives error if the player starts outside of the world
+        if (blockTypes[voxel.id].isSolid) // gives error if the player starts outside of the world
             return true;
         else
             return false;
@@ -1477,51 +1477,51 @@ public class World : MonoBehaviour
     }
 }
 
-[System.Serializable]
-public class BlockType
-{
-    public string blockName;
-    public bool isDrawn;
-    public bool isSolid;
-    public bool isTransparent;
-    public VoxelMeshData meshData;
-    public Sprite icon;
-    public bool isActive;
-    public GameObject studs;
-    public GameObject voxelBoundObject;
+//[System.Serializable]
+//public class BlockType
+//{
+//    public string blockName;
+//    public bool isDrawn;
+//    public bool isSolid;
+//    public bool isTransparent;
+//    public VoxelMeshData meshData;
+//    public Sprite icon;
+//    public bool isActive;
+//    public GameObject studs;
+//    public GameObject voxelBoundObject;
 
-    [Header("Texture Values")]
-    public int backFaceTexture;
-    public int frontFaceTexture;
-    public int topFaceTexture;
-    public int bottomFaceTexture;
-    public int leftFaceTexture;
-    public int rightFaceTexture;
+//    [Header("Texture Values")]
+//    public int backFaceTexture;
+//    public int frontFaceTexture;
+//    public int topFaceTexture;
+//    public int bottomFaceTexture;
+//    public int leftFaceTexture;
+//    public int rightFaceTexture;
 
-    // Back, Front, Top, Bottom, Left, Right
+//    // Back, Front, Top, Bottom, Left, Right
 
-    public int GetTextureID(int faceIndex)
-    {
-        switch (faceIndex)
-        {
-            case 0:
-                return backFaceTexture;
-            case 1:
-                return frontFaceTexture;
-            case 2:
-                return topFaceTexture;
-            case 3:
-                return bottomFaceTexture;
-            case 4:
-                return leftFaceTexture;
-            case 5:
-                return rightFaceTexture;
-            default:
-                Debug.Log("Error in GetTextureID; invalid face index");
-                return 0;
-        }
-    }
-}
+//    public int GetTextureID(int faceIndex)
+//    {
+//        switch (faceIndex)
+//        {
+//            case 0:
+//                return backFaceTexture;
+//            case 1:
+//                return frontFaceTexture;
+//            case 2:
+//                return topFaceTexture;
+//            case 3:
+//                return bottomFaceTexture;
+//            case 4:
+//                return leftFaceTexture;
+//            case 5:
+//                return rightFaceTexture;
+//            default:
+//                Debug.Log("Error in GetTextureID; invalid face index");
+//                return 0;
+//        }
+//    }
+//}
 
 public class VoxelMod
 {

@@ -68,7 +68,7 @@ public class SetupMenu : MonoBehaviour
         loadingText.SetActive(true);
 
         if (Settings.Platform == 2)
-            SceneManager.LoadScene(5); // mobile loads smaller scene
+            SceneManager.LoadScene(5); // mobile VR loads smaller scene
         else
             SceneManager.LoadScene(3);
     }
@@ -82,7 +82,7 @@ public class SetupMenu : MonoBehaviour
         Settings.OnlinePlay = true;
 
         if (Settings.Platform == 2)
-            SceneManager.LoadScene(5); // mobile loads smaller scene
+            SceneManager.LoadScene(5); // mobile VR loads smaller scene
         else
             SceneManager.LoadScene(3);
     }

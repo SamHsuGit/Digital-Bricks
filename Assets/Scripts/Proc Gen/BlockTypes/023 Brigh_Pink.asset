@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 023 Brigh_Pink
+  m_EditorClassIdentifier: 
+  blockName: 
+  isDrawn: 1
+  isSolid: 1
+  isTransparent: 0
+  meshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
+  icon: {fileID: 4449047110683481943, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  isActive: 0
+  studs: {fileID: 2620124397277145217, guid: 8661812d1d20af7458a3ac4ba40b7eb9, type: 3}
+  voxelBoundObject: {fileID: 0}
+  backFaceTexture: 64
+  frontFaceTexture: 64
+  topFaceTexture: 65
+  bottomFaceTexture: 63
+  leftFaceTexture: 64
+  rightFaceTexture: 64

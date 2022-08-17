@@ -102,7 +102,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
-                    if (World.Instance.blocktypes[chunkData.map[x, y, z].id].isDrawn)
+                    if (World.Instance.blockTypes[chunkData.map[x, y, z].id].isDrawn)
                         UpdateMeshData(new Vector3(x, y, z)); // draw chunk by adding mesh data
                 }
             }
@@ -284,7 +284,7 @@ public class Chunk
         {
             VoxelState neighbor = chunkData.map[x, y, z].neighbors[p];
 
-            if (neighbor != null && World.Instance.blocktypes[neighbor.id].isTransparent)
+            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent)
             {
                 int faceVertCount = 0;
                 for (int i = 0; i < voxel.properties.meshData.faces[p].vertData.Length; i++)
@@ -295,7 +295,7 @@ public class Chunk
                     faceVertCount++;
                 }
 
-                if (!World.Instance.blocktypes[voxel.id].isTransparent)
+                if (!World.Instance.blockTypes[voxel.id].isTransparent)
                 {
                     for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
                         triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);

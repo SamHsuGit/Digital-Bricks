@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 017 Dark_Turquoise
+  m_EditorClassIdentifier: 
+  blockName: 
+  isDrawn: 1
+  isSolid: 1
+  isTransparent: 0
+  meshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
+  icon: {fileID: 2748531719775846729, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  isActive: 0
+  studs: {fileID: 2620124397277145217, guid: 5235fb1ec8e15a442a52a347e0267623, type: 3}
+  voxelBoundObject: {fileID: 0}
+  backFaceTexture: 46
+  frontFaceTexture: 46
+  topFaceTexture: 47
+  bottomFaceTexture: 45
+  leftFaceTexture: 46
+  rightFaceTexture: 46

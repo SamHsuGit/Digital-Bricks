@@ -131,8 +131,8 @@ public class Toolbar : MonoBehaviour
                     creativeBlockID--;
                 }
                 
-                if (creativeBlockID > World.Instance.blocktypes.Length - 1) // limit blockIndex to range of defined blocks
-                    creativeBlockID = (byte)(World.Instance.blocktypes.Length - 1);
+                if (creativeBlockID > World.Instance.blockTypes.Length - 1) // limit blockIndex to range of defined blocks
+                    creativeBlockID = (byte)(World.Instance.blockTypes.Length - 1);
                 if (creativeBlockID < 2) // cannot select air or barrier blocks
                     creativeBlockID = 2;
                 if (creativeBlockID == 25 || creativeBlockID == 26 && inputHandler.navUp) // cannot select reserved blocktypes 25 and 26

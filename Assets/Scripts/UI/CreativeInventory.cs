@@ -14,7 +14,7 @@ public class CreativeInventory : MonoBehaviour
 
         world = World.Instance;
 
-        for (int i = 1; i < world.blocktypes.Length; i++)
+        for (int i = 1; i < world.blockTypes.Length; i++)
         {
 
             GameObject newSlot = Instantiate(slotPrefab, transform);
