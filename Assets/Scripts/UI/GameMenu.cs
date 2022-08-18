@@ -71,7 +71,7 @@ public class GameMenu : MonoBehaviour
         playerHUDCanvasGroup.interactable = true;
         optionsMenuCanvasGroup.alpha = 0;
         optionsMenuCanvasGroup.interactable = false;
-        debugText.SetActive(true);
+        debugText.SetActive(false);
         controlsText.SetActive(false);
         autoSaveIcon.SetActive(false);
     }
@@ -146,6 +146,8 @@ public class GameMenu : MonoBehaviour
     {
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
         SettingsStatic.LoadedSettings.timeOfDay = lighting.timeOfDay; // only write this value when saving instead of every frame update
+
+        World.Instance.SetUndrawVoxels();
 
         FileSystemExtension.SaveSettings();
         SettingsStatic.LoadSettings();
@@ -228,5 +230,10 @@ public class GameMenu : MonoBehaviour
     public void ToggleControls()
     {
         controlsText.SetActive(!controlsText.activeSelf);
+    }
+
+    public void ToggleDebug()
+    {
+        debugText.SetActive(!debugText.activeSelf);
     }
 }

@@ -31,7 +31,6 @@ public static class SettingsStatic
         settings.worldCoord = 1;
         settings.timeOfDay = 6.01f;
         settings.worldSizeinChunks = 5;
-        settings.undrawVoxels = true;
         settings.playerName = "PlayerName";
         settings.creativeMode = false;
 
@@ -77,11 +76,10 @@ public class Settings
     public bool fullscreen;
 
     [Header("World Gen")]
-    public int planetSeed;
-    public int worldCoord; // int yields numbers from 0 to 2,147,483,647 inclusively
+    public int planetSeed; // can be 0 to 2,147,483,647 inclusively
+    public int worldCoord; // can be 0 to 2,147,483,647 inclusively
     public float timeOfDay;
     public int worldSizeinChunks;
-    public bool undrawVoxels;
 
     [Header("Player Customization")]
     public string playerName;

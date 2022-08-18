@@ -247,11 +247,16 @@ public class World : MonoBehaviour
         //Debug.Log("Player Joined");
         //Debug.Log("playerCount = " + playerCount);
 
-        // found that performance is good enough to never undraw voxels or voxelBoundObjects (regardless of graphics settings) which can cause other issues
-        if ((Settings.OnlinePlay || playerCount <= 2) && SettingsStatic.LoadedSettings.worldSizeinChunks > 5) // for online play or singleplayer local with larger world size
-            undrawVoxels = SettingsStatic.LoadedSettings.undrawVoxels; // allow user to determine if undraw voxels (true by default)
-        else
-            undrawVoxels = false; // cannot undraw voxels in local splitscreen
+        SetUndrawVoxels();
+    }
+
+    public void SetUndrawVoxels()
+    {
+        undrawVoxels = true;
+        if ((!Settings.OnlinePlay || playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
+            undrawVoxels = false;
+        else if (SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local single splitscreen or online and graphics settings are set to ultra
+            undrawVoxels = false;
         undrawVoxelBoundObjects = undrawVoxels; // set same as undrawVoxels
     }
 

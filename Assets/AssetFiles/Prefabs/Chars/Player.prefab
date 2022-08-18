@@ -44,7 +44,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4673335178978187722}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 48, y: 91, z: 48}
+  m_LocalPosition: {x: 168, y: 91, z: 168}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5290477769798018411}
@@ -435,6 +435,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d8864d24-f971-4c48-8d97-f72fb4267cf1
     m_ActionName: Actions/Drop[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5114036199920861410}
+        m_TargetAssemblyTypeName: GameMenu, Assembly-CSharp
+        m_MethodName: ToggleDebug
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cc161660-967f-496b-ac99-2a5d39d466eb
+    m_ActionName: Actions/Debug[/Keyboard/f3]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Actions
