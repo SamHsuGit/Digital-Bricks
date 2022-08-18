@@ -34,17 +34,23 @@ public class DebugText : MonoBehaviour
         {
             string debugText = frameRate + " fps";
             debugText += "\n";
+            debugText += " CPU: " + SystemInfo.processorType + " RAM: " + SystemInfo.systemMemorySize + " OS: " + SystemInfo.operatingSystem;
+            debugText += "\n";
+            debugText += "GPU: " + SystemInfo.graphicsDeviceName + " VRAM: " + SystemInfo.graphicsMemorySize;
+            debugText += "\n";
             debugText += "XYZ: " + (Mathf.FloorToInt(playerPos.x) - halfWorldSizeInVoxels) + " / " + Mathf.FloorToInt(playerPos.y) + " / " + (Mathf.FloorToInt(playerPos.z) - halfWorldSizeInVoxels);
             debugText += "\n";
             debugText += "Chunk: " + (World.Instance.GetChunkFromVector3(playerPos).coord.x - halfWorldSizeInChunks) + " / " + (World.Instance.GetChunkFromVector3(playerPos).coord.z - halfWorldSizeInChunks);
             debugText += "\n";
-            debugText += "Biome: " + World.Instance.biome.biomeName;
-            debugText += "\n";
-            debugText += "c: " + World.Instance.continentalness;
-            debugText += "\n";
-            debugText += "e: " + World.Instance.erosion;
+            debugText += "c: " + World.Instance.continentalness + " e: " + World.Instance.erosion + " pv: " + World.Instance.peaksAndValleys;
             debugText += "\n";
             debugText += "w: " + World.Instance.weirdness;
+            debugText += "\n";
+            debugText += "t: " + World.Instance.temperature + " h: " + World.Instance.humidity + " Biome: " + World.Instance.biome.biomeName;
+            debugText += "\n";
+            debugText += "f: " + World.Instance.fertility + " p: " + World.Instance.percolation + " SurfaceObType: " + World.Instance.surfaceObType;
+            debugText += "\n";
+            debugText += "VBO: " + World.Instance.placementVBO;
 
             text.text = debugText;
 

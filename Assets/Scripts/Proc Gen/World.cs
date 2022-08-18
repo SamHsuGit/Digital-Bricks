@@ -39,11 +39,11 @@ public class World : MonoBehaviour
     private int terrainHeightVoxels = 0; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
     private float terrainHeightPercentChunk; // defines height of terrain as percentage of total chunkHeight
 
-    private float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
-    private float percolation = 0; // defines surfaceOb size, eventually derive from weirdness?
-    private float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
+    public float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
+    public float percolation = 0; // defines surfaceOb size, eventually derive from weirdness?
+    public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
 
-    private int surfaceObType = 0; // based on percolation and fertility
+    public int surfaceObType = 0; // based on percolation and fertility
 
     public Biome biome;
     public GameObject mainCameraGameObject;
@@ -878,8 +878,8 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
-        humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome (call only once, expensive)
-        temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome (call only once, expensive)
+        humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome
+        temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome
         if (!worldData.isAlive)
             biome = biomes[11];
         else
@@ -914,10 +914,10 @@ public class World : MonoBehaviour
         // add structures like monoliths and flora like trees and plants and mushrooms
         if ((yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
-            fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f); // ideally only call once (expensive)
-            percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // ideally only call once (expensive)
+            fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
+            percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f);
             surfaceObType = GetSurfaceObType(percolation, fertility);
-            placementVBO = Noise.Get2DPerlin(xzCoords, 321, 10f); // ideally only call once (expensive)
+            placementVBO = Noise.Get2DPerlin(xzCoords, 321, 10f);
 
             switch (surfaceObType)
             {
