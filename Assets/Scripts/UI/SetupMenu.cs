@@ -6,12 +6,14 @@ using UnityEngine.UI;
 public class SetupMenu : MonoBehaviour
 {
     public GameObject menuElements;
-    public GameObject loadingText;
+    public Slider loadingSlider;
+    public TextMeshProUGUI loadingPercentageText;
     public TMP_InputField playerNameInputField;
     public Toggle creativeMode;
     public TMP_InputField planetSeedInputField;
     public TMP_InputField worldCoordInputField;
     public GameObject modelsObjectToSpin;
+    public GameObject levelLoaderObject;
     
     public Slider worldRenderDistanceSlider;
     public Slider worldSizeInChunksSlider;
@@ -22,10 +24,14 @@ public class SetupMenu : MonoBehaviour
 
     public int index;
 
+    private LevelLoader levelLoader;
+
     private void Awake()
     {
         // import this player's char model as a preview before entering the game
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
+
+        levelLoader = levelLoaderObject.GetComponent<LevelLoader>();
     }
 
     private void Start()
@@ -40,7 +46,7 @@ public class SetupMenu : MonoBehaviour
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
         worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
-        loadingText.SetActive(false);
+        loadingSlider.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -65,12 +71,18 @@ public class SetupMenu : MonoBehaviour
         SaveSettings();
 
         Settings.OnlinePlay = false;
-        loadingText.SetActive(true);
+        loadingSlider.gameObject.SetActive(true);
 
         if (Settings.Platform == 2)
+        {
             SceneManager.LoadScene(5); // mobile VR loads smaller scene
+            //levelLoader.LoadLevel(5, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
+        }
         else
+        {
             SceneManager.LoadScene(3);
+            //levelLoader.LoadLevel(3, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
+        }
     }
 
     public void Online()
@@ -82,9 +94,15 @@ public class SetupMenu : MonoBehaviour
         Settings.OnlinePlay = true;
 
         if (Settings.Platform == 2)
+        {
             SceneManager.LoadScene(5); // mobile VR loads smaller scene
+            //levelLoader.LoadLevel(5, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
+        }
         else
+        {
             SceneManager.LoadScene(3);
+            //levelLoader.LoadLevel(3, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
+        }
     }
 
     public void Back()

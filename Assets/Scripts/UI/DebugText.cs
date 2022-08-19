@@ -34,9 +34,13 @@ public class DebugText : MonoBehaviour
         {
             string debugText = frameRate + " fps";
             debugText += "\n";
-            debugText += " CPU: " + SystemInfo.processorType + " RAM: " + SystemInfo.systemMemorySize + " OS: " + SystemInfo.operatingSystem;
+            debugText += "Pre World Load Time: " + World.Instance.preWorldLoadTime;
             debugText += "\n";
-            debugText += "GPU: " + SystemInfo.graphicsDeviceName + " VRAM: " + SystemInfo.graphicsMemorySize;
+            debugText += "World Load Time: " + World.Instance.worldLoadTime;
+            debugText += "\n";
+            debugText += " CPU: " + SystemInfo.processorType + " RAM: " + SystemInfo.systemMemorySize + " Mb  OS: " + SystemInfo.operatingSystem;
+            debugText += "\n";
+            debugText += "GPU: " + SystemInfo.graphicsDeviceName + " VRAM: " + SystemInfo.graphicsMemorySize + " Mb";
             debugText += "\n";
             debugText += "XYZ: " + (Mathf.FloorToInt(playerPos.x) - halfWorldSizeInVoxels) + " / " + Mathf.FloorToInt(playerPos.y) + " / " + (Mathf.FloorToInt(playerPos.z) - halfWorldSizeInVoxels);
             debugText += "\n";

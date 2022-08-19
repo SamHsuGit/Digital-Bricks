@@ -203,12 +203,12 @@ public class Chunk
 
         if (newID == 0)
         {
-            World.Instance.RemoveObjectsFromVoxel(pos); // removes objects if voxel below is replaced with air
+            World.Instance.RemoveVBOFromVoxel(pos); // removes objects if voxel below is replaced with air
         }
         else
         {
             // add objects immediately whenever a new block is placed. Currently only objects are only replaced. Studs are replaced when update chunk is called.
-            World.Instance.AddObjectsToVoxel(pos, newID);
+            World.Instance.AddVBOToVoxel(pos, newID);
         }
 
         int xCheck = Mathf.FloorToInt(pos.x);

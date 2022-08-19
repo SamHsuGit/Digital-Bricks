@@ -1,25 +1,25 @@
 ﻿using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using System.Diagnostics;
 
 public class World : MonoBehaviour
 {
     public static World Instance { get { return _instance; } }
     public bool worldLoaded = false;
-    public int tick;
-    public bool saving = false;
-    public bool undrawVoxelBoundObjects = false;
+    public string preWorldLoadTime;
+    public string worldLoadTime;
+    public bool undrawVBO = false;
     public bool undrawVoxels = false; // does not redraw voxels if set to true...
-    public bool VBOs = true;
     public bool chunkMeshColliders = true;
     public int planetNumber;
     public int seed;
     public string baseObString;
     public GameObject baseOb;
     public bool isEarth;
-    public bool ticksEnabled = true;
 
     // use spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
     public Vector2[] continentalnessSplinePoints;
@@ -79,7 +79,7 @@ public class World : MonoBehaviour
     public Chunk[,] chunks;
     public List<ChunkCoord> activeChunks = new List<ChunkCoord>();
     public List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>();
-    public List<ChunkCoord> activeChunksObjectsList = new List<ChunkCoord>();
+    public List<ChunkCoord> activeChunksVBOList = new List<ChunkCoord>();
     public List<ChunkCoord> activeChunksObjectsListCopy = new List<ChunkCoord>();
 
     public List<Chunk> chunksToUpdate = new List<Chunk>();
@@ -93,6 +93,15 @@ public class World : MonoBehaviour
     public Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
     public Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
     public WorldData worldData;
+
+    // private variables
+    private Stopwatch worldLoadStopWatch;
+
+    // WorldGen toggles
+    private bool drawClouds = true;
+    private bool drawLodes = true;
+    private bool drawSurfaceObject = true;
+    public bool drawVBO = true;
 
     private static World _instance;
     private static bool multithreading = true;
@@ -118,15 +127,17 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        worldLoadStopWatch = new Stopwatch();
+        worldLoadStopWatch.Start();
         chunks = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks]; // set size of array from saved value
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
-        Random.InitState(seed);
+        UnityEngine.Random.InitState(seed);
 
         // initialized, reset when players join
         undrawVoxels = false;
-        undrawVoxelBoundObjects = false;
+        undrawVBO = false;
 
         playerCount = 0;
 
@@ -257,7 +268,7 @@ public class World : MonoBehaviour
             undrawVoxels = false;
         else if (SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local single splitscreen or online and graphics settings are set to ultra
             undrawVoxels = false;
-        undrawVoxelBoundObjects = undrawVoxels; // set same as undrawVoxels
+        undrawVBO = undrawVoxels; // set same as undrawVoxels
     }
 
     private void Start()
@@ -314,7 +325,11 @@ public class World : MonoBehaviour
             mainCamera.enabled = false;
 
         Settings.WorldLoaded = true;
-
+        worldLoadStopWatch.Stop();
+        TimeSpan ts = worldLoadStopWatch.Elapsed;
+        worldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
         //StartCoroutine(Tick()); // caused exception when trying to access activeChunks while it was being modified so commented out
     }
 
@@ -413,20 +428,20 @@ public class World : MonoBehaviour
             }
             //randomize blockIDs based on seed values
             // Default ProcGen values based on seed
-            worldData.blockIDsubsurface = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDcore = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome00 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome01 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome02 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome03 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome04 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome05 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome06 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome07 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome08 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome09 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome10 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome11 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDsubsurface = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDcore = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome00 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome01 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome02 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome03 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome04 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome05 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome06 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome07 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome08 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome09 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome10 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDBiome11 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             if (worldData.distToStar < 2 || worldData.distToStar > 5) // if distToStar is too close or far (too hot/cold)
             {
                 worldData.hasAtmosphere = false; // world has no atmosphere
@@ -438,22 +453,22 @@ public class World : MonoBehaviour
                 worldData.isAlive = true; // world is hospitable to flora
             }
             worldData.biomes = new int[] {0, 1, 2, 3, 4, 5, 6}; // controls which biomes the world has
-            worldData.blockIDTreeLeavesWinter = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesSpring = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesSummer = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesFall1 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesFall2 = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeTrunk = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDCacti = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDMushroomLargeCap = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDMushroomLargeStem = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDMonolith = (byte)Random.Range(minRandBlockID, 24);
-            worldData.blockIDEvergreenLeaves = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDEvergreenTrunk = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDHoneyComb = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDHugeTreeLeaves = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDHugeTreeTrunk = (byte)Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDColumn = (byte)Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesWinter = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesSpring = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesSummer = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesFall1 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesFall2 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDCacti = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDMushroomLargeCap = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDMushroomLargeStem = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDMonolith = (byte)UnityEngine.Random.Range(minRandBlockID, 24);
+            worldData.blockIDEvergreenLeaves = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDEvergreenTrunk = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHoneyComb = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHugeTreeLeaves = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHugeTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDColumn = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
         }
 
         biomes[0].surfaceBlock = worldData.blockIDBiome00;
@@ -502,26 +517,6 @@ public class World : MonoBehaviour
     //    }
     //}
 
-    private void FixedUpdate()
-    {
-        ////disabled autosave feature
-        //if (Settings.OnlinePlay)
-        //{
-        //    saving = false;
-
-        //    // AutoSave feature every hour
-        //    if (tick > 50 * 60 * 60 * 24) // 1 sec = 50 ticks, 60 sec = 1 min, 60 min = 1 hr, 24 hr = 1 day (save every day for server maintenance)
-        //    {
-        //        tick = 0;
-        //        saving = true;
-        //        Debug.Log("Saved Game: " + System.DateTime.Now);
-        //        SaveSystem.SaveWorld(Instance.worldData, this);
-        //    }
-        //    else
-        //        tick++;
-        //}
-    }
-
     private void Update()
     {
         if (!worldLoaded) // don't continue with main loop if world has not been loaded.
@@ -534,8 +529,8 @@ public class World : MonoBehaviour
         //    chunkCoordsToDrawList.Clear();
         //}
 
-        activeChunksObjectsListCopy = new List<ChunkCoord>(activeChunksObjectsList);
-        activeChunksObjectsList.Clear();
+        activeChunksObjectsListCopy = new List<ChunkCoord>(activeChunksVBOList);
+        activeChunksVBOList.Clear();
 
         // create copies of the lists to use so the original lists can be modified during the update loop (was causing errors)
         playersCopy = players;
@@ -592,51 +587,28 @@ public class World : MonoBehaviour
             }
         }
 
-        //lock (ChunkDrawThreadLock) // chunks deactivate correctly, but do not get redrawn correctly...
-        //{
-        //    if (!activateNewChunks) // deactivate all non-active chunks as some still had mesh colliders enabled...
-        //    {
-        //        foreach (KeyValuePair<ChunkCoord, Chunk> chunk in chunks)
-        //        {
-        //            if (chunk.Value.isActive)
-        //                chunk.Value.isActive = true;
-        //            else
-        //                chunk.Value.isActive = false;
-        //        }
-        //    }
-        //}
-
-        //if (!activateNewChunks && !firstChunkLoaded)
-        //{
-        //    AddObjectsToChunk(firstChunkCoord);
-        //    firstChunkLoaded = true; // only load the firstChunkVBO once and only check while in 'tutorial' small world mode
-        //}
-
         foreach (Player p in players)
         {
             foreach (ChunkCoord c in p.chunksToAddVBO)
             {
-                if (!activeChunksObjectsList.Contains(c))
-                    activeChunksObjectsList.Add(c); // complile master list of chunks to draw objects
+                if (!activeChunksVBOList.Contains(c))
+                    activeChunksVBOList.Add(c); // complile master list of chunks to draw objects
             }
         }
 
-        foreach (ChunkCoord c in activeChunksObjectsList)
+        foreach (ChunkCoord c in activeChunksVBOList)
         {
-            //if (!activateNewChunks && chunks.ContainsKey(c) && chunks[c].isActive)
-            //    AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
-            //else if (activateNewChunks)
-            if(VBOs)
-                AddObjectsToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
+            if(drawVBO)
+                AddVBOToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
         }
 
-        foreach (ChunkCoord c in activeChunksObjectsList)
+        foreach (ChunkCoord c in activeChunksVBOList)
         {
             if (activeChunksObjectsListCopy.Contains(c))
                 activeChunksObjectsListCopy.Remove(c);
         }
 
-        if (undrawVoxelBoundObjects)
+        if (undrawVBO)
         {
             // create a new copy of master list
             // clear master list
@@ -649,8 +621,8 @@ public class World : MonoBehaviour
             foreach (ChunkCoord c in activeChunksObjectsListCopy)
             {
                 //if(activateNewChunks) // only undraw if out of tutorial mode
-                if (VBOs)
-                    RemoveObjectsFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
+                if (drawVBO)
+                    RemoveVBOFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
             }
         }
     }
@@ -838,7 +810,7 @@ public class World : MonoBehaviour
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
         // If between certain height range, return clouds.
-        if (yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
+        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
         {
             // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
             if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
@@ -897,7 +869,7 @@ public class World : MonoBehaviour
 
         /* LODE PASS */
         // add ores and underground caves
-        if (yGlobalPos < terrainHeightVoxels - 5)
+        if (drawLodes && yGlobalPos < terrainHeightVoxels - 5)
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -912,7 +884,7 @@ public class World : MonoBehaviour
 
         /* SURFACE OBJECTS PASS */
         // add structures like monoliths and flora like trees and plants and mushrooms
-        if ((yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+        if (drawSurfaceObject && (yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
             percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f);
@@ -1230,7 +1202,7 @@ public class World : MonoBehaviour
         }
     }
 
-    public void AddObjectsToChunk(ChunkCoord chunkCoord)
+    public void AddVBOToChunk(ChunkCoord chunkCoord)
     {
         // for all voxels in chunk
         for (int y = 0; y < VoxelData.ChunkHeight - 1; y++)
@@ -1327,14 +1299,14 @@ public class World : MonoBehaviour
         }
     }
 
-    public void AddObjectsToVoxel(Vector3 pos, byte id)
+    public void AddVBOToVoxel(Vector3 pos, byte id)
     {
         // if voxel has an object defined, then add object to voxel
         if (blockTypes[id].voxelBoundObject != null)
             objectDictionary.Add(pos, Instantiate(blockTypes[id].voxelBoundObject, pos, Quaternion.identity));
     }
 
-    public void RemoveObjectsFromChunk(ChunkCoord chunkCoord)
+    public void RemoveVBOFromChunk(ChunkCoord chunkCoord)
     {
         // for all voxels in chunk
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
@@ -1370,7 +1342,7 @@ public class World : MonoBehaviour
         }
     }
 
-    public void RemoveObjectsFromVoxel(Vector3 pos)
+    public void RemoveVBOFromVoxel(Vector3 pos)
     {
         // for voxel specified
         Vector3 positionAbove = new Vector3(pos.x, pos.y + 1, pos.z);
@@ -1481,52 +1453,6 @@ public class World : MonoBehaviour
             return false;
     }
 }
-
-//[System.Serializable]
-//public class BlockType
-//{
-//    public string blockName;
-//    public bool isDrawn;
-//    public bool isSolid;
-//    public bool isTransparent;
-//    public VoxelMeshData meshData;
-//    public Sprite icon;
-//    public bool isActive;
-//    public GameObject studs;
-//    public GameObject voxelBoundObject;
-
-//    [Header("Texture Values")]
-//    public int backFaceTexture;
-//    public int frontFaceTexture;
-//    public int topFaceTexture;
-//    public int bottomFaceTexture;
-//    public int leftFaceTexture;
-//    public int rightFaceTexture;
-
-//    // Back, Front, Top, Bottom, Left, Right
-
-//    public int GetTextureID(int faceIndex)
-//    {
-//        switch (faceIndex)
-//        {
-//            case 0:
-//                return backFaceTexture;
-//            case 1:
-//                return frontFaceTexture;
-//            case 2:
-//                return topFaceTexture;
-//            case 3:
-//                return bottomFaceTexture;
-//            case 4:
-//                return leftFaceTexture;
-//            case 5:
-//                return rightFaceTexture;
-//            default:
-//                Debug.Log("Error in GetTextureID; invalid face index");
-//                return 0;
-//        }
-//    }
-//}
 
 public class VoxelMod
 {

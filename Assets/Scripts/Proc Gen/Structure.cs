@@ -535,6 +535,14 @@ public static class Structure
 
     public static byte PorousBlocks(float maxRadius, Vector3 treePosition, Vector3 voxelPosition, byte blockID, float threshold)
     {
+        ////Random.Range is not threadsafe https://answers.unity.com/questions/945837/why-isnt-randomrange-thread-safe.html
+        ////System.Random produced all true for rand.NextDouble() > 0.5f... (negligible performance difference compared to 3DPerlin Noise calculation so chose to keep 3DPerlin calc)
+        //var rand = new System.Random();
+        //if (rand.NextDouble() > 0.5f)
+        //    return blockID;
+        //else
+        //    return 0;
+
         if (Noise.Get3DPerlin(voxelPosition, treePosition.x + treePosition.z, 0.5f, Mathf.Clamp((Mathf.Abs(voxelPosition.x) + Mathf.Abs(voxelPosition.z)) / maxRadius, 0, threshold)))
             return blockID;
         else

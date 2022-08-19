@@ -23,7 +23,6 @@ public class GameMenu : MonoBehaviour
     public GameObject optionsMenu;
     public GameObject debugText;
     public AudioSource buttonSound;
-    public GameObject autoSaveIcon;
     public GameObject controlsText;
 
     CanvasGroup backgroundMaskCanvasGroup;
@@ -73,17 +72,11 @@ public class GameMenu : MonoBehaviour
         optionsMenuCanvasGroup.interactable = false;
         debugText.SetActive(false);
         controlsText.SetActive(false);
-        autoSaveIcon.SetActive(false);
     }
 
     private void Update()
     {
         CheckSplitscreenCanvasRenderMode();
-
-        if (World.Instance.saving)
-            autoSaveIcon.SetActive(true);
-        else
-            autoSaveIcon.SetActive(false);
     }
 
     public void UpdateHP()

@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,9 +16,12 @@ public class GameManagerScript : MonoBehaviour
     public GameObject charPrefab;
 
     private World world;
+    private Stopwatch preWorldGenStopwatch;
 
     void Awake()
     {
+        preWorldGenStopwatch = new Stopwatch();
+        preWorldGenStopwatch.Start();
         world = worldOb.GetComponent<World>();
 
         // these values are set immediately and overwritten later if necessary to match server properties
@@ -33,6 +38,11 @@ public class GameManagerScript : MonoBehaviour
         }
         else
             Setup();
+        preWorldGenStopwatch.Stop();
+        TimeSpan ts = preWorldGenStopwatch.Elapsed;
+        world.preWorldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
     }
 
     public void Setup() // called by NetworkMenu for online play
@@ -51,12 +61,10 @@ public class GameManagerScript : MonoBehaviour
         {
             LDrawImporterRuntime.SetActive(false);
             world.chunkMeshColliders = false;
-            world.VBOs = true;
         }
         else
         {
             world.chunkMeshColliders = true; // values set ahead of world gameObject activation
-            world.VBOs = true; // values set ahead of world gameObject activation
         }
 
         if (Settings.OnlinePlay) // network online multiplayer
