@@ -6,7 +6,7 @@ public static class VoxelData
 	public static readonly int ChunkWidth = 16;
 
 	// original Minecraft World Height Limit = 128, found that a smaller chunkHeight is needed to reduce world load times to under 15 seconds due to poor code optimization
-	public static readonly int ChunkHeight = 64;
+	public static readonly int ChunkHeight = 96;
 
 	// get this value from Settings instead of setting a static readonly int
 	// was 5000, reduced since limiting choices unleashes creativity.
