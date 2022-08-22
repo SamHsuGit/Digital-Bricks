@@ -837,7 +837,7 @@ public class World : MonoBehaviour
 
         if (yGlobalPos > terrainHeightVoxels) // guarantees all blocks above terrainHeight are 0
             return 0;
-        if (weirdness > 0.5f) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
+        if (weirdness > 0.8f) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
