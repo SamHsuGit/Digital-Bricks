@@ -135,9 +135,8 @@ public class World : MonoBehaviour
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         UnityEngine.Random.InitState(seed);
 
-        // initialized, reset when players join
-        undrawVoxels = false;
-        undrawVBO = false;
+        // initialized, try to reset when players join
+        SetUndrawVoxels();
 
         playerCount = 0;
 
@@ -200,76 +199,7 @@ public class World : MonoBehaviour
         };
     }
 
-    public void JoinPlayer(GameObject playerGameObject)
-    {
-        Player player;
-
-        if (playerGameObject == worldPlayer)
-        {
-            player = new Player(playerGameObject, "WorldPlayer"); // world player is needed to generate the world before the player is added
-            players.Add(player);
-            //Debug.Log("Added WorldPlayer");
-        }
-        else if (Settings.Platform != 2)
-        {
-            player = playerGameObject.GetComponent<Controller>().player;
-            players.Add(player);
-            //Debug.Log("Added Player");
-        }
-        else
-        {
-            player = new Player(playerGameObject, "VR Player");
-            players.Add(player);
-            //Debug.Log("Added VR Player");
-        }
-
-        playerGameObjects.Add(player, player.playerGameObject);
-
-        // Set player position from save file
-        if (Settings.Platform != 2 && IsGlobalPosInsideBorder(player.spawnPosition)) // if the player position is in world border move to default spawn position
-        {
-            CharacterController charController = playerGameObject.GetComponent<CharacterController>();
-            bool playerCharControllerActive = charController.enabled; // save active state of player character controller to reset to old value after teleport
-            charController.enabled = false; // disable character controller since this prevents teleporting to saved locations
-            playerGameObject.transform.position = player.spawnPosition; // teleport player to saved location
-            charController.enabled = playerCharControllerActive; // reset character controller to previous state we saved earlier
-        }
-        else // if player pos is not in world
-            playerGameObject.transform.position = defaultSpawnPosition; // spawn at world spawn point
-
-        ChunkCoord coord = GetChunkCoordFromVector3(playerGameObject.transform.position);
-        playerChunkCoords.Add(coord);
-        playerLastChunkCoords.Add(playerChunkCoords[playerCount]);
-
-        int firstLoadDrawDistance;
-
-        if (playerCount < 1 && playerGameObject.transform.position == defaultSpawnPosition) // for world player
-            firstLoadDrawDistance = loadDistance; // SettingsStatic.LoadedSettings.drawDistance; // first load distance is just large enough to render world for world player
-        else
-            firstLoadDrawDistance = loadDistance; // max value is 3 to ensure older PCs can still handle the CPU Load
-
-        if (firstLoadDrawDistance < loadDistance) // checks to ensure that firstLoadDrawDistance is at least as large as loadDistance
-            firstLoadDrawDistance = loadDistance;
-
-        //if(playerGameObject != worldPlayer) // doesn't make a difference in load times
-            FirstCheckViewDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
-
-        playerCount++;
-        //Debug.Log("Player Joined");
-        //Debug.Log("playerCount = " + playerCount);
-
-        SetUndrawVoxels();
-    }
-
-    public void SetUndrawVoxels()
-    {
-        undrawVoxels = true;
-        if ((!Settings.OnlinePlay || playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
-            undrawVoxels = false;
-        else if (SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local single splitscreen or online and graphics settings are set to ultra
-            undrawVoxels = false;
-        undrawVBO = undrawVoxels; // set same as undrawVoxels
-    }
+    
 
     private void Start()
     {
@@ -502,6 +432,77 @@ public class World : MonoBehaviour
             for (int z = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; z < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; z++)
                 worldData.RequestChunk(new Vector2Int(x, z));
         }
+    }
+
+    public void JoinPlayer(GameObject playerGameObject)
+    {
+        Player player;
+
+        if (playerGameObject == worldPlayer)
+        {
+            player = new Player(playerGameObject, "WorldPlayer"); // world player is needed to generate the world before the player is added
+            players.Add(player);
+            //Debug.Log("Added WorldPlayer");
+        }
+        else if (Settings.Platform != 2)
+        {
+            player = playerGameObject.GetComponent<Controller>().player;
+            players.Add(player);
+            //Debug.Log("Added Player");
+        }
+        else
+        {
+            player = new Player(playerGameObject, "VR Player");
+            players.Add(player);
+            //Debug.Log("Added VR Player");
+        }
+
+        playerGameObjects.Add(player, player.playerGameObject);
+
+        // Set player position from save file
+        if (Settings.Platform != 2 && IsGlobalPosInsideBorder(player.spawnPosition)) // if the player position is in world border move to default spawn position
+        {
+            CharacterController charController = playerGameObject.GetComponent<CharacterController>();
+            bool playerCharControllerActive = charController.enabled; // save active state of player character controller to reset to old value after teleport
+            charController.enabled = false; // disable character controller since this prevents teleporting to saved locations
+            playerGameObject.transform.position = player.spawnPosition; // teleport player to saved location
+            charController.enabled = playerCharControllerActive; // reset character controller to previous state we saved earlier
+        }
+        else // if player pos is not in world
+            playerGameObject.transform.position = defaultSpawnPosition; // spawn at world spawn point
+
+        ChunkCoord coord = GetChunkCoordFromVector3(playerGameObject.transform.position);
+        playerChunkCoords.Add(coord);
+        playerLastChunkCoords.Add(playerChunkCoords[playerCount]);
+
+        int firstLoadDrawDistance;
+
+        if (playerCount < 1 && playerGameObject.transform.position == defaultSpawnPosition) // for world player
+            firstLoadDrawDistance = loadDistance; // SettingsStatic.LoadedSettings.drawDistance; // first load distance is just large enough to render world for world player
+        else
+            firstLoadDrawDistance = loadDistance; // max value is 3 to ensure older PCs can still handle the CPU Load
+
+        if (firstLoadDrawDistance < loadDistance) // checks to ensure that firstLoadDrawDistance is at least as large as loadDistance
+            firstLoadDrawDistance = loadDistance;
+
+        //if(playerGameObject != worldPlayer) // doesn't make a difference in load times
+        FirstCheckViewDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
+
+        playerCount++;
+        //Debug.Log("Player Joined");
+        //Debug.Log("playerCount = " + playerCount);
+
+        SetUndrawVoxels();
+    }
+
+    public void SetUndrawVoxels()
+    {
+        undrawVoxels = true;
+        if ((!Settings.OnlinePlay && playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
+            undrawVoxels = false;
+        else if (SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local splitscreen (singleplayer) or online and graphics settings are set to ultra
+            undrawVoxels = false;
+        undrawVBO = undrawVoxels; // set same as undrawVoxels
     }
 
     //IEnumerator Tick()

@@ -5,6 +5,7 @@ using TMPro;
 public class DebugText : MonoBehaviour
 {
     public GameObject player;
+    Controller controller;
 
     TextMeshProUGUI text;
 
@@ -20,7 +21,7 @@ public class DebugText : MonoBehaviour
 
         halfWorldSizeInVoxels = VoxelData.WorldSizeInVoxels / 2;
         halfWorldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeinChunks / 2;
-
+        controller = null;
     }
 
     void Update()
@@ -28,23 +29,37 @@ public class DebugText : MonoBehaviour
         if (player == null)
             return;
 
+        if (player != null && controller == null)
+            controller = player.GetComponent<Controller>();
+
         Vector3 playerPos = player.transform.position;
 
         if (World.Instance.worldLoaded && World.Instance.GetChunkFromVector3(playerPos) != null) // don't do this unless the world is loaded and player is in a chunk
         {
-            string debugText = frameRate + " fps";
+            byte blockID = 0;
+            string blockName = "air";
+            if (controller != null)
+            {
+                blockID = controller.blockID;
+                blockName = World.Instance.blockTypes[(int)blockID].name;
+            }
+
+            string debugText = "LDPlay v" + Application.version;
+            debugText += " planetSeed: " + SettingsStatic.LoadedSettings.planetSeed + " worldCoords: " + SettingsStatic.LoadedSettings.worldCoord;
             debugText += "\n";
-            debugText += "Pre World Load Time: " + World.Instance.preWorldLoadTime;
+            debugText += frameRate + " fps";
             debugText += "\n";
-            debugText += "World Load Time: " + World.Instance.worldLoadTime;
+            debugText += "pre world load time: " + World.Instance.preWorldLoadTime;
             debugText += "\n";
-            debugText += " CPU: " + SystemInfo.processorType + " RAM: " + SystemInfo.systemMemorySize + " Mb  OS: " + SystemInfo.operatingSystem;
+            debugText += "world load time: " + World.Instance.worldLoadTime;
+            debugText += "\n";
+            debugText += "CPU: " + SystemInfo.processorType + " RAM: " + SystemInfo.systemMemorySize + " Mb  OS: " + SystemInfo.operatingSystem;
             debugText += "\n";
             debugText += "GPU: " + SystemInfo.graphicsDeviceName + " VRAM: " + SystemInfo.graphicsMemorySize + " Mb";
             debugText += "\n";
-            debugText += "XYZ: " + (Mathf.FloorToInt(playerPos.x) - halfWorldSizeInVoxels) + " / " + Mathf.FloorToInt(playerPos.y) + " / " + (Mathf.FloorToInt(playerPos.z) - halfWorldSizeInVoxels);
+            debugText += "pos: (" + (Mathf.FloorToInt(playerPos.x) - halfWorldSizeInVoxels) + " , " + Mathf.FloorToInt(playerPos.y) + " , " + (Mathf.FloorToInt(playerPos.z) - halfWorldSizeInVoxels) + ")";
             debugText += "\n";
-            debugText += "Chunk: " + (World.Instance.GetChunkFromVector3(playerPos).coord.x - halfWorldSizeInChunks) + " / " + (World.Instance.GetChunkFromVector3(playerPos).coord.z - halfWorldSizeInChunks);
+            debugText += "chunk: (" + (World.Instance.GetChunkFromVector3(playerPos).coord.x - halfWorldSizeInChunks) + " , " + (World.Instance.GetChunkFromVector3(playerPos).coord.z - halfWorldSizeInChunks) + ")";
             debugText += "\n";
             debugText += "c: " + World.Instance.continentalness + " e: " + World.Instance.erosion + " pv: " + World.Instance.peaksAndValleys;
             debugText += "\n";
@@ -55,6 +70,8 @@ public class DebugText : MonoBehaviour
             debugText += "f: " + World.Instance.fertility + " p: " + World.Instance.percolation + " SurfaceObType: " + World.Instance.surfaceObType;
             debugText += "\n";
             debugText += "VBO: " + World.Instance.placementVBO;
+            debugText += "\n";
+            debugText += "blockID: " + blockName;
 
             text.text = debugText;
 

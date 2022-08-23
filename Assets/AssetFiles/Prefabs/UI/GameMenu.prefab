@@ -1375,8 +1375,6 @@ MonoBehaviour:
   debugText: {fileID: 9216991064955783154}
   buttonSound: {fileID: 6193172391877120140}
   controlsText: {fileID: 6345523285659678912}
-  autoSaveIcon: {fileID: 0}
-  test: 0
 --- !u!223 &1391849460458908909
 Canvas:
   m_ObjectHideFlags: 0
@@ -7053,8 +7051,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -30}
-  m_SizeDelta: {x: 800, y: 60}
+  m_AnchoredPosition: {x: 400, y: -162.5}
+  m_SizeDelta: {x: 800, y: 325}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9218819952807204863
 CanvasRenderer:
