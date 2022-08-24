@@ -90,7 +90,7 @@ public class PlayerVoxelCollider : MonoBehaviour
             }
 
             // Affect vertical momentum with gravity if flight not enabled
-            if (verticalMomentum > gravity)
+            if (world.worldLoaded &&  verticalMomentum > gravity)
                 verticalMomentum += Time.fixedDeltaTime * gravity;
         }
 

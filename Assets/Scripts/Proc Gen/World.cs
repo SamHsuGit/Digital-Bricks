@@ -111,6 +111,7 @@ public class World : MonoBehaviour
 
     // hard coded values
     private const float seaLevelThreshold = 0.34f;
+    private const float isAirThreshold = 0.8f;
     private const int minWorldSize = 5;
 
     private static World _instance;
@@ -823,9 +824,10 @@ public class World : MonoBehaviour
 
         GetTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
 
-        if (yGlobalPos > terrainHeightVoxels) // guarantees all blocks above terrainHeight are 0
+        if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
             return 0;
-        if (weirdness > 0.8f) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
+
+        if (weirdness > isAirThreshold) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
@@ -834,6 +836,7 @@ public class World : MonoBehaviour
                     return 0;
             }
         }
+
         CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
