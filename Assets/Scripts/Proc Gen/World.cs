@@ -8,59 +8,59 @@ using System.Diagnostics;
 
 public class World : MonoBehaviour
 {
-    public static World Instance { get { return _instance; } }
-    public bool worldLoaded = false;
-    public string preWorldLoadTime;
-    public string worldLoadTime;
-    public bool undrawVBO = false;
-    public bool undrawVoxels = false; // does not redraw voxels if set to true...
-    public bool chunkMeshColliders = true;
-    public int planetNumber;
-    public int seed;
-    public string baseObString;
-    public GameObject baseOb;
-    public bool isEarth;
+    // PUBLIC VARIABLES
+    [Header("Shown For Debug")]
+    public int playerCount = 0;
+    public WorldData worldData;
 
-    // use spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
-    public Vector2[] continentalnessSplinePoints;
-    public Vector2[] erosionSplinePoints;
-    public Vector2[] peaksAndValleysSplinePoints;
+    [Header("Public Referenced By Others")]
+    // Procedural World Generation Values
+    [HideInInspector] public int season;
+    [HideInInspector] public int planetNumber;
+    [HideInInspector] public int seed;
+    [HideInInspector] public bool isEarth;
 
     // Cached Perlin Noise Map Values (10 2D perlin noise, 1 3D perlin noise, minecraft 1.18 uses 3 2D (continentalness, erosion, weirdness) and 3 3D (temp/humid/caves))
-    public float continentalness = 0; // continentalness, defines distance from ocean
-    public float erosion = 0; // erosion, defines how mountainous the terrain is
-    public float peaksAndValleys = 0; // peaks and valleys
-    public float weirdness = 0; // weirdness
-    public float temperature = 0; // temperature, defines biome
-    public float humidity = 0; // humidity, defines biome + cloud density
-    public bool isAir = false; // used for 3D Perlin Noise pass
+    [HideInInspector] public float continentalness = 0; // continentalness, defines distance from ocean
+    [HideInInspector] public float erosion = 0; // erosion, defines how mountainous the terrain is
+    [HideInInspector] public float peaksAndValleys = 0; // peaks and valleys
+    [HideInInspector] public float weirdness = 0; // weirdness
+    [HideInInspector] public float temperature = 0; // temperature, defines biome
+    [HideInInspector] public float humidity = 0; // humidity, defines biome + cloud density
+    [HideInInspector] public bool isAir = false; // used for 3D Perlin Noise pass
 
     // eventually derive these values from original perlin noise samples
     private int terrainHeightVoxels = 0; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
     private float terrainHeightPercentChunk; // defines height of terrain as percentage of total chunkHeight
 
-    public float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
-    public float percolation = 0; // defines surfaceOb size, eventually derive from weirdness?
-    public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
+    [HideInInspector] public float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
+    [HideInInspector] public float percolation = 0; // defines surfaceOb size, eventually derive from weirdness?
+    [HideInInspector] public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
 
-    public int surfaceObType = 0; // based on percolation and fertility
+    [HideInInspector] public int surfaceObType = 0; // based on percolation and fertility
 
-    public Biome biome;
+    // Other Values
+    [HideInInspector] public bool worldLoaded = false;
+    [HideInInspector] public string preWorldLoadTime;
+    [HideInInspector] public string worldLoadTime;
+    [HideInInspector] public string baseObString;
+    [HideInInspector] public List<Player> players = new List<Player>();
+    [HideInInspector] public List<GameObject> baseObPieces = new List<GameObject>();
+    [HideInInspector] public Biome biome;
+    [HideInInspector] public GameObject baseOb;
+    [HideInInspector] public object ChunkUpdateThreadLock = new object();
+    [HideInInspector] public object ChunkLoadThreadLock = new object();
+    [HideInInspector] public object ChunkListThreadLock = new object();
+
+    [Header("Public References")]
     public GameObject mainCameraGameObject;
     public Lighting globalLighting;
     public GameObject loadingText;
     public GameObject loadingBackground;
-    
     public CustomNetworkManager customNetworkManager;
-
-    [Header("World Generation Values")]
-    public Vector3 defaultSpawnPosition;
-    public int season;
     public Planet[] planets;
     public Biome[] biomes;
-    public int heightOffset = 20;
     public GameObject worldPlayer;
-    
     public Material blockMaterial;
     public Material blockMaterialTransparent;
     public PhysicMaterial physicMaterial;
@@ -68,62 +68,52 @@ public class World : MonoBehaviour
     public GameObject[] voxelPrefabs;
     public AudioSource chunkLoadSound;
 
-    // public variables
-    public List<Player> players = new List<Player>();
-    public int playerCount = 0;
+    // public chunk update lists, dictionaries, queues used by Chunk script
+    [HideInInspector] public Dictionary<ChunkCoord, Chunk> chunksDict = new Dictionary<ChunkCoord, Chunk>();
+    [HideInInspector] public List<ChunkCoord> activeChunks = new List<ChunkCoord>();
+    [HideInInspector] public List<Chunk> chunksToUpdate = new List<Chunk>();
+    [HideInInspector] public Queue<Chunk> chunksToDraw = new Queue<Chunk>();
+    [HideInInspector] public static World Instance { get { return _instance; } }
 
-    // chunk draw lists and arrays
-    public ChunkCoord firstChunkCoord;
-    public bool firstChunkLoaded;
-    public Dictionary<ChunkCoord, Chunk> chunksDict = new Dictionary<ChunkCoord, Chunk>();
-    public Chunk[,] chunks;
-    public List<ChunkCoord> activeChunks = new List<ChunkCoord>();
-    public List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>();
-    public List<ChunkCoord> activeChunksVBOList = new List<ChunkCoord>();
-    public List<ChunkCoord> activeChunksObjectsListCopy = new List<ChunkCoord>();
-
-    public List<Chunk> chunksToUpdate = new List<Chunk>();
-    public Queue<Chunk> chunksToDraw = new Queue<Chunk>();
-
-    public List<GameObject> baseObPieces = new List<GameObject>();
-
-    public object ChunkUpdateThreadLock = new object();
-    public object ChunkLoadThreadLock = new object();
-    public object ChunkListThreadLock = new object();
-    public Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
-    public Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
-    public WorldData worldData;
-
-    // private variables
-    private Stopwatch worldLoadStopWatch;
-
-    // WorldGen toggles
-    private bool drawClouds = true;
-    private bool drawLodes = true;
-    private bool drawSurfaceObject = true;
-    public bool drawVBO = true;
-
-    private static World _instance;
+    // PRIVATE VARIABLES
+    private int cloudHeight;
     private static bool multithreading = true;
+    private bool applyingModifications;
     private int loadDistance;
     private int LOD0threshold;
+    private bool undrawVBO = false;
+    private bool undrawVoxels = false;
     private int studRenderDistanceInChunks; // acts as a radius like drawDistance
 
+    private Chunk[,] chunks;
+    private List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>();
+    private List<ChunkCoord> activeChunksVBOList = new List<ChunkCoord>();
+    private List<ChunkCoord> activeChunksObjectsListCopy = new List<ChunkCoord>();
+    private List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
+    private List<ChunkCoord> playerChunkCoordsCopy = new List<ChunkCoord>();
+    private List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
+    private List<ChunkCoord> playerLastChunkCoordsCopy = new List<ChunkCoord>();
+    private Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
+    private List<Player> playersCopy = new List<Player>();
+    private Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
+    private Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
+    private Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
+
+    private Thread ChunkRedrawThread;
+    private Camera mainCamera;
+    private Stopwatch worldLoadStopWatch;
+    private Vector3 defaultSpawnPosition;
+
+    // use spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
+    private Vector2[] continentalnessSplinePoints;
+    private Vector2[] erosionSplinePoints;
+    private Vector2[] peaksAndValleysSplinePoints;
+
     // hard coded values
-    private float seaLevelThreshold = 0.34f;
-    private int cloudHeight;
+    private const float seaLevelThreshold = 0.34f;
+    private const int minWorldSize = 5;
 
-    List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
-    List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
-    Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
-    List<Player> playersCopy = new List<Player>();
-    List<ChunkCoord> playerChunkCoordsCopy = new List<ChunkCoord>();
-    List<ChunkCoord> playerLastChunkCoordsCopy = new List<ChunkCoord>();
-
-    bool applyingModifications = false;
-    Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
-    Thread ChunkRedrawThread;
-    Camera mainCamera;
+    private static World _instance;
 
     private void Awake()
     {
@@ -155,8 +145,6 @@ public class World : MonoBehaviour
         // Else set this to the instance.
         else
             _instance = this;
-
-        firstChunkCoord = new ChunkCoord(SettingsStatic.LoadedSettings.worldSizeinChunks / 2, SettingsStatic.LoadedSettings.worldSizeinChunks / 2);
 
         cloudHeight = VoxelData.ChunkHeight - 15;
 
@@ -198,8 +186,6 @@ public class World : MonoBehaviour
             new Vector2(1.00f, 1.00f),
         };
     }
-
-    
 
     private void Start()
     {
@@ -498,7 +484,9 @@ public class World : MonoBehaviour
     public void SetUndrawVoxels()
     {
         undrawVoxels = true;
-        if ((!Settings.OnlinePlay && playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
+        if (SettingsStatic.LoadedSettings.worldSizeinChunks == minWorldSize) // worlds of min size do not need to undraw chunks to save memory
+            undrawVoxels = false;
+        else if ((!Settings.OnlinePlay && playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
             undrawVoxels = false;
         else if (SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local splitscreen (singleplayer) or online and graphics settings are set to ultra
             undrawVoxels = false;
@@ -549,7 +537,6 @@ public class World : MonoBehaviour
                 continue;
             }
 
-            // WIP need to debug why playersCopy.Count != playerChunkCoordsCopy.Count
             //Debug.Log("player " + i + " = " + playersCopy[i].name);
             //Debug.Log(playersCopy.Count);
             //Debug.Log(playerChunkCoordsCopy.Count);
@@ -597,10 +584,12 @@ public class World : MonoBehaviour
             }
         }
 
-        foreach (ChunkCoord c in activeChunksVBOList)
+        if (SettingsStatic.LoadedSettings.drawVBO)
         {
-            if(drawVBO)
+            foreach (ChunkCoord c in activeChunksVBOList)
+            {
                 AddVBOToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
+            }
         }
 
         foreach (ChunkCoord c in activeChunksVBOList)
@@ -609,7 +598,7 @@ public class World : MonoBehaviour
                 activeChunksObjectsListCopy.Remove(c);
         }
 
-        if (undrawVBO)
+        if (SettingsStatic.LoadedSettings.drawVBO && undrawVBO)
         {
             // create a new copy of master list
             // clear master list
@@ -621,9 +610,7 @@ public class World : MonoBehaviour
             // destroy objects in copy of master list
             foreach (ChunkCoord c in activeChunksObjectsListCopy)
             {
-                //if(activateNewChunks) // only undraw if out of tutorial mode
-                if (drawVBO)
-                    RemoveVBOFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
+                RemoveVBOFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
             }
         }
     }
@@ -811,7 +798,7 @@ public class World : MonoBehaviour
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
         // If between certain height range, return clouds.
-        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
+        if (SettingsStatic.LoadedSettings.drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
         {
             // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
             if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
@@ -870,7 +857,7 @@ public class World : MonoBehaviour
 
         /* LODE PASS */
         // add ores and underground caves
-        if (drawLodes && yGlobalPos < terrainHeightVoxels - 5)
+        if (SettingsStatic.LoadedSettings.drawLodes && yGlobalPos < terrainHeightVoxels - 5)
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -885,7 +872,7 @@ public class World : MonoBehaviour
 
         /* SURFACE OBJECTS PASS */
         // add structures like monoliths and flora like trees and plants and mushrooms
-        if (drawSurfaceObject && (yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+        if (SettingsStatic.LoadedSettings.drawSurfaceObjects && (yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
             percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f);

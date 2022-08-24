@@ -54,7 +54,7 @@ public class CustomNetworkManager : NetworkManager
         // playerPrefab is the one assigned in the inspector in Network
         // Manager but you can use different prefabs per race for example
         //Transform startPos = GetStartPosition(); // not used to set default Spawn pos in settings
-        Vector3 startPos = worldOb.GetComponent<World>().defaultSpawnPosition;
+        Vector3 startPos = Settings.DefaultSpawnPosition;
         playerGameObject = Instantiate(charPrefab, startPos, Quaternion.identity);
 
         Controller controller = playerGameObject.GetComponent<Controller>();

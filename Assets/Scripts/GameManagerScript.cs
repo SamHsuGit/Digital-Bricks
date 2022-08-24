@@ -43,6 +43,7 @@ public class GameManagerScript : MonoBehaviour
         world.preWorldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
+        FileSystemExtension.SaveSettings(); // saved changed settings to file
     }
 
     public void Setup() // called by NetworkMenu for online play
@@ -60,11 +61,11 @@ public class GameManagerScript : MonoBehaviour
         if (Settings.Platform == 2)
         {
             LDrawImporterRuntime.SetActive(false);
-            world.chunkMeshColliders = false;
+            SettingsStatic.LoadedSettings.chunkMeshColliders = false;
         }
         else
         {
-            world.chunkMeshColliders = true; // values set ahead of world gameObject activation
+            SettingsStatic.LoadedSettings.chunkMeshColliders = true; // values set ahead of world gameObject activation
         }
 
         if (Settings.OnlinePlay) // network online multiplayer

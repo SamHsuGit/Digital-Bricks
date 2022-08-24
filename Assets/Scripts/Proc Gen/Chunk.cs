@@ -338,7 +338,7 @@ public class Chunk
         
         meshFilter.mesh = mesh;
 
-        if(World.Instance.chunkMeshColliders)
+        if(SettingsStatic.LoadedSettings.chunkMeshColliders)
         {
             if (col == null)
                 col = chunkObject.AddComponent<MeshCollider>();

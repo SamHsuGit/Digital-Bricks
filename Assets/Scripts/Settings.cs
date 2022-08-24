@@ -18,21 +18,33 @@ public static class SettingsStatic
     {
         Settings settings = new Settings();
 
-        settings.ipAddress = "localhost";
+        // not configured in UI
+        settings.drawClouds = true;
+        settings.drawLodes = true;
+        settings.drawSurfaceObjects = true;
+        settings.chunkMeshColliders = true;
+        settings.drawVBO = true;
+        settings.timeOfDay = 6.01f;
+
+        // performance
+        settings.graphicsQuality = 0;
         settings.viewDistance = 3;
+
+        // world gen
+        settings.creativeMode = false;
+        settings.planetSeed = 3;
+        settings.worldCoord = 1;
+        settings.worldSizeinChunks = 5;
+
+        // customization
+        settings.playerName = "PlayerName";
+        settings.ipAddress = "localhost";
         settings.volume = 0.5f;
         settings.lookSpeed = 0.1f;
         settings.lookAccel = 0.1f;
         settings.fov = 90f;
-        settings.graphicsQuality = 0;
         settings.invertY = false;
         settings.fullscreen = true;
-        settings.planetSeed = 3;
-        settings.worldCoord = 1;
-        settings.timeOfDay = 6.01f;
-        settings.worldSizeinChunks = 5;
-        settings.playerName = "PlayerName";
-        settings.creativeMode = false;
 
         string path;
         if (Settings.Platform == 2)
@@ -57,33 +69,33 @@ public class Settings
     private static bool _networkPlay = false;
     private static string _appPath;
 
-    [Header("Game Data")]
-    public string ipAddress;
+    // not configured in UI
+    public bool drawClouds;
+    public bool drawLodes;
+    public bool drawSurfaceObjects;
+    public bool chunkMeshColliders;
+    public bool drawVBO;
+    public float timeOfDay;
 
-    [Header("Performance")]
-    // NOTE: viewDistance is a radius, just like in Minecraft.
-    public int viewDistance; // loadDistance = viewDistance * 3.33 to reduce lag by ensuring player is always moving in loaded chunks
-
-    [Header("Controls")]
-    [Range(0.0001f, 1f)]
-    public float volume;
-    [Range(0.001f, 10f)]
-    public float lookSpeed;
-    public float lookAccel;
-    public float fov;
+    // performance
     public int graphicsQuality;
-    public bool invertY;
-    public bool fullscreen;
+    public int viewDistance; // loadDistance > viewDistance to reduce lag by ensuring player is always moving in loaded chunks. viewDistance is a radius, just like in Minecraft.
 
-    [Header("World Gen")]
+    // world gen
+    public bool creativeMode;
     public int planetSeed; // can be 0 to 2,147,483,647 inclusively
     public int worldCoord; // can be 0 to 2,147,483,647 inclusively
-    public float timeOfDay;
     public int worldSizeinChunks;
 
-    [Header("Player Customization")]
+    // customization
     public string playerName;
-    public bool creativeMode;
+    public string ipAddress;
+    [Range(0.0001f, 1f)] public float volume;
+    [Range(0.001f, 10f)] public float lookSpeed;
+    public float lookAccel;
+    public float fov;
+    public bool invertY;
+    public bool fullscreen;
 
     public static bool WorldLoaded
     {
