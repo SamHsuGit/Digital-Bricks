@@ -61,11 +61,9 @@ public class GameManagerScript : MonoBehaviour
         if (Settings.Platform == 2)
         {
             LDrawImporterRuntime.SetActive(false);
+            // values set ahead of world gameObject activation
+            SettingsStatic.LoadedSettings.creativeMode = true;
             SettingsStatic.LoadedSettings.chunkMeshColliders = false;
-        }
-        else
-        {
-            SettingsStatic.LoadedSettings.chunkMeshColliders = true; // values set ahead of world gameObject activation
         }
 
         if (Settings.OnlinePlay) // network online multiplayer

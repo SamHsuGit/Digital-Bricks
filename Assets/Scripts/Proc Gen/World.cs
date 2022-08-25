@@ -43,6 +43,7 @@ public class World : MonoBehaviour
     [HideInInspector] public bool worldLoaded = false;
     [HideInInspector] public string preWorldLoadTime;
     [HideInInspector] public string worldLoadTime;
+    [HideInInspector] public string chunkDrawTime;
     [HideInInspector] public string baseObString;
     [HideInInspector] public List<Player> players = new List<Player>();
     [HideInInspector] public List<GameObject> baseObPieces = new List<GameObject>();
@@ -80,15 +81,19 @@ public class World : MonoBehaviour
     private static bool multithreading = true;
     private bool applyingModifications;
     private int loadDistance;
-    private int LOD0threshold;
     private bool undrawVBO = false;
     private bool undrawVoxels = false;
+    private bool drawClouds;
+    private bool drawLodes;
+    private bool drawSurfaceObjects;
+    private bool drawVBO;
+    private int viewDistance;
     private int studRenderDistanceInChunks; // acts as a radius like drawDistance
 
     private Chunk[,] chunks;
     private List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>();
     private List<ChunkCoord> activeChunksVBOList = new List<ChunkCoord>();
-    private List<ChunkCoord> activeChunksObjectsListCopy = new List<ChunkCoord>();
+    private List<ChunkCoord> activeChunksVBOListCopy = new List<ChunkCoord>();
     private List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     private List<ChunkCoord> playerChunkCoordsCopy = new List<ChunkCoord>();
     private List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
@@ -102,6 +107,7 @@ public class World : MonoBehaviour
     private Thread ChunkRedrawThread;
     private Camera mainCamera;
     private Stopwatch worldLoadStopWatch;
+    private Stopwatch chunkDrawStopWatch;
     private Vector3 defaultSpawnPosition;
 
     // use spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
@@ -113,12 +119,20 @@ public class World : MonoBehaviour
     private const float seaLevelThreshold = 0.34f;
     private const float isAirThreshold = 0.8f;
     private const int minWorldSize = 5;
+    //private const int LOD0threshold = 1;
 
     private static World _instance;
 
     private void Awake()
     {
+        drawClouds = SettingsStatic.LoadedSettings.drawClouds;
+        drawLodes = SettingsStatic.LoadedSettings.drawLodes;
+        drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
+        drawVBO = SettingsStatic.LoadedSettings.drawVBO;
+        viewDistance = SettingsStatic.LoadedSettings.viewDistance;
+
         worldLoadStopWatch = new Stopwatch();
+        chunkDrawStopWatch = new Stopwatch();
         worldLoadStopWatch.Start();
         chunks = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks]; // set size of array from saved value
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
@@ -412,7 +426,6 @@ public class World : MonoBehaviour
         //Debug.Log("WorldSizeInChunks = " + SettingsStatic.LoadedSettings.worldSizeinChunks);
         //Debug.Log("View Distance = " + SettingsStatic.LoadedSettings.viewDistance);
         //Debug.Log("Load Distance = " + loadDistance);
-        LOD0threshold = 1; // Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 0.333f);
 
         for (int x = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; x < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; x++)
         {
@@ -519,8 +532,10 @@ public class World : MonoBehaviour
         //    chunkCoordsToDrawList.Clear();
         //}
 
-        activeChunksObjectsListCopy = new List<ChunkCoord>(activeChunksVBOList);
-        activeChunksVBOList.Clear();
+        if(drawVBO)
+            activeChunksVBOListCopy = new List<ChunkCoord>(activeChunksVBOList);
+        if (drawVBO)
+            activeChunksVBOList.Clear();
 
         // create copies of the lists to use so the original lists can be modified during the update loop (was causing errors)
         playersCopy = players;
@@ -552,7 +567,8 @@ public class World : MonoBehaviour
                 if (!playerChunkCoordsCopy[i].Equals(playerLastChunkCoordsCopy[i]))
                 {
                     CheckViewDistance(playerChunkCoordsCopy[i], i); // re-draw chunks
-                    CheckVBODrawDist(playerChunkCoordsCopy[i], i); // re-draw studs
+                    if(drawVBO)
+                        CheckVBODrawDist(playerChunkCoordsCopy[i], i); // re-draw studs
                 }
             }
 
@@ -560,46 +576,58 @@ public class World : MonoBehaviour
             {
                 lock (chunksToDraw)
                 {
+                    chunkDrawStopWatch.Start();
+
                     chunksToDraw.Dequeue().CreateMesh();
+
+                    chunkDrawStopWatch.Stop();
+                    TimeSpan ts = chunkDrawStopWatch.Elapsed;
+                    chunkDrawTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                        ts.Hours, ts.Minutes, ts.Seconds,
+                        ts.Milliseconds / 10);
                 }
             }
 
-            if (!multithreading)
+            if (!multithreading) // old code (always multithread)
             {
                 if (!applyingModifications)
                     ApplyModifications();
 
                 if (chunksToUpdate.Count > 0)
-                {
                     UpdateChunks();
+            }
+        }
+
+        if (drawVBO)
+        {
+            foreach (Player p in players)
+            {
+                foreach (ChunkCoord c in p.chunksToAddVBO)
+                {
+                    if (!activeChunksVBOList.Contains(c))
+                        activeChunksVBOList.Add(c); // complile master list of chunks to draw objects
                 }
             }
         }
 
-        foreach (Player p in players)
-        {
-            foreach (ChunkCoord c in p.chunksToAddVBO)
-            {
-                if (!activeChunksVBOList.Contains(c))
-                    activeChunksVBOList.Add(c); // complile master list of chunks to draw objects
-            }
-        }
-
-        if (SettingsStatic.LoadedSettings.drawVBO)
+        if (drawVBO)
         {
             foreach (ChunkCoord c in activeChunksVBOList)
             {
-                AddVBOToChunk(c); // add voxel bound objects in chunksToDrawObjectsList
+                AddVBOToChunk(c); // add voxel bound objects in chunksToDrawVBOList
             }
         }
 
-        foreach (ChunkCoord c in activeChunksVBOList)
+        if (drawVBO)
         {
-            if (activeChunksObjectsListCopy.Contains(c))
-                activeChunksObjectsListCopy.Remove(c);
+            foreach (ChunkCoord c in activeChunksVBOList)
+            {
+                if (activeChunksVBOListCopy.Contains(c))
+                    activeChunksVBOListCopy.Remove(c);
+            }
         }
 
-        if (SettingsStatic.LoadedSettings.drawVBO && undrawVBO)
+        if (drawVBO && undrawVBO)
         {
             // create a new copy of master list
             // clear master list
@@ -609,9 +637,9 @@ public class World : MonoBehaviour
             // Add all player list values into master list (avoid duplicates)
             // create objects in master list
             // destroy objects in copy of master list
-            foreach (ChunkCoord c in activeChunksObjectsListCopy)
+            foreach (ChunkCoord c in activeChunksVBOListCopy)
             {
-                RemoveVBOFromChunk(c); // remove voxel bound objects in previousChunksToDrawObjectsList
+                RemoveVBOFromChunk(c); // remove voxel bound objects in previousChunksToDrawVBOList
             }
         }
     }
@@ -649,9 +677,9 @@ public class World : MonoBehaviour
         }
 
         // Loop through all chunks currently within view distance of the player.
-        for (int x = playerChunkCoord.x - SettingsStatic.LoadedSettings.viewDistance; x < playerChunkCoord.x + SettingsStatic.LoadedSettings.viewDistance; x++)
+        for (int x = playerChunkCoord.x - viewDistance; x < playerChunkCoord.x + viewDistance; x++)
         {
-            for (int z = playerChunkCoord.z - SettingsStatic.LoadedSettings.viewDistance; z < playerChunkCoord.z + SettingsStatic.LoadedSettings.viewDistance; z++)
+            for (int z = playerChunkCoord.z - viewDistance; z < playerChunkCoord.z + viewDistance; z++)
             {
                 ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
 
@@ -664,33 +692,27 @@ public class World : MonoBehaviour
                     chunks[x, z].isInDrawDist = true;
                     activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
 
-                    if(chunksToUpdate.Contains(chunks[x, z]))
-                    {
-                        chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = false; // mark as outside LOD0
-                        if (x > playerChunkCoord.x - LOD0threshold && x < playerChunkCoord.x + LOD0threshold && z > playerChunkCoord.z - LOD0threshold && z < playerChunkCoord.z + LOD0threshold)
-                            chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = true; // mark as inside LOD0
-                    }
+                    // WIP Doesn't work
+                    //if(chunksToUpdate.Contains(chunks[x, z]))
+                    //{
+                    //    chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = false; // mark as outside LOD0
+                    //    if (x > playerChunkCoord.x - LOD0threshold && x < playerChunkCoord.x + LOD0threshold && z > playerChunkCoord.z - LOD0threshold && z < playerChunkCoord.z + LOD0threshold)
+                    //        chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = true; // mark as inside LOD0
+                    //}
                 }
 
                 // if this chunk coord is in the previous list, remove it so it doesn't get undrawn
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
                     if (previouslyActiveChunks[i].Equals(thisChunkCoord))
-                    {
                         previouslyActiveChunks.RemoveAt(i);
-                    }
                 }
             }
         }
 
-        // Any chunks left in the previousActiveChunks list are no longer in the player's view distance, so loop through and mark to un-draw them.
+        // Any chunks left in the previousActiveChunks list are no longer in the player's view distance, so loop through and disable them (i.e. mark to un-draw them).
         foreach (ChunkCoord c in previouslyActiveChunks)
-        {
-            if (chunks[c.x, c.z] != null)
-            {
-                chunks[c.x, c.z].isInDrawDist = false; // marks chunks to be un-drawn
-            }
-        }
+            chunks[c.x, c.z].isInDrawDist = false; // marks chunks to be un-drawn
     }
 
     void ThreadedUpdate() // the loop where the chunk draw occurs, this operation is threaded.
@@ -799,7 +821,7 @@ public class World : MonoBehaviour
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
         // If between certain height range, return clouds.
-        if (SettingsStatic.LoadedSettings.drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
+        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
         {
             // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
             if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
@@ -860,7 +882,7 @@ public class World : MonoBehaviour
 
         /* LODE PASS */
         // add ores and underground caves
-        if (SettingsStatic.LoadedSettings.drawLodes && yGlobalPos < terrainHeightVoxels - 5)
+        if (drawLodes && yGlobalPos < terrainHeightVoxels - 5)
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -875,7 +897,7 @@ public class World : MonoBehaviour
 
         /* SURFACE OBJECTS PASS */
         // add structures like monoliths and flora like trees and plants and mushrooms
-        if (SettingsStatic.LoadedSettings.drawSurfaceObjects && (yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+        if (drawSurfaceObjects && (yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
             percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f);

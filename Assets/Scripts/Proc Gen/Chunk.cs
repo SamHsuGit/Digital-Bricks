@@ -156,6 +156,8 @@ public class Chunk
             if(chunkObject.GetComponent<MeshCollider>() != null)
                 chunkObject.GetComponent<MeshCollider>().enabled = value;
             _isActive = value;
+            if (chunkObject != null)
+                chunkObject.SetActive(value);
         }
     }
 
@@ -182,7 +184,7 @@ public class Chunk
         set { _isInStructDrawDist = value; }
     }
 
-    public bool isInObDrawDist
+    public bool isInVBODrawDist
     {
         get { return _isInObDrawDist; }
         set { _isInObDrawDist = value; }

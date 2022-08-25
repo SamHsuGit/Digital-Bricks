@@ -49,9 +49,17 @@ public class DebugText : MonoBehaviour
             debugText += "\n";
             debugText += frameRate + " fps";
             debugText += "\n";
+            debugText += "Active Chunks: " + World.Instance.activeChunks.Count;
+            debugText += "\n";
+            debugText += "Chunks To Update: " + World.Instance.chunksToUpdate.Count;
+            debugText += "\n";
+            debugText += "Chunks To Draw: " + World.Instance.chunksToDraw.Count;
+            debugText += "\n";
             debugText += "pre world load time: " + World.Instance.preWorldLoadTime;
             debugText += "\n";
             debugText += "world load time: " + World.Instance.worldLoadTime;
+            debugText += "\n";
+            debugText += "chunk draw time: " + World.Instance.chunkDrawTime;
             debugText += "\n";
             debugText += "CPU: " + SystemInfo.processorType + " RAM: " + SystemInfo.systemMemorySize + " Mb  OS: " + SystemInfo.operatingSystem;
             debugText += "\n";
