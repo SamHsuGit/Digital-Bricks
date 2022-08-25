@@ -106,10 +106,13 @@ MonoBehaviour:
   worldLoaded: 0
   preWorldLoadTime: 
   worldLoadTime: 
+  getVoxelTime: 
+  chunkDrawTime: 
   baseObString: 
   baseObPieces: []
   biome: {fileID: 0}
   baseOb: {fileID: 0}
+  blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
   mainCameraGameObject: {fileID: 0}
   globalLighting: {fileID: 0}
   loadingText: {fileID: 0}
@@ -162,7 +165,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1f79fc23f66fa9c48b216cef8c3ef390, type: 2}
   - {fileID: 11400000, guid: f7e9971761b16e441b2cb2465b306386, type: 2}
   worldPlayer: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
-  blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
+  blockMaterialLit: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
+  blockMaterialUnlit: {fileID: 2100000, guid: c4fc2d828d2dcb44a8674b462e40fda5, type: 2}
   blockMaterialTransparent: {fileID: 2100000, guid: b30f605d8d5c115428ab690dd5222b44, type: 2}
   physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
   blockTypes:

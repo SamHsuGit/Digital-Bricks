@@ -43,6 +43,7 @@ public class World : MonoBehaviour
     [HideInInspector] public bool worldLoaded = false;
     [HideInInspector] public string preWorldLoadTime;
     [HideInInspector] public string worldLoadTime;
+    [HideInInspector] public string debugTimer;
     [HideInInspector] public string chunkDrawTime;
     [HideInInspector] public string baseObString;
     [HideInInspector] public List<Player> players = new List<Player>();
@@ -52,6 +53,7 @@ public class World : MonoBehaviour
     [HideInInspector] public object ChunkUpdateThreadLock = new object();
     [HideInInspector] public object ChunkLoadThreadLock = new object();
     [HideInInspector] public object ChunkListThreadLock = new object();
+    [HideInInspector] public Material blockMaterial;
 
     [Header("Public References")]
     public GameObject mainCameraGameObject;
@@ -62,7 +64,8 @@ public class World : MonoBehaviour
     public Planet[] planets;
     public Biome[] biomes;
     public GameObject worldPlayer;
-    public Material blockMaterial;
+    public Material blockMaterialLit;
+    public Material blockMaterialUnlit;
     public Material blockMaterialTransparent;
     public PhysicMaterial physicMaterial;
     public BlockType[] blockTypes;
@@ -83,6 +86,7 @@ public class World : MonoBehaviour
     private int loadDistance;
     private bool undrawVBO = false;
     private bool undrawVoxels = false;
+    private bool useBiomes;
     private bool drawClouds;
     private bool drawLodes;
     private bool drawSurfaceObjects;
@@ -108,6 +112,7 @@ public class World : MonoBehaviour
     private Camera mainCamera;
     private Stopwatch worldLoadStopWatch;
     private Stopwatch chunkDrawStopWatch;
+    private Stopwatch debugStopWatch;
     private Vector3 defaultSpawnPosition;
 
     // use spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
@@ -125,14 +130,22 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        useBiomes = SettingsStatic.LoadedSettings.useBiomes;
         drawClouds = SettingsStatic.LoadedSettings.drawClouds;
         drawLodes = SettingsStatic.LoadedSettings.drawLodes;
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
+        debugTimer = "notMeasured";
+
+        if (SettingsStatic.LoadedSettings.graphicsQuality == 0)
+            blockMaterial = blockMaterialUnlit;
+        else
+            blockMaterial = blockMaterialLit;
 
         worldLoadStopWatch = new Stopwatch();
         chunkDrawStopWatch = new Stopwatch();
+        debugStopWatch = new Stopwatch();
         worldLoadStopWatch.Start();
         chunks = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks]; // set size of array from saved value
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
@@ -256,11 +269,10 @@ public class World : MonoBehaviour
             mainCamera.enabled = false;
 
         Settings.WorldLoaded = true;
+
         worldLoadStopWatch.Stop();
         TimeSpan ts = worldLoadStopWatch.Elapsed;
-        worldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
+        worldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
         //StartCoroutine(Tick()); // caused exception when trying to access activeChunks while it was being modified so commented out
     }
 
@@ -582,9 +594,7 @@ public class World : MonoBehaviour
 
                     chunkDrawStopWatch.Stop();
                     TimeSpan ts = chunkDrawStopWatch.Elapsed;
-                    chunkDrawTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                        ts.Hours, ts.Minutes, ts.Seconds,
-                        ts.Milliseconds / 10);
+                    chunkDrawTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 }
             }
 
@@ -841,7 +851,7 @@ public class World : MonoBehaviour
         }
 
         /* BASIC TERRAIN PASS */
-        // Adds basic terrain
+        // Adds base terrain using spline points to GetTerrainHeight
         byte voxelValue = 0;
 
         GetTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
@@ -865,7 +875,9 @@ public class World : MonoBehaviour
         // Calculates biome (determines surface and subsurface blocktypes)
         humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome
         temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome
-        if (!worldData.isAlive)
+        if (!useBiomes)
+            biome = biomes[0];
+        else if (!worldData.isAlive)
             biome = biomes[11];
         else
             biome = biomes[GetBiome(temperature, humidity)];
@@ -1011,7 +1023,6 @@ public class World : MonoBehaviour
         }
         else
             return false;
-            
     }
 
     public void GetTerrainHeight(Vector2 xzCoords)
@@ -1406,7 +1417,7 @@ public class World : MonoBehaviour
         applyingModifications = false;
     }
 
-    ChunkCoord GetChunkCoordFromVector3(Vector3 pos)
+    public ChunkCoord GetChunkCoordFromVector3(Vector3 pos)
     {
         int x = Mathf.FloorToInt(pos.x / VoxelData.ChunkWidth);
         int z = Mathf.FloorToInt(pos.z / VoxelData.ChunkWidth);
@@ -1464,6 +1475,19 @@ public class World : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    public void StartDebugTimer()
+    {
+        debugStopWatch.Reset();
+        debugStopWatch.Restart();
+    }
+
+    public void StopDebugTimer()
+    {
+        debugStopWatch.Stop();
+        TimeSpan ts = debugStopWatch.Elapsed;
+        debugTimer = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
     }
 }
 

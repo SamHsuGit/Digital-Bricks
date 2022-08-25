@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
@@ -24,6 +25,9 @@ public class GameMenu : MonoBehaviour
     public GameObject debugText;
     public AudioSource buttonSound;
     public GameObject controlsText;
+
+    private int previousGraphicsQuality;
+    private Material newMaterial;
 
     CanvasGroup backgroundMaskCanvasGroup;
     CanvasGroup playerHUDCanvasGroup;
@@ -144,6 +148,18 @@ public class GameMenu : MonoBehaviour
 
         FileSystemExtension.SaveSettings();
         SettingsStatic.LoadSettings();
+
+        if(previousGraphicsQuality != SettingsStatic.LoadedSettings.graphicsQuality)
+        {
+            if (SettingsStatic.LoadedSettings.graphicsQuality == 0)
+                newMaterial = World.Instance.blockMaterialUnlit;
+            else
+                newMaterial = World.Instance.blockMaterialLit;
+
+            World.Instance.blockMaterial = newMaterial;
+            foreach(KeyValuePair<ChunkCoord,Chunk> keyValue in World.Instance.chunksDict)
+                keyValue.Value.chunkObject.gameObject.GetComponent<Renderer>().material = newMaterial;
+        }
     }
 
     public void SaveAndQuit()
@@ -203,6 +219,7 @@ public class GameMenu : MonoBehaviour
 
     public void SetGraphicsQuality(int value)
     {
+        previousGraphicsQuality = SettingsStatic.LoadedSettings.graphicsQuality;
         SettingsStatic.LoadedSettings.graphicsQuality = value;
         QualitySettings.SetQualityLevel(value, true);
     }

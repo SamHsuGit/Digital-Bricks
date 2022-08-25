@@ -19,6 +19,7 @@ public static class SettingsStatic
         Settings settings = new Settings();
 
         // not configured in UI
+        settings.useBiomes = true;
         settings.drawClouds = true;
         settings.drawLodes = true;
         settings.drawSurfaceObjects = true;
@@ -70,6 +71,7 @@ public class Settings
     private static string _appPath;
 
     // not configured in UI
+    public bool useBiomes;
     public bool drawClouds;
     public bool drawLodes;
     public bool drawSurfaceObjects;

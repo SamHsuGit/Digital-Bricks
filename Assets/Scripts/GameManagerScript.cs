@@ -40,9 +40,7 @@ public class GameManagerScript : MonoBehaviour
             Setup();
         preWorldGenStopwatch.Stop();
         TimeSpan ts = preWorldGenStopwatch.Elapsed;
-        world.preWorldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
+        world.preWorldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
         FileSystemExtension.SaveSettings(); // saved changed settings to file
     }
 

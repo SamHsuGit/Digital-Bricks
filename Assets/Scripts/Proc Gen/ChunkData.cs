@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using UnityEngine;
 
 [System.Serializable]
@@ -6,7 +7,7 @@ public class ChunkData
 {
     // ChunkData was created to load data separately before chunks are created to create an efficient load time.
 
-    // To share worlds over discord, need to reduce savedata to under 8 MB
+    // Set a goal to reduce savedata to under 8 MB to share worlds over internet in a reasonable way.
     // enables chunk strings to be sent over the network to sync world files upon start
 
     // Each voxel has a voxelState byte (8 bits = 2^8 = 256 blockIDs)
@@ -18,6 +19,8 @@ public class ChunkData
     // Non Run Length Encoded bytes (actual) = 361,000 bytes (361 KB)
     // Run Length Encoded Memory Usage = 5,000 bytes (5KB) (~20% compression)
 
+    // Future Optimizations:
+    // Only save the voxel states of modified voxels instead of an entire chunk
 
     // Minecraft Optimizations:
     // Minecraft uses Named Binary Tag Format to efficiently store binary data related to chunks in region files
@@ -64,6 +67,7 @@ public class ChunkData
 
     public void Populate()
     {
+        //Debug.Log("ChunkData.Populate");
         // currently populates all voxel data, but only needs to populate voxels which are adjacent to air
         for (int z = 0; z < VoxelData.ChunkWidth; z++)
         {
@@ -114,8 +118,8 @@ public class ChunkData
                     voxel.neighbors[i].chunkData.chunk.AddActiveVoxel(voxel.neighbors[i]);
         }
 
-        // Add this ChunkData to the modified chunks list.
-        World.Instance.worldData.AddToModifiedChunkList(this);
+        // Do not add this to list of chunks to be saved (do not want to save all chunks where surfaceObjects/structures/trees are created, only player edited chunks).
+        //World.Instance.worldData.AddToModifiedChunkList(this);
 
         // If we have a chunk attached, add that for updating.
         if (chunk != null)
@@ -211,6 +215,8 @@ public class ChunkData
 
     public string EncodeChunk(ChunkData chunk)
     {
+        // Encodes chunks into a list of voxelStates runs from bottom to top of chunk, then to next increments x position, then next z position
+        StringBuilder sb = new StringBuilder(); // used as recommended per https://docs.unity3d.com/2020.3/Documentation/Manual/performance-garbage-collection-best-practices.html
         string str = string.Empty;
         for (int z = 0; z < VoxelData.ChunkWidth; z++) // last does next z value
         {
@@ -218,11 +224,12 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++) // first runs from y = 0 to 96 at x = 0, z = 0
                 {
-                    str += stringBlockIDs[chunk.map[x, y, z].id];
+                    sb.Append(stringBlockIDs[chunk.map[x, y, z].id]);
                 }
-                str += ",";
+                sb.Append(",");
             }
         }
+        str = sb.ToString();
 
         str = chunk.position.x.ToString() + "," + chunk.position.y.ToString() + "," + RunLengthEncode(str);
 
@@ -274,10 +281,11 @@ public class ChunkData
 
     public string RunLengthEncode(string str)
     {
-        // example input str = "aaaaabbbbacaa"
-        // example output returnValue = "5a4b1a1c2a"
+        // example input str = "aaaaabbbbacaa" represents the voxel states in a vertical slice of a chunk (bottom to top)
+        // example output returnValue = "5a4b1a1c2a" represents the voxel states in a vertical slice of a chunk (bottom to top)
         try
         {
+            StringBuilder sb = new StringBuilder();
             string returnValue = string.Empty;
             int n = str.Length;
             for (int i = 0; i < n; i++)
@@ -288,11 +296,13 @@ public class ChunkData
                     count++;
                     i++;
                 }
-                if(!str[i].ToString().Contains(","))
-                    returnValue += count;
-                returnValue += str[i];
+                if (!str[i].ToString().Contains(","))
+                {
+                    sb.Append(count);
+                }
+                sb.Append(str[i]);
             }
-            return returnValue;
+            return sb.ToString();
         }
         catch (Exception e)
         {
@@ -303,8 +313,8 @@ public class ChunkData
 
     public string RunLengthDecode(string str)
     {
-        // example input returnValue = "5a4b1a1c2a"
-        // example output str = "aaaaabbbbacaa"
+        // example input returnValue = "5a4b1a1c2a" represents the voxel states in a vertical slice of a chunk (bottom to top)
+        // example output str = "aaaaabbbbacaa" represents the voxel states in a vertical slice of a chunk (bottom to top)
         try
         {
             string returnValue = string.Empty;

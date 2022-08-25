@@ -8,6 +8,7 @@ public class DebugText : MonoBehaviour
     Controller controller;
 
     TextMeshProUGUI text;
+    string oldDebugText;
 
     float frameRate;
     float timer;
@@ -61,6 +62,8 @@ public class DebugText : MonoBehaviour
             debugText += "\n";
             debugText += "chunk draw time: " + World.Instance.chunkDrawTime;
             debugText += "\n";
+            debugText += "measured time: " + World.Instance.debugTimer;
+            debugText += "\n";
             debugText += "CPU: " + SystemInfo.processorType + " RAM: " + SystemInfo.systemMemorySize + " Mb  OS: " + SystemInfo.operatingSystem;
             debugText += "\n";
             debugText += "GPU: " + SystemInfo.graphicsDeviceName + " VRAM: " + SystemInfo.graphicsMemorySize + " Mb";
@@ -81,7 +84,11 @@ public class DebugText : MonoBehaviour
             debugText += "\n";
             debugText += "blockID: " + blockName;
 
-            text.text = debugText;
+            if(debugText != oldDebugText)
+            {
+                text.text = debugText;
+                oldDebugText = debugText;
+            }
 
             if (timer > 1f)
             {

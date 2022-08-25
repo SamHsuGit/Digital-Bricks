@@ -104,7 +104,7 @@ public class WorldData
         // assumes chunks.ContainsKey(coord) = false
 
         // attempt to load the chunk from memory (checks if file exists)
-        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetSeed, SettingsStatic.LoadedSettings.worldCoord, SettingsStatic.LoadedSettings.worldSizeinChunks, coord); // can be slow if loading lots of chunks from memory?
+        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetSeed, SettingsStatic.LoadedSettings.worldCoord, SettingsStatic.LoadedSettings.worldSizeinChunks, coord); // can be very slow if loading lots of chunks from memory
         if (chunk != null)
         {
             chunks.Add(coord, chunk);
@@ -112,9 +112,12 @@ public class WorldData
         }
         else
         {
-            // generate new chunk data using the GetVoxel procGen algorithm
+            // generate new chunk data using the World GetVoxel procGen algorithm
             chunks.Add(coord, new ChunkData(coord));
+
+            //World.Instance.StartDebugTimer();
             chunks[coord].Populate();
+            //World.Instance.StopDebugTimer();
         }
     }
 
@@ -166,7 +169,7 @@ public class WorldData
         x *= VoxelData.ChunkWidth;
         z *= VoxelData.ChunkWidth;
 
-        // Check if the chunk exists. If not, create it.
+        // Check if the chunk exists. If not, create it and populate voxel states
         ChunkData chunk = RequestChunk(new Vector2Int(x, z));
 
         if (chunk == null)

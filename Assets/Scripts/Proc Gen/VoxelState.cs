@@ -54,7 +54,7 @@ public class VoxelNeighbors
     {
         get
         {
-            // If the requested neighbour is null, attempt to get it from WorldData.GetVoxel.
+            // If the requested neighbour is null, attempt to get it from WorldData.GetVoxel which tries to get saved data but generates new data if does not exist.
             if (_neighbors[index] == null)
             {
                 _neighbors[index] = World.Instance.worldData.GetVoxel(parent.globalPosition + VoxelData.faceChecks[index]);
