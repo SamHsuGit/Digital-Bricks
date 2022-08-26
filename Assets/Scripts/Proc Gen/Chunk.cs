@@ -283,7 +283,9 @@ public class Chunk
 
         for (int p = 0; p < 6; p++)
         {
-            VoxelState neighbor = chunkData.map[x, y, z].neighbors[p];
+            Vector3 neighborPos = pos + VoxelData.faceChecks[p];
+            VoxelState neighbor = CheckVoxel(neighborPos);
+            //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // DOES NOT WORK. Chunks loaded from file do not have neighbors which causes chunk to not render
 
             if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent)
             {
