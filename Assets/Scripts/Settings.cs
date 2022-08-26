@@ -35,7 +35,7 @@ public static class SettingsStatic
         settings.creativeMode = false;
         settings.planetSeed = 3;
         settings.worldCoord = 1;
-        settings.worldSizeinChunks = 5;
+        settings.worldSizeInChunks = 5;
 
         // customization
         settings.playerName = "PlayerName";
@@ -87,7 +87,7 @@ public class Settings
     public bool creativeMode;
     public int planetSeed; // can be 0 to 2,147,483,647 inclusively
     public int worldCoord; // can be 0 to 2,147,483,647 inclusively
-    public int worldSizeinChunks;
+    public int worldSizeInChunks;
 
     // customization
     public string playerName;

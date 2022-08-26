@@ -9,7 +9,7 @@ public static class SaveSystem
     public static void SaveWorld(WorldData worldData, World world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetSeed + "-" + worldData.worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeinChunks + "/";
+        string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetSeed + "-" + worldData.worldCoord + "-" + worldData.worldSizeInChunks + "/";
 
         if (!Directory.Exists(savePath))
         {
@@ -17,7 +17,7 @@ public static class SaveSystem
         }
 
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(savePath + worldData.planetSeed + "-" + worldData.worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeinChunks + ".worldData", FileMode.Create);
+        FileStream stream = new FileStream(savePath + worldData.planetSeed + "-" + worldData.worldCoord + "-" + worldData.worldSizeInChunks + ".worldData", FileMode.Create);
 
         if (SettingsStatic.LoadedSettings.creativeMode)
         {
@@ -110,7 +110,7 @@ public static class SaveSystem
 
     public static int[] LoadPlayerStats(GameObject player, string playerName)
     {
-        string loadPath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeinChunks + "/";
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeInChunks + "/";
 
         if (File.Exists(loadPath + playerName + ".stats")) // IF PLAYER STATS FOUND
         {
@@ -170,7 +170,7 @@ public static class SaveSystem
         int count = 0;
         foreach(ChunkData chunk in chunks)
         {
-            SaveChunk(chunk, worldData.planetSeed, worldData.worldCoord, worldData.sizeInChunks);
+            SaveChunk(chunk, worldData.planetSeed, worldData.worldCoord, worldData.worldSizeInChunks);
             count++;
         }
     }
@@ -222,29 +222,45 @@ public static class SaveSystem
         }
     }
 
-    public static ChunkData LoadChunk(int _planetSeed, int _worldCoord, int sizeInChunks, Vector2Int position)
+    public static ChunkData LoadChunk(int _planetSeed, int _worldCoord, Vector2Int position)
     {
         // loads chunks from file (SLOW)
-        ChunkData chunk = new ChunkData();
+        ChunkData chunkData = new ChunkData();
 
         string chunkName = position.x + "-" + position.y;
-        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "-" + sizeInChunks + "/chunks/" + chunkName + ".chunk";
 
+        // IMPORTANT: use SettingsStatic.LoadedSettings.worldSizeInChunks (causes chunk rendering issue)
+        // worldSizeInChunks = 0, renders correctly but doesn't use saved data
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeInChunks + "/chunks/" + chunkName + ".chunk";
+
+        //Debug.Log(loadPath);
         if (File.Exists(loadPath))
         {
+            //Debug.Log("Found " + loadPath);
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath, FileMode.Open);
 
             string str = formatter.Deserialize(stream) as string;
-            chunk = chunk.DecodeChunk(str);
-
+            chunkData = chunkData.DecodeChunk(str);
+            //Debug.Log(chunkData.map[15,61,15].position); // is correct
+            //Debug.Log(chunkData.map[15, 61, 15].properties.meshData.faces[0].vertData.Length); // returns 4 which seems correct
+            //Debug.Log(chunkData.map[15, 61, 15].properties.meshData.faces[0].triangles.Length); // returns 6 triangles for one face???
+            //Debug.Log(chunkData.map[15,61,15].neighbors[0].id); // why is this air?
+            //Debug.Log(chunkData.map[15, 61, 15].neighbors[1].id); // why is this air?
+            //Debug.Log(chunkData.map[15, 61, 15].neighbors[2].id); // why is this air?
+            //Debug.Log(chunkData.map[15, 61, 15].neighbors[3].id); // why is this air?
+            //Debug.Log(chunkData.map[15, 61, 15].neighbors[4].id); // why is this air?
+            //Debug.Log(chunkData.map[15, 61, 15].neighbors[5].id); // why is this air?
             stream.Close();
         }
         else
-            chunk = null;
+        {
+            //Debug.Log(loadPath + " not found.");
+            chunkData = null;
+        }
 
-        if (chunk != null)
-            return chunk;
+        if (chunkData != null)
+            return chunkData;
         else
             return null;
     }

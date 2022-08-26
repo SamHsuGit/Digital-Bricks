@@ -18,6 +18,7 @@ public class World : MonoBehaviour
     [HideInInspector] public int season;
     [HideInInspector] public int planetNumber;
     [HideInInspector] public int seed;
+    [HideInInspector] public int worldSizeInChunks;
     [HideInInspector] public bool isEarth;
 
     // Cached Perlin Noise Map Values (10 2D perlin noise, 1 3D perlin noise, minecraft 1.18 uses 3 2D (continentalness, erosion, weirdness) and 3 3D (temp/humid/caves))
@@ -136,6 +137,7 @@ public class World : MonoBehaviour
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
+        worldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks;
         debugTimer = "notMeasured";
 
         if (SettingsStatic.LoadedSettings.graphicsQuality == 0)
@@ -147,7 +149,7 @@ public class World : MonoBehaviour
         chunkDrawStopWatch = new Stopwatch();
         debugStopWatch = new Stopwatch();
         worldLoadStopWatch.Start();
-        chunks = new Chunk[SettingsStatic.LoadedSettings.worldSizeinChunks, SettingsStatic.LoadedSettings.worldSizeinChunks]; // set size of array from saved value
+        chunks = new Chunk[worldSizeInChunks, worldSizeInChunks]; // set size of array from saved value
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
         season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
@@ -222,7 +224,7 @@ public class World : MonoBehaviour
             isEarth = true;
         else
             isEarth = false;
-        worldData = SaveSystem.LoadWorld(planetNumber, seed, SettingsStatic.LoadedSettings.worldSizeinChunks); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
+        worldData = SaveSystem.LoadWorld(planetNumber, seed, worldSizeInChunks); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
         WorldDataOverrides(planetNumber);
 
         if (Settings.Platform == 2)
@@ -431,17 +433,14 @@ public class World : MonoBehaviour
     public void LoadWorld()
     {
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
-        if (SettingsStatic.LoadedSettings.worldSizeinChunks < 100)
+        if (worldSizeInChunks < 100)
             loadDistance = SettingsStatic.LoadedSettings.viewDistance;
         else
             loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
-        //Debug.Log("WorldSizeInChunks = " + SettingsStatic.LoadedSettings.worldSizeinChunks);
-        //Debug.Log("View Distance = " + SettingsStatic.LoadedSettings.viewDistance);
-        //Debug.Log("Load Distance = " + loadDistance);
 
-        for (int x = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; x < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; x++)
+        for (int x = (worldSizeInChunks / 2) - loadDistance; x < (worldSizeInChunks / 2) + loadDistance; x++)
         {
-            for (int z = (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) - loadDistance; z < (SettingsStatic.LoadedSettings.worldSizeinChunks / 2) + loadDistance; z++)
+            for (int z = (worldSizeInChunks / 2) - loadDistance; z < (worldSizeInChunks / 2) + loadDistance; z++)
                 worldData.RequestChunk(new Vector2Int(x, z));
         }
     }
@@ -510,7 +509,7 @@ public class World : MonoBehaviour
     public void SetUndrawVoxels()
     {
         undrawVoxels = true;
-        if (SettingsStatic.LoadedSettings.worldSizeinChunks == minWorldSize) // worlds of min size do not need to undraw chunks to save memory
+        if (worldSizeInChunks == minWorldSize) // worlds of min size do not need to undraw chunks to save memory
             undrawVoxels = false;
         else if ((!Settings.OnlinePlay && playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
             undrawVoxels = false;
@@ -790,23 +789,6 @@ public class World : MonoBehaviour
         int zGlobalPos = Mathf.FloorToInt(globalPos.z);
         Vector2 xzCoords = new Vector2(xGlobalPos, zGlobalPos);
 
-        //// Cannot know what chunks are surrounded without first calculating the neighboring voxels...
-        //// ignore chunks which do not touch transparent blocks
-        //VoxelState[] neighborVoxelStates = new VoxelState[] { };
-        //bool visible = false;
-        //for (int p = 0; p < 6; p++)
-        //{
-        //    Vector3 neighborPos = globalPos + VoxelData.faceChecks[p];
-        //    neighborVoxelStates[p] = GetChunkFromVector3(globalPos).CheckVoxel(neighborPos);
-        //}
-        //for(int i = 0; i < neighborVoxelStates.Length; i++) // if any face is visible, flag it
-        //{
-        //    if (neighborVoxelStates[i] != null && blocktypes[neighborVoxelStates[i].id].isTransparent)
-        //        visible = true;
-        //}
-        //if (!visible) // if none of faces are visible, return 0 (air)
-        //    return 0;
-
         /* IMMUTABLE PASS */
         // If outside world, return air.
         if (!IsGlobalPosInWorld(globalPos))
@@ -1016,7 +998,7 @@ public class World : MonoBehaviour
 
     public bool CheckMakeBase(Vector3 globalPos)
     {
-        if (Settings.Platform != 2 && globalPos.y == terrainHeightVoxels && globalPos.x == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(VoxelData.WorldSizeInVoxels / 2 + VoxelData.ChunkWidth / 2))
+        if (Settings.Platform != 2 && globalPos.y == terrainHeightVoxels && globalPos.x == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
         {
             modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, 0, isEarth)); // make base at center of first chunk at terrain height
             return true;
@@ -1454,7 +1436,7 @@ public class World : MonoBehaviour
 
     public bool IsChunkInWorld(ChunkCoord coord)
     {
-        if (coord.x > 0 && coord.x < SettingsStatic.LoadedSettings.worldSizeinChunks - 1 && coord.z > 0 && coord.z < SettingsStatic.LoadedSettings.worldSizeinChunks - 1)
+        if (coord.x > 0 && coord.x < worldSizeInChunks - 1 && coord.z > 0 && coord.z < worldSizeInChunks - 1)
             return true;
         else
             return false;
@@ -1462,7 +1444,7 @@ public class World : MonoBehaviour
 
     public bool IsGlobalPosInWorld(Vector3 pos)
     {
-        if (pos.x >= 0 && pos.x < VoxelData.WorldSizeInVoxels && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < VoxelData.WorldSizeInVoxels)
+        if (pos.x >= 0 && pos.x < worldSizeInChunks * VoxelData.ChunkWidth && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < worldSizeInChunks * VoxelData.ChunkWidth)
             return true;
         else
             return false;
@@ -1470,8 +1452,9 @@ public class World : MonoBehaviour
 
     public bool IsGlobalPosInsideBorder(Vector3 pos)
     {
+        // IMPORTANT: has to use SettingsStatic.LoadedSettings.worldSizeInChunks for world size instead of private local variable to put char at correct position (script timing issues?)
         ChunkCoord _newChunkCoord = GetChunkCoordFromVector3(pos);
-        if (_newChunkCoord.x > 0 && _newChunkCoord.x < SettingsStatic.LoadedSettings.worldSizeinChunks - 1 && _newChunkCoord.z > 0 && _newChunkCoord.z < SettingsStatic.LoadedSettings.worldSizeinChunks - 1)
+        if (_newChunkCoord.x > 0 && _newChunkCoord.x < SettingsStatic.LoadedSettings.worldSizeInChunks - 1 && _newChunkCoord.z > 0 && _newChunkCoord.z < SettingsStatic.LoadedSettings.worldSizeInChunks - 1)
             return true;
         else
             return false;

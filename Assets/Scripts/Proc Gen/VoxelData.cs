@@ -22,7 +22,7 @@ public static class VoxelData
 
 	public static int WorldSizeInVoxels
 	{
-		get { return SettingsStatic.LoadedSettings.worldSizeinChunks * ChunkWidth; }
+		get { return SettingsStatic.LoadedSettings.worldSizeInChunks * ChunkWidth; }
 	}
 
 	public static readonly int TextureAtlasSizeInBlocks = 16;

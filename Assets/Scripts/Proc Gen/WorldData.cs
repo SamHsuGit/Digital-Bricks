@@ -7,7 +7,7 @@ public class WorldData
 {
     public int planetSeed;
     public int worldCoord;
-    public int sizeInChunks;
+    public int worldSizeInChunks;
     public bool survivalMode;
     public int distToStar;
     public int system;
@@ -58,11 +58,11 @@ public class WorldData
             modifiedChunks.Add(chunk);
     }
 
-    public WorldData (int planetNumber, int seed, int sizeInChunks)
+    public WorldData (int _planetSeed, int _worldCoord, int _sizeInChunks)
     {
-        this.planetSeed = planetNumber;
-        this.worldCoord = seed;
-        this.sizeInChunks = sizeInChunks;
+        planetSeed = _planetSeed;
+        worldCoord = _worldCoord;
+        worldSizeInChunks = _sizeInChunks;
     }
 
     public WorldData()
@@ -104,7 +104,7 @@ public class WorldData
         // assumes chunks.ContainsKey(coord) = false
 
         // attempt to load the chunk from memory (checks if file exists)
-        ChunkData chunk = SaveSystem.LoadChunk(SettingsStatic.LoadedSettings.planetSeed, SettingsStatic.LoadedSettings.worldCoord, SettingsStatic.LoadedSettings.worldSizeinChunks, coord); // can be very slow if loading lots of chunks from memory
+        ChunkData chunk = SaveSystem.LoadChunk(planetSeed, worldCoord, coord); // can be very slow if loading lots of chunks from memory
         if (chunk != null)
         {
             chunks.Add(coord, chunk);
@@ -123,8 +123,8 @@ public class WorldData
 
     bool IsVoxelInWorld(Vector3 pos)
     {
-
-        if (pos.x >= 0 && pos.x < VoxelData.WorldSizeInVoxels && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < VoxelData.WorldSizeInVoxels)
+        int _worldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks;
+        if (pos.x >= 0 && pos.x < _worldSizeInChunks * VoxelData.ChunkWidth && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < _worldSizeInChunks * VoxelData.ChunkWidth)
             return true;
         else
             return false;

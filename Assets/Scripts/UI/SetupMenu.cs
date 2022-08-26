@@ -42,7 +42,7 @@ public class SetupMenu : MonoBehaviour
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
         creativeMode.isOn = SettingsStatic.LoadedSettings.creativeMode;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
-        worldSizeInChunksSlider.value = SettingsStatic.LoadedSettings.worldSizeinChunks;
+        worldSizeInChunksSlider.value = SettingsStatic.LoadedSettings.worldSizeInChunks;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
         worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
@@ -117,10 +117,10 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
         SettingsStatic.LoadedSettings.creativeMode = creativeMode.isOn;
         SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
-        SettingsStatic.LoadedSettings.worldSizeinChunks = (int)worldSizeInChunksSlider.value;
+        SettingsStatic.LoadedSettings.worldSizeInChunks = (int)worldSizeInChunksSlider.value;
 
-        if(SettingsStatic.LoadedSettings.worldSizeinChunks < 5) // hard limit on how many chunks can render at low end due to load and draw issues with low # of chunks
-            SettingsStatic.LoadedSettings.worldSizeinChunks = 5;
+        if(SettingsStatic.LoadedSettings.worldSizeInChunks < 5) // hard limit on how many chunks can render at low end due to load and draw issues with low # of chunks
+            SettingsStatic.LoadedSettings.worldSizeInChunks = 5;
 
         try
         {

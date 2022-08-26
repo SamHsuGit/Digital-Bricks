@@ -244,8 +244,7 @@ public class Chunk
 
             if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
             {
-                if(World.Instance.IsGlobalPosInsideBorder(currentVoxel + position))
-                    World.Instance.GetChunkFromVector3(currentVoxel + position).UpdateChunk();
+                World.Instance.GetChunkFromVector3(currentVoxel + position).UpdateChunk();
             }
         }
     }
@@ -291,9 +290,10 @@ public class Chunk
                 int faceVertCount = 0;
                 for (int i = 0; i < voxel.properties.meshData.faces[p].vertData.Length; i++)
                 {
+                    VertData vertData = voxel.properties.meshData.faces[p].GetVertData(i);
                     vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
                     normals.Add(voxel.properties.meshData.faces[p].normal);
-                    AddTexture(voxel.properties.GetTextureID(p), voxel.properties.meshData.faces[p].vertData[i].uv);
+                    AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
                     faceVertCount++;
                 }
 

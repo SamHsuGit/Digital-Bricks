@@ -11,16 +11,10 @@ public class VoxelState
     [System.NonSerialized] public VoxelNeighbors neighbors;
     [System.NonSerialized] public Vector3Int position;
 
-    public VoxelState()
-    {
-        // default constructor
-        id = 0;
-    }
-
     public VoxelState(byte _id, ChunkData _chunkData, Vector3Int _position)
     {
         // constructor
-        this.id = _id;
+        id = _id;
         chunkData = _chunkData;
         neighbors = new VoxelNeighbors(this);
         position = _position;

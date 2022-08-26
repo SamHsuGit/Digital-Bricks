@@ -241,7 +241,7 @@ public class ChunkData
         int xChunkPos = int.Parse(substrings[0]);
         int zChunkPos = int.Parse(substrings[1]);
 
-        ChunkData chunk = new ChunkData(xChunkPos, zChunkPos);
+        ChunkData chunkData = new ChunkData(xChunkPos, zChunkPos);
 
         for (int z = 0; z < VoxelData.ChunkWidth; z++)
         {
@@ -249,12 +249,11 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    chunk.map[x, y, z] = GetSliceVoxelStatesFromString(substrings[2 + x + VoxelData.ChunkWidth * z], x, y, z)[y];
+                    chunkData.map[x, y, z] = GetSliceVoxelStatesFromString(substrings[2 + x + VoxelData.ChunkWidth * z], x, y, z)[y];
                 }
             }
         }
-        Debug.Log(chunk.map.Length);
-        return chunk;
+        return chunkData;
     }
 
     public VoxelState[] GetSliceVoxelStatesFromString(string str, int _x, int _y, int _z)
@@ -266,7 +265,7 @@ public class ChunkData
             for (int j = 0; j < stringBlockIDs.Length; j++)
             {
                 if (str[i].ToString().Contains(stringBlockIDs[j]))
-                    yVoxelStates[i] = new VoxelState((byte)j, this, new Vector3Int(_x, _y, _z));
+                    yVoxelStates[i] = new VoxelState((byte)j, this, new Vector3Int(_x, _y, _z)); // voxelState positions not being entered correctly???
             }
         }
         return yVoxelStates;

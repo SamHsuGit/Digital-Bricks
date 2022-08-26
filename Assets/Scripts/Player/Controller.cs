@@ -335,8 +335,8 @@ public class Controller : NetworkBehaviour
 
     public void SetWorldSizeInChunksServer(int oldValue, int newValue)
     {
-        SettingsStatic.LoadedSettings.worldSizeinChunks = newValue;
-        customNetworkManager.worldOb.GetComponent<World>().worldData.sizeInChunks = newValue;
+        SettingsStatic.LoadedSettings.worldSizeInChunks = newValue;
+        customNetworkManager.worldOb.GetComponent<World>().worldData.worldSizeInChunks = newValue;
     }
 
     [Client]
@@ -374,9 +374,9 @@ public class Controller : NetworkBehaviour
         // tell world to draw chunks from server
         for (int i = 0; i < serverChunks.Length - 1; i++) // serverChunks.Length - 1 since last item is always empty after ';' char
         {
-            ChunkData chunk = new ChunkData();
-            chunk = chunk.DecodeChunk(serverChunks[i]);
-            world.worldData.modifiedChunks.Add(chunk); // add chunk to list of chunks to be saved
+            ChunkData chunkData = new ChunkData();
+            chunkData = chunkData.DecodeChunk(serverChunks[i]);
+            world.worldData.modifiedChunks.Add(chunkData); // add chunk to list of chunks to be saved
         }
         world.worldData.planetSeed = planetNumberServer;
         world.worldData.worldCoord = seedServer;

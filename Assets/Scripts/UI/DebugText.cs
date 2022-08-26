@@ -20,8 +20,8 @@ public class DebugText : MonoBehaviour
     {
         text = GetComponent<TextMeshProUGUI>();
 
-        halfWorldSizeInVoxels = VoxelData.WorldSizeInVoxels / 2;
-        halfWorldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeinChunks / 2;
+        halfWorldSizeInVoxels = SettingsStatic.LoadedSettings.worldSizeInChunks * VoxelData.ChunkWidth / 2;
+        halfWorldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks / 2;
         controller = null;
     }
 
