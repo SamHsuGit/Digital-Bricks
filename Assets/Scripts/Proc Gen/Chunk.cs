@@ -161,13 +161,13 @@ public class Chunk
         }
     }
 
-    public bool isInLoadDist
+    public bool isInLoadDist // used for object pooling? Need to unload inactive chunks from memory to save RAM usage?
     {
         get { return _isInLoadDist; }
         set { _isInLoadDist = value; }
     }
 
-    public bool isInDrawDist
+    public bool isInDrawDist // used for object pooling? Need to unload inactive chunks from memory to save RAM usage?
     {
         get { return _isInDrawDist; }
         set
@@ -225,7 +225,7 @@ public class Chunk
         //UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
 
         chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
-        World.Instance.worldData.AddToModifiedChunkList(chunkData); // save data only contains list of player modified voxels, otherwise, generates using the GetVoxel algorithm.
+        //World.Instance.worldData.AddToModifiedChunkList(chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
         
         lock (World.Instance.ChunkUpdateThreadLock)
         {

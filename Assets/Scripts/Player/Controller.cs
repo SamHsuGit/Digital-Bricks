@@ -356,7 +356,7 @@ public class Controller : NetworkBehaviour
     public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
-        List<string> chunksList = SaveSystem.LoadChunkFromFile(planetNumberServer, seedServer, worldSizeInChunksServer);
+        List<string> chunksList = SaveSystem.LoadChunkListFromFile(planetNumberServer, seedServer, worldSizeInChunksServer);
         string chunksServerCombinedString = string.Empty;
         for (int i = 0; i < chunksList.Count; i++)
         {
@@ -375,7 +375,7 @@ public class Controller : NetworkBehaviour
         for (int i = 0; i < serverChunks.Length - 1; i++) // serverChunks.Length - 1 since last item is always empty after ';' char
         {
             ChunkData chunkData = new ChunkData();
-            chunkData = chunkData.DecodeChunk(serverChunks[i]);
+            chunkData = chunkData.DecodeChunkDataFromString(serverChunks[i]);
             world.worldData.modifiedChunks.Add(chunkData); // add chunk to list of chunks to be saved
         }
         world.worldData.planetSeed = planetNumberServer;
@@ -1439,6 +1439,6 @@ public class Controller : NetworkBehaviour
 
     public void SaveWorld(WorldData worldData)
     {
-        SaveSystem.SaveWorld(worldData, world); // save specified worldData to disk (must pass in worldData since, clients set modified chunks from server)
+        SaveSystem.SaveWorldDataToFile(worldData, world); // save specified worldData to disk (must pass in worldData since, clients set modified chunks from server)
     }
 }

@@ -104,7 +104,7 @@ public class WorldData
         // assumes chunks.ContainsKey(coord) = false
 
         // attempt to load the chunk from memory (checks if file exists)
-        ChunkData chunk = SaveSystem.LoadChunk(planetSeed, worldCoord, coord); // can be very slow if loading lots of chunks from memory
+        ChunkData chunk = SaveSystem.LoadChunkFromFile(planetSeed, worldCoord, coord); // can be very slow if loading lots of chunks from memory
         if (chunk != null)
         {
             chunks.Add(coord, chunk);

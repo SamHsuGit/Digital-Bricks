@@ -3,10 +3,11 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using System;
 
 public static class SaveSystem
 {
-    public static void SaveWorld(WorldData worldData, World world)
+    public static void SaveWorldDataToFile(WorldData worldData, World world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
         string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetSeed + "-" + worldData.worldCoord + "-" + worldData.worldSizeInChunks + "/";
@@ -48,9 +49,7 @@ public static class SaveSystem
                 int[] playerStats = GetPlayerStats(playerOb); // save player stats
 
                 BinaryFormatter formatter = new BinaryFormatter();
-
                 FileStream stream = new FileStream(savePath + playerSaveName + ".stats", FileMode.Create);
-
                 formatter.Serialize(stream, playerStats);
                 stream.Close();
 
@@ -170,12 +169,12 @@ public static class SaveSystem
         int count = 0;
         foreach(ChunkData chunk in chunks)
         {
-            SaveChunk(chunk, worldData.planetSeed, worldData.worldCoord, worldData.worldSizeInChunks);
+            SaveChunkToFile(chunk, worldData.planetSeed, worldData.worldCoord, worldData.worldSizeInChunks);
             count++;
         }
     }
 
-    public static void SaveChunk(ChunkData chunk, int _planetSeed, int _worldCoord, int sizeInChunks)
+    public static void SaveChunkToFile(ChunkData chunk, int _planetSeed, int _worldCoord, int sizeInChunks)
     {
         string chunkName = chunk.position.x + "-" + chunk.position.y;
 
@@ -185,12 +184,20 @@ public static class SaveSystem
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
 
-        BinaryFormatter formatter = new BinaryFormatter();
+        // saving byte array as binary file is faster than reading strings from text files
+        // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
         FileStream stream;
-
-        stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create); // overwrites any existing files by default
-        formatter.Serialize(stream, chunk.EncodeChunk(chunk));
+        stream = new FileStream(savePath + chunkName + ".chunk", FileMode.CreateNew);
+        BinaryWriter w = new BinaryWriter(stream,System.Text.Encoding.UTF8);
+        w.Write(chunk.GetByteArrayFromChunkData(chunk));
         stream.Close();
+
+        // uses strings for a human readable format (slower). Kept for debugging
+        //BinaryFormatter formatter = new BinaryFormatter();
+        //FileStream stream;
+        //stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create); // overwrites any existing files by default
+        //formatter.Serialize(stream, chunk.EncodeChunk(chunk));
+        //stream.Close();
     }
 
     public static WorldData LoadWorld(int _planetSeed, int _worldCoord, int sizeInChunks)
@@ -216,46 +223,44 @@ public static class SaveSystem
             worldData.survivalMode = !SettingsStatic.LoadedSettings.creativeMode; // new worlds set value of creative mode from saved value
             SettingsStatic.LoadedSettings.timeOfDay = 6.0f; // reset time of day to morning for new worlds
             FileSystemExtension.SaveSettings();
-            SaveWorld(worldData, World.Instance);
+            SaveWorldDataToFile(worldData, World.Instance);
 
             return worldData;
         }
     }
 
-    public static ChunkData LoadChunk(int _planetSeed, int _worldCoord, Vector2Int position)
+    public static ChunkData LoadChunkFromFile(int _planetSeed, int _worldCoord, Vector2Int position)
     {
-        // loads chunks from file (SLOW)
+        // loads chunks from file
         ChunkData chunkData = new ChunkData();
 
         string chunkName = position.x + "-" + position.y;
 
-        // IMPORTANT: use SettingsStatic.LoadedSettings.worldSizeInChunks (causes chunk rendering issue)
+        // IMPORTANT: use SettingsStatic.LoadedSettings.worldSizeInChunks
         // worldSizeInChunks = 0, renders correctly but doesn't use saved data
         string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeInChunks + "/chunks/" + chunkName + ".chunk";
 
-        //Debug.Log(loadPath);
         if (File.Exists(loadPath))
         {
-            //Debug.Log("Found " + loadPath);
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(loadPath, FileMode.Open);
-
-            string str = formatter.Deserialize(stream) as string;
-            chunkData = chunkData.DecodeChunk(str);
-            //Debug.Log(chunkData.map[15,61,15].position); // is correct
-            //Debug.Log(chunkData.map[15, 61, 15].properties.meshData.faces[0].vertData.Length); // returns 4 which seems correct
-            //Debug.Log(chunkData.map[15, 61, 15].properties.meshData.faces[0].triangles.Length); // returns 6 triangles for one face???
-            //Debug.Log(chunkData.map[15,61,15].neighbors[0].id); // why is this air?
-            //Debug.Log(chunkData.map[15, 61, 15].neighbors[1].id); // why is this air?
-            //Debug.Log(chunkData.map[15, 61, 15].neighbors[2].id); // why is this air?
-            //Debug.Log(chunkData.map[15, 61, 15].neighbors[3].id); // why is this air?
-            //Debug.Log(chunkData.map[15, 61, 15].neighbors[4].id); // why is this air?
-            //Debug.Log(chunkData.map[15, 61, 15].neighbors[5].id); // why is this air?
+            // saving byte array as binary file is faster than reading strings from text files
+            // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
+            FileStream stream;
+            stream = new FileStream(loadPath, FileMode.Open, FileAccess.Read);
+            BinaryReader r = new BinaryReader(stream,System.Text.Encoding.UTF8);
+            int count = 2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight);
+            byte[] byteArray = r.ReadBytes(count);
+            chunkData = chunkData.GetChunkDataFromByteArray(byteArray);
             stream.Close();
+
+            // uses strings for a human readable format (slower). Kept for debugging
+            //BinaryFormatter formatter = new BinaryFormatter();
+            //FileStream stream = new FileStream(loadPath, FileMode.Open);
+            //string str = formatter.Deserialize(stream) as string;
+            //chunkData = chunkData.DecodeChunk(str);
+            //stream.Close();
         }
         else
         {
-            //Debug.Log(loadPath + " not found.");
             chunkData = null;
         }
 
@@ -265,7 +270,7 @@ public static class SaveSystem
             return null;
     }
 
-    public static List<string> LoadChunkFromFile(int _planetSeed, int _worldCoord, int sizeInChunks)
+    public static List<string> LoadChunkListFromFile(int _planetSeed, int _worldCoord, int sizeInChunks)
     {
         List<string> strArray = new List<string>();
 

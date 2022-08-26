@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using UnityEngine;
 
@@ -205,7 +207,51 @@ public class ChunkData
         "?", // 81
     };
 
-    public string EncodeChunk(ChunkData chunk)
+    public byte[] GetByteArrayFromChunkData(ChunkData chunkData)
+    {
+        byte[] voxelBytes = new byte[2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight)];
+        voxelBytes[0] = (byte)chunkData.position.x;
+        voxelBytes[1] = (byte)chunkData.position.y;
+        int i = 2;
+
+        for (int z = 0; z < VoxelData.ChunkWidth; z++) // last does next z value
+        {
+            for (int x = 0; x < VoxelData.ChunkWidth; x++) // then does next x value
+            {
+                for (int y = 0; y < VoxelData.ChunkHeight; y++) // first runs from y = 0 to 96 at x = 0, z = 0
+                {
+                    voxelBytes[i] = chunkData.map[x, y, z].id;
+                    i++;
+                }
+            }
+        }
+        voxelBytes = Compressor.Compress(voxelBytes);
+        return voxelBytes;
+    }
+
+    public ChunkData GetChunkDataFromByteArray(byte[] voxelBytes)
+    {
+        voxelBytes = Compressor.Decompress(voxelBytes);
+        int xChunkPos = (int)voxelBytes[0];
+        int zChunkPos = (int)voxelBytes[1];
+
+        ChunkData chunkData = new ChunkData(xChunkPos, zChunkPos);
+        int i = 2;
+        for (int z = 0; z < VoxelData.ChunkWidth; z++)
+        {
+            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            {
+                for (int y = 0; y < VoxelData.ChunkHeight; y++)
+                {
+                    chunkData.map[x, y, z] = new VoxelState(voxelBytes[i], chunkData, new Vector3Int(x,y,z));
+                    i++;
+                }
+            }
+        }
+        return chunkData;
+    }
+
+    public string EncodeChunkDataToString(ChunkData chunkData)
     {
         // Encodes chunks into a list of voxelStates runs from bottom to top of chunk, then to next increments x position, then next z position
         StringBuilder sb = new StringBuilder(); // used as recommended per https://docs.unity3d.com/2020.3/Documentation/Manual/performance-garbage-collection-best-practices.html
@@ -216,26 +262,26 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++) // first runs from y = 0 to 96 at x = 0, z = 0
                 {
-                    sb.Append(stringBlockIDs[chunk.map[x, y, z].id]);
+                    sb.Append(stringBlockIDs[chunkData.map[x, y, z].id]);
                 }
                 sb.Append(",");
             }
         }
         str = sb.ToString();
 
-        str = chunk.position.x.ToString() + "," + chunk.position.y.ToString() + "," + RunLengthEncode(str);
+        str = chunkData.position.x.ToString() + "," + chunkData.position.y.ToString() + "," + RunLengthEncodeString(str);
 
         return str;
     }
 
-    public ChunkData DecodeChunk(string str)
+    public ChunkData DecodeChunkDataFromString(string str)
     {
         string[] substrings = new string[] { };
         substrings = str.Split(',');
 
         for (int i = 2; i < substrings.Length - 1; i++)
         {
-            substrings[i] = RunLengthDecode(substrings[i]);
+            substrings[i] = RunLengthDecodeString(substrings[i]);
         }
 
         int xChunkPos = int.Parse(substrings[0]);
@@ -271,7 +317,7 @@ public class ChunkData
         return yVoxelStates;
     }
 
-    public string RunLengthEncode(string str)
+    public string RunLengthEncodeString(string str)
     {
         // example input str = "aaaaabbbbacaa" represents the voxel states in a vertical slice of a chunk (bottom to top)
         // example output returnValue = "5a4b1a1c2a" represents the voxel states in a vertical slice of a chunk (bottom to top)
@@ -298,12 +344,12 @@ public class ChunkData
         }
         catch (Exception e)
         {
-            ErrorMessage.Show("Exception in Run Length Encoding: " + e.Message);
+            Debug.Log("Exception in Run Length Encoding: " + e.Message);
             return null;
         }
     }
 
-    public string RunLengthDecode(string str)
+    public string RunLengthDecodeString(string str)
     {
         // example input returnValue = "5a4b1a1c2a" represents the voxel states in a vertical slice of a chunk (bottom to top)
         // example output str = "aaaaabbbbacaa" represents the voxel states in a vertical slice of a chunk (bottom to top)
@@ -325,8 +371,43 @@ public class ChunkData
         }
         catch (Exception e)
         {
-            ErrorMessage.Show("Exception in Run Length Decoding: " + e.Message);
+            Debug.Log("Exception in Run Length Decoding: " + e.Message);
             return null;
         }
+    }
+}
+
+class Compressor
+{
+    //GZIP (RLE) Compression from https://stackoverflow.com/questions/1932691/how-to-do-rle-run-length-encoding-in-c-sharp-on-a-byte-array
+    public static byte[] Compress(byte[] buffer)
+    {
+        MemoryStream ms = new MemoryStream();
+        GZipStream zip = new GZipStream(ms, CompressionMode.Compress, true);
+        zip.Write(buffer, 0, buffer.Length);
+        zip.Close();
+        ms.Position = 0;
+
+        byte[] compressed = new byte[ms.Length];
+        ms.Read(compressed, 0, compressed.Length);
+
+        byte[] gzBuffer = new byte[compressed.Length + 4];
+        Buffer.BlockCopy(compressed, 0, gzBuffer, 4, compressed.Length);
+        Buffer.BlockCopy(BitConverter.GetBytes(buffer.Length), 0, gzBuffer, 0, 4);
+        return gzBuffer;
+    }
+    public static byte[] Decompress(byte[] gzBuffer)
+    {
+        MemoryStream ms = new MemoryStream();
+        int msgLength = BitConverter.ToInt32(gzBuffer, 0);
+        ms.Write(gzBuffer, 4, gzBuffer.Length - 4);
+
+        byte[] buffer = new byte[msgLength];
+
+        ms.Position = 0;
+        GZipStream zip = new GZipStream(ms, CompressionMode.Decompress);
+        zip.Read(buffer, 0, buffer.Length);
+
+        return buffer;
     }
 }
