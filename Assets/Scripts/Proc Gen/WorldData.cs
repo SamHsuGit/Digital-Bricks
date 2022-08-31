@@ -79,7 +79,7 @@ public class WorldData
         worldCoord = wD.worldCoord;
     }
 
-    public ChunkData RequestChunk (Vector2Int coord)
+    public ChunkData RequestChunk (Vector2Int coord, bool create)
     {
         ChunkData c;
 
@@ -89,6 +89,8 @@ public class WorldData
             {
                 c = chunks[coord];
             }
+            else if (!create)
+                c = null;
             else // If it doesn't exist, create the chunk then return it.
             {
                 LoadChunkFromFile(coord);
@@ -146,7 +148,7 @@ public class WorldData
         z *= VoxelData.ChunkWidth;
 
         // Check if the chunk exists. If not, create it.
-        ChunkData chunk = RequestChunk(new Vector2Int(x, z));
+        ChunkData chunk = RequestChunk(new Vector2Int(x, z), true);
 
         // Then create a Vector3Int with the position of our voxel *within* the chunk.
         Vector3Int voxel = new Vector3Int((int)(pos.x -x),(int)pos.y, (int)(pos.z - z));
@@ -170,7 +172,7 @@ public class WorldData
         z *= VoxelData.ChunkWidth;
 
         // Check if the chunk exists. If not, create it and populate voxel states
-        ChunkData chunk = RequestChunk(new Vector2Int(x, z));
+        ChunkData chunk = RequestChunk(new Vector2Int(x, z), false);
 
         if (chunk == null)
             return null;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using System.Diagnostics;
+using Unity.Profiling;
 
 public class World : MonoBehaviour
 {
@@ -126,6 +127,9 @@ public class World : MonoBehaviour
     private const float isAirThreshold = 0.8f;
     private const int minWorldSize = 5;
     //private const int LOD0threshold = 1;
+
+    private static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
+    private static readonly ProfilerMarker s_SimulatePerfMarker = new ProfilerMarker(ProfilerCategory.Ai, "MySystem.Simulate");
 
     private static World _instance;
 
@@ -441,7 +445,7 @@ public class World : MonoBehaviour
         for (int x = (worldSizeInChunks / 2) - loadDistance; x < (worldSizeInChunks / 2) + loadDistance; x++)
         {
             for (int z = (worldSizeInChunks / 2) - loadDistance; z < (worldSizeInChunks / 2) + loadDistance; z++)
-                worldData.RequestChunk(new Vector2Int(x, z));
+                worldData.LoadChunkFromFile(new Vector2Int(x, z));
         }
     }
 
@@ -533,6 +537,7 @@ public class World : MonoBehaviour
 
     private void Update()
     {
+        
         if (!worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
 
@@ -577,8 +582,9 @@ public class World : MonoBehaviour
                 // Only update the chunks if the player has moved from the chunk they were previously on.
                 if (!playerChunkCoordsCopy[i].Equals(playerLastChunkCoordsCopy[i]))
                 {
+                    
                     CheckViewDistance(playerChunkCoordsCopy[i], i); // re-draw chunks
-                    if(drawVBO)
+                    if (drawVBO)
                         CheckVBODrawDist(playerChunkCoordsCopy[i], i); // re-draw studs
                 }
             }
@@ -650,6 +656,34 @@ public class World : MonoBehaviour
                 RemoveVBOFromChunk(c); // remove voxel bound objects in previousChunksToDrawVBOList
             }
         }
+
+        using (s_SimulatePerfMarker.Auto())
+        {
+
+        }
+    }
+
+    public void AddChunkToUpdate(Chunk chunk)
+    { 
+        AddChunkToUpdate(chunk, false);
+    }
+
+
+    public void AddChunkToUpdate(Chunk chunk, bool insert)
+    {
+        // Lock list to ensure only one thing is using the list at a time.
+        lock (ChunkUpdateThreadLock)
+        {
+            // Make sure update list doesn't already contain chunk.
+            if (!chunksToUpdate.Contains(chunk))
+            {
+                // If insert is true, chunk gets inserted at the top of the list.
+                if (insert)
+                    chunksToUpdate.Insert(0, chunk);
+                else
+                    chunksToUpdate.Add(chunk);
+            }
+        }
     }
 
     void CheckVBODrawDist(ChunkCoord playerChunkCoord, int playerIndex)
@@ -690,16 +724,18 @@ public class World : MonoBehaviour
             for (int z = playerChunkCoord.z - viewDistance; z < playerChunkCoord.z + viewDistance; z++)
             {
                 ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
-
+                
                 // If the current chunk is in the world...
                 if (IsChunkInWorld(thisChunkCoord))
                 {
                     // Check if its in view distance, if not, mark it to be re-drawn.
                     if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
-                        chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
-                    chunks[x, z].isInDrawDist = true;
-                    activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
+                        chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position - CREATING NEW CHUNKS TAKES UP 90% OF CPU TIME WHEN PROFILING WHEN RUNNING THE POPULATE > GET VOXEL FUNCTION (Profiling get voxel runs out of memory)
 
+                    chunks[x, z].isInDrawDist = true;
+
+                    chunks[x, z].isActive = true;
+                    activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
                     // WIP Doesn't work
                     //if(chunksToUpdate.Contains(chunks[x, z]))
                     //{
@@ -708,7 +744,7 @@ public class World : MonoBehaviour
                     //        chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = true; // mark as inside LOD0
                     //}
                 }
-
+                
                 // if this chunk coord is in the previous list, remove it so it doesn't get undrawn
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
@@ -721,6 +757,8 @@ public class World : MonoBehaviour
         // Any chunks left in the previousActiveChunks list are no longer in the player's view distance, so loop through and disable them (i.e. mark to un-draw them).
         foreach (ChunkCoord c in previouslyActiveChunks)
             chunks[c.x, c.z].isInDrawDist = false; // marks chunks to be un-drawn
+
+        
     }
 
     void ThreadedUpdate() // the loop where the chunk draw occurs, this operation is threaded.
@@ -1470,6 +1508,16 @@ public class World : MonoBehaviour
         debugStopWatch.Stop();
         TimeSpan ts = debugStopWatch.Elapsed;
         debugTimer = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+    }
+
+    public void StartProfileMarker()
+    {
+        s_PreparePerfMarker.Begin();
+    }
+
+    public void StopProfileMarker()
+    {
+        s_PreparePerfMarker.End();
     }
 }
 

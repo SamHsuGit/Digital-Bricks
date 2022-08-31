@@ -67,8 +67,14 @@ public class ChunkData
     [HideInInspector]
     public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
+    public VoxelState state;
+
     public void Populate()
     {
+        // Profiling Reveals this is the most resource intensive operation (takes a long time primarily due to the number of iterations 16x16x96)
+        // GC alone takes up 12.9% of CPU time
+
+        World.Instance.StartProfileMarker();
         //Debug.Log("ChunkData.Populate");
         // currently populates all voxel data, but only needs to populate voxels which are adjacent to air
         for (int z = 0; z < VoxelData.ChunkWidth; z++)
@@ -79,10 +85,18 @@ public class ChunkData
                 {
                     Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
 
-                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x,y,z));
+                    // reuse same state voxelState variable to reduce garbage collection
+                    //state.id = World.Instance.GetVoxel(voxelGlobalPos);
+                    //state.chunkData = this;
+                    //state.neighbors = new VoxelNeighbors(state);
+                    //state.position = new Vector3Int(x, y, z);
+                    //map[x, y, z] = state;
+
+                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x, y, z));
                 }
             }
         }
+        World.Instance.StopProfileMarker();
     }
 
     public void ModifyVoxel(Vector3Int pos, byte _id, int direction)
@@ -117,8 +131,7 @@ public class ChunkData
 
         // If we have a chunk attached, add that for updating.
         if (chunk != null)
-            World.Instance.activeChunks.Add(chunk.coord);
-
+            World.Instance.AddChunkToUpdate(chunk);
     }
 
     public string[] stringBlockIDs = new string[]

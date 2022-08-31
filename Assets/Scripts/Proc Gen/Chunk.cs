@@ -30,13 +30,13 @@ public class Chunk
 
     List<VoxelState> activeVoxels = new List<VoxelState>();
 
-    public Chunk(ChunkCoord coord)
+    public Chunk(ChunkCoord _coord)
     {
-        this.coord = coord;
+        coord = _coord;
 
         chunkObject = new GameObject();
         chunkObject.isStatic = true;
-        World.Instance.chunksDict.Add(this.coord, this);
+        World.Instance.chunksDict.Add(coord, this);
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
 
@@ -45,12 +45,12 @@ public class Chunk
         meshRenderer.materials = materials;
 
         chunkObject.transform.SetParent(World.Instance.transform);
-        chunkObject.transform.position = new Vector3(this.coord.x * VoxelData.ChunkWidth, 0f, this.coord.z * VoxelData.ChunkWidth);
-        chunkObject.name = "Chunk " + this.coord.x + ", " + this.coord.z;
+        chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
+        chunkObject.name = "Chunk " + coord.x + ", " + coord.z;
         chunkObject.tag = "Chunk";
         position = chunkObject.transform.position;
 
-        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z));
+        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
         chunkData.chunk = this;
 
         // when chunk is first created loop through all voxels in chunk and if they can be active, add to list
@@ -67,17 +67,14 @@ public class Chunk
             }
         }
 
-        lock (World.Instance.ChunkUpdateThreadLock)
-        {
-            World.Instance.chunksToUpdate.Add(this);
+        World.Instance.AddChunkToUpdate(this);
 
-            //if (coord.x == World.Instance.firstChunkCoord.x && coord.z == World.Instance.firstChunkCoord.z) //always show first chunk
-            //    isActive = true;
-            //else if (!World.Instance.activateNewChunks)
-            //    isActive = false;
-            //else
-                isActive = true;
-        }
+        //if (coord.x == World.Instance.firstChunkCoord.x && coord.z == World.Instance.firstChunkCoord.z) //always show first chunk
+        //    isActive = true;
+        //else if (!World.Instance.activateNewChunks)
+        //    isActive = false;
+        //else
+            //isActive = true;
     }
 
     public void TickUpdate()
@@ -221,17 +218,17 @@ public class Chunk
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
         // Added in https://www.youtube.com/watch?v=DjQ6yFRuZ7Q but is broken, does not allow player to modify voxels so commented out, instead use old code below
-        //chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, 0); // write new block ID to chunkData 
-        //UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, 0); // write new block ID to chunkData 
+        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
 
-        chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
-        //World.Instance.worldData.AddToModifiedChunkList(chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
+        //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
+        ////World.Instance.worldData.AddToModifiedChunkList(chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
         
-        lock (World.Instance.ChunkUpdateThreadLock)
-        {
-            World.Instance.chunksToUpdate.Insert(0, this);
-            UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
-        }
+        //lock (World.Instance.ChunkUpdateThreadLock)
+        //{
+        //    World.Instance.AddChunkToUpdate(this, true);
+        //    UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+        //}
     }
 
     void UpdateSurroundingVoxels(int x, int y, int z)
@@ -244,7 +241,7 @@ public class Chunk
 
             if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
             {
-                World.Instance.GetChunkFromVector3(currentVoxel + position).UpdateChunk();
+                World.Instance.AddChunkToUpdate(World.Instance.GetChunkFromVector3(currentVoxel + position), true);
             }
         }
     }
