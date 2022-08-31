@@ -330,7 +330,7 @@ public class Chunk
             mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         }
 
-        if (uvs.ToArray().Length != vertices.ToArray().Length) // the supplied array needs to be the same size as teh Mesh.vertices array
+        if (uvs.ToArray().Length != vertices.ToArray().Length) // the supplied array needs to be the same size as the Mesh.vertices array
             return;
         else
             mesh.uv = uvs.ToArray();

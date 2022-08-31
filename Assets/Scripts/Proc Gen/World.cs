@@ -82,7 +82,6 @@ public class World : MonoBehaviour
 
     // PRIVATE VARIABLES
     private int cloudHeight;
-    private static bool multithreading = true;
     private bool applyingModifications;
     private int loadDistance;
     private bool undrawVBO = false;
@@ -122,6 +121,7 @@ public class World : MonoBehaviour
     private Vector2[] peaksAndValleysSplinePoints;
 
     // hard coded values
+    private const bool multithreading = true;
     private const float seaLevelThreshold = 0.34f;
     private const float isAirThreshold = 0.8f;
     private const int minWorldSize = 5;
@@ -585,7 +585,6 @@ public class World : MonoBehaviour
 
             if (chunksToDraw.Count > 0)
             {
-                lock (chunksToDraw)
                 {
                     chunkDrawStopWatch.Start();
 
@@ -597,14 +596,14 @@ public class World : MonoBehaviour
                 }
             }
 
-            if (!multithreading) // old code (always multithread)
-            {
-                if (!applyingModifications)
-                    ApplyModifications();
+            //if (!multithreading) // old code (always multithread)
+            //{
+            //    if (!applyingModifications)
+            //        ApplyModifications();
 
-                if (chunksToUpdate.Count > 0)
-                    UpdateChunks();
-            }
+            //    if (chunksToUpdate.Count > 0)
+            //        UpdateChunks();
+            //}
         }
 
         if (drawVBO)
@@ -778,7 +777,7 @@ public class World : MonoBehaviour
         worldLoaded = true;
     }
 
-    public byte GetVoxel(Vector3 globalPos)
+    public byte GetVoxel(Vector3Int globalPos)
     {
         // The main algorithm used in the procedural world generation
         // used to determine voxelID at each position in a chunk. Runs whenever voxel ids need to be calculated (only modified voxels are saved to the serialized file).
@@ -836,7 +835,7 @@ public class World : MonoBehaviour
         // Adds base terrain using spline points to GetTerrainHeight
         byte voxelValue = 0;
 
-        GetTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
+        CalcTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
 
         if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
             return 0;
@@ -996,7 +995,7 @@ public class World : MonoBehaviour
         return voxelValue;
     }
 
-    public bool CheckMakeBase(Vector3 globalPos)
+    public bool CheckMakeBase(Vector3Int globalPos)
     {
         if (Settings.Platform != 2 && globalPos.y == terrainHeightVoxels && globalPos.x == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
         {
@@ -1007,7 +1006,7 @@ public class World : MonoBehaviour
             return false;
     }
 
-    public void GetTerrainHeight(Vector2 xzCoords)
+    public void CalcTerrainHeight(Vector2 xzCoords)
     {
         // get values for continentalness, erosion, and wierdness from 3 Perlin Noise maps
         continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
@@ -1381,7 +1380,7 @@ public class World : MonoBehaviour
         }
     }
 
-    void ApplyModifications()
+    private void ApplyModifications()
     {
         applyingModifications = true;
 
