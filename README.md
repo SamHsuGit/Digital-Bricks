@@ -19,7 +19,7 @@ Grygory Dyadichenko - LDraw Importer (MIT License): https://github.com/Nox7atra/
 
 vis2k Mirror (MIT License): https://github.com/vis2k/Mirror
 
-GZipStream run length encoding algorithm to achieve 90:1 compression ratio
+GZipStream run length encoding algorithm to achieve 90:1 compression ratio https://docs.microsoft.com/en-us/dotnet/api/system.io.compression.gzipstream?view=net-6.0
 
 Unity (Personal License)
 
