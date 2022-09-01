@@ -92,14 +92,14 @@ public class ChunkData
                     //state.position = new Vector3Int(x, y, z);
                     //map[x, y, z] = state;
 
-                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x, y, z));
+                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x, y, z) , 1); // by default all blocks face forwards (otherwise, implement code to determine block orientation procedurally)
                 }
             }
         }
         World.Instance.StopProfileMarker();
     }
 
-    public void ModifyVoxel(Vector3Int pos, byte _id, int direction)
+    public void ModifyVoxel(Vector3Int pos, byte _id, byte direction)
     {
 
         // If we've somehow tried to change a block for the same block, just return.
@@ -115,7 +115,7 @@ public class ChunkData
 
         // Set voxel to new ID.
         voxel.id = _id;
-        //voxel.orientation = direction;
+        voxel.orientation = direction;
 
         if (voxel.properties.isActive && BlockBehavior.Active(voxel))
             voxel.chunkData.chunk.AddActiveVoxel(voxel);
@@ -220,9 +220,9 @@ public class ChunkData
         "?", // 81
     };
 
-    public byte[] GetByteArrayFromChunkData(ChunkData chunkData)
+    public byte[] EncodeByteArray(ChunkData chunkData)
     {
-        byte[] voxelBytes = new byte[2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight)];
+        byte[] voxelBytes = new byte[2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight) * 2];
         voxelBytes[0] = (byte)chunkData.position.x;
         voxelBytes[1] = (byte)chunkData.position.y;
         int i = 2;
@@ -234,7 +234,8 @@ public class ChunkData
                 for (int y = 0; y < VoxelData.ChunkHeight; y++) // first runs from y = 0 to 96 at x = 0, z = 0
                 {
                     voxelBytes[i] = chunkData.map[x, y, z].id;
-                    i++;
+                    voxelBytes[i + 1] = chunkData.map[x, y, z].orientation;
+                    i = i + 2;
                 }
             }
         }
@@ -242,7 +243,7 @@ public class ChunkData
         return voxelBytes;
     }
 
-    public ChunkData GetChunkDataFromByteArray(byte[] voxelBytes)
+    public ChunkData DecodeByteArray(byte[] voxelBytes)
     {
         voxelBytes = Compressor.Decompress(voxelBytes);
         int xChunkPos = (int)voxelBytes[0];
@@ -256,15 +257,17 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    chunkData.map[x, y, z] = new VoxelState(voxelBytes[i], chunkData, new Vector3Int(x,y,z));
-                    i++;
+                    chunkData.map[x, y, z] = new VoxelState(voxelBytes[i], chunkData, new Vector3Int(x,y,z), voxelBytes[i + 1]);
+                    i = i + 2;
                 }
             }
         }
         return chunkData;
     }
 
-    public string EncodeChunkDataToString(ChunkData chunkData)
+
+    // THE FOLLOWING FUNCTIONS NEEDED TO SEND DATA OVER NETWORK (MIRROR DOCUMENTATION: https://mirror-networking.gitbook.io/docs/guides/data-types)
+    public string EncodeString(ChunkData chunkData)
     {
         // Encodes chunks into a list of voxelStates runs from bottom to top of chunk, then to next increments x position, then next z position
         StringBuilder sb = new StringBuilder(); // used as recommended per https://docs.unity3d.com/2020.3/Documentation/Manual/performance-garbage-collection-best-practices.html
@@ -282,19 +285,19 @@ public class ChunkData
         }
         str = sb.ToString();
 
-        str = chunkData.position.x.ToString() + "," + chunkData.position.y.ToString() + "," + RunLengthEncodeString(str);
+        str = chunkData.position.x.ToString() + "," + chunkData.position.y.ToString() + "," + RLEString(str);
 
         return str;
     }
 
-    public ChunkData DecodeChunkDataFromString(string str)
+    public ChunkData DecodeString(string str)
     {
         string[] substrings = new string[] { };
         substrings = str.Split(',');
 
         for (int i = 2; i < substrings.Length - 1; i++)
         {
-            substrings[i] = RunLengthDecodeString(substrings[i]);
+            substrings[i] = RLDString(substrings[i]);
         }
 
         int xChunkPos = int.Parse(substrings[0]);
@@ -308,14 +311,14 @@ public class ChunkData
             {
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
-                    chunkData.map[x, y, z] = GetSliceVoxelStatesFromString(substrings[2 + x + VoxelData.ChunkWidth * z], x, y, z)[y];
+                    chunkData.map[x, y, z] = GetSliceFromString(substrings[2 + x + VoxelData.ChunkWidth * z], x, y, z)[y];
                 }
             }
         }
         return chunkData;
     }
 
-    public VoxelState[] GetSliceVoxelStatesFromString(string str, int _x, int _y, int _z)
+    public VoxelState[] GetSliceFromString(string str, int _x, int _y, int _z)
     {
         // get an array of voxelStates for all y positions for a given x and z coordinate in a chunk
         VoxelState[] yVoxelStates = new VoxelState[str.Length];
@@ -324,13 +327,13 @@ public class ChunkData
             for (int j = 0; j < stringBlockIDs.Length; j++)
             {
                 if (str[i].ToString().Contains(stringBlockIDs[j]))
-                    yVoxelStates[i] = new VoxelState((byte)j, this, new Vector3Int(_x, _y, _z)); // voxelState positions not being entered correctly???
+                    yVoxelStates[i] = new VoxelState((byte)j, this, new Vector3Int(_x, _y, _z), 1); // default orient all blocks to face forwards (i.e. orientation = 1)
             }
         }
         return yVoxelStates;
     }
 
-    public string RunLengthEncodeString(string str)
+    public string RLEString(string str)
     {
         // example input str = "aaaaabbbbacaa" represents the voxel states in a vertical slice of a chunk (bottom to top)
         // example output returnValue = "5a4b1a1c2a" represents the voxel states in a vertical slice of a chunk (bottom to top)
@@ -362,7 +365,7 @@ public class ChunkData
         }
     }
 
-    public string RunLengthDecodeString(string str)
+    public string RLDString(string str)
     {
         // example input returnValue = "5a4b1a1c2a" represents the voxel states in a vertical slice of a chunk (bottom to top)
         // example output str = "aaaaabbbbacaa" represents the voxel states in a vertical slice of a chunk (bottom to top)

@@ -84,6 +84,26 @@ public class DebugText : MonoBehaviour
             debugText += "\n";
             debugText += "blockID: " + blockName;
 
+            string direction = "";
+            switch (controller.orientation)
+            {
+                case 0:
+                    direction = "East";
+                    break;
+                case 5:
+                    direction = "South";
+                    break;
+                case 1:
+                    direction = "West";
+                    break;
+                default:
+                    direction = "North";
+                    break;
+            }
+
+            debugText += "\n";
+            debugText += "Direction Facing: " + direction;
+
             if(debugText != oldDebugText)
             {
                 text.text = debugText;

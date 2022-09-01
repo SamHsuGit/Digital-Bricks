@@ -1430,7 +1430,7 @@ public class World : MonoBehaviour
             {
                 VoxelMod v = queue.Dequeue();
 
-                worldData.SetVoxel(v.position, v.id);
+                worldData.SetVoxel(v.position, v.id, 1); // block orientation set to 1 by default, can determine orientation if generating directional blocks as modifications
             }
         }
         applyingModifications = false;

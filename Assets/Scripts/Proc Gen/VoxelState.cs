@@ -6,15 +6,16 @@ using UnityEngine;
 public class VoxelState
 {
     public byte id; // 1 byte = 2^8 (256) unique block IDs
-
+    public byte orientation; // 1 byte used to store block state into such as orientation
     [System.NonSerialized] public ChunkData chunkData;
     [System.NonSerialized] public VoxelNeighbors neighbors;
     [System.NonSerialized] public Vector3Int position;
 
-    public VoxelState(byte _id, ChunkData _chunkData, Vector3Int _position)
+    public VoxelState(byte _id, ChunkData _chunkData, Vector3Int _position, byte _orientation)
     {
         // constructor
         id = _id;
+        orientation = _orientation;
         chunkData = _chunkData;
         neighbors = new VoxelNeighbors(this);
         position = _position;

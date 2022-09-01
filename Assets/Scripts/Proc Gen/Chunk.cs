@@ -195,7 +195,7 @@ public class Chunk
             return true;
     }
 
-    public void EditVoxel(Vector3 pos, byte newID)
+    public void EditVoxel(Vector3 pos, byte newID, Controller _player, ChunkData _chunkData)
     {
         if (!World.Instance.IsGlobalPosInWorld(pos))
             return;
@@ -218,11 +218,11 @@ public class Chunk
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
         // Added in https://www.youtube.com/watch?v=DjQ6yFRuZ7Q but is broken, does not allow player to modify voxels so commented out, instead use old code below
-        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, 0); // write new block ID to chunkData 
+        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData 
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
 
         //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
-        ////World.Instance.worldData.AddToModifiedChunkList(chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
+        World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
         
         //lock (World.Instance.ChunkUpdateThreadLock)
         //{
@@ -278,20 +278,65 @@ public class Chunk
 
         VoxelState voxel = chunkData.map[x, y, z];
 
+        float rot = 0f;
+        switch (voxel.orientation)
+        {
+            case 0:
+                rot = 180f;
+                break;
+            case 5:
+                rot = 270f;
+                break;
+            case 1:
+                rot = 0f;
+                break;
+            default:
+                rot = 90f;
+                break;
+        }
+
         for (int p = 0; p < 6; p++)
         {
-            Vector3 neighborPos = pos + VoxelData.faceChecks[p];
+            int translatedP = p;
+
+            if(voxel.orientation != 1)
+            {
+                if (voxel.orientation == 0)
+                {
+                    if (p == 0) translatedP = 1;
+                    else if (p == 1) translatedP = 0;
+                    else if (p == 4) translatedP = 5;
+                    else if (p == 5) translatedP = 4;
+                }
+                else if (voxel.orientation == 5)
+                {
+                    if (p == 0) translatedP = 5;
+                    else if (p == 1) translatedP = 4;
+                    else if (p == 4) translatedP = 0;
+                    else if (p == 5) translatedP = 1;
+                }
+                else if (voxel.orientation == 4)
+                {
+                    if (p == 0) translatedP = 4;
+                    else if (p == 1) translatedP = 5;
+                    else if (p == 4) translatedP = 1;
+                    else if (p == 5) translatedP = 0;
+                }
+            }
+
+            Vector3 neighborPos = pos + VoxelData.faceChecks[translatedP];
             VoxelState neighbor = CheckVoxel(neighborPos);
             //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // DOES NOT WORK. Chunks loaded from file do not have neighbors which causes chunk to not render
 
             if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent)
             {
                 int faceVertCount = 0;
+                
                 for (int i = 0; i < voxel.properties.meshData.faces[p].vertData.Length; i++)
                 {
                     VertData vertData = voxel.properties.meshData.faces[p].GetVertData(i);
-                    vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
-                    normals.Add(voxel.properties.meshData.faces[p].normal);
+                    vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
+                    normals.Add(VoxelData.faceChecks[p]);
                     AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
                     faceVertCount++;
                 }

@@ -44,7 +44,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4673335178978187722}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 808, y: 91, z: 808}
+  m_LocalPosition: {x: 48, y: 91, z: 48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5290477769798018411}
@@ -515,6 +515,7 @@ MonoBehaviour:
   camMode: 1
   setCamMode: 0
   lookVelocity: 1
+  orientation: 0
   charModelOrigin: {fileID: 6156733249479519148}
   gameMenu: {fileID: 5290477769798018415}
   nametag: {fileID: 2688012131756474887}

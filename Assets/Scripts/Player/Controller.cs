@@ -28,7 +28,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetSeedServer))] private int seedServer;
     [SyncVar(hook = nameof(SetWorldSizeInChunksServer))] private int worldSizeInChunksServer;
     [SyncVar(hook = nameof(SetBaseServer))] private string baseServer;
-    [SyncVar(hook = nameof(SaveChunks))] private string chunksServer;
+    [SyncVar(hook = nameof(SaveChunksString))] private string chunksServer;
 
     [Header("Debug States")]
     [SerializeField] float collisionDamage;
@@ -49,6 +49,8 @@ public class Controller : NetworkBehaviour
     public bool setCamMode = false;
 
     [SerializeField] float lookVelocity = 1f;
+
+    public byte orientation;
 
     [Header("GameObject References")]
     public GameObject charModelOrigin;
@@ -149,7 +151,6 @@ public class Controller : NetworkBehaviour
             // For some reason, can't get this to run on clients... (supposed to make server resend chunkStringSyncVar)
             CmdSetServerChunkStringSyncVar(); // When client joins, requests that host sends latest saved chunks as string (triggers SyncVar update which occurs before OnStartClient())
             // after client sends chunksServer string SyncVar, the syncVars do not update as required to have clients then save the chunks to memory...
-            //SaveChunks(chunksServer, chunksServer);
         }
 
         if (!Settings.OnlinePlay)
@@ -266,7 +267,7 @@ public class Controller : NetworkBehaviour
         baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
 
-        SetServerChunkStringSyncVar(); // Server sends initially loaded chunks as chunkStringSyncVar to clients
+        //SetServerChunkStringSyncVar(); // Server sends initially loaded chunks as chunkStringSyncVar to clients (DISABLED, send chunks over internet manually, figure out how to send data not as strings)
 
         customNetworkManager.InitWorld();
     }
@@ -366,16 +367,16 @@ public class Controller : NetworkBehaviour
         chunksServer = chunksServerCombinedString;
     }
 
-    public void SaveChunks(string oldValue, string newValue)
+    public void SaveChunksString(string oldValue, string newValue) // eventually figure out how to send data over network using long list of bytes instead of a string
     {
         string[] serverChunks = newValue.Split(';'); // splits individual chunk strings using ';' char delimiter
         World world = customNetworkManager.worldOb.GetComponent<World>();
 
-        // tell world to draw chunks from server
+        //tell world to draw chunks from server
         for (int i = 0; i < serverChunks.Length - 1; i++) // serverChunks.Length - 1 since last item is always empty after ';' char
         {
             ChunkData chunkData = new ChunkData();
-            chunkData = chunkData.DecodeChunkDataFromString(serverChunks[i]);
+            chunkData = chunkData.DecodeString(serverChunks[i]);
             world.worldData.modifiedChunks.Add(chunkData); // add chunk to list of chunks to be saved
         }
         world.worldData.planetSeed = planetNumberServer;
@@ -463,6 +464,17 @@ public class Controller : NetworkBehaviour
 
         if (setCamMode)
             SetCamMode();
+
+        Vector3 XZDirection = transform.forward;
+        XZDirection.y = 0;
+        if (Vector3.Angle(XZDirection, Vector3.forward) <= 45)
+            orientation = 0; // player is facing forwards.
+        else if (Vector3.Angle(XZDirection, Vector3.right) <= 45)
+            orientation = 5;
+        else if (Vector3.Angle(XZDirection, Vector3.back) <= 45)
+            orientation = 1;
+        else
+            orientation = 4;
     }
 
     void FixedUpdate()
@@ -1084,7 +1096,9 @@ public class Controller : NetworkBehaviour
         if (oldBlockID == 1) // cannot place barrier blocks
             return;
 
-        World.Instance.GetChunkFromVector3(position).EditVoxel(position, id);
+        Chunk chunk = World.Instance.GetChunkFromVector3(position);
+
+        chunk.EditVoxel(position, id, this, chunk.chunkData);
 
         Vector3 centeredPosition = new Vector3(position.x + 0.5f, position.y + 0.5f, position.z + 0.5f);
         if (remove)

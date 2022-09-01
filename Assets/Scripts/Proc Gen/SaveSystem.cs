@@ -7,6 +7,8 @@ using System;
 
 public static class SaveSystem
 {
+    static readonly bool stringSaveData = false;
+
     public static void SaveWorldDataToFile(WorldData worldData, World world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
@@ -184,20 +186,25 @@ public static class SaveSystem
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
 
-        // saving byte array as binary file is faster than reading strings from text files
-        // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
-        FileStream stream;
-        stream = new FileStream(savePath + chunkName + ".chunk", FileMode.CreateNew);
-        BinaryWriter w = new BinaryWriter(stream,System.Text.Encoding.UTF8);
-        w.Write(chunk.GetByteArrayFromChunkData(chunk));
-        stream.Close();
-
-        // uses strings for a human readable format (slower). Kept for debugging
-        //BinaryFormatter formatter = new BinaryFormatter();
-        //FileStream stream;
-        //stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create); // overwrites any existing files by default
-        //formatter.Serialize(stream, chunk.EncodeChunk(chunk));
-        //stream.Close();
+        if (!stringSaveData)
+        {
+            // saving byte array as binary file is faster than reading strings from text files
+            // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
+            FileStream stream;
+            stream = new FileStream(savePath + chunkName + ".chunk", FileMode.CreateNew);
+            BinaryWriter w = new BinaryWriter(stream, System.Text.Encoding.UTF8);
+            w.Write(chunk.EncodeByteArray(chunk));
+            stream.Close();
+        }
+        else
+        {
+            // uses strings for a human readable format (slower). Kept for debugging
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream;
+            stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create); // overwrites any existing files by default
+            formatter.Serialize(stream, chunk.EncodeString(chunk));
+            stream.Close();
+        }
     }
 
     public static WorldData LoadWorld(int _planetSeed, int _worldCoord, int sizeInChunks)
@@ -223,7 +230,6 @@ public static class SaveSystem
             worldData.survivalMode = !SettingsStatic.LoadedSettings.creativeMode; // new worlds set value of creative mode from saved value
             SettingsStatic.LoadedSettings.timeOfDay = 6.0f; // reset time of day to morning for new worlds
             FileSystemExtension.SaveSettings();
-            SaveWorldDataToFile(worldData, World.Instance);
 
             return worldData;
         }
@@ -242,22 +248,27 @@ public static class SaveSystem
 
         if (File.Exists(loadPath))
         {
-            // saving byte array as binary file is faster than reading strings from text files
-            // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
-            FileStream stream;
-            stream = new FileStream(loadPath, FileMode.Open, FileAccess.Read);
-            BinaryReader r = new BinaryReader(stream,System.Text.Encoding.UTF8);
-            int count = 2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight);
-            byte[] byteArray = r.ReadBytes(count);
-            chunkData = chunkData.GetChunkDataFromByteArray(byteArray);
-            stream.Close();
-
-            // uses strings for a human readable format (slower). Kept for debugging
-            //BinaryFormatter formatter = new BinaryFormatter();
-            //FileStream stream = new FileStream(loadPath, FileMode.Open);
-            //string str = formatter.Deserialize(stream) as string;
-            //chunkData = chunkData.DecodeChunk(str);
-            //stream.Close();
+            if (!stringSaveData)
+            {
+                // saving byte array as binary file is faster than reading strings from text files
+                // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
+                FileStream stream;
+                stream = new FileStream(loadPath, FileMode.Open, FileAccess.Read);
+                BinaryReader r = new BinaryReader(stream, System.Text.Encoding.UTF8);
+                int count = 2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight);
+                byte[] byteArray = r.ReadBytes(count);
+                chunkData = chunkData.DecodeByteArray(byteArray);
+                stream.Close();
+            }
+            else
+            {
+                // uses strings for a human readable format (slower). Kept for debugging
+                BinaryFormatter formatter = new BinaryFormatter();
+                FileStream stream = new FileStream(loadPath, FileMode.Open);
+                string str = formatter.Deserialize(stream) as string;
+                chunkData = chunkData.DecodeString(str);
+                stream.Close();
+            }
         }
         else
         {
