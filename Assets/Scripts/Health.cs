@@ -23,7 +23,7 @@ public class Health : NetworkBehaviour
     int lastPlayerPos = 0;
 
     Controller controller;
-    PlayerVoxelCollider voxelCollider;
+    VoxelCollider voxelCollider;
     GameObject ob;
     public List<GameObject> modelPieces;
     readonly SyncList<GameObject> modelPiecesSyncList = new SyncList<GameObject>();
@@ -32,8 +32,8 @@ public class Health : NetworkBehaviour
     {
         if (gameObject.GetComponent<Controller>() != null)
             controller = gameObject.GetComponent<Controller>();
-        if(gameObject.GetComponent<PlayerVoxelCollider>() != null)
-            voxelCollider = gameObject.GetComponent<PlayerVoxelCollider>();
+        if(gameObject.GetComponent<VoxelCollider>() != null)
+            voxelCollider = gameObject.GetComponent<VoxelCollider>();
     }
 
     public override void OnStartServer()

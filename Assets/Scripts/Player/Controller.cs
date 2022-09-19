@@ -96,7 +96,7 @@ public class Controller : NetworkBehaviour
     private CapsuleCollider cc;
     private Rigidbody rb;
     private BoxCollider bc;
-    private PlayerVoxelCollider voxelCollider;
+    private VoxelCollider voxelCollider;
     private Animator animator;
     private PlayerInput playerInput;
     private InputHandler inputHandler;
@@ -105,7 +105,7 @@ public class Controller : NetworkBehaviour
     private CanvasGroup backgroundMaskCanvasGroup;
     private GameMenu gameMenuComponent;
     private BoxCollider playerCameraBoxCollider;
-    private PlayerVoxelCollider playerCameraVoxelCollider;
+    private VoxelCollider playerCameraVoxelCollider;
     private PPFXSetValues worldPPFXSetValues;
     private CharacterController charController;
     private PhysicMaterial physicMaterial;
@@ -156,7 +156,7 @@ public class Controller : NetworkBehaviour
         if (!Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
 
-        voxelCollider = GetComponent<PlayerVoxelCollider>();
+        voxelCollider = GetComponent<VoxelCollider>();
         voxelCollider.world = world;
         physicMaterial = world.physicMaterial;
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
@@ -174,7 +174,7 @@ public class Controller : NetworkBehaviour
         playerCameraOrigin = playerCamera.transform.parent.gameObject;
         lookAtConstraint = playerCamera.GetComponent<LookAtConstraint>();
         playerCameraBoxCollider = playerCamera.GetComponent<BoxCollider>();
-        playerCameraVoxelCollider = playerCamera.GetComponent<PlayerVoxelCollider>();
+        playerCameraVoxelCollider = playerCamera.GetComponent<VoxelCollider>();
         charController = GetComponent<CharacterController>();
 
         health.isAlive = true;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerVoxelCollider : MonoBehaviour
+public class VoxelCollider : MonoBehaviour
 {
     public float baseWalkSpeed;
     public float baseSprintSpeed;
@@ -67,7 +67,6 @@ public class PlayerVoxelCollider : MonoBehaviour
             return Vector3.zero;
 
         Vector3 velocityPlayer;
-        //playerChunkIsActive = PlayerInActiveChunk();
 
         if (cc != null)
             center = cc.transform.position + cc.center; // cache current center of collider position
@@ -115,13 +114,22 @@ public class PlayerVoxelCollider : MonoBehaviour
             velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
         }
 
+        // collision detection
+        if ((velocityPlayer.z > 0 && front) || (velocityPlayer.z < 0 && back))
+            velocityPlayer.z = 0;
+        if ((velocityPlayer.x > 0 && right) || (velocityPlayer.x < 0 && left))
+            velocityPlayer.x = 0;
+        if (velocityPlayer.y < 0)
+            velocityPlayer.y = CheckDownSpeed(velocityPlayer.y);
+        if (velocityPlayer.y > 0)
+            velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
+
         return velocityPlayer;
     }
 
     public Vector3 CalculateVelocityCamera(float horizontal, float vertical, bool isSprinting)
     {
         Vector3 velocityCamera;
-        //bool cameraChunkIsActive = PlayerInActiveChunk();
 
         center = transform.position;
 
@@ -131,7 +139,6 @@ public class PlayerVoxelCollider : MonoBehaviour
         else
             velocityCamera = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed;
 
-        //if (cameraChunkIsActive) // DISABLED since the camera was getting stuck inside meshes due to character controller?, more important to have a free camera
         {
             isGrounded = CheckGrounded(velocityCamera.y);
             // horizontal collision detection
@@ -172,6 +179,31 @@ public class PlayerVoxelCollider : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    public float CheckDownSpeed(float downSpeed) // checks in cross pattern
+    {
+        float distToVoxelBelow = center.y - halfColliderHeight + downSpeed;
+
+        //if (distToVoxelBelow < 0) // prevent checking voxels below bottom of world
+        //    return false; // allow player to move below bottom of world chunks
+
+        if (
+            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 + colliderOffset)) ||
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 - colliderOffset))
+           )
+        {
+            //Debug.Log("landed on: " + center.x + ", " + (center.y - yOffset + downSpeed) + ", " + (center.z + width / 2 - colliderOffset));
+            isGrounded = true;
+            return 0;
+        }
+        else
+        {
+            isGrounded = false;
+            return downSpeed;
         }
     }
 
