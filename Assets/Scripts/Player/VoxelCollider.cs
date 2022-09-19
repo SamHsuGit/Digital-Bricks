@@ -114,15 +114,18 @@ public class VoxelCollider : MonoBehaviour
             velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
         }
 
-        // collision detection
-        if ((velocityPlayer.z > 0 && front) || (velocityPlayer.z < 0 && back))
-            velocityPlayer.z = 0;
-        if ((velocityPlayer.x > 0 && right) || (velocityPlayer.x < 0 && left))
-            velocityPlayer.x = 0;
-        if (velocityPlayer.y < 0)
-            velocityPlayer.y = CheckDownSpeed(velocityPlayer.y);
-        if (velocityPlayer.y > 0)
-            velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
+        // voxel based collision detection (no chunk meshes)
+        if(!SettingsStatic.LoadedSettings.creativeMode && !SettingsStatic.LoadedSettings.chunkMeshColliders)
+        {
+            if ((velocityPlayer.z > 0 && front) || (velocityPlayer.z < 0 && back))
+                velocityPlayer.z = 0;
+            if ((velocityPlayer.x > 0 && right) || (velocityPlayer.x < 0 && left))
+                velocityPlayer.x = 0;
+            if (velocityPlayer.y < 0)
+                velocityPlayer.y = CheckDownSpeed(velocityPlayer.y);
+            if (velocityPlayer.y > 0)
+                velocityPlayer.y = CheckUpSpeed(velocityPlayer.y);
+        }
 
         return velocityPlayer;
     }
