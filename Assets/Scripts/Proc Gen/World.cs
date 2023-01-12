@@ -12,6 +12,7 @@ public class World : MonoBehaviour
     // PUBLIC VARIABLES
     [Header("Shown For Debug")]
     public int playerCount = 0;
+    public bool drawStuds;
     public WorldData worldData;
 
     [Header("Public Referenced By Others")]
@@ -82,6 +83,8 @@ public class World : MonoBehaviour
     [HideInInspector] public static World Instance { get { return _instance; } }
 
     // PRIVATE VARIABLES
+    private int blockIDprocGen = 11;
+    private int blockIDbase = 12;
     private int cloudHeight;
     private bool applyingModifications;
     private int loadDistance;
@@ -140,6 +143,7 @@ public class World : MonoBehaviour
         drawLodes = SettingsStatic.LoadedSettings.drawLodes;
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
+        drawStuds = true;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
         worldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks;
         debugTimer = "notMeasured";
@@ -232,7 +236,7 @@ public class World : MonoBehaviour
         WorldDataOverrides(planetNumber);
 
         if (Settings.Platform == 2)
-            blockTypes[25].voxelBoundObject = null;
+            blockTypes[blockIDbase].voxelBoundObject = null;
         else
         {
             if(Settings.OnlinePlay && baseObString != null)
@@ -242,7 +246,7 @@ public class World : MonoBehaviour
                 baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
             }
 
-            blockTypes[25].voxelBoundObject = baseOb;
+            blockTypes[blockIDbase].voxelBoundObject = baseOb;
 
             if (Settings.OnlinePlay)
             {
@@ -311,7 +315,9 @@ public class World : MonoBehaviour
     {
         //override worldData with planet data for specific planets in our solar system, otherwise randomize the blockIDs/colors
         int minRandBlockID = 2;
-        int maxRandBlockID = 24;
+        int maxRandBlockID = 10;
+        int minRandBlockIDFlora = 5;
+        int numberOfHardcodedPlanets = 17;
 
         worldData.system = GetSystem(planetNumber);
         worldData.distToStar = GetDistToStar(planetNumber);
@@ -320,7 +326,7 @@ public class World : MonoBehaviour
         //Debug.Log("Seed:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.system, worldData.distToStar));
         //Debug.Log("Universe Coords (galaxy, system, planet)" + worldData.galaxy + "-" + worldData.system + "-" + distToStar);
 
-        if (planetNumber < 32) // 8 planets + solid colored planets
+        if (planetNumber <= numberOfHardcodedPlanets) // 8 planets + 9 solid colored planets
         {
             Planet planet = planets[planetNumber];
 
@@ -358,22 +364,22 @@ public class World : MonoBehaviour
             worldData.blockIDHugeTreeTrunk = planet.blockIDHugeTreeTrunk;
             worldData.blockIDColumn = planet.blockIDColumn;
         }
-        if (planetNumber >= 32) // random colored planets based on proximity to star
+        if (planetNumber > numberOfHardcodedPlanets) // random colored planets based on proximity to star
         {
             if (distToStar >= 0 && distToStar <= 3) // hot, close to star
             {
-                minRandBlockID = 3;
-                maxRandBlockID = 8;
+                minRandBlockID = 2;
+                maxRandBlockID = 4;
             }
             else if (distToStar >= 4 && distToStar <= 6) // temperate, medium distance from star
             {
-                minRandBlockID = 9;
-                maxRandBlockID = 15;
+                minRandBlockID = 5;
+                maxRandBlockID = 6;
             }
             else if (distToStar >= 7 && distToStar <= 8) // cold, far from star
             {
-                minRandBlockID = 16;
-                maxRandBlockID = 24;
+                minRandBlockID = 7;
+                maxRandBlockID = 10;
             }
             //randomize blockIDs based on seed values
             // Default ProcGen values based on seed
@@ -402,21 +408,21 @@ public class World : MonoBehaviour
                 worldData.isAlive = true; // world is hospitable to flora
             }
             worldData.biomes = new int[] {0, 1, 2, 3, 4, 5, 6}; // controls which biomes the world has
-            worldData.blockIDTreeLeavesWinter = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesSpring = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesSummer = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesFall1 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeLeavesFall2 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDCacti = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDMushroomLargeCap = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDMushroomLargeStem = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDTreeLeavesWinter = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDTreeLeavesSpring = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDTreeLeavesSummer = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDTreeLeavesFall1 = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDTreeLeavesFall2 = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDCacti = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDMushroomLargeCap = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDMushroomLargeStem = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDMonolith = (byte)UnityEngine.Random.Range(minRandBlockID, 24);
-            worldData.blockIDEvergreenLeaves = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDEvergreenTrunk = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDEvergreenLeaves = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDEvergreenTrunk = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDHoneyComb = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDHugeTreeLeaves = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDHugeTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDHugeTreeLeaves = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
+            worldData.blockIDHugeTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDColumn = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
         }
 
@@ -839,7 +845,7 @@ public class World : MonoBehaviour
         if (worldData.planetSeed == 0 && worldData.worldCoord == 0)
         {
             terrainHeightVoxels = 1;
-            if (yGlobalPos == 1 && !CheckMakeBase(globalPos))
+            if (yGlobalPos <= 1 && !CheckMakeBase(globalPos))
                 return 4;
             else if (yGlobalPos > 1)
                 return 0;
@@ -1257,8 +1263,8 @@ public class World : MonoBehaviour
                     Vector3 globalPosition = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y, chunkCoord.z * VoxelData.ChunkWidth + z);
                     Vector3 globalPositionAbove = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y + 1, chunkCoord.z * VoxelData.ChunkWidth + z);
 
-                    // if voxel matches Perlin noise pattern
-                    if (blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
+                    // if voxel matches Perlin noise pattern and studs enabled
+                    if (drawStuds && blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
                     {
                         // if studs don't already exist
                         if (!studDictionary.TryGetValue(globalPositionAbove, out _))
@@ -1287,13 +1293,13 @@ public class World : MonoBehaviour
                             //Add VBO to voxel
                             Vector3 VBOPosition = globalPosition;
                             Quaternion VBOorientation = Quaternion.identity;
-                            if (blockID == 25 || blockID == 26)
+                            if (blockID == blockIDprocGen || blockID == blockIDbase)
                             {
                                 VBOPosition = new Vector3(globalPosition.x + 0.5f, globalPosition.y, globalPosition.z + 0.5f); // make center of the VBO center of the voxel (voxel origin is corner)
                                 VBOorientation.eulerAngles = new Vector3(180, 0, 0); // if VBOImport then flip right side up
                             }
                             GameObject VBO;
-                            if (blockID == 25 && Settings.Platform != 2 && blockTypes[blockID].voxelBoundObject != null)
+                            if (blockID == blockIDprocGen && Settings.Platform != 2 && blockTypes[blockID].voxelBoundObject != null)
                             {
                                 baseOb = blockTypes[blockID].voxelBoundObject;
                                 if (Settings.OnlinePlay)
@@ -1364,7 +1370,7 @@ public class World : MonoBehaviour
                     // Destroy any gameObject associated with the global position or global position above
                     byte blockID = chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
 
-                    if (objectDictionary.TryGetValue(globalPosition, out _) && blockID != 25 && blockID != 26) // voxelBoundObjects but not base or procGen.ldr
+                    if (objectDictionary.TryGetValue(globalPosition, out _) && blockID != blockIDprocGen && blockID != blockIDbase) // voxelBoundObjects but not base or procGen.ldr
                     {
                         Destroy(objectDictionary[globalPosition]);
                         objectDictionary.Remove(globalPosition);
@@ -1457,7 +1463,7 @@ public class World : MonoBehaviour
         if (voxel == null)
             return false;
 
-        if (voxel.id == 25 || voxel.id == 26)
+        if (voxel.id == blockIDprocGen || voxel.id == blockIDbase)
             return true; // VBO placeholder to prevent player from replacing with a voxel
 
         if (blockTypes[voxel.id].isSolid) // gives error if the player starts outside of the world

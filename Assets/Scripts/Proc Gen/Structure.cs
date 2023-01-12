@@ -143,7 +143,7 @@ public static class Structure
         int zRadius = LDrawImportRuntime.Instance.baseObSizeZ / 2;
         xRadius += 1; // safety boundary in case import is offset by 1 block
         zRadius += 1; // safety boundary in case import is offset by 1 block
-        byte blockID = 25;
+        byte blockID = 12;
         ReserveSpaceVBO(queue, position, xRadius, zRadius);
         queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
         return queue;
@@ -253,7 +253,7 @@ public static class Structure
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        int numberOfBlockIDs = 23;
+        int numberOfBlockIDs = 9;
 
         for(int i = 1; i <= numberOfBlockIDs; i++)
         {
@@ -378,13 +378,13 @@ public static class Structure
     static Queue<VoxelMod> MakeGrass(Vector3Int position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 31)); // grass
+        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 17)); // grass
         return queue;
     }
     static Queue<VoxelMod> MakeMushroomSmall(Vector3Int position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 32)); // mushroomSmall
+        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 18)); // mushroomSmall
         return queue;
     }
 
@@ -393,7 +393,7 @@ public static class Structure
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
         int height = (int)(10 * fertility);
 
-        queue = MakeColumn(queue, position, height, 33); // bamboo
+        queue = MakeColumn(queue, position, height, 19); // bamboo
 
         return queue;
 
@@ -401,7 +401,7 @@ public static class Structure
     static Queue<VoxelMod> MakeFlower(Vector3Int position)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 34)); // flower
+        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 20)); // flower
         return queue;
     }
 

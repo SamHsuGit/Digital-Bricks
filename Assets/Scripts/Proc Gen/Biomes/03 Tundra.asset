@@ -167,7 +167,7 @@ MonoBehaviour:
     maxRadius: 0
   lodes:
   - nodeName: Crystals
-    blockID: 30
+    blockID: 16
     minHeight: 1
     maxHeight: 96
     scale: 2

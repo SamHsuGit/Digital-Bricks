@@ -17,8 +17,7 @@ MonoBehaviour:
   scale: 0.08
   terrainHeight: 5
   terrainScale: 0.01
-  surfaceBlock: 13
-  placeFlora: 1
+  surfaceBlock: 15
   smallStructures:
   - name: Rock
     floraIndex: 16

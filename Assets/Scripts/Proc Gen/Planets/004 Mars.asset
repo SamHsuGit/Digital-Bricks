@@ -13,36 +13,36 @@ MonoBehaviour:
   m_Name: 004 Mars
   m_EditorClassIdentifier: 
   distToStar: 4
-  blockIDsubsurface: 6
+  blockIDsubsurface: 5
   blockIDcore: 5
-  blockIDBiome00: 8
-  blockIDBiome01: 6
-  blockIDBiome02: 6
-  blockIDBiome03: 6
-  blockIDBiome04: 8
-  blockIDBiome05: 6
-  blockIDBiome06: 6
-  blockIDBiome07: 8
-  blockIDBiome08: 6
-  blockIDBiome09: 8
-  blockIDBiome10: 6
-  blockIDBiome11: 8
+  blockIDBiome00: 5
+  blockIDBiome01: 5
+  blockIDBiome02: 5
+  blockIDBiome03: 4
+  blockIDBiome04: 5
+  blockIDBiome05: 5
+  blockIDBiome06: 4
+  blockIDBiome07: 5
+  blockIDBiome08: 5
+  blockIDBiome09: 5
+  blockIDBiome10: 5
+  blockIDBiome11: 5
   hasAtmosphere: 1
   isAlive: 0
   biomes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
   blockIDTreeLeavesWinter: 4
-  blockIDTreeLeavesSpring: 29
-  blockIDTreeLeavesSummer: 29
-  blockIDTreeLeavesFall1: 11
-  blockIDTreeLeavesFall2: 7
-  blockIDTreeTrunk: 28
-  blockIDCacti: 13
-  blockIDMushroomLargeCap: 28
+  blockIDTreeLeavesSpring: 15
+  blockIDTreeLeavesSummer: 15
+  blockIDTreeLeavesFall1: 7
+  blockIDTreeLeavesFall2: 5
+  blockIDTreeTrunk: 14
+  blockIDCacti: 8
+  blockIDMushroomLargeCap: 14
   blockIDMushroomLargeStem: 4
   blockIDMonolith: 2
-  blockIDEvergreenLeaves: 29
-  blockIDEvergreenTrunk: 28
+  blockIDEvergreenLeaves: 15
+  blockIDEvergreenTrunk: 14
   blockIDHoneyComb: 2
-  blockIDHugeTreeLeaves: 29
-  blockIDHugeTreeTrunk: 28
+  blockIDHugeTreeLeaves: 15
+  blockIDHugeTreeTrunk: 14
   blockIDColumn: 3

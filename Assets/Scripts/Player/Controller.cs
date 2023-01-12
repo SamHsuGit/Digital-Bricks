@@ -117,6 +117,10 @@ public class Controller : NetworkBehaviour
     private Rigidbody heldObRb;
 
     //Initializers & Constants
+    private int blockIDprocGen = 11;
+    private int blockIDbase = 12;
+    private int blockIDcrystal = 16;
+    private int blockIDmushroom = 18;
     private float colliderHeight;
     private float colliderRadius;
     private Vector3 colliderCenter;
@@ -630,14 +634,14 @@ public class Controller : NetworkBehaviour
             return;
 
         // if has mushroom, and health is not max and the selected slot has a stack
-        if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 32 && health.hp < health.hpMax)
+        if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDmushroom && health.hp < health.hpMax)
         {
             // remove qty 1 from stack
             health.RequestEditSelfHealth(1);
             eat.Play();
             TakeFromCurrentSlot(1);
         }
-        else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == 30) // if has crystal, spawn projectile
+        else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
         {
             if(Settings.OnlinePlay)
                 CmdSpawnObject(2, 0, rayCastStart);
@@ -678,7 +682,7 @@ public class Controller : NetworkBehaviour
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id;
 
-            if (blockID == 25 || blockID == 26) // cannot destroy procGen.ldr or base.ldr (imported VBO)
+            if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
                 return;
 
             shootBricks.Play();
@@ -709,7 +713,7 @@ public class Controller : NetworkBehaviour
 
     void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
     {
-        if (!World.Instance.IsGlobalPosInsideBorder(position) || blockID == 0 || blockID == 1 || blockID == 25 || blockID == 26) // if the blockID at position is air, barrier, base, procGenVBO, then skip to next position
+        if (!World.Instance.IsGlobalPosInsideBorder(position) || blockID == 0 || blockID == 1 || blockID == blockIDprocGen || blockID == blockIDbase) // if the blockID at position is air, barrier, base, procGenVBO, then skip to next position
             return;
 
         EditVoxel(position, 0, true); // destroy voxel at position
@@ -755,7 +759,7 @@ public class Controller : NetworkBehaviour
             else if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
             {
                 blockID = World.Instance.GetVoxelState(removePos.position).id;
-                if (blockID == 25 || blockID == 26) // cannot pickup procGen.ldr or base.ldr (imported VBO)
+                if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
                     return;
 
                 PickupBrick(removePos.position);
@@ -928,9 +932,9 @@ public class Controller : NetworkBehaviour
 
     void PickupBrick(Vector3 pos)
     {
-        if (blockID == 30)
+        if (blockID == blockIDcrystal)
             crystal.Play();
-        else if (blockID == 32)
+        else if (blockID == blockIDmushroom)
             mushroom.Play();
 
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
@@ -945,9 +949,9 @@ public class Controller : NetworkBehaviour
     {
         if (!World.Instance.CheckForVoxel(placePos.position))
         {
-            if (blockID == 30)
+            if (blockID == blockIDcrystal)
                 crystal.Play();
-            else if (blockID == 32)
+            else if (blockID == blockIDmushroom)
                 mushroom.Play();
 
             // replace voxel, play sound

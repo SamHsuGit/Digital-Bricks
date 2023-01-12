@@ -13,36 +13,36 @@ MonoBehaviour:
   m_Name: 008 Neptune
   m_EditorClassIdentifier: 
   distToStar: 8
-  blockIDsubsurface: 18
-  blockIDcore: 18
-  blockIDBiome00: 18
-  blockIDBiome01: 18
-  blockIDBiome02: 18
-  blockIDBiome03: 18
-  blockIDBiome04: 18
-  blockIDBiome05: 18
-  blockIDBiome06: 18
-  blockIDBiome07: 18
-  blockIDBiome08: 18
-  blockIDBiome09: 18
-  blockIDBiome10: 18
-  blockIDBiome11: 18
+  blockIDsubsurface: 9
+  blockIDcore: 4
+  blockIDBiome00: 9
+  blockIDBiome01: 9
+  blockIDBiome02: 9
+  blockIDBiome03: 9
+  blockIDBiome04: 9
+  blockIDBiome05: 9
+  blockIDBiome06: 9
+  blockIDBiome07: 9
+  blockIDBiome08: 9
+  blockIDBiome09: 9
+  blockIDBiome10: 9
+  blockIDBiome11: 9
   hasAtmosphere: 1
   isAlive: 0
   biomes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
   blockIDTreeLeavesWinter: 4
-  blockIDTreeLeavesSpring: 29
-  blockIDTreeLeavesSummer: 29
-  blockIDTreeLeavesFall1: 11
-  blockIDTreeLeavesFall2: 7
-  blockIDTreeTrunk: 28
-  blockIDCacti: 13
-  blockIDMushroomLargeCap: 28
+  blockIDTreeLeavesSpring: 15
+  blockIDTreeLeavesSummer: 15
+  blockIDTreeLeavesFall1: 7
+  blockIDTreeLeavesFall2: 5
+  blockIDTreeTrunk: 14
+  blockIDCacti: 8
+  blockIDMushroomLargeCap: 14
   blockIDMushroomLargeStem: 4
   blockIDMonolith: 2
-  blockIDEvergreenLeaves: 29
-  blockIDEvergreenTrunk: 28
+  blockIDEvergreenLeaves: 15
+  blockIDEvergreenTrunk: 14
   blockIDHoneyComb: 2
-  blockIDHugeTreeLeaves: 29
-  blockIDHugeTreeTrunk: 28
+  blockIDHugeTreeLeaves: 15
+  blockIDHugeTreeTrunk: 14
   blockIDColumn: 3

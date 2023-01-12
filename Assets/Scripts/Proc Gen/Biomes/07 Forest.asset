@@ -17,7 +17,7 @@ MonoBehaviour:
   scale: 0.08
   terrainHeight: 80
   terrainScale: 0.12
-  surfaceBlock: 27
+  surfaceBlock: 13
   smallStructures:
   - name: Rock
     floraIndex: 16
@@ -167,7 +167,7 @@ MonoBehaviour:
     maxRadius: 10
   lodes:
   - nodeName: Crystals
-    blockID: 30
+    blockID: 16
     minHeight: 1
     maxHeight: 96
     scale: 2
