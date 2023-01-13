@@ -13,7 +13,6 @@ public class BlockType : ScriptableObject
     public VoxelMeshData studsMeshData;
     public Sprite icon;
     public bool isActive;
-    public GameObject studs;
     public GameObject voxelBoundObject;
 
     [Header("Texture Values")]

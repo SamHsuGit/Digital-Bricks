@@ -12,7 +12,6 @@ public class World : MonoBehaviour
     // PUBLIC VARIABLES
     [Header("Shown For Debug")]
     public int playerCount = 0;
-    public bool drawStuds;
     public WorldData worldData;
 
     [Header("Public Referenced By Others")]
@@ -96,7 +95,7 @@ public class World : MonoBehaviour
     private bool drawSurfaceObjects;
     private bool drawVBO;
     private int viewDistance;
-    private int studRenderDistanceInChunks; // acts as a radius like drawDistance
+    private int VBORenderDistanceInChunks; // acts as a radius like drawDistance
 
     private Chunk[,] chunks;
     private List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>();
@@ -109,7 +108,6 @@ public class World : MonoBehaviour
     private Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
     private List<Player> playersCopy = new List<Player>();
     private Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
-    private Dictionary<Vector3, GameObject> studDictionary = new Dictionary<Vector3, GameObject>();
     private Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
 
     private Thread ChunkRedrawThread;
@@ -143,7 +141,6 @@ public class World : MonoBehaviour
         drawLodes = SettingsStatic.LoadedSettings.drawLodes;
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
-        drawStuds = false;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
         worldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks;
         debugTimer = "notMeasured";
@@ -172,7 +169,7 @@ public class World : MonoBehaviour
         if (SettingsStatic.LoadedSettings.viewDistance < 1)
             SettingsStatic.LoadedSettings.viewDistance = 1;
 
-        studRenderDistanceInChunks = 1; // keep studs render distance lower than viewDistance to avoid errors.
+        VBORenderDistanceInChunks = 1; // keep studs render distance lower than viewDistance to avoid errors.
         //Debug.Log("viewDist = " + SettingsStatic.LoadedSettings.viewDistance);
         //Debug.Log("stud render dist = " + studRenderDistanceInChunks);
 
@@ -697,9 +694,9 @@ public class World : MonoBehaviour
         players[playerIndex].chunksToAddVBO.Clear();
 
         // Loop through all chunks currently within view distance of the player.
-        for (int x = playerChunkCoord.x - studRenderDistanceInChunks; x < playerChunkCoord.x + studRenderDistanceInChunks; x++)
+        for (int x = playerChunkCoord.x - VBORenderDistanceInChunks; x < playerChunkCoord.x + VBORenderDistanceInChunks; x++)
         {
-            for (int z = playerChunkCoord.z - studRenderDistanceInChunks; z < playerChunkCoord.z + studRenderDistanceInChunks; z++)
+            for (int z = playerChunkCoord.z - VBORenderDistanceInChunks; z < playerChunkCoord.z + VBORenderDistanceInChunks; z++)
             {
                 ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
 
@@ -1263,25 +1260,6 @@ public class World : MonoBehaviour
                     Vector3 globalPosition = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y, chunkCoord.z * VoxelData.ChunkWidth + z);
                     Vector3 globalPositionAbove = new Vector3(chunkCoord.x * VoxelData.ChunkWidth + x, y + 1, chunkCoord.z * VoxelData.ChunkWidth + z);
 
-                    // if voxel matches Perlin noise pattern and studs enabled
-                    if (drawStuds && blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs != null && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.1f)
-                    {
-                        // if studs don't already exist
-                        if (!studDictionary.TryGetValue(globalPositionAbove, out _))
-                        {
-                            // if voxel is solid, and voxel above is air, and voxel is not barrier block
-                            if (blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].isSolid && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y + 1, z].id == 0 && chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id != 1)
-                            {
-                                // add studs
-                                studDictionary.Add(globalPositionAbove, Instantiate(blockTypes[chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id].studs, globalPositionAbove, Quaternion.identity));
-                            }
-                        }
-                        else
-                        {
-                            //Debug.Log(globalPositionAbove + " already exists");
-                        }
-                    }
-
                     byte blockID = chunks[chunkCoord.x, chunkCoord.z].chunkData.map[x, y, z].id;
 
                     // if voxel has an object defined
@@ -1376,12 +1354,6 @@ public class World : MonoBehaviour
                         objectDictionary.Remove(globalPosition);
                         //Debug.Log("Removed Object at " + globalPosition.x + ", " + globalPosition.z);
                     }
-                    else if (studDictionary.TryGetValue(globalPositionAbove, out _)) // studs
-                    {
-                        Destroy(studDictionary[globalPositionAbove]);
-                        studDictionary.Remove(globalPositionAbove);
-                        //Debug.Log("Removed Object at " + globalPositionAbove.x + ", " + globalPositionAbove.z);
-                    }
                     else
                     {
                         //Debug.Log("No entry found in dictionary for: " + globalPositionAbove.x + "," + globalPositionAbove.y + "," + globalPositionAbove.z);
@@ -1396,13 +1368,8 @@ public class World : MonoBehaviour
         // for voxel specified
         Vector3 positionAbove = new Vector3(pos.x, pos.y + 1, pos.z);
 
-        // Destroy each studs gameObject created
-        if (studDictionary.TryGetValue(positionAbove, out _)) // if voxelBoundObject is stored above voxel coord (e.g. studs)
-        {
-            Destroy(studDictionary[positionAbove]);
-            studDictionary.Remove(positionAbove);
-        }
-        else if (objectDictionary.TryGetValue(pos, out _)) // else if voxelBoundObject is stored within voxel coord (all non-stud objects)
+        // Destroy each gameObject created
+        if (objectDictionary.TryGetValue(pos, out _)) // else if voxelBoundObject is stored within voxel coord (all non-stud objects)
         {
             Destroy(objectDictionary[pos]);
             objectDictionary.Remove(pos);
