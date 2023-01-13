@@ -255,11 +255,8 @@ public static class Structure
 
         int numberOfBlockIDs = 9;
 
-        for(int i = 1; i <= numberOfBlockIDs; i++)
-        {
-            byte blockID = (byte)(i + 1);
-            queue = MakeColumn(queue, position, numberOfBlockIDs, blockID); // rainbow
-        }
+        for(int i = 2; i < numberOfBlockIDs + 2; i++)
+            queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + i, position.z), (byte)i));
 
         return queue;
     }

@@ -680,6 +680,10 @@ public class Controller : NetworkBehaviour
         else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
         {
             Vector3 position = shootPos.position;
+
+            if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
+                return;
+
             blockID = World.Instance.GetVoxelState(position).id;
 
             if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
@@ -758,6 +762,9 @@ public class Controller : NetworkBehaviour
             }
             else if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
             {
+                if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
+                    return;
+
                 blockID = World.Instance.GetVoxelState(removePos.position).id;
                 if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
                     return;

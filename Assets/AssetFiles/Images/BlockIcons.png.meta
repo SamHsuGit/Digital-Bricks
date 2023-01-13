@@ -102,7 +102,7 @@ TextureImporter:
       213: 8874480006941658528
     second: 026
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -123,6 +123,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -161,6 +162,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -212,6 +214,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Windows Store Apps
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
@@ -310,7 +324,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 010
+      name: 006
       rect:
         serializedVersion: 2
         x: 3064
@@ -331,7 +345,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 011
+      name: 007
       rect:
         serializedVersion: 2
         x: 3426
@@ -352,7 +366,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 014
+      name: 008
       rect:
         serializedVersion: 2
         x: 457
@@ -373,7 +387,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 019
+      name: 009
       rect:
         serializedVersion: 2
         x: 2339
@@ -394,7 +408,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 024
+      name: 010
       rect:
         serializedVersion: 2
         x: 84
@@ -415,7 +429,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 027
+      name: 013
       rect:
         serializedVersion: 2
         x: 1208
@@ -430,13 +444,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 145713b3044376870800000000000000
-      internalID: 8675960657628198209
+      internalID: -1266807616821673123
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 028
+      name: 014
       rect:
         serializedVersion: 2
         x: 1600
@@ -451,13 +465,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 0ad48263c90005050800000000000000
-      internalID: 5787126192094596512
+      internalID: -2610892883229420862
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 029
+      name: 015
       rect:
         serializedVersion: 2
         x: 1978
@@ -472,13 +486,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 273d5c2ebf0af9170800000000000000
-      internalID: 8187439651284702066
+      internalID: -4771556272078792200
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 030
+      name: 016
       rect:
         serializedVersion: 2
         x: 2326
@@ -493,13 +507,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 747438c5a74f7c5b0800000000000000
-      internalID: -5348037226103879865
+      internalID: -6246070551821309166
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 031
+      name: 017
       rect:
         serializedVersion: 2
         x: 2721
@@ -514,13 +528,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 6975e6935d419c920800000000000000
-      internalID: 3010960731898009494
+      internalID: 8627043524693180128
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 032
+      name: 018
       rect:
         serializedVersion: 2
         x: 3105
@@ -535,13 +549,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 6984fceea88639e20800000000000000
-      internalID: 3356141093242488982
+      internalID: -7523670994549806873
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 033
+      name: 019
       rect:
         serializedVersion: 2
         x: 3483
@@ -556,13 +570,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 318a18f3013778860800000000000000
-      internalID: 7532115415422576659
+      internalID: -2283223821045826522
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 034
+      name: 020
       rect:
         serializedVersion: 2
         x: 3774
@@ -577,13 +591,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: f5466de338be185b0800000000000000
-      internalID: -5367750331921439649
+      internalID: 109434020790643247
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 025
+      name: 011
       rect:
         serializedVersion: 2
         x: 464
@@ -598,13 +612,13 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 233b057c71e3f0cf0800000000000000
-      internalID: -283939979651927246
+      internalID: 8675960657628198209
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 026
+      name: 012
       rect:
         serializedVersion: 2
         x: 842
@@ -634,6 +648,26 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      004: -6943373833598557
+      011: 8675960657628198209
+      019: -2283223821045826522
+      002: 5679390536090785944
+      009: 4665620361206564391
+      015: -4771556272078792200
+      014: -2610892883229420862
+      003: 5392753449730437660
+      007: 1159639000735656762
+      006: -1501523072523359806
+      018: -7523670994549806873
+      016: -6246070551821309166
+      017: 8627043524693180128
+      012: 8874480006941658528
+      013: -1266807616821673123
+      005: -7538633921802359561
+      020: 109434020790643247
+      008: 6931913342542670997
+      010: 6804417665525417643
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
