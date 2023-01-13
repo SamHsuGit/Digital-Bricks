@@ -143,7 +143,7 @@ public class World : MonoBehaviour
         drawLodes = SettingsStatic.LoadedSettings.drawLodes;
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
-        drawStuds = true;
+        drawStuds = false;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
         worldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks;
         debugTimer = "notMeasured";

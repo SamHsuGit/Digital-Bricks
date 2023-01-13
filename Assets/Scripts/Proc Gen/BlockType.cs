@@ -9,7 +9,8 @@ public class BlockType : ScriptableObject
     public bool isDrawn;
     public bool isSolid;
     public bool isTransparent;
-    public VoxelMeshData meshData;
+    public VoxelMeshData standardMeshData;
+    public VoxelMeshData studsMeshData;
     public Sprite icon;
     public bool isActive;
     public GameObject studs;

@@ -295,7 +295,12 @@ public class Chunk
                 break;
         }
 
-        for (int p = 0; p < 6; p++)
+        VoxelState neighborAbove = CheckVoxel(pos + VoxelData.faceChecks[2]); // if block above is transparent, use studs mesh data, otherwise leave as a standard block
+        VoxelMeshData meshData = voxel.properties.standardMeshData;
+        if (neighborAbove != null && World.Instance.blockTypes[neighborAbove.id].isTransparent)// && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.5f)
+            meshData = voxel.properties.studsMeshData;
+
+            for (int p = 0; p < 6; p++)
         {
             int translatedP = p;
 
@@ -332,9 +337,9 @@ public class Chunk
             {
                 int faceVertCount = 0;
                 
-                for (int i = 0; i < voxel.properties.meshData.faces[p].vertData.Length; i++)
+                for (int i = 0; i < meshData.faces[p].vertData.Length; i++)
                 {
-                    VertData vertData = voxel.properties.meshData.faces[p].GetVertData(i);
+                    VertData vertData = meshData.faces[p].GetVertData(i);
                     vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
                     normals.Add(VoxelData.faceChecks[p]);
                     AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
@@ -343,13 +348,13 @@ public class Chunk
 
                 if (!World.Instance.blockTypes[voxel.id].isTransparent)
                 {
-                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
-                        triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+                    for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
+                        triangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
                 }
                 else
                 {
-                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
-                        transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+                    for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
+                        transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
                 }
 
                 vertexIndex += faceVertCount;

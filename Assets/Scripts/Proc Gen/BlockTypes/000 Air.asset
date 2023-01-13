@@ -16,7 +16,8 @@ MonoBehaviour:
   isDrawn: 0
   isSolid: 0
   isTransparent: 1
-  meshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
+  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
+  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 0}
   isActive: 0
   studs: {fileID: 0}
