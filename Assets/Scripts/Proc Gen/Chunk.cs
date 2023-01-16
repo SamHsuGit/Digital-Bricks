@@ -297,7 +297,7 @@ public class Chunk
 
         VoxelState neighborAbove = CheckVoxel(pos + VoxelData.faceChecks[2]); // if block above is transparent, use studs mesh data, otherwise leave as a standard block
         VoxelMeshData meshData = voxel.properties.standardMeshData;
-        if (neighborAbove != null && World.Instance.blockTypes[neighborAbove.id].isTransparent)// && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.8f)
+        if (SettingsStatic.LoadedSettings.drawStuds && neighborAbove != null && World.Instance.blockTypes[neighborAbove.id].isTransparent)// && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.8f)
             meshData = voxel.properties.studsMeshData;
 
             for (int p = 0; p < 6; p++)
