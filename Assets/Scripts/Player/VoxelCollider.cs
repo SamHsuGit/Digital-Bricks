@@ -170,10 +170,10 @@ public class VoxelCollider : MonoBehaviour
         //    return false; // allow player to move below bottom of world chunks
 
         if (
-            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 + colliderOffset)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 - colliderOffset))
+            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, distToVoxelBelow, center.z)) || // left bottom center
+            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, distToVoxelBelow, center.z)) || // right bottom center
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 - colliderOffset)) || // center bottom back
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 + colliderOffset)) // center bottom front
            )
         {
             //Debug.Log("landed on: " + center.x + ", " + (center.y - yOffset + downSpeed) + ", " + (center.z + width / 2 - colliderOffset));
@@ -193,10 +193,10 @@ public class VoxelCollider : MonoBehaviour
         //    return false; // allow player to move below bottom of world chunks
 
         if (
-            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 + colliderOffset)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 - colliderOffset))
+            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) || // left bottom center
+            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) || // right bottom center
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 - colliderOffset)) || // center bottom back
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 + colliderOffset)) // center bottom front
            )
         {
             //Debug.Log("landed on: " + center.x + ", " + (center.y - yOffset + downSpeed) + ", " + (center.z + width / 2 - colliderOffset));
@@ -218,10 +218,10 @@ public class VoxelCollider : MonoBehaviour
             return upSpeed; // allow player to move above top of world chunks
 
         if (
-            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelAbove, center.z)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelAbove, center.z)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z - length / 2 + colliderOffset)) ||
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z + length / 2 - colliderOffset))
+            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelAbove, center.z)) || // left top center
+            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelAbove, center.z)) || // right top center
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z - length / 2 - colliderOffset)) || // center top back
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z + length / 2 + colliderOffset)) // center top front
            )
         {
             return 0;
@@ -232,52 +232,60 @@ public class VoxelCollider : MonoBehaviour
         }
     }
 
-    public bool front // checks 2 corners
+    public bool front // checks front 4 corners
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) ||
-                World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset))
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left top front
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // right top front
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left bottom front
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) // right bottom front
                 )
                 return true;
             else
                 return false;
         }
     }
-    public bool back // checks 2 corners
+    public bool back // checks back 4 corners
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) ||
-                World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset))
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // left top back
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // right top back
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) || // left bottom back
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) // right bottom back
                 )
                 return true;
             else
                 return false;
         }
     }
-    public bool left // checks 2 corners
+    public bool left // checks left 4 corners
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z)) ||
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z))
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left top front
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left bottom front
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // left top back
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) // left bottom back
                 )
                 return true;
             else
                 return false;
         }
     }
-    public bool right // checks 2 corners
+    public bool right // checks right 4 corners
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z)) ||
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z))
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // right top front
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) || // right bottom front
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // right top back
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) // right bottom back
                 )
                 return true;
             else

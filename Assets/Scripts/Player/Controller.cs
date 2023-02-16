@@ -745,55 +745,96 @@ public class Controller : NetworkBehaviour
         if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
             return;
 
-        bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabDist, 11); // ignore player layer
-        if (hitCollider) // IF HIT COLLIDER (can be rb or chunk)
+        if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
+            return;
+
+        if(!SettingsStatic.LoadedSettings.chunkMeshColliders)
         {
-            hitOb = raycastHit.transform.gameObject;
-            holdingGrab = true;
-
-            if (hitOb.GetComponent<Rigidbody>() != null) // if ob has rigidbody (and collider)
+            if(removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
             {
-                heldObRb = hitOb.GetComponent<Rigidbody>();
-                heldObRb.isKinematic = false;
-                heldObRb.velocity = Vector3.zero;
-                heldObRb.angularVelocity = Vector3.zero;
-                heldObRb.useGravity = false;
-                heldObRb.detectCollisions = true;
+                holdingGrab = true;
+
+                PlayerPickBrick();
             }
-            else if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
+            else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null)
             {
-                if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
-                    return;
-
-                blockID = World.Instance.GetVoxelState(removePos.position).id;
-                if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
-                    return;
-
-                PickupBrick(removePos.position);
-                reticle.SetActive(false);
-
-                if (Settings.OnlinePlay)
-                    CmdUpdateGrabObject(holdingGrab, blockID);
-                else
-                    UpdateShowGrabObject(holdingGrab, blockID);
+                holdingGrab = true;
+                PlayerPickBrickFromInventory();
             }
         }
-        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // IF HIT COLLIDER AND TOOLBAR HAS STACK
+        else
         {
-            holdingGrab = true;
-            blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+            bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabDist, 11); // ignore player layer
+            if (hitCollider) // IF HIT COLLIDER (can be rb or chunk)
+            {
+                hitOb = raycastHit.transform.gameObject;
+                holdingGrab = true;
 
-            if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
-                TakeFromCurrentSlot(0);
-            else
-                TakeFromCurrentSlot(1);
-            reticle.SetActive(false);
+                if (hitOb.GetComponent<Rigidbody>() != null) // if ob has rigidbody (and collider)
+                {
+                    heldObRb = hitOb.GetComponent<Rigidbody>();
+                    heldObRb.isKinematic = false;
+                    heldObRb.velocity = Vector3.zero;
+                    heldObRb.angularVelocity = Vector3.zero;
+                    heldObRb.useGravity = false;
+                    heldObRb.detectCollisions = true;
+                }
+                else if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
+                {
+                    //if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
+                    //    return;
 
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
-            else
-                UpdateShowGrabObject(holdingGrab, blockID);
+                    PlayerPickBrick();
+                }
+            }
+            else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // IF HIT COLLIDER AND TOOLBAR HAS STACK
+            {
+                holdingGrab = true;
+                PlayerPickBrickFromInventory();
+            }
         }
+    }
+
+    void PlayerPickBrick()
+    {
+        blockID = World.Instance.GetVoxelState(removePos.position).id;
+        if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
+            return;
+
+        if (blockID == blockIDcrystal)
+            crystal.Play();
+        else if (blockID == blockIDmushroom)
+            mushroom.Play();
+
+        if (blockID != 0 && blockID != 1) // if block is not air or barrier block
+        {
+            // remove voxel, play sound
+            RemoveVoxel(removePos.position);
+            brickPickUp.Play();
+        }
+
+        reticle.SetActive(false);
+
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
+            UpdateShowGrabObject(holdingGrab, blockID);
+    }
+
+    void PlayerPickBrickFromInventory()
+    {
+        blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+
+        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+            TakeFromCurrentSlot(0);
+        else
+            TakeFromCurrentSlot(1);
+        reticle.SetActive(false);
+
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
+            UpdateShowGrabObject(holdingGrab, blockID);
     }
 
     [Command]
@@ -859,26 +900,12 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        if(grabbedPrefab != null || (hitOb != null && hitOb.tag == "voxelRb")) // IF HOLDING VOXEL OR VOXEL RB
+        if (!SettingsStatic.LoadedSettings.chunkMeshColliders)
         {
-            if (hitOb != null && hitOb.tag == "voxelRb") // If voxel Rb
-            {
-                blockID = (byte)hitOb.GetComponent<SceneObject>().typeVoxel; //determine type of voxel to store back in inventory
-                Destroy(hitOb); // destroy the gameobject as it has been 'stored' in inventory
-
-                //reset heldOb and heldObRb properties
-                heldObRb.useGravity = true;
-                heldObRb.detectCollisions = true;
-                hitOb = null;
-                heldObRb = null;
-            }
+            if (Settings.OnlinePlay)
+                CmdUpdateGrabObject(holdingGrab, blockID);
             else
-            {
-                if (Settings.OnlinePlay)
-                    CmdUpdateGrabObject(holdingGrab, blockID);
-                else
-                    UpdateShowGrabObject(holdingGrab, blockID);
-            }
+                UpdateShowGrabObject(holdingGrab, blockID);
 
             if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT, PLACE VOXEL
             {
@@ -888,13 +915,45 @@ public class Controller : NetworkBehaviour
             else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
                 PutAwayBrick(blockID);
         }
-        else if (hitOb != null && heldObRb != null) // IF HOLDING NON-VOXEL OBJECT
+        else
         {
-            //reset heldOb and heldObRb properties
-            heldObRb.useGravity = true;
-            heldObRb.detectCollisions = true;
-            hitOb = null;
-            heldObRb = null;
+            if (grabbedPrefab != null || (hitOb != null && hitOb.tag == "voxelRb")) // IF HOLDING VOXEL OR VOXEL RB
+            {
+                if (hitOb != null && hitOb.tag == "voxelRb") // If voxel Rb
+                {
+                    blockID = (byte)hitOb.GetComponent<SceneObject>().typeVoxel; //determine type of voxel to store back in inventory
+                    Destroy(hitOb); // destroy the gameobject as it has been 'stored' in inventory
+
+                    //reset heldOb and heldObRb properties
+                    heldObRb.useGravity = true;
+                    heldObRb.detectCollisions = true;
+                    hitOb = null;
+                    heldObRb = null;
+                }
+                else
+                {
+                    if (Settings.OnlinePlay)
+                        CmdUpdateGrabObject(holdingGrab, blockID);
+                    else
+                        UpdateShowGrabObject(holdingGrab, blockID);
+                }
+
+                if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT, PLACE VOXEL
+                {
+                    health.blockCounter++;
+                    PlaceBrick(placePos.position);
+                }
+                else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
+                    PutAwayBrick(blockID);
+            }
+            else if (hitOb != null && heldObRb != null) // IF HOLDING NON-VOXEL OBJECT
+            {
+                //reset heldOb and heldObRb properties
+                heldObRb.useGravity = true;
+                heldObRb.detectCollisions = true;
+                hitOb = null;
+                heldObRb = null;
+            }
         }
     }
 
@@ -934,21 +993,6 @@ public class Controller : NetworkBehaviour
 
             // if made it here, toolbar has no empty slots to put voxels into so shoot held voxel off into space
             pressedShoot();
-        }
-    }
-
-    void PickupBrick(Vector3 pos)
-    {
-        if (blockID == blockIDcrystal)
-            crystal.Play();
-        else if (blockID == blockIDmushroom)
-            mushroom.Play();
-
-        if (blockID != 0 && blockID != 1) // if block is not air or barrier block
-        {
-            // remove voxel, play sound
-            RemoveVoxel(pos);
-            brickPickUp.Play();
         }
     }
 

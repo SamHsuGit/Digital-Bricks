@@ -101,10 +101,18 @@ public class World : MonoBehaviour
     private List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>();
     private List<ChunkCoord> activeChunksVBOList = new List<ChunkCoord>();
     private List<ChunkCoord> activeChunksVBOListCopy = new List<ChunkCoord>();
+
     private List<ChunkCoord> playerChunkCoords = new List<ChunkCoord>();
     private List<ChunkCoord> playerChunkCoordsCopy = new List<ChunkCoord>();
     private List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
     private List<ChunkCoord> playerLastChunkCoordsCopy = new List<ChunkCoord>();
+
+    // Define a dictionary to cache the chunk coordinates for each player
+    private Dictionary<Player, ChunkCoord> playerChunkCoordCache = new Dictionary<Player, ChunkCoord>();
+
+    // Define a dictionary to cache the list of chunks in view distance for each player
+    private Dictionary<Player, List<Chunk>> playerChunksInViewDistanceCache = new Dictionary<Player, List<Chunk>>();
+
     private Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
     private List<Player> playersCopy = new List<Player>();
     private Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
@@ -560,6 +568,7 @@ public class World : MonoBehaviour
         playersCopy = players;
         playerChunkCoordsCopy = playerChunkCoords; // playerChunkCoords is a placeholder so new players can join while playerChunkCoordsCopy is used in update loop
         playerLastChunkCoordsCopy = playerLastChunkCoords;
+
         for (int i = 0; i < playersCopy.Count; i++) // for all players (need to include worldplayer here since we do not know if the world player was added first or not, later check if worldplayer)
         {
             // if the player disconnected, remove their gameobject from the dictionary and go to the next dictionary value
@@ -579,40 +588,31 @@ public class World : MonoBehaviour
             if (playersCopy[i].playerGameObject != worldPlayer && playersCopy[i].playerGameObject != null && playersCopy.Count == playerChunkCoordsCopy.Count)
             {
                 playerChunkCoordsCopy[i] = GetChunkCoordFromVector3(playerGameObjects[playersCopy[i]].transform.position); // get the current chunkCoords for given player camera
-                
+
                 //Debug.Log("playerChunkCoordsCopy = " + playerChunkCoordsCopy[playerCount - 1].x + ", " + playerChunkCoordsCopy[playerCount - 1].z);
                 //Debug.Log("playerLastChunkCoordsCopy = " + playerLastChunkCoordsCopy[playerCount - 1].x + " , " + playerLastChunkCoordsCopy[playerCount - 1].z);
                 // Only update the chunks if the player has moved from the chunk they were previously on.
                 if (!playerChunkCoordsCopy[i].Equals(playerLastChunkCoordsCopy[i]))
                 {
-                    
+
                     CheckViewDistance(playerChunkCoordsCopy[i], i); // re-draw chunks
                     if (drawVBO)
                         CheckVBODrawDist(playerChunkCoordsCopy[i], i); // re-draw studs
                 }
             }
+        }
 
-            if (chunksToDraw.Count > 0)
+        if (chunksToDraw.Count > 0)
+        {
             {
-                {
-                    chunkDrawStopWatch.Start();
+                chunkDrawStopWatch.Start();
 
-                    chunksToDraw.Dequeue().CreateMesh();
+                chunksToDraw.Dequeue().CreateMesh();
 
-                    chunkDrawStopWatch.Stop();
-                    TimeSpan ts = chunkDrawStopWatch.Elapsed;
-                    chunkDrawTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                }
+                chunkDrawStopWatch.Stop();
+                TimeSpan ts = chunkDrawStopWatch.Elapsed;
+                chunkDrawTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
             }
-
-            //if (!multithreading) // old code (always multithread)
-            //{
-            //    if (!applyingModifications)
-            //        ApplyModifications();
-
-            //    if (chunksToUpdate.Count > 0)
-            //        UpdateChunks();
-            //}
         }
 
         if (drawVBO)
@@ -689,9 +689,9 @@ public class World : MonoBehaviour
         }
     }
 
-    void CheckVBODrawDist(ChunkCoord playerChunkCoord, int playerIndex)
+    void CheckVBODrawDist(ChunkCoord playerChunkCoord, int player)
     {
-        players[playerIndex].chunksToAddVBO.Clear();
+        players[player].chunksToAddVBO.Clear();
 
         // Loop through all chunks currently within view distance of the player.
         for (int x = playerChunkCoord.x - VBORenderDistanceInChunks; x < playerChunkCoord.x + VBORenderDistanceInChunks; x++)
@@ -703,16 +703,17 @@ public class World : MonoBehaviour
                 // If the current chunk is in the world...
                 if (IsChunkInWorld(thisChunkCoord))
                 {
-                    if (!players[playerIndex].chunksToAddVBO.Contains(thisChunkCoord)) // if the list doesn't already contain this value
-                        players[playerIndex].chunksToAddVBO.Add(thisChunkCoord); // mark chunk to draw objects
+                    if (!players[player].chunksToAddVBO.Contains(thisChunkCoord)) // if the list doesn't already contain this value
+                        players[player].chunksToAddVBO.Add(thisChunkCoord); // mark chunk to draw objects
                 }
             }
         }
     }
 
-    void CheckViewDistance(ChunkCoord playerChunkCoord, int playerIndex)
+    void CheckViewDistance(ChunkCoord playerChunkCoord, int player)
     {
-        playerLastChunkCoords[playerIndex] = playerChunkCoord;
+        playerLastChunkCoords[player] = playerChunkCoord;
+        //playerLastChunkCoordsDict[player] = playerChunkCoord;
 
         // if toggled, undraw chunks to save memory
         if (undrawVoxels)
@@ -820,6 +821,8 @@ public class World : MonoBehaviour
 
     public byte GetVoxel(Vector3Int globalPos)
     {
+        //return 0;
+
         // The main algorithm used in the procedural world generation
         // used to determine voxelID at each position in a chunk. Runs whenever voxel ids need to be calculated (only modified voxels are saved to the serialized file).
         // optimized to try to determine blockID in the fastest way possible

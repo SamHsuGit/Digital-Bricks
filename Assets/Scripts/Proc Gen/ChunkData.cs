@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -69,6 +70,22 @@ public class ChunkData
 
     public VoxelState state;
 
+    private Dictionary<Vector3Int, byte> voxelTypeMemo = new Dictionary<Vector3Int, byte>();
+
+    public byte GetVoxel(Vector3Int pos) //memoization function recommended as performance improvement by chatGPT
+    {
+        // checks if we already know the value of the voxel stored in voxelTypeMemo, if so return it
+        if (voxelTypeMemo.ContainsKey(pos))
+        {
+            return voxelTypeMemo[pos];
+        }
+
+        // if we do not know the value, calculated it normally with the GetVoxel function defined in the world class (slow)
+        byte voxelType = World.Instance.GetVoxel(pos);
+        voxelTypeMemo[pos] = voxelType;
+        return voxelType;
+    }
+
     public void Populate()
     {
         // Profiling Reveals this is the most resource intensive operation (takes a long time primarily due to the number of iterations 16x16x96)
@@ -84,15 +101,17 @@ public class ChunkData
                 for (int y = 0; y < VoxelData.ChunkHeight; y++)
                 {
                     Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
-
-                    // reuse same state voxelState variable to reduce garbage collection
-                    //state.id = World.Instance.GetVoxel(voxelGlobalPos);
-                    //state.chunkData = this;
-                    //state.neighbors = new VoxelNeighbors(state);
-                    //state.position = new Vector3Int(x, y, z);
-                    //map[x, y, z] = state;
-
-                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x, y, z) , 1); // by default all blocks face forwards (otherwise, implement code to determine block orientation procedurally)
+                    byte voxelType;
+                    if (voxelTypeMemo.TryGetValue(voxelGlobalPos, out voxelType))
+                    {
+                        map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
+                    }
+                    else
+                    {
+                        voxelType = GetVoxel(voxelGlobalPos); // call memoization function recommended as performance improvement by chatGPT
+                        voxelTypeMemo[voxelGlobalPos] = voxelType;
+                        map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
+                    }
                 }
             }
         }
