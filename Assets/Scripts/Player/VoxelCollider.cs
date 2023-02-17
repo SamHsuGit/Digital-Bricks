@@ -144,10 +144,11 @@ public class VoxelCollider : MonoBehaviour
 
         {
             isGrounded = CheckGrounded(velocityCamera.y);
+            
             // horizontal collision detection
-            if ((velocityCamera.z > 0 && front) || (velocityCamera.z < 0 && back))
+            if ((velocityCamera.z > 0 && front) || (velocityCamera.z < 0 && back)) // (Global East/West)
                 velocityCamera.z = 0;
-            if ((velocityCamera.x > 0 && right) || (velocityCamera.x < 0 && left))
+            if ((velocityCamera.x > 0 && right) || (velocityCamera.x < 0 && left)) // (Global North/South)
                 velocityCamera.x = 0;
             // vertical collision detection
             if (velocityCamera.y < 0 && isGrounded)
@@ -232,60 +233,52 @@ public class VoxelCollider : MonoBehaviour
         }
     }
 
-    public bool front // checks front 4 corners
+    public bool front // checks front 2 points
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left top front
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // right top front
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left bottom front
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) // right bottom front
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // center top front
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) // center bottom front
                 )
                 return true;
             else
                 return false;
         }
     }
-    public bool back // checks back 4 corners
+    public bool back // checks back 2 points
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // left top back
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // right top back
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) || // left bottom back
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) // right bottom back
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // center top back
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) // center bottom back
                 )
                 return true;
             else
                 return false;
         }
     }
-    public bool left // checks left 4 corners
+    public bool left // checks left 2 points
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left top front
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) || // left bottom front
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // left top back
-                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) // left bottom back
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z)) || // left top center
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z)) // left bottom center
                 )
                 return true;
             else
                 return false;
         }
     }
-    public bool right // checks right 4 corners
+    public bool right // checks right 2 points
     {
         get
         {
             if (
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset)) || // right top front
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset)) || // right bottom front
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset)) || // right top back
-                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset)) // right bottom back
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z)) || // right top center
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z)) // right bottom center
                 )
                 return true;
             else

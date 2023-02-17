@@ -855,24 +855,16 @@ public class World : MonoBehaviour
         if (yGlobalPos == 1)
             return worldData.blockIDcore; // planet core block (e.g. lava)
 
-        // If between certain height range, return clouds.
-        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5)
+        humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome
+        temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome
+        percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and biome
+
+        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5) // determines cloud altitude
         {
-            // smaller clouds create illusion of more of them loaded (cloud density threshold determined by noise to generate large areas of thicker cloud cover)
-            if (Noise.Get2DPerlin(new Vector2(xGlobalPos, zGlobalPos), 52, 0.1f) > 0.2f) // determines if cloud cover is dense or not
-            {
-                if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.6f)) // light cloud cover
-                    return 4; // blocktype = cloud
-                else
-                    return 0; // blocktype = air
-            }
+            if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
+                return 4;
             else
-            {
-                if (Noise.Get3DPerlin(globalPos, 1234, 0.2f, 0.4f)) // dense cloud cover
-                    return 4; // blocktype = cloud
-                else
-                    return 0; // blocktype = air
-            }
+                return 0;
         }
 
         /* BASIC TERRAIN PASS */
@@ -898,8 +890,6 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
-        humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome
-        temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome
         if (!useBiomes)
             biome = biomes[0];
         else if (!worldData.isAlive)
@@ -937,7 +927,6 @@ public class World : MonoBehaviour
         if (drawSurfaceObjects && (yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
-            percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f);
             surfaceObType = GetSurfaceObType(percolation, fertility);
             placementVBO = Noise.Get2DPerlin(xzCoords, 321, 10f);
 
