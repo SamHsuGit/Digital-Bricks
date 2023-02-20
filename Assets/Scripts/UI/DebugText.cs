@@ -80,8 +80,6 @@ public class DebugText : MonoBehaviour
             debugText += "\n";
             debugText += "f: " + World.Instance.fertility + " p: " + World.Instance.percolation + " SurfaceObType: " + World.Instance.surfaceObType;
             debugText += "\n";
-            debugText += "VBO: " + World.Instance.placementVBO;
-            debugText += "\n";
             debugText += "blockID: " + blockName;
 
             string direction = "";

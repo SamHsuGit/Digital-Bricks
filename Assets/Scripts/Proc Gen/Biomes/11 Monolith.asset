@@ -73,7 +73,27 @@ MonoBehaviour:
     maxRadius: 0
   smallFlora: []
   mediumFlora: []
-  largeFlora: []
+  largeFlora:
+  - name: HoneyComb
+    floraIndex: 11
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.8
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.3
+    minHeight: 13
+    maxHeight: 30
+    minRadius: 0
+    maxRadius: 0
+  - name: Monolith
+    floraIndex: 5
+    floraZoneScale: 1.2
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 5
+    floraPlacementThreshold: 0.88
+    minHeight: 1
+    maxHeight: 30
+    minRadius: 0
+    maxRadius: 0
   XLFlora:
   - name: HoneyComb
     floraIndex: 11

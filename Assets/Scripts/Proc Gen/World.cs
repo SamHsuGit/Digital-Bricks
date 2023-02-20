@@ -857,9 +857,11 @@ public class World : MonoBehaviour
 
         humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome
         temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome
-        percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and biome
+        percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and surface ob type
 
-        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 5) // determines cloud altitude
+
+        // * DRAW CLOUDS
+        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 1) // determines cloud altitude
         {
             if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
                 return 4;
@@ -908,7 +910,7 @@ public class World : MonoBehaviour
             voxelValue = worldData.blockIDsubsurface;
 
         /* LODE PASS */
-        // add ores and underground caves
+        //add ores and underground caves
         if (drawLodes && yGlobalPos < terrainHeightVoxels - 5)
         {
             foreach (Lode lode in biome.lodes)
@@ -928,7 +930,6 @@ public class World : MonoBehaviour
         {
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
             surfaceObType = GetSurfaceObType(percolation, fertility);
-            placementVBO = Noise.Get2DPerlin(xzCoords, 321, 10f);
 
             switch (surfaceObType)
             {
