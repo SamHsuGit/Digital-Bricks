@@ -92,29 +92,58 @@ public class ChunkData
         // GC alone takes up 12.9% of CPU time
 
         World.Instance.StartProfileMarker();
-        //Debug.Log("ChunkData.Populate");
-        // currently populates all voxel data, but only needs to populate voxels which are adjacent to air
-        for (int z = 0; z < VoxelData.ChunkWidth; z++)
+
+        // planetSeed 0, worldCoord 0 is a blank canvas for building around the imported ldraw file
+        if (World.Instance.worldData.planetSeed == 0 && World.Instance.worldData.worldCoord == 0)
         {
-            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+
+            for (int z = 0; z < VoxelData.ChunkWidth; z++)
             {
-                for (int y = 0; y < VoxelData.ChunkHeight; y++)
+                for (int x = 0; x < VoxelData.ChunkWidth; x++)
                 {
-                    Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
-                    byte voxelType;
-                    if (voxelTypeMemo.TryGetValue(voxelGlobalPos, out voxelType))
+                    for (int y = 0; y < VoxelData.ChunkHeight; y++)
                     {
-                        map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
-                    }
-                    else
-                    {
-                        voxelType = GetVoxel(voxelGlobalPos); // call memoization function recommended as performance improvement by chatGPT
-                        voxelTypeMemo[voxelGlobalPos] = voxelType;
+                        Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
+
+                        byte voxelType = 0;
+                        if (y < 1)
+                        {
+                            voxelType = 4;
+                            if(Settings.Platform != 2 && voxelGlobalPos.x == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && voxelGlobalPos.z == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
+                                World.Instance.modifications.Enqueue(Structure.GenerateSurfaceOb(0, voxelGlobalPos, 0, 0, 0, 0, 0, true)); // make base at center of first chunk at terrain height
+                        }
                         map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
                     }
                 }
             }
         }
+        else
+        {
+            //Debug.Log("ChunkData.Populate");
+            // currently populates all voxel data, but only needs to populate voxels which are adjacent to air
+            for (int z = 0; z < VoxelData.ChunkWidth; z++)
+            {
+                for (int x = 0; x < VoxelData.ChunkWidth; x++)
+                {
+                    for (int y = 0; y < VoxelData.ChunkHeight; y++)
+                    {
+                        Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
+                        byte voxelType;
+                        if (voxelTypeMemo.TryGetValue(voxelGlobalPos, out voxelType))
+                        {
+                            map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
+                        }
+                        else
+                        {
+                            voxelType = GetVoxel(voxelGlobalPos); // call memoization function recommended as performance improvement by chatGPT
+                            voxelTypeMemo[voxelGlobalPos] = voxelType;
+                            map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
+                        }
+                    }
+                }
+            }
+        }
+        
         World.Instance.StopProfileMarker();
     }
 

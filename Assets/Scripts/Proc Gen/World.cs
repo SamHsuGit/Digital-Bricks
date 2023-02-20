@@ -115,7 +115,7 @@ public class World : MonoBehaviour
 
     private Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
     private List<Player> playersCopy = new List<Player>();
-    private Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
+    public Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
     private Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
 
     private Thread ChunkRedrawThread;
@@ -824,44 +824,38 @@ public class World : MonoBehaviour
         //return 0;
 
         // The main algorithm used in the procedural world generation
-        // used to determine voxelID at each position in a chunk. Runs whenever voxel ids need to be calculated (only modified voxels are saved to the serialized file).
+        // used to determine voxelID at each position in a chunk if not previously calculated.
+        // Runs whenever voxel ids need to be calculated (only modified voxels are saved to the serialized file).
         // optimized to try to determine blockID in the fastest way possible
+        // try to calculate the most commone block type first to minimize the # of checked conditions we run for each global position.
 
         int yGlobalPos = Mathf.FloorToInt(globalPos.y);
-        int xGlobalPos = Mathf.FloorToInt(globalPos.x);
-        int zGlobalPos = Mathf.FloorToInt(globalPos.z);
-        Vector2 xzCoords = new Vector2(xGlobalPos, zGlobalPos);
+        Vector2 xzCoords = new Vector2(Mathf.FloorToInt(globalPos.x), Mathf.FloorToInt(globalPos.z));
 
         /* IMMUTABLE PASS */
-        // If outside world, return air.
-        if (!IsGlobalPosInWorld(globalPos))
-            return 0;
-        
+        //// If outside world, return air.
+        //if (!IsGlobalPosInWorld(globalPos))
+        //    return 0;
+
         // for small worlds, return air outside world border to enable edges to render all faces and not block camera movement
         if (!IsGlobalPosInsideBorder(globalPos))
             return 0;
 
-        // planetSeed 0, worldCoord 0 is a blank canvas for building around the imported ldraw file
-        if (worldData.planetSeed == 0 && worldData.worldCoord == 0)
+        /* AIR PASS */
+        // Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
+        if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
         {
-            terrainHeightVoxels = 1;
-            if (yGlobalPos <= 1 && !CheckMakeBase(globalPos))
-                return 4;
-            else if (yGlobalPos > 1)
+            if (!drawClouds)
+                return 0;
+            else if (yGlobalPos < cloudHeight || yGlobalPos > cloudHeight)
                 return 0;
         }
 
-        // bottom of world layer is core block (e.g. water/lava)
-        if (yGlobalPos == 1)
-            return worldData.blockIDcore; // planet core block (e.g. lava)
-
+        /* CLOUD PASS */
         humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome
         temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome
         percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and surface ob type
-
-
-        // * DRAW CLOUDS
-        if (drawClouds && yGlobalPos > cloudHeight && yGlobalPos < cloudHeight + 1) // determines cloud altitude
+        if (drawClouds && yGlobalPos == cloudHeight) // determines cloud altitude
         {
             if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
                 return 4;
@@ -874,9 +868,6 @@ public class World : MonoBehaviour
         byte voxelValue = 0;
 
         CalcTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
-
-        if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
-            return 0;
 
         if (weirdness > isAirThreshold) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
         {
@@ -908,6 +899,10 @@ public class World : MonoBehaviour
             voxelValue = biome.surfaceBlock;
         else // must be subsurface block
             voxelValue = worldData.blockIDsubsurface;
+
+        // bottom of world layer is core block (e.g. water/lava)
+        if (yGlobalPos == 1)
+            return worldData.blockIDcore; // planet core block (e.g. lava)
 
         /* LODE PASS */
         //add ores and underground caves
