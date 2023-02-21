@@ -863,6 +863,9 @@ public class World : MonoBehaviour
                 return 0;
         }
 
+        //// TESTED ONLY CLOUDS AND WORLD GEN STILL SLOW FROM SOMETHING
+        //return 0;
+
         /* BASIC TERRAIN PASS */
         // Adds base terrain using spline points to GetTerrainHeight
         byte voxelValue = 0;

@@ -76,8 +76,11 @@ public class DebugText : MonoBehaviour
             debugText += "\n";
             debugText += "w: " + World.Instance.weirdness;
             debugText += "\n";
-            debugText += "t: " + World.Instance.temperature + " h: " + World.Instance.humidity + " Biome: " + World.Instance.biome.biomeName;
-            debugText += "\n";
+            if(World.Instance.biome != null)
+            {
+                debugText += "t: " + World.Instance.temperature + " h: " + World.Instance.humidity + " Biome: " + World.Instance.biome.biomeName;
+                debugText += "\n";
+            }
             debugText += "f: " + World.Instance.fertility + " p: " + World.Instance.percolation + " SurfaceObType: " + World.Instance.surfaceObType;
             debugText += "\n";
             debugText += "blockID: " + blockName;
