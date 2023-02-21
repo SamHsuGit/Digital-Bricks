@@ -34,7 +34,12 @@ public class Lighting : MonoBehaviour
         if (sunProperties == null)
             return;
 
-        float TimeOfDayIncrement = Time.deltaTime / 60 * 12 / 10; // divide by 60 to get 24 min days, multiply by 12 to get 1 min days, divide by 10 to get 10  min days
+        float TimeOfDayIncrement = Time.deltaTime / 60 * 12 / 5; // divide by 60 to get 24 min days, multiply by 12 to get 1 min days, divide by 5 to get 5  min day
+        if (daytime)
+            TimeOfDayIncrement *= 1;
+        else
+            TimeOfDayIncrement *= 2; // nights are half as short as daytime
+
         //float TimeOfDayIncrement = Time.deltaTime / 60 * 48; // divide by 60 to get 24 min days, multiply by 48 to get 15 sec days (TESTING)
 
         if (Application.isPlaying)

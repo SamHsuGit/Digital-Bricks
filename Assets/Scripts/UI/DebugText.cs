@@ -5,7 +5,9 @@ using TMPro;
 public class DebugText : MonoBehaviour
 {
     public GameObject player;
-    Controller controller;
+    private GameManagerScript gameManager;
+    private Controller controller;
+    private Lighting lighting;
 
     TextMeshProUGUI text;
     string oldDebugText;
@@ -19,6 +21,8 @@ public class DebugText : MonoBehaviour
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
+        lighting = gameManager.globalLighting.GetComponent<Lighting>();
 
         halfWorldSizeInVoxels = SettingsStatic.LoadedSettings.worldSizeInChunks * VoxelData.ChunkWidth / 2;
         halfWorldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks / 2;
@@ -71,6 +75,8 @@ public class DebugText : MonoBehaviour
             debugText += "pos: (" + (Mathf.FloorToInt(playerPos.x) - halfWorldSizeInVoxels) + " , " + Mathf.FloorToInt(playerPos.y) + " , " + (Mathf.FloorToInt(playerPos.z) - halfWorldSizeInVoxels) + ")";
             debugText += "\n";
             debugText += "chunk: (" + (World.Instance.GetChunkFromVector3(playerPos).coord.x - halfWorldSizeInChunks) + " , " + (World.Instance.GetChunkFromVector3(playerPos).coord.z - halfWorldSizeInChunks) + ")";
+            debugText += "\n";
+            debugText += "time of day: " + lighting.timeOfDay;
             debugText += "\n";
             debugText += "c: " + World.Instance.continentalness + " e: " + World.Instance.erosion + " pv: " + World.Instance.peaksAndValleys;
             debugText += "\n";

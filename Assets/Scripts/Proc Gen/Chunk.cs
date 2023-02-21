@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 public class Chunk
@@ -362,13 +363,14 @@ public class Chunk
         }
     }
 
-    public void CreateMesh() // UNKNOWN ERRORS PERSIST IN THIS FUNCTION, NOT SURE WHY...
+    public void CreateMesh()
     {
         Mesh mesh = new Mesh();
-        mesh.vertices = vertices.ToArray(); // code is not threadsafe, being modified by other threads... but vertices appeared locked for all modifications and still failed...
-        
+
+        mesh.vertices = vertices.ToArray();
+
         mesh.subMeshCount = 2; // used for block and transBlock materials?
-        
+
         if (triangles.Count % 3 != 0) // The number of supplied triangle indices must be a multiple of 3
             return;
         else
@@ -386,10 +388,10 @@ public class Chunk
             return;
         else
             mesh.normals = normals.ToArray();
-        
+
         meshFilter.mesh = mesh;
 
-        if(SettingsStatic.LoadedSettings.chunkMeshColliders)
+        if (SettingsStatic.LoadedSettings.chunkMeshColliders)
         {
             if (col == null)
                 col = chunkObject.AddComponent<MeshCollider>();
