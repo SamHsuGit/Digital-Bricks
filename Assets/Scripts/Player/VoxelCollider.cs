@@ -7,7 +7,7 @@ public class VoxelCollider : MonoBehaviour
     public float baseJumpForce = 15f;
     public bool isMoving = false;
     public bool isGrounded = false;
-    public int maxJumps;
+    private int maxJumps = 1;
     public int currentJumps;
 
     public World world;

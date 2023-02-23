@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Monolith
   offset: 1200
   scale: 0.08
-  terrainHeight: 80
+  terrainHeight: 40
   terrainScale: 0.12
   surfaceBlock: 2
   smallStructures:
@@ -58,7 +58,7 @@ MonoBehaviour:
     floraPlacementScale: 15
     floraPlacementThreshold: 0.3
     minHeight: 13
-    maxHeight: 30
+    maxHeight: 24
     minRadius: 0
     maxRadius: 0
   - name: Monolith
@@ -68,7 +68,7 @@ MonoBehaviour:
     floraPlacementScale: 5
     floraPlacementThreshold: 0.88
     minHeight: 1
-    maxHeight: 30
+    maxHeight: 24
     minRadius: 0
     maxRadius: 0
   smallFlora: []
@@ -81,7 +81,7 @@ MonoBehaviour:
     floraPlacementScale: 15
     floraPlacementThreshold: 0.3
     minHeight: 13
-    maxHeight: 30
+    maxHeight: 24
     minRadius: 0
     maxRadius: 0
   - name: Monolith
@@ -91,7 +91,7 @@ MonoBehaviour:
     floraPlacementScale: 5
     floraPlacementThreshold: 0.88
     minHeight: 1
-    maxHeight: 30
+    maxHeight: 24
     minRadius: 0
     maxRadius: 0
   XLFlora:
@@ -102,7 +102,7 @@ MonoBehaviour:
     floraPlacementScale: 15
     floraPlacementThreshold: 0.3
     minHeight: 13
-    maxHeight: 30
+    maxHeight: 24
     minRadius: 0
     maxRadius: 0
   - name: Monolith
@@ -112,28 +112,28 @@ MonoBehaviour:
     floraPlacementScale: 5
     floraPlacementThreshold: 0.88
     minHeight: 1
-    maxHeight: 30
+    maxHeight: 24
     minRadius: 0
     maxRadius: 0
   lodes:
   - nodeName: Crystals
     blockID: 16
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 2
     threshold: 0.68
     noiseOffset: 1
   - nodeName: Cave
     blockID: 0
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 0.01
     threshold: 0.6
     noiseOffset: 40
   - nodeName: CaveSmall
     blockID: 0
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30

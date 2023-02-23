@@ -98,8 +98,8 @@ MonoBehaviour:
     floraZoneThreshold: 0.2
     floraPlacementScale: 15
     floraPlacementThreshold: 0.81
-    minHeight: 30
-    maxHeight: 40
+    minHeight: 14
+    maxHeight: 24
     minRadius: 4
     maxRadius: 6
   mediumFlora:
@@ -119,8 +119,8 @@ MonoBehaviour:
     floraZoneThreshold: 0.2
     floraPlacementScale: 15
     floraPlacementThreshold: 0.81
-    minHeight: 30
-    maxHeight: 40
+    minHeight: 14
+    maxHeight: 24
     minRadius: 4
     maxRadius: 6
   largeFlora:
@@ -140,8 +140,8 @@ MonoBehaviour:
     floraZoneThreshold: 0.2
     floraPlacementScale: 15
     floraPlacementThreshold: 0.81
-    minHeight: 30
-    maxHeight: 40
+    minHeight: 14
+    maxHeight: 24
     minRadius: 4
     maxRadius: 6
   XLFlora:
@@ -161,29 +161,29 @@ MonoBehaviour:
     floraZoneThreshold: 0.2
     floraPlacementScale: 15
     floraPlacementThreshold: 0.81
-    minHeight: 30
-    maxHeight: 40
+    minHeight: 14
+    maxHeight: 24
     minRadius: 4
     maxRadius: 6
   lodes:
   - nodeName: Crystals
     blockID: 16
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 2
     threshold: 0.68
     noiseOffset: 1
   - nodeName: Cave
     blockID: 0
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 0.01
     threshold: 0.6
     noiseOffset: 40
   - nodeName: CaveSmall
     blockID: 0
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30

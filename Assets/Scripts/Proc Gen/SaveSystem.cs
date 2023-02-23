@@ -7,12 +7,15 @@ using System;
 
 public static class SaveSystem
 {
+    // bool to toggle how to encode saved data: as semi readable string (4 kb) or binary (0.5 kb)
+    // binary encoding imposes limit on how many chunks can be saved (world size in chunks limited to 255) but yields far better data compression
+    // chose to use binary compression and limit world size to 200 x 200 chunks
     static readonly bool stringSaveData = false;
 
     public static void SaveWorldDataToFile(WorldData worldData, World world)
     {
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetSeed + "-" + worldData.worldCoord + "-" + worldData.worldSizeInChunks + "/";
+        string savePath = Settings.AppSaveDataPath + "/saves/" + worldData.planetSeed + "-" + worldData.worldCoord + "/";
 
         if (!Directory.Exists(savePath))
         {
@@ -20,11 +23,11 @@ public static class SaveSystem
         }
 
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(savePath + worldData.planetSeed + "-" + worldData.worldCoord + "-" + worldData.worldSizeInChunks + ".worldData", FileMode.Create);
+        FileStream stream = new FileStream(savePath + worldData.planetSeed + "-" + worldData.worldCoord + ".worldData", FileMode.Create);
 
         if (SettingsStatic.LoadedSettings.creativeMode)
         {
-            worldData.survivalMode = false; // if the world is saved in creative mode, the world is marked as non-survival forever after
+            worldData.creativeMode = false; // if the world is saved in creative mode, the world is marked as non-survival forever after
         }
 
         formatter.Serialize(stream, worldData);
@@ -111,7 +114,7 @@ public static class SaveSystem
 
     public static int[] LoadPlayerStats(GameObject player, string playerName)
     {
-        string loadPath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeInChunks + "/";
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/";
 
         if (File.Exists(loadPath + playerName + ".stats")) // IF PLAYER STATS FOUND
         {
@@ -171,29 +174,31 @@ public static class SaveSystem
         int count = 0;
         foreach(ChunkData chunk in chunks)
         {
-            SaveChunkToFile(chunk, worldData.planetSeed, worldData.worldCoord, worldData.worldSizeInChunks);
+            SaveChunkToFile(chunk, worldData.planetSeed, worldData.worldCoord);
             count++;
         }
     }
 
-    public static void SaveChunkToFile(ChunkData chunk, int _planetSeed, int _worldCoord, int sizeInChunks)
+    public static void SaveChunkToFile(ChunkData chunkData, int _planetSeed, int _worldCoord)
     {
-        string chunkName = chunk.position.x + "-" + chunk.position.y;
+        string chunkName = chunkData.position.x + "-" + chunkData.position.y;
 
         // Set our save location and make sure we have a saves folder ready to go.
-        string savePath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord +"-" + sizeInChunks + "/chunks/";
+        string savePath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "/chunks/";
 
         if (!Directory.Exists(savePath))
+        {
             Directory.CreateDirectory(savePath);
+        }
 
         if (!stringSaveData)
         {
             // saving byte array as binary file is faster than reading strings from text files
             // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
             FileStream stream;
-            stream = new FileStream(savePath + chunkName + ".chunk", FileMode.CreateNew);
+            stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create); // overwrites any existing files by default
             BinaryWriter w = new BinaryWriter(stream, System.Text.Encoding.UTF8);
-            w.Write(chunk.EncodeByteArray(chunk));
+            w.Write(chunkData.EncodeByteArray(chunkData));
             stream.Close();
         }
         else
@@ -202,32 +207,33 @@ public static class SaveSystem
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream;
             stream = new FileStream(savePath + chunkName + ".chunk", FileMode.Create); // overwrites any existing files by default
-            formatter.Serialize(stream, chunk.EncodeString(chunk));
+            formatter.Serialize(stream, chunkData.EncodeString(chunkData));
             stream.Close();
         }
     }
 
-    public static WorldData LoadWorld(int _planetSeed, int _worldCoord, int sizeInChunks)
+    public static WorldData LoadWorld(int _planetSeed, int _worldCoord)
     {
         // loads world upon game start in world script
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "/";
 
-        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "-" +  sizeInChunks + "/";
-
-        if (File.Exists(loadPath + _planetSeed + "-" + _worldCoord + "-" + sizeInChunks + ".worldData"))
+        if (File.Exists(loadPath + _planetSeed + "-" + _worldCoord + ".worldData"))
         {
-
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(loadPath + _planetSeed + "-" + _worldCoord + "-" + sizeInChunks + ".worldData", FileMode.Open);
+            FileStream stream = new FileStream(loadPath + _planetSeed + "-" + _worldCoord + ".worldData", FileMode.Open);
 
             WorldData worldData = formatter.Deserialize(stream) as WorldData;
-            
+
             stream.Close();
             return new WorldData(worldData);
         }
         else
         {
-            WorldData worldData = new WorldData(_planetSeed, _worldCoord, sizeInChunks);
-            worldData.survivalMode = !SettingsStatic.LoadedSettings.creativeMode; // new worlds set value of creative mode from saved value
+            WorldData worldData = new WorldData(_planetSeed, _worldCoord);
+            if (SettingsStatic.LoadedSettings.creativeMode)
+                worldData.creativeMode = true; // new worlds set value of creative mode from saved value
+            else
+                worldData.creativeMode = false;
             SettingsStatic.LoadedSettings.timeOfDay = 6.0f; // reset time of day to morning for new worlds
             FileSystemExtension.SaveSettings();
 
@@ -244,7 +250,7 @@ public static class SaveSystem
 
         // IMPORTANT: use SettingsStatic.LoadedSettings.worldSizeInChunks
         // worldSizeInChunks = 0, renders correctly but doesn't use saved data
-        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "-" + SettingsStatic.LoadedSettings.worldSizeInChunks + "/chunks/" + chunkName + ".chunk";
+        string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "/chunks/" + chunkName + ".chunk";
 
         if (File.Exists(loadPath))
         {
@@ -281,11 +287,11 @@ public static class SaveSystem
             return null;
     }
 
-    public static List<string> LoadChunkListFromFile(int _planetSeed, int _worldCoord, int sizeInChunks)
+    public static List<string> LoadChunkListFromFile(int _planetSeed, int _worldCoord)
     {
         List<string> strArray = new List<string>();
 
-        string path = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "-" + sizeInChunks + "/chunks/";
+        string path = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "/chunks/";
         if(Directory.Exists(path))
         {
             foreach (string file in Directory.GetFiles(path))

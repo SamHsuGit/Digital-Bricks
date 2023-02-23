@@ -8,6 +8,8 @@ public static class VoxelData
 	// original Minecraft World Height Limit = 128, found that a smaller chunkHeight is needed to reduce world load times to under 15 seconds due to poor code optimization
 	public const int ChunkHeight = 64;
 
+	public const int WorldSizeInChunks = 200; // binary data compression limits the # of chunks that can be stored to 256
+
 	// get this value from Settings instead of setting a static readonly int
 	// was 5000, reduced since limiting choices unleashes creativity.
 	// Lego Worlds "Medium" world size = 100x100 chunks, 5000x16 = 80,000 bricks (meters) long / 25 mps = 3,200s to fly across world (1,600s from center to border)
@@ -22,7 +24,7 @@ public static class VoxelData
 
 	public static int WorldSizeInVoxels
 	{
-		get { return SettingsStatic.LoadedSettings.worldSizeInChunks * ChunkWidth; }
+		get { return WorldSizeInChunks * ChunkWidth; }
 	}
 
 	public static readonly int TextureAtlasSizeInBlocks = 16;

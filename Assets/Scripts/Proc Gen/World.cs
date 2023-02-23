@@ -37,7 +37,7 @@ public class World : MonoBehaviour
 
     [HideInInspector] public float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
     [HideInInspector] public float percolation = 0; // defines surfaceOb size, eventually derive from weirdness?
-    [HideInInspector] public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
+    //[HideInInspector] public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
 
     [HideInInspector] public int surfaceObType = 0; // based on percolation and fertility
 
@@ -150,7 +150,7 @@ public class World : MonoBehaviour
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
-        worldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks;
+        worldSizeInChunks = VoxelData.WorldSizeInChunks;
         debugTimer = "notMeasured";
 
         if (SettingsStatic.LoadedSettings.graphicsQuality == 0)
@@ -237,7 +237,7 @@ public class World : MonoBehaviour
             isEarth = true;
         else
             isEarth = false;
-        worldData = SaveSystem.LoadWorld(planetNumber, seed, worldSizeInChunks); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
+        worldData = SaveSystem.LoadWorld(planetNumber, seed); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
         WorldDataOverrides(planetNumber);
 
         if (Settings.Platform == 2)
@@ -671,7 +671,6 @@ public class World : MonoBehaviour
         AddChunkToUpdate(chunk, false);
     }
 
-
     public void AddChunkToUpdate(Chunk chunk, bool insert)
     {
         // Lock list to ensure only one thing is using the list at a time.
@@ -872,7 +871,7 @@ public class World : MonoBehaviour
 
         CalcTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
 
-        if (weirdness > isAirThreshold) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
+        if (yGlobalPos > 1 && weirdness > isAirThreshold) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
@@ -1455,7 +1454,7 @@ public class World : MonoBehaviour
     {
         // IMPORTANT: has to use SettingsStatic.LoadedSettings.worldSizeInChunks for world size instead of private local variable to put char at correct position (script timing issues?)
         ChunkCoord _newChunkCoord = GetChunkCoordFromVector3(pos);
-        if (_newChunkCoord.x > 0 && _newChunkCoord.x < SettingsStatic.LoadedSettings.worldSizeInChunks - 1 && _newChunkCoord.z > 0 && _newChunkCoord.z < SettingsStatic.LoadedSettings.worldSizeInChunks - 1)
+        if (_newChunkCoord.x > 0 && _newChunkCoord.x < VoxelData.WorldSizeInChunks - 1 && _newChunkCoord.z > 0 && _newChunkCoord.z < VoxelData.WorldSizeInChunks - 1)
             return true;
         else
             return false;

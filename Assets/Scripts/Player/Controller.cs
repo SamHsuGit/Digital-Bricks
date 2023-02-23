@@ -26,7 +26,6 @@ public class Controller : NetworkBehaviour
     // These server values cannot be set in controller since world is activated before controller, merely included here to check states match
     [SyncVar(hook = nameof(SetPlanetNumberServer))] private int planetNumberServer;
     [SyncVar(hook = nameof(SetSeedServer))] private int seedServer;
-    [SyncVar(hook = nameof(SetWorldSizeInChunksServer))] private int worldSizeInChunksServer;
     [SyncVar(hook = nameof(SetBaseServer))] private string baseServer;
     [SyncVar(hook = nameof(SaveChunksString))] private string chunksServer;
 
@@ -338,12 +337,6 @@ public class Controller : NetworkBehaviour
         customNetworkManager.worldOb.GetComponent<World>().worldData.worldCoord = newValue;
     }
 
-    public void SetWorldSizeInChunksServer(int oldValue, int newValue)
-    {
-        SettingsStatic.LoadedSettings.worldSizeInChunks = newValue;
-        customNetworkManager.worldOb.GetComponent<World>().worldData.worldSizeInChunks = newValue;
-    }
-
     [Client]
     public void SetBaseServer(string oldValue, string newValue)
     {
@@ -361,7 +354,7 @@ public class Controller : NetworkBehaviour
     public void SetServerChunkStringSyncVar()
     {
         // encode the list of chunkStrings into a single string that is auto-serialized by mirror
-        List<string> chunksList = SaveSystem.LoadChunkListFromFile(planetNumberServer, seedServer, worldSizeInChunksServer);
+        List<string> chunksList = SaveSystem.LoadChunkListFromFile(planetNumberServer, seedServer);
         string chunksServerCombinedString = string.Empty;
         for (int i = 0; i < chunksList.Count; i++)
         {
@@ -1147,6 +1140,7 @@ public class Controller : NetworkBehaviour
 
     void EditVoxel(Vector3 position, byte id, bool remove)
     {
+        
         byte oldBlockID = World.Instance.GetChunkFromVector3(position).GetVoxelFromGlobalVector3(position).id;
         if (oldBlockID == 1) // cannot place barrier blocks
             return;

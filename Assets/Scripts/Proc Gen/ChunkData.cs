@@ -271,8 +271,8 @@ public class ChunkData
     public byte[] EncodeByteArray(ChunkData chunkData)
     {
         byte[] voxelBytes = new byte[2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight) * 2];
-        voxelBytes[0] = (byte)chunkData.position.x;
-        voxelBytes[1] = (byte)chunkData.position.y;
+        voxelBytes[0] = (byte)(chunkData.position.x / VoxelData.ChunkWidth);
+        voxelBytes[1] = (byte)(chunkData.position.y / VoxelData.ChunkWidth);
         int i = 2;
 
         for (int z = 0; z < VoxelData.ChunkWidth; z++) // last does next z value
@@ -294,8 +294,8 @@ public class ChunkData
     public ChunkData DecodeByteArray(byte[] voxelBytes)
     {
         voxelBytes = Compressor.Decompress(voxelBytes);
-        int xChunkPos = (int)voxelBytes[0];
-        int zChunkPos = (int)voxelBytes[1];
+        int xChunkPos = (int)voxelBytes[0] * VoxelData.ChunkWidth;
+        int zChunkPos = (int)voxelBytes[1] * VoxelData.ChunkWidth;
 
         ChunkData chunkData = new ChunkData(xChunkPos, zChunkPos);
         int i = 2;
@@ -314,7 +314,7 @@ public class ChunkData
     }
 
 
-    // THE FOLLOWING FUNCTIONS NEEDED TO SEND DATA OVER NETWORK (MIRROR DOCUMENTATION: https://mirror-networking.gitbook.io/docs/guides/data-types)
+    // THE FOLLOWING FUNCTIONS NEEDED TO SEND STRINGS OVER NETWORK (MIRROR DOCUMENTATION: https://mirror-networking.gitbook.io/docs/guides/data-types)
     public string EncodeString(ChunkData chunkData)
     {
         // Encodes chunks into a list of voxelStates runs from bottom to top of chunk, then to next increments x position, then next z position

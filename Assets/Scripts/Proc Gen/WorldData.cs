@@ -7,8 +7,7 @@ public class WorldData
 {
     public int planetSeed;
     public int worldCoord;
-    public int worldSizeInChunks;
-    public bool survivalMode;
+    public bool creativeMode;
     public int distToStar;
     public int system;
     public int galaxy;
@@ -55,14 +54,15 @@ public class WorldData
     public void AddToModifiedChunkList (ChunkData chunk)
     {
         if (!modifiedChunks.Contains(chunk))
+        {
             modifiedChunks.Add(chunk);
+        }
     }
 
-    public WorldData (int _planetSeed, int _worldCoord, int _sizeInChunks)
+    public WorldData (int _planetSeed, int _worldCoord)
     {
         planetSeed = _planetSeed;
         worldCoord = _worldCoord;
-        worldSizeInChunks = _sizeInChunks;
     }
 
     public WorldData()
@@ -82,7 +82,7 @@ public class WorldData
     public ChunkData RequestChunk (Vector2Int coord, bool create)
     {
         ChunkData c;
-
+        
         lock (World.Instance.ChunkListThreadLock)
         {
             if (chunks.ContainsKey(coord)) // if chunk already exists, return it instead of loading from file
@@ -116,16 +116,13 @@ public class WorldData
         {
             // generate new chunk data using the World GetVoxel procGen algorithm
             chunks.Add(coord, new ChunkData(coord));
-
-            //World.Instance.StartDebugTimer();
             chunks[coord].Populate();
-            //World.Instance.StopDebugTimer();
         }
     }
 
     bool IsVoxelInWorld(Vector3 pos)
     {
-        int _worldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks;
+        int _worldSizeInChunks = VoxelData.WorldSizeInChunks;
         if (pos.x >= 0 && pos.x < _worldSizeInChunks * VoxelData.ChunkWidth && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < _worldSizeInChunks * VoxelData.ChunkWidth)
             return true;
         else

@@ -29,7 +29,7 @@ public class Toolbar : MonoBehaviour
 
     private void Start()
     {
-        if (SettingsStatic.LoadedSettings.creativeMode || !World.Instance.worldData.survivalMode)
+        if (SettingsStatic.LoadedSettings.creativeMode || World.Instance.worldData.creativeMode)
             EmptyAllSlots();
         else
             SetInventoryFromSave();

@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Grassland
   offset: 333
   scale: 0.08
-  terrainHeight: 80
+  terrainHeight: 40
   terrainScale: 0.08
   surfaceBlock: 13
   smallStructures:
@@ -95,7 +95,7 @@ MonoBehaviour:
   - name: Grass
     floraIndex: 6
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
+    floraZoneThreshold: 0.6
     floraPlacementScale: 15
     floraPlacementThreshold: 0.78
     minHeight: 0
@@ -169,21 +169,21 @@ MonoBehaviour:
   - nodeName: Crystals
     blockID: 16
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 2
     threshold: 0.68
     noiseOffset: 1
   - nodeName: Cave
     blockID: 0
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 0.01
     threshold: 0.6
     noiseOffset: 40
   - nodeName: CaveSmall
     blockID: 0
     minHeight: 1
-    maxHeight: 96
+    maxHeight: 64
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30

@@ -16,9 +16,7 @@ public class SetupMenu : MonoBehaviour
     public GameObject levelLoaderObject;
     
     public Slider worldRenderDistanceSlider;
-    public Slider worldSizeInChunksSlider;
     public TextMeshProUGUI worldRenderText;
-    public TextMeshProUGUI worldSizeInChunksText;
 
     public AudioSource buttonSound;
 
@@ -42,7 +40,6 @@ public class SetupMenu : MonoBehaviour
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
         creativeMode.isOn = SettingsStatic.LoadedSettings.creativeMode;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
-        worldSizeInChunksSlider.value = SettingsStatic.LoadedSettings.worldSizeInChunks;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
         worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
@@ -57,11 +54,6 @@ public class SetupMenu : MonoBehaviour
     public void SetRenderDistance()
     {
         worldRenderText.text = worldRenderDistanceSlider.value.ToString();
-    }
-
-    public void SetWorldSize()
-    {
-        worldSizeInChunksText.text = worldSizeInChunksSlider.value.ToString();
     }
 
     public void Local()
@@ -117,10 +109,6 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
         SettingsStatic.LoadedSettings.creativeMode = creativeMode.isOn;
         SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
-        SettingsStatic.LoadedSettings.worldSizeInChunks = (int)worldSizeInChunksSlider.value;
-
-        if(SettingsStatic.LoadedSettings.worldSizeInChunks < 5) // hard limit on how many chunks can render at low end due to load and draw issues with low # of chunks
-            SettingsStatic.LoadedSettings.worldSizeInChunks = 5;
 
         try
         {

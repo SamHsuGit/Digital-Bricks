@@ -24,8 +24,8 @@ public class DebugText : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
         lighting = gameManager.globalLighting.GetComponent<Lighting>();
 
-        halfWorldSizeInVoxels = SettingsStatic.LoadedSettings.worldSizeInChunks * VoxelData.ChunkWidth / 2;
-        halfWorldSizeInChunks = SettingsStatic.LoadedSettings.worldSizeInChunks / 2;
+        halfWorldSizeInVoxels = VoxelData.WorldSizeInChunks * VoxelData.ChunkWidth / 2;
+        halfWorldSizeInChunks = VoxelData.WorldSizeInChunks / 2;
         controller = null;
     }
 
