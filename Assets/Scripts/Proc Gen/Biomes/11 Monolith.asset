@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Monolith
   offset: 1200
   scale: 0.08
-  terrainHeight: 40
+  terrainHeight: 20
   terrainScale: 0.12
   surfaceBlock: 2
   smallStructures:

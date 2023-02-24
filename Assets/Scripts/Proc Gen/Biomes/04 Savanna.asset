@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Savanna
   offset: 555
   scale: 0.08
-  terrainHeight: 40
+  terrainHeight: 20
   terrainScale: 0.01
   surfaceBlock: 7
   smallStructures:

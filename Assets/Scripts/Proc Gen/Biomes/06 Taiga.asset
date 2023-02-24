@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Taiga
   offset: 777
   scale: 0.08
-  terrainHeight: 40
+  terrainHeight: 20
   terrainScale: 0.12
   surfaceBlock: 4
   smallStructures:

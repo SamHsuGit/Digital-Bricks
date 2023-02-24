@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Grassland
   offset: 333
   scale: 0.08
-  terrainHeight: 40
+  terrainHeight: 20
   terrainScale: 0.08
   surfaceBlock: 13
   smallStructures:

@@ -23,9 +23,7 @@ public static class SettingsStatic
         settings.drawClouds = true;
         settings.drawLodes = true;
         settings.drawSurfaceObjects = true;
-        settings.chunkMeshColliders = true;
         settings.drawVBO = true;
-        settings.drawStuds = true;
         settings.timeOfDay = 6.01f;
 
         // performance
@@ -75,9 +73,7 @@ public class Settings
     public bool drawClouds;
     public bool drawLodes;
     public bool drawSurfaceObjects;
-    public bool chunkMeshColliders;
     public bool drawVBO;
-    public bool drawStuds;
     public float timeOfDay;
 
     // performance
@@ -190,5 +186,4 @@ public static class FileSystemExtension
             path = Application.streamingAssetsPath + "/settings.cfg";
         File.WriteAllText(path, jsonExport);
     }
-
 }

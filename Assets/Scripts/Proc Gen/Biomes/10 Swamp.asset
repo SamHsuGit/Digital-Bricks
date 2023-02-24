@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Swamp
   offset: 1100
   scale: 0.08
-  terrainHeight: 40
+  terrainHeight: 10
   terrainScale: 0.01
   surfaceBlock: 9
   smallStructures:

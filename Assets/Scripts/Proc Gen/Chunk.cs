@@ -297,9 +297,7 @@ public class Chunk
         }
 
         VoxelState neighborAbove = CheckVoxel(pos + VoxelData.faceChecks[2]); // if block above is transparent, use studs mesh data, otherwise leave as a standard block
-        VoxelMeshData meshData = voxel.properties.standardMeshData;
-        if (SettingsStatic.LoadedSettings.drawStuds && neighborAbove != null && World.Instance.blockTypes[neighborAbove.id].isTransparent)// && Noise.Get2DPerlin(new Vector2(x, z), 321, 10f) < 0.8f)
-            meshData = voxel.properties.studsMeshData;
+        VoxelMeshData meshData = voxel.properties.studsMeshData;
 
             for (int p = 0; p < 6; p++)
         {
@@ -366,40 +364,13 @@ public class Chunk
     public void CreateMesh()
     {
         Mesh mesh = new Mesh();
-
         mesh.vertices = vertices.ToArray();
-
-        mesh.subMeshCount = 2; // used for block and transBlock materials?
-
-        if (triangles.Count % 3 != 0) // The number of supplied triangle indices must be a multiple of 3
-            return;
-        else
-        {
-            mesh.SetTriangles(triangles.ToArray(), 0);
-            mesh.SetTriangles(transparentTriangles.ToArray(), 1);
-        }
-
-        if (uvs.ToArray().Length != vertices.ToArray().Length) // the supplied array needs to be the same size as the Mesh.vertices array
-            return;
-        else
-            mesh.uv = uvs.ToArray();
-
-        if (normals.Count == 0 || mesh == null)
-            return;
-        else
-            mesh.normals = normals.ToArray();
-
+        mesh.subMeshCount = 3; // used for block and transBlock materials?
+        mesh.SetTriangles(triangles.ToArray(), 0);
+        mesh.SetTriangles(transparentTriangles.ToArray(), 1);
+        mesh.uv = uvs.ToArray();
+        mesh.normals = normals.ToArray();
         meshFilter.mesh = mesh;
-
-        if (SettingsStatic.LoadedSettings.chunkMeshColliders)
-        {
-            if (col == null)
-                col = chunkObject.AddComponent<MeshCollider>();
-            else
-                col = chunkObject.GetComponent<MeshCollider>();
-            col.sharedMesh = mesh;
-            col.material = World.Instance.physicMaterial;
-        }
     }
 
     void AddTexture(int textureID, Vector2 uv)

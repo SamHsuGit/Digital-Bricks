@@ -50,7 +50,7 @@ public class DebugText : MonoBehaviour
             }
 
             string debugText = "LDPlay v" + Application.version;
-            debugText += " planetSeed: " + SettingsStatic.LoadedSettings.planetSeed + " worldCoords: " + SettingsStatic.LoadedSettings.worldCoord + " season: " + World.Instance.season;
+            debugText += " planetSeed: " + SettingsStatic.LoadedSettings.planetSeed + " worldCoords: " + SettingsStatic.LoadedSettings.worldCoord;
             debugText += "\n";
             debugText += frameRate + " fps";
             debugText += "\n";

@@ -16,7 +16,6 @@ public class World : MonoBehaviour
 
     [Header("Public Referenced By Others")]
     // Procedural World Generation Values
-    [HideInInspector] public int season;
     [HideInInspector] public int planetNumber;
     [HideInInspector] public int seed;
     [HideInInspector] public int worldSizeInChunks;
@@ -165,7 +164,6 @@ public class World : MonoBehaviour
         chunks = new Chunk[worldSizeInChunks, worldSizeInChunks]; // set size of array from saved value
         defaultSpawnPosition = Settings.DefaultSpawnPosition;
         mainCamera = mainCameraGameObject.GetComponent<Camera>();
-        season = Mathf.CeilToInt(System.DateTime.Now.Month / 3f);
         UnityEngine.Random.InitState(seed);
 
         // initialized, try to reset when players join
@@ -832,13 +830,13 @@ public class World : MonoBehaviour
         Vector2 xzCoords = new Vector2(Mathf.FloorToInt(globalPos.x), Mathf.FloorToInt(globalPos.z));
 
         /* IMMUTABLE PASS */
-        //// If outside world, return air.
-        //if (!IsGlobalPosInWorld(globalPos))
-        //    return 0;
-
-        // for small worlds, return air outside world border to enable edges to render all faces and not block camera movement
-        if (!IsGlobalPosInsideBorder(globalPos))
+        // If outside world, return air.
+        if (!IsGlobalPosInWorld(globalPos))
             return 0;
+
+        //// for small worlds, return air outside world border to enable edges to render all faces and not block camera movement
+        //if (!IsGlobalPosInsideBorder(globalPos))
+        //    return 0;
 
         /* AIR PASS */
         // Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
@@ -862,13 +860,9 @@ public class World : MonoBehaviour
                 return 0;
         }
 
-        //// TESTED ONLY CLOUDS AND WORLD GEN STILL SLOW FROM SOMETHING
-        //return 0;
-
         /* BASIC TERRAIN PASS */
         // Adds base terrain using spline points to GetTerrainHeight
         byte voxelValue = 0;
-
         CalcTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
 
         if (yGlobalPos > 1 && weirdness > isAirThreshold) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
@@ -923,7 +917,9 @@ public class World : MonoBehaviour
 
         /* SURFACE OBJECTS PASS */
         // add structures like monoliths and flora like trees and plants and mushrooms
-        if (drawSurfaceObjects && (yGlobalPos == terrainHeightVoxels && yGlobalPos < cloudHeight && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+        // uses the tallest object height to limit the altitude at which objects can spawn
+        int tallestStructureHeight = 25;
+        if (drawSurfaceObjects && (yGlobalPos == terrainHeightVoxels && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
             surfaceObType = GetSurfaceObType(percolation, fertility);
@@ -1444,7 +1440,7 @@ public class World : MonoBehaviour
 
     public bool IsGlobalPosInWorld(Vector3 pos)
     {
-        if (pos.x >= 0 && pos.x < worldSizeInChunks * VoxelData.ChunkWidth && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < worldSizeInChunks * VoxelData.ChunkWidth)
+        if (pos.x >= 0 && pos.x < worldSizeInChunks * VoxelData.ChunkWidth && pos.y >= 0 && pos.y < VoxelData.ChunkHeight - 1 && pos.z >= 0 && pos.z < worldSizeInChunks * VoxelData.ChunkWidth)
             return true;
         else
             return false;

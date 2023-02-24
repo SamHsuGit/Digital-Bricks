@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Woods
   offset: 666
   scale: 0.08
-  terrainHeight: 40
+  terrainHeight: 20
   terrainScale: 0.12
   surfaceBlock: 13
   smallStructures:

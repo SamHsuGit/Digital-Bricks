@@ -112,7 +112,6 @@ public class Controller : NetworkBehaviour
     private Lighting lighting;
     private GameObject undefinedPrefabToSpawn;
     private RaycastHit raycastHit;
-    private GameObject hitOb;
     private Rigidbody heldObRb;
 
     //Initializers & Constants
@@ -541,23 +540,9 @@ public class Controller : NetworkBehaviour
                         SetDOF();
                         SetTPSDist();
 
-                        //// IF PRESSED GRAB
-                        //if (!holdingGrab && inputHandler.grab)
-                        //    PressedGrab();
-
-                        //// IF HOLDING GRAB
-                        //if (holdingGrab && inputHandler.grab)
-                        //    HoldingGrab();
-
                         // IF PRESSED SHOOT
                         if (inputHandler.shoot)
                             pressedShoot();
-
-                        //// IF RELEASED GRAB
-                        //if (holdingGrab && !inputHandler.grab)
-                        //    ReleasedGrab();
-
-                        //positionCursorBlocks();
 
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
@@ -667,7 +652,6 @@ public class Controller : NetworkBehaviour
                 heldObRb.useGravity = true;
                 heldObRb.detectCollisions = true;
             }
-            hitOb = null;
             heldObRb = null;
         }
         else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
@@ -741,50 +725,16 @@ public class Controller : NetworkBehaviour
         if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
             return;
 
-        if(!SettingsStatic.LoadedSettings.chunkMeshColliders)
+        if(removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
         {
-            if(removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
-            {
-                holdingGrab = true;
+            holdingGrab = true;
 
-                PlayerPickBrick();
-            }
-            else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null)
-            {
-                holdingGrab = true;
-                PlayerPickBrickFromInventory();
-            }
+            PlayerPickBrick();
         }
-        else
+        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null)
         {
-            bool hitCollider = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out raycastHit, grabDist, 11); // ignore player layer
-            if (hitCollider) // IF HIT COLLIDER (can be rb or chunk)
-            {
-                hitOb = raycastHit.transform.gameObject;
-                holdingGrab = true;
-
-                if (hitOb.GetComponent<Rigidbody>() != null) // if ob has rigidbody (and collider)
-                {
-                    heldObRb = hitOb.GetComponent<Rigidbody>();
-                    heldObRb.isKinematic = false;
-                    heldObRb.velocity = Vector3.zero;
-                    heldObRb.angularVelocity = Vector3.zero;
-                    heldObRb.useGravity = false;
-                    heldObRb.detectCollisions = true;
-                }
-                else if (removePos.gameObject.activeSelf && hitOb.tag != "voxelRb" && hitOb.tag != "voxelBit") // IF GRABBED VOXEL CHUNK
-                {
-                    //if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
-                    //    return;
-
-                    PlayerPickBrick();
-                }
-            }
-            else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // IF HIT COLLIDER AND TOOLBAR HAS STACK
-            {
-                holdingGrab = true;
-                PlayerPickBrickFromInventory();
-            }
+            holdingGrab = true;
+            PlayerPickBrickFromInventory();
         }
     }
 
@@ -893,61 +843,18 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        if (!SettingsStatic.LoadedSettings.chunkMeshColliders)
-        {
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
-            else
-                UpdateShowGrabObject(holdingGrab, blockID);
-
-            if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT, PLACE VOXEL
-            {
-                health.blockCounter++;
-                PlaceBrick(placePos.position);
-            }
-            else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
-                PutAwayBrick(blockID);
-        }
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
         else
+            UpdateShowGrabObject(holdingGrab, blockID);
+
+        if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
         {
-            if (grabbedPrefab != null || (hitOb != null && hitOb.tag == "voxelRb")) // IF HOLDING VOXEL OR VOXEL RB
-            {
-                if (hitOb != null && hitOb.tag == "voxelRb") // If voxel Rb
-                {
-                    blockID = (byte)hitOb.GetComponent<SceneObject>().typeVoxel; //determine type of voxel to store back in inventory
-                    Destroy(hitOb); // destroy the gameobject as it has been 'stored' in inventory
-
-                    //reset heldOb and heldObRb properties
-                    heldObRb.useGravity = true;
-                    heldObRb.detectCollisions = true;
-                    hitOb = null;
-                    heldObRb = null;
-                }
-                else
-                {
-                    if (Settings.OnlinePlay)
-                        CmdUpdateGrabObject(holdingGrab, blockID);
-                    else
-                        UpdateShowGrabObject(holdingGrab, blockID);
-                }
-
-                if (removePos.gameObject.activeSelf) // IF VOXEL PRESENT, PLACE VOXEL
-                {
-                    health.blockCounter++;
-                    PlaceBrick(placePos.position);
-                }
-                else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
-                    PutAwayBrick(blockID);
-            }
-            else if (hitOb != null && heldObRb != null) // IF HOLDING NON-VOXEL OBJECT
-            {
-                //reset heldOb and heldObRb properties
-                heldObRb.useGravity = true;
-                heldObRb.detectCollisions = true;
-                hitOb = null;
-                heldObRb = null;
-            }
+            health.blockCounter++;
+            PlaceBrick(placePos.position);
         }
+        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
+            PutAwayBrick(blockID);
     }
 
     void PutAwayBrick(byte blockID)

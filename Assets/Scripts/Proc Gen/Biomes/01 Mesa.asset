@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Mesa
   offset: 222
   scale: 0.08
-  terrainHeight: 40
+  terrainHeight: 25
   terrainScale: 0.01
   surfaceBlock: 7
   smallStructures:
