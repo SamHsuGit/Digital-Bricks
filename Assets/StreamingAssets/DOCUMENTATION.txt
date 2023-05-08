@@ -110,8 +110,8 @@ LDRAW IMPORTER
 		"charRun.ldr"   - The player character's run pose
 		"projectile.ldr"- The player character's projectile that can be shot if you have crystals
 	DEFAULT LDRAW FILES FILE LOCATIONS:
-		Winx64: DigitalBricks_Data/StreamingAssets
-		MacOS: 	DigitalBricks MacOS.app/Contents/StreamingAssets
+		Winx64: Digital Bricks_Data/StreamingAssets
+		MacOS: 	Digital Bricks MacOS.app/Contents/StreamingAssets
 
 	CUSTOM LDRAW FILE SETUP PROCESS
 		NOTE: Parts library must be manually updated as new parts are added to the ldraw system.
@@ -119,7 +119,7 @@ LDRAW IMPORTER
 		2. Remove all previously existing submodels (if any).
 		3. All parts must be under one submodel named "filename-submodel.ldr" (e.g. base-submodel.ldr)
    		NOTE: Sometimes Stud.io has its own submodels denoted with "bl_" prefix which ldraw cannot import
-		4. Export as .ldr to  the DigitalBricks_Data/ldraw/models/ folder with one of the valid filenames (e.g. base.ldr)
+		4. Export as .ldr to  the Digital Bricks_Data/ldraw/models/ folder with one of the valid filenames (e.g. base.ldr)
 
 COLLISIONS
 	Script: VoxelCollider
@@ -152,15 +152,15 @@ MULTIPLAYER
 	NOTE: For best practice, all players should join a multiplayer game at same time (or close to) after sharing world and ldraw files manually.
 
 	SAVE FILE LOCATION
-		1. (Windows) C:\Users%userprofile%\AppData\LocalLow\Sam Hsu\DigitalBricks\saves\
-		2. (MacOS) ~/Library/Application Support/Sam Hsu/DigitalBricks/saves/
-		3. (UWP) %userprofile%\AppData\Local\Packages\DigitalBricks\LocalState\saves\
+		1. (Windows) C:\Users%userprofile%\AppData\LocalLow\Sam Hsu\Digital Bricks\saves\
+		2. (MacOS) ~/Library/Application Support/Sam Hsu/Digital Bricks/saves/
+		3. (UWP) %userprofile%\AppData\Local\Packages\Digital Bricks\LocalState\saves\
 
 LIGHTING
 	
 
 SAVED SETTINGS
-	player preferences for gameplay settings are stored in the settings.cfg file in C:\DigitalBricks\DigitalBricks_Data
+	player preferences for gameplay settings are stored in the settings.cfg file in C:\Digital Bricks\Digital Bricks_Data
 	player preferences include in-game options menu selections for
 		ip Address
 		Volume
@@ -177,7 +177,7 @@ DEBUG
 	Please report all bugs and on GitHub and share your Player.log file (please check if the issue was already reported): https://github.com/SamHsuGit/LDPlay/issues
 
 	Player.log FILE LOCATIONS
-		Windows: C:\Users%userprofile%\AppData\LocalLow\Sam Hsu\DigitalBricks\Player.log"
-		MacOS: "~/Library/Application Support/Sam Hsu/DigitalBricks/Player.log"
-		UWP = "%userprofile%\AppData\Local\Packages\DigitalBricksLocalState\Player.log"
+		Windows: C:\Users%userprofile%\AppData\LocalLow\Sam Hsu\Digital Bricks\Player.log"
+		MacOS: "~/Library/Application Support/Sam Hsu/Digital Bricks/Player.log"
+		UWP = "%userprofile%\AppData\Local\Packages\Digital BricksLocalState\Player.log"
 	
