@@ -150,7 +150,7 @@ public class World : MonoBehaviour
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
-        undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 3;
+        undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 4;
         worldSizeInChunks = VoxelData.WorldSizeInChunks;
         debugTimer = "notMeasured";
 
@@ -524,9 +524,7 @@ public class World : MonoBehaviour
     public void SetUndrawVoxels()
     {
         undrawVoxels = true;
-        if (worldSizeInChunks == minWorldSize) // worlds of min size do not need to undraw chunks to save memory
-            undrawVoxels = false;
-        else if ((!Settings.OnlinePlay && playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
+        if ((!Settings.OnlinePlay && playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
             undrawVoxels = false;
         else if (SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local splitscreen (singleplayer) or online and graphics settings are set to ultra
             undrawVoxels = false;
