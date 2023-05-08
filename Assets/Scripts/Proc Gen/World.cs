@@ -94,6 +94,7 @@ public class World : MonoBehaviour
     private bool drawSurfaceObjects;
     private bool drawVBO;
     private int viewDistance;
+    private int undrawDistance;
     private int VBORenderDistanceInChunks; // acts as a radius like drawDistance
 
     private Chunk[,] chunks;
@@ -149,6 +150,7 @@ public class World : MonoBehaviour
         drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
         drawVBO = SettingsStatic.LoadedSettings.drawVBO;
         viewDistance = SettingsStatic.LoadedSettings.viewDistance;
+        undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 3;
         worldSizeInChunks = VoxelData.WorldSizeInChunks;
         debugTimer = "notMeasured";
 
@@ -733,7 +735,7 @@ public class World : MonoBehaviour
                     if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
                         chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position - CREATING NEW CHUNKS TAKES UP 90% OF CPU TIME WHEN PROFILING WHEN RUNNING THE POPULATE > GET VOXEL FUNCTION (Profiling get voxel runs out of memory)
 
-                    chunks[x, z].isInDrawDist = true;
+                    chunks[x, z].isDrawn = true;
 
                     chunks[x, z].isActive = true;
                     activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
@@ -757,9 +759,29 @@ public class World : MonoBehaviour
 
         // Any chunks left in the previousActiveChunks list are no longer in the player's view distance, so loop through and disable them (i.e. mark to un-draw them).
         foreach (ChunkCoord c in previouslyActiveChunks)
-            chunks[c.x, c.z].isInDrawDist = false; // marks chunks to be un-drawn
+            chunks[c.x, c.z].isDrawn = false; // marks chunks to be un-drawn
 
-        
+        // for all loaded chunks in the world (regardless of previouslyActiveChunks list)
+        foreach (Chunk c in chunks)
+        {
+            if (c != null)
+            {
+                // if the current active chunk is within the undraw distance
+                if (c.coord.x < playerChunkCoord.x + undrawDistance && c.coord.x > playerChunkCoord.x - undrawDistance && c.coord.z < playerChunkCoord.z + undrawDistance && c.coord.z > playerChunkCoord.z - undrawDistance)
+                {
+                    //// remove from previously active chunks
+                    //for (int i = 0; i < previouslyActiveChunks.Count; i++)
+                    //    if (previouslyActiveChunks[i].Equals(c.coord))
+                    //        previouslyActiveChunks.RemoveAt(i);
+
+                    chunks[c.coord.x, c.coord.z].isDrawn = true;
+                }
+                else
+                {
+                    chunks[c.coord.x, c.coord.z].isDrawn = false;
+                }
+            }
+        }
     }
 
     void ThreadedUpdate() // the loop where the chunk draw occurs, this operation is threaded.

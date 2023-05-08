@@ -165,13 +165,14 @@ public class Chunk
         set { _isInLoadDist = value; }
     }
 
-    public bool isInDrawDist // used for object pooling? Need to unload inactive chunks from memory to save RAM usage?
+    public bool isDrawn // used for object pooling? Need to unload inactive chunks from memory to save RAM usage?
     {
         get { return _isInDrawDist; }
         set
         {
             _isInDrawDist = value;
             if (chunkObject != null)
+                //chunkObject.GetComponent<MeshRenderer>().enabled = value;
                 chunkObject.SetActive(value);
         }
     }
