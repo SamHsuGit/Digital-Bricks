@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Sam Hsu
-  productName: LDPlay
+  productName: Digital Bricks
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -165,7 +165,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Standalone: com.Sam-Hsu.LDPlay
+    Standalone: com.Sam-Hsu.Digital-Bricks
     iPhone: com.SamHsu.LDPlay
   buildNumber:
     Standalone: 0
@@ -695,14 +695,14 @@ PlayerSettings:
     Standalone: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: LDPlay
+  metroPackageName: DigitalBricks
   metroPackageVersion: 0.58.0.0
   metroCertificatePath: Assets/WSATestCertificate.pfx
-  metroCertificatePassword: "@ikc\x7F8ai3"
+  metroCertificatePassword: "@ikc\x7F8ai"
   metroCertificateSubject: Sam Hsu
   metroCertificateIssuer: Sam Hsu
-  metroCertificateNotAfter: 005963a629c5d901
-  metroApplicationDescription: LDPlay
+  metroCertificateNotAfter: 001c004aefa0da01
+  metroApplicationDescription: DigitalBricks
   wsaImages:
     65636: Assets/AssetFiles/Images/Logo/LogoBlack50x50.png
     65661: Assets/AssetFiles/Images/Logo/LogoBlack63x63.png
@@ -744,7 +744,7 @@ PlayerSettings:
     2293910: Assets/AssetFiles/Images/Logo/LogoBlack465x225.png
     2293960: Assets/AssetFiles/Images/Logo/LogoBlack620x300.png
     2294160: 
-  metroTileShortName: BrickFormers - A Fan-Made Game
+  metroTileShortName: Digital Bricks
   metroTileShowName: 0
   metroMediumTileShowName: 1
   metroLargeTileShowName: 0

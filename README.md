@@ -1,4 +1,4 @@
-# LDPlay
+# Digital Bricks
 A Fan-Made LEGO Sandbox
 
 Samuel Hsu 2021

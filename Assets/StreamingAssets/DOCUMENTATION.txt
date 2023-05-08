@@ -111,8 +111,8 @@ LDRAW IMPORTER
 		"charRun.ldr"   - The player character's run pose
 		"projectile.ldr"- The player character's projectile that can be shot if you have crystals
 	DEFAULT LDRAW FILES FILE LOCATIONS:
-		Winx64: LDPlay_Data/StreamingAssets
-		MacOS: 	LDPlay MacOS.app/Contents/StreamingAssets
+		Winx64: Digital Bricks_Data/StreamingAssets
+		MacOS: 	Digital Bricks MacOS.app/Contents/StreamingAssets
 
 	CUSTOM LDRAW FILE SETUP PROCESS
 		NOTE: Parts library must be manually updated as new parts are added to the ldraw system.
