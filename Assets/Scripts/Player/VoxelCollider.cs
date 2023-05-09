@@ -7,7 +7,7 @@ public class VoxelCollider : MonoBehaviour
     public float baseJumpForce = 15f;
     public bool isMoving = false;
     public bool isGrounded = false;
-    private int maxJumps = 1;
+    public int maxJumps;
     public int currentJumps;
 
     public World world;
@@ -114,8 +114,10 @@ public class VoxelCollider : MonoBehaviour
             velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
         }
 
+        isGrounded = CheckGrounded(velocityPlayer.y);
+
         // voxel based collision detection (no chunk meshes due to performance cost of generating chunk meshes)
-        if(!SettingsStatic.LoadedSettings.creativeMode)
+        if (!SettingsStatic.LoadedSettings.creativeMode)
         {
             if ((velocityPlayer.z > 0 && front) || (velocityPlayer.z < 0 && back))
                 velocityPlayer.z = 0;

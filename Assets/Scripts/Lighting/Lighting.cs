@@ -19,7 +19,7 @@ public class Lighting : MonoBehaviour
     [SerializeField] private float reflectionIntensity;
 
     [SerializeField, Range(0, 24)] public float timeOfDay = 6.01f;
-    public float maxFogDensity = 0.01f;
+    public float maxFogDensity = 0.02f;
 
     //NOTE: MacBook Air requires Gamma Color Space. Cannot use Linear.
 
@@ -77,18 +77,14 @@ public class Lighting : MonoBehaviour
 
     private void UpdateLighting(float timePercent)
     {
-        // FOG
+        // Dynamic Fog
         RenderSettings.fogColor = sunProperties.FogColor.Evaluate(timePercent);
-
         float amplitude = maxFogDensity / 2;
-
         float period = 12; // 12 hr period = fog rolls in 2x per day
         float frequency = 2 * Mathf.PI / period;
         float horizontalShift = Mathf.PI / 2;
-
         float verticalShift = maxFogDensity / 2;
-
-        RenderSettings.fogDensity = amplitude * Mathf.Sin(frequency * (timePercent * 24) - horizontalShift) + verticalShift;
+        RenderSettings.fogDensity = amplitude * Mathf.Cos(frequency * (timePercent * 24) - horizontalShift) + verticalShift;
 
         RenderSettings.ambientLight = sunProperties.AmbientColor.Evaluate(timePercent);
         sun.color = sunProperties.DirectionalColor.Evaluate(timePercent);

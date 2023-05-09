@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Animations;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class Controller : NetworkBehaviour
 {
@@ -105,7 +107,7 @@ public class Controller : NetworkBehaviour
     private GameMenu gameMenuComponent;
     private BoxCollider playerCameraBoxCollider;
     private VoxelCollider playerCameraVoxelCollider;
-    private PPFXSetValues worldPPFXSetValues;
+    public PPFXSetValues worldPPFXSetValues;
     private CharacterController charController;
     private PhysicMaterial physicMaterial;
     private CustomNetworkManager customNetworkManager;
@@ -490,6 +492,7 @@ public class Controller : NetworkBehaviour
 
         daytime = lighting.daytime;
 
+        // player normally uses voxel collision in voxelCollider to check grounded, unless standing on imported ldraw parts which have physics collisions, then mark player as grounded
         isGrounded = CheckGroundedCollider();
 
         if (!options)
@@ -537,7 +540,8 @@ public class Controller : NetworkBehaviour
                             charObRun.SetActive(false);
                         }
 
-                        SetDOF();
+                        if (world.playerCount < 2)
+                            SetDOF();
                         SetTPSDist();
 
                         // IF PRESSED SHOOT
@@ -565,7 +569,8 @@ public class Controller : NetworkBehaviour
                         if (charObRun != null && charObRun.activeSelf)
                             charObRun.SetActive(false);
 
-                        SetDOF();
+                        if (world.playerCount < 2)
+                            SetDOF();
 
                         lookAtConstraint.constraintActive = false;
                         MoveCamera(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)

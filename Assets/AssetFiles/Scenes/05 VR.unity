@@ -167,6 +167,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -215,6 +216,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100000, y: 100000, z: 100000}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -319,6 +321,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1144522442495259669}
   - {fileID: 1263108544252249200}
@@ -411,8 +414,12 @@ PrefabInstance:
       value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
       propertyPath: timeOfDay
-      value: 6.01
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
       propertyPath: wasDaytime
@@ -438,7 +445,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 2529205028307385178}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 387010ac6f429394c86779a87e370f2e, type: 3}
   m_Name: 
@@ -510,6 +517,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -526,45 +534,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189eb45db5f68064d8da851126f78eb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldLoaded: 0
-  tick: 0
-  saving: 0
-  undrawVoxelBoundObjects: 0
-  undrawVoxels: 0
-  VBOs: 1
-  chunkMeshColliders: 1
+  playerCount: 0
+  worldData:
+    planetSeed: 3
+    worldCoord: 1
+    creativeMode: 0
+    distToStar: 0
+    system: 0
+    galaxy: 0
+    blockIDsubsurface: 0
+    blockIDcore: 0
+    blockIDBiome00: 0
+    blockIDBiome01: 0
+    blockIDBiome02: 0
+    blockIDBiome03: 0
+    blockIDBiome04: 0
+    blockIDBiome05: 0
+    blockIDBiome06: 0
+    blockIDBiome07: 0
+    blockIDBiome08: 0
+    blockIDBiome09: 0
+    blockIDBiome10: 0
+    blockIDBiome11: 0
+    hasAtmosphere: 0
+    isAlive: 1
+    biomes: 
+    blockIDTreeLeavesWinter: 0
+    blockIDTreeLeavesSpring: 0
+    blockIDTreeLeavesSummer: 0
+    blockIDTreeLeavesFall1: 0
+    blockIDTreeLeavesFall2: 0
+    blockIDTreeTrunk: 0
+    blockIDCacti: 0
+    blockIDMushroomLargeCap: 0
+    blockIDMushroomLargeStem: 0
+    blockIDMonolith: 0
+    blockIDEvergreenLeaves: 0
+    blockIDEvergreenTrunk: 0
+    blockIDHoneyComb: 0
+    blockIDHugeTreeLeaves: 0
+    blockIDHugeTreeTrunk: 0
+    blockIDColumn: 0
   planetNumber: 0
   seed: 0
-  baseObString: 
-  baseOb: {fileID: 0}
+  worldSizeInChunks: 0
   isEarth: 0
-  ticksEnabled: 1
-  continentalnessSplinePoints: []
-  erosionSplinePoints: []
-  peaksAndValleysSplinePoints: []
-  terrainHeightPercentChunk: 0
-  terrainHeightVoxels: 0
-  isAir: 0
   continentalness: 0
   erosion: 0
   peaksAndValleys: 0
   weirdness: 0
   temperature: 0
   humidity: 0
+  isAir: 0
   fertility: 0
   percolation: 0
-  placementVBO: 0
-  seaLevelThreshold: 0.34
-  cloudHeight: 0
   surfaceObType: 0
+  worldLoaded: 0
+  preWorldLoadTime: 
+  worldLoadTime: 
+  debugTimer: 
+  chunkDrawTime: 
+  baseObString: 
+  baseObPieces: []
   biome: {fileID: 0}
+  baseOb: {fileID: 0}
+  blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
   mainCameraGameObject: {fileID: 1689049683}
   globalLighting: {fileID: 2529205028307385179}
   loadingText: {fileID: 0}
   loadingBackground: {fileID: 0}
   customNetworkManager: {fileID: 0}
-  defaultSpawnPosition: {x: 0, y: 0, z: 0}
-  season: 0
   planets:
   - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
   - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}
@@ -606,537 +645,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9f3801dea13a8f94988736dbed9d655c, type: 2}
   - {fileID: 11400000, guid: 1f79fc23f66fa9c48b216cef8c3ef390, type: 2}
   - {fileID: 11400000, guid: f7e9971761b16e441b2cb2465b306386, type: 2}
-  heightOffset: 20
   worldPlayer: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
-  blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
+  blockMaterialLit: {fileID: 0}
+  blockMaterialUnlit: {fileID: 0}
   blockMaterialTransparent: {fileID: 0}
   physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
-  blocktypes:
-  - blockName: 00 Air
-    isDrawn: 0
-    isSolid: 0
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: 0}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: 01 Barrier
-    isDrawn: 0
-    isSolid: 1
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: 0}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 2
-    frontFaceTexture: 2
-    topFaceTexture: 2
-    bottomFaceTexture: 2
-    leftFaceTexture: 2
-    rightFaceTexture: 2
-  - blockName: 02 Black (Bedrock)
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 5679390536090785944, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 2b6c2f246d983a142b04e3d99cfa2fca, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 1
-    frontFaceTexture: 1
-    topFaceTexture: 2
-    bottomFaceTexture: 0
-    leftFaceTexture: 1
-    rightFaceTexture: 1
-  - blockName: 03 Light_Grey (Stone)
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 5392753449730437660, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 05ca634519d200f4e9f0bcae56ed9cde, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 4
-    frontFaceTexture: 4
-    topFaceTexture: 5
-    bottomFaceTexture: 3
-    leftFaceTexture: 4
-    rightFaceTexture: 4
-  - blockName: 04 White (Cloud)
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -6943373833598557, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: e318c3b15183ab746aaaf8296a91ad91, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 7
-    frontFaceTexture: 7
-    topFaceTexture: 8
-    bottomFaceTexture: 6
-    leftFaceTexture: 7
-    rightFaceTexture: 7
-  - blockName: 05 Red (Lava)
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -7538633921802359561, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 8767e57b23115524fbf2e48d1dddee77, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 10
-    frontFaceTexture: 10
-    topFaceTexture: 11
-    bottomFaceTexture: 9
-    leftFaceTexture: 10
-    rightFaceTexture: 10
-  - blockName: 06 Dark_Red
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 448961105294916356, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: a28437ab4ad7fcd45905a0e2fa319192, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 13
-    frontFaceTexture: 13
-    topFaceTexture: 14
-    bottomFaceTexture: 12
-    leftFaceTexture: 13
-    rightFaceTexture: 13
-  - blockName: 07 Orange
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -4219558403781695398, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 9d8c1a38276268e499b386f9664b49b4, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 16
-    frontFaceTexture: 16
-    topFaceTexture: 17
-    bottomFaceTexture: 15
-    leftFaceTexture: 16
-    rightFaceTexture: 16
-  - blockName: 08 Dark_Orange
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 6181873364862223445, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 3aeb07a86f941c940aed077955f5d6c5, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 19
-    frontFaceTexture: 19
-    topFaceTexture: 20
-    bottomFaceTexture: 18
-    leftFaceTexture: 20
-    rightFaceTexture: 20
-  - blockName: 09 Tan
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -9138616440249935319, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: feb312e62777c81408ab7c962b86ac05, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 22
-    frontFaceTexture: 22
-    topFaceTexture: 23
-    bottomFaceTexture: 21
-    leftFaceTexture: 22
-    rightFaceTexture: 22
-  - blockName: 10 Brown
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -1501523072523359806, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 9983939e376156945af6880b4b7d21c1, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 25
-    frontFaceTexture: 25
-    topFaceTexture: 26
-    bottomFaceTexture: 24
-    leftFaceTexture: 25
-    rightFaceTexture: 25
-  - blockName: 11 Yellow
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 1159639000735656762, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 05ad328eb23b80c40b04cbe788c33b51, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 28
-    frontFaceTexture: 28
-    topFaceTexture: 29
-    bottomFaceTexture: 27
-    leftFaceTexture: 28
-    rightFaceTexture: 28
-  - blockName: 12 Bright_Light_Orange
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 4789437984422588439, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 749394d461ca63a4fa63cabdf0c13788, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 31
-    frontFaceTexture: 31
-    topFaceTexture: 32
-    bottomFaceTexture: 30
-    leftFaceTexture: 31
-    rightFaceTexture: 31
-  - blockName: 13 Lime
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 4271331837703844512, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 5e21a3d3fb0c48548904493198843b09, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 34
-    frontFaceTexture: 34
-    topFaceTexture: 35
-    bottomFaceTexture: 33
-    leftFaceTexture: 34
-    rightFaceTexture: 34
-  - blockName: 14 Green
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 6931913342542670997, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 209aa2d0dc3717d449f8e688c7397252, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 37
-    frontFaceTexture: 37
-    topFaceTexture: 38
-    bottomFaceTexture: 36
-    leftFaceTexture: 37
-    rightFaceTexture: 37
-  - blockName: 15 Sand_Green
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 1155390472802733821, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: dc9b2b9cdaaa6ae4b9442955f72d16d2, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 40
-    frontFaceTexture: 40
-    topFaceTexture: 41
-    bottomFaceTexture: 39
-    leftFaceTexture: 41
-    rightFaceTexture: 41
-  - blockName: 16 Medium_Azure
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -1099303167411363153, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: f7c982254a6cf834d97b936f091bb2d1, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 43
-    frontFaceTexture: 43
-    topFaceTexture: 44
-    bottomFaceTexture: 42
-    leftFaceTexture: 43
-    rightFaceTexture: 43
-  - blockName: 17 Dark_Turquoise
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 2748531719775846729, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 5235fb1ec8e15a442a52a347e0267623, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 46
-    frontFaceTexture: 46
-    topFaceTexture: 47
-    bottomFaceTexture: 45
-    leftFaceTexture: 46
-    rightFaceTexture: 46
-  - blockName: 18 Medium_Blue
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 18154999638459529, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: fa2528a071dc25a408b457d932785856, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 49
-    frontFaceTexture: 49
-    topFaceTexture: 50
-    bottomFaceTexture: 48
-    leftFaceTexture: 49
-    rightFaceTexture: 49
-  - blockName: 19 Blue (Water)
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 4665620361206564391, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: d14eca03bd664ef4fae6a6d44968ae77, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 52
-    frontFaceTexture: 52
-    topFaceTexture: 53
-    bottomFaceTexture: 51
-    leftFaceTexture: 52
-    rightFaceTexture: 52
-  - blockName: 20 Dark_Blue
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 3779112015154510966, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 27a82e47d93abe343833d1f500098ca2, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 55
-    frontFaceTexture: 55
-    topFaceTexture: 56
-    bottomFaceTexture: 54
-    leftFaceTexture: 55
-    rightFaceTexture: 55
-  - blockName: 21 Medium_Lavender
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 42737121281919281, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 5e686be1ad5b5b744b602350a2bf8220, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 58
-    frontFaceTexture: 58
-    topFaceTexture: 59
-    bottomFaceTexture: 57
-    leftFaceTexture: 58
-    rightFaceTexture: 58
-  - blockName: 22 Magenta
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 289541532373216470, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 9cd703a85ed083f4497f8e28a308de1d, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 61
-    frontFaceTexture: 61
-    topFaceTexture: 62
-    bottomFaceTexture: 60
-    leftFaceTexture: 61
-    rightFaceTexture: 61
-  - blockName: 23 Bright_Pink
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 4449047110683481943, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 8661812d1d20af7458a3ac4ba40b7eb9, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 64
-    frontFaceTexture: 64
-    topFaceTexture: 65
-    bottomFaceTexture: 63
-    leftFaceTexture: 64
-    rightFaceTexture: 64
-  - blockName: 24 Dark_Pink
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 6804417665525417643, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 342a2c6c9b3283a44b5f41322fde5461, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 67
-    frontFaceTexture: 67
-    topFaceTexture: 68
-    bottomFaceTexture: 66
-    leftFaceTexture: 67
-    rightFaceTexture: 67
-  - blockName: 25 base.ldr
-    isDrawn: 0
-    isSolid: 0
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: 8675960657628198209, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 756824590394074418, guid: eff43f24235a4ba4a8c20ca252e7df64, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: 26 procGen.ldr
-    isDrawn: 0
-    isSolid: 0
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: 8874480006941658528, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 756824590394074418, guid: 390fe447ccb6f2842b0ba22bd43865ad, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: 27 Grass
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: 588497054336764479, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 9670f9bbd1d614f488c0fff11e26dd26, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 70
-    frontFaceTexture: 70
-    topFaceTexture: 71
-    bottomFaceTexture: 69
-    leftFaceTexture: 70
-    rightFaceTexture: 70
-  - blockName: 28 Wood
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -540048619370252142, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 445e3405fb29814468c55c674fd43bb6, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 74
-    frontFaceTexture: 74
-    topFaceTexture: 75
-    bottomFaceTexture: 72
-    leftFaceTexture: 73
-    rightFaceTexture: 73
-  - blockName: 29 Leaves
-    isDrawn: 1
-    isSolid: 1
-    isTransparent: 0
-    meshData: {fileID: 0}
-    icon: {fileID: -3511060238418154924, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 2620124397277145217, guid: 89e973f8beb8e0a43b1c7e0ca802aca2, type: 3}
-    voxelBoundObject: {fileID: 0}
-    backFaceTexture: 78
-    frontFaceTexture: 78
-    topFaceTexture: 79
-    bottomFaceTexture: 76
-    leftFaceTexture: 77
-    rightFaceTexture: 77
-  - blockName: 30 Crystal
-    isDrawn: 0
-    isSolid: 1
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: -6691012767228139306, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 6649896901485739460, guid: 1bd16d96cabde844d819dddf944f92af, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: 31 Grass
-    isDrawn: 0
-    isSolid: 1
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: 8251907811329543855, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 2630247148938265349, guid: 50205679261b18b48a2bf62f59cc3cd5, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: 32 Mushroom
-    isDrawn: 0
-    isSolid: 1
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: -8946788012438720712, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 6413844807415285134, guid: fee1129e358d38a4c9a075378d9ea333, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: 33 Bamboo
-    isDrawn: 0
-    isSolid: 1
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: -3538851436377425636, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 8684780012657908826, guid: 8d0153cbbcbaabe4e9630a7817a20832, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: 34 Flower
-    isDrawn: 0
-    isSolid: 1
-    isTransparent: 1
-    meshData: {fileID: 0}
-    icon: {fileID: 5837620518785745679, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-    isActive: 0
-    studs: {fileID: 0}
-    voxelBoundObject: {fileID: 37570108828818984, guid: 349121dd2cf6def48acebf10f0f0170f, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
+  blockTypes: []
   voxelPrefabs:
   - {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}
   - {fileID: 8436909742428498496, guid: dbb5fd4476c044b419ca217aa0edfe12, type: 3}
@@ -1174,50 +688,6 @@ MonoBehaviour:
   - {fileID: 8684780012657908826, guid: 8d0153cbbcbaabe4e9630a7817a20832, type: 3}
   - {fileID: 37570108828818984, guid: 349121dd2cf6def48acebf10f0f0170f, type: 3}
   chunkLoadSound: {fileID: 2841459445815596871}
-  playerCount: 0
-  firstChunkLoaded: 0
-  baseObPieces: []
-  worldData:
-    planetNumber: 3
-    seed: 0
-    sizeInChunks: 0
-    survivalMode: 0
-    distToStar: 0
-    system: 0
-    galaxy: 0
-    blockIDsubsurface: 0
-    blockIDcore: 0
-    blockIDBiome00: 0
-    blockIDBiome01: 0
-    blockIDBiome02: 0
-    blockIDBiome03: 0
-    blockIDBiome04: 0
-    blockIDBiome05: 0
-    blockIDBiome06: 0
-    blockIDBiome07: 0
-    blockIDBiome08: 0
-    blockIDBiome09: 0
-    blockIDBiome10: 0
-    blockIDBiome11: 0
-    hasAtmosphere: 0
-    isAlive: 1
-    biomes: 
-    blockIDTreeLeavesWinter: 0
-    blockIDTreeLeavesSpring: 0
-    blockIDTreeLeavesSummer: 0
-    blockIDTreeLeavesFall1: 0
-    blockIDTreeLeavesFall2: 0
-    blockIDTreeTrunk: 0
-    blockIDCacti: 0
-    blockIDMushroomLargeCap: 0
-    blockIDMushroomLargeStem: 0
-    blockIDMonolith: 0
-    blockIDEvergreenLeaves: 0
-    blockIDEvergreenTrunk: 0
-    blockIDHoneyComb: 0
-    blockIDHugeTreeLeaves: 0
-    blockIDHugeTreeTrunk: 0
-    blockIDColumn: 0
 --- !u!1 &2841459445815596870
 GameObject:
   m_ObjectHideFlags: 0
@@ -1360,7 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGlobal: 1
+  m_IsGlobal: 1
   priority: 2
   blendDistance: 0
   weight: 1

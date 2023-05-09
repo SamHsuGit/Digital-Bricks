@@ -543,6 +543,8 @@ MonoBehaviour:
   charObIdle: {fileID: 0}
   charObRun: {fileID: 0}
   world: {fileID: 0}
+  worldPPFXSetValues: {fileID: 0}
+  globalVolumeProfile: {fileID: 11400000, guid: 01bd5b6628cbad742a508470fdc93c2c, type: 2}
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -636,11 +638,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8eec174fdbab234c947e7a2280a2e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseWalkSpeed: 5
-  baseSprintSpeed: 9
-  baseJumpForce: 15
+  baseWalkSpeed: 1
+  baseSprintSpeed: 2
+  baseJumpForce: 10
   isMoving: 0
   isGrounded: 0
+  maxJumps: 0
   currentJumps: 0
   world: {fileID: 0}
   controller: {fileID: 3963772888375218276}
