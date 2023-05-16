@@ -544,7 +544,6 @@ MonoBehaviour:
   charObRun: {fileID: 0}
   world: {fileID: 0}
   worldPPFXSetValues: {fileID: 0}
-  globalVolumeProfile: {fileID: 11400000, guid: 01bd5b6628cbad742a508470fdc93c2c, type: 2}
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0
