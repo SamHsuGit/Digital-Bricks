@@ -133,7 +133,7 @@ public class World : MonoBehaviour
     // hard coded values
     private const bool multithreading = true;
     private const float seaLevelThreshold = 0.34f;
-    private const float isAirThreshold = 0.8f;
+    private const float isAirThreshold = 0.7f; //0.8f;
     private const int minWorldSize = 5;
     //private const int LOD0threshold = 1;
 

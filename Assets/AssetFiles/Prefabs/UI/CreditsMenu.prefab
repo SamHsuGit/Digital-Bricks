@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 6976479444726254941}
   - component: {fileID: 6976479444726254940}
   m_Layer: 5
-  m_Name: Names
+  m_Name: Names Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,23 +142,30 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Procedural Generation
+  m_text: 'Digital Bricks
+
+    A GAME BY SAM HSU
+
+
+    Procedural Generation Tutorial
+    by
 
     B3agz
 
 
-    Modelling
+    LDraw Models by
 
     The LDraw.org Community
 
 
     LDraw
-    Model Importer
+    Model Importer by
 
     Grygory Dyadichenko
 
 
-    Multiplayer Networking
+    Multiplayer Networking Framework
+    by
 
     vis2k'
   m_isRightToLeft: 0
@@ -169,8 +176,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190260
-  m_fontColor: {r: 0.7058824, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -442,7 +449,7 @@ GameObject:
   - component: {fileID: 6976479445994056059}
   - component: {fileID: 6976479445994056058}
   m_Layer: 5
-  m_Name: Contributors
+  m_Name: Credits Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -496,7 +503,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Contributors
+  m_text: Credits
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -640,8 +647,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190260
-  m_fontColor: {r: 0.7058824, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

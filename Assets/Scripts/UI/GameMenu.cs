@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using Mirror;
+using TMPro;
 
 public class GameMenu : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class GameMenu : MonoBehaviour
     public GameObject playerHUD;
     public GameObject optionsMenu;
     public GameObject debugText;
+    public TextMeshProUGUI PlanetSeedWorldCoordText;
     public AudioSource buttonSound;
     public GameObject controlsText;
 
@@ -110,6 +112,7 @@ public class GameMenu : MonoBehaviour
         playerHUDCanvasGroup.interactable = false;
         optionsMenuCanvasGroup.alpha = 1;
         optionsMenuCanvasGroup.interactable = true;
+        PlanetSeedWorldCoordText.text = "Planet Seed = " + SettingsStatic.LoadedSettings.planetSeed + ", World Coord = " + SettingsStatic.LoadedSettings.worldCoord;
     }
 
     public void ReturnToGame()
