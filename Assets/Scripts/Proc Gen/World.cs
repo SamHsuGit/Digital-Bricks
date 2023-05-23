@@ -133,7 +133,7 @@ public class World : MonoBehaviour
     // hard coded values
     private const bool multithreading = true;
     private const float seaLevelThreshold = 0.34f;
-    private const float isAirThreshold = 0.7f; //0.8f;
+    private const float isAirThreshold = 0.6f; //0.8f;
     private const int minWorldSize = 5;
     //private const int LOD0threshold = 1;
 
@@ -838,7 +838,15 @@ public class World : MonoBehaviour
 
     public byte GetVoxel(Vector3Int globalPos)
     {
+        //// For performance testing
         //return 0;
+
+        //// For 3D Noise Testing
+        //isAir = GetIsAir(globalPos);
+        //if (isAir)
+        //    return 0;
+        //else
+        //    return 2;
 
         // The main algorithm used in the procedural world generation
         // used to determine voxelID at each position in a chunk if not previously calculated.
@@ -1060,7 +1068,7 @@ public class World : MonoBehaviour
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f);
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f);
 
-        weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.08f); // used to determine if landscape should be filled with large 3D holes.
+        weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.08f); // used to determine if terrainGen should use 3D noise or not to generate wierd landscapes with overhangs
 
         // use spline points to determine terrainHeight for each component
         float continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
@@ -1076,39 +1084,27 @@ public class World : MonoBehaviour
         //// Broken, eventually turn this into a single function for terrainHeight using 3D Perlin Noise and (3) other 2D Perlin Noise maps to determine height and squashing?
         //// based on https://youtu.be/CSa5O6knuwI
 
-        //GetTerrainHeight(new Vector2(globalPos.x, globalPos.z));
+        //// used if terrainHeightPercentChunk is not already calculated
+        //CalcTerrainHeight(new Vector2(globalPos.x, globalPos.z));
 
-        //// testing
-        //float terrainHeight = 0.5f; // WIP terrain height seems to update based changing this value
-        //float squashingFactor = 0.1f; // WIP squashing factor does not seem to flatten the terrain
+        // squashing factor is like slope of function
+        // terrain height offset is like y intercept
+        float x1 = 0;
+        float y1 = 1;
+        float m = -(1 - weirdness)*0.01f; // larger values of weirdness give less weird results so we take the inverse and scale to achieve wierdness close to values of -0.014f
+        float b = terrainHeightPercentChunk; // density function moves up/down based on terrainHeight
+        float x2 = globalPos.y;
+        float y2 = m * x2 + b;
+        float density;
 
-        //terrainHeight = terrainHeightPercentChunk;
-        //squashingFactor = weirdness * weirdnessFactor;
+        if (globalPos.y >= cloudHeight) // ensures air at top of level
+            density = 0;
+        else
+            density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y); // density is a linear function, high density at low elevation, low density at high elevation
+        return Noise.Get3DPerlin(globalPos, 0, 0.05f, density);
 
-        //float upperLimit = Mathf.Clamp(terrainHeight + squashingFactor, terrainHeight, 1);
-        //float lowerLimit = Mathf.Clamp(terrainHeight - squashingFactor, 0, terrainHeight);
-
-        //int terrainHeightVoxels = Mathf.FloorToInt(terrainHeight * cloudHeight);
-        //int upperLimitVoxels = Mathf.FloorToInt(upperLimit * cloudHeight);
-        //int lowerLimitVoxels = Mathf.FloorToInt(lowerLimit * cloudHeight);
-
-        //float density; // density varies from 1 at bottom of chunk to 0 at top of chunk
-        //if (globalPos.y >= cloudHeight) // density is always 0 above cloudHeight
-        //    density = 0;
-        //else if (globalPos.y > upperLimitVoxels && globalPos.y < cloudHeight) // density is always 0 above upper limit
-        //    density = 0;
-        //else if (globalPos.y > terrainHeightVoxels && globalPos.y <= upperLimitVoxels) // density decreases above ground
-        //    density = GetValueBetweenPoints(new Vector2(terrainHeight, 0.5f), new Vector2(cloudHeight, 0), globalPos.y);
-        //else if (globalPos.y == terrainHeightVoxels) // terrainHeight acts as mid point where density is constant
-        //    density = 0.5f;
-        //else if (globalPos.y >= lowerLimitVoxels && globalPos.y < terrainHeightVoxels) // density increases below ground
-        //    density = GetValueBetweenPoints(new Vector2(0, 1), new Vector2(terrainHeight, 0.5f), globalPos.y);
-        //else
-        //    density = 1; // density is always 1 below lower limit
-
-        //float density = GetValueBetweenPoints(new Vector2(0, 1), new Vector2(cloudHeight, 0), globalPos.y);
-        float density = terrainHeightPercentChunk;
-        return Noise.Get3DPerlin(globalPos, 0, 0.1f, density); // scale sets size of perlin noise, high density = higher perlin noise threshold to return true (isAir)
+        //float density = terrainHeightPercentChunk;
+        //return Noise.Get3DPerlin(globalPos, 0, 0.1f, density); // scale sets size of perlin noise, high density = higher perlin noise threshold to return true (isAir)
     }
 
     public float GetValueBetweenPoints(Vector2 first, Vector2 last, float x)

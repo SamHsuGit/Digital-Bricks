@@ -45,7 +45,7 @@ public class SetupMenu : MonoBehaviour
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
         worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
-        if (SettingsStatic.LoadedSettings.worldCoord == 0)
+        if (Directory.GetDirectories(Settings.AppSaveDataPath + "/saves/").Length == 0) // if no save files, create random world coord for world generation seed
             RandomizeWorldCoord();
         loadingSlider.gameObject.SetActive(false);
     }
