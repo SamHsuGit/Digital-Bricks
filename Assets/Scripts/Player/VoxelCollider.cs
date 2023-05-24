@@ -116,7 +116,7 @@ public class VoxelCollider : MonoBehaviour
 
         isGrounded = CheckGrounded(velocityPlayer.y);
 
-        // voxel based collision detection (no chunk meshes due to performance cost of generating chunk meshes)
+        // voxel based collision detection (no chunk meshes due to performance cost of updating chunk meshes)
         if (!SettingsStatic.LoadedSettings.creativeMode)
         {
             if ((velocityPlayer.z > 0 && front) || (velocityPlayer.z < 0 && back))
@@ -196,10 +196,12 @@ public class VoxelCollider : MonoBehaviour
         //    return false; // allow player to move below bottom of world chunks
 
         if (
-            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) || // left bottom center
-            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) || // right bottom center
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 - colliderOffset)) || // center bottom back
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 + colliderOffset)) // center bottom front
+            //World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelBelow, center.z)) || // left bottom center
+            //World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelBelow, center.z)) || // right bottom center
+            //World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 - colliderOffset)) || // center bottom back
+            //World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 + colliderOffset)) // center bottom front
+
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z)) // directly below player
            )
         {
             //Debug.Log("landed on: " + center.x + ", " + (center.y - yOffset + downSpeed) + ", " + (center.z + width / 2 - colliderOffset));
@@ -221,10 +223,12 @@ public class VoxelCollider : MonoBehaviour
             return upSpeed; // allow player to move above top of world chunks
 
         if (
-            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelAbove, center.z)) || // left top center
-            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelAbove, center.z)) || // right top center
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z - length / 2 - colliderOffset)) || // center top back
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z + length / 2 + colliderOffset)) // center top front
+            //World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 + colliderOffset, distToVoxelAbove, center.z)) || // left top center
+            //World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 - colliderOffset, distToVoxelAbove, center.z)) || // right top center
+            //World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z - length / 2 - colliderOffset)) || // center top back
+            //World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z + length / 2 + colliderOffset)) // center top front
+
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelAbove, center.z)) // directly above player
            )
         {
             return 0;
