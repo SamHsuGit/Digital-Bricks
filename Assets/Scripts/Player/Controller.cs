@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Animations;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using System.Threading;
 
 public class Controller : NetworkBehaviour
 {
@@ -527,6 +528,7 @@ public class Controller : NetworkBehaviour
                         positionCursorBlocks();
 
                         lookAtConstraint.constraintActive = false;
+
                         MovePlayer(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
                         break;
                     }

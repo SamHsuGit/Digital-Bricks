@@ -22,7 +22,6 @@ public class Chunk
     public Vector3 position;
 
     private bool _isInLoadDist;
-    private bool _isInDrawDist = false;
     private bool _isInStructDrawDist;
     private bool _isInObDrawDist;
     private bool _isActive;
@@ -139,20 +138,11 @@ public class Chunk
         normals.Clear();
     }
 
-    public bool isActive
+    public bool isActive // used for object pooling to unload inactive chunks from memory to save RAM usage
     {
-        get
-        {
-            if (_isActive)
-                return true;
-            else
-                return false;
-        }
+        get { return _isActive; }
         set
         {
-            meshRenderer.enabled = value;
-            if(chunkObject.GetComponent<MeshCollider>() != null)
-                chunkObject.GetComponent<MeshCollider>().enabled = value;
             _isActive = value;
             if (chunkObject != null)
                 chunkObject.SetActive(value);
@@ -163,18 +153,6 @@ public class Chunk
     {
         get { return _isInLoadDist; }
         set { _isInLoadDist = value; }
-    }
-
-    public bool isDrawn // used for object pooling? Need to unload inactive chunks from memory to save RAM usage?
-    {
-        get { return _isInDrawDist; }
-        set
-        {
-            _isInDrawDist = value;
-            if (chunkObject != null)
-                //chunkObject.GetComponent<MeshRenderer>().enabled = value;
-                chunkObject.SetActive(value);
-        }
     }
 
     public bool isInStructDrawDist

@@ -36,7 +36,6 @@ public class World : MonoBehaviour
 
     [HideInInspector] public float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
     [HideInInspector] public float percolation = 0; // defines surfaceOb size, eventually derive from weirdness?
-    //[HideInInspector] public float placementVBO = 0; // defines placement of Voxel Bound Objects (i.e. studs, grass, flowers), eventually derive from weirdness?
 
     [HideInInspector] public int surfaceObType = 0; // based on percolation and fertility
 
@@ -87,7 +86,7 @@ public class World : MonoBehaviour
     private bool applyingModifications;
     private int loadDistance;
     private bool undrawVBO = false;
-    private bool undrawVoxels = false;
+    private bool undrawVoxels = true;
     private bool useBiomes;
     private bool drawClouds;
     private bool drawLodes;
@@ -106,12 +105,6 @@ public class World : MonoBehaviour
     private List<ChunkCoord> playerChunkCoordsCopy = new List<ChunkCoord>();
     private List<ChunkCoord> playerLastChunkCoords = new List<ChunkCoord>();
     private List<ChunkCoord> playerLastChunkCoordsCopy = new List<ChunkCoord>();
-
-    // Define a dictionary to cache the chunk coordinates for each player
-    private Dictionary<Player, ChunkCoord> playerChunkCoordCache = new Dictionary<Player, ChunkCoord>();
-
-    // Define a dictionary to cache the list of chunks in view distance for each player
-    private Dictionary<Player, List<Chunk>> playerChunksInViewDistanceCache = new Dictionary<Player, List<Chunk>>();
 
     private Dictionary<Player, GameObject> playerGameObjects = new Dictionary<Player, GameObject>();
     private List<Player> playersCopy = new List<Player>();
@@ -134,7 +127,6 @@ public class World : MonoBehaviour
     private const bool multithreading = true;
     private const float seaLevelThreshold = 0.34f;
     private const float isAirThreshold = 0.6f; //0.8f;
-    private const int minWorldSize = 5;
     //private const int LOD0threshold = 1;
 
     private static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
@@ -178,8 +170,6 @@ public class World : MonoBehaviour
             SettingsStatic.LoadedSettings.viewDistance = 1;
 
         VBORenderDistanceInChunks = 1; // keep studs render distance lower than viewDistance to avoid errors.
-        //Debug.Log("viewDist = " + SettingsStatic.LoadedSettings.viewDistance);
-        //Debug.Log("stud render dist = " + studRenderDistanceInChunks);
 
         // If the instance value is not null and not *this*, we've somehow ended up with more than one World component.
         // Since another one has already been assigned, delete this one.
@@ -288,7 +278,6 @@ public class World : MonoBehaviour
         worldLoadStopWatch.Stop();
         TimeSpan ts = worldLoadStopWatch.Elapsed;
         worldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-        //StartCoroutine(Tick()); // caused exception when trying to access activeChunks while it was being modified so commented out
     }
 
     public int GetGalaxy(int planetNumber)
@@ -328,8 +317,6 @@ public class World : MonoBehaviour
         worldData.distToStar = GetDistToStar(planetNumber);
         worldData.galaxy = GetGalaxy(planetNumber);
         int distToStar = worldData.distToStar;
-        //Debug.Log("Seed:" + GetSeedFromSpaceCoords(worldData.galaxy, worldData.system, worldData.distToStar));
-        //Debug.Log("Universe Coords (galaxy, system, planet)" + worldData.galaxy + "-" + worldData.system + "-" + distToStar);
 
         if (planetNumber <= numberOfHardcodedPlanets) // 8 planets + 9 solid colored planets
         {
@@ -451,7 +438,7 @@ public class World : MonoBehaviour
         if (worldSizeInChunks < 100)
             loadDistance = SettingsStatic.LoadedSettings.viewDistance;
         else
-            loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); //Mathf.CeilToInt(SettingsStatic.LoadedSettings.drawDistance * 1.99f); // cannot be larger than firstLoadDist (optimum value is 4, any larger yields > 30 sec exist world load time)
+            loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); // optimal loadDistance provides enough world to hide edges with low load time (7 sec)
 
         for (int x = (worldSizeInChunks / 2) - loadDistance; x < (worldSizeInChunks / 2) + loadDistance; x++)
         {
@@ -468,19 +455,16 @@ public class World : MonoBehaviour
         {
             player = new Player(playerGameObject, "WorldPlayer"); // world player is needed to generate the world before the player is added
             players.Add(player);
-            //Debug.Log("Added WorldPlayer");
         }
         else if (Settings.Platform != 2)
         {
             player = playerGameObject.GetComponent<Controller>().player;
             players.Add(player);
-            //Debug.Log("Added Player");
         }
         else
         {
             player = new Player(playerGameObject, "VR Player");
             players.Add(player);
-            //Debug.Log("Added VR Player");
         }
 
         playerGameObjects.Add(player, player.playerGameObject);
@@ -506,17 +490,14 @@ public class World : MonoBehaviour
         if (playerCount < 1 && playerGameObject.transform.position == defaultSpawnPosition) // for world player
             firstLoadDrawDistance = loadDistance; // SettingsStatic.LoadedSettings.drawDistance; // first load distance is just large enough to render world for world player
         else
-            firstLoadDrawDistance = loadDistance; // max value is 3 to ensure older PCs can still handle the CPU Load
+            firstLoadDrawDistance = loadDistance; // max value is 3 to ensure older PCs can still perform this
 
         if (firstLoadDrawDistance < loadDistance) // checks to ensure that firstLoadDrawDistance is at least as large as loadDistance
             firstLoadDrawDistance = loadDistance;
 
-        //if(playerGameObject != worldPlayer) // doesn't make a difference in load times
         FirstCheckViewDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
 
         playerCount++;
-        //Debug.Log("Player Joined");
-        //Debug.Log("playerCount = " + playerCount);
 
         SetUndrawVoxels();
     }
@@ -531,31 +512,10 @@ public class World : MonoBehaviour
         undrawVBO = undrawVoxels; // set same as undrawVoxels
     }
 
-    //IEnumerator Tick()
-    //{
-    //    while (ticksEnabled)
-    //    {
-    //        foreach(ChunkCoord c in activeChunks) // throws exception: "Collection was modified; enumeration operation may not execute."
-    //        {
-    //            chunks[c.x, c.z].TickUpdate();
-    //        }
-
-    //        yield return new WaitForSeconds(VoxelData.tickLength);
-    //    }
-    //}
-
     private void Update()
     {
-        
         if (!worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
-
-        // if set to not undraw voxels, do not undraw chunks (DISABLED, was causing chunks to 'randomly' be turned off)
-        //if(!undrawVoxels)
-        //{
-        //    previousChunksToDrawList = new List<ChunkCoord>(chunkCoordsToDrawList);
-        //    chunkCoordsToDrawList.Clear();
-        //}
 
         if(drawVBO)
             activeChunksVBOListCopy = new List<ChunkCoord>(activeChunksVBOList);
@@ -570,25 +530,19 @@ public class World : MonoBehaviour
         for (int i = 0; i < playersCopy.Count; i++) // for all players (need to include worldplayer here since we do not know if the world player was added first or not, later check if worldplayer)
         {
             // if the player disconnected, remove their gameobject from the dictionary and go to the next dictionary value
-            if (playersCopy[i] == null)//|| playerChunkCoords.Count > 1 && player.Key == worldPlayer)
+            if (playersCopy[i] == null)
             {
                 playersCopy.RemoveAt(i);
                 playerChunkCoordsCopy.RemoveAt(i);
                 playerLastChunkCoordsCopy.RemoveAt(i);
-                //Debug.Log("Player Quit");
                 continue;
             }
 
-            //Debug.Log("player " + i + " = " + playersCopy[i].name);
-            //Debug.Log(playersCopy.Count);
-            //Debug.Log(playerChunkCoordsCopy.Count);
             // if the player is not the worldPlayer (checks for null players if the client disconnects before host). Also ensures that the chunk coords and players have same number of indices
             if (playersCopy[i].playerGameObject != worldPlayer && playersCopy[i].playerGameObject != null && playersCopy.Count == playerChunkCoordsCopy.Count)
             {
                 playerChunkCoordsCopy[i] = GetChunkCoordFromVector3(playerGameObjects[playersCopy[i]].transform.position); // get the current chunkCoords for given player camera
 
-                //Debug.Log("playerChunkCoordsCopy = " + playerChunkCoordsCopy[playerCount - 1].x + ", " + playerChunkCoordsCopy[playerCount - 1].z);
-                //Debug.Log("playerLastChunkCoordsCopy = " + playerLastChunkCoordsCopy[playerCount - 1].x + " , " + playerLastChunkCoordsCopy[playerCount - 1].z);
                 // Only update the chunks if the player has moved from the chunk they were previously on.
                 if (!playerChunkCoordsCopy[i].Equals(playerLastChunkCoordsCopy[i]))
                 {
@@ -644,14 +598,6 @@ public class World : MonoBehaviour
 
         if (drawVBO && undrawVBO)
         {
-            // create a new copy of master list
-            // clear master list
-            // for each player
-            // clear player list
-            // create player list of chunks to draw objects
-            // Add all player list values into master list (avoid duplicates)
-            // create objects in master list
-            // destroy objects in copy of master list
             foreach (ChunkCoord c in activeChunksVBOListCopy)
             {
                 RemoveVBOFromChunk(c); // remove voxel bound objects in previousChunksToDrawVBOList
@@ -710,7 +656,6 @@ public class World : MonoBehaviour
     void CheckViewDistance(ChunkCoord playerChunkCoord, int player)
     {
         playerLastChunkCoords[player] = playerChunkCoord;
-        //playerLastChunkCoordsDict[player] = playerChunkCoord;
 
         // if toggled, undraw chunks to save memory
         if (undrawVoxels)
@@ -733,17 +678,8 @@ public class World : MonoBehaviour
                     if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
                         chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position - CREATING NEW CHUNKS TAKES UP 90% OF CPU TIME WHEN PROFILING WHEN RUNNING THE POPULATE > GET VOXEL FUNCTION (Profiling get voxel runs out of memory)
 
-                    chunks[x, z].isDrawn = true;
-
                     chunks[x, z].isActive = true;
                     activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
-                    // WIP Doesn't work
-                    //if(chunksToUpdate.Contains(chunks[x, z]))
-                    //{
-                    //    chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = false; // mark as outside LOD0
-                    //    if (x > playerChunkCoord.x - LOD0threshold && x < playerChunkCoord.x + LOD0threshold && z > playerChunkCoord.z - LOD0threshold && z < playerChunkCoord.z + LOD0threshold)
-                    //        chunksToUpdate[chunksToUpdate.IndexOf(chunks[x, z])].isInStructDrawDist = true; // mark as inside LOD0
-                    //}
                 }
                 
                 // if this chunk coord is in the previous list, remove it so it doesn't get undrawn
@@ -757,7 +693,7 @@ public class World : MonoBehaviour
 
         // Any chunks left in the previousActiveChunks list are no longer in the player's view distance, so loop through and disable them (i.e. mark to un-draw them).
         foreach (ChunkCoord c in previouslyActiveChunks)
-            chunks[c.x, c.z].isDrawn = false; // marks chunks to be un-drawn
+            chunks[c.x, c.z].isActive = false; // marks chunks to be un-drawn
 
         // for all loaded chunks in the world (regardless of previouslyActiveChunks list)
         foreach (Chunk c in chunks)
@@ -766,18 +702,9 @@ public class World : MonoBehaviour
             {
                 // if the current active chunk is within the undraw distance
                 if (c.coord.x < playerChunkCoord.x + undrawDistance && c.coord.x > playerChunkCoord.x - undrawDistance && c.coord.z < playerChunkCoord.z + undrawDistance && c.coord.z > playerChunkCoord.z - undrawDistance)
-                {
-                    //// remove from previously active chunks
-                    //for (int i = 0; i < previouslyActiveChunks.Count; i++)
-                    //    if (previouslyActiveChunks[i].Equals(c.coord))
-                    //        previouslyActiveChunks.RemoveAt(i);
-
-                    chunks[c.coord.x, c.coord.z].isDrawn = true;
-                }
+                    chunks[c.coord.x, c.coord.z].isActive = true;
                 else
-                {
-                    chunks[c.coord.x, c.coord.z].isDrawn = false;
-                }
+                    chunks[c.coord.x, c.coord.z].isActive = false;
             }
         }
     }

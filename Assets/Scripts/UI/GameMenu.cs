@@ -165,9 +165,9 @@ public class GameMenu : MonoBehaviour
         }
     }
 
-    public void SaveAndQuit()
+    public void Quit()
     {
-        Save();
+        //Save();
 
         // if splitscreen play and more than one player and the first player is not this player, destroy the gameObject
         if (!Settings.OnlinePlay && World.Instance.playerCount > 2 && World.Instance.players[1].playerGameObject != player.gameObject)
