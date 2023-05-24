@@ -20,6 +20,9 @@ public class VoxelCollider : MonoBehaviour
 
     public bool isPlayer = false;
     public bool isCamera = false;
+    public int voxelID = 0;
+
+    public GameObject[] voxelBits;
 
     CapsuleCollider cc;
     private float gravity = -9.8f * 3; // multiply to account for scaled geometry
@@ -59,7 +62,26 @@ public class VoxelCollider : MonoBehaviour
             stepHeight = 1;
             colliderOffset = 1;
         }
+        //else if (voxelID != 0)
+        //{
+        //    height = 1;
+        //    halfColliderHeight = height / 2;
+        //    colliderOffset = 0;
+        //}
     }
+
+    //private void FixedUpdate()
+    //{
+    //    if (voxelID == 0)
+    //        return;
+
+    //    if (front || back || left || right || CheckDownSpeed(1) == 0 || CheckUpSpeed(1) == 0)
+    //    {
+    //        Debug.Log("Collision Detected");
+    //        //GameObject ob = Instantiate(voxelBits[voxelID], transform.position, Quaternion.identity);
+    //        //Destroy(this);
+    //    }
+    //}
 
     public Vector3 CalculateVelocity(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
     {

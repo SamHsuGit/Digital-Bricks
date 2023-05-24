@@ -13,9 +13,6 @@ public class Controller : NetworkBehaviour
 
     public Player player;
 
-    [Header("GameObject Arrays")]
-    public GameObject[] voxels;
-
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;

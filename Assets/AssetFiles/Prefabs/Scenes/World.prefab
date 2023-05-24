@@ -51,8 +51,7 @@ MonoBehaviour:
   worldData:
     planetSeed: 3
     worldCoord: 1
-    worldSizeInChunks: 0
-    survivalMode: 0
+    creativeMode: 0
     distToStar: 0
     system: 0
     galaxy: 0
@@ -89,7 +88,6 @@ MonoBehaviour:
     blockIDHugeTreeLeaves: 0
     blockIDHugeTreeTrunk: 0
     blockIDColumn: 0
-  season: 0
   planetNumber: 0
   seed: 0
   worldSizeInChunks: 0
@@ -103,7 +101,6 @@ MonoBehaviour:
   isAir: 0
   fertility: 0
   percolation: 0
-  placementVBO: 0
   surfaceObType: 0
   worldLoaded: 0
   preWorldLoadTime: 
