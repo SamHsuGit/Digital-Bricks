@@ -644,7 +644,7 @@ public class Controller : NetworkBehaviour
             brickPickUp.Play();
 
             // while holding shoot, spawn an object with current partname parented to cursor with light blue material
-            string color = "43";
+            string color = "43"; // spawns objects with trans light blue for temp color
             string x = "0.000000";
             string y = "0.000000";
             string z = "0.000000";
