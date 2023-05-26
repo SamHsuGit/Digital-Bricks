@@ -33,36 +33,37 @@ public class Gun : NetworkBehaviour
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
     }
 
-    private void FixedUpdate()
-    {
-        if(Settings.OnlinePlay && !isLocalPlayer) return;
+    // Disabled since we are using the shoot button to place bricks
+    //private void FixedUpdate()
+    //{
+    //    if (Settings.OnlinePlay && !isLocalPlayer) return;
 
-        target = null; // reset target
-        target = FindTarget(); // get target gameObject
+    //    target = null; // reset target
+    //    target = FindTarget(); // get target gameObject
 
-        switch (controller.camMode)
-        {
-            case 1:
-                sphereCastStart = fpsCam.transform.position;
-                break;
-            case 2:
-                sphereCastStart = controller.playerCamera.transform.parent.transform.position;
-                break;
-            case 3:
-                sphereCastStart = controller.playerCamera.transform.parent.transform.position;
-                break;
-        }
+    //    switch (controller.camMode)
+    //    {
+    //        case 1:
+    //            sphereCastStart = fpsCam.transform.position;
+    //            break;
+    //        case 2:
+    //            sphereCastStart = controller.playerCamera.transform.parent.transform.position;
+    //            break;
+    //        case 3:
+    //            sphereCastStart = controller.playerCamera.transform.parent.transform.position;
+    //            break;
+    //    }
 
-        if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
-        {
-            if (inputHandler.shoot)
-            {
-                nextTimeToFire = Time.time + 1f / fireRate;
-                pewpew.Play();
-                Shoot();
-            }
-        }
-    }
+    //    if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
+    //    {
+    //        if (inputHandler.shoot)
+    //        {
+    //            nextTimeToFire = Time.time + 1f / fireRate;
+    //            pewpew.Play();
+    //            Shoot();
+    //        }
+    //    }
+    //}
 
     // if raycast hits a destructible object (with health but not this player), turn outer reticle red
     public Health FindTarget()

@@ -1,15 +1,11 @@
-0 Electric Power Functions IR Receiver with "V2" Pattern
-0 Name: 58123p01.dat
-0 Author: Philippe Hurbain [Philo]
-0 !LDRAW_ORG Shortcut UPDATE 2012-03
-0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
-
-0 BFC CERTIFY CW
-
-0 !HISTORY 2012-12-28 [PTadmin] Official Update 2012-03
-
-1 0 0 10 40 0 0 -1 1 0 0 0 -4 0 s\58124s03.dat
-1 16 0 0 0 0 0 -1 0 1 0 1 0 0 58147.dat
-1 72 0 0 0 0 0 -1 0 1 0 1 0 0 58148p01.dat
-1 32 0 0 0 0 0 -1 0 1 0 1 0 0 58149.dat
-1 25 0 0 0 0 0 -1 0 1 0 1 0 0 58150.dat
+0 FILE 58123p01.dat
+0 Electric Power Functions Receiver Unit with Dark Bluish Gray Bottom and Black V2 Print (Version 2)
+0 Name:  58123p01.dat
+0 Author:  
+0 BL_Item_No 58123bc01
+0 BFC CERTIFY CCW
+1 0 0.0000 10.0000 40.0000 0.0000 0.0000 -1.0000 1.0000 0.0000 0.0000 0.0000 -4.0000 0.0000 s/58124s03.dat
+1 16 0.0000 0.0000 0.0000 0.0000 0.0000 -1.0000 0.0000 1.0000 0.0000 1.0000 0.0000 0.0000 58147.dat
+1 72 0.0000 0.0000 0.0000 0.0000 0.0000 -1.0000 0.0000 1.0000 0.0000 1.0000 0.0000 0.0000 58148p01.dat
+1 32 0.0000 0.0000 0.0000 0.0000 0.0000 -1.0000 0.0000 1.0000 0.0000 1.0000 0.0000 0.0000 58149.dat
+1 25 0.0000 0.0000 0.0000 0.0000 0.0000 -1.0000 0.0000 1.0000 0.0000 1.0000 0.0000 0.0000 58150.dat

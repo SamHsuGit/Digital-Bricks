@@ -1,15 +1,11 @@
-0 Tile  6 x  8 with Rounded Corners and Groove
-0 Name: 65474.dat
-0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Part UPDATE 2020-02
-0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
-
+0 FILE 65474.dat
+0 Tile, Round 6 x 8 Oval
+0 Name:  65474.dat
+0 Author:  
+0 BL_Item_No 65474
 0 BFC CERTIFY CCW
-
-0 !HISTORY 2020-09-05 [PTadmin] Official Update 2020-02
-
-1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\65474s01.dat
-
-1 16 -20 0 0 0 0 -60 0 1 0 60 0 0 48\2-4chrd.dat
-4 16 -20 0 60 -20 0 -60 20 0 -60 20 0 60
-1 16 20 0 0 0 0 60 0 1 0 60 0 0 48\2-4chrd.dat
+3 16 -20.000 0.000 -60.000 20.000 0.000 -60.000 20.000 0.000 60.000
+3 16 20.000 0.000 60.000 -20.000 0.000 60.000 -20.000 0.000 -60.000
+1 16 0.0000 0.0000 0.0000 1.0000 0.0000 0.0000 0.0000 1.0000 0.0000 0.0000 0.0000 1.0000 s/65474s01.dat
+1 16 -20.0000 0.0000 0.0000 0.0000 0.0000 -60.0000 0.0000 1.0000 0.0000 60.0000 0.0000 0.0000 2-4chrd.dat
+1 16 20.0000 0.0000 0.0000 0.0000 0.0000 60.0000 0.0000 1.0000 0.0000 60.0000 0.0000 0.0000 2-4chrd.dat

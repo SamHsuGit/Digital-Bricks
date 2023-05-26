@@ -5,13 +5,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.Animations;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using System.Threading;
+using LDraw;
 
 public class Controller : NetworkBehaviour
 {
     // NOTE: this class assumes world has already been activated
 
     public Player player;
+    public Material[] materials;
 
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
@@ -41,6 +42,8 @@ public class Controller : NetworkBehaviour
     public float maxFocusDistance = 2f;
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
+    public bool holdingBuild = false;
+    public bool movingSpawnedPiece = false;
     public byte blockID;
     public float baseAnimRate = 2; // health script overrides this
     public float animRate = 2; // health script overrides this
@@ -79,6 +82,8 @@ public class Controller : NetworkBehaviour
     public GameObject charObRun;
     public World world;
 
+    [HideInInspector] public GameObject spawnedPiece;
+
     private Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
     private Vector3 velocityPlayer;
@@ -90,6 +95,7 @@ public class Controller : NetworkBehaviour
 
     //Components
     private GameManagerScript gameManager;
+    private LDrawConfigRuntime _ldrawConfigRuntime;
     private GameObject playerCameraOrigin;
     private LookAtConstraint lookAtConstraint;
     private CapsuleCollider cc;
@@ -141,6 +147,7 @@ public class Controller : NetworkBehaviour
     void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
+        _ldrawConfigRuntime = gameManager.LDrawImporterRuntime.GetComponent<LDrawImportRuntime>().ldrawConfigRuntime;
         world = gameManager.worldOb.GetComponent<World>();
         lighting = gameManager.globalLighting.GetComponent<Lighting>();
         customNetworkManager = gameManager.PlayerManagerNetwork.GetComponent<CustomNetworkManager>();
@@ -514,13 +521,21 @@ public class Controller : NetworkBehaviour
                         if (holdingGrab && inputHandler.grab)
                             HoldingGrab();
 
-                        // IF PRESSED SHOOT
-                        if (inputHandler.shoot)
-                            pressedShoot();
-
                         // IF RELEASED GRAB
                         if (holdingGrab && !inputHandler.grab)
                             ReleasedGrab();
+
+                        // IF PRESSED BUILD
+                        if (!holdingBuild && inputHandler.shoot)
+                            PressedBuild();
+
+                        // IF HOLDING BUILD
+                        if (holdingBuild && inputHandler.shoot)
+                            HoldingBuild();
+
+                        // IF RELEASED BUILD
+                        if (holdingBuild && !inputHandler.shoot)
+                            ReleasedBuild();
 
                         positionCursorBlocks();
 
@@ -545,7 +560,7 @@ public class Controller : NetworkBehaviour
 
                         // IF PRESSED SHOOT
                         if (inputHandler.shoot)
-                            pressedShoot();
+                            PressedBuild();
 
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
@@ -607,93 +622,175 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    public void pressedShoot()
+    public void PressedBuild()
     {
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
             return;
 
-        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
+        if (toolbar.slots[toolbar.slotIndex].itemSlot.stack == null) // do not spawn object if no voxel in current inventory slot
             return;
 
-        // if has mushroom, and health is not max and the selected slot has a stack
-        if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDmushroom && health.hp < health.hpMax)
+        blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+
+        if (blockID < 2 || blockID > 10) // do not spawn object if voxelID is outside defined range
         {
-            // remove qty 1 from stack
-            health.RequestEditSelfHealth(1);
-            eat.Play();
-            TakeFromCurrentSlot(1);
+            blockID = 0;
+            return;
         }
-        else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
+        else // spawn object
         {
-            if(Settings.OnlinePlay)
-                CmdSpawnObject(2, 0, rayCastStart);
-            else
-                SpawnObject(2, 0, rayCastStart);
-            TakeFromCurrentSlot(1);
-        }
-        else if (holdingGrab) // IF HOLDING SOMETHING
-        {
-            holdingGrab = false;
-            reticle.SetActive(true);
+            reticle.SetActive(false);
+            holdingBuild = true;
+            brickPickUp.Play();
 
-            if (grabbedPrefab != null) // IF HOLDING VOXEL
-            {
-                Vector3 position = holdPos.position;
+            // while holding shoot, spawn an object with current partname parented to cursor with light blue material
+            string color = "43";
+            string x = "0.000000";
+            string y = "0.000000";
+            string z = "0.000000";
+            string partname = "3005.dat";
+            string cmdstring = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
 
-                shootBricks.Play();
-
-                SpawnVoxelRbFromWorld(position, blockID);
-
-                UpdateShowGrabObject(holdingGrab, blockID);
-            }
-            else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
-            {
-                heldObRb.velocity = playerCamera.transform.forward * 25; // give some velocity forwards
-            }
-
-            if (heldObRb != null)
-            {
-                heldObRb.useGravity = true;
-                heldObRb.detectCollisions = true;
-            }
-            heldObRb = null;
-        }
-        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
-        {
-            Vector3 position = shootPos.position;
-
-            if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
-                return;
-
-            blockID = World.Instance.GetVoxelState(position).id;
-
-            if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
-                return;
-
-            shootBricks.Play();
-
-            SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
-        }
-        else if (gun.hit.transform != null && gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
-        {
-            GameObject hitObject = gun.hit.transform.gameObject;
-            Destroy(gun.hit.transform.gameObject);
-            Vector3 pos = hitObject.transform.position;
             if (Settings.OnlinePlay)
-            {
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            }
+                CmdSpawnPiece(partname, cmdstring, 0); // spawn with transparent "temp" material
             else
-            {
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            }
+                SpawnPiece(partname, cmdstring, 0); // spawn with transparent "temp" material
         }
+
+        //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
+        //    return;
+
+        //if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
+        //    return;
+
+        //// if has mushroom, and health is not max and the selected slot has a stack
+        //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDmushroom && health.hp < health.hpMax)
+        //{
+        //    // remove qty 1 from stack
+        //    health.RequestEditSelfHealth(1);
+        //    eat.Play();
+        //    TakeFromCurrentSlot(1);
+        //}
+        //else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
+        //{
+        //    if (Settings.OnlinePlay)
+        //        CmdSpawnObject(2, 0, rayCastStart);
+        //    else
+        //        SpawnObject(2, 0, rayCastStart);
+        //    TakeFromCurrentSlot(1);
+        //}
+        //else if (holdingGrab) // IF HOLDING SOMETHING
+        //{
+        //    holdingGrab = false;
+        //    reticle.SetActive(true);
+
+        //    if (grabbedPrefab != null) // IF HOLDING VOXEL
+        //    {
+        //        Vector3 position = holdPos.position;
+
+        //        shootBricks.Play();
+
+        //        SpawnVoxelRbFromWorld(position, blockID);
+
+        //        UpdateShowGrabObject(holdingGrab, blockID);
+        //    }
+        //    else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
+        //    {
+        //        heldObRb.velocity = playerCamera.transform.forward * 25; // give some velocity forwards
+        //    }
+
+        //    if (heldObRb != null)
+        //    {
+        //        heldObRb.useGravity = true;
+        //        heldObRb.detectCollisions = true;
+        //    }
+        //    heldObRb = null;
+        //}
+        //else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
+        //{
+        //    Vector3 position = shootPos.position;
+
+        //    if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
+        //        return;
+
+        //    blockID = World.Instance.GetVoxelState(position).id;
+
+        //    if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
+        //        return;
+
+        //    shootBricks.Play();
+
+        //    SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+        //}
+        //else if (gun.hit.transform != null && gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
+        //{
+        //    GameObject hitObject = gun.hit.transform.gameObject;
+        //    Destroy(gun.hit.transform.gameObject);
+        //    Vector3 pos = hitObject.transform.position;
+        //    if (Settings.OnlinePlay)
+        //    {
+        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+        //    }
+        //    else
+        //    {
+        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+        //    }
+        //}
+    }
+
+    void HoldingBuild()
+    {
+        if (spawnedPiece != null) // IF PIECE IS SPAWNED
+        {
+            spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+            // add code to check if looking at connectivity, snap to connection point with correct rotation.
+        }
+    }
+
+    void ReleasedBuild()
+    {
+        holdingBuild = false;
+        reticle.SetActive(true);
+
+        if (!toolbar.slots[toolbar.slotIndex].itemSlot.HasItem) // cannot do this if no items in slot
+        {
+            // remove temp piece
+            if (!movingSpawnedPiece)
+                Destroy(spawnedPiece);
+            spawnedPiece = null;
+            return;
+        }
+        
+        blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+
+        if (blockID < 2 || blockID > 10) // cannot place bricks using voxels outside the defined color range
+        {
+            // remove temp piece
+            if (!movingSpawnedPiece)
+                Destroy(spawnedPiece);
+            spawnedPiece = null;
+            blockID = 0;
+            return;
+        }
+
+        // when release shoot, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
+        brickPlaceDown.Play();
+        spawnedPiece.transform.GetChild(0).GetComponent<MeshRenderer>().material = materials[blockID];
+
+        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+            TakeFromCurrentSlot(0);
+        else if (!movingSpawnedPiece)
+            TakeFromCurrentSlot(1);
+
+        // reset values
+        spawnedPiece = null;
+        blockID = 0;
     }
 
     void SpawnVoxelRbFromWorld(Vector3 position, byte blockID)
@@ -729,7 +826,23 @@ public class Controller : NetworkBehaviour
         if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
             return;
 
-        if(removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
+        // check if cursor aimed at previously spawned piece
+        RaycastHit hit;
+        if (Physics.SphereCast(playerCamera.transform.position, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist))
+        {
+            GameObject hitObject = hit.transform.gameObject;
+            if (hitObject != null && hitObject.tag == "spawnedPiece")
+            {
+                reticle.SetActive(false);
+                holdingGrab = true;
+                movingSpawnedPiece = true;
+                brickPickUp.Play();
+                spawnedPiece = hitObject;
+            }
+            return; // do not spawn object if hit previously existing object
+        }
+
+        if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
         {
             holdingGrab = true;
 
@@ -822,6 +935,12 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
+        if (spawnedPiece != null) // IF PIECE IS SPAWNED
+        {
+            spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+            // add code to check if looking at connectivity, snap to connection point with correct rotation.
+        }
+
         if (heldObRb != null) // IF NON-VOXEL RB
         {
             heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f);
@@ -859,6 +978,14 @@ public class Controller : NetworkBehaviour
         }
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
             PutAwayBrick(blockID);
+
+        if (movingSpawnedPiece)
+        {
+            brickPlaceDown.Play();
+            movingSpawnedPiece = false;
+            spawnedPiece = null;
+        }
+        movingSpawnedPiece = false;
     }
 
     void PutAwayBrick(byte blockID)
@@ -896,7 +1023,7 @@ public class Controller : NetworkBehaviour
             }
 
             // if made it here, toolbar has no empty slots to put voxels into so shoot held voxel off into space
-            pressedShoot();
+            PressedBuild();
         }
     }
 
@@ -920,11 +1047,48 @@ public class Controller : NetworkBehaviour
 
     public void TakeFromCurrentSlot(int amount)
     {
+        if (toolbar.slots[toolbar.slotIndex].itemSlot.stack.amount == 0) // do not remove if qty is already zero
+            return;
+
         toolbar.slots[toolbar.slotIndex].itemSlot.Take(amount);
 
         // if after removing qty 1 from stack, qty = 0, then remove the stack from the slot
         if (toolbar.slots[toolbar.slotIndex].itemSlot.stack.amount == 0)
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
+    }
+
+    
+
+    public void CmdSpawnPiece(string _partname, string cmdstr, int material)
+    {
+        SpawnPiece(_partname, cmdstr, material);
+    }
+
+    public void SpawnPiece(string _partname, string cmdstr, int material)
+    {
+        Vector3 spawnDir;
+        if (camMode == 1) // first person camera spawn object in direction camera
+            spawnDir = playerCamera.transform.forward;
+        else // all other camera modes, spawn object in direction of playerObject
+            spawnDir = transform.forward;
+        Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+        //Vector3 pos = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y, playerCamera.transform.position.z + cc.radius * 2);
+
+        //GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
+        var model = LDrawModelRuntime.Create(cmdstr, cmdstr, false);
+        spawnedPiece = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
+        spawnedPiece = LDrawImportRuntime.Instance.ConfigureModelOb(spawnedPiece, pos, false);
+
+        spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(180,0,0)); // set part orientation to zero
+        //ob.transform.rotation = Quaternion.LookRotation(spawnDir); // orient forwards in direction of camera
+        //SceneObject sceneObject = ob.AddComponent<SceneObject>();
+        //sceneObject.controller = this;
+        BoxCollider VoxelBc = spawnedPiece.AddComponent<BoxCollider>();
+        VoxelBc.material = physicMaterial;
+        spawnedPiece.SetActive(true);
+        spawnedPiece.name = _partname;
+        spawnedPiece.tag = "spawnedPiece";
+        spawnedPiece.GetComponentInChildren<MeshRenderer>().material = materials[material];
     }
 
     public void CmdSpawnObject(int type, int item, Vector3 pos)

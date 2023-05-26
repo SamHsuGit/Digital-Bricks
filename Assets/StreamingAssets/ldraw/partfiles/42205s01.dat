@@ -1,10 +1,11 @@
 0 ~Corner Stud for Window/Door, Hole for Bump
 0 Name: s\42205s01.dat
 0 Author: Gerald Lasser [GeraldLasser]
-0 !LDRAW_ORG Unofficial_Subpart
-0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 !LDRAW_ORG Unofficial_Subpart 
+0 !LICENSE Licensed under CC BY 4.0 : see CAreadme.txt
 
 0 BFC CERTIFY CCW
+
 
 0 // Area Around Stud
 3 16 10 0 10 4.5 0 5 4.5 0 2.5
