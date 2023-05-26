@@ -1,0 +1,85 @@
+//p1x
+3024.dat + 3024.dat = 3023.dat	//1x1p + 1x1p = 1x2p
+3023.dat + 3024.dat = 3623.dat	//1x2p + 1x1p = 1x3p
+3023.dat + 3023.dat = 3710.dat	//1x2p + 1x2p = 1x4p
+3623.dat + 3623.dat = 3666.dat	//1x3p + 1x3p = 1x6p
+3710.dat + 3710.dat = 3460.dat	//1x4p + 1x4p = 1x8p
+3666.dat + 3666.dat = 60479.dat	//1x6p + 1x6p = 1x12p
+
+//p2x
+3623.dat + 3623.dat = 3022.dat	//1x2p + 1x2p = 2x2p
+3022.dat + 3623.dat = 3021.dat	//2x2p + 1x2p = 2x3p
+3022.dat + 3022.dat = 3020.dat	//2x2p + 2x2p = 2x4p
+3022.dat + 3022.dat = 3795.dat	//2x3p + 2x3p = 2x6p
+3022.dat + 3022.dat = 3034.dat	//2x4p + 2x4p = 2x8p
+3795.dat + 3795.dat = 2445.dat	//2x6p + 2x6p = 2x12p
+
+//br1x
+3024.dat - r = 3062.dat	//1x1b - r = 1x1br
+
+//br2x
+3003.dat - r = 3941.dat	//2x2b - r = 2x2br
+
+//pr1x
+3024.dat - r = 4073.dat		//1x1p - r = 1x1pr
+
+//pr2x
+3022.dat - r = 4032.dat		//2x2p - r = 2x2pr
+
+//tr1x
+4073.dat - t = 98138.dat	//1x1pr - t = 1x1tr
+
+//tr2x
+4032.dat - t = 4150.dat		//2x2pr - t = 2x2tr
+
+//t1x
+3024.dat - t = 3070.dat		//1x1p - t = 1x1t
+3023.dat - t = 3069.dat		//1x2p - t = 1x2t
+3623.dat - t = 63864.dat	//1x3p - t = 1x3t
+3710.dat - t = 2431.dat		//1x4p - t = 1x4t
+3666.dat - t = 6636.dat		//1x6p - t = 1x6t
+3460.dat - t = 4162.dat		//1x6p - t = 1x6t
+
+//t2x
+3022.dat - t = 3068.dat		//2x2p - t = 2x2t
+3021.dat - t = 26603.dat	//2x3p - t = 2x3t
+3020.dat - t = 87079.dat	//1x4p - t = 1x4t
+3795.dat - t = 69729.dat	//1x6p - t = 1x6t
+
+//b1x
+3024.dat + 3024.dat + 3024.dat = 3005.dat	//1x1p + 1x1p + 1x1p = 1x1b
+3005.dat + 3005.dat = 3004.dat	//1x1b + 1x1b = 1x2b
+3004.dat + 3005.dat = 3622.dat	//1x2b + 1x1b = 1x3b
+3004.dat + 3004.dat = 3010.dat	//1x2b + 1x2b = 1x4b
+3622.dat + 3622.dat = 3009.dat	//1x3b + 1x3b = 1x6b
+3010.dat + 3010.dat = 3008.dat	//1x4b + 1x4b = 1x8b
+3009.dat + 3009.dat = 6112.dat	//1x6b + 1x6b = 1x12b
+
+//b2x
+3622.dat + 3622.dat = 3003.dat	//1x2b + 1x2b = 2x2b
+3003.dat + 3622.dat = 3002.dat	//2x2b + 1x2b = 2x3b
+3003.dat + 3003.dat = 3001.dat	//2x2b + 2x2b = 2x4b
+3002.dat + 3002.dat = 2456.dat 	//2x3b + 2x3b = 2x6b
+3001.dat + 3001.dat = 3007.dat	//2x4b + 2x4b = 2x8b
+
+//s1x
+3005.dat - s = 54200.dat	//1x1b - s = 1x1s
+3004.dat - s = 3040.dat		//1x2b - s = 1x2s
+3622.dat - s = 4286.dat		//1x3b - s = 1x3s
+3010.dat - s = 60477.dat	//1x4b - s = 1x4s
+
+//s2x
+3003.dat - s = 3039.dat		//2x2b - s = 2x2s
+3039.dat - s = 3045.dat		//2x2s - s = 2x2sdoubleconvex
+3045.dat - s = 3046.dat		//2x2sdoubleconvex - s = 2x2sdoubleconcave
+3002.dat - s = 3298.dat		//2x3b - s = 2x3s
+3001.dat - s = 30363.dat	//2x4b - s = 1x4s
+
+//si1x
+3004.dat - si = 3665.dat	//1x2b - si = 1x2si
+3622.dat - si = 4287.dat	//1x3b - si = 1x3si
+
+//si2x
+3003.dat - si = 3660.dat	//2x2b - si = 2x2si
+3660.dat - si = 3676.dat	//2x2s - si = 2x2sisdoubleconvex
+3002.dat - si = 3747.dat	//2x3b - si = 2x3si
