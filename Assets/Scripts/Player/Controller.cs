@@ -281,7 +281,7 @@ public class Controller : NetworkBehaviour
             if (cmdstrings[i].Length == 0)
                 return;
             string[] strs = cmdstrings[i].Split(",");
-            string materialName = strs[0];
+            int color = int.Parse(strs[0]);
             float posx = float.Parse(strs[1]);
             float posy = float.Parse(strs[2]);
             float posz = float.Parse(strs[3]);
@@ -293,19 +293,12 @@ public class Controller : NetworkBehaviour
             Vector3 pos = new Vector3(posx, posy, posz);
             Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
 
-            int colorIndex = 0;
-            for(int j = 0; j < materials.Length; i++)
-            {
-                if (materialName == materials[j].name)
-                    colorIndex = j;
-            }
-
-            string commandstring = "1 " + colorIndex + " 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
+            string commandstring = "1 " + color + " 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
 
             if (Settings.OnlinePlay)
-                CmdSpawnPiece(true, partname, commandstring, colorIndex, pos, rot);
+                CmdSpawnPiece(true, partname, commandstring, color, pos, rot);
             else
-                SpawnPiece(true, partname, commandstring, colorIndex, pos, rot);
+                SpawnPiece(true, partname, commandstring, color, pos, rot);
         }
     }
 
@@ -727,12 +720,13 @@ public class Controller : NetworkBehaviour
             string y = "0.000000";
             string z = "0.000000";
             string partname = "3005.dat";
+            Vector3 pos = new Vector3(0, 1, 0);
             string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
 
             if (Settings.OnlinePlay)
-                CmdSpawnPiece(false, partname, cmdstr, 0, Vector3.zero, Quaternion.identity); // spawn with transparent "temp" material
+                CmdSpawnPiece(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
             else
-                SpawnPiece(false, partname, cmdstr, 0, Vector3.zero, Quaternion.identity); // spawn with transparent "temp" material
+                SpawnPiece(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
         }
 
         //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
@@ -932,8 +926,7 @@ public class Controller : NetworkBehaviour
             }
             return; // do not spawn object if hit previously existing object
         }
-
-        if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
+        else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
         {
             holdingGrab = true;
 
@@ -1748,7 +1741,15 @@ public class Controller : NetworkBehaviour
                 Vector3 pos = ob.transform.position;
                 Quaternion rot = ob.transform.rotation;
                 string partname = ob.name;
-                string color = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material.name;
+                Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
+
+                string color = "0";
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    if (mat.name.Contains(materials[i].name))
+                        color = i.ToString();
+                }
+
                 cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + rot.x + "," + rot.y + "," + rot.z + "," + rot.w + "," + partname + "*\n";
             }
 
