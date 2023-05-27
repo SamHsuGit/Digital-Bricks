@@ -60,9 +60,9 @@ public class LDrawImportRuntime : MonoBehaviour
         charObIdle = ImportLDrawLocal("charIdle", importPosition, false); // char is not static (i.e. isStatic = false)
         charObRun = ImportLDrawLocal("charRun", importPosition, false); // char is not static (i.e. isStatic = false)
         projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
-        baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
+        //baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
 
-        CalcBaseObSize(baseOb);
+        //CalcBaseObSize(baseOb);
     }
 
     public void CalcBaseObSize(GameObject baseOb)

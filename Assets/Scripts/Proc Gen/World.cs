@@ -234,12 +234,7 @@ public class World : MonoBehaviour
             blockTypes[blockIDbase].voxelBoundObject = null;
         else
         {
-            if(Settings.OnlinePlay && baseObString != null)
-            {
-                baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
-                LDrawImportRuntime.Instance.baseOb = baseOb;
-                baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
-            }
+            LoadSpawnedPiecesOnlinePlay();
 
             blockTypes[blockIDbase].voxelBoundObject = baseOb;
 
@@ -278,6 +273,47 @@ public class World : MonoBehaviour
         worldLoadStopWatch.Stop();
         TimeSpan ts = worldLoadStopWatch.Elapsed;
         worldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+    }
+
+    public void LoadSpawnedPiecesOnlinePlay()
+    {
+        if (Settings.OnlinePlay && baseObString != null)
+        {
+            UnityEngine.Debug.Log(baseObString);
+            // load pieces
+
+
+            //baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
+            //LDrawImportRuntime.Instance.baseOb = baseOb;
+            //baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
+            //}
+        }
+    }
+
+    public void LoadSpawnedPieces(string cmdstr)
+    {
+        //separate string into separate strings based on new lines
+        //extract partname
+        string[] cmdstrings = cmdstr.Split("\n");
+        //for (int i = 0; i < cmdstrings.Length; i++)
+        //{
+        //    int indexDat = cmdstrings[i].IndexOf(".dat");
+        //    cmdstrings[i] = cmdstrings[i].Substring(index)
+        //}
+
+
+        // for each line read from cmdstr
+        //string color = "43"; // spawns objects with trans light blue for temp color
+        //string x = "0.000000";
+        //string y = "0.000000";
+        //string z = "0.000000";
+        //string partname = "3005.dat";
+        //string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
+
+        //if (Settings.OnlinePlay)
+        //    CmdSpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
+        //else
+        //    SpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
     }
 
     public int GetGalaxy(int planetNumber)
@@ -825,12 +861,12 @@ public class World : MonoBehaviour
             isAir = GetIsAir(globalPos);
             if (isAir)
             {
-                if (!CheckMakeBase(globalPos))
+                //if (!CheckMakeBase(globalPos))
                     return 0;
             }
         }
 
-        CheckMakeBase(globalPos);
+        //CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)

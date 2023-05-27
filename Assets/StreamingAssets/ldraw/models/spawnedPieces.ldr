@@ -3,7 +3,7 @@
 0 Name: spawnedPieces
 0 Author: 
 0 CustomBrick
-0 NumOfBricks: 2
+0 NumOfBricks: 1
 1 16 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 spawnedPieces - submodel.ldr
 0 NOFILE
 0 FILE spawnedPieces - submodel.ldr
@@ -11,7 +11,6 @@
 0 Name: spawnedPieces - submodel.ldr
 0 Author: 
 0 CustomBrick
-0 NumOfBricks: 2
+0 NumOfBricks: 1
 1 0 0 0 0 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 3005.dat
-1 0 -40 0 0 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 3005.dat
 0 NOFILE

@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using LDraw;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class Controller : NetworkBehaviour
 {
@@ -243,6 +244,21 @@ public class Controller : NetworkBehaviour
         }
     }
 
+    private void LoadSpawnedPiecesLocalPlay()
+    {
+        // Import spawnedPieces
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/spawnedPieces.brx", FileMode.Open);
+        string base64 = formatter.Deserialize(stream) as string;
+        stream.Close();
+        // d-obfuscate
+        //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
+        var data = System.Convert.FromBase64String(base64);
+        baseServer = System.Text.Encoding.UTF8.GetString(data);
+
+        // load pieces
+    }
+
     void InputComponents()
     {
         if (gameObject.GetComponent<PlayerInput>() != null) { playerInput = gameObject.GetComponent<PlayerInput>(); }
@@ -275,7 +291,17 @@ public class Controller : NetworkBehaviour
         // SET SERVER VALUES FROM HOST CLIENT
         planetNumberServer = SettingsStatic.LoadedSettings.planetSeed;
         seedServer = SettingsStatic.LoadedSettings.worldCoord;
-        baseServer = FileSystemExtension.ReadFileToString("base.ldr");
+
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/spawnedPieces.brx", FileMode.Open);
+        string base64 = formatter.Deserialize(stream) as string;
+        stream.Close();
+        // d-obfuscate
+        //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
+        var data = System.Convert.FromBase64String(base64);
+        baseServer = System.Text.Encoding.UTF8.GetString(data);
+
+        //baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
 
         //SetServerChunkStringSyncVar(); // Server sends initially loaded chunks as chunkStringSyncVar to clients (DISABLED, send chunks over internet manually, figure out how to send data not as strings)
@@ -644,27 +670,6 @@ public class Controller : NetworkBehaviour
             reticle.SetActive(false);
             holdingBuild = true;
             brickPickUp.Play();
-
-            //string path;
-            //string cmdstr = "";
-            //if (Settings.Platform == 2)
-            //    path = Settings.AppSaveDataPath + "/spawnedPieces.txt";
-            //else
-            //    path = Application.streamingAssetsPath + "/spawnedPieces.txt";
-            //if (File.Exists(path))
-            //{
-            //    cmdstr = File.ReadAllText(path);
-            //    spawnedPiecesCmdStr = JsonUtility.FromJson<string>(cmdstr);
-            //}
-
-            //separate string into separate strings based on new lines
-            //extract partname
-            //string[] cmdstrings = cmdstr.Split("\n");
-            //for (int i = 0; i < cmdstrings.Length; i++)
-            //{
-            //    int indexDat = cmdstrings[i].IndexOf(".dat");
-            //    cmdstrings[i] = cmdstrings[i].Substring(index)
-            //}
 
             // while holding shoot, spawn an object with current partname parented to cursor with light blue material
             string color = "43"; // spawns objects with trans light blue for temp color
@@ -1625,10 +1630,11 @@ public class Controller : NetworkBehaviour
     public void SaveWorld(WorldData worldData)
     {
         SaveSystem.SaveWorldDataToFile(worldData, world); // save specified worldData to disk (must pass in worldData since, clients set modified chunks from server)
-        SaveSpawnedPieces();
+        ExportSpawnedPieces(false);
+        ExportSpawnedPieces(true);
     }
 
-    public void SaveSpawnedPieces()
+    public void ExportSpawnedPieces(bool obfuscate)
     {
         GameObject[] spawnedPiecesObs = GameObject.FindGameObjectsWithTag("spawnedPiece");
         string cmdstr = "0 FILE spawnedPieces.io\n" +
@@ -1662,6 +1668,22 @@ public class Controller : NetworkBehaviour
         }
         cmdstr += "0 NOFILE";
 
-        FileSystemExtension.SaveStringToFile(cmdstr, "ldraw/models/spawnedPieces.ldr");
+        if(!obfuscate)
+            FileSystemExtension.SaveStringToFile(cmdstr, "ldraw/models/spawnedPieces.ldr");
+        else
+        {
+            // obfuscate the text so it cannot be read easily
+            //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
+            var bytes = System.Text.Encoding.UTF8.GetBytes(cmdstr);
+            var base64 = System.Convert.ToBase64String(bytes);
+
+            // save as binary file (obfuscated so players cannot cheat and create their own bases without "earning" the pieces)
+            // uses strings for a human readable format (slower). Kept for debugging
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream;
+            stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/spawnedPieces.brx", FileMode.Create); // overwrites any existing files by default
+            formatter.Serialize(stream, base64);
+            stream.Close();
+        }
     }
 }
