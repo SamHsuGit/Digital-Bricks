@@ -236,6 +236,8 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
+            LoadSpawnedPiecesLocalPlay();
+
             SetPlayerColliderSettings();
             SetName(playerName, playerName);
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
@@ -246,17 +248,65 @@ public class Controller : NetworkBehaviour
 
     private void LoadSpawnedPiecesLocalPlay()
     {
+        string path = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/spawnedPieces.brx";
+        if (!File.Exists(path))
+            return;
+
         // Import spawnedPieces
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/spawnedPieces.brx", FileMode.Open);
+        FileStream stream = new FileStream(path, FileMode.Open);
         string base64 = formatter.Deserialize(stream) as string;
         stream.Close();
         // d-obfuscate
         //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
         var data = System.Convert.FromBase64String(base64);
-        baseServer = System.Text.Encoding.UTF8.GetString(data);
+        string decodedString = System.Text.Encoding.UTF8.GetString(data);
 
-        // load pieces
+        baseServer = decodedString;
+        LoadSpawnedPieces(baseServer);
+    }
+
+    public void LoadSpawnedPieces(string cmdstr)
+    {
+        if (cmdstr.Length == 0)
+            return;
+        //separate string into separate strings based on new lines
+        //extract partname
+        string[] cmdstrings = cmdstr.Split("*");
+        if (cmdstrings.Length == 0)
+            return;
+
+        for (int i = 0; i < cmdstrings.Length - 1; i++) // last entry is blank due to new line delimiter so we stop one away from last string array value
+        {
+            if (cmdstrings[i].Length == 0)
+                return;
+            string[] strs = cmdstrings[i].Split(",");
+            string materialName = strs[0];
+            float posx = float.Parse(strs[1]);
+            float posy = float.Parse(strs[2]);
+            float posz = float.Parse(strs[3]);
+            float rotx = float.Parse(strs[4]);
+            float roty = float.Parse(strs[5]);
+            float rotz = float.Parse(strs[6]);
+            float rotw = float.Parse(strs[7]);
+            string partname = strs[8];
+            Vector3 pos = new Vector3(posx, posy, posz);
+            Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
+
+            int colorIndex = 0;
+            for(int j = 0; j < materials.Length; i++)
+            {
+                if (materialName == materials[j].name)
+                    colorIndex = j;
+            }
+
+            string commandstring = "1 " + colorIndex + " 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
+
+            if (Settings.OnlinePlay)
+                CmdSpawnPiece(true, partname, commandstring, colorIndex, pos, rot);
+            else
+                SpawnPiece(true, partname, commandstring, colorIndex, pos, rot);
+        }
     }
 
     void InputComponents()
@@ -680,9 +730,9 @@ public class Controller : NetworkBehaviour
             string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
 
             if (Settings.OnlinePlay)
-                CmdSpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
+                CmdSpawnPiece(false, partname, cmdstr, 0, Vector3.zero, Quaternion.identity); // spawn with transparent "temp" material
             else
-                SpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
+                SpawnPiece(false, partname, cmdstr, 0, Vector3.zero, Quaternion.identity); // spawn with transparent "temp" material
         }
 
         //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
@@ -820,6 +870,7 @@ public class Controller : NetworkBehaviour
         }
 
         // when release shoot, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
+        spawnedPiece.transform.position = placePos.position; // when released, snap to the nearest valid position instead of "free space"
         brickPlaceDown.Play();
         spawnedPiece.transform.GetChild(0).GetComponent<MeshRenderer>().material = materials[blockID];
 
@@ -1035,6 +1086,7 @@ public class Controller : NetworkBehaviour
         {
             brickPlaceDown.Play();
             movingSpawnedPiece = false;
+            spawnedPiece.transform.position = placePos.position; // releasing a spawnedPiece while in mid-air should snap it to the nearest available position
             spawnedPiece = null;
         }
         movingSpawnedPiece = false;
@@ -1111,28 +1163,40 @@ public class Controller : NetworkBehaviour
 
     
 
-    public void CmdSpawnPiece(string _partname, string cmdstr, int material)
+    public void CmdSpawnPiece(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
     {
-        SpawnPiece(_partname, cmdstr, material);
+        SpawnPiece(fromFile, _partname, cmdstr, material, pos, rot);
     }
 
-    public void SpawnPiece(string _partname, string cmdstr, int material)
+    public void SpawnPiece(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
     {
-        Vector3 spawnDir;
-        if (camMode == 1) // first person camera spawn object in direction camera
-            spawnDir = playerCamera.transform.forward;
-        else // all other camera modes, spawn object in direction of playerObject
-            spawnDir = transform.forward;
-        Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-        //Vector3 pos = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y, playerCamera.transform.position.z + cc.radius * 2);
+        if (!fromFile)
+        {
+            //Vector3 spawnDir;
+            //if (camMode == 1) // first person camera spawn object in direction camera
+            //    spawnDir = playerCamera.transform.forward;
+            //else // all other camera modes, spawn object in direction of playerObject
+            //    spawnDir = transform.forward;
+            pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+            //Vector3 pos = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y, playerCamera.transform.position.z + cc.radius * 2);
+        }
 
         //GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
         var model = LDrawModelRuntime.Create(cmdstr, cmdstr, false);
         spawnedPiece = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
         spawnedPiece = LDrawImportRuntime.Instance.ConfigureModelOb(spawnedPiece, pos, false);
 
-        spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(180,0,0)); // set part orientation to zero
-        //ob.transform.rotation = Quaternion.LookRotation(spawnDir); // orient forwards in direction of camera
+        if (!fromFile)
+        {
+            spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0)); // set part orientation to zero
+            //ob.transform.rotation = Quaternion.LookRotation(spawnDir); // orient forwards in direction of camera
+        }
+        else
+        {
+            spawnedPiece.transform.rotation = rot;
+        }
+
+
         //SceneObject sceneObject = ob.AddComponent<SceneObject>();
         //sceneObject.controller = this;
         BoxCollider VoxelBc = spawnedPiece.AddComponent<BoxCollider>();
@@ -1140,7 +1204,7 @@ public class Controller : NetworkBehaviour
         spawnedPiece.SetActive(true);
         spawnedPiece.name = _partname;
         spawnedPiece.tag = "spawnedPiece";
-        spawnedPiece.GetComponentInChildren<MeshRenderer>().material = materials[material];
+        spawnedPiece.transform.GetChild(0).GetComponent<MeshRenderer>().material = materials[material];
     }
 
     public void CmdSpawnObject(int type, int item, Vector3 pos)
@@ -1636,8 +1700,16 @@ public class Controller : NetworkBehaviour
 
     public void ExportSpawnedPieces(bool obfuscate)
     {
+        string savePath = Settings.AppSaveDataPath + "/saves/" + world.worldData.planetSeed + "-" + world.worldData.worldCoord + "/";
+        if (!Directory.Exists(savePath))
+            return;
+
         GameObject[] spawnedPiecesObs = GameObject.FindGameObjectsWithTag("spawnedPiece");
-        string cmdstr = "0 FILE spawnedPieces.io\n" +
+        string cmdstr = "";
+
+        if (!obfuscate) // save file to .ldr format to allow players to use their models in other software
+        {
+            cmdstr = "0 FILE spawnedPieces.io\n" +
             "0 Untitled Model\n" +
             "0 Name: spawnedPieces\n" +
             "0 Author: \n" +
@@ -1651,37 +1723,44 @@ public class Controller : NetworkBehaviour
             "0 Author: \n" +
             "0 CustomBrick\n" +
             "0 NumOfBricks: " + spawnedPiecesObs.Length + "\n";
-        foreach (GameObject ob in spawnedPiecesObs)
-        {
-            float scaleFactor = 40f;
-            Vector3 pos = (ob.transform.position - spawnedPiecesObs[0].transform.position) * scaleFactor; // position relative to first piece
-            string partname = ob.name;
-            Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
-            string color = "0";
-            
-            for (int i = 0; i < materials.Length; i++)
+            foreach (GameObject ob in spawnedPiecesObs)
             {
-                if (materials[i].name == mat.name)
-                    color = i.ToString();
-            }
-            cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname + "\n";
-        }
-        cmdstr += "0 NOFILE";
+                float scaleFactor = 40f;
+                Vector3 pos = (ob.transform.position - spawnedPiecesObs[0].transform.position) * scaleFactor; // position relative to first piece
+                string partname = ob.name;
+                Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
+                string color = "0";
 
-        if(!obfuscate)
-            FileSystemExtension.SaveStringToFile(cmdstr, "ldraw/models/spawnedPieces.ldr");
-        else
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    if (materials[i].name == mat.name)
+                        color = i.ToString();
+                }
+                cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname + "\n";
+            }
+            cmdstr += "0 NOFILE";
+            FileSystemExtension.SaveStringToFile(cmdstr, savePath + "spawnedPieces.ldr");
+        }
+        else // save the brick data to an obfuscated file to be loaded in next time world is loaded
         {
+            foreach (GameObject ob in spawnedPiecesObs)
+            {
+                Vector3 pos = ob.transform.position;
+                Quaternion rot = ob.transform.rotation;
+                string partname = ob.name;
+                string color = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material.name;
+                cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + rot.x + "," + rot.y + "," + rot.z + "," + rot.w + "," + partname + "*\n";
+            }
+
             // obfuscate the text so it cannot be read easily
             //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
             var bytes = System.Text.Encoding.UTF8.GetBytes(cmdstr);
             var base64 = System.Convert.ToBase64String(bytes);
 
             // save as binary file (obfuscated so players cannot cheat and create their own bases without "earning" the pieces)
-            // uses strings for a human readable format (slower). Kept for debugging
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream;
-            stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/spawnedPieces.brx", FileMode.Create); // overwrites any existing files by default
+            stream = new FileStream(savePath + "spawnedPieces.brx", FileMode.Create); // overwrites any existing files by default
             formatter.Serialize(stream, base64);
             stream.Close();
         }

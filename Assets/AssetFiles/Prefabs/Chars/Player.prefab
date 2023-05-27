@@ -506,6 +506,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
   - {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
   - {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}
+  spawnedPiecesCmdStr: 
   playerName: PlayerName
   playerCharIdle: 
   playerCharRun: 

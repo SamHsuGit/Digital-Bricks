@@ -279,41 +279,14 @@ public class World : MonoBehaviour
     {
         if (Settings.OnlinePlay && baseObString != null)
         {
-            UnityEngine.Debug.Log(baseObString);
             // load pieces
-
+            //LoadSpawnedPieces(baseObString);
 
             //baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
             //LDrawImportRuntime.Instance.baseOb = baseOb;
             //baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
             //}
         }
-    }
-
-    public void LoadSpawnedPieces(string cmdstr)
-    {
-        //separate string into separate strings based on new lines
-        //extract partname
-        string[] cmdstrings = cmdstr.Split("\n");
-        //for (int i = 0; i < cmdstrings.Length; i++)
-        //{
-        //    int indexDat = cmdstrings[i].IndexOf(".dat");
-        //    cmdstrings[i] = cmdstrings[i].Substring(index)
-        //}
-
-
-        // for each line read from cmdstr
-        //string color = "43"; // spawns objects with trans light blue for temp color
-        //string x = "0.000000";
-        //string y = "0.000000";
-        //string z = "0.000000";
-        //string partname = "3005.dat";
-        //string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
-
-        //if (Settings.OnlinePlay)
-        //    CmdSpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
-        //else
-        //    SpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
     }
 
     public int GetGalaxy(int planetNumber)
