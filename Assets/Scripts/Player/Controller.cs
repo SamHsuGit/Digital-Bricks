@@ -6,6 +6,7 @@ using UnityEngine.Animations;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using LDraw;
+using System.IO;
 
 public class Controller : NetworkBehaviour
 {
@@ -13,6 +14,7 @@ public class Controller : NetworkBehaviour
 
     public Player player;
     public Material[] materials;
+    public string spawnedPiecesCmdStr;
 
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
@@ -643,18 +645,39 @@ public class Controller : NetworkBehaviour
             holdingBuild = true;
             brickPickUp.Play();
 
+            //string path;
+            //string cmdstr = "";
+            //if (Settings.Platform == 2)
+            //    path = Settings.AppSaveDataPath + "/spawnedPieces.txt";
+            //else
+            //    path = Application.streamingAssetsPath + "/spawnedPieces.txt";
+            //if (File.Exists(path))
+            //{
+            //    cmdstr = File.ReadAllText(path);
+            //    spawnedPiecesCmdStr = JsonUtility.FromJson<string>(cmdstr);
+            //}
+
+            //separate string into separate strings based on new lines
+            //extract partname
+            //string[] cmdstrings = cmdstr.Split("\n");
+            //for (int i = 0; i < cmdstrings.Length; i++)
+            //{
+            //    int indexDat = cmdstrings[i].IndexOf(".dat");
+            //    cmdstrings[i] = cmdstrings[i].Substring(index)
+            //}
+
             // while holding shoot, spawn an object with current partname parented to cursor with light blue material
             string color = "43"; // spawns objects with trans light blue for temp color
             string x = "0.000000";
             string y = "0.000000";
             string z = "0.000000";
             string partname = "3005.dat";
-            string cmdstring = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
+            string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
 
             if (Settings.OnlinePlay)
-                CmdSpawnPiece(partname, cmdstring, 0); // spawn with transparent "temp" material
+                CmdSpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
             else
-                SpawnPiece(partname, cmdstring, 0); // spawn with transparent "temp" material
+                SpawnPiece(partname, cmdstr, 0); // spawn with transparent "temp" material
         }
 
         //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
@@ -748,8 +771,20 @@ public class Controller : NetworkBehaviour
     {
         if (spawnedPiece != null) // IF PIECE IS SPAWNED
         {
-            spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-            // add code to check if looking at connectivity, snap to connection point with correct rotation.
+            if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
+            {
+                spawnedPiece.transform.position = placePos.position; // move instance to position where it would attach
+                spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
+
+                // add code to check if looking at connectivity, snap to connection point with correct rotation.
+            }
+            else // IF HOLDING VOXEL
+            {
+                spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+                //spawnedPiece.transform.eulerAngles = placePos.eulerAngles;
+                //spawnedPiece.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                //spawnedPiece.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
+            }
         }
     }
 
@@ -937,8 +972,20 @@ public class Controller : NetworkBehaviour
     {
         if (spawnedPiece != null) // IF PIECE IS SPAWNED
         {
-            spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-            // add code to check if looking at connectivity, snap to connection point with correct rotation.
+            if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
+            {
+                spawnedPiece.transform.position = placePos.position; // move instance to position where it would attach
+                spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
+
+                // add code to check if looking at connectivity, snap to connection point with correct rotation.
+            }
+            else // IF HOLDING VOXEL
+            {
+                spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+                //spawnedPiece.transform.eulerAngles = placePos.eulerAngles;
+                //spawnedPiece.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                //spawnedPiece.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
+            }
         }
 
         if (heldObRb != null) // IF NON-VOXEL RB
@@ -1578,5 +1625,43 @@ public class Controller : NetworkBehaviour
     public void SaveWorld(WorldData worldData)
     {
         SaveSystem.SaveWorldDataToFile(worldData, world); // save specified worldData to disk (must pass in worldData since, clients set modified chunks from server)
+        SaveSpawnedPieces();
+    }
+
+    public void SaveSpawnedPieces()
+    {
+        GameObject[] spawnedPiecesObs = GameObject.FindGameObjectsWithTag("spawnedPiece");
+        string cmdstr = "0 FILE spawnedPieces.io\n" +
+            "0 Untitled Model\n" +
+            "0 Name: spawnedPieces\n" +
+            "0 Author: \n" +
+            "0 CustomBrick\n" +
+            "0 NumOfBricks: " + spawnedPiecesObs.Length + "\n" +
+            "1 16 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 spawnedPieces - submodel.ldr\n" +
+            "0 NOFILE\n" +
+            "0 FILE spawnedPieces - submodel.ldr\n" +
+            "0 spawnedPieces - submodel.ldr\n" +
+            "0 Name: spawnedPieces - submodel.ldr\n" +
+            "0 Author: \n" +
+            "0 CustomBrick\n" +
+            "0 NumOfBricks: " + spawnedPiecesObs.Length + "\n";
+        foreach (GameObject ob in spawnedPiecesObs)
+        {
+            float scaleFactor = 40f;
+            Vector3 pos = (ob.transform.position - spawnedPiecesObs[0].transform.position) * scaleFactor; // position relative to first piece
+            string partname = ob.name;
+            Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
+            string color = "0";
+            
+            for (int i = 0; i < materials.Length; i++)
+            {
+                if (materials[i].name == mat.name)
+                    color = i.ToString();
+            }
+            cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname + "\n";
+        }
+        cmdstr += "0 NOFILE";
+
+        FileSystemExtension.SaveStringToFile(cmdstr, "ldraw/models/spawnedPieces.ldr");
     }
 }

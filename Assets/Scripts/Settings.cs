@@ -174,16 +174,16 @@ public static class FileSystemExtension
 
     public static void SaveSettings()
     {
-        SaveStringToFile(JsonUtility.ToJson(SettingsStatic.LoadedSettings));
+        SaveStringToFile(JsonUtility.ToJson(SettingsStatic.LoadedSettings), "settings.cfg");
     }
 
-    public static void SaveStringToFile(string jsonExport)
+    public static void SaveStringToFile(string jsonExport, string filename)
     {
         string path;
         if (Settings.Platform == 2)
-            path = Settings.AppSaveDataPath + "/settings.cfg";
+            path = Settings.AppSaveDataPath + "/" + filename;
         else
-            path = Application.streamingAssetsPath + "/settings.cfg";
+            path = Application.streamingAssetsPath + "/" + filename;
         File.WriteAllText(path, jsonExport);
     }
 }
