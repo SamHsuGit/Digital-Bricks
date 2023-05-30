@@ -44,6 +44,7 @@ public static class SettingsStatic
         settings.fov = 90f;
         settings.invertY = false;
         settings.fullscreen = true;
+        settings.currentBrickIndex = 0;
 
         string path;
         if (Settings.Platform == 2)
@@ -94,6 +95,7 @@ public class Settings
     public float fov;
     public bool invertY;
     public bool fullscreen;
+    public int currentBrickIndex;
 
     public static bool WorldLoaded
     {

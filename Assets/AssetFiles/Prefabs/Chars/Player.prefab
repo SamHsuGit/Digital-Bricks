@@ -494,23 +494,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  materials:
-  - {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
-  - {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
-  - {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}
-  - {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}
-  - {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}
-  - {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}
-  - {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
-  - {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}
-  - {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
-  - {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
-  - {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}
-  spawnedPiecesCmdStr: 
   playerName: PlayerName
   playerCharIdle: 
   playerCharRun: 
   playerProjectile: 
+  currentBrickIndex: 0
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0
@@ -523,7 +511,7 @@ MonoBehaviour:
   focusDistanceIncrement: 0.03
   holdingGrab: 0
   holdingBuild: 0
-  movingSpawnedPiece: 0
+  movingPlacedBrick: 0
   blockID: 0
   baseAnimRate: 2
   animRate: 2
@@ -557,7 +545,19 @@ MonoBehaviour:
   charObIdle: {fileID: 0}
   charObRun: {fileID: 0}
   world: {fileID: 0}
-  spawnedPiece: {fileID: 0}
+  brickMaterials:
+  - {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
+  - {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
+  - {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}
+  - {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}
+  - {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}
+  - {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}
+  - {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
+  - {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}
+  - {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
+  - {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
+  - {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}
+  placedBrick: {fileID: 0}
   worldPPFXSetValues: {fileID: 0}
 --- !u!114 &8694146929136081849
 MonoBehaviour:

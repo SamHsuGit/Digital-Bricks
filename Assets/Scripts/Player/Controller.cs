@@ -13,14 +13,11 @@ public class Controller : NetworkBehaviour
 {
     // NOTE: this class assumes world has already been activated
 
-    public Player player;
-    public Material[] materials;
-    public string spawnedPiecesCmdStr;
-
     [SyncVar(hook = nameof(SetName))] public string playerName = "PlayerName";
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
+    [SyncVar(hook = nameof(SetCurrentBrick))] public int currentBrickIndex;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
     [SyncVar(hook = nameof(SetTime))] private float timeOfDayServer;
@@ -46,7 +43,7 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public bool holdingBuild = false;
-    public bool movingSpawnedPiece = false;
+    public bool movingPlacedBrick = false;
     public byte blockID;
     public float baseAnimRate = 2; // health script overrides this
     public float animRate = 2; // health script overrides this
@@ -58,6 +55,7 @@ public class Controller : NetworkBehaviour
     public byte orientation;
 
     [Header("GameObject References")]
+    public Player player;
     public GameObject charModelOrigin;
     public GameObject gameMenu;
     public GameObject nametag;
@@ -84,8 +82,9 @@ public class Controller : NetworkBehaviour
     public GameObject charObIdle;
     public GameObject charObRun;
     public World world;
+    public Material[] brickMaterials;
 
-    [HideInInspector] public GameObject spawnedPiece;
+    [HideInInspector] public GameObject placedBrick;
 
     private Dictionary<Vector3, GameObject> voxelBoundObjects = new Dictionary<Vector3, GameObject>();
 
@@ -141,6 +140,8 @@ public class Controller : NetworkBehaviour
     private bool daytime = true;
     private float nextTimeToAnim = 0;
     private List<Material> cachedMaterials = new List<Material>();
+    private string[] ldrawPartsListStringArray = new string[] { };
+    private string currentBrickName;
 
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
     // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
@@ -196,6 +197,8 @@ public class Controller : NetworkBehaviour
         placePos = Instantiate(placePosPrefab).transform;
         holdPos = holdPosPrefab.transform;
 
+        LoadLdrawPartsList();
+
         CinematicBars.SetActive(false);
     }
 
@@ -236,7 +239,7 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            LoadSpawnedPiecesLocalPlay();
+            LoadPlacedBricksLocalPlay();
 
             SetPlayerColliderSettings();
             SetName(playerName, playerName);
@@ -246,13 +249,23 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    private void LoadSpawnedPiecesLocalPlay()
+    private void LoadLdrawPartsList()
     {
-        string path = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/spawnedPieces.brx";
+        string path = Application.streamingAssetsPath + "/ldraw/parts.txt";
+        if (!File.Exists(path))
+            ErrorMessage.Show("Error: Could not find " + path);
+
+        string ldrawPartList = File.ReadAllText(path);
+        ldrawPartsListStringArray = ldrawPartList.Split("\n");
+    }
+
+    private void LoadPlacedBricksLocalPlay()
+    {
+        string path = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/placedBricks.brx";
         if (!File.Exists(path))
             return;
 
-        // Import spawnedPieces
+        // Import placed bricks
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(path, FileMode.Open);
         string base64 = formatter.Deserialize(stream) as string;
@@ -263,10 +276,10 @@ public class Controller : NetworkBehaviour
         string decodedString = System.Text.Encoding.UTF8.GetString(data);
 
         baseServer = decodedString;
-        LoadSpawnedPieces(baseServer);
+        LoadPlacedBricks(baseServer);
     }
 
-    public void LoadSpawnedPieces(string cmdstr)
+    public void LoadPlacedBricks(string cmdstr)
     {
         if (cmdstr.Length == 0)
             return;
@@ -296,9 +309,9 @@ public class Controller : NetworkBehaviour
             string commandstring = "1 " + color + " 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
 
             if (Settings.OnlinePlay)
-                CmdSpawnPiece(true, partname, commandstring, color, pos, rot);
+                CmdPlaceBrick(true, partname, commandstring, color, pos, rot);
             else
-                SpawnPiece(true, partname, commandstring, color, pos, rot);
+                PlaceBrick(true, partname, commandstring, color, pos, rot);
         }
     }
 
@@ -336,7 +349,7 @@ public class Controller : NetworkBehaviour
         seedServer = SettingsStatic.LoadedSettings.worldCoord;
 
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/spawnedPieces.brx", FileMode.Open);
+        FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/placedBricks.brx", FileMode.Open);
         string base64 = formatter.Deserialize(stream) as string;
         stream.Close();
         // d-obfuscate
@@ -512,6 +525,11 @@ public class Controller : NetworkBehaviour
         isMoving = newValue;
     }
 
+    public void SetCurrentBrick(int oldValue, int newValue)
+    {
+        currentBrickIndex = newValue;
+    }
+
     private void OnDestroy()
     {
         foreach (Material mat in cachedMaterials)
@@ -583,6 +601,8 @@ public class Controller : NetworkBehaviour
                             charObIdle.SetActive(false);
                         if (charObRun != null && charObRun.activeSelf)
                             charObRun.SetActive(false);
+
+                        CalcPlacedBrickName();
 
                         // IF PRESSED GRAB
                         if (!holdingGrab && inputHandler.grab)
@@ -676,6 +696,17 @@ public class Controller : NetworkBehaviour
         playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist);
     }
 
+    public void CalcPlacedBrickName()
+    {
+        if (inputHandler.navRight || inputHandler.navUp)
+            currentBrickIndex++;
+        else if (inputHandler.navLeft || inputHandler.navDown)
+            currentBrickIndex--;
+
+        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
+    }
+
     public void SetDOF()
     {
         // allow adjustments for DoF
@@ -719,14 +750,15 @@ public class Controller : NetworkBehaviour
             string x = "0.000000";
             string y = "0.000000";
             string z = "0.000000";
-            string partname = "3005.dat";
+            //string partname = "3005.dat";
+            string partname = currentBrickName;
             Vector3 pos = new Vector3(0, 1, 0);
             string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
 
             if (Settings.OnlinePlay)
-                CmdSpawnPiece(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
+                CmdPlaceBrick(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
             else
-                SpawnPiece(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
+                PlaceBrick(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
         }
 
         //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
@@ -818,21 +850,30 @@ public class Controller : NetworkBehaviour
 
     void HoldingBuild()
     {
-        if (spawnedPiece != null) // IF PIECE IS SPAWNED
+        if (placedBrick != null) // IF PIECE IS SPAWNED
         {
             if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
             {
-                spawnedPiece.transform.position = placePos.position; // move instance to position where it would attach
-                spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
+                //placedBrick.transform.position = placePos.position; // move instance to position where it would attach
+                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
+                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
+                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
+                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
+                //placedBrick.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
 
                 // add code to check if looking at connectivity, snap to connection point with correct rotation.
             }
             else // IF HOLDING VOXEL
             {
-                spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                //spawnedPiece.transform.eulerAngles = placePos.eulerAngles;
-                //spawnedPiece.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                //spawnedPiece.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
+                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
+                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
+                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
+                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
+                //placedBrick.transform.eulerAngles = placePos.eulerAngles;
+                //placedBrick.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                //placedBrick.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
             }
         }
     }
@@ -845,9 +886,9 @@ public class Controller : NetworkBehaviour
         if (!toolbar.slots[toolbar.slotIndex].itemSlot.HasItem) // cannot do this if no items in slot
         {
             // remove temp piece
-            if (!movingSpawnedPiece)
-                Destroy(spawnedPiece);
-            spawnedPiece = null;
+            if (!movingPlacedBrick)
+                Destroy(placedBrick);
+            placedBrick = null;
             return;
         }
         
@@ -856,25 +897,24 @@ public class Controller : NetworkBehaviour
         if (blockID < 2 || blockID > 10) // cannot place bricks using voxels outside the defined color range
         {
             // remove temp piece
-            if (!movingSpawnedPiece)
-                Destroy(spawnedPiece);
-            spawnedPiece = null;
+            if (!movingPlacedBrick)
+                Destroy(placedBrick);
+            placedBrick = null;
             blockID = 0;
             return;
         }
 
         // when release shoot, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
-        spawnedPiece.transform.position = placePos.position; // when released, snap to the nearest valid position instead of "free space"
         brickPlaceDown.Play();
-        spawnedPiece.transform.GetChild(0).GetComponent<MeshRenderer>().material = materials[blockID];
+        placedBrick.transform.GetChild(0).GetComponent<MeshRenderer>().material = brickMaterials[blockID];
 
         if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
             TakeFromCurrentSlot(0);
-        else if (!movingSpawnedPiece)
+        else if (!movingPlacedBrick)
             TakeFromCurrentSlot(1);
 
         // reset values
-        spawnedPiece = null;
+        placedBrick = null;
         blockID = 0;
     }
 
@@ -916,13 +956,13 @@ public class Controller : NetworkBehaviour
         if (Physics.SphereCast(playerCamera.transform.position, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist))
         {
             GameObject hitObject = hit.transform.gameObject;
-            if (hitObject != null && hitObject.tag == "spawnedPiece")
+            if (hitObject != null && hitObject.tag == "placedBrick")
             {
                 reticle.SetActive(false);
                 holdingGrab = true;
-                movingSpawnedPiece = true;
+                movingPlacedBrick = true;
                 brickPickUp.Play();
-                spawnedPiece = hitObject;
+                placedBrick = hitObject;
             }
             return; // do not spawn object if hit previously existing object
         }
@@ -1019,21 +1059,30 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
-        if (spawnedPiece != null) // IF PIECE IS SPAWNED
+        if (placedBrick != null) // IF PIECE IS SPAWNED
         {
             if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
             {
-                spawnedPiece.transform.position = placePos.position; // move instance to position where it would attach
-                spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
+                //placedBrick.transform.position = placePos.position; // move instance to position where it would attach
+                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
+                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
+                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
+                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
+                //placedBrick.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
 
                 // add code to check if looking at connectivity, snap to connection point with correct rotation.
             }
             else // IF HOLDING VOXEL
             {
-                spawnedPiece.transform.position = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                //spawnedPiece.transform.eulerAngles = placePos.eulerAngles;
-                //spawnedPiece.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                //spawnedPiece.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
+                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
+                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
+                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
+                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
+                //placedBrick.transform.eulerAngles = placePos.eulerAngles;
+                //placedBrick.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                //placedBrick.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
             }
         }
 
@@ -1075,14 +1124,13 @@ public class Controller : NetworkBehaviour
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
             PutAwayBrick(blockID);
 
-        if (movingSpawnedPiece)
+        if (movingPlacedBrick)
         {
             brickPlaceDown.Play();
-            movingSpawnedPiece = false;
-            spawnedPiece.transform.position = placePos.position; // releasing a spawnedPiece while in mid-air should snap it to the nearest available position
-            spawnedPiece = null;
+            movingPlacedBrick = false;
+            placedBrick = null;
         }
-        movingSpawnedPiece = false;
+        movingPlacedBrick = false;
     }
 
     void PutAwayBrick(byte blockID)
@@ -1156,12 +1204,12 @@ public class Controller : NetworkBehaviour
 
     
 
-    public void CmdSpawnPiece(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
+    public void CmdPlaceBrick(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
     {
-        SpawnPiece(fromFile, _partname, cmdstr, material, pos, rot);
+        PlaceBrick(fromFile, _partname, cmdstr, material, pos, rot);
     }
 
-    public void SpawnPiece(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
+    public void PlaceBrick(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
     {
         if (!fromFile)
         {
@@ -1171,33 +1219,36 @@ public class Controller : NetworkBehaviour
             //else // all other camera modes, spawn object in direction of playerObject
             //    spawnDir = transform.forward;
             pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+            float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
+            yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
+            pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
             //Vector3 pos = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y, playerCamera.transform.position.z + cc.radius * 2);
         }
 
         //GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
         var model = LDrawModelRuntime.Create(cmdstr, cmdstr, false);
-        spawnedPiece = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
-        spawnedPiece = LDrawImportRuntime.Instance.ConfigureModelOb(spawnedPiece, pos, false);
+        placedBrick = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
+        placedBrick = LDrawImportRuntime.Instance.ConfigureModelOb(placedBrick, pos, false);
 
         if (!fromFile)
         {
-            spawnedPiece.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0)); // set part orientation to zero
+            placedBrick.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0)); // set part orientation to zero
             //ob.transform.rotation = Quaternion.LookRotation(spawnDir); // orient forwards in direction of camera
         }
         else
         {
-            spawnedPiece.transform.rotation = rot;
+            placedBrick.transform.rotation = rot;
         }
 
 
         //SceneObject sceneObject = ob.AddComponent<SceneObject>();
         //sceneObject.controller = this;
-        BoxCollider VoxelBc = spawnedPiece.AddComponent<BoxCollider>();
+        BoxCollider VoxelBc = placedBrick.AddComponent<BoxCollider>();
         VoxelBc.material = physicMaterial;
-        spawnedPiece.SetActive(true);
-        spawnedPiece.name = _partname;
-        spawnedPiece.tag = "spawnedPiece";
-        spawnedPiece.transform.GetChild(0).GetComponent<MeshRenderer>().material = materials[material];
+        placedBrick.SetActive(true);
+        placedBrick.name = _partname;
+        placedBrick.tag = "placedBrick";
+        placedBrick.transform.GetChild(0).GetComponent<MeshRenderer>().material = brickMaterials[material];
     }
 
     public void CmdSpawnObject(int type, int item, Vector3 pos)
@@ -1687,56 +1738,56 @@ public class Controller : NetworkBehaviour
     public void SaveWorld(WorldData worldData)
     {
         SaveSystem.SaveWorldDataToFile(worldData, world); // save specified worldData to disk (must pass in worldData since, clients set modified chunks from server)
-        ExportSpawnedPieces(false);
-        ExportSpawnedPieces(true);
+        ExportPlacedBricks(false);
+        ExportPlacedBricks(true);
     }
 
-    public void ExportSpawnedPieces(bool obfuscate)
+    public void ExportPlacedBricks(bool obfuscate)
     {
         string savePath = Settings.AppSaveDataPath + "/saves/" + world.worldData.planetSeed + "-" + world.worldData.worldCoord + "/";
         if (!Directory.Exists(savePath))
             return;
 
-        GameObject[] spawnedPiecesObs = GameObject.FindGameObjectsWithTag("spawnedPiece");
+        GameObject[] placedBrickObs = GameObject.FindGameObjectsWithTag("placedBrick");
         string cmdstr = "";
 
         if (!obfuscate) // save file to .ldr format to allow players to use their models in other software
         {
-            cmdstr = "0 FILE spawnedPieces.io\n" +
+            cmdstr = "0 FILE placedBricks.io\n" +
             "0 Untitled Model\n" +
-            "0 Name: spawnedPieces\n" +
+            "0 Name: placedBricks\n" +
             "0 Author: \n" +
             "0 CustomBrick\n" +
-            "0 NumOfBricks: " + spawnedPiecesObs.Length + "\n" +
-            "1 16 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 spawnedPieces - submodel.ldr\n" +
+            "0 NumOfBricks: " + placedBrickObs.Length + "\n" +
+            "1 16 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 placedBricks - submodel.ldr\n" +
             "0 NOFILE\n" +
-            "0 FILE spawnedPieces - submodel.ldr\n" +
-            "0 spawnedPieces - submodel.ldr\n" +
-            "0 Name: spawnedPieces - submodel.ldr\n" +
+            "0 FILE placedBricks - submodel.ldr\n" +
+            "0 placedBricks - submodel.ldr\n" +
+            "0 Name: placedBricks - submodel.ldr\n" +
             "0 Author: \n" +
             "0 CustomBrick\n" +
-            "0 NumOfBricks: " + spawnedPiecesObs.Length + "\n";
-            foreach (GameObject ob in spawnedPiecesObs)
+            "0 NumOfBricks: " + placedBrickObs.Length + "\n";
+            foreach (GameObject ob in placedBrickObs)
             {
                 float scaleFactor = 40f;
-                Vector3 pos = (ob.transform.position - spawnedPiecesObs[0].transform.position) * scaleFactor; // position relative to first piece
+                Vector3 pos = (ob.transform.position - placedBrickObs[0].transform.position) * scaleFactor; // position relative to first piece
                 string partname = ob.name;
                 Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
                 string color = "0";
 
-                for (int i = 0; i < materials.Length; i++)
+                for (int i = 0; i < brickMaterials.Length; i++)
                 {
-                    if (materials[i].name == mat.name)
+                    if (brickMaterials[i].name == mat.name)
                         color = i.ToString();
                 }
                 cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname + "\n";
             }
             cmdstr += "0 NOFILE";
-            FileSystemExtension.SaveStringToFile(cmdstr, savePath + "spawnedPieces.ldr");
+            FileSystemExtension.SaveStringToFile(cmdstr, savePath + "placedBricks.ldr");
         }
         else // save the brick data to an obfuscated file to be loaded in next time world is loaded
         {
-            foreach (GameObject ob in spawnedPiecesObs)
+            foreach (GameObject ob in placedBrickObs)
             {
                 Vector3 pos = ob.transform.position;
                 Quaternion rot = ob.transform.rotation;
@@ -1744,9 +1795,9 @@ public class Controller : NetworkBehaviour
                 Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
 
                 string color = "0";
-                for (int i = 0; i < materials.Length; i++)
+                for (int i = 0; i < brickMaterials.Length; i++)
                 {
-                    if (mat.name.Contains(materials[i].name))
+                    if (mat.name.Contains(brickMaterials[i].name))
                         color = i.ToString();
                 }
 
@@ -1761,7 +1812,7 @@ public class Controller : NetworkBehaviour
             // save as binary file (obfuscated so players cannot cheat and create their own bases without "earning" the pieces)
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream;
-            stream = new FileStream(savePath + "spawnedPieces.brx", FileMode.Create); // overwrites any existing files by default
+            stream = new FileStream(savePath + "placedBricks.brx", FileMode.Create); // overwrites any existing files by default
             formatter.Serialize(stream, base64);
             stream.Close();
         }

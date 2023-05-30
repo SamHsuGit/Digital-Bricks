@@ -12,7 +12,7 @@ TagManager:
   - object
   - voxelRb
   - voxelBit
-  - spawnedPiece
+  - placedBrick
   layers:
   - Default
   - TransparentFX
