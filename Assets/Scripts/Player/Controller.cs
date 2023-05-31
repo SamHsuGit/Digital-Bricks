@@ -18,6 +18,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
     [SyncVar(hook = nameof(SetCurrentBrick))] public int currentBrickIndex;
+    [SyncVar(hook = nameof(SetCurrentBrickRotation))] public int currentBrickRotation;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
     [SyncVar(hook = nameof(SetTime))] private float timeOfDayServer;
@@ -198,6 +199,8 @@ public class Controller : NetworkBehaviour
         holdPos = holdPosPrefab.transform;
 
         LoadLdrawPartsList();
+        currentBrickIndex = SettingsStatic.LoadedSettings.currentBrickIndex;
+        currentBrickRotation = SettingsStatic.LoadedSettings.currentBrickRotation;
 
         CinematicBars.SetActive(false);
     }
@@ -289,11 +292,11 @@ public class Controller : NetworkBehaviour
         if (cmdstrings.Length == 0)
             return;
 
-        for (int i = 0; i < cmdstrings.Length - 1; i++) // last entry is blank due to new line delimiter so we stop one away from last string array value
+        for (int j = 0; j < cmdstrings.Length - 1; j++) // last entry is blank due to new line delimiter so we stop one away from last string array value
         {
-            if (cmdstrings[i].Length == 0)
+            if (cmdstrings[j].Length == 0)
                 return;
-            string[] strs = cmdstrings[i].Split(",");
+            string[] strs = cmdstrings[j].Split(",");
             int color = int.Parse(strs[0]);
             float posx = float.Parse(strs[1]);
             float posy = float.Parse(strs[2]);
@@ -306,7 +309,18 @@ public class Controller : NetworkBehaviour
             Vector3 pos = new Vector3(posx, posy, posz);
             Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
 
-            string commandstring = "1 " + color + " 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
+            // ADD CODE TO CALCULATE THESE VALUES BASED ON SAVED VALUES
+            string a = "1.000000";
+            string b = "0.000000";
+            string c = "0.000000";
+            string d = "0.000000";
+            string e = "1.000000";
+            string f = "0.000000";
+            string g = "0.000000";
+            string h = "0.000000";
+            string i = "1.000000";
+
+            string commandstring = "1 " + color + " 0.000000 0.000000 0.000000" + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
             if (Settings.OnlinePlay)
                 CmdPlaceBrick(true, partname, commandstring, color, pos, rot);
@@ -530,6 +544,11 @@ public class Controller : NetworkBehaviour
         currentBrickIndex = newValue;
     }
 
+    public void SetCurrentBrickRotation(int oldValue, int newValue)
+    {
+        currentBrickRotation = newValue;
+    }
+
     private void OnDestroy()
     {
         foreach (Material mat in cachedMaterials)
@@ -602,7 +621,7 @@ public class Controller : NetworkBehaviour
                         if (charObRun != null && charObRun.activeSelf)
                             charObRun.SetActive(false);
 
-                        CalcPlacedBrickName();
+                        CheckBrickPlacement();
 
                         // IF PRESSED GRAB
                         if (!holdingGrab && inputHandler.grab)
@@ -696,12 +715,60 @@ public class Controller : NetworkBehaviour
         playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist);
     }
 
-    public void CalcPlacedBrickName()
+    public void CheckBrickPlacement()
     {
-        if (inputHandler.navRight || inputHandler.navUp)
-            currentBrickIndex++;
-        else if (inputHandler.navLeft || inputHandler.navDown)
-            currentBrickIndex--;
+        // only do code if values change
+        if (inputHandler.navUp)
+        {
+            if (currentBrickIndex + 1 <= ldrawPartsListStringArray.Length - 1)
+                currentBrickIndex++;
+            else
+                currentBrickIndex = 0;
+
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
+
+            if (Settings.OnlinePlay)
+                CmdUpdateGrabObject(holdingGrab, blockID);
+            else
+                UpdateShowGrabObject(holdingGrab, blockID);
+        }
+        else if (inputHandler.navDown)
+        {
+            if (currentBrickIndex - 1 >= 0)
+                currentBrickIndex--;
+            else
+                currentBrickIndex = ldrawPartsListStringArray.Length - 1;
+
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
+
+            if (Settings.OnlinePlay)
+                CmdUpdateGrabObject(holdingGrab, blockID);
+            else
+                UpdateShowGrabObject(holdingGrab, blockID);
+        }
+        else if (inputHandler.navLeft)
+        {
+            if (currentBrickRotation + 1 <= 15)
+                currentBrickRotation++;
+            else
+                currentBrickRotation = 0;
+            SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
+
+            Destroy(placedBrick);
+            SpawnTempBrick(currentBrickRotation);
+        }
+        else if (inputHandler.navRight)
+        {
+            if (currentBrickRotation - 1 >= 0)
+                currentBrickRotation--;
+            else
+                currentBrickRotation = 15;
+
+            Destroy(placedBrick);
+            SpawnTempBrick(currentBrickRotation);
+        }
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
         currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
@@ -745,20 +812,7 @@ public class Controller : NetworkBehaviour
             holdingBuild = true;
             brickPickUp.Play();
 
-            // while holding shoot, spawn an object with current partname parented to cursor with light blue material
-            string color = "43"; // spawns objects with trans light blue for temp color
-            string x = "0.000000";
-            string y = "0.000000";
-            string z = "0.000000";
-            //string partname = "3005.dat";
-            string partname = currentBrickName;
-            Vector3 pos = new Vector3(0, 1, 0);
-            string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname;
-
-            if (Settings.OnlinePlay)
-                CmdPlaceBrick(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
-            else
-                PlaceBrick(false, partname, cmdstr, 0, pos, Quaternion.identity); // spawn with transparent "temp" material
+            SpawnTempBrick(currentBrickRotation);
         }
 
         //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
@@ -848,32 +902,117 @@ public class Controller : NetworkBehaviour
         //}
     }
 
+    void SpawnTempBrick(int rotation)
+    {
+        // while holding shoot, spawn an object with current partname parented to cursor with light blue material
+        string color = "43"; // spawns objects with trans light blue for temp color
+        string x = "0.000000";
+        string y = "0.000000";
+        string z = "0.000000";
+        string a = "1.000000";
+        string b = "0.000000";
+        string c = "0.000000";
+        string d = "0.000000";
+        string e = "1.000000";
+        string f = "0.000000";
+        string g = "0.000000";
+        string h = "0.000000";
+        string i = "1.000000";
+        string partname = currentBrickName;
+        Vector3 pos = new Vector3(0, 1, 0);
+        string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
+
+        //Matrix4x4 matrix = new Matrix4x4() { a, b, c, x, d, e, f, y, g, h, i, z, 0, 0, 0, 1 };
+
+        //public static Quaternion ExtractRotation(this Matrix4x4 matrix)
+        //{
+            //Vector3 forward;
+            //forward.x = matrix.m02;
+            //forward.y = matrix.m12;
+            //forward.z = matrix.m22;
+
+            //Vector3 upwards;
+            //upwards.x = matrix.m01;
+            //upwards.y = matrix.m11;
+            //upwards.z = matrix.m21;
+
+            //Quaternion rot = Quaternion.LookRotation(forward, upwards);
+        //}
+
+        Quaternion rot = Quaternion.identity;
+        switch (rotation)
+        {
+            case 0:
+                rot = Quaternion.Euler(new Vector3(0, 0, 0));
+                break;
+            case 1:
+                rot = Quaternion.Euler(new Vector3(0, 90, 0));
+                break;
+            case 2:
+                rot = Quaternion.Euler(new Vector3(0, 180, 0));
+                break;
+            case 3:
+                rot = Quaternion.Euler(new Vector3(0, 270, 0));
+                break;
+            case 4:
+                rot = Quaternion.Euler(new Vector3(90, 0, 0));
+                break;
+            case 5:
+                rot = Quaternion.Euler(new Vector3(90, 90, 0));
+                break;
+            case 6:
+                rot = Quaternion.Euler(new Vector3(90, 180, 0));
+                break;
+            case 7:
+                rot = Quaternion.Euler(new Vector3(90, 270, 0));
+                break;
+            case 8:
+                rot = Quaternion.Euler(new Vector3(180, 0, 0));
+                break;
+            case 9:
+                rot = Quaternion.Euler(new Vector3(180, 90, 0));
+                break;
+            case 10:
+                rot = Quaternion.Euler(new Vector3(180, 180, 0));
+                break;
+            case 11:
+                rot = Quaternion.Euler(new Vector3(180, 270, 0));
+                break;
+            case 12:
+                rot = Quaternion.Euler(new Vector3(270, 0, 0));
+                break;
+            case 13:
+                rot = Quaternion.Euler(new Vector3(270, 90, 0));
+                break;
+            case 14:
+                rot = Quaternion.Euler(new Vector3(270, 180, 0));
+                break;
+            case 15:
+                rot = Quaternion.Euler(new Vector3(270, 270, 0));
+                break;
+        }
+
+        if (Settings.OnlinePlay)
+            CmdPlaceBrick(false, partname, cmdstr, 0, pos, rot); // spawn with transparent "temp" material
+        else
+            PlaceBrick(false, partname, cmdstr, 0, pos, rot); // spawn with transparent "temp" material
+    }
+
     void HoldingBuild()
     {
         if (placedBrick != null) // IF PIECE IS SPAWNED
         {
             if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
             {
-                //placedBrick.transform.position = placePos.position; // move instance to position where it would attach
                 Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
-                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
-                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
-                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
-                //placedBrick.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
-
-                // add code to check if looking at connectivity, snap to connection point with correct rotation.
+                pos = GetGridPos(pos); // snap to grid
+                placedBrick.transform.position = pos;
             }
             else // IF HOLDING VOXEL
             {
                 Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
-                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
-                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
-                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
-                //placedBrick.transform.eulerAngles = placePos.eulerAngles;
-                //placedBrick.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                //placedBrick.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
+                pos = GetGridPos(pos); // snap to grid
+                placedBrick.transform.position = pos;
             }
         }
     }
@@ -906,7 +1045,8 @@ public class Controller : NetworkBehaviour
 
         // when release shoot, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
         brickPlaceDown.Play();
-        placedBrick.transform.GetChild(0).GetComponent<MeshRenderer>().material = brickMaterials[blockID];
+        ResetPlacedBrickMaterialsAndBoxColliders(blockID);
+        
 
         if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
             TakeFromCurrentSlot(0);
@@ -929,7 +1069,6 @@ public class Controller : NetworkBehaviour
         else
             SpawnObject(0, blockID, position);
     }
-
     
     public void DropItemsInSlot()
     {
@@ -1035,6 +1174,13 @@ public class Controller : NetworkBehaviour
 
     void UpdateShowGrabObject(bool holding, byte blockID)
     {
+        if (holdingBuild)
+        {
+            Destroy(placedBrick);
+            placedBrick = null;
+
+            SpawnTempBrick(currentBrickRotation);
+        }
         if (holding)
         {
             grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
@@ -1063,26 +1209,15 @@ public class Controller : NetworkBehaviour
         {
             if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
             {
-                //placedBrick.transform.position = placePos.position; // move instance to position where it would attach
                 Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
-                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
-                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
-                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
-                //placedBrick.transform.rotation = Quaternion.Euler(new Vector3(placePos.rotation.x + 180, placePos.rotation.y, placePos.rotation.z));
-
-                // add code to check if looking at connectivity, snap to connection point with correct rotation.
+                pos = GetGridPos(pos); // snap to grid
+                placedBrick.transform.position = pos;
             }
             else // IF HOLDING VOXEL
             {
                 Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
-                yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
-                pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
-                placedBrick.transform.position = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z)); // round to the nearest grid position
-                //placedBrick.transform.eulerAngles = placePos.eulerAngles;
-                //placedBrick.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                //placedBrick.transform.Translate(new Vector3(0.0f, 0.0f, 0.0f));
+                pos = GetGridPos(pos); // snap to grid
+                placedBrick.transform.position = pos;
             }
         }
 
@@ -1202,53 +1337,96 @@ public class Controller : NetworkBehaviour
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
     }
 
-    
-
     public void CmdPlaceBrick(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
     {
         PlaceBrick(fromFile, _partname, cmdstr, material, pos, rot);
     }
 
-    public void PlaceBrick(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
+    public Vector3 GetGridPos(Vector3 pos)
+    {
+        // 1 stud is 1/2 the width of a voxel and one stud is 1/5 the height of a voxel
+        Vector3 returnPos = new Vector3((Mathf.Ceil(pos.x * 2) / 2) + 0.25f, Mathf.Ceil(pos.y * 5) / 5, (Mathf.Ceil(pos.z * 2) / 2) + 0.25f); // snap position to nearest voxel grid
+        
+        if(placedBrick != null)
+        {
+            if(placedBrick.GetComponent<BoxCollider>() != null)
+            {
+                BoxCollider bc = placedBrick.GetComponent<BoxCollider>();
+                if (bc.size.x % 40 == 0)
+                    {
+                        // odd stud width should use center of collider
+                        // even stud width should use offset center of collider
+                        // if part child object box collider size has increment of 40 with no remainder, use offset, otherwise offset entire part 0.25f in that direction
+                        returnPos += new Vector3(0.25f, 0, 0);
+                    }
+                if (bc.size.z % 40 == 0)
+                {
+                    returnPos += new Vector3(0, 0, 0.25f);
+                }
+                returnPos += new Vector3(0, bc.size.y / 40, 0); // move bottom of part to voxel grid
+            }
+        }
+
+        return returnPos; // round to the nearest grid position
+    }
+
+    public void ResetPlacedBrickMaterialsAndBoxColliders(int materialIndex)
+    {
+        MeshRenderer[] mrs = placedBrick.transform.GetComponentsInChildren<MeshRenderer>();
+        if (mrs.Length != 0)
+        {
+            foreach (MeshRenderer mr in mrs)
+            {
+                mr.material = brickMaterials[materialIndex];
+            }
+        }
+        BoxCollider[] bcs = placedBrick.transform.GetComponentsInChildren<BoxCollider>();
+        if (bcs.Length != 0)
+        {
+            foreach (BoxCollider bc in bcs)
+            {
+                bc.enabled = false;
+            }
+        }
+        placedBrick.GetComponent<BoxCollider>().enabled = true;
+    }
+
+    public void PlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
     {
         if (!fromFile)
         {
-            //Vector3 spawnDir;
-            //if (camMode == 1) // first person camera spawn object in direction camera
-            //    spawnDir = playerCamera.transform.forward;
-            //else // all other camera modes, spawn object in direction of playerObject
-            //    spawnDir = transform.forward;
             pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-            float yPosMultiple = (pos.y - (float)System.Math.Truncate(pos.y)); // returns the decimal portion of the number
-            yPosMultiple = Mathf.Ceil(yPosMultiple / 0.2f) * 0.2f; // finds the nearest multiple of 0.2
-            pos = new Vector3(Mathf.Round(pos.x) - 0.5f, pos.y + yPosMultiple, Mathf.Round(pos.z) - 0.5f); // round to the nearest grid position
-            //Vector3 pos = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y, playerCamera.transform.position.z + cc.radius * 2);
+            pos = GetGridPos(pos); // snap to grid
         }
 
-        //GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
         var model = LDrawModelRuntime.Create(cmdstr, cmdstr, false);
         placedBrick = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
         placedBrick = LDrawImportRuntime.Instance.ConfigureModelOb(placedBrick, pos, false);
 
-        if (!fromFile)
-        {
-            placedBrick.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0)); // set part orientation to zero
-            //ob.transform.rotation = Quaternion.LookRotation(spawnDir); // orient forwards in direction of camera
-        }
-        else
-        {
-            placedBrick.transform.rotation = rot;
-        }
-
+        //if (!fromFile)
+        //{
+        //    placedBrick.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0)); // set part orientation to zero
+        //}
+        //else
+        //{
+        //    placedBrick.transform.rotation = rot;
+        //}
+        placedBrick.transform.rotation = rot;
 
         //SceneObject sceneObject = ob.AddComponent<SceneObject>();
         //sceneObject.controller = this;
+        if (placedBrick.GetComponent<BoxCollider>() != null)
+        {
+            BoxCollider previousBC = placedBrick.GetComponent<BoxCollider>();
+            Destroy(previousBC);
+        }
         BoxCollider VoxelBc = placedBrick.AddComponent<BoxCollider>();
         VoxelBc.material = physicMaterial;
         placedBrick.SetActive(true);
         placedBrick.name = _partname;
         placedBrick.tag = "placedBrick";
-        placedBrick.transform.GetChild(0).GetComponent<MeshRenderer>().material = brickMaterials[material];
+
+        ResetPlacedBrickMaterialsAndBoxColliders(materialIndex);
     }
 
     public void CmdSpawnObject(int type, int item, Vector3 pos)

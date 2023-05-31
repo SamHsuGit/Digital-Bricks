@@ -45,6 +45,7 @@ public static class SettingsStatic
         settings.invertY = false;
         settings.fullscreen = true;
         settings.currentBrickIndex = 0;
+        settings.currentBrickRotation = 0;
 
         string path;
         if (Settings.Platform == 2)
@@ -96,6 +97,7 @@ public class Settings
     public bool invertY;
     public bool fullscreen;
     public int currentBrickIndex;
+    public int currentBrickRotation;
 
     public static bool WorldLoaded
     {
