@@ -915,6 +915,7 @@ public class Controller : NetworkBehaviour
         Quaternion rot = Quaternion.identity;
         switch (currentBrickRotation)
         {
+            // ONLY ALLOW ROTATION OF BRICK NORTH SOUTH EAST WEST FOR NOW
             case 0:
                 rot = Quaternion.Euler(new Vector3(180, 0, 0));
                 break;
@@ -1336,46 +1337,48 @@ public class Controller : NetworkBehaviour
 
     public Vector3 GetGridPos(Vector3 pos)
     {
-        // 1 stud is 1/2 the width of a voxel and one stud is 1/5 the height of a voxel
-        Vector3 returnPos = new Vector3((Mathf.Ceil(pos.x * 2) / 2) + 0.25f, Mathf.Ceil(pos.y * 5) / 5, (Mathf.Ceil(pos.z * 2) / 2) + 0.25f); // snap position to nearest voxel grid
-        
-        if(placedBrick != null)
-        {
-            if(placedBrick.GetComponent<BoxCollider>() != null)
-            {
-                BoxCollider bc = placedBrick.GetComponent<BoxCollider>();
-                if (placedBrick.transform.rotation.y == 0 && placedBrick.transform.rotation.y == 180)
-                {
-                    if (bc.size.x % 40 == 0)
-                    {
-                        // odd stud width should use center of collider
-                        // even stud width should use offset center of collider
-                        // if part child object box collider size has increment of 40 with no remainder, use offset, otherwise offset entire part 0.25f in that direction
-                        returnPos += new Vector3(0, 0, 0.25f);
-                    }
-                    if (bc.size.z % 40 == 0)
-                    {
-                        returnPos += new Vector3(0.25f, 0, 0);
-                    }
-                }
-                else if (placedBrick.transform.rotation.y == 90 && placedBrick.transform.rotation.y == 270)
-                {
-                    if (bc.size.x % 40 == 0)
-                    {
-                        // odd stud width should use center of collider
-                        // even stud width should use offset center of collider
-                        // if part child object box collider size has increment of 40 with no remainder, use offset, otherwise offset entire part 0.25f in that direction
-                        returnPos += new Vector3(0.25f, 0, 0);
-                    }
-                    if (bc.size.z % 40 == 0)
-                    {
-                        returnPos += new Vector3(0, 0, 0.25f);
-                    }
-                }
-                
-                returnPos += new Vector3(0, bc.size.y / 40, 0); // move bottom of part to voxel grid
-            }
-        }
+        Vector3 returnPos = Vector3.zero;
+
+        // NEED TO USE THE PART POSITION FROM THE LDRAW PART FILE TO BE ABLE TO SAVE PART POSITIONS CORRECTLY (SHOULD USE OBJECT SNAP)
+        //float xOffset = 0f;
+        //float yOffset = 0f;
+        //float zOffset = 0f;
+        //if(placedBrick != null)
+        //{
+        //    if(placedBrick.GetComponent<BoxCollider>() != null)
+        //    {
+        //        BoxCollider bc = placedBrick.GetComponent<BoxCollider>();
+        //        int bcsx = Mathf.RoundToInt(bc.size.x); // eliminate rounding errors
+        //        int bcsz = Mathf.RoundToInt(bc.size.z); // eliminate rounding errors
+        //        if (currentBrickRotation % 2 == 0) // if current rotation index is even
+        //        {
+        //            if (bcsx % 40 != 0) // if stud width is odd
+        //            {
+        //                xOffset = 0.25f; // offset in that direction to align with stud grid
+        //            }
+        //            if (bcsz % 40 != 0) // if stud width is odd
+        //            {
+        //                zOffset = 0.25f; // offset in that direction to align with stud grid
+        //            }
+        //        }
+        //        else if (currentBrickRotation % 2 != 0) // if current rotation index is odd
+        //        {
+        //            if (bcsx % 40 != 0) // if stud width is odd
+        //            {
+        //                zOffset = 0.25f; // offset other direction since rotated
+        //            }
+        //            if (bcsz % 40 != 0) // if stud width is odd
+        //            {
+        //                xOffset = 0.25f; // offset other direction since rotated
+        //            }
+        //        }
+        //        yOffset = bc.size.y / 40; // move bottom of part to voxel grid
+        //    }
+        //}
+
+        // FORCES BRICKS TO SNAP TO GRID BASED ON BRICK PROPORTIONS
+        //// 1 stud is 1/2 the width of a voxel and one stud is 1/5 the height of a voxel
+        //returnPos = new Vector3((Mathf.Ceil(pos.x * 2) / 2) + xOffset, Mathf.Ceil(pos.y * 5) / 5 + yOffset, (Mathf.Ceil(pos.z * 2) / 2) + zOffset); // snap position to nearest voxel grid
 
         return returnPos; // round to the nearest grid position
     }
@@ -1411,6 +1414,8 @@ public class Controller : NetworkBehaviour
 
         var model = LDrawModelRuntime.Create(cmdstr, cmdstr, false);
         placedBrick = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
+
+        //***NEED TO USE POSITION FROM LDRAW PART FILE TO PLACE PART TO BE ABLE TO SAVE PART LOCATIONS BACK TO FILE CORRECTLY!!!
         placedBrick = LDrawImportRuntime.Instance.ConfigureModelOb(placedBrick, pos, false);
 
         placedBrick.transform.rotation = rot; // set parent object rotation equal to rotation passed into this function
@@ -1966,29 +1971,26 @@ public class Controller : NetworkBehaviour
         }
         else // save file to .ldr format to allow players to use their models in other software
         {
-            cmdstr = "0 FILE placedBricks.io\n" +
+            cmdstr = "0 FILE placedBricks\n" +
             "0 Untitled Model\n" +
             "0 Name: placedBricks\n" +
             "0 Author: \n" +
             "0 CustomBrick\n" +
             "0 NumOfBricks: " + placedBrickObs.Length + "\n" +
-            "1 16 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 placedBricks - submodel.ldr\n" +
+            "1 16 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 placedBricks-submodel.ldr\n" +
             "0 NOFILE\n" +
-            "0 FILE placedBricks - submodel.ldr\n" +
-            "0 placedBricks - submodel.ldr\n" +
-            "0 Name: placedBricks - submodel.ldr\n" +
+            "0 FILE placedBricks-submodel.ldr\n" +
+            "0 placedBricks-submodel.ldr\n" +
+            "0 Name: placedBricks-submodel.ldr\n" +
             "0 Author: \n" +
             "0 CustomBrick\n" +
             "0 NumOfBricks: " + placedBrickObs.Length + "\n";
             foreach (GameObject ob in placedBrickObs)
             {
-                float scaleFactor = 40f;
-                Quaternion rot = ob.transform.rotation;
-                Vector3 pos = (ob.transform.position - placedBrickObs[0].transform.position) * scaleFactor; // position relative to first piece
+                
                 string partname = ob.name;
                 Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
                 string color = "0";
-
                 for (int j = 0; j < brickMaterials.Length; j++)
                 {
                     if (brickMaterials[j].name == mat.name)
@@ -1996,26 +1998,95 @@ public class Controller : NetworkBehaviour
                 }
 
                 // CALCULATE 4x4 MATRIX ROTATION VALUES
-                rot = Quaternion.Euler(Mathf.Round(rot.x * 1000000) * 0.000001f, Mathf.Round(rot.y * 1000000) * 0.000001f, Mathf.Round(rot.z * 1000000) * 0.000001f); // round to 6 decimal places format
-                Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, rot, new Vector3(1, 1, 1));
-                string a = matrix.m00.ToString();
-                string b = matrix.m01.ToString();
-                string c = matrix.m02.ToString();
-                string x = matrix.m03.ToString();
-                string d = matrix.m10.ToString();
-                string e = matrix.m11.ToString();
-                string f = matrix.m12.ToString();
-                string y = matrix.m13.ToString();
-                string g = matrix.m20.ToString();
-                string h = matrix.m21.ToString();
-                string i = matrix.m22.ToString();
-                string z = matrix.m23.ToString();
+                float scaleFactor = 40f;
+                Vector3 pos = (ob.transform.position - placedBrickObs[0].transform.position) * scaleFactor; // position relative to first piece
+                Quaternion rot = ob.transform.rotation;
+
+                Matrix4x4 matrix = Matrix4x4.TRS(pos, rot, new Vector3(1, 1, 1));
+
+                // TESTING METHOD BELOW YIELDS INCORRECT RESULTS AS ROTATIONS MUST BE TAKEN RELATIVE TO PART ORIGIN (FROM LDRAW FILE) NOT PART CENTER POINT GENERATED BY BOUNDING BOX
+                string a = "0.000000";
+                string b = "0.000000";
+                string c = "0.000000";
+                string d = "0.000000";
+                string e = "1.000000";
+                string f = "0.000000";
+                string g = "0.000000";
+                string h = "0.000000";
+                string i = "0.000000";
+                switch (Mathf.RoundToInt(ob.transform.rotation.eulerAngles.y))
+                {
+                    case 0:
+                        {
+                            a = "1.000000";
+                            c = "0.000000";
+                            g = "0.000000";
+                            i = "1.000000";
+                            break;
+                        }
+                    case 90:
+                        {
+                            a = "0.000000";
+                            c = "-1.000000";
+                            g = "1.000000";
+                            i = "0.000000";
+                            break;
+                        }
+                    case -270:
+                        {
+                            a = "0.000000";
+                            c = "-1.000000";
+                            g = "1.000000";
+                            i = "0.000000";
+                            break;
+                        }
+                    case 180:
+                        {
+                            a = "-1.000000";
+                            c = "0.000000";
+                            g = "0.000000";
+                            i = "-1.000000";
+                            break;
+                        }
+                    case -180:
+                        {
+                            a = "-1.000000";
+                            c = "0.000000";
+                            g = "0.000000";
+                            i = "-1.000000";
+                            break;
+                        }
+                    case -90:
+                        {
+                            a = "0.000000";
+                            c = "1.000000";
+                            g = "-1.000000";
+                            i = "0.000000";
+                            break;
+                        }
+                    case 270:
+                        {
+                            a = "0.000000";
+                            c = "1.000000";
+                            g = "-1.000000";
+                            i = "0.000000";
+                            break;
+                        }
+                }
+                // VALUES FROM TESTING LDRAW EXPORTS FROM STUDIO
+                // 0:           a1, b0, c0, d0, e1, f0, g0, h0, i1
+                //90 (-270):    a0, b0, c-1, d0, e1, f0, g1, h0, i0
+                //180 (-180):   a-1, b0, c0, d0, e1, f0, g0, h0, i-1
+                //-90 (270):    a0, b0, c1, d0, e1, f0, g-1, h0, i0
+
                 //https://www.ldraw.org/article/218.html
                 //FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
                 /// a b c x \
                 //| d e f y |
                 //| g h i z |
                 //\ 0 0 0 1 /
+
+                // BUILD COMMAND STRING
                 cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname + "\n";
             }
             cmdstr += "0 NOFILE";
