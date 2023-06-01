@@ -143,7 +143,7 @@ public class Controller : NetworkBehaviour
     private List<Material> cachedMaterials = new List<Material>();
     private string[] ldrawPartsListStringArray = new string[] { };
     private string currentBrickName;
-    private bool obfuscateBRXFILE = false;
+    private bool obfuscateBRXFILE = true;
 
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
     // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
@@ -312,7 +312,6 @@ public class Controller : NetworkBehaviour
             Vector3 pos = new Vector3(posx, posy, posz);
 
             // SIMPLIFIED FORMAT
-            //cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + rot.x + "," + rot.y + "," + rot.z + "," + rot.w + "," + partname + "*\n";
             string a = "1.000000";
             string b = "0.000000";
             string c = "0.000000";
@@ -328,32 +327,6 @@ public class Controller : NetworkBehaviour
             float rotw = float.Parse(strs[7]);
             string partname = strs[8];
             Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
-
-            //// LDRAW FORMAT
-            //string a = strs[4];
-            //string b = strs[5];
-            //string c = strs[6];
-            //string d = strs[7];
-            //string e = strs[8];
-            //string f = strs[9];
-            //string g = strs[10];
-            //string h = strs[11];
-            //string i = strs[12];
-            //string partname = strs[13];
-            //Matrix4x4 matrix = new Matrix4x4();
-            //matrix.SetRow(0, new Vector4(float.Parse(a), float.Parse(b), float.Parse(c), float.Parse(x)));
-            //matrix.SetRow(1, new Vector4(float.Parse(d), float.Parse(e), float.Parse(f), float.Parse(y)));
-            //matrix.SetRow(2, new Vector4(float.Parse(g), float.Parse(h), float.Parse(i), float.Parse(z)));
-            //matrix.SetRow(3, new Vector4(0, 0, 0, 1));
-            //Vector3 forward;
-            //forward.x = matrix.m02;
-            //forward.y = matrix.m12;
-            //forward.z = matrix.m22;
-            //Vector3 upwards;
-            //upwards.x = matrix.m01;
-            //upwards.y = matrix.m11;
-            //upwards.z = matrix.m21;
-            //Quaternion rot = Quaternion.LookRotation(forward, upwards);
 
             string commandstring = "1 " + color + " 0.000000 0.000000 0.000000" + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
@@ -785,7 +758,7 @@ public class Controller : NetworkBehaviour
         }
         else if (inputHandler.navLeft)
         {
-            if (currentBrickRotation + 1 <= 15)
+            if (currentBrickRotation + 1 <= 3)
                 currentBrickRotation++;
             else
                 currentBrickRotation = 0;
@@ -799,7 +772,7 @@ public class Controller : NetworkBehaviour
             if (currentBrickRotation - 1 >= 0)
                 currentBrickRotation--;
             else
-                currentBrickRotation = 15;
+                currentBrickRotation = 3;
 
             Destroy(placedBrick);
             SpawnTempBrick();
@@ -943,83 +916,61 @@ public class Controller : NetworkBehaviour
         switch (currentBrickRotation)
         {
             case 0:
-                rot = Quaternion.Euler(new Vector3(0, 0, 0));
-                break;
-            case 1:
-                rot = Quaternion.Euler(new Vector3(0, 90, 0));
-                break;
-            case 2:
-                rot = Quaternion.Euler(new Vector3(0, 180, 0));
-                break;
-            case 3:
-                rot = Quaternion.Euler(new Vector3(0, 270, 0));
-                break;
-            case 4:
-                rot = Quaternion.Euler(new Vector3(90, 0, 0));
-                break;
-            case 5:
-                rot = Quaternion.Euler(new Vector3(90, 90, 0));
-                break;
-            case 6:
-                rot = Quaternion.Euler(new Vector3(90, 180, 0));
-                break;
-            case 7:
-                rot = Quaternion.Euler(new Vector3(90, 270, 0));
-                break;
-            case 8:
                 rot = Quaternion.Euler(new Vector3(180, 0, 0));
                 break;
-            case 9:
+            case 1:
                 rot = Quaternion.Euler(new Vector3(180, 90, 0));
                 break;
-            case 10:
+            case 2:
                 rot = Quaternion.Euler(new Vector3(180, 180, 0));
                 break;
-            case 11:
+            case 3:
                 rot = Quaternion.Euler(new Vector3(180, 270, 0));
                 break;
-            case 12:
-                rot = Quaternion.Euler(new Vector3(270, 0, 0));
-                break;
-            case 13:
-                rot = Quaternion.Euler(new Vector3(270, 90, 0));
-                break;
-            case 14:
-                rot = Quaternion.Euler(new Vector3(270, 180, 0));
-                break;
-            case 15:
-                rot = Quaternion.Euler(new Vector3(270, 270, 0));
-                break;
+            //case 4:
+            //    rot = Quaternion.Euler(new Vector3(270, 0, 0));
+            //    break;
+            //case 5:
+            //    rot = Quaternion.Euler(new Vector3(270, 90, 0));
+            //    break;
+            //case 6:
+            //    rot = Quaternion.Euler(new Vector3(270, 180, 0));
+            //    break;
+            //case 7:
+            //    rot = Quaternion.Euler(new Vector3(270, 270, 0));
+            //    break;
+            //case 8:
+            //    rot = Quaternion.Euler(new Vector3(0, 0, 0));
+            //    break;
+            //case 9:
+            //    rot = Quaternion.Euler(new Vector3(0, 90, 0));
+            //    break;
+            //case 10:
+            //    rot = Quaternion.Euler(new Vector3(0, 180, 0));
+            //    break;
+            //case 11:
+            //    rot = Quaternion.Euler(new Vector3(0, 270, 0));
+            //    break;
+            //case 12:
+            //    rot = Quaternion.Euler(new Vector3(90, 0, 0));
+            //    break;
+            //case 13:
+            //    rot = Quaternion.Euler(new Vector3(90, 90, 0));
+            //    break;
+            //case 14:
+            //    rot = Quaternion.Euler(new Vector3(90, 180, 0));
+            //    break;
+            //case 15:
+            //    rot = Quaternion.Euler(new Vector3(90, 270, 0));
+            //    break;
         }
-
-        Quaternion rotationQuaternion = Quaternion.identity;
-
-        //Quaternion rotationQuaternion = rot; // SEND ROT TO CALCULATE 4x4MATRIX VALUES FOR LDRAW IMPORTER TO ROTATE SUB PARTS (NOT USED)
-        //Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 1, 0), rotationQuaternion, new Vector3(1, 1, 1));
-        ////https://www.ldraw.org/article/218.html
-        ////FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
-        ///// a b c x \
-        ////| d e f y |
-        ////| g h i z |
-        ////\ 0 0 0 1 /
 
         // while holding shoot, spawn an object with current partname parented to cursor with light blue material
         string color = "43"; // spawns objects with trans light blue for temp color
-        string x = "0.000000";
-        string y = "0.000000";
-        string z = "0.000000";
-
-        // USE LDRAW IMPORTER COMMAND STRING TO TELL IMPORTER WHICH ROTATION TO USE FOR SUB PARTS ( NOT USED)
-        //string a = matrix.m00.ToString(); //"1.000000";
-        //string b = matrix.m01.ToString(); //"0.000000";
-        //string c = matrix.m02.ToString(); //"0.000000";
-        //string d = matrix.m10.ToString(); //"0.000000";
-        //string e = matrix.m11.ToString(); //"1.000000";
-        //string f = matrix.m12.ToString(); //"0.000000";
-        //string g = matrix.m20.ToString(); //"0.000000";
-        //string h = matrix.m21.ToString(); //"0.000000";
-        //string i = matrix.m22.ToString(); //"1.000000";
-
+        // block position/rotation are not applied to subparts with the ldraw importer plugin so we set these values to default since we are rotating the new parent object.
+        string x = "0.000000"; // position x
+        string y = "0.000000"; // position y
+        string z = "0.000000"; // position z
         string a = "1.000000";
         string b = "0.000000";
         string c = "0.000000";
@@ -1220,17 +1171,6 @@ public class Controller : NetworkBehaviour
         {
             Destroy(placedBrick);
             placedBrick = null;
-
-            string[] rotation = new string[9];
-            rotation[0] = "1.000000";
-            rotation[1] = "0.000000";
-            rotation[2] = "0.000000";
-            rotation[3] = "0.000000";
-            rotation[4] = "1.000000";
-            rotation[5] = "0.000000";
-            rotation[6] = "0.000000";
-            rotation[7] = "0.000000";
-            rotation[8] = "1.000000";
             SpawnTempBrick();
         }
         if (holding)
@@ -1404,16 +1344,23 @@ public class Controller : NetworkBehaviour
             if(placedBrick.GetComponent<BoxCollider>() != null)
             {
                 BoxCollider bc = placedBrick.GetComponent<BoxCollider>();
+                Vector3 vector1 = new Vector3(0.25f, 0, 0);
+                Vector3 vector2 = new Vector3(0, 0, 0.25f);
+                //if (placedBrick.transform.rotation.y != 0 && placedBrick.transform.rotation.y != 180) // doesn't work
+                //{
+                //    vector1 = new Vector3(0, 0, 0.25f);
+                //    vector2 = new Vector3(0.25f, 0, 0);
+                //}
                 if (bc.size.x % 40 == 0)
                     {
                         // odd stud width should use center of collider
                         // even stud width should use offset center of collider
                         // if part child object box collider size has increment of 40 with no remainder, use offset, otherwise offset entire part 0.25f in that direction
-                        returnPos += new Vector3(0.25f, 0, 0);
+                        returnPos += vector1;
                     }
                 if (bc.size.z % 40 == 0)
                 {
-                    returnPos += new Vector3(0, 0, 0.25f);
+                    returnPos += vector2;
                 }
                 returnPos += new Vector3(0, bc.size.y / 40, 0); // move bottom of part to voxel grid
             }
@@ -1455,9 +1402,9 @@ public class Controller : NetworkBehaviour
         placedBrick = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
         placedBrick = LDrawImportRuntime.Instance.ConfigureModelOb(placedBrick, pos, false);
 
-        placedBrick.transform.rotation = rot;
+        placedBrick.transform.rotation = rot; // set parent object rotation equal to rotation passed into this function
 
-        //SceneObject sceneObject = ob.AddComponent<SceneObject>();
+        //SceneObject sceneObject = ob.AddComponent<SceneObject>(); // used for spawning object on the server
         //sceneObject.controller = this;
         if (placedBrick.GetComponent<BoxCollider>() != null)
         {
@@ -1988,30 +1935,6 @@ public class Controller : NetworkBehaviour
                     if (mat.name.Contains(brickMaterials[j].name))
                         color = j.ToString();
                 }
-
-                //Transform child = ob.transform.GetChild(0);
-                //Quaternion childRot = Quaternion.Euler(Mathf.Round(child.rotation.x * 1000000) * 0.000001f, Mathf.Round(child.rotation.y * 1000000) * 0.000001f, Mathf.Round(child.rotation.z * 1000000) * 0.000001f);
-                //Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, childRot, new Vector3(1, 1, 1));
-                //Debug.Log(childRot);
-                //string a = matrix.m00.ToString();
-                //string b = matrix.m01.ToString();
-                //string c = matrix.m02.ToString();
-                //string x = matrix.m03.ToString();
-                //string d = matrix.m10.ToString();
-                //string e = matrix.m11.ToString();
-                //string f = matrix.m12.ToString();
-                //string y = matrix.m13.ToString();
-                //string g = matrix.m20.ToString();
-                //string h = matrix.m21.ToString();
-                //string i = matrix.m22.ToString();
-                //string z = matrix.m23.ToString();
-                ////https://www.ldraw.org/article/218.html
-                ////FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
-                ///// a b c x \
-                ////| d e f y |
-                ////| g h i z |
-                ////\ 0 0 0 1 /
-                //cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + a + "," + b + "," + c + "," + d + "," + e + "," + f + "," + g + "," + h + "," + i + "," + partname + "*\n";
                 cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + rot.x + "," + rot.y + "," + rot.z + "," + rot.w + "," + partname + "*\n";
             }
 
@@ -2061,10 +1984,9 @@ public class Controller : NetworkBehaviour
                         color = j.ToString();
                 }
 
-                //Transform child = ob.transform.GetChild(0);
+                // CALCULATE 4x4 MATRIX ROTATION VALUES
                 rot = Quaternion.Euler(Mathf.Round(rot.x * 1000000) * 0.000001f, Mathf.Round(rot.y * 1000000) * 0.000001f, Mathf.Round(rot.z * 1000000) * 0.000001f); // round to 6 decimal places format
                 Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, rot, new Vector3(1, 1, 1));
-
                 string a = matrix.m00.ToString();
                 string b = matrix.m01.ToString();
                 string c = matrix.m02.ToString();
@@ -2077,14 +1999,12 @@ public class Controller : NetworkBehaviour
                 string h = matrix.m21.ToString();
                 string i = matrix.m22.ToString();
                 string z = matrix.m23.ToString();
-
                 //https://www.ldraw.org/article/218.html
                 //FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
                 /// a b c x \
                 //| d e f y |
                 //| g h i z |
                 //\ 0 0 0 1 /
-
                 cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname + "\n";
             }
             cmdstr += "0 NOFILE";
