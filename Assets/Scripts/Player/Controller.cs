@@ -1344,24 +1344,35 @@ public class Controller : NetworkBehaviour
             if(placedBrick.GetComponent<BoxCollider>() != null)
             {
                 BoxCollider bc = placedBrick.GetComponent<BoxCollider>();
-                Vector3 vector1 = new Vector3(0.25f, 0, 0);
-                Vector3 vector2 = new Vector3(0, 0, 0.25f);
-                //if (placedBrick.transform.rotation.y != 0 && placedBrick.transform.rotation.y != 180) // doesn't work
-                //{
-                //    vector1 = new Vector3(0, 0, 0.25f);
-                //    vector2 = new Vector3(0.25f, 0, 0);
-                //}
-                if (bc.size.x % 40 == 0)
+                if (placedBrick.transform.rotation.y == 0 && placedBrick.transform.rotation.y == 180)
+                {
+                    if (bc.size.x % 40 == 0)
                     {
                         // odd stud width should use center of collider
                         // even stud width should use offset center of collider
                         // if part child object box collider size has increment of 40 with no remainder, use offset, otherwise offset entire part 0.25f in that direction
-                        returnPos += vector1;
+                        returnPos += new Vector3(0, 0, 0.25f);
                     }
-                if (bc.size.z % 40 == 0)
-                {
-                    returnPos += vector2;
+                    if (bc.size.z % 40 == 0)
+                    {
+                        returnPos += new Vector3(0.25f, 0, 0);
+                    }
                 }
+                else if (placedBrick.transform.rotation.y == 90 && placedBrick.transform.rotation.y == 270)
+                {
+                    if (bc.size.x % 40 == 0)
+                    {
+                        // odd stud width should use center of collider
+                        // even stud width should use offset center of collider
+                        // if part child object box collider size has increment of 40 with no remainder, use offset, otherwise offset entire part 0.25f in that direction
+                        returnPos += new Vector3(0.25f, 0, 0);
+                    }
+                    if (bc.size.z % 40 == 0)
+                    {
+                        returnPos += new Vector3(0, 0, 0.25f);
+                    }
+                }
+                
                 returnPos += new Vector3(0, bc.size.y / 40, 0); // move bottom of part to voxel grid
             }
         }
