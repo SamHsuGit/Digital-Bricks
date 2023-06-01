@@ -143,6 +143,7 @@ public class Controller : NetworkBehaviour
     private List<Material> cachedMaterials = new List<Material>();
     private string[] ldrawPartsListStringArray = new string[] { };
     private string currentBrickName;
+    private bool obfuscateBRXFILE = false;
 
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
     // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
@@ -273,12 +274,18 @@ public class Controller : NetworkBehaviour
         FileStream stream = new FileStream(path, FileMode.Open);
         string base64 = formatter.Deserialize(stream) as string;
         stream.Close();
-        // d-obfuscate
-        //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
-        var data = System.Convert.FromBase64String(base64);
-        string decodedString = System.Text.Encoding.UTF8.GetString(data);
 
-        baseServer = decodedString;
+        if (obfuscateBRXFILE)
+        {
+            // de-obfuscate
+            //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
+            var data = System.Convert.FromBase64String(base64);
+            string decodedString = System.Text.Encoding.UTF8.GetString(data);
+            baseServer = decodedString;
+        }
+        else
+            baseServer = base64;
+        
         LoadPlacedBricks(baseServer);
     }
 
@@ -286,8 +293,8 @@ public class Controller : NetworkBehaviour
     {
         if (cmdstr.Length == 0)
             return;
+
         //separate string into separate strings based on new lines
-        //extract partname
         string[] cmdstrings = cmdstr.Split("*");
         if (cmdstrings.Length == 0)
             return;
@@ -297,19 +304,15 @@ public class Controller : NetworkBehaviour
             if (cmdstrings[j].Length == 0)
                 return;
             string[] strs = cmdstrings[j].Split(",");
+
             int color = int.Parse(strs[0]);
             float posx = float.Parse(strs[1]);
             float posy = float.Parse(strs[2]);
             float posz = float.Parse(strs[3]);
-            float rotx = float.Parse(strs[4]);
-            float roty = float.Parse(strs[5]);
-            float rotz = float.Parse(strs[6]);
-            float rotw = float.Parse(strs[7]);
-            string partname = strs[8];
             Vector3 pos = new Vector3(posx, posy, posz);
-            Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
 
-            // ADD CODE TO CALCULATE THESE VALUES BASED ON SAVED VALUES
+            // SIMPLIFIED FORMAT
+            //cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + rot.x + "," + rot.y + "," + rot.z + "," + rot.w + "," + partname + "*\n";
             string a = "1.000000";
             string b = "0.000000";
             string c = "0.000000";
@@ -319,6 +322,38 @@ public class Controller : NetworkBehaviour
             string g = "0.000000";
             string h = "0.000000";
             string i = "1.000000";
+            float rotx = float.Parse(strs[4]);
+            float roty = float.Parse(strs[5]);
+            float rotz = float.Parse(strs[6]);
+            float rotw = float.Parse(strs[7]);
+            string partname = strs[8];
+            Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
+
+            //// LDRAW FORMAT
+            //string a = strs[4];
+            //string b = strs[5];
+            //string c = strs[6];
+            //string d = strs[7];
+            //string e = strs[8];
+            //string f = strs[9];
+            //string g = strs[10];
+            //string h = strs[11];
+            //string i = strs[12];
+            //string partname = strs[13];
+            //Matrix4x4 matrix = new Matrix4x4();
+            //matrix.SetRow(0, new Vector4(float.Parse(a), float.Parse(b), float.Parse(c), float.Parse(x)));
+            //matrix.SetRow(1, new Vector4(float.Parse(d), float.Parse(e), float.Parse(f), float.Parse(y)));
+            //matrix.SetRow(2, new Vector4(float.Parse(g), float.Parse(h), float.Parse(i), float.Parse(z)));
+            //matrix.SetRow(3, new Vector4(0, 0, 0, 1));
+            //Vector3 forward;
+            //forward.x = matrix.m02;
+            //forward.y = matrix.m12;
+            //forward.z = matrix.m22;
+            //Vector3 upwards;
+            //upwards.x = matrix.m01;
+            //upwards.y = matrix.m11;
+            //upwards.z = matrix.m21;
+            //Quaternion rot = Quaternion.LookRotation(forward, upwards);
 
             string commandstring = "1 " + color + " 0.000000 0.000000 0.000000" + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
@@ -757,7 +792,7 @@ public class Controller : NetworkBehaviour
             SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
             Destroy(placedBrick);
-            SpawnTempBrick(currentBrickRotation);
+            SpawnTempBrick();
         }
         else if (inputHandler.navRight)
         {
@@ -767,7 +802,7 @@ public class Controller : NetworkBehaviour
                 currentBrickRotation = 15;
 
             Destroy(placedBrick);
-            SpawnTempBrick(currentBrickRotation);
+            SpawnTempBrick();
         }
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
@@ -812,7 +847,7 @@ public class Controller : NetworkBehaviour
             holdingBuild = true;
             brickPickUp.Play();
 
-            SpawnTempBrick(currentBrickRotation);
+            SpawnTempBrick();
         }
 
         //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
@@ -902,45 +937,10 @@ public class Controller : NetworkBehaviour
         //}
     }
 
-    void SpawnTempBrick(int rotation)
+    void SpawnTempBrick()
     {
-        // while holding shoot, spawn an object with current partname parented to cursor with light blue material
-        string color = "43"; // spawns objects with trans light blue for temp color
-        string x = "0.000000";
-        string y = "0.000000";
-        string z = "0.000000";
-        string a = "1.000000";
-        string b = "0.000000";
-        string c = "0.000000";
-        string d = "0.000000";
-        string e = "1.000000";
-        string f = "0.000000";
-        string g = "0.000000";
-        string h = "0.000000";
-        string i = "1.000000";
-        string partname = currentBrickName;
-        Vector3 pos = new Vector3(0, 1, 0);
-        string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
-
-        //Matrix4x4 matrix = new Matrix4x4() { a, b, c, x, d, e, f, y, g, h, i, z, 0, 0, 0, 1 };
-
-        //public static Quaternion ExtractRotation(this Matrix4x4 matrix)
-        //{
-            //Vector3 forward;
-            //forward.x = matrix.m02;
-            //forward.y = matrix.m12;
-            //forward.z = matrix.m22;
-
-            //Vector3 upwards;
-            //upwards.x = matrix.m01;
-            //upwards.y = matrix.m11;
-            //upwards.z = matrix.m21;
-
-            //Quaternion rot = Quaternion.LookRotation(forward, upwards);
-        //}
-
         Quaternion rot = Quaternion.identity;
-        switch (rotation)
+        switch (currentBrickRotation)
         {
             case 0:
                 rot = Quaternion.Euler(new Vector3(0, 0, 0));
@@ -991,6 +991,48 @@ public class Controller : NetworkBehaviour
                 rot = Quaternion.Euler(new Vector3(270, 270, 0));
                 break;
         }
+
+        Quaternion rotationQuaternion = Quaternion.identity;
+
+        //Quaternion rotationQuaternion = rot; // SEND ROT TO CALCULATE 4x4MATRIX VALUES FOR LDRAW IMPORTER TO ROTATE SUB PARTS (NOT USED)
+        //Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 1, 0), rotationQuaternion, new Vector3(1, 1, 1));
+        ////https://www.ldraw.org/article/218.html
+        ////FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
+        ///// a b c x \
+        ////| d e f y |
+        ////| g h i z |
+        ////\ 0 0 0 1 /
+
+        // while holding shoot, spawn an object with current partname parented to cursor with light blue material
+        string color = "43"; // spawns objects with trans light blue for temp color
+        string x = "0.000000";
+        string y = "0.000000";
+        string z = "0.000000";
+
+        // USE LDRAW IMPORTER COMMAND STRING TO TELL IMPORTER WHICH ROTATION TO USE FOR SUB PARTS ( NOT USED)
+        //string a = matrix.m00.ToString(); //"1.000000";
+        //string b = matrix.m01.ToString(); //"0.000000";
+        //string c = matrix.m02.ToString(); //"0.000000";
+        //string d = matrix.m10.ToString(); //"0.000000";
+        //string e = matrix.m11.ToString(); //"1.000000";
+        //string f = matrix.m12.ToString(); //"0.000000";
+        //string g = matrix.m20.ToString(); //"0.000000";
+        //string h = matrix.m21.ToString(); //"0.000000";
+        //string i = matrix.m22.ToString(); //"1.000000";
+
+        string a = "1.000000";
+        string b = "0.000000";
+        string c = "0.000000";
+        string d = "0.000000";
+        string e = "1.000000";
+        string f = "0.000000";
+        string g = "0.000000";
+        string h = "0.000000";
+        string i = "1.000000";
+
+        string partname = currentBrickName;
+        Vector3 pos = new Vector3(0, 1, 0);
+        string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
         if (Settings.OnlinePlay)
             CmdPlaceBrick(false, partname, cmdstr, 0, pos, rot); // spawn with transparent "temp" material
@@ -1179,7 +1221,17 @@ public class Controller : NetworkBehaviour
             Destroy(placedBrick);
             placedBrick = null;
 
-            SpawnTempBrick(currentBrickRotation);
+            string[] rotation = new string[9];
+            rotation[0] = "1.000000";
+            rotation[1] = "0.000000";
+            rotation[2] = "0.000000";
+            rotation[3] = "0.000000";
+            rotation[4] = "1.000000";
+            rotation[5] = "0.000000";
+            rotation[6] = "0.000000";
+            rotation[7] = "0.000000";
+            rotation[8] = "1.000000";
+            SpawnTempBrick();
         }
         if (holding)
         {
@@ -1403,14 +1455,6 @@ public class Controller : NetworkBehaviour
         placedBrick = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
         placedBrick = LDrawImportRuntime.Instance.ConfigureModelOb(placedBrick, pos, false);
 
-        //if (!fromFile)
-        //{
-        //    placedBrick.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0)); // set part orientation to zero
-        //}
-        //else
-        //{
-        //    placedBrick.transform.rotation = rot;
-        //}
         placedBrick.transform.rotation = rot;
 
         //SceneObject sceneObject = ob.AddComponent<SceneObject>();
@@ -1920,7 +1964,7 @@ public class Controller : NetworkBehaviour
         ExportPlacedBricks(true);
     }
 
-    public void ExportPlacedBricks(bool obfuscate)
+    public void ExportPlacedBricks(bool ldraw)
     {
         string savePath = Settings.AppSaveDataPath + "/saves/" + world.worldData.planetSeed + "-" + world.worldData.worldCoord + "/";
         if (!Directory.Exists(savePath))
@@ -1928,8 +1972,65 @@ public class Controller : NetworkBehaviour
 
         GameObject[] placedBrickObs = GameObject.FindGameObjectsWithTag("placedBrick");
         string cmdstr = "";
+        
+        if(!ldraw) // save the brick data to an obfuscated file to be loaded in next time world is loaded
+        {
+            foreach (GameObject ob in placedBrickObs)
+            {
+                Vector3 pos = ob.transform.position;
+                Quaternion rot = ob.transform.rotation;
+                string partname = ob.name;
+                Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
 
-        if (!obfuscate) // save file to .ldr format to allow players to use their models in other software
+                string color = "0";
+                for (int j = 0; j < brickMaterials.Length; j++)
+                {
+                    if (mat.name.Contains(brickMaterials[j].name))
+                        color = j.ToString();
+                }
+
+                //Transform child = ob.transform.GetChild(0);
+                //Quaternion childRot = Quaternion.Euler(Mathf.Round(child.rotation.x * 1000000) * 0.000001f, Mathf.Round(child.rotation.y * 1000000) * 0.000001f, Mathf.Round(child.rotation.z * 1000000) * 0.000001f);
+                //Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, childRot, new Vector3(1, 1, 1));
+                //Debug.Log(childRot);
+                //string a = matrix.m00.ToString();
+                //string b = matrix.m01.ToString();
+                //string c = matrix.m02.ToString();
+                //string x = matrix.m03.ToString();
+                //string d = matrix.m10.ToString();
+                //string e = matrix.m11.ToString();
+                //string f = matrix.m12.ToString();
+                //string y = matrix.m13.ToString();
+                //string g = matrix.m20.ToString();
+                //string h = matrix.m21.ToString();
+                //string i = matrix.m22.ToString();
+                //string z = matrix.m23.ToString();
+                ////https://www.ldraw.org/article/218.html
+                ////FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
+                ///// a b c x \
+                ////| d e f y |
+                ////| g h i z |
+                ////\ 0 0 0 1 /
+                //cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + a + "," + b + "," + c + "," + d + "," + e + "," + f + "," + g + "," + h + "," + i + "," + partname + "*\n";
+                cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + rot.x + "," + rot.y + "," + rot.z + "," + rot.w + "," + partname + "*\n";
+            }
+
+            // obfuscate the text so it cannot be read easily
+            //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
+            var bytes = System.Text.Encoding.UTF8.GetBytes(cmdstr);
+            var base64 = System.Convert.ToBase64String(bytes);
+
+            // save as binary file (obfuscated so players cannot cheat and create their own bases without "earning" the pieces)
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream;
+            stream = new FileStream(savePath + "placedBricks.brx", FileMode.Create); // overwrites any existing files by default
+            if (obfuscateBRXFILE)
+                formatter.Serialize(stream, base64);
+            else
+                formatter.Serialize(stream, cmdstr);
+            stream.Close();
+        }
+        else // save file to .ldr format to allow players to use their models in other software
         {
             cmdstr = "0 FILE placedBricks.io\n" +
             "0 Untitled Model\n" +
@@ -1948,51 +2049,46 @@ public class Controller : NetworkBehaviour
             foreach (GameObject ob in placedBrickObs)
             {
                 float scaleFactor = 40f;
+                Quaternion rot = ob.transform.rotation;
                 Vector3 pos = (ob.transform.position - placedBrickObs[0].transform.position) * scaleFactor; // position relative to first piece
                 string partname = ob.name;
                 Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
                 string color = "0";
 
-                for (int i = 0; i < brickMaterials.Length; i++)
+                for (int j = 0; j < brickMaterials.Length; j++)
                 {
-                    if (brickMaterials[i].name == mat.name)
-                        color = i.ToString();
+                    if (brickMaterials[j].name == mat.name)
+                        color = j.ToString();
                 }
-                cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + "1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 " + partname + "\n";
+
+                //Transform child = ob.transform.GetChild(0);
+                rot = Quaternion.Euler(Mathf.Round(rot.x * 1000000) * 0.000001f, Mathf.Round(rot.y * 1000000) * 0.000001f, Mathf.Round(rot.z * 1000000) * 0.000001f); // round to 6 decimal places format
+                Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, rot, new Vector3(1, 1, 1));
+
+                string a = matrix.m00.ToString();
+                string b = matrix.m01.ToString();
+                string c = matrix.m02.ToString();
+                string x = matrix.m03.ToString();
+                string d = matrix.m10.ToString();
+                string e = matrix.m11.ToString();
+                string f = matrix.m12.ToString();
+                string y = matrix.m13.ToString();
+                string g = matrix.m20.ToString();
+                string h = matrix.m21.ToString();
+                string i = matrix.m22.ToString();
+                string z = matrix.m23.ToString();
+
+                //https://www.ldraw.org/article/218.html
+                //FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
+                /// a b c x \
+                //| d e f y |
+                //| g h i z |
+                //\ 0 0 0 1 /
+
+                cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname + "\n";
             }
             cmdstr += "0 NOFILE";
             FileSystemExtension.SaveStringToFile(cmdstr, savePath + "placedBricks.ldr");
-        }
-        else // save the brick data to an obfuscated file to be loaded in next time world is loaded
-        {
-            foreach (GameObject ob in placedBrickObs)
-            {
-                Vector3 pos = ob.transform.position;
-                Quaternion rot = ob.transform.rotation;
-                string partname = ob.name;
-                Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
-
-                string color = "0";
-                for (int i = 0; i < brickMaterials.Length; i++)
-                {
-                    if (mat.name.Contains(brickMaterials[i].name))
-                        color = i.ToString();
-                }
-
-                cmdstr += color + "," + pos.x + "," + pos.y + "," + pos.z + "," + rot.x + "," + rot.y + "," + rot.z + "," + rot.w + "," + partname + "*\n";
-            }
-
-            // obfuscate the text so it cannot be read easily
-            //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
-            var bytes = System.Text.Encoding.UTF8.GetBytes(cmdstr);
-            var base64 = System.Convert.ToBase64String(bytes);
-
-            // save as binary file (obfuscated so players cannot cheat and create their own bases without "earning" the pieces)
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream;
-            stream = new FileStream(savePath + "placedBricks.brx", FileMode.Create); // overwrites any existing files by default
-            formatter.Serialize(stream, base64);
-            stream.Close();
         }
     }
 }
