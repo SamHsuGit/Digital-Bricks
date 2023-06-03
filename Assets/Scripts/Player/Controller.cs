@@ -1998,11 +1998,12 @@ public class Controller : NetworkBehaviour
 
                 // CALCULATE 4x4 MATRIX ROTATION VALUES
                 float scaleFactor = 40f;
+
+                // ldr export positions are slightly off due to saving position of center of part not origin of part (compare exported ldr file from this program to export from stud.io)
                 Vector3 pos = (ob.transform.position - placedBrickObs[0].transform.position) * scaleFactor; // position relative to first piece
+
                 Quaternion rot = ob.transform.rotation;
-
                 Matrix4x4 matrix = Matrix4x4.TRS(pos, rot, new Vector3(1, 1, 1));
-
                 string a = "0.000000";
                 string b = "0.000000";
                 string c = "0.000000";
@@ -2022,7 +2023,7 @@ public class Controller : NetworkBehaviour
                             i = "1.000000";
                             break;
                         }
-                    case 90:
+                    case -90:
                         {
                             a = "0.000000";
                             c = "-1.000000";
@@ -2030,7 +2031,7 @@ public class Controller : NetworkBehaviour
                             i = "0.000000";
                             break;
                         }
-                    case -270:
+                    case 270:
                         {
                             a = "0.000000";
                             c = "-1.000000";
@@ -2054,7 +2055,7 @@ public class Controller : NetworkBehaviour
                             i = "-1.000000";
                             break;
                         }
-                    case -90:
+                    case 90:
                         {
                             a = "0.000000";
                             c = "1.000000";
@@ -2062,7 +2063,7 @@ public class Controller : NetworkBehaviour
                             i = "0.000000";
                             break;
                         }
-                    case 270:
+                    case -270:
                         {
                             a = "0.000000";
                             c = "1.000000";
