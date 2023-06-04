@@ -282,10 +282,12 @@ public class World : MonoBehaviour
             // load pieces
             //LoadSpawnedPieces(baseObString);
 
-            //baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
-            //LDrawImportRuntime.Instance.baseOb = baseOb;
-            //baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
-            //}
+            if(worldData.planetSeed == 0 && worldData.worldCoord == 0)
+            {
+                baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
+                LDrawImportRuntime.Instance.baseOb = baseOb;
+                baseOb.transform.position = LDrawImportRuntime.Instance.importPosition;
+            }
         }
     }
 
@@ -834,12 +836,16 @@ public class World : MonoBehaviour
             isAir = GetIsAir(globalPos);
             if (isAir)
             {
-                //if (!CheckMakeBase(globalPos))
+                if (worldData.planetSeed == 0 && worldData.worldCoord == 0)
+                    if (!CheckMakeBase(globalPos))
+                        return 0;
+                else
                     return 0;
             }
         }
 
-        //CheckMakeBase(globalPos);
+        if (worldData.planetSeed == 0 && worldData.worldCoord == 0)
+            CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
