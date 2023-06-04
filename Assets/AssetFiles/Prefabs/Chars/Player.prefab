@@ -505,6 +505,10 @@ MonoBehaviour:
   isMoving: 0
   isSprinting: 0
   options: 0
+  navUp: 0
+  navDown: 0
+  navLeft: 0
+  navRight: 0
   checkIncrement: 0.1
   grabDist: 4
   tpsDist: 0
@@ -560,6 +564,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}
   placedBrick: {fileID: 0}
   worldPPFXSetValues: {fileID: 0}
+  ldrawHexValues: 2b0000002b00000000000000070000000f00000004000000060000000e000000020000000100000005000000
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0

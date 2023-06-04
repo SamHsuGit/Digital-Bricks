@@ -103,7 +103,7 @@ public class Toolbar : MonoBehaviour
         if (player == null)
             return;
 
-        if(optionsMenuCanvasGroup.alpha != 1 && !controller.holdingBuild && (setNavigate || inputHandler.scrollWheel != Vector2.zero))
+        if(optionsMenuCanvasGroup.alpha != 1 && !controller.holdingBuild && !controller.movingPlacedBrick && (setNavigate || inputHandler.scrollWheel != Vector2.zero))
         {
             if (setNavigate)
                 setNavigate = false;

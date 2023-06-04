@@ -72,8 +72,8 @@
 3003.dat - s = 3039.dat		//2x2b - s = 2x2s
 3039.dat - s = 3045.dat		//2x2s - s = 2x2sdoubleconvex
 3045.dat - s = 3046.dat		//2x2sdoubleconvex - s = 2x2sdoubleconcave
-3002.dat - s = 3298.dat		//2x3b - s = 2x3s
-3001.dat - s = 30363.dat	//2x4b - s = 1x4s
+3002.dat - s = 3298.dat		//2x3b - s = 2x3s (removed, error upon rendering)
+3001.dat - s = 30363.dat	//2x4b - s = 1x4s (removed, error upon rendering)
 
 //si1x
 3004.dat - si = 3665.dat	//1x2b - si = 1x2si

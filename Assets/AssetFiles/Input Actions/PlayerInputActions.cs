@@ -128,39 +128,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""NavigateUp"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""b141e51c-1a69-4696-a587-7e2d14e554aa"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""NavigateDown"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""7a85eab4-4c9a-4c5b-9999-8d73de906c4a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""NavigateLeft"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""8a292e9b-34a2-4f04-913f-10df962f2c6b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""NavigateRight"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""e4769cf2-c7fc-46f0-8721-5455d87481a4"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Touched"",

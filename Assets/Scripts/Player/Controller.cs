@@ -37,6 +37,10 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
     public bool isSprinting;
     public bool options = false;
+    public bool navUp = false;
+    public bool navDown = false;
+    public bool navLeft = false;
+    public bool navRight = false;
     public float checkIncrement = 0.1f;
     public float grabDist = 4f; // defines how far player can reach to grab/place voxels
     public float tpsDist;
@@ -84,6 +88,21 @@ public class Controller : NetworkBehaviour
     public GameObject charObRun;
     public World world;
     public Material[] brickMaterials;
+
+    public int[] ldrawHexValues = new int[]
+    {
+        43,
+        43,
+        0,
+        7,
+        15,
+        4,
+        6,
+        14,
+        2,
+        1,
+        5
+    };
 
     [HideInInspector] public GameObject placedBrick;
 
@@ -143,7 +162,8 @@ public class Controller : NetworkBehaviour
     private List<Material> cachedMaterials = new List<Material>();
     private string[] ldrawPartsListStringArray = new string[] { };
     private string currentBrickName;
-    private bool obfuscateBRXFILE = true;
+    private int currentBrickMaterialIndex;
+    private bool obfuscateBRXFILE = true; // set to true to prevent cheaters from importing a base using ldraw file format
 
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
     // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
@@ -629,7 +649,8 @@ public class Controller : NetworkBehaviour
                         if (charObRun != null && charObRun.activeSelf)
                             charObRun.SetActive(false);
 
-                        CheckBrickPlacement();
+                        GetBrickPlacementInput();
+                        CheckBrickPlacementInput();
 
                         // IF PRESSED GRAB
                         if (!holdingGrab && inputHandler.grab)
@@ -723,10 +744,22 @@ public class Controller : NetworkBehaviour
         playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist);
     }
 
-    public void CheckBrickPlacement()
+    public void GetBrickPlacementInput()
+    {
+        if(inputHandler.navUp)
+            navUp = true;
+        if (inputHandler.navDown)
+            navDown = true;
+        if (inputHandler.navLeft)
+            navLeft = true;
+        if (inputHandler.navRight)
+            navRight = true;
+    }
+
+    public void CheckBrickPlacementInput()
     {
         // only do code if values change
-        if (inputHandler.navUp)
+        if (!movingPlacedBrick && navUp)
         {
             if (currentBrickIndex + 1 <= ldrawPartsListStringArray.Length - 1)
                 currentBrickIndex++;
@@ -740,8 +773,9 @@ public class Controller : NetworkBehaviour
                 CmdUpdateGrabObject(holdingGrab, blockID);
             else
                 UpdateShowGrabObject(holdingGrab, blockID);
+            navUp = false;
         }
-        else if (inputHandler.navDown)
+        else if (!movingPlacedBrick && navDown)
         {
             if (currentBrickIndex - 1 >= 0)
                 currentBrickIndex--;
@@ -755,8 +789,9 @@ public class Controller : NetworkBehaviour
                 CmdUpdateGrabObject(holdingGrab, blockID);
             else
                 UpdateShowGrabObject(holdingGrab, blockID);
+            navDown = false;
         }
-        else if (inputHandler.navLeft)
+        else if (!movingPlacedBrick && navLeft)
         {
             if (currentBrickRotation + 1 <= 3)
                 currentBrickRotation++;
@@ -766,8 +801,9 @@ public class Controller : NetworkBehaviour
 
             Destroy(placedBrick);
             SpawnTempBrick();
+            navLeft = false;
         }
-        else if (inputHandler.navRight)
+        else if (!movingPlacedBrick && navRight)
         {
             if (currentBrickRotation - 1 >= 0)
                 currentBrickRotation--;
@@ -776,6 +812,7 @@ public class Controller : NetworkBehaviour
 
             Destroy(placedBrick);
             SpawnTempBrick();
+            navRight = false;
         }
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
@@ -1024,8 +1061,8 @@ public class Controller : NetworkBehaviour
             placedBrick = null;
             return;
         }
-        
-        blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+
+        currentBrickMaterialIndex = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
         if (blockID < 2 || blockID > 10) // cannot place bricks using voxels outside the defined color range
         {
@@ -1039,7 +1076,7 @@ public class Controller : NetworkBehaviour
 
         // when release shoot, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
         brickPlaceDown.Play();
-        ResetPlacedBrickMaterialsAndBoxColliders(blockID);
+        ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
         
 
         if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
@@ -1095,6 +1132,8 @@ public class Controller : NetworkBehaviour
                 holdingGrab = true;
                 movingPlacedBrick = true;
                 brickPickUp.Play();
+                if(placedBrick != null)
+                    currentBrickMaterialIndex = (byte)GetMaterialIndex(placedBrick);
                 placedBrick = hitObject;
             }
             return; // do not spawn object if hit previously existing object
@@ -1105,7 +1144,7 @@ public class Controller : NetworkBehaviour
 
             PlayerPickBrick();
         }
-        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null)
+        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
         {
             holdingGrab = true;
             PlayerPickBrickFromInventory();
@@ -1198,23 +1237,13 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
-        if (placedBrick != null) // IF PIECE IS SPAWNED
+        if (placedBrick != null && movingPlacedBrick) // IF PIECE IS SPAWNED
         {
-            if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
-            {
-                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                pos = GetGridPos(pos); // snap to grid
-                placedBrick.transform.position = pos;
-            }
-            else // IF HOLDING VOXEL
-            {
-                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                pos = GetGridPos(pos); // snap to grid
-                placedBrick.transform.position = pos;
-            }
+            Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+            pos = GetGridPos(pos); // snap to grid
+            placedBrick.transform.position = pos;
         }
-
-        if (heldObRb != null) // IF NON-VOXEL RB
+        else if (heldObRb != null) // IF NON-VOXEL RB
         {
             heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f);
         }
@@ -1244,20 +1273,21 @@ public class Controller : NetworkBehaviour
         else
             UpdateShowGrabObject(holdingGrab, blockID);
 
-        if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
+        if (movingPlacedBrick)
+        {
+            brickPlaceDown.Play();
+            ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
+            placedBrick = null;
+            movingPlacedBrick = false;
+        }
+        else if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
         {
             health.blockCounter++;
-            PlaceBrick(placePos.position);
+            PlaceVoxel(placePos.position);
         }
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
             PutAwayBrick(blockID);
 
-        if (movingPlacedBrick)
-        {
-            brickPlaceDown.Play();
-            movingPlacedBrick = false;
-            placedBrick = null;
-        }
         movingPlacedBrick = false;
     }
 
@@ -1300,7 +1330,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    void PlaceBrick(Vector3 pos)
+    void PlaceVoxel(Vector3 pos)
     {
         if (!World.Instance.CheckForVoxel(placePos.position))
         {
@@ -1384,12 +1414,16 @@ public class Controller : NetworkBehaviour
 
     public void ResetPlacedBrickMaterialsAndBoxColliders(int materialIndex)
     {
+        if (placedBrick == null)
+            return;
+
         MeshRenderer[] mrs = placedBrick.transform.GetComponentsInChildren<MeshRenderer>();
         if (mrs.Length != 0)
         {
             foreach (MeshRenderer mr in mrs)
             {
-                mr.material = brickMaterials[materialIndex];
+                if(materialIndex <= brickMaterials.Length)
+                    mr.material = brickMaterials[materialIndex];
             }
         }
         BoxCollider[] bcs = placedBrick.transform.GetComponentsInChildren<BoxCollider>();
@@ -1421,16 +1455,19 @@ public class Controller : NetworkBehaviour
 
         //SceneObject sceneObject = ob.AddComponent<SceneObject>(); // used for spawning object on the server
         //sceneObject.controller = this;
-        if (placedBrick.GetComponent<BoxCollider>() != null)
-        {
-            BoxCollider previousBC = placedBrick.GetComponent<BoxCollider>();
-            Destroy(previousBC);
-        }
+        //if (placedBrick.GetComponent<BoxCollider>() != null)
+        //{
+        //    BoxCollider previousBC = placedBrick.GetComponent<BoxCollider>();
+        //    Destroy(previousBC);
+        //}
         BoxCollider VoxelBc = placedBrick.AddComponent<BoxCollider>();
+        VoxelBc.enabled = true;
         VoxelBc.material = physicMaterial;
         placedBrick.SetActive(true);
         placedBrick.name = _partname;
         placedBrick.tag = "placedBrick";
+        placedBrick.layer = 0;
+        placedBrick.isStatic = true;
 
         ResetPlacedBrickMaterialsAndBoxColliders(materialIndex);
     }
@@ -1988,19 +2025,14 @@ public class Controller : NetworkBehaviour
             {
                 
                 string partname = ob.name;
-                Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
-                string color = "0";
-                for (int j = 0; j < brickMaterials.Length; j++)
-                {
-                    if (brickMaterials[j].name == mat.name)
-                        color = j.ToString();
-                }
+                string color = GetMaterialIndex(ob).ToString();
 
                 // CALCULATE 4x4 MATRIX ROTATION VALUES
                 float scaleFactor = 40f;
 
-                // ldr export positions are slightly off due to saving position of center of part not origin of part (compare exported ldr file from this program to export from stud.io)
-                Vector3 pos = (ob.transform.position - placedBrickObs[0].transform.position) * scaleFactor; // position relative to first piece
+                // brick width = 20 LDRAW UNITS LDU https://www.ldraw.org/article/218.html
+                // use sup-part for part offset and get position relative to first piece
+                Vector3 pos = (ob.transform.GetChild(0).transform.position - placedBrickObs[0].transform.position) * scaleFactor;
 
                 Quaternion rot = ob.transform.rotation;
                 Matrix4x4 matrix = Matrix4x4.TRS(pos, rot, new Vector3(1, 1, 1));
@@ -2013,6 +2045,7 @@ public class Controller : NetworkBehaviour
                 string g = "0.000000";
                 string h = "0.000000";
                 string i = "0.000000";
+                // VALUES BELOW CREATED AFTER COMPARING OUTPUT TO STUD.IO FILE OUTPUT
                 switch (Mathf.RoundToInt(ob.transform.rotation.eulerAngles.y))
                 {
                     case 0:
@@ -2072,11 +2105,6 @@ public class Controller : NetworkBehaviour
                             break;
                         }
                 }
-                // VALUES FROM TESTING LDRAW EXPORTS FROM STUDIO
-                // 0:           a1, b0, c0, d0, e1, f0, g0, h0, i1
-                //90 (-270):    a0, b0, c-1, d0, e1, f0, g1, h0, i0
-                //180 (-180):   a-1, b0, c0, d0, e1, f0, g0, h0, i-1
-                //-90 (270):    a0, b0, c1, d0, e1, f0, g-1, h0, i0
 
                 //https://www.ldraw.org/article/218.html
                 //FILE FORMAT = 1 <colour> x y z a b c d e f g h i <file>
@@ -2086,10 +2114,26 @@ public class Controller : NetworkBehaviour
                 //\ 0 0 0 1 /
 
                 // BUILD COMMAND STRING
-                cmdstr += "1" + " " + color + " " + pos.x + " " + pos.y + " " + pos.z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname + "\n";
+                // y component needs to be inverted since LDRAW uses a -y = up coordinate system https://www.ldraw.org/article/218.html
+                cmdstr += "1" + " " + color + " " + Mathf.Round(pos.x) + " " + Mathf.Round(-pos.y) + " " + Mathf.Round(pos.z) + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname + "\n";
             }
             cmdstr += "0 NOFILE";
             FileSystemExtension.SaveStringToFile(cmdstr, savePath + "placedBricks.ldr");
         }
+    }
+
+    private int GetMaterialIndex(GameObject ob)
+    {
+        if(ob == null || ob.transform.GetChild(0).GetComponent<MeshRenderer>() == null)
+                return 0;
+
+        Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
+        int color = 0;
+        for (int j = 0; j < brickMaterials.Length; j++)
+        {
+            if (brickMaterials[j].name + " (Instance)" == mat.name)
+                color = ldrawHexValues[j];
+        }
+        return color;
     }
 }
