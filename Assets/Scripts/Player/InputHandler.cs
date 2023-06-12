@@ -5,6 +5,8 @@ public class InputHandler : MonoBehaviour
     [Header("public variables")]
     public Vector2 move;
     public Vector2 look;
+    public bool next;
+    public bool previous;
     public bool navUp;
     public bool navDown;
     public bool navLeft;
@@ -17,6 +19,8 @@ public class InputHandler : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx) => move = ctx.ReadValue<Vector2>();
     public void OnLook(InputAction.CallbackContext ctx) => look = ctx.ReadValue<Vector2>();
+    public void OnNext(InputAction.CallbackContext ctx) => next = ctx.performed;
+    public void OnPrevious(InputAction.CallbackContext ctx) => previous = ctx.performed;
     public void OnNavigateUp(InputAction.CallbackContext ctx) => navUp = ctx.performed;
     public void OnNavigateDown(InputAction.CallbackContext ctx) => navDown = ctx.performed;
     public void OnNavigateLeft(InputAction.CallbackContext ctx) => navLeft = ctx.performed;

@@ -1,13 +1,11 @@
+using LDraw;
 using Mirror;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Animations;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
-using LDraw;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.InputSystem;
 
 public class Controller : NetworkBehaviour
 {
@@ -18,6 +16,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
     [SyncVar(hook = nameof(SetCurrentBrick))] public int currentBrickIndex;
+    [SyncVar(hook = nameof(SetCurrentBrickType))] public int currentBrickType;
     [SyncVar(hook = nameof(SetCurrentBrickRotation))] public int currentBrickRotation;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
@@ -37,12 +36,9 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
     public bool isSprinting;
     public bool options = false;
-    public bool navUp = false;
-    public bool navDown = false;
-    public bool next = false;
-    public bool previous = false;
-    public bool navLeft = false;
-    public bool navRight = false;
+    public bool setBrickType = false;
+    public bool setBrickIndex = false;
+    public bool rotateBrick = false;
     public float checkIncrement = 0.1f;
     public float grabDist = 4f; // defines how far player can reach to grab/place voxels
     public float tpsDist;
@@ -162,7 +158,8 @@ public class Controller : NetworkBehaviour
     private bool daytime = true;
     private float nextTimeToAnim = 0;
     private List<Material> cachedMaterials = new List<Material>();
-    private string[] ldrawPartsListStringArray = new string[] { };
+    private string[][] ldrawPartsTypes;
+    private string[] currentLDrawPartsListStringArray = new string[] { };
     private string currentBrickName;
     private int currentBrickMaterialIndex;
     private bool obfuscateBRXFILE = true; // set to true to prevent cheaters from importing a base using ldraw file format
@@ -221,7 +218,19 @@ public class Controller : NetworkBehaviour
         placePos = Instantiate(placePosPrefab).transform;
         holdPos = holdPosPrefab.transform;
 
-        LoadLdrawPartsList();
+        ldrawPartsTypes = new string[][]
+        {
+            LoadLdrawPartsList("b.txt"),
+            LoadLdrawPartsList("p.txt"),
+            LoadLdrawPartsList("t.txt"),
+            LoadLdrawPartsList("br.txt"),
+            LoadLdrawPartsList("pr.txt"),
+            LoadLdrawPartsList("tr.txt"),
+            LoadLdrawPartsList("s.txt"),
+        };
+        currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+
         currentBrickIndex = SettingsStatic.LoadedSettings.currentBrickIndex;
         currentBrickRotation = SettingsStatic.LoadedSettings.currentBrickRotation;
 
@@ -275,14 +284,15 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    private void LoadLdrawPartsList()
+    private string[] LoadLdrawPartsList(string name)
     {
-        string path = Application.streamingAssetsPath + "/ldraw/parts.txt";
+        string path = Application.streamingAssetsPath + "/ldraw/bricktypes/" + name;
         if (!File.Exists(path))
             ErrorMessage.Show("Error: Could not find " + path);
 
         string ldrawPartList = File.ReadAllText(path);
-        ldrawPartsListStringArray = ldrawPartList.Split("\n");
+        currentLDrawPartsListStringArray = ldrawPartList.Split("\n");
+        return currentLDrawPartsListStringArray;
     }
 
     private void LoadPlacedBricksLocalPlay()
@@ -574,6 +584,11 @@ public class Controller : NetworkBehaviour
         currentBrickIndex = newValue;
     }
 
+    public void SetCurrentBrickType(int oldValue, int newValue)
+    {
+        currentBrickType = newValue;
+    }
+
     public void SetCurrentBrickRotation(int oldValue, int newValue)
     {
         currentBrickRotation = newValue;
@@ -603,10 +618,36 @@ public class Controller : NetworkBehaviour
         else if (!options)
             gameMenuComponent.ReturnToGame();
 
-        //if (next)
-        //    IncrementBrick();
-        //else if (previous)
-        //    DecrementBrick();
+        if (holdingBuild && !movingPlacedBrick)
+        {
+            if (setBrickType)
+            {
+                if (inputHandler.next)
+                    IncrementBrickType();
+                else if (inputHandler.previous)
+                    DecrementBrickType();
+            }
+            if (setBrickIndex)
+            {
+                if (inputHandler.navUp)
+                    IncrementBrickIndex();
+                else if (inputHandler.navDown)
+                    DecrementBrickIndex();
+            }
+            if (rotateBrick)
+            {
+                if (inputHandler.navLeft)
+                    RotateBrickLeft();
+                else if (inputHandler.navRight)
+                    RotateBrickRight();
+            }
+        }
+        else
+        {
+            setBrickType = false;
+            setBrickIndex = false;
+            rotateBrick = false;
+        }
 
         if (setCamMode)
             SetCamMode();
@@ -655,9 +696,6 @@ public class Controller : NetworkBehaviour
                             charObIdle.SetActive(false);
                         if (charObRun != null && charObRun.activeSelf)
                             charObRun.SetActive(false);
-
-                        GetBrickPlacementInput();
-                        CheckBrickPlacementInput();
 
                         // IF PRESSED GRAB
                         if (!holdingGrab && inputHandler.grab)
@@ -751,130 +789,136 @@ public class Controller : NetworkBehaviour
         playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist);
     }
 
-    public void GetBrickPlacementInput()
+    public void ToggleBrickType()
     {
-        if(inputHandler.navUp)
-            navUp = true;
-        if (inputHandler.navDown)
-            navDown = true;
-        if (inputHandler.navLeft)
-            navLeft = true;
-        if (inputHandler.navRight)
-            navRight = true;
+        setBrickType = true;
     }
 
-    public void NextBrick()
+    public void ToggleBrickIndex()
     {
-        next = !next;
+        setBrickIndex = true;
     }
 
-    public void PreviousBrick()
+    public void ToggleRotateBrick()
     {
-        previous = !previous;
+        rotateBrick = true;
     }
 
-    public void IncrementBrick()
+    public void IncrementBrickType()
     {
-        if (!movingPlacedBrick && gameObject.scene.IsValid())
-        {
-            Debug.Log("fire");
-            if (currentBrickIndex + 1 <= ldrawPartsListStringArray.Length - 1)
-                currentBrickIndex++;
-            else
-                currentBrickIndex = 0;
+        if (currentBrickType + 1 <= ldrawPartsTypes.Length - 1)
+            currentBrickType++;
+        else
+            currentBrickType = 0;
 
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
+        SetCurrentBrickType(currentBrickType, currentBrickType);
+        currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+        if (currentBrickIndex + 1 > currentLDrawPartsListStringArray.Length - 1)
+            currentBrickIndex = 0;
+        if (currentBrickIndex - 1 < 0)
+            currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
 
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
-            else
-                UpdateShowGrabObject(holdingGrab, blockID);
-            navUp = false;
-        }
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
+            UpdateShowGrabObject(holdingGrab, blockID);
+        setBrickType = false;
     }
 
-    public void DecrementBrick()
+    public void DecrementBrickType()
     {
-        if (!movingPlacedBrick && gameObject.scene.IsValid())
-        {
-            if (currentBrickIndex - 1 >= 0)
-                currentBrickIndex--;
-            else
-                currentBrickIndex = ldrawPartsListStringArray.Length - 1;
-
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
-
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
-            else
-                UpdateShowGrabObject(holdingGrab, blockID);
-            navDown = false;
-        }
-    }
-
-    public void CheckBrickPlacementInput()
-    {
-        // only do code if values change
-        if (!movingPlacedBrick && navUp)
-        {
-            if (currentBrickIndex + 1 <= ldrawPartsListStringArray.Length - 1)
-                currentBrickIndex++;
-            else
-                currentBrickIndex = 0;
-
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
-
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
-            else
-                UpdateShowGrabObject(holdingGrab, blockID);
-            navUp = false;
-        }
-        else if (!movingPlacedBrick && navDown)
-        {
-            if (currentBrickIndex - 1 >= 0)
-                currentBrickIndex--;
-            else
-                currentBrickIndex = ldrawPartsListStringArray.Length - 1;
-
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
-
-            if (Settings.OnlinePlay)
-                CmdUpdateGrabObject(holdingGrab, blockID);
-            else
-                UpdateShowGrabObject(holdingGrab, blockID);
-            navDown = false;
-        }
-        else if (!movingPlacedBrick && navLeft)
-        {
-            if (currentBrickRotation + 1 <= 3)
-                currentBrickRotation++;
-            else
-                currentBrickRotation = 0;
-            SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
-
-            Destroy(placedBrick);
-            SpawnTempBrick();
-            navLeft = false;
-        }
-        else if (!movingPlacedBrick && navRight)
-        {
-            if (currentBrickRotation - 1 >= 0)
-                currentBrickRotation--;
-            else
-                currentBrickRotation = 3;
-
-            Destroy(placedBrick);
-            SpawnTempBrick();
-            navRight = false;
-        }
+        if (currentBrickType - 1 >= 0)
+            currentBrickType--;
+        else
+            currentBrickType = ldrawPartsTypes.Length - 1;
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-        currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
+        currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+        if (currentBrickIndex + 1 > currentLDrawPartsListStringArray.Length - 1)
+            currentBrickIndex = 0;
+        if (currentBrickIndex - 1 < 0)
+            currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
+
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
+            UpdateShowGrabObject(holdingGrab, blockID);
+        setBrickType = false;
+    }
+
+    public void IncrementBrickIndex()
+    {
+        if (currentBrickIndex + 1 <= currentLDrawPartsListStringArray.Length - 1)
+            currentBrickIndex++;
+        else
+            currentBrickIndex = 0;
+
+        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
+            UpdateShowGrabObject(holdingGrab, blockID);
+
+        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        setBrickIndex = false;
+    }
+
+    public void DecrementBrickIndex()
+    {
+        if (currentBrickIndex - 1 >= 0)
+            currentBrickIndex--;
+        else
+            currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
+
+        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(holdingGrab, blockID);
+        else
+            UpdateShowGrabObject(holdingGrab, blockID);
+
+        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        setBrickIndex = false;
+    }
+
+    public void RotateBrickLeft()
+    {
+        if (currentBrickRotation + 1 <= 3)
+            currentBrickRotation++;
+        else
+            currentBrickRotation = 0;
+        SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
+
+        Destroy(placedBrick);
+        SpawnTempBrick();
+
+        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        rotateBrick = false;
+    }
+
+    public void RotateBrickRight()
+    {
+        if (currentBrickRotation - 1 >= 0)
+            currentBrickRotation--;
+        else
+            currentBrickRotation = 3;
+
+        Destroy(placedBrick);
+        SpawnTempBrick();
+
+        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        rotateBrick = false;
     }
 
     public void SetDOF()
