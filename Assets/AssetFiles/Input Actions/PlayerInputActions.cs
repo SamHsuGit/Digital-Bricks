@@ -73,7 +73,16 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Drop"",
+                    ""name"": ""Previous"",
+                    ""type"": ""Button"",
+                    ""id"": ""60e75519-f30a-4eb6-9687-05208ec4b698"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Next"",
                     ""type"": ""Button"",
                     ""id"": ""d8864d24-f971-4c48-8d97-f72fb4267cf1"",
                     ""expectedControlType"": ""Button"",
@@ -537,22 +546,22 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ada4d2ac-73af-4a7b-9672-67c0f10ce1fe"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Drop"",
+                    ""action"": ""Next"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""d352c633-d7ad-4cba-a103-234e76fdf852"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Drop"",
+                    ""action"": ""Next"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -575,6 +584,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Debug"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d921ec5d-4ff6-4df9-a0a4-9a2b26c43fa7"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Previous"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9a74dcb4-166f-49f6-bdd0-4e4ecb2e9766"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Previous"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1200,7 +1231,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Actions_ScrollWheel = m_Actions.FindAction("ScrollWheel", throwIfNotFound: true);
         m_Actions_Grab = m_Actions.FindAction("Grab", throwIfNotFound: true);
         m_Actions_Shoot = m_Actions.FindAction("Shoot", throwIfNotFound: true);
-        m_Actions_Drop = m_Actions.FindAction("Drop", throwIfNotFound: true);
+        m_Actions_Previous = m_Actions.FindAction("Previous", throwIfNotFound: true);
+        m_Actions_Next = m_Actions.FindAction("Next", throwIfNotFound: true);
         m_Actions_Jump = m_Actions.FindAction("Jump", throwIfNotFound: true);
         m_Actions_Sprint = m_Actions.FindAction("Sprint", throwIfNotFound: true);
         m_Actions_ToggleOptions = m_Actions.FindAction("ToggleOptions", throwIfNotFound: true);
@@ -1288,7 +1320,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_ScrollWheel;
     private readonly InputAction m_Actions_Grab;
     private readonly InputAction m_Actions_Shoot;
-    private readonly InputAction m_Actions_Drop;
+    private readonly InputAction m_Actions_Previous;
+    private readonly InputAction m_Actions_Next;
     private readonly InputAction m_Actions_Jump;
     private readonly InputAction m_Actions_Sprint;
     private readonly InputAction m_Actions_ToggleOptions;
@@ -1309,7 +1342,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @ScrollWheel => m_Wrapper.m_Actions_ScrollWheel;
         public InputAction @Grab => m_Wrapper.m_Actions_Grab;
         public InputAction @Shoot => m_Wrapper.m_Actions_Shoot;
-        public InputAction @Drop => m_Wrapper.m_Actions_Drop;
+        public InputAction @Previous => m_Wrapper.m_Actions_Previous;
+        public InputAction @Next => m_Wrapper.m_Actions_Next;
         public InputAction @Jump => m_Wrapper.m_Actions_Jump;
         public InputAction @Sprint => m_Wrapper.m_Actions_Sprint;
         public InputAction @ToggleOptions => m_Wrapper.m_Actions_ToggleOptions;
@@ -1345,9 +1379,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Shoot.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnShoot;
-                @Drop.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
-                @Drop.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
-                @Drop.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnDrop;
+                @Previous.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnPrevious;
+                @Previous.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnPrevious;
+                @Previous.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnPrevious;
+                @Next.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNext;
+                @Next.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNext;
+                @Next.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnNext;
                 @Jump.started -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_ActionsActionsCallbackInterface.OnJump;
@@ -1400,9 +1437,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
-                @Drop.started += instance.OnDrop;
-                @Drop.performed += instance.OnDrop;
-                @Drop.canceled += instance.OnDrop;
+                @Previous.started += instance.OnPrevious;
+                @Previous.performed += instance.OnPrevious;
+                @Previous.canceled += instance.OnPrevious;
+                @Next.started += instance.OnNext;
+                @Next.performed += instance.OnNext;
+                @Next.canceled += instance.OnNext;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -1597,7 +1637,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnGrab(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
-        void OnDrop(InputAction.CallbackContext context);
+        void OnPrevious(InputAction.CallbackContext context);
+        void OnNext(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnToggleOptions(InputAction.CallbackContext context);

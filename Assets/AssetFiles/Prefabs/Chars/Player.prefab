@@ -424,7 +424,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3963772888375218276}
         m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: DropItemsInSlot
+        m_MethodName: NextBrick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -452,6 +452,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: cc161660-967f-496b-ac99-2a5d39d466eb
     m_ActionName: Actions/Debug[/Keyboard/f3]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3963772888375218276}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: PreviousBrick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 60e75519-f30a-4eb6-9687-05208ec4b698
+    m_ActionName: Actions/Previous[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Actions
@@ -507,6 +523,8 @@ MonoBehaviour:
   options: 0
   navUp: 0
   navDown: 0
+  next: 0
+  previous: 0
   navLeft: 0
   navRight: 0
   checkIncrement: 0.1

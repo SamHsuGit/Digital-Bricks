@@ -32,6 +32,7 @@ public static class SettingsStatic
 
         // world gen
         settings.creativeMode = false;
+        settings.chunkLoadAnim = true;
         settings.planetSeed = 3;
         settings.worldCoord = 1;
 
@@ -84,6 +85,7 @@ public class Settings
 
     // world gen
     public bool creativeMode;
+    public bool chunkLoadAnim;
     public int planetSeed; // can be 0 to 2,147,483,647 inclusively
     public int worldCoord; // can be 0 to 2,147,483,647 inclusively
 

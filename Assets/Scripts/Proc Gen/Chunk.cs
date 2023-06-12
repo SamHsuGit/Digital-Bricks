@@ -69,6 +69,12 @@ public class Chunk
 
         World.Instance.AddChunkToUpdate(this);
 
+        if(SettingsStatic.LoadedSettings.chunkLoadAnim)
+        {
+            chunkObject.AddComponent<ChunkLoadAnimation>();
+            World.Instance.chunkLoadSound.Play();
+        }
+
         //if (coord.x == World.Instance.firstChunkCoord.x && coord.z == World.Instance.firstChunkCoord.z) //always show first chunk
         //    isActive = true;
         //else if (!World.Instance.activateNewChunks)

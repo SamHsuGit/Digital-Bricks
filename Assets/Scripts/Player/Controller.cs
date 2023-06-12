@@ -39,6 +39,8 @@ public class Controller : NetworkBehaviour
     public bool options = false;
     public bool navUp = false;
     public bool navDown = false;
+    public bool next = false;
+    public bool previous = false;
     public bool navLeft = false;
     public bool navRight = false;
     public float checkIncrement = 0.1f;
@@ -601,6 +603,11 @@ public class Controller : NetworkBehaviour
         else if (!options)
             gameMenuComponent.ReturnToGame();
 
+        //if (next)
+        //    IncrementBrick();
+        //else if (previous)
+        //    DecrementBrick();
+
         if (setCamMode)
             SetCamMode();
 
@@ -754,6 +761,57 @@ public class Controller : NetworkBehaviour
             navLeft = true;
         if (inputHandler.navRight)
             navRight = true;
+    }
+
+    public void NextBrick()
+    {
+        next = !next;
+    }
+
+    public void PreviousBrick()
+    {
+        previous = !previous;
+    }
+
+    public void IncrementBrick()
+    {
+        if (!movingPlacedBrick && gameObject.scene.IsValid())
+        {
+            Debug.Log("fire");
+            if (currentBrickIndex + 1 <= ldrawPartsListStringArray.Length - 1)
+                currentBrickIndex++;
+            else
+                currentBrickIndex = 0;
+
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
+
+            if (Settings.OnlinePlay)
+                CmdUpdateGrabObject(holdingGrab, blockID);
+            else
+                UpdateShowGrabObject(holdingGrab, blockID);
+            navUp = false;
+        }
+    }
+
+    public void DecrementBrick()
+    {
+        if (!movingPlacedBrick && gameObject.scene.IsValid())
+        {
+            if (currentBrickIndex - 1 >= 0)
+                currentBrickIndex--;
+            else
+                currentBrickIndex = ldrawPartsListStringArray.Length - 1;
+
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsListStringArray[currentBrickIndex];
+
+            if (Settings.OnlinePlay)
+                CmdUpdateGrabObject(holdingGrab, blockID);
+            else
+                UpdateShowGrabObject(holdingGrab, blockID);
+            navDown = false;
+        }
     }
 
     public void CheckBrickPlacementInput()
