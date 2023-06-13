@@ -39,16 +39,16 @@ public class Controller : NetworkBehaviour
     public bool setBrickType = false;
     public bool setBrickIndex = false;
     public bool rotateBrick = false;
+    public bool holdingGrab = false;
+    public bool holdingBuild = false;
+    public bool heldObjectIsBrick = false;
+    public bool movingPlacedBrickUseStoredValues = false;
+    public byte blockID;
     public float checkIncrement = 0.1f;
     public float grabDist = 4f; // defines how far player can reach to grab/place voxels
     public float tpsDist;
     public float maxFocusDistance = 2f;
     public float focusDistanceIncrement = 0.03f;
-    public bool holdingGrab = false;
-    public bool holdingBuild = false;
-    public bool heldObjectIsBrick = false;
-    public bool movingPlacedBrick = false;
-    public byte blockID;
     public float baseAnimRate = 2; // health script overrides this
     public float animRate = 2; // health script overrides this
     public int camMode = 1;
@@ -224,10 +224,8 @@ public class Controller : NetworkBehaviour
             LoadLdrawPartsList("b.txt"),
             LoadLdrawPartsList("p.txt"),
             LoadLdrawPartsList("t.txt"),
-            LoadLdrawPartsList("br.txt"),
-            LoadLdrawPartsList("pr.txt"),
-            LoadLdrawPartsList("tr.txt"),
             LoadLdrawPartsList("s.txt"),
+            LoadLdrawPartsList("r.txt"),
         };
         currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
@@ -862,8 +860,12 @@ public class Controller : NetworkBehaviour
         else
             UpdateShowGrabObject(blockID);
 
-        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        if (!movingPlacedBrickUseStoredValues)
+        {
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        }
+
         setBrickIndex = false;
     }
 
@@ -888,8 +890,12 @@ public class Controller : NetworkBehaviour
             SpawnTempBrick();
         }
 
-        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        if (!movingPlacedBrickUseStoredValues)
+        {
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        }
+
         setBrickIndex = false;
     }
 
@@ -905,9 +911,13 @@ public class Controller : NetworkBehaviour
             CmdUpdateGrabObject(blockID);
         else
             UpdateShowGrabObject(blockID);
-
-        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        
+        if (!movingPlacedBrickUseStoredValues)
+        {
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        }
+            
         rotateBrick = false;
     }
 
@@ -923,8 +933,12 @@ public class Controller : NetworkBehaviour
         else
             UpdateShowGrabObject(blockID);
 
-        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        
+        if(!movingPlacedBrickUseStoredValues)
+        {
+            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        }
         rotateBrick = false;
     }
 
@@ -1156,7 +1170,7 @@ public class Controller : NetworkBehaviour
         if (!toolbar.slots[toolbar.slotIndex].itemSlot.HasItem) // cannot do this if no items in slot
         {
             // remove temp piece
-            if (!movingPlacedBrick)
+            if (!heldObjectIsBrick)
                 Destroy(placedBrick);
             placedBrick = null;
             return;
@@ -1167,21 +1181,21 @@ public class Controller : NetworkBehaviour
         if (blockID < 2 || blockID > 10) // cannot place bricks using voxels outside the defined color range
         {
             // remove temp piece
-            if (!movingPlacedBrick)
+            if (!heldObjectIsBrick)
                 Destroy(placedBrick);
             placedBrick = null;
             blockID = 0;
             return;
         }
 
-        // when released, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
+        // when released, change material to voxelID from slot and stop moving part
         brickPlaceDown.Play();
         ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
-        
 
+        // remove qty(1) voxel from slot as "cost"
         if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
             TakeFromCurrentSlot(0);
-        else if (!movingPlacedBrick)
+        else
             TakeFromCurrentSlot(1);
 
         // reset values
@@ -1232,11 +1246,12 @@ public class Controller : NetworkBehaviour
                 reticle.SetActive(false);
                 holdingGrab = true;
                 heldObjectIsBrick = true;
-                movingPlacedBrick = true;
                 brickPickUp.Play();
                 if(placedBrick != null)
-                    currentBrickMaterialIndex = (byte)GetMaterialIndex(placedBrick);
+                    currentBrickMaterialIndex = (byte)GetMaterialIndex(hitObject);
                 placedBrick = hitObject;
+                currentBrickName = placedBrick.name;
+                movingPlacedBrickUseStoredValues = true;
             }
             return; // do not spawn object if hit previously existing object
         }
@@ -1376,7 +1391,7 @@ public class Controller : NetworkBehaviour
         else
             UpdateShowGrabObject(blockID);
 
-        if (movingPlacedBrick)
+        if (heldObjectIsBrick)
         {
             brickPlaceDown.Play();
             ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
@@ -1389,9 +1404,9 @@ public class Controller : NetworkBehaviour
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
             PutAwayBrick(blockID);
 
-        heldObjectIsBrick = false;
         placedBrick = null;
-        movingPlacedBrick = false;
+        heldObjectIsBrick = false;
+        movingPlacedBrickUseStoredValues = false;
     }
 
     void PutAwayBrick(byte blockID)

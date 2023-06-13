@@ -599,15 +599,15 @@ MonoBehaviour:
   setBrickType: 0
   setBrickIndex: 0
   rotateBrick: 0
+  holdingGrab: 0
+  holdingBuild: 0
+  heldObjectIsBrick: 0
+  blockID: 0
   checkIncrement: 0.1
   grabDist: 4
   tpsDist: 0
   maxFocusDistance: 2
   focusDistanceIncrement: 0.03
-  holdingGrab: 0
-  holdingBuild: 0
-  movingPlacedBrick: 0
-  blockID: 0
   baseAnimRate: 2
   animRate: 2
   camMode: 1

@@ -26,7 +26,10 @@ public class GameMenu : MonoBehaviour
     public GameObject debugText;
     public TextMeshProUGUI PlanetSeedWorldCoordText;
     public AudioSource buttonSound;
-    public GameObject controlsText;
+    public GameObject basicControlsText;
+    public GameObject brickControlsText;
+    public GameObject camControlsText;
+    public bool showControls = false;
 
     private int previousGraphicsQuality;
     private Material newMaterial;
@@ -77,12 +80,40 @@ public class GameMenu : MonoBehaviour
         optionsMenuCanvasGroup.alpha = 0;
         optionsMenuCanvasGroup.interactable = false;
         debugText.SetActive(false);
-        controlsText.SetActive(false);
+        basicControlsText.SetActive(false);
     }
 
     private void Update()
     {
         CheckSplitscreenCanvasRenderMode();
+
+        if (showControls)
+        {
+            if (controller.camMode != 1)
+            {
+                basicControlsText.SetActive(false);
+                brickControlsText.SetActive(false);
+                camControlsText.SetActive(true);
+            }
+            else if (controller.camMode == 1 && (controller.holdingBuild || controller.holdingGrab))
+            {
+                basicControlsText.SetActive(false);
+                brickControlsText.SetActive(true);
+                camControlsText.SetActive(false);
+            }
+            else
+            {
+                basicControlsText.SetActive(true);
+                brickControlsText.SetActive(false);
+                camControlsText.SetActive(false);
+            }
+        }
+        else
+        {
+            camControlsText.SetActive(false);
+            brickControlsText.SetActive(false);
+            basicControlsText.SetActive(false);
+        }
     }
 
     public void UpdateHP()
@@ -242,7 +273,7 @@ public class GameMenu : MonoBehaviour
 
     public void ToggleControls()
     {
-        controlsText.SetActive(!controlsText.activeSelf);
+        showControls = !showControls;
     }
 
     public void ToggleDebug()
