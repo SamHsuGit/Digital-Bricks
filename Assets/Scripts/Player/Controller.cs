@@ -1250,6 +1250,7 @@ public class Controller : NetworkBehaviour
                 if(placedBrick != null)
                     currentBrickMaterialIndex = (byte)GetMaterialIndex(hitObject);
                 placedBrick = hitObject;
+                // store values for later if moving bricks
                 currentBrickName = placedBrick.name;
                 movingPlacedBrickUseStoredValues = true;
             }
