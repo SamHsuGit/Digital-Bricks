@@ -46,6 +46,7 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public bool holdingGrab = false;
     public bool holdingBuild = false;
+    public bool heldObjectIsBrick = false;
     public bool movingPlacedBrick = false;
     public byte blockID;
     public float baseAnimRate = 2; // health script overrides this
@@ -618,7 +619,7 @@ public class Controller : NetworkBehaviour
         else if (!options)
             gameMenuComponent.ReturnToGame();
 
-        if (holdingBuild && !movingPlacedBrick)
+        if (holdingBuild || holdingGrab)
         {
             if (setBrickType)
             {
@@ -742,10 +743,6 @@ public class Controller : NetworkBehaviour
                             SetDOF();
                         SetTPSDist();
 
-                        // IF PRESSED SHOOT
-                        if (inputHandler.shoot)
-                            PressedBuild();
-
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
@@ -821,9 +818,9 @@ public class Controller : NetworkBehaviour
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
+            CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(holdingGrab, blockID);
+            UpdateShowGrabObject(blockID);
         setBrickType = false;
     }
 
@@ -844,9 +841,9 @@ public class Controller : NetworkBehaviour
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
+            CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(holdingGrab, blockID);
+            UpdateShowGrabObject(blockID);
         setBrickType = false;
     }
 
@@ -861,9 +858,9 @@ public class Controller : NetworkBehaviour
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
+            CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(holdingGrab, blockID);
+            UpdateShowGrabObject(blockID);
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
@@ -881,9 +878,15 @@ public class Controller : NetworkBehaviour
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
+            CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(holdingGrab, blockID);
+            UpdateShowGrabObject(blockID);
+
+        if (holdingGrab)
+        {
+            Destroy(placedBrick);
+            SpawnTempBrick();
+        }
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
@@ -898,8 +901,10 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 0;
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
-        Destroy(placedBrick);
-        SpawnTempBrick();
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(blockID);
+        else
+            UpdateShowGrabObject(blockID);
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
@@ -913,8 +918,10 @@ public class Controller : NetworkBehaviour
         else
             currentBrickRotation = 3;
 
-        Destroy(placedBrick);
-        SpawnTempBrick();
+        if (Settings.OnlinePlay)
+            CmdUpdateGrabObject(blockID);
+        else
+            UpdateShowGrabObject(blockID);
 
         SetCurrentBrick(currentBrickIndex, currentBrickIndex);
         currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
@@ -955,98 +962,102 @@ public class Controller : NetworkBehaviour
         }
         else // spawn object
         {
+            heldObjectIsBrick = true;
             reticle.SetActive(false);
             holdingBuild = true;
             brickPickUp.Play();
 
             SpawnTempBrick();
         }
+    }
 
-        //if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
-        //    return;
+    private void PressedShoot()
+    {
+        if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
+            return;
 
-        //if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
-        //    return;
+        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
+            return;
 
-        //// if has mushroom, and health is not max and the selected slot has a stack
-        //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDmushroom && health.hp < health.hpMax)
-        //{
-        //    // remove qty 1 from stack
-        //    health.RequestEditSelfHealth(1);
-        //    eat.Play();
-        //    TakeFromCurrentSlot(1);
-        //}
-        //else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
-        //{
-        //    if (Settings.OnlinePlay)
-        //        CmdSpawnObject(2, 0, rayCastStart);
-        //    else
-        //        SpawnObject(2, 0, rayCastStart);
-        //    TakeFromCurrentSlot(1);
-        //}
-        //else if (holdingGrab) // IF HOLDING SOMETHING
-        //{
-        //    holdingGrab = false;
-        //    reticle.SetActive(true);
+        // if has mushroom, and health is not max and the selected slot has a stack
+        if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDmushroom && health.hp < health.hpMax)
+        {
+            // remove qty 1 from stack
+            health.RequestEditSelfHealth(1);
+            eat.Play();
+            TakeFromCurrentSlot(1);
+        }
+        else if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
+        {
+            if (Settings.OnlinePlay)
+                CmdSpawnObject(2, 0, rayCastStart);
+            else
+                SpawnObject(2, 0, rayCastStart);
+            TakeFromCurrentSlot(1);
+        }
+        else if (holdingGrab) // IF HOLDING SOMETHING
+        {
+            holdingGrab = false;
+            reticle.SetActive(true);
 
-        //    if (grabbedPrefab != null) // IF HOLDING VOXEL
-        //    {
-        //        Vector3 position = holdPos.position;
+            if (grabbedPrefab != null) // IF HOLDING VOXEL
+            {
+                Vector3 position = holdPos.position;
 
-        //        shootBricks.Play();
+                shootBricks.Play();
 
-        //        SpawnVoxelRbFromWorld(position, blockID);
+                SpawnVoxelRbFromWorld(position, blockID);
 
-        //        UpdateShowGrabObject(holdingGrab, blockID);
-        //    }
-        //    else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
-        //    {
-        //        heldObRb.velocity = playerCamera.transform.forward * 25; // give some velocity forwards
-        //    }
+                UpdateShowGrabObject(blockID);
+            }
+            else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
+            {
+                heldObRb.velocity = playerCamera.transform.forward * 25; // give some velocity forwards
+            }
 
-        //    if (heldObRb != null)
-        //    {
-        //        heldObRb.useGravity = true;
-        //        heldObRb.detectCollisions = true;
-        //    }
-        //    heldObRb = null;
-        //}
-        //else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
-        //{
-        //    Vector3 position = shootPos.position;
+            if (heldObRb != null)
+            {
+                heldObRb.useGravity = true;
+                heldObRb.detectCollisions = true;
+            }
+            heldObRb = null;
+        }
+        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
+        {
+            Vector3 position = shootPos.position;
 
-        //    if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
-        //        return;
+            if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
+                return;
 
-        //    blockID = World.Instance.GetVoxelState(position).id;
+            blockID = World.Instance.GetVoxelState(position).id;
 
-        //    if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
-        //        return;
+            if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
+                return;
 
-        //    shootBricks.Play();
+            shootBricks.Play();
 
-        //    SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
-        //}
-        //else if (gun.hit.transform != null && gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
-        //{
-        //    GameObject hitObject = gun.hit.transform.gameObject;
-        //    Destroy(gun.hit.transform.gameObject);
-        //    Vector3 pos = hitObject.transform.position;
-        //    if (Settings.OnlinePlay)
-        //    {
-        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-        //        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-        //    }
-        //    else
-        //    {
-        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-        //        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-        //    }
-        //}
+            SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+        }
+        else if (gun.hit.transform != null && gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
+        {
+            GameObject hitObject = gun.hit.transform.gameObject;
+            Destroy(gun.hit.transform.gameObject);
+            Vector3 pos = hitObject.transform.position;
+            if (Settings.OnlinePlay)
+            {
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            }
+            else
+            {
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            }
+        }
     }
 
     void SpawnTempBrick()
@@ -1134,20 +1145,7 @@ public class Controller : NetworkBehaviour
     void HoldingBuild()
     {
         if (placedBrick != null) // IF PIECE IS SPAWNED
-        {
-            if (placePos.gameObject.activeSelf) // IF LOOKING AT CHUNK
-            {
-                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                pos = GetGridPos(pos); // snap to grid
-                placedBrick.transform.position = pos;
-            }
-            else // IF HOLDING VOXEL
-            {
-                Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-                pos = GetGridPos(pos); // snap to grid
-                placedBrick.transform.position = pos;
-            }
-        }
+            MoveBrickToCursor();
     }
 
     void ReleasedBuild()
@@ -1176,7 +1174,7 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        // when release shoot, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
+        // when released, change material to voxelID from slot and stop moving part and remove qty (1) voxel from slot as "cost"
         brickPlaceDown.Play();
         ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
         
@@ -1187,6 +1185,7 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(1);
 
         // reset values
+        heldObjectIsBrick = false;
         placedBrick = null;
         blockID = 0;
     }
@@ -1232,6 +1231,7 @@ public class Controller : NetworkBehaviour
             {
                 reticle.SetActive(false);
                 holdingGrab = true;
+                heldObjectIsBrick = true;
                 movingPlacedBrick = true;
                 brickPickUp.Play();
                 if(placedBrick != null)
@@ -1243,12 +1243,14 @@ public class Controller : NetworkBehaviour
         else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
         {
             holdingGrab = true;
+            heldObjectIsBrick = false;
 
             PlayerPickBrick();
         }
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
         {
             holdingGrab = true;
+            heldObjectIsBrick = false;
             PlayerPickBrickFromInventory();
         }
     }
@@ -1274,9 +1276,9 @@ public class Controller : NetworkBehaviour
         reticle.SetActive(false);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
+            CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(holdingGrab, blockID);
+            UpdateShowGrabObject(blockID);
     }
 
     void PlayerPickBrickFromInventory()
@@ -1290,32 +1292,33 @@ public class Controller : NetworkBehaviour
         reticle.SetActive(false);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
+            CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(holdingGrab, blockID);
+            UpdateShowGrabObject(blockID);
     }
 
     [Command]
-    void CmdUpdateGrabObject(bool holding, byte blockID)
+    void CmdUpdateGrabObject(byte blockID)
     {
-        RpcUpdateGrabObject(holding, blockID);
+        RpcUpdateGrabObject(blockID);
     }
 
     [ClientRpc]
-    void RpcUpdateGrabObject(bool holding, byte blockID)
+    void RpcUpdateGrabObject(byte blockID)
     {
-        UpdateShowGrabObject(holding, blockID);
+        UpdateShowGrabObject(blockID);
     }
 
-    void UpdateShowGrabObject(bool holding, byte blockID)
+    void UpdateShowGrabObject(byte blockID)
     {
-        if (holdingBuild)
+        if (placedBrick != null && heldObjectIsBrick)
         {
             Destroy(placedBrick);
             placedBrick = null;
             SpawnTempBrick();
+            MoveBrickToCursor();
         }
-        if (holding)
+        else if(holdingGrab)
         {
             grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
             BoxCollider bc = grabbedPrefab.AddComponent<BoxCollider>(); //add a box collider to the grabbedPrefab voxel
@@ -1339,11 +1342,9 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
-        if (placedBrick != null && movingPlacedBrick) // IF PIECE IS SPAWNED
+        if (placedBrick != null) // IF PIECE IS SPAWNED
         {
-            Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
-            pos = GetGridPos(pos); // snap to grid
-            placedBrick.transform.position = pos;
+            MoveBrickToCursor();
         }
         else if (heldObRb != null) // IF NON-VOXEL RB
         {
@@ -1371,16 +1372,14 @@ public class Controller : NetworkBehaviour
         reticle.SetActive(true);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(holdingGrab, blockID);
+            CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(holdingGrab, blockID);
+            UpdateShowGrabObject(blockID);
 
         if (movingPlacedBrick)
         {
             brickPlaceDown.Play();
             ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
-            placedBrick = null;
-            movingPlacedBrick = false;
         }
         else if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
         {
@@ -1390,6 +1389,8 @@ public class Controller : NetworkBehaviour
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
             PutAwayBrick(blockID);
 
+        heldObjectIsBrick = false;
+        placedBrick = null;
         movingPlacedBrick = false;
     }
 
@@ -1428,7 +1429,7 @@ public class Controller : NetworkBehaviour
             }
 
             // if made it here, toolbar has no empty slots to put voxels into so shoot held voxel off into space
-            PressedBuild();
+            PressedShoot();
         }
     }
 
@@ -1465,6 +1466,13 @@ public class Controller : NetworkBehaviour
     public void CmdPlaceBrick(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
     {
         PlaceBrick(fromFile, _partname, cmdstr, material, pos, rot);
+    }
+
+    public void MoveBrickToCursor()
+    {
+        Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
+        pos = GetGridPos(pos); // snap to grid
+        placedBrick.transform.position = pos;
     }
 
     public Vector3 GetGridPos(Vector3 pos)
