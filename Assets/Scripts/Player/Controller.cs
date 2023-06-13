@@ -1230,8 +1230,8 @@ public class Controller : NetworkBehaviour
 
     public void PressedGrab()
     {
-        if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
-            return;
+        //if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
+        //    return;
 
         if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
             return;
@@ -1395,7 +1395,8 @@ public class Controller : NetworkBehaviour
         if (heldObjectIsBrick)
         {
             brickPlaceDown.Play();
-            ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
+            //if(!movingPlacedBrickUseStoredValues)
+                ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
         }
         else if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
         {
