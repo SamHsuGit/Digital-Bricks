@@ -15,8 +15,9 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
-    [SyncVar(hook = nameof(SetCurrentBrick))] public int currentBrickIndex;
     [SyncVar(hook = nameof(SetCurrentBrickType))] public int currentBrickType;
+    [SyncVar(hook = nameof(SetCurrentBrickIndex))] public int currentBrickIndex;
+    [SyncVar(hook = nameof(SetCurrentBrickMaterialIndex))] public int currentBrickMaterialIndex;
     [SyncVar(hook = nameof(SetCurrentBrickRotation))] public int currentBrickRotation;
 
     // Server Values (server generates these values upon start, all clients get these values from server upon connecting)
@@ -161,8 +162,6 @@ public class Controller : NetworkBehaviour
     private List<Material> cachedMaterials = new List<Material>();
     private string[][] ldrawPartsTypes;
     private string[] currentLDrawPartsListStringArray = new string[] { };
-    private string currentBrickName;
-    private int currentBrickMaterialIndex;
     private bool obfuscateBRXFILE = true; // set to true to prevent cheaters from importing a base using ldraw file format
 
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
@@ -228,7 +227,6 @@ public class Controller : NetworkBehaviour
             LoadLdrawPartsList("r.txt"),
         };
         currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
 
         currentBrickIndex = SettingsStatic.LoadedSettings.currentBrickIndex;
         currentBrickRotation = SettingsStatic.LoadedSettings.currentBrickRotation;
@@ -578,7 +576,7 @@ public class Controller : NetworkBehaviour
         isMoving = newValue;
     }
 
-    public void SetCurrentBrick(int oldValue, int newValue)
+    public void SetCurrentBrickIndex(int oldValue, int newValue)
     {
         currentBrickIndex = newValue;
     }
@@ -591,6 +589,11 @@ public class Controller : NetworkBehaviour
     public void SetCurrentBrickRotation(int oldValue, int newValue)
     {
         currentBrickRotation = newValue;
+    }
+
+    public void SetCurrentBrickMaterialIndex(int oldValue, int newValue)
+    {
+        currentBrickMaterialIndex = newValue;
     }
 
     private void OnDestroy()
@@ -808,17 +811,16 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickType(currentBrickType, currentBrickType);
         currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-        if (currentBrickIndex + 1 > currentLDrawPartsListStringArray.Length - 1)
+        if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
             currentBrickIndex = 0;
-        if (currentBrickIndex - 1 < 0)
+        if (currentBrickIndex < 0)
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
-
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject(0);
         else
-            UpdateShowGrabObject(blockID);
+            UpdateShowGrabObject(0);
         setBrickType = false;
     }
 
@@ -829,19 +831,18 @@ public class Controller : NetworkBehaviour
         else
             currentBrickType = ldrawPartsTypes.Length - 1;
 
-        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
+        SetCurrentBrickType(currentBrickType, currentBrickType);
         currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-        if (currentBrickIndex + 1 > currentLDrawPartsListStringArray.Length - 1)
+        if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
             currentBrickIndex = 0;
-        if (currentBrickIndex - 1 < 0)
+        if (currentBrickIndex < 0)
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
-
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject(0);
         else
-            UpdateShowGrabObject(blockID);
+            UpdateShowGrabObject(0);
         setBrickType = false;
     }
 
@@ -852,18 +853,16 @@ public class Controller : NetworkBehaviour
         else
             currentBrickIndex = 0;
 
-        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject(0);
         else
-            UpdateShowGrabObject(blockID);
+            UpdateShowGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+            SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
         }
 
         setBrickIndex = false;
@@ -876,24 +875,16 @@ public class Controller : NetworkBehaviour
         else
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
 
-        SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-        currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject(0);
         else
-            UpdateShowGrabObject(blockID);
-
-        if (holdingGrab)
-        {
-            Destroy(placedBrick);
-            SpawnTempBrick();
-        }
+            UpdateShowGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+            SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
         }
 
         setBrickIndex = false;
@@ -908,14 +899,13 @@ public class Controller : NetworkBehaviour
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject(0);
         else
-            UpdateShowGrabObject(blockID);
+            UpdateShowGrabObject(0);
         
         if (!movingPlacedBrickUseStoredValues)
         {
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+            SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
         }
             
         rotateBrick = false;
@@ -929,15 +919,14 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 3;
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject(0);
         else
-            UpdateShowGrabObject(blockID);
+            UpdateShowGrabObject(0);
 
         
         if(!movingPlacedBrickUseStoredValues)
         {
-            SetCurrentBrick(currentBrickIndex, currentBrickIndex);
-            currentBrickName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+            SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
         }
         rotateBrick = false;
     }
@@ -980,8 +969,9 @@ public class Controller : NetworkBehaviour
             reticle.SetActive(false);
             holdingBuild = true;
             brickPickUp.Play();
-
-            SpawnTempBrick();
+            int brickMaterialIndex = System.Convert.ToInt32(blockID);
+            SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
+            SpawnTempBrick(0);
         }
     }
 
@@ -1074,7 +1064,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    void SpawnTempBrick()
+    void SpawnTempBrick(int materialIndex)
     {
         Quaternion rot = Quaternion.identity;
         switch (currentBrickRotation)
@@ -1146,14 +1136,14 @@ public class Controller : NetworkBehaviour
         string h = "0.000000";
         string i = "1.000000";
 
-        string partname = currentBrickName;
+        string partname = ldrawPartsTypes[currentBrickType][currentBrickIndex];
         Vector3 pos = new Vector3(0, 1, 0);
         string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
         if (Settings.OnlinePlay)
-            CmdPlaceBrick(false, partname, cmdstr, 0, pos, rot); // spawn with transparent "temp" material
+            CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
         else
-            PlaceBrick(false, partname, cmdstr, 0, pos, rot); // spawn with transparent "temp" material
+            PlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
     }
 
     void HoldingBuild()
@@ -1176,7 +1166,8 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        currentBrickMaterialIndex = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+        int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
+        SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
 
         if (blockID < 2 || blockID > 10) // cannot place bricks using voxels outside the defined color range
         {
@@ -1228,6 +1219,22 @@ public class Controller : NetworkBehaviour
         }
     }
 
+    public int GetRotationIndexFromQuaternion(Quaternion rot)
+    {
+        int rotationIndex = 0;
+
+        if(rot.eulerAngles == new Vector3(0, 0, 180))
+            rotationIndex = 2;
+        else if(rot.eulerAngles == new Vector3(0,90, 180))
+            rotationIndex = 3;
+        else if (rot.eulerAngles == new Vector3(-180, 0, 0))
+            rotationIndex = 0;
+        else if (rot.eulerAngles == new Vector3(0, 270, 180))
+            rotationIndex = 1;
+
+        return rotationIndex;
+    }
+
     public void PressedGrab()
     {
         //if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
@@ -1247,11 +1254,11 @@ public class Controller : NetworkBehaviour
                 holdingGrab = true;
                 heldObjectIsBrick = true;
                 brickPickUp.Play();
-                if(placedBrick != null)
-                    currentBrickMaterialIndex = (byte)GetMaterialIndex(hitObject);
+                int brickMaterialIndex = GetMaterialIndex(hitObject);
+                SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
+                currentBrickRotation = GetRotationIndexFromQuaternion(hitObject.transform.rotation);
                 placedBrick = hitObject;
                 // store values for later if moving bricks
-                currentBrickName = placedBrick.name;
                 movingPlacedBrickUseStoredValues = true;
             }
             return; // do not spawn object if hit previously existing object
@@ -1331,7 +1338,7 @@ public class Controller : NetworkBehaviour
         {
             Destroy(placedBrick);
             placedBrick = null;
-            SpawnTempBrick();
+            SpawnTempBrick(blockID);
             MoveBrickToCursor();
         }
         else if(holdingGrab)
@@ -1388,15 +1395,14 @@ public class Controller : NetworkBehaviour
         reticle.SetActive(true);
 
         if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject((byte)currentBrickMaterialIndex);
         else
-            UpdateShowGrabObject(blockID);
+            UpdateShowGrabObject((byte)currentBrickMaterialIndex);
 
         if (heldObjectIsBrick)
         {
             brickPlaceDown.Play();
-            //if(!movingPlacedBrickUseStoredValues)
-                ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
+            ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
         }
         else if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
         {
@@ -2152,7 +2158,7 @@ public class Controller : NetworkBehaviour
             {
                 
                 string partname = ob.name;
-                string color = GetMaterialIndex(ob).ToString();
+                string color = GetLDrawColorNumber(ob).ToString();
 
                 // CALCULATE 4x4 MATRIX ROTATION VALUES
                 float scaleFactor = 40f;
@@ -2249,7 +2255,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    private int GetMaterialIndex(GameObject ob)
+    private int GetLDrawColorNumber(GameObject ob)
     {
         if(ob == null || ob.transform.GetChild(0).GetComponent<MeshRenderer>() == null)
                 return 0;
@@ -2260,6 +2266,25 @@ public class Controller : NetworkBehaviour
         {
             if (brickMaterials[j].name + " (Instance)" == mat.name)
                 color = ldrawHexValues[j];
+        }
+        return color;
+    }
+
+    private int GetMaterialIndex(GameObject ob)
+    {
+        if (ob == null || ob.transform.GetComponentInChildren<MeshRenderer>() == null)
+            return 0;
+
+        Material mat = ob.GetComponentInChildren<MeshRenderer>().material;
+        int color = currentBrickMaterialIndex; // default is current material, if none found, return current material
+        for (int j = 0; j < brickMaterials.Length; j++)
+        {
+            if (brickMaterials[j].name + " (Instance)" == mat.name || brickMaterials[j].name == mat.name)
+            {
+                color = j;
+                //Debug.Log(color);
+            }
+                
         }
         return color;
     }
