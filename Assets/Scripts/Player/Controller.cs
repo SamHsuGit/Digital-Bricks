@@ -278,17 +278,9 @@ public class Controller : NetworkBehaviour
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
 
             world.gameObject.SetActive(true);
-        }
 
-        if (Settings.OnlinePlay && hasAuthority)
-            Debug.Log("test");
-
-        //if (Settings.OnlinePlay && isServer && hasAuthority)
-        //    CmdLoadPlacedBricks();
-        if (!Settings.OnlinePlay)
             LoadPlacedBricks();
-        //else
-        //    LoadPlacedBricksFromString(baseServer);
+        }
     }
 
     private string[] LoadLdrawPartsList(string name)
@@ -416,17 +408,6 @@ public class Controller : NetworkBehaviour
         seedServer = SettingsStatic.LoadedSettings.worldCoord;
 
         LoadPlacedBricks();
-
-        //BinaryFormatter formatter = new BinaryFormatter();
-        //string path = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/placedBricks.brx";
-        //FileStream stream = new FileStream(path, FileMode.Open);
-        //string base64 = formatter.Deserialize(stream) as string;
-        //stream.Close();
-        //// de-obfuscate
-        ////https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
-        //var data = System.Convert.FromBase64String(base64);
-        //baseServer = System.Text.Encoding.UTF8.GetString(data);
-        //baseServer = FileSystemExtension.ReadFileToString("base.ldr");
 
         versionServer = Application.version;
 
@@ -842,7 +823,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateShowGrabObject(0);
+        UpdateGrabObject(0);
         setBrickType = false;
     }
 
@@ -861,7 +842,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateShowGrabObject(0);
+        UpdateGrabObject(0);
         setBrickType = false;
     }
 
@@ -874,7 +855,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateShowGrabObject(0);
+        UpdateGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -893,7 +874,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateShowGrabObject(0);
+        UpdateGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -911,7 +892,7 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 0;
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
-        UpdateShowGrabObject(0);
+        UpdateGrabObject(0);
         
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -928,7 +909,7 @@ public class Controller : NetworkBehaviour
         else
             currentBrickRotation = 3;
 
-        UpdateShowGrabObject(0);
+        UpdateGrabObject(0);
         
         if(!movingPlacedBrickUseStoredValues)
         {
@@ -1020,7 +1001,7 @@ public class Controller : NetworkBehaviour
 
                 SpawnVoxelRbFromWorld(position, blockID);
 
-                UpdateShowGrabObject(blockID);
+                UpdateGrabObject(blockID);
             }
             else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
             {
@@ -1148,9 +1129,9 @@ public class Controller : NetworkBehaviour
         Vector3 pos = new Vector3(0, 1, 0);
         string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
-        if (Settings.OnlinePlay && hasAuthority)
-            CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
-        else
+        //if (Settings.OnlinePlay && hasAuthority)
+        //    CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
+        //else
             PlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
     }
 
@@ -1173,6 +1154,8 @@ public class Controller : NetworkBehaviour
             placedBrick = null;
             return;
         }
+
+        UpdateGrabObject((byte)currentBrickMaterialIndex);
 
         int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
@@ -1312,7 +1295,7 @@ public class Controller : NetworkBehaviour
 
         reticle.SetActive(false);
 
-        UpdateShowGrabObject(blockID);
+        UpdateGrabObject(blockID);
     }
 
     void PlayerPickBrickFromInventory()
@@ -1325,31 +1308,32 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(1);
         reticle.SetActive(false);
 
-        UpdateShowGrabObject(blockID);
+        UpdateGrabObject(blockID);
     }
 
-    void UpdateShowGrabObject(byte blockID)
+    void UpdateGrabObject(byte blockID)
     {
-        // a switch function to call the correct function depending on online play or not
+        //// a switch function to call the correct function depending on online play or not
         if (Settings.OnlinePlay && hasAuthority)
             CmdUpdateGrabObject(blockID);
         else
-            EditShowGrabObject(blockID);
+            EditGrabObject(blockID);
     }
 
     [Command]
     void CmdUpdateGrabObject(byte blockID)
     {
-        RpcUpdateGrabObject(blockID);
+        EditGrabObject(blockID);
+        //RpcUpdateGrabObject(blockID);
     }
 
     [ClientRpc]
     void RpcUpdateGrabObject(byte blockID)
     {
-        EditShowGrabObject(blockID);
+        EditGrabObject(blockID);
     }
 
-    void EditShowGrabObject(byte blockID)
+    void EditGrabObject(byte blockID)
     {
         if (placedBrick != null && heldObjectIsBrick)
         {
@@ -1411,7 +1395,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        UpdateShowGrabObject((byte)currentBrickMaterialIndex);
+        UpdateGrabObject((byte)currentBrickMaterialIndex);
 
         if (heldObjectIsBrick)
         {
