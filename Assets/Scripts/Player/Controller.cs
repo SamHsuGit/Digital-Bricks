@@ -1352,7 +1352,8 @@ public class Controller : NetworkBehaviour
         if(!holdingGrab)
             EditGrabObject(blockID);
         else
-            RpcUpdateGrabObject(blockID); // does not create object for client
+            EditGrabObject
+            //RpcUpdateGrabObject(blockID); // does not create object for client
     }
 
     [ClientRpc]
