@@ -1341,13 +1341,13 @@ public class Controller : NetworkBehaviour
     {
         //// a switch function to call the correct function depending on online play or not
         if (Settings.OnlinePlay && hasAuthority)
-            CmdUpdateGrabObject(blockID, holdingGrab);
+            CmdUpdateGrabObject(blockID);
         else
             EditGrabObject(blockID);
     }
 
     [Command]
-    void CmdUpdateGrabObject(byte blockID, bool holdingGrab)
+    void CmdUpdateGrabObject(byte blockID)
     {
         EditGrabObject(blockID);
         //if (!holdingGrab)
@@ -1424,10 +1424,10 @@ public class Controller : NetworkBehaviour
 
     public void ReleasedGrab()
     {
-        UpdateGrabObject((byte)currentBrickMaterialIndex);
-
         holdingGrab = false;
         reticle.SetActive(true);
+
+        UpdateGrabObject((byte)currentBrickMaterialIndex);
 
         if (heldObjectIsBrick)
         {
