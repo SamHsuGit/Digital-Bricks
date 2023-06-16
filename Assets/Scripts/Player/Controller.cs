@@ -1143,6 +1143,7 @@ public class Controller : NetworkBehaviour
 
     void ReleasedBuild()
     {
+        UpdateGrabObject((byte)currentBrickMaterialIndex);
         holdingBuild = false;
         reticle.SetActive(true);
 
@@ -1155,7 +1156,7 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        UpdateGrabObject((byte)currentBrickMaterialIndex);
+        
 
         int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
@@ -1341,19 +1342,19 @@ public class Controller : NetworkBehaviour
     {
         //// a switch function to call the correct function depending on online play or not
         if (Settings.OnlinePlay && hasAuthority)
-            CmdUpdateGrabObject(blockID);
+            CmdUpdateGrabObject(blockID, holdingBuild);
         else
             EditGrabObject(blockID);
     }
 
     [Command]
-    void CmdUpdateGrabObject(byte blockID)
+    void CmdUpdateGrabObject(byte blockID, bool holdingBuild)
     {
-        EditGrabObject(blockID);
-        //if (!holdingGrab)
-        //    EditGrabObject(blockID);
-        //else
-        //    RpcUpdateGrabObject(blockID); // does not create object for client
+        //EditGrabObject(blockID);
+        if (holdingBuild)
+            EditGrabObject(blockID);
+        else
+            RpcUpdateGrabObject(blockID); // does not create object for client
     }
 
     [ClientRpc]
