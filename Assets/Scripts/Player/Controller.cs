@@ -1622,8 +1622,8 @@ public class Controller : NetworkBehaviour
 
         placedBrick.transform.rotation = rot; // set parent object rotation equal to rotation passed into this function
 
-        //SceneObject sceneObject = ob.AddComponent<SceneObject>(); // used for spawning object on the server
-        //sceneObject.controller = this;
+        SceneObject sceneObject = placedBrick.AddComponent<SceneObject>(); // used for spawning object on the server
+        sceneObject.controller = this;
         //if (placedBrick.GetComponent<BoxCollider>() != null)
         //{
         //    BoxCollider previousBC = placedBrick.GetComponent<BoxCollider>();
