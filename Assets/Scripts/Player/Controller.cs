@@ -1053,7 +1053,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    void SpawnTempBrick(int materialIndex)
+    private void SpawnTempBrick(int materialIndex)
     {
         Quaternion rot = Quaternion.identity;
         switch (currentBrickRotation)
@@ -1129,16 +1129,16 @@ public class Controller : NetworkBehaviour
         Vector3 pos = new Vector3(0, 1, 0);
         string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
-        if (Settings.OnlinePlay && hasAuthority)
-            CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
-        else
+        if(!Settings.OnlinePlay)
             PlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
+        else if (Settings.OnlinePlay && hasAuthority)
+            CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material (HOST SPAWNS OBJECT ON CLIENT MACHINES)
     }
 
     void HoldingBuild()
     {
         if (placedBrick != null) // IF PIECE IS SPAWNED
-            MoveBrickToCursor();
+            MoveBrickToCursor(placedBrick);
     }
 
     void ReleasedBuild()
@@ -1340,7 +1340,8 @@ public class Controller : NetworkBehaviour
             Destroy(placedBrick);
             placedBrick = null;
             SpawnTempBrick(blockID);
-            MoveBrickToCursor();
+            if(placedBrick != null)
+                MoveBrickToCursor(placedBrick);
         }
         else if(holdingGrab)
         {
@@ -1368,9 +1369,10 @@ public class Controller : NetworkBehaviour
     {
         if (placedBrick != null) // IF PIECE IS SPAWNED
         {
-            MoveBrickToCursor();
+            MoveBrickToCursor(placedBrick);
         }
-        else if (heldObRb != null) // IF NON-VOXEL RB
+        //else if (heldObRb != null) // IF NON-VOXEL RB
+        if (heldObRb != null) // IF NON-VOXEL RB
         {
             heldObRb.MovePosition(playerCamera.transform.position + playerCamera.transform.forward * 3.5f);
         }
@@ -1506,11 +1508,11 @@ public class Controller : NetworkBehaviour
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
     }
 
-    public void MoveBrickToCursor()
+    public void MoveBrickToCursor(GameObject ob)
     {
         Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
         pos = GetGridPos(pos); // snap to grid
-        placedBrick.transform.position = pos;
+        ob.transform.position = pos; // throws error when build is released on host machine
     }
 
     public Vector3 GetGridPos(Vector3 pos)
@@ -1597,8 +1599,10 @@ public class Controller : NetworkBehaviour
         PlaceBrick(fromFile, _partname, cmdstr, materialIndex, pos, rot);
     }
 
-    public void PlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
+    public GameObject PlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
     {
+        GameObject returnOb;
+
         if (!fromFile)
         {
             pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
@@ -1639,6 +1643,9 @@ public class Controller : NetworkBehaviour
 
         if (fromFile)
             placedBrick = null;
+
+        returnOb = placedBrick;
+        return returnOb;
     }
 
     public void CmdSpawnObject(int type, int item, Vector3 pos)
