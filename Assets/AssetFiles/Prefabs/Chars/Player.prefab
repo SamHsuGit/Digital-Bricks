@@ -588,8 +588,9 @@ MonoBehaviour:
   playerCharIdle: 
   playerCharRun: 
   playerProjectile: 
-  currentBrickIndex: 0
   currentBrickType: 0
+  currentBrickIndex: 0
+  currentBrickMaterialIndex: 0
   currentBrickRotation: 0
   collisionDamage: 0
   isGrounded: 0

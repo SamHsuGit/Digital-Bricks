@@ -5466,11 +5466,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Grab \t\tHold RMB (B)\nStore \t\tRelease Grab while aimed at air\nUnstore
-    \t\tHold Grab while aimed at air\nPlace\t\tHold & Release LMB (X)\nNavigate Slots\tScroll/Arrow
-    Keys (D-Pad)\nChange Cam\tTab (Y)\n\nOptions\t\tEsc (Start)\nMove\t\tWASD (Left
-    Stick)\nLook\t\tMouse (Right Stick)\nJump\t\tSpace (Xbox A)\nSprint\t\tLeft Shift
-    (Left Stick Press)"
+  m_text: "Grab \t\tHold/Release RMB (B)\nStore \t\tRelease Grab while aimed at air\nUnstore
+    \t\tHold Grab while aimed at air\nBuild\t\tHold/Release LMB (X) with Stored Bricks\nConvert
+    Brick\tPress Build while Grabbing Brick\n\nNavigate Slots\tScroll/Arrow Keys
+    (D-Pad)\nChange Cam\tTab (Y)\n\nOptions\t\tEsc (Start)\nMove\t\tWASD (Left Stick)\nLook\t\tMouse
+    (Right Stick)\nJump\t\tSpace (Xbox A)\nSprint\t\tLeft Shift (Left Stick Press)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -7389,7 +7389,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Y (Select) = SHOW CONTROLS
+  m_text: Y (Select) = HIDE/SHOW CONTROLS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

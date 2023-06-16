@@ -228,6 +228,8 @@ public class Controller : NetworkBehaviour
         };
         currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
 
+        // set to zero every time the game starts
+        currentBrickType = SettingsStatic.LoadedSettings.currentBrickType;
         currentBrickIndex = SettingsStatic.LoadedSettings.currentBrickIndex;
         currentBrickRotation = SettingsStatic.LoadedSettings.currentBrickRotation;
 
@@ -576,14 +578,14 @@ public class Controller : NetworkBehaviour
         isMoving = newValue;
     }
 
-    public void SetCurrentBrickIndex(int oldValue, int newValue)
-    {
-        currentBrickIndex = newValue;
-    }
-
     public void SetCurrentBrickType(int oldValue, int newValue)
     {
         currentBrickType = newValue;
+    }
+
+    public void SetCurrentBrickIndex(int oldValue, int newValue)
+    {
+        currentBrickIndex = newValue;
     }
 
     public void SetCurrentBrickRotation(int oldValue, int newValue)
@@ -710,6 +712,10 @@ public class Controller : NetworkBehaviour
                         // IF RELEASED GRAB
                         if (holdingGrab && !inputHandler.grab)
                             ReleasedGrab();
+
+                        // IF PRESSED BUILD WHILE HOLDING GRAB
+                        if (holdingGrab && inputHandler.shoot)
+                            PressedBuildWhileGrab();
 
                         // IF PRESSED BUILD
                         if (!holdingBuild && inputHandler.shoot)
@@ -950,6 +956,8 @@ public class Controller : NetworkBehaviour
 
     public void PressedBuild()
     {
+        // SPAWN A BRICK
+
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
             return;
 
@@ -1254,9 +1262,15 @@ public class Controller : NetworkBehaviour
                 holdingGrab = true;
                 heldObjectIsBrick = true;
                 brickPickUp.Play();
+
+                // save values from brick object
                 int brickMaterialIndex = GetMaterialIndex(hitObject);
                 SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
+                Vector2Int indexAndType = GetBrickTypeAndIndex(hitObject);
+                SetCurrentBrickType(indexAndType.x, indexAndType.x);
+                SetCurrentBrickIndex(indexAndType.y, indexAndType.y);
                 currentBrickRotation = GetRotationIndexFromQuaternion(hitObject.transform.rotation);
+                
                 placedBrick = hitObject;
                 // store values for later if moving bricks
                 movingPlacedBrickUseStoredValues = true;
@@ -1417,6 +1431,26 @@ public class Controller : NetworkBehaviour
         movingPlacedBrickUseStoredValues = false;
     }
 
+    public void PressedBuildWhileGrab()
+    {
+        // CONVERT BRICK BACK INTO VOXEL
+
+        if (!heldObjectIsBrick)
+            return;
+        inputHandler.grab = false; // force the input to false
+        inputHandler.shoot = false; // force the input to false
+
+        holdingGrab = false;
+        reticle.SetActive(true);
+        brickPlaceDown.Play();
+        PutAwayBrick((byte)currentBrickMaterialIndex);
+        Destroy(placedBrick);
+
+        placedBrick = null;
+        heldObjectIsBrick = false;
+        movingPlacedBrickUseStoredValues = false;
+    }
+
     void PutAwayBrick(byte blockID)
     {
         int firstSlot;
@@ -1452,7 +1486,8 @@ public class Controller : NetworkBehaviour
             }
 
             // if made it here, toolbar has no empty slots to put voxels into so shoot held voxel off into space
-            PressedShoot();
+            //PressedShoot();
+            return; // if made it here, toolbar has no empty slots to put voxels into so do not add any bricks to slots
         }
     }
 
@@ -1603,6 +1638,9 @@ public class Controller : NetworkBehaviour
         placedBrick.isStatic = true;
 
         ResetPlacedBrickMaterialsAndBoxColliders(materialIndex);
+
+        if (fromFile)
+            placedBrick = null;
     }
 
     public void CmdSpawnObject(int type, int item, Vector3 pos)
@@ -2112,7 +2150,9 @@ public class Controller : NetworkBehaviour
                 Vector3 pos = ob.transform.position;
                 Quaternion rot = ob.transform.rotation;
                 string partname = ob.name;
-                Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
+                if (ob.GetComponentInChildren<MeshRenderer>() == null)
+                    continue;
+                Material mat = ob.GetComponentInChildren<MeshRenderer>().material;
 
                 string color = "0";
                 for (int j = 0; j < brickMaterials.Length; j++)
@@ -2287,5 +2327,24 @@ public class Controller : NetworkBehaviour
                 
         }
         return color;
+    }
+
+    private Vector2Int GetBrickTypeAndIndex(GameObject ob)
+    {
+        if (ob == null)
+            return new Vector2Int(0, 0);
+
+        Vector2Int brickTypeAndIndex = new Vector2Int(0, 0);
+        for(int j = 0; j < ldrawPartsTypes.Length; j++)
+        {
+            for (int k = 0; k < ldrawPartsTypes[j].Length; k++)
+            {
+                if(ob.name == ldrawPartsTypes[j][k])
+                {
+                    brickTypeAndIndex = new Vector2Int(j, k);
+                }
+            }
+        }
+        return brickTypeAndIndex;
     }
 }

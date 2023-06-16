@@ -29,7 +29,7 @@ public class GameMenu : MonoBehaviour
     public GameObject basicControlsText;
     public GameObject brickControlsText;
     public GameObject camControlsText;
-    public bool showControls = false;
+    public bool showControls;
 
     private int previousGraphicsQuality;
     private Material newMaterial;
@@ -53,6 +53,7 @@ public class GameMenu : MonoBehaviour
         controller = player.GetComponent<Controller>();
         canvas = GetComponent<Canvas>();
         health = player.GetComponent<Health>();
+        showControls = SettingsStatic.LoadedSettings.showControls;
     }
 
     private void Start()
@@ -95,7 +96,7 @@ public class GameMenu : MonoBehaviour
                 brickControlsText.SetActive(false);
                 camControlsText.SetActive(true);
             }
-            else if (controller.camMode == 1 && (controller.holdingBuild || controller.holdingGrab))
+            else if (controller.camMode == 1 && (controller.holdingBuild || (controller.holdingGrab && controller.heldObjectIsBrick)))
             {
                 basicControlsText.SetActive(false);
                 brickControlsText.SetActive(true);
@@ -177,6 +178,10 @@ public class GameMenu : MonoBehaviour
     {
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
         SettingsStatic.LoadedSettings.timeOfDay = lighting.timeOfDay; // only write this value when saving instead of every frame update
+        SettingsStatic.LoadedSettings.currentBrickType = controller.currentBrickType;
+        SettingsStatic.LoadedSettings.currentBrickIndex = controller.currentBrickIndex;
+        SettingsStatic.LoadedSettings.currentBrickRotation = controller.currentBrickRotation;
+        SettingsStatic.LoadedSettings.showControls = showControls;
 
         World.Instance.SetUndrawVoxels();
 
