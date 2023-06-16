@@ -273,9 +273,7 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            if (Settings.OnlinePlay && hasAuthority)
-                CmdLoadPlacedBricks();
-            else
+            if (!Settings.OnlinePlay)
                 LoadPlacedBricks();
 
             SetPlayerColliderSettings();
@@ -833,9 +831,9 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(0);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(0);
+        //else
             UpdateShowGrabObject(0);
         setBrickType = false;
     }
@@ -855,9 +853,9 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(0);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(0);
+        //else
             UpdateShowGrabObject(0);
         setBrickType = false;
     }
@@ -871,9 +869,9 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(0);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(0);
+        //else
             UpdateShowGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
@@ -893,9 +891,9 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(0);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(0);
+        //else
             UpdateShowGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
@@ -914,9 +912,9 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 0;
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(0);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(0);
+        //else
             UpdateShowGrabObject(0);
         
         if (!movingPlacedBrickUseStoredValues)
@@ -934,9 +932,9 @@ public class Controller : NetworkBehaviour
         else
             currentBrickRotation = 3;
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(0);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(0);
+        //else
             UpdateShowGrabObject(0);
 
         
@@ -1322,9 +1320,9 @@ public class Controller : NetworkBehaviour
 
         reticle.SetActive(false);
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject(blockID);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(blockID);
+        //else
             UpdateShowGrabObject(blockID);
     }
 
@@ -1338,10 +1336,19 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(1);
         reticle.SetActive(false);
 
-        if (Settings.OnlinePlay)
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject(blockID);
+        //else
+            UpdateShowGrabObject(blockID);
+    }
+
+    void UpdateShowGrabObject(byte blockID)
+    {
+        // a switch function to call the correct function depending on online play or not
+        if (Settings.OnlinePlay && hasAuthority)
             CmdUpdateGrabObject(blockID);
         else
-            UpdateShowGrabObject(blockID);
+            EditShowGrabObject(blockID);
     }
 
     [Command]
@@ -1353,10 +1360,10 @@ public class Controller : NetworkBehaviour
     [ClientRpc]
     void RpcUpdateGrabObject(byte blockID)
     {
-        UpdateShowGrabObject(blockID);
+        EditShowGrabObject(blockID);
     }
 
-    void UpdateShowGrabObject(byte blockID)
+    void EditShowGrabObject(byte blockID)
     {
         if (placedBrick != null && heldObjectIsBrick)
         {
@@ -1418,9 +1425,9 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        if (Settings.OnlinePlay)
-            CmdUpdateGrabObject((byte)currentBrickMaterialIndex);
-        else
+        //if (Settings.OnlinePlay)
+        //    CmdUpdateGrabObject((byte)currentBrickMaterialIndex);
+        //else
             UpdateShowGrabObject((byte)currentBrickMaterialIndex);
 
         if (heldObjectIsBrick)
@@ -1503,6 +1510,7 @@ public class Controller : NetworkBehaviour
 
     void PlaceVoxel(Vector3 pos)
     {
+        // a switch function to call the correct function depending on online play or not
         if (!World.Instance.CheckForVoxel(placePos.position))
         {
             if (blockID == blockIDcrystal)
