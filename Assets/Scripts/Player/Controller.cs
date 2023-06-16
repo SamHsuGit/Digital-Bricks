@@ -273,7 +273,7 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            LoadPlacedBricksLocalPlay();
+            LoadPlacedBricks();
 
             SetPlayerColliderSettings();
             SetName(playerName, playerName);
@@ -294,7 +294,7 @@ public class Controller : NetworkBehaviour
         return currentLDrawPartsListStringArray;
     }
 
-    private void LoadPlacedBricksLocalPlay()
+    private void LoadPlacedBricks()
     {
         string path = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/placedBricks.brx";
         if (!File.Exists(path))
@@ -401,14 +401,15 @@ public class Controller : NetworkBehaviour
         planetNumberServer = SettingsStatic.LoadedSettings.planetSeed;
         seedServer = SettingsStatic.LoadedSettings.worldCoord;
 
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/placedBricks.brx", FileMode.Open);
-        string base64 = formatter.Deserialize(stream) as string;
-        stream.Close();
-        // d-obfuscate
-        //https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
-        var data = System.Convert.FromBase64String(base64);
-        baseServer = System.Text.Encoding.UTF8.GetString(data);
+        LoadPlacedBricks();
+        //BinaryFormatter formatter = new BinaryFormatter();
+        //FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/placedBricks.brx", FileMode.Open);
+        //string base64 = formatter.Deserialize(stream) as string;
+        //stream.Close();
+        //// d-obfuscate
+        ////https://stackoverflow.com/questions/20010374/obfuscating-randomizing-a-string
+        //var data = System.Convert.FromBase64String(base64);
+        //baseServer = System.Text.Encoding.UTF8.GetString(data);
 
         //baseServer = FileSystemExtension.ReadFileToString("base.ldr");
         versionServer = Application.version;
