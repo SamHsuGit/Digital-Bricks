@@ -273,17 +273,22 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            if (Settings.OnlinePlay && hasAuthority)
-                CmdLoadPlacedBricks();
-            else
-                LoadPlacedBricks();
-
             SetPlayerColliderSettings();
             SetName(playerName, playerName);
             nametag.SetActive(false); // disable nametag for singleplayer/splitscreen play
 
             world.gameObject.SetActive(true);
         }
+
+        if (Settings.OnlinePlay && hasAuthority)
+            Debug.Log("test");
+
+        //if (Settings.OnlinePlay && isServer && hasAuthority)
+        //    CmdLoadPlacedBricks();
+        if (!Settings.OnlinePlay)
+            LoadPlacedBricks();
+        //else
+        //    LoadPlacedBricksFromString(baseServer);
     }
 
     private string[] LoadLdrawPartsList(string name)
@@ -410,7 +415,7 @@ public class Controller : NetworkBehaviour
         planetNumberServer = SettingsStatic.LoadedSettings.planetSeed;
         seedServer = SettingsStatic.LoadedSettings.worldCoord;
 
-        //CmdLoadPlacedBricks();
+        LoadPlacedBricks();
 
         //BinaryFormatter formatter = new BinaryFormatter();
         //string path = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/placedBricks.brx";
@@ -451,6 +456,8 @@ public class Controller : NetworkBehaviour
 
         if (isClientOnly)
             customNetworkManager.InitWorld(); // activate world only after getting syncVar latest values from server
+
+        LoadPlacedBricksFromString(baseServer);
     }
 
     void SetPlayerColliderSettings()
