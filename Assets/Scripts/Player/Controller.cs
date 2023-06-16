@@ -273,7 +273,10 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            LoadPlacedBricks();
+            if (Settings.OnlinePlay && hasAuthority)
+                CmdLoadPlacedBricks();
+            else
+                LoadPlacedBricks();
 
             SetPlayerColliderSettings();
             SetName(playerName, playerName);
@@ -292,6 +295,12 @@ public class Controller : NetworkBehaviour
         string ldrawPartList = File.ReadAllText(path);
         currentLDrawPartsListStringArray = ldrawPartList.Split("\n");
         return currentLDrawPartsListStringArray;
+    }
+
+    [Command]
+    private void CmdLoadPlacedBricks()
+    {
+        LoadPlacedBricks();
     }
 
     private void LoadPlacedBricks()
@@ -316,11 +325,11 @@ public class Controller : NetworkBehaviour
         }
         else
             baseServer = base64;
-        
-        LoadPlacedBricks(baseServer);
+
+        LoadPlacedBricksFromString(baseServer);
     }
 
-    public void LoadPlacedBricks(string cmdstr)
+    public void LoadPlacedBricksFromString(string cmdstr)
     {
         if (cmdstr.Length == 0)
             return;
@@ -401,7 +410,7 @@ public class Controller : NetworkBehaviour
         planetNumberServer = SettingsStatic.LoadedSettings.planetSeed;
         seedServer = SettingsStatic.LoadedSettings.worldCoord;
 
-        LoadPlacedBricks();
+        CmdLoadPlacedBricks();
         //BinaryFormatter formatter = new BinaryFormatter();
         //FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/placedBricks.brx", FileMode.Open);
         //string base64 = formatter.Deserialize(stream) as string;
