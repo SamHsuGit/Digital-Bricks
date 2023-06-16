@@ -1349,11 +1349,11 @@ public class Controller : NetworkBehaviour
     [Command]
     void CmdUpdateGrabObject(byte blockID, bool holdingGrab)
     {
-        if (!holdingGrab)
-            EditGrabObject(blockID);
-        else
-            EditGrabObject(blockID);
-            //RpcUpdateGrabObject(blockID); // does not create object for client
+        EditGrabObject(blockID);
+        //if (!holdingGrab)
+        //    EditGrabObject(blockID);
+        //else
+        //    RpcUpdateGrabObject(blockID); // does not create object for client
     }
 
     [ClientRpc]
