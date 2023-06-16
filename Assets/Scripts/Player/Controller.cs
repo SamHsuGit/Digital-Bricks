@@ -273,7 +273,9 @@ public class Controller : NetworkBehaviour
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            if (!Settings.OnlinePlay)
+            if (Settings.OnlinePlay && hasAuthority)
+                CmdLoadPlacedBricks();
+            else
                 LoadPlacedBricks();
 
             SetPlayerColliderSettings();
@@ -408,7 +410,8 @@ public class Controller : NetworkBehaviour
         planetNumberServer = SettingsStatic.LoadedSettings.planetSeed;
         seedServer = SettingsStatic.LoadedSettings.worldCoord;
 
-        CmdLoadPlacedBricks();
+        //CmdLoadPlacedBricks();
+
         //BinaryFormatter formatter = new BinaryFormatter();
         //FileStream stream = new FileStream(Application.streamingAssetsPath + "/" + "ldraw/models/placedBricks.brx", FileMode.Open);
         //string base64 = formatter.Deserialize(stream) as string;
@@ -419,6 +422,8 @@ public class Controller : NetworkBehaviour
         //baseServer = System.Text.Encoding.UTF8.GetString(data);
 
         //baseServer = FileSystemExtension.ReadFileToString("base.ldr");
+
+
         versionServer = Application.version;
 
         //SetServerChunkStringSyncVar(); // Server sends initially loaded chunks as chunkStringSyncVar to clients (DISABLED, send chunks over internet manually, figure out how to send data not as strings)
@@ -831,10 +836,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(0);
-        //else
-            UpdateShowGrabObject(0);
+        UpdateShowGrabObject(0);
         setBrickType = false;
     }
 
@@ -853,10 +855,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(0);
-        //else
-            UpdateShowGrabObject(0);
+        UpdateShowGrabObject(0);
         setBrickType = false;
     }
 
@@ -869,10 +868,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(0);
-        //else
-            UpdateShowGrabObject(0);
+        UpdateShowGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -891,10 +887,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(0);
-        //else
-            UpdateShowGrabObject(0);
+        UpdateShowGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -912,10 +905,7 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 0;
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(0);
-        //else
-            UpdateShowGrabObject(0);
+        UpdateShowGrabObject(0);
         
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -932,11 +922,7 @@ public class Controller : NetworkBehaviour
         else
             currentBrickRotation = 3;
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(0);
-        //else
-            UpdateShowGrabObject(0);
-
+        UpdateShowGrabObject(0);
         
         if(!movingPlacedBrickUseStoredValues)
         {
@@ -1320,10 +1306,7 @@ public class Controller : NetworkBehaviour
 
         reticle.SetActive(false);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(blockID);
-        //else
-            UpdateShowGrabObject(blockID);
+        UpdateShowGrabObject(blockID);
     }
 
     void PlayerPickBrickFromInventory()
@@ -1336,10 +1319,7 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(1);
         reticle.SetActive(false);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject(blockID);
-        //else
-            UpdateShowGrabObject(blockID);
+        UpdateShowGrabObject(blockID);
     }
 
     void UpdateShowGrabObject(byte blockID)
@@ -1425,10 +1405,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        //if (Settings.OnlinePlay)
-        //    CmdUpdateGrabObject((byte)currentBrickMaterialIndex);
-        //else
-            UpdateShowGrabObject((byte)currentBrickMaterialIndex);
+        UpdateShowGrabObject((byte)currentBrickMaterialIndex);
 
         if (heldObjectIsBrick)
         {
@@ -1648,7 +1625,6 @@ public class Controller : NetworkBehaviour
             netManager.spawnPrefabs.Add(placedBrick);
         }
 
-        //***NEED TO USE POSITION FROM LDRAW PART FILE TO PLACE PART TO BE ABLE TO SAVE PART LOCATIONS BACK TO FILE CORRECTLY!!!
         placedBrick = LDrawImportRuntime.Instance.ConfigureModelOb(placedBrick, pos, false);
 
         placedBrick.transform.rotation = rot; // set parent object rotation equal to rotation passed into this function
