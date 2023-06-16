@@ -1617,13 +1617,20 @@ public class Controller : NetworkBehaviour
         var model = LDrawModelRuntime.Create(cmdstr, cmdstr, false);
         placedBrick = model.CreateMeshGameObject(_ldrawConfigRuntime.ScaleMatrix);
 
+        if (Settings.OnlinePlay)
+        {
+            // for online play, register the brick with the network manager
+            NetworkManager netManager = gameManager.PlayerManagerNetwork.GetComponent<NetworkManager>();
+            netManager.spawnPrefabs.Add(placedBrick);
+        }
+
         //***NEED TO USE POSITION FROM LDRAW PART FILE TO PLACE PART TO BE ABLE TO SAVE PART LOCATIONS BACK TO FILE CORRECTLY!!!
         placedBrick = LDrawImportRuntime.Instance.ConfigureModelOb(placedBrick, pos, false);
 
         placedBrick.transform.rotation = rot; // set parent object rotation equal to rotation passed into this function
 
-        SceneObject sceneObject = placedBrick.AddComponent<SceneObject>(); // used for spawning object on the server
-        sceneObject.controller = this;
+        //SceneObject sceneObject = placedBrick.AddComponent<SceneObject>(); // used for spawning object on the server
+        //sceneObject.controller = this;
         //if (placedBrick.GetComponent<BoxCollider>() != null)
         //{
         //    BoxCollider previousBC = placedBrick.GetComponent<BoxCollider>();
