@@ -1394,7 +1394,7 @@ public class Controller : NetworkBehaviour
 
     public void HoldingGrab()
     {
-        if (placedBrick != null) // IF PIECE IS SPAWNED
+        if (placedBrick != null && heldObjectIsBrick) // IF PIECE IS SPAWNED
         {
             MoveBrickToCursor(placedBrick);
         }
