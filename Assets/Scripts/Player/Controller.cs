@@ -1522,11 +1522,6 @@ public class Controller : NetworkBehaviour
             toolbar.slots[toolbar.slotIndex].itemSlot.EmptySlot();
     }
 
-    public void CmdPlaceBrick(bool fromFile, string _partname, string cmdstr, int material, Vector3 pos, Quaternion rot)
-    {
-        PlaceBrick(fromFile, _partname, cmdstr, material, pos, rot);
-    }
-
     public void MoveBrickToCursor()
     {
         Vector3 pos = playerCamera.transform.position + playerCamera.transform.forward * cc.radius * 8;
@@ -1604,6 +1599,18 @@ public class Controller : NetworkBehaviour
             }
         }
         placedBrick.GetComponent<BoxCollider>().enabled = true;
+    }
+
+    [Command]
+    void CmdPlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
+    {
+        RpcPlaceBrick(fromFile, _partname, cmdstr, materialIndex, pos, rot);
+    }
+
+    [ClientRpc]
+    void RpcPlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
+    {
+        PlaceBrick(fromFile, _partname, cmdstr, materialIndex, pos, rot);
     }
 
     public void PlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
