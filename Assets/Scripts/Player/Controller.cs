@@ -1255,6 +1255,7 @@ public class Controller : NetworkBehaviour
                 currentBrickRotation = GetRotationIndexFromQuaternion(hitObject.transform.rotation);
                 
                 placedBrick = hitObject;
+
                 // store values for later if moving bricks
                 movingPlacedBrickUseStoredValues = true;
             }
@@ -1265,7 +1266,7 @@ public class Controller : NetworkBehaviour
             holdingGrab = true;
             heldObjectIsBrick = false;
 
-            PlayerPickBrick();
+            PlayerRemoveVoxel();
         }
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
         {
@@ -1275,7 +1276,32 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    void PlayerPickBrick()
+    void PlayerRemoveBrick(GameObject ob)
+    {
+        if (Settings.OnlinePlay && hasAuthority)
+            CmdRemoveBrick(ob);
+        else
+            RemoveBrick(ob);
+    }
+
+    [Command]
+    void CmdRemoveBrick(GameObject ob)
+    {
+        RpcRemoveBrick(ob);
+    }
+
+    [ClientRpc]
+    void RpcRemoveBrick(GameObject ob)
+    {
+        RemoveBrick(ob);
+    }
+
+    void RemoveBrick(GameObject ob)
+    {
+        Destroy(ob);
+    }
+
+    void PlayerRemoveVoxel()
     {
         blockID = World.Instance.GetVoxelState(removePos.position).id;
         if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
@@ -1338,6 +1364,7 @@ public class Controller : NetworkBehaviour
         if (placedBrick != null && heldObjectIsBrick)
         {
             Destroy(placedBrick);
+            //PlayerRemoveBrick(placedBrick);
             placedBrick = null;
             SpawnTempBrick(blockID);
             if(placedBrick != null)
@@ -1397,6 +1424,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
+        
         UpdateGrabObject((byte)currentBrickMaterialIndex);
 
         if (heldObjectIsBrick)
