@@ -1349,8 +1349,8 @@ public class Controller : NetworkBehaviour
     [Command]
     void CmdUpdateGrabObject(byte blockID)
     {
-        EditGrabObject(blockID);
-        //RpcUpdateGrabObject(blockID);
+        //EditGrabObject(blockID);
+        RpcUpdateGrabObject(blockID);
     }
 
     [ClientRpc]
@@ -1423,7 +1423,6 @@ public class Controller : NetworkBehaviour
     {
         holdingGrab = false;
         reticle.SetActive(true);
-
         
         UpdateGrabObject((byte)currentBrickMaterialIndex);
 
