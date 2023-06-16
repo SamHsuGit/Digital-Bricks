@@ -1129,7 +1129,7 @@ public class Controller : NetworkBehaviour
         Vector3 pos = new Vector3(0, 1, 0);
         string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
-        if(!Settings.OnlinePlay)
+        if(!Settings.OnlinePlay || (Settings.OnlinePlay && holdingBuild)) // if online and holding build, only spawn local temp brick, not on server
             PlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
         else if (Settings.OnlinePlay && hasAuthority)
             CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material (HOST SPAWNS OBJECT ON CLIENT MACHINES)
