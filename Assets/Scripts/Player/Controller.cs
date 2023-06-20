@@ -1350,6 +1350,7 @@ public class Controller : NetworkBehaviour
     void CmdUpdateGrabObject(byte blockID)
     {
         EditGrabObject(blockID); // updates/creates new object on server
+        RpcUpdateGrabObject(blockID); // updates/creates new object on all clients
     }
 
     [ClientRpc]
