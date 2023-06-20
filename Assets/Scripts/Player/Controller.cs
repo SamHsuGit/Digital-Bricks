@@ -823,7 +823,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0);
+        UpdateGrabObject(0, false);
         setBrickType = false;
     }
 
@@ -842,7 +842,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0);
+        UpdateGrabObject(0, false);
         setBrickType = false;
     }
 
@@ -855,7 +855,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0);
+        UpdateGrabObject(0, false);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -874,7 +874,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0);
+        UpdateGrabObject(0, false);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -892,7 +892,7 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 0;
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
-        UpdateGrabObject(0);
+        UpdateGrabObject(0, false);
         
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -909,7 +909,7 @@ public class Controller : NetworkBehaviour
         else
             currentBrickRotation = 3;
 
-        UpdateGrabObject(0);
+        UpdateGrabObject(0, false);
         
         if(!movingPlacedBrickUseStoredValues)
         {
@@ -1001,7 +1001,7 @@ public class Controller : NetworkBehaviour
 
                 SpawnVoxelRbFromWorld(position, blockID);
 
-                UpdateGrabObject(blockID);
+                UpdateGrabObject(blockID, false);
             }
             else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
             {
@@ -1143,7 +1143,6 @@ public class Controller : NetworkBehaviour
 
     void ReleasedBuild()
     {
-        UpdateGrabObject((byte)currentBrickMaterialIndex);
         holdingBuild = false;
         reticle.SetActive(true);
 
@@ -1156,7 +1155,7 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        
+        UpdateGrabObject((byte)currentBrickMaterialIndex, false);
 
         int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
@@ -1322,7 +1321,7 @@ public class Controller : NetworkBehaviour
 
         reticle.SetActive(false);
 
-        UpdateGrabObject(blockID);
+        UpdateGrabObject(blockID, false);
     }
 
     void PlayerPickBrickFromInventory()
@@ -1335,26 +1334,27 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(1);
         reticle.SetActive(false);
 
-        UpdateGrabObject(blockID);
+        UpdateGrabObject(blockID, false);
     }
 
-    void UpdateGrabObject(byte blockID)
+    void UpdateGrabObject(byte blockID, bool updateClients)
     {
         //// a switch function to call the correct function depending on online play or not
         if (Settings.OnlinePlay && hasAuthority)
-            CmdUpdateGrabObject(blockID, holdingBuild);
+            CmdUpdateGrabObject(blockID, updateClients);
         else
             EditGrabObject(blockID);
     }
 
     [Command]
-    void CmdUpdateGrabObject(byte blockID, bool holdingBuild)
+    void CmdUpdateGrabObject(byte blockID, bool updateClients)
     {
         //EditGrabObject(blockID);
-        if (holdingBuild)
-            EditGrabObject(blockID);
-        else
+        if (updateClients)
             RpcUpdateGrabObject(blockID); // does not create object for client
+        else
+            EditGrabObject(blockID);
+            
     }
 
     [ClientRpc]
@@ -1428,7 +1428,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        UpdateGrabObject((byte)currentBrickMaterialIndex);
+        UpdateGrabObject((byte)currentBrickMaterialIndex, true);
 
         if (heldObjectIsBrick)
         {
