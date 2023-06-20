@@ -1428,7 +1428,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        UpdateGrabObject((byte)currentBrickMaterialIndex, false);
+        UpdateGrabObject((byte)currentBrickMaterialIndex, true);
 
         if (heldObjectIsBrick)
         {
