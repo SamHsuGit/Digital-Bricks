@@ -1287,7 +1287,8 @@ public class Controller : NetworkBehaviour
     [Command]
     void CmdRemoveBrick(GameObject ob)
     {
-        RpcRemoveBrick(ob);
+        //RpcRemoveBrick(ob);
+        RemoveBrick(ob);
     }
 
     [ClientRpc]
@@ -1349,8 +1350,8 @@ public class Controller : NetworkBehaviour
     [Command]
     void CmdUpdateGrabObject(byte blockID)
     {
-        EditGrabObject(blockID); // updates/creates new object on server
-        RpcUpdateGrabObject(blockID); // updates/creates new object on all clients
+        EditGrabObject(blockID); // updates/creates new object on server which in turn adds the object to clients
+        //RpcUpdateGrabObject(blockID); // fails to create object on clients
     }
 
     [ClientRpc]
@@ -1363,8 +1364,8 @@ public class Controller : NetworkBehaviour
     {
         if (placedBrick != null && heldObjectIsBrick)
         {
-            Destroy(placedBrick);
-            //PlayerRemoveBrick(placedBrick); // does not work for multiplayer, does not properly destroy object
+            //Destroy(placedBrick);
+            PlayerRemoveBrick(placedBrick); // does not work for multiplayer, does not properly destroy object
             placedBrick = null;
             SpawnTempBrick(blockID);
             if(placedBrick != null)
