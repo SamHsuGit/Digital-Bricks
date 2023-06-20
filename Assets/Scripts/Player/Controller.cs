@@ -823,7 +823,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0, false);
+        UpdateGrabObject(0);
         setBrickType = false;
     }
 
@@ -842,7 +842,7 @@ public class Controller : NetworkBehaviour
             currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0, false);
+        UpdateGrabObject(0);
         setBrickType = false;
     }
 
@@ -855,7 +855,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0, false);
+        UpdateGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -874,7 +874,7 @@ public class Controller : NetworkBehaviour
 
         SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        UpdateGrabObject(0, false);
+        UpdateGrabObject(0);
 
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -892,7 +892,7 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 0;
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
-        UpdateGrabObject(0, false);
+        UpdateGrabObject(0);
         
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -909,7 +909,7 @@ public class Controller : NetworkBehaviour
         else
             currentBrickRotation = 3;
 
-        UpdateGrabObject(0, false);
+        UpdateGrabObject(0);
         
         if(!movingPlacedBrickUseStoredValues)
         {
@@ -1001,7 +1001,7 @@ public class Controller : NetworkBehaviour
 
                 SpawnVoxelRbFromWorld(position, blockID);
 
-                UpdateGrabObject(blockID, false);
+                UpdateGrabObject(blockID);
             }
             else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
             {
@@ -1155,7 +1155,7 @@ public class Controller : NetworkBehaviour
             return;
         }
 
-        UpdateGrabObject((byte)currentBrickMaterialIndex, false);
+        UpdateGrabObject((byte)currentBrickMaterialIndex);
 
         int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
@@ -1321,7 +1321,7 @@ public class Controller : NetworkBehaviour
 
         reticle.SetActive(false);
 
-        UpdateGrabObject(blockID, false);
+        UpdateGrabObject(blockID);
     }
 
     void PlayerPickBrickFromInventory()
@@ -1334,27 +1334,22 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(1);
         reticle.SetActive(false);
 
-        UpdateGrabObject(blockID, false);
+        UpdateGrabObject(blockID);
     }
 
-    void UpdateGrabObject(byte blockID, bool RpcUpdateClients)
+    void UpdateGrabObject(byte blockID)
     {
         //// a switch function to call the correct function depending on online play or not
         if (Settings.OnlinePlay && hasAuthority)
-            CmdUpdateGrabObject(blockID, RpcUpdateClients);
+            CmdUpdateGrabObject(blockID);
         else
             EditGrabObject(blockID);
     }
 
     [Command]
-    void CmdUpdateGrabObject(byte blockID, bool RpcUpdateClients)
+    void CmdUpdateGrabObject(byte blockID)
     {
-        //EditGrabObject(blockID);
-        if (RpcUpdateClients)
-            RpcUpdateGrabObject(blockID); // does not create object for client
-        else
-            EditGrabObject(blockID);
-            
+        EditGrabObject(blockID); // updates/creates new object on server
     }
 
     [ClientRpc]
@@ -1428,7 +1423,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
 
-        UpdateGrabObject((byte)currentBrickMaterialIndex, true);
+        UpdateGrabObject((byte)currentBrickMaterialIndex);
 
         if (heldObjectIsBrick)
         {
