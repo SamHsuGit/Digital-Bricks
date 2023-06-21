@@ -952,8 +952,11 @@ public class Controller : NetworkBehaviour
             blockID = 0;
             return;
         }
-        else // spawn object
+        else // spawn brick object
         {
+            if (Settings.OnlinePlay) // disabled for multiplayer
+                return;
+
             heldObjectIsBrick = true;
             reticle.SetActive(false);
             holdingBuild = true;
@@ -1241,6 +1244,9 @@ public class Controller : NetworkBehaviour
             GameObject hitObject = hit.transform.gameObject;
             if (hitObject != null && hitObject.tag == "placedBrick")
             {
+                if (Settings.OnlinePlay) // disabled for multiplayer
+                    return;
+
                 reticle.SetActive(false);
                 holdingGrab = true;
                 heldObjectIsBrick = true;
