@@ -218,14 +218,11 @@ public class Controller : NetworkBehaviour
         placePos = Instantiate(placePosPrefab).transform;
         holdPos = holdPosPrefab.transform;
 
-        ldrawPartsTypes = new string[][]
-        {
-            LoadLdrawPartsList("b.txt"),
-            LoadLdrawPartsList("p.txt"),
-            LoadLdrawPartsList("t.txt"),
-            LoadLdrawPartsList("s.txt"),
-            LoadLdrawPartsList("r.txt"),
-        };
+        // load brick palettes
+        string[] brickTypeFilenames = LoadBrickTypeFilenames();
+        ldrawPartsTypes = new string[brickTypeFilenames.Length][];
+        for (int i = 0; i < brickTypeFilenames.Length; i++)
+            ldrawPartsTypes[i] = LoadBrickNumbers(brickTypeFilenames[i]);
         currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
 
         // set to zero every time the game starts
@@ -283,7 +280,44 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    private string[] LoadLdrawPartsList(string name)
+    private string[] LoadBrickTypeFilenames()
+    {
+        string[] originalStringArray;
+        string[] returnStringArray;
+
+        string path = Application.streamingAssetsPath + "/ldraw/bricktypes/";
+        if (!Directory.Exists(path))
+            ErrorMessage.Show("Error: Could not find Directory: " + path);
+
+        originalStringArray = Directory.GetFiles(path);
+
+        // count the number of instances that need to be ignored
+        int count = 0;
+        for(int i = 0; i < originalStringArray.Length; i++)
+        {
+            originalStringArray[i] = Path.GetFileName(originalStringArray[i]);
+            if (!originalStringArray[i].Contains("meta"))
+                count++;
+        }
+        returnStringArray = new string[count]; // set the correct size of the final string array
+
+
+        // build the final string array
+        count = 0;
+        for (int i = 0; i < originalStringArray.Length; i++)
+        {
+            originalStringArray[i] = Path.GetFileName(originalStringArray[i]);
+            if (!originalStringArray[i].Contains("meta"))
+            {
+                returnStringArray[count] = originalStringArray[i];
+                count++;
+            }
+        }
+
+        return returnStringArray;
+    }
+
+    private string[] LoadBrickNumbers(string name)
     {
         string path = Application.streamingAssetsPath + "/ldraw/bricktypes/" + name;
         if (!File.Exists(path))
