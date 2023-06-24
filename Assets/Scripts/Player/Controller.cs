@@ -46,6 +46,7 @@ public class Controller : NetworkBehaviour
     public bool movingPlacedBrickUseStoredValues = false;
     public byte blockID;
     public float checkIncrement = 0.1f;
+    public float sphereCastRadius;
     public float grabDist = 4f; // defines how far player can reach to grab/place voxels
     public float tpsDist;
     public float maxFocusDistance = 2f;
@@ -151,7 +152,6 @@ public class Controller : NetworkBehaviour
     private float colliderRadius;
     private Vector3 colliderCenter;
     private Vector3 rayCastStart;
-    private float sphereCastRadius;
     private float rotationY = 0f;
     private float rotationX = 0f;
     private float maxLookVelocity = 5f;
