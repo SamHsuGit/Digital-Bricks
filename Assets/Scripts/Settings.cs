@@ -52,6 +52,8 @@ public static class SettingsStatic
         // dev tools
         settings.creativeMode = false;
         settings.terrainHeightMakeBase = 0;
+        settings.weirdnessOverride = false;
+        settings.biomeOverride = 3;
 
         string path;
         if (Settings.Platform == 2)
@@ -110,6 +112,8 @@ public class Settings
     // dev tools
     public bool creativeMode;
     public int terrainHeightMakeBase;
+    public bool weirdnessOverride;
+    public int biomeOverride;
 
     public static bool WorldLoaded
     {

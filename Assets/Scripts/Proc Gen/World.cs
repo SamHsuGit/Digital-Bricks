@@ -441,6 +441,22 @@ public class World : MonoBehaviour
         biomes[9].surfaceBlock = worldData.blockIDBiome09;
         biomes[10].surfaceBlock = worldData.blockIDBiome10;
         biomes[11].surfaceBlock = worldData.blockIDBiome11;
+
+        if(SettingsStatic.LoadedSettings.creativeMode)
+        {
+            worldData.blockIDBiome00 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome01 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome02 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome03 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome04 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome05 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome06 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome07 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome08 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome09 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome10 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+            worldData.blockIDBiome11 = (byte)SettingsStatic.LoadedSettings.biomeOverride;
+        }
     }
 
     public void LoadWorld()
@@ -867,7 +883,7 @@ public class World : MonoBehaviour
             voxelValue = worldData.blockIDsubsurface;
 
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
-        if(worldData.planetSeed != 3)
+        if(worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.weirdnessOverride)
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
