@@ -102,7 +102,8 @@ public class Controller : NetworkBehaviour
         14,
         2,
         1,
-        5
+        5,
+        3
     };
 
     [HideInInspector] public GameObject placedBrick;
@@ -144,7 +145,7 @@ public class Controller : NetworkBehaviour
     private Rigidbody heldObRb;
 
     //Initializers & Constants
-    private int blockIDprocGen = 11;
+    private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
     private int blockIDcrystal = 16;
     private int blockIDmushroom = 18;
@@ -981,7 +982,7 @@ public class Controller : NetworkBehaviour
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if (blockID < 2 || blockID > 10) // do not spawn object if voxelID is outside defined range
+        if (blockID < 2 || blockID > 11) // do not spawn object if voxelID is outside defined range
         {
             blockID = 0;
             return;
@@ -1197,7 +1198,7 @@ public class Controller : NetworkBehaviour
         int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
 
-        if (blockID < 2 || blockID > 10) // cannot place bricks using voxels outside the defined color range
+        if (blockID < 2 || blockID > 11) // cannot place bricks using voxels outside the defined color range
         {
             // remove temp piece
             if (!heldObjectIsBrick)

@@ -61,7 +61,7 @@ public class LDrawImportRuntime : MonoBehaviour
         charObRun = ImportLDrawLocal("charRun", importPosition, false); // char is not static (i.e. isStatic = false)
         projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
 
-        if(SettingsStatic.LoadedSettings.planetSeed == 0 && SettingsStatic.LoadedSettings.worldCoord == 0)
+        if(SettingsStatic.LoadedSettings.creativeMode)
         {
             baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
             CalcBaseObSize(baseOb);
@@ -219,6 +219,7 @@ public class LDrawImportRuntime : MonoBehaviour
         go.transform.gameObject.AddComponent<MeshRenderer>().enabled = false; // only used to generate bounds for BoxCollider
 
         BoxCollider bc = go.AddComponent<BoxCollider>();
+        bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z)); // avoids negative values for box collider scale
         bc.material = physicMaterial;
     }
 

@@ -236,6 +236,18 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -369,7 +381,7 @@ TextureImporter:
       name: 008
       rect:
         serializedVersion: 2
-        x: 2310
+        x: 2318
         y: 3698
         width: 308
         height: 328
@@ -597,11 +609,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 011
+      name: 012
       rect:
         serializedVersion: 2
         x: 3375
-        y: 3294
+        y: 3302
         width: 332
         height: 349
       alignment: 0
@@ -618,11 +630,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 012
+      name: 011
       rect:
         serializedVersion: 2
-        x: 3734
-        y: 3281
+        x: 2294
+        y: 3255
         width: 321
         height: 357
       alignment: 0
@@ -650,8 +662,8 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       004: -6943373833598557
-      011: 8675960657628198209
       019: -2283223821045826522
+      011: 8874480006941658528
       002: 5679390536090785944
       009: 4665620361206564391
       015: -4771556272078792200
@@ -662,7 +674,7 @@ TextureImporter:
       018: -7523670994549806873
       016: -6246070551821309166
       017: 8627043524693180128
-      012: 8874480006941658528
+      012: 8675960657628198209
       013: -1266807616821673123
       005: -7538633921802359561
       020: 109434020790643247

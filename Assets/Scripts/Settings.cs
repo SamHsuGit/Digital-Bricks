@@ -31,7 +31,6 @@ public static class SettingsStatic
         settings.viewDistance = 3;
 
         // world gen
-        settings.creativeMode = false;
         settings.chunkLoadAnim = true;
         settings.planetSeed = 3;
         settings.worldCoord = 1;
@@ -49,6 +48,10 @@ public static class SettingsStatic
         settings.currentBrickIndex = 0;
         settings.currentBrickRotation = 0;
         settings.showControls = true;
+
+        // dev tools
+        settings.creativeMode = false;
+        settings.terrainHeightMakeBase = 0;
 
         string path;
         if (Settings.Platform == 2)
@@ -86,7 +89,6 @@ public class Settings
     public int viewDistance; // loadDistance > viewDistance to reduce lag by ensuring player is always moving in loaded chunks. viewDistance is a radius, just like in Minecraft.
 
     // world gen
-    public bool creativeMode; // currently disabled, this does nothing
     public bool chunkLoadAnim;
     public int planetSeed; // can be 0 to 2,147,483,647 inclusively
     public int worldCoord; // can be 0 to 2,147,483,647 inclusively
@@ -105,6 +107,9 @@ public class Settings
     public int currentBrickRotation;
     public bool showControls;
 
+    // dev tools
+    public bool creativeMode;
+    public int terrainHeightMakeBase;
 
     public static bool WorldLoaded
     {

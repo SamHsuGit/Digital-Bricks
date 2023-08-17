@@ -606,6 +606,7 @@ MonoBehaviour:
   movingPlacedBrickUseStoredValues: 0
   blockID: 0
   checkIncrement: 0.1
+  sphereCastRadius: 0
   grabDist: 4
   tpsDist: 0
   maxFocusDistance: 2
@@ -654,7 +655,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
   - {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
   - {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}
-  ldrawHexValues: 2b0000002b00000000000000070000000f00000004000000060000000e000000020000000100000005000000
+  - {fileID: 2100000, guid: 9f05affb8bfa5da4bbb1968db9ae7519, type: 2}
+  ldrawHexValues: 2b0000002b00000000000000070000000f00000004000000060000000e00000002000000010000000500000003000000
   placedBrick: {fileID: 0}
   worldPPFXSetValues: {fileID: 0}
 --- !u!114 &8694146929136081849

@@ -80,7 +80,7 @@ public class World : MonoBehaviour
     [HideInInspector] public static World Instance { get { return _instance; } }
 
     // PRIVATE VARIABLES
-    private int blockIDprocGen = 11;
+    private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
     private int cloudHeight;
     private bool applyingModifications;
@@ -126,7 +126,7 @@ public class World : MonoBehaviour
     // hard coded values
     private const bool multithreading = true;
     private const float seaLevelThreshold = 0.34f;
-    private const float isAirThreshold = 0.6f; //0.8f;
+    private const float isAirThreshold = 0.6f;
     //private const int LOD0threshold = 1;
 
     private static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
@@ -282,7 +282,7 @@ public class World : MonoBehaviour
             // load pieces
             //LoadSpawnedPieces(baseObString);
 
-            if(worldData.planetSeed == 0 && worldData.worldCoord == 0)
+            if(SettingsStatic.LoadedSettings.creativeMode)
             {
                 baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
                 LDrawImportRuntime.Instance.baseOb = baseOb;
@@ -382,7 +382,7 @@ public class World : MonoBehaviour
             else if (distToStar >= 7 && distToStar <= 8) // cold, far from star
             {
                 minRandBlockID = 7;
-                maxRandBlockID = 10;
+                maxRandBlockID = 11;
             }
             //randomize blockIDs based on seed values
             // Default ProcGen values based on seed
@@ -836,7 +836,7 @@ public class World : MonoBehaviour
             isAir = GetIsAir(globalPos);
             if (isAir)
             {
-                if (worldData.planetSeed == 0 && worldData.worldCoord == 0)
+                if (SettingsStatic.LoadedSettings.creativeMode)
                     if (!CheckMakeBase(globalPos))
                         return 0;
                 else
@@ -844,7 +844,7 @@ public class World : MonoBehaviour
             }
         }
 
-        if (worldData.planetSeed == 0 && worldData.worldCoord == 0)
+        if (SettingsStatic.LoadedSettings.creativeMode)
             CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
@@ -865,6 +865,14 @@ public class World : MonoBehaviour
             voxelValue = biome.surfaceBlock;
         else // must be subsurface block
             voxelValue = worldData.blockIDsubsurface;
+
+        //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
+        if(worldData.planetSeed != 3)
+        {
+            isAir = GetIsAir(globalPos);
+            if (isAir)
+                return 0;
+        }
 
         // bottom of world layer is core block (e.g. water/lava)
         if (yGlobalPos == 1)
@@ -994,7 +1002,11 @@ public class World : MonoBehaviour
 
     public bool CheckMakeBase(Vector3Int globalPos)
     {
-        if (Settings.Platform != 2 && globalPos.y == terrainHeightVoxels && globalPos.x == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
+        int baseTerrainHeight = SettingsStatic.LoadedSettings.terrainHeightMakeBase;
+        if (SettingsStatic.LoadedSettings.terrainHeightMakeBase == 0)
+            baseTerrainHeight = terrainHeightVoxels;
+
+        if (Settings.Platform != 2 && globalPos.y == baseTerrainHeight && globalPos.x == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
         {
             modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, 0, isEarth)); // make base at center of first chunk at terrain height
             return true;

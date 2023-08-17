@@ -1600,7 +1600,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 4019985971419277002}
   m_TextViewport: {fileID: 5397360705401433496}
   m_TextComponent: {fileID: 88530821874755449}
@@ -2459,7 +2459,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 6885639081814093113}
-    m_SelectOnDown: {fileID: 6885639080844121917}
+    m_SelectOnDown: {fileID: 5468359553988880244}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -2720,7 +2720,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 6885639080702157682}
+    m_SelectOnUp: {fileID: 5468359553988880244}
     m_SelectOnDown: {fileID: 2475988401749571918}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}

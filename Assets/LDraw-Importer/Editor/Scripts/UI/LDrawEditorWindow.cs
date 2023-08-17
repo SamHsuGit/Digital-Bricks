@@ -103,7 +103,8 @@ namespace LDraw
             go.transform.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);
             go.transform.gameObject.SetActive(true);
             go.transform.gameObject.AddComponent<MeshRenderer>().enabled = false; // only used to generate bounds for BoxCollider
-            go.AddComponent<BoxCollider>();
+            BoxCollider bc = go.AddComponent<BoxCollider>();
+            bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z)); // avoids negative values for box collider scale
         }
 
         private enum GeneratingType

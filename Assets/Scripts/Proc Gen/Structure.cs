@@ -82,12 +82,12 @@ public static class Structure
         {
             for (int z = -zRadius; z < zRadius; z++)
             {
-                for (int y = 0; y < VoxelData.ChunkHeight - position.y; y++)
+                for (int y = position.y; y < LDrawImportRuntime.Instance.baseObSizeY; y++)
                 {
                     // + 1 to offset voxels to be aligned with center of plates
                     queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y, position.z + z), 3)); // make stone 'baseplate' for model to sit on
 
-                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y + 1, position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y + 2, position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
                 }
             }
         }

@@ -135,10 +135,10 @@ public class Toolbar : MonoBehaviour
                     creativeBlockID = (byte)(World.Instance.blockTypes.Length - 1);
                 if (creativeBlockID < 2) // cannot select air or barrier blocks
                     creativeBlockID = 2;
-                if (creativeBlockID == 25 || creativeBlockID == 26 && inputHandler.navUp) // cannot select reserved blocktypes 25 and 26
-                    creativeBlockID = 27;
-                if (creativeBlockID == 25 || creativeBlockID == 26 && inputHandler.navDown) // cannot select reserved blocktypes 25 and 26
-                    creativeBlockID = 24;
+                if (creativeBlockID == 12 && inputHandler.navUp) // cannot select reserved blockID 12 (skip over)
+                    creativeBlockID = 13;
+                if (creativeBlockID == 12 && inputHandler.navDown) // cannot select reserved blockID 12 (skip over)
+                    creativeBlockID = 11;
 
                 slots[slotIndex].itemSlot.EmptySlot();
                 ItemStack stack = new ItemStack(creativeBlockID, creativeBlockID);
