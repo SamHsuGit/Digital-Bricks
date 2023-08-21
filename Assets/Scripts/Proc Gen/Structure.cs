@@ -76,18 +76,29 @@ public static class Structure
         return 0;
     }
 
-    static void ReserveSpaceVBO(Queue<VoxelMod> queue, Vector3Int position, int xRadius, int zRadius)
+    static void ReserveSpaceVBO(Queue<VoxelMod> queue, Vector3Int position, int xRadius, int zRadius, bool isBase)
     {
-        for (int x = -xRadius; x < xRadius; x++)
+        int factor = 2;
+        int heightStart = 0;
+        int heightEnd = (VoxelData.ChunkHeight - position.y) * factor;
+
+        if (isBase) // if is base use imported base dimensions, otherwise set start at position and end at chunk ceiling
         {
-            for (int z = -zRadius; z < zRadius; z++)
+            //heightStart = position.y;
+            xRadius *= factor;
+            zRadius *= factor;
+            //heightEnd = LDrawImportRuntime.Instance.baseObSizeY * factor;
+        }
+
+        for (int x = -xRadius; x < xRadius * 1.5f; x++)
+        {
+            for (int z = -zRadius; z < zRadius * 1.5f; z++)
             {
-                for (int y = position.y; y < LDrawImportRuntime.Instance.baseObSizeY; y++)
+                for (int y = heightStart; y < heightEnd; y++)
                 {
                     // + 1 to offset voxels to be aligned with center of plates
                     queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y, position.z + z), 3)); // make stone 'baseplate' for model to sit on
-
-                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y + 2, position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y + 1, position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
                 }
             }
         }
@@ -102,7 +113,7 @@ public static class Structure
         xRadius += 1; // safety boundary in case import is offset by 1 block
         zRadius += 1; // safety boundary in case import is offset by 1 block
         byte blockID = 12;
-        ReserveSpaceVBO(queue, position, xRadius, zRadius);
+        ReserveSpaceVBO(queue, position, xRadius, zRadius, true);
         queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), blockID)); // add vboImport placeholder voxel to flag to world to add VBO
         return queue;
     }

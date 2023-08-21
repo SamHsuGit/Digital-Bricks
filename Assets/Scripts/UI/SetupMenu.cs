@@ -40,7 +40,7 @@ public class SetupMenu : MonoBehaviour
         Application.targetFrameRate = 60;
         
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
-        creativeMode.isOn = SettingsStatic.LoadedSettings.creativeMode;
+        creativeMode.isOn = SettingsStatic.LoadedSettings.developerMode;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
@@ -120,7 +120,7 @@ public class SetupMenu : MonoBehaviour
     public void SaveSettings()
     {
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
-        SettingsStatic.LoadedSettings.creativeMode = creativeMode.isOn;
+        SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn;
         SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
 
         //// try to load the saved planet seed, otherwise default to 3

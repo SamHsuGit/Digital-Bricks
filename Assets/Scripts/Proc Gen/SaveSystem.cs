@@ -25,7 +25,7 @@ public static class SaveSystem
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(savePath + worldData.planetSeed + "-" + worldData.worldCoord + ".worldData", FileMode.Create);
 
-        if (SettingsStatic.LoadedSettings.creativeMode)
+        if (SettingsStatic.LoadedSettings.developerMode)
         {
             worldData.creativeMode = false; // if the world is saved in creative mode, the world is marked as non-survival forever after
         }
@@ -97,7 +97,7 @@ public static class SaveSystem
             // overwrite zero place holders with values from player toolbar if not in creative mode
             for (int i = 4; i < 22; i += 2)
             {
-                if (!SettingsStatic.LoadedSettings.creativeMode && playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
+                if (!SettingsStatic.LoadedSettings.developerMode && playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
                 {
                     playerStats[i] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.id;
                     playerStats[i + 1] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
@@ -230,7 +230,7 @@ public static class SaveSystem
         else
         {
             WorldData worldData = new WorldData(_planetSeed, _worldCoord);
-            if (SettingsStatic.LoadedSettings.creativeMode)
+            if (SettingsStatic.LoadedSettings.developerMode)
                 worldData.creativeMode = true; // new worlds set value of creative mode from saved value
             else
                 worldData.creativeMode = false;

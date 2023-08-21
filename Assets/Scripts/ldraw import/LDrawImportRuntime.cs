@@ -61,7 +61,7 @@ public class LDrawImportRuntime : MonoBehaviour
         charObRun = ImportLDrawLocal("charRun", importPosition, false); // char is not static (i.e. isStatic = false)
         projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
 
-        if(SettingsStatic.LoadedSettings.creativeMode)
+        if(SettingsStatic.LoadedSettings.developerMode)
         {
             baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
             CalcBaseObSize(baseOb);
@@ -192,7 +192,7 @@ public class LDrawImportRuntime : MonoBehaviour
 
         _ob.transform.localScale = new Vector3(scale, scale, scale); // rescale imported object to match voxel size
         _ob.isStatic = isStatic;
-        if (!isStatic)
+        //if (!isStatic) // disabled so players could pick apart imported base objects
             modelObbc.enabled = false;
 
         return _ob;
@@ -231,6 +231,8 @@ public class LDrawImportRuntime : MonoBehaviour
             {
                 child.parent = _modelOb.transform;
                 child.gameObject.layer = 10; // mark as LEGO PIECE
+                child.gameObject.tag = "placedBrick"; // mark pieces to be able to pick up later
+                child.name = child.name + ".dat";
             }
             if (child.childCount > 0)
                 ElevateMeshRendererChildren(child.gameObject);

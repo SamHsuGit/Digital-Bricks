@@ -93,7 +93,7 @@ public class VoxelCollider : MonoBehaviour
         if (cc != null)
             center = cc.transform.position + cc.center; // cache current center of collider position
 
-        if (!SettingsStatic.LoadedSettings.creativeMode)
+        if (!SettingsStatic.LoadedSettings.developerMode)
         {
             // reset jumps when grounded
             if (isGrounded || (isPlayer && controller.isGrounded))
@@ -123,14 +123,14 @@ public class VoxelCollider : MonoBehaviour
             roadFactor = 1;
 
         // if we're sprinting, use the sprint multiplier
-        if(SettingsStatic.LoadedSettings.creativeMode)
+        if(SettingsStatic.LoadedSettings.developerMode)
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * 0.1f;
         else if (isSprinting)
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * roadFactor;
         else
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseWalkSpeed * roadFactor;
 
-        if (!SettingsStatic.LoadedSettings.creativeMode)
+        if (!SettingsStatic.LoadedSettings.developerMode)
         {
             // Apply vertical momentum (falling/jumping).
             velocityPlayer += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
@@ -139,7 +139,7 @@ public class VoxelCollider : MonoBehaviour
         isGrounded = CheckGrounded(velocityPlayer.y);
 
         // voxel based collision detection (no chunk meshes due to performance cost of updating chunk meshes)
-        if (!SettingsStatic.LoadedSettings.creativeMode)
+        if (!SettingsStatic.LoadedSettings.developerMode)
         {
             if ((velocityPlayer.z > 0 && front) || (velocityPlayer.z < 0 && back))
                 velocityPlayer.z = 0;

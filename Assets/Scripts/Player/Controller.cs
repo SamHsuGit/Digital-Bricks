@@ -775,7 +775,7 @@ public class Controller : NetworkBehaviour
                     {
                         rayCastStart = transform.position + transform.up * colliderHeight * 0.75f + transform.forward * colliderRadius * 4;
 
-                        if (charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.creativeMode)
+                        if (charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.developerMode)
                         {
                             charObIdle.SetActive(true);
                             charObRun.SetActive(false);
@@ -788,7 +788,7 @@ public class Controller : NetworkBehaviour
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
-                        if (!SettingsStatic.LoadedSettings.creativeMode && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
+                        if (!SettingsStatic.LoadedSettings.developerMode && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
                             Animate();
                         else
                         {
@@ -1007,7 +1007,7 @@ public class Controller : NetworkBehaviour
         if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
             return;
 
-        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
+        if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
             return;
 
         // if has mushroom, and health is not max and the selected slot has a stack
@@ -1213,7 +1213,7 @@ public class Controller : NetworkBehaviour
         ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
 
         // remove qty(1) voxel from slot as "cost"
-        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+        if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
             TakeFromCurrentSlot(0);
         else
             TakeFromCurrentSlot(1);
@@ -1238,7 +1238,7 @@ public class Controller : NetworkBehaviour
     
     public void DropItemsInSlot()
     {
-        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // cannot run this function if creative mode and first slot selected
+        if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot run this function if creative mode and first slot selected
             return;
 
         if (!options && camMode == 1 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
@@ -1364,7 +1364,7 @@ public class Controller : NetworkBehaviour
     {
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if (SettingsStatic.LoadedSettings.creativeMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+        if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
             TakeFromCurrentSlot(0);
         else
             TakeFromCurrentSlot(1);
@@ -1503,7 +1503,7 @@ public class Controller : NetworkBehaviour
     void PutAwayBrick(byte blockID)
     {
         int firstSlot;
-        if (SettingsStatic.LoadedSettings.creativeMode) // determine first slot
+        if (SettingsStatic.LoadedSettings.developerMode) // determine first slot
             firstSlot = 1;
         else
             firstSlot = 0;
@@ -1976,7 +1976,7 @@ public class Controller : NetworkBehaviour
 
         velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 
-        if (!SettingsStatic.LoadedSettings.creativeMode && inputHandler.jump)
+        if (!SettingsStatic.LoadedSettings.developerMode && inputHandler.jump)
         {
             isGrounded = false;
             inputHandler.jump = false;
@@ -2008,7 +2008,7 @@ public class Controller : NetworkBehaviour
             if (isMoving) // if is moving
                 charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0); // rotate char model to face same y direction as camera
         }
-        if(camMode != 3 && SettingsStatic.LoadedSettings.creativeMode)
+        if(camMode != 3 && SettingsStatic.LoadedSettings.developerMode)
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);
@@ -2402,17 +2402,28 @@ public class Controller : NetworkBehaviour
         if (ob == null)
             return new Vector2Int(0, 0);
 
+        //bool typeAndIndexFound = false;
+
         Vector2Int brickTypeAndIndex = new Vector2Int(0, 0);
         for(int j = 0; j < ldrawPartsTypes.Length; j++)
         {
             for (int k = 0; k < ldrawPartsTypes[j].Length; k++)
             {
-                if(ob.name == ldrawPartsTypes[j][k])
+                //// tested on 2456.dat, same for generated parts but not the same for imported parts???
+                //Debug.Log(ob.name);
+                //Debug.Log(ldrawPartsTypes[0][11]);
+
+                if (ob.name == ldrawPartsTypes[j][k])
                 {
                     brickTypeAndIndex = new Vector2Int(j, k);
+                    //typeAndIndexFound = true;
                 }
             }
         }
+
+        //if (!typeAndIndexFound)
+        //    Debug.Log("brick type and index not found");
+
         return brickTypeAndIndex;
     }
 }

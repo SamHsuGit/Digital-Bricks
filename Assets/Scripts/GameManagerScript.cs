@@ -60,7 +60,7 @@ public class GameManagerScript : MonoBehaviour
         {
             LDrawImporterRuntime.SetActive(false);
             // values set ahead of world gameObject activation
-            SettingsStatic.LoadedSettings.creativeMode = true;
+            SettingsStatic.LoadedSettings.developerMode = true;
         }
 
         if (Settings.OnlinePlay) // network online multiplayer

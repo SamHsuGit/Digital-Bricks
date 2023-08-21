@@ -50,10 +50,10 @@ public static class SettingsStatic
         settings.showControls = true;
 
         // dev tools
-        settings.creativeMode = false;
+        settings.developerMode = false;
         settings.terrainHeightMakeBase = 0;
         settings.weirdnessOverride = false;
-        settings.biomeOverride = 3;
+        settings.biomeOverride = 12;
 
         string path;
         if (Settings.Platform == 2)
@@ -110,7 +110,7 @@ public class Settings
     public bool showControls;
 
     // dev tools
-    public bool creativeMode;
+    public bool developerMode;
     public int terrainHeightMakeBase;
     public bool weirdnessOverride;
     public int biomeOverride;

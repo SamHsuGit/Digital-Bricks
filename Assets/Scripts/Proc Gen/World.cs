@@ -282,7 +282,7 @@ public class World : MonoBehaviour
             // load pieces
             //LoadSpawnedPieces(baseObString);
 
-            if(SettingsStatic.LoadedSettings.creativeMode)
+            if(SettingsStatic.LoadedSettings.developerMode)
             {
                 baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
                 LDrawImportRuntime.Instance.baseOb = baseOb;
@@ -836,7 +836,7 @@ public class World : MonoBehaviour
             isAir = GetIsAir(globalPos);
             if (isAir)
             {
-                if (SettingsStatic.LoadedSettings.creativeMode)
+                if (SettingsStatic.LoadedSettings.developerMode)
                     if (!CheckMakeBase(globalPos))
                         return 0;
                 else
@@ -844,7 +844,7 @@ public class World : MonoBehaviour
             }
         }
 
-        if (SettingsStatic.LoadedSettings.creativeMode)
+        if (SettingsStatic.LoadedSettings.developerMode)
             CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
@@ -869,7 +869,7 @@ public class World : MonoBehaviour
             voxelValue = worldData.blockIDsubsurface;
 
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
-        if(worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.weirdnessOverride)
+        if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.weirdnessOverride)
         {
             isAir = GetIsAir(globalPos);
             if (isAir)

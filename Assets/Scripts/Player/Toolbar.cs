@@ -29,7 +29,7 @@ public class Toolbar : MonoBehaviour
 
     private void Start()
     {
-        if (SettingsStatic.LoadedSettings.creativeMode || World.Instance.worldData.creativeMode)
+        if (SettingsStatic.LoadedSettings.developerMode || World.Instance.worldData.creativeMode)
             EmptyAllSlots();
         else
             SetInventoryFromSave();
@@ -39,7 +39,7 @@ public class Toolbar : MonoBehaviour
     {
         for(int i = 0; i < controller.toolbar.slots.Length; i++)
         {
-            if(SettingsStatic.LoadedSettings.creativeMode && i == 0)
+            if(SettingsStatic.LoadedSettings.developerMode && i == 0)
                 ResetCreativeSlot();
             else
                 controller.toolbar.slots[i].itemSlot.EmptySlot();
@@ -84,7 +84,7 @@ public class Toolbar : MonoBehaviour
             else
             {
                 // for creative mode and slot and blockID < 2
-                if (SettingsStatic.LoadedSettings.creativeMode && slotIndex == 0 && blockID < 2)
+                if (SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && blockID < 2)
                 {
                     // if no saved blockID, then set creative slot to blockID 2
                     ResetCreativeSlot();
@@ -120,7 +120,7 @@ public class Toolbar : MonoBehaviour
 
             highlight.position = slots[slotIndex].slotIcon.transform.position;
             
-            if (SettingsStatic.LoadedSettings.creativeMode && slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
+            if (SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
             {
                 if (inputHandler.navUp)
                 {
