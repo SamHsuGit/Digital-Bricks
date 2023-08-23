@@ -281,7 +281,7 @@ public class World : MonoBehaviour
             // load pieces
             //LoadSpawnedPieces(baseObString);
 
-            if(SettingsStatic.LoadedSettings.developerMode)
+            if(SettingsStatic.LoadedSettings.spawnBase)
             {
                 baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
                 LDrawImportRuntime.Instance.baseOb = baseOb;
@@ -835,7 +835,7 @@ public class World : MonoBehaviour
             isAir = GetIsAir(globalPos);
             if (isAir)
             {
-                if (SettingsStatic.LoadedSettings.developerMode)
+                if (SettingsStatic.LoadedSettings.spawnBase)
                     if (!CheckMakeBase(globalPos))
                         return 0;
                 else
@@ -843,7 +843,7 @@ public class World : MonoBehaviour
             }
         }
 
-        if (SettingsStatic.LoadedSettings.developerMode)
+        if (SettingsStatic.LoadedSettings.spawnBase)
             CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */

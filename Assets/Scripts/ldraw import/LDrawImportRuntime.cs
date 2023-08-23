@@ -61,7 +61,7 @@ public class LDrawImportRuntime : MonoBehaviour
         charObRun = ImportLDrawLocal("charRun", importPosition, false); // char is not static (i.e. isStatic = false)
         projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
 
-        if(SettingsStatic.LoadedSettings.developerMode)
+        if(SettingsStatic.LoadedSettings.spawnBase)
         {
             baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
             CalcBaseObSize(baseOb);

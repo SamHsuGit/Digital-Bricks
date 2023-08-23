@@ -78,16 +78,16 @@ public static class Structure
 
     static void ReserveSpaceVBO(Queue<VoxelMod> queue, Vector3Int position, int xRadius, int zRadius, bool isBase)
     {
-        int factor = 2;
+        float factor = 1f;
         int heightStart = 0;
-        int heightEnd = (VoxelData.ChunkHeight - position.y) * factor;
+        int heightEnd = Mathf.RoundToInt((VoxelData.ChunkHeight - position.y) * factor);
 
         if (isBase) // if is base use imported base dimensions, otherwise set start at position and end at chunk ceiling
         {
-            //heightStart = position.y;
-            xRadius *= factor;
-            zRadius *= factor;
-            //heightEnd = LDrawImportRuntime.Instance.baseObSizeY * factor;
+            heightStart = position.y;
+            xRadius = Mathf.RoundToInt(xRadius * factor);
+            zRadius = Mathf.RoundToInt(zRadius * factor);
+            heightEnd = Mathf.RoundToInt(LDrawImportRuntime.Instance.baseObSizeY * factor);
         }
 
         for (int x = -xRadius; x < xRadius * 1.5f; x++)
@@ -98,7 +98,7 @@ public static class Structure
                 {
                     // + 1 to offset voxels to be aligned with center of plates
                     queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y, position.z + z), 3)); // make stone 'baseplate' for model to sit on
-                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y + 1, position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), 0)); // reserve space for vboImport by creating air blocks in space it takes up
                 }
             }
         }
