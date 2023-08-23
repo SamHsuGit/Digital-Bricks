@@ -881,15 +881,17 @@ public class World : MonoBehaviour
 
         /* LODE PASS */
         //add ores and underground caves
-        if (drawLodes && yGlobalPos < terrainHeightVoxels - 5)
+        if (drawLodes && yGlobalPos < terrainHeightVoxels - 5) // - 5 ensures caves do not bleed into top of terrain
         {
             foreach (Lode lode in biome.lodes)
             {
-                {
-                    if (yGlobalPos > lode.minHeight) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
-                        if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold))
-                            voxelValue = lode.blockID;
-                }
+                float threshold = lode.threshold;
+                if (lode.blockID == 16)
+                    threshold = SettingsStatic.LoadedSettings.oreThreshold;
+
+                if (yGlobalPos > lode.minHeight) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
+                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, threshold))
+                        voxelValue = lode.blockID;
             }
             return voxelValue; // if object is below terrain, do not bother running code for surface objects
         }

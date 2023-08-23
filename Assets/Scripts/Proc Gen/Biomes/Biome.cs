@@ -5,9 +5,6 @@ public class Biome : ScriptableObject
 {
     [Header("Biome Attributes")]
     public string biomeName;
-    public int offset;
-    public float scale;
-    public float terrainScale;
     public byte surfaceBlock; // this value is changed by other scripts depending on planet
     public SurfaceOb[] smallStructures; // for best performance do not add more than 2 values
     public SurfaceOb[] mediumStructures; // for best performance do not add more than 2 values
