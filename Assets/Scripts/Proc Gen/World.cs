@@ -126,7 +126,6 @@ public class World : MonoBehaviour
     // hard coded values
     private const bool multithreading = true;
     private const float seaLevelThreshold = 0.34f;
-    private const float isAirThreshold = 0.6f;
     //private const int LOD0threshold = 1;
 
     private static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
@@ -831,7 +830,7 @@ public class World : MonoBehaviour
         byte voxelValue = 0;
         CalcTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
 
-        if (yGlobalPos > 1 && weirdness > isAirThreshold) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
+        if (yGlobalPos > 1 && weirdness > SettingsStatic.LoadedSettings.terrainDensity) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
@@ -869,7 +868,7 @@ public class World : MonoBehaviour
             voxelValue = worldData.blockIDsubsurface;
 
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
-        if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.weirdnessOverride)
+        if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.terrainDensity == 0)
         {
             isAir = GetIsAir(globalPos);
             if (isAir)

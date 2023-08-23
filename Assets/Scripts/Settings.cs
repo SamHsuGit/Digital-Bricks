@@ -52,7 +52,7 @@ public static class SettingsStatic
         // dev tools
         settings.developerMode = false;
         settings.terrainHeightMakeBase = 0;
-        settings.weirdnessOverride = false;
+        settings.terrainDensity = 0.6f;
         settings.biomeOverride = 12;
 
         string path;
@@ -112,7 +112,7 @@ public class Settings
     // dev tools
     public bool developerMode;
     public int terrainHeightMakeBase;
-    public bool weirdnessOverride;
+    public float terrainDensity;
     public int biomeOverride;
 
     public static bool WorldLoaded
