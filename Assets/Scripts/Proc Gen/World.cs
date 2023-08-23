@@ -881,19 +881,46 @@ public class World : MonoBehaviour
 
         /* LODE PASS */
         //add ores and underground caves
+        // if object is below terrain, do not bother running code for surface objects
         if (drawLodes && yGlobalPos < terrainHeightVoxels - 5) // - 5 ensures caves do not bleed into top of terrain
         {
             foreach (Lode lode in biome.lodes)
             {
                 float threshold = lode.threshold;
-                if (lode.blockID == 16)
-                    threshold = SettingsStatic.LoadedSettings.oreThreshold;
+                float scale = lode.scale;
 
-                if (yGlobalPos > lode.minHeight) // make upper limit chunkHeight instead of lode.maxHeight since chunkHeight is variable
-                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, threshold))
+                switch(lode.blockID)
+                {
+                    case 0:
+                    {
+                        if(lode.nodeName == "Cave")
+                            {
+                                scale = SettingsStatic.LoadedSettings.caveLargeScale;
+                                threshold = SettingsStatic.LoadedSettings.caveLargeThreshold;
+                            }
+                        else if (lode.nodeName == "CaveSmall")
+                            {
+                                scale = SettingsStatic.LoadedSettings.caveSmallScale;
+                                threshold = SettingsStatic.LoadedSettings.caveSmallThreshold;
+                            }
+                        break;
+                    }
+                    case 16:
+                    {
+                            float minOreThreshold = 0.6f;
+                        if (SettingsStatic.LoadedSettings.oreThreshold < minOreThreshold)
+                            threshold = minOreThreshold;
+                        else
+                            threshold = SettingsStatic.LoadedSettings.oreThreshold;
+                        break;
+                    }
+                }
+
+                if (yGlobalPos > lode.minHeight && yGlobalPos < lode.maxHeight) // if position is within allowable lode range
+                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, scale, threshold))
                         voxelValue = lode.blockID;
             }
-            return voxelValue; // if object is below terrain, do not bother running code for surface objects
+            return voxelValue;
         }
 
         /* SURFACE OBJECTS PASS */
@@ -1032,8 +1059,24 @@ public class World : MonoBehaviour
         float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
         float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
 
-        terrainHeightPercentChunk = continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor;
-        terrainHeightVoxels = Mathf.Clamp(Mathf.FloorToInt(cloudHeight * terrainHeightPercentChunk - 0),0, cloudHeight); // multiplies by number of voxels to get height in voxels
+        if(SettingsStatic.LoadedSettings.terrainHeightOverride == 0)
+        {
+            terrainHeightPercentChunk = continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor;
+            terrainHeightVoxels = Mathf.Clamp(Mathf.FloorToInt(cloudHeight * terrainHeightPercentChunk - 0), 0, cloudHeight); // multiplies by number of voxels to get height in voxels
+        }
+        else
+        {
+            if(SettingsStatic.LoadedSettings.terrainHeightOverride > VoxelData.ChunkHeight)
+            {
+                terrainHeightPercentChunk = 1;
+                terrainHeightVoxels = VoxelData.ChunkHeight;
+            }
+            else
+            {
+                terrainHeightPercentChunk = SettingsStatic.LoadedSettings.terrainHeightOverride / VoxelData.ChunkHeight;
+                terrainHeightVoxels = SettingsStatic.LoadedSettings.terrainHeightOverride;
+            }
+        }
     }
 
     public bool GetIsAir(Vector3 globalPos)
