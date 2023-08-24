@@ -55,11 +55,6 @@ public static class SettingsStatic
         settings.terrainHeightMakeBase = 0;
         settings.terrainHeightOverride = 0;
         settings.terrainDensity = 0.6f;
-        settings.oreThreshold = 0.68f;
-        settings.caveSmallThreshold = 0.5f;
-        settings.caveLargeThreshold = 0.6f;
-        settings.caveSmallScale = 0.06f;
-        settings.caveLargeScale = 0.01f;
         settings.biomeOverride = 12;
 
         string path;
@@ -122,11 +117,6 @@ public class Settings
     public int terrainHeightMakeBase;
     public int terrainHeightOverride;
     public float terrainDensity;
-    public float oreThreshold;
-    public float caveSmallThreshold;
-    public float caveLargeThreshold;
-    public float caveSmallScale;
-    public float caveLargeScale;
     public int biomeOverride;
 
     public static bool WorldLoaded

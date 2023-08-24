@@ -886,38 +886,8 @@ public class World : MonoBehaviour
         {
             foreach (Lode lode in biome.lodes)
             {
-                float threshold = lode.threshold;
-                float scale = lode.scale;
-
-                switch(lode.blockID)
-                {
-                    case 0:
-                    {
-                        if(lode.nodeName == "Cave")
-                            {
-                                scale = SettingsStatic.LoadedSettings.caveLargeScale;
-                                threshold = SettingsStatic.LoadedSettings.caveLargeThreshold;
-                            }
-                        else if (lode.nodeName == "CaveSmall")
-                            {
-                                scale = SettingsStatic.LoadedSettings.caveSmallScale;
-                                threshold = SettingsStatic.LoadedSettings.caveSmallThreshold;
-                            }
-                        break;
-                    }
-                    case 16:
-                    {
-                            float minOreThreshold = 0.6f;
-                        if (SettingsStatic.LoadedSettings.oreThreshold < minOreThreshold)
-                            threshold = minOreThreshold;
-                        else
-                            threshold = SettingsStatic.LoadedSettings.oreThreshold;
-                        break;
-                    }
-                }
-
                 if (yGlobalPos > lode.minHeight && yGlobalPos < lode.maxHeight) // if position is within allowable lode range
-                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, scale, threshold))
+                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold))
                         voxelValue = lode.blockID;
             }
             return voxelValue;
