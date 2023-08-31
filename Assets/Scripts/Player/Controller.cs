@@ -363,7 +363,7 @@ public class Controller : NetworkBehaviour
 
     public void LoadPlacedBricksFromString(string cmdstr)
     {
-        if (cmdstr.Length == 0)
+        if (cmdstr == null || cmdstr.Length == 0)
             return;
 
         //separate string into separate strings based on new lines
