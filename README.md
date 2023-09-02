@@ -6,6 +6,8 @@ Samuel Hsu 2021
 LEGO® and the LEGO® logo are trademarks of the LEGO® Group, which does not sponsor or endorse this work.
 This is a non-profit, fan-made game.
 
+Unity Editor 2021.3.16f1
+
 https://hsu3samuel8.wixsite.com/home
 
 Code based on previous work by:
