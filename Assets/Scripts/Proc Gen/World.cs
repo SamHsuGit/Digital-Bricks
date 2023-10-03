@@ -868,7 +868,8 @@ public class World : MonoBehaviour
             voxelValue = worldData.blockIDsubsurface;
 
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
-        if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.terrainDensity == 0)
+        //if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.terrainDensity == 0)
+        if (yGlobalPos > 1 && weirdness > SettingsStatic.LoadedSettings.terrainDensity)
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
@@ -1071,7 +1072,7 @@ public class World : MonoBehaviour
             density = 0;
         else
             density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y); // density is a linear function, high density at low elevation, low density at high elevation
-        return Noise.Get3DPerlin(globalPos, 0, 0.05f, density);
+        return Noise.Get3DPerlin(globalPos, 0, 0.1f, density);
 
         //float density = terrainHeightPercentChunk;
         //return Noise.Get3DPerlin(globalPos, 0, 0.1f, density); // scale sets size of perlin noise, high density = higher perlin noise threshold to return true (isAir)

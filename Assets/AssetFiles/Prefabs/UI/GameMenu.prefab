@@ -6754,7 +6754,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Rotate Brick \tHold Place + L/R Arrow  Keys (D-Pad)\nNext Brick \tHold
     Place + Up/Down Arrow Keys (D-Pad)\nNext Brick Type\tHold Place + Q/E (Left/Right
-    Bumper)\n"
+    Bumper)\nSpawn Brick\tE (Right Bumper)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
