@@ -140,13 +140,12 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.62.0.0
+  bundleVersion: 0.63.0.0
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 11400000, guid: 356465746464f144f80965f5f05a58d7, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -697,7 +696,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: DigitalBricks
-  metroPackageVersion: 0.62.0.0
+  metroPackageVersion: 0.63.0.0
   metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: "@ikc\x7F8ai"
   metroCertificateSubject: Sam Hsu
