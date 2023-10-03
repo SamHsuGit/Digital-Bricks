@@ -19,6 +19,8 @@ public static class SettingsStatic
         Settings settings = new Settings();
 
         // not configured in UI
+        settings.projectilesHurt = false;
+        settings.drawChunkMeshes = false;
         settings.useBiomes = true;
         settings.drawClouds = true;
         settings.drawLodes = true;
@@ -81,6 +83,8 @@ public class Settings
     private static string _appPath;
 
     // not configured in UI
+    public bool projectilesHurt;
+    public bool drawChunkMeshes;
     public bool useBiomes;
     public bool drawClouds;
     public bool drawLodes;

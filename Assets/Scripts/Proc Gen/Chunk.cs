@@ -356,6 +356,16 @@ public class Chunk
         mesh.uv = uvs.ToArray();
         mesh.normals = normals.ToArray();
         meshFilter.mesh = mesh;
+
+        if (SettingsStatic.LoadedSettings.drawChunkMeshes) // allows rigidbodies to collide with chunks
+        {
+            if (col == null)
+                col = chunkObject.AddComponent<MeshCollider>();
+            else
+                col = chunkObject.GetComponent<MeshCollider>();
+            col.sharedMesh = mesh;
+            col.material = World.Instance.physicMaterial;
+        }
     }
 
     void AddTexture(int textureID, Vector2 uv)

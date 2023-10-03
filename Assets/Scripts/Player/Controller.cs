@@ -683,6 +683,9 @@ public class Controller : NetworkBehaviour
         }
         else
         {
+            if (inputHandler.next)
+                PressedShoot();
+
             setBrickType = false;
             setBrickIndex = false;
             rotateBrick = false;
@@ -1024,7 +1027,7 @@ public class Controller : NetworkBehaviour
                 CmdSpawnObject(2, 0, rayCastStart);
             else
                 SpawnObject(2, 0, rayCastStart);
-            TakeFromCurrentSlot(1);
+            //TakeFromCurrentSlot(1);
         }
         else if (holdingGrab) // IF HOLDING SOMETHING
         {
@@ -1300,7 +1303,15 @@ public class Controller : NetworkBehaviour
                 // store values for later if moving bricks
                 movingPlacedBrickUseStoredValues = true;
             }
-            return; // do not spawn object if hit previously existing object
+            else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
+            {
+                holdingGrab = true;
+                heldObjectIsBrick = false;
+
+                PlayerRemoveVoxel();
+            }
+            else
+                return; // do not spawn object if hit previously existing object
         }
         else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
         {
@@ -1753,7 +1764,8 @@ public class Controller : NetworkBehaviour
                 else
                     sceneObject.projectile[0] = projectile;
                 sceneObject.typeProjectile = item; // should be 0 for first item in array
-                ob.tag = "Hazard";
+                if(SettingsStatic.LoadedSettings.projectilesHurt)
+                    ob.tag = "Hazard";
                 sceneObject.SetEquippedItem(type, item); // update the child object on the server
 
                 // WIP collider is slightly off center for some reason, has to do with LDrawImportRuntime
