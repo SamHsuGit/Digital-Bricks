@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 001 Mercury
   m_EditorClassIdentifier: 
   distToStar: 1
+  planetName: Mercury
+  sprite: {fileID: 0}
   blockIDsubsurface: 3
   blockIDcore: 2
   blockIDBiome00: 3
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}

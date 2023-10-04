@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 02 Grassland
   m_EditorClassIdentifier: 
   biomeName: Grassland
-  offset: 333
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.08
   surfaceBlock: 13
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: 8e803a3deb4c8e3449cc0420617f14aa, type: 3}
+  - {fileID: 21300000, guid: ead698cc7cdf8614b994040479840dc6, type: 3}
+  - {fileID: 21300000, guid: 8f32c125729f0a84284e168a293a0fb7, type: 3}
+  material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}

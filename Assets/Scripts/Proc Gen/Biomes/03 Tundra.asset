@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 03 Tundra
   m_EditorClassIdentifier: 
   biomeName: Tundra
-  offset: 444
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.08
   surfaceBlock: 4
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: c1a497f70677f684a914fd40b1e2deb6, type: 3}
+  - {fileID: 21300000, guid: 3d8f6fe6496abe446ae1ca9815f48365, type: 3}
+  - {fileID: 21300000, guid: 8b998606ad937f74497f4686f31faacd, type: 3}
+  material: {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}

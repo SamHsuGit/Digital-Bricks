@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 08 Fall Forest
   m_EditorClassIdentifier: 
   biomeName: Fall Forest
-  offset: 999
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.12
   surfaceBlock: 14
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: b4c4dd6b9c441514d93261a2e9c5a4e4, type: 3}
+  - {fileID: 21300000, guid: 6edd174d8e59c69439cbfdd2033f13bd, type: 3}
+  - {fileID: 21300000, guid: 1903123af32a38148884e106dc9166c2, type: 3}
+  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}

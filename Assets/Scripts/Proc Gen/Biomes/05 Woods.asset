@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 05 Woods
   m_EditorClassIdentifier: 
   biomeName: Woods
-  offset: 666
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.12
   surfaceBlock: 13
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: 8506c1c20b4d8334c91ccd0446653ccd, type: 3}
+  - {fileID: 21300000, guid: 9babf34f9db13fa42933f1cdc68db7e6, type: 3}
+  - {fileID: 21300000, guid: 8434fdfda7d84c345a1537df07a9268c, type: 3}
+  material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}

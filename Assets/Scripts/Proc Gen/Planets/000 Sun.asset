@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 000 Sun
   m_EditorClassIdentifier: 
   distToStar: 0
+  planetName: Sun
+  sprite: {fileID: 0}
   blockIDsubsurface: 7
   blockIDcore: 5
   blockIDBiome00: 7
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}

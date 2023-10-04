@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 009 Black
   m_EditorClassIdentifier: 
   distToStar: 1
+  planetName: Black
+  sprite: {fileID: 0}
   blockIDsubsurface: 2
   blockIDcore: 2
   blockIDBiome00: 0
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 3
   blockIDHugeTreeTrunk: 2
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}

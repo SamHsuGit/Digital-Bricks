@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 003 Earth
   m_EditorClassIdentifier: 
   distToStar: 3
+  planetName: Earth
+  sprite: {fileID: 0}
   blockIDsubsurface: 3
   blockIDcore: 9
   blockIDBiome00: 4
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}

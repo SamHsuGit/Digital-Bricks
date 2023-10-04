@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 06 Taiga
   m_EditorClassIdentifier: 
   biomeName: Taiga
-  offset: 777
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.12
   surfaceBlock: 4
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: 2a4032aa8847aa943846bd44d2d56070, type: 3}
+  - {fileID: 21300000, guid: cabfcba191002c74ea4a1da5a7c86867, type: 3}
+  - {fileID: 21300000, guid: c332b4ce4de660f4b8a0438ad1045493, type: 3}
+  material: {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}

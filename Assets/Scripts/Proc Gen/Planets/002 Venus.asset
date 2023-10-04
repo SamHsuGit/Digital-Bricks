@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 002 Venus
   m_EditorClassIdentifier: 
   distToStar: 2
+  planetName: Venus
+  sprite: {fileID: 0}
   blockIDsubsurface: 5
   blockIDcore: 5
   blockIDBiome00: 5
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}

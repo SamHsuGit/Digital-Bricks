@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310320405d39bd747a911d1afc7cdf50, type: 3}
   m_Name: 016 Blue
   m_EditorClassIdentifier: 
-  distToStar: 2
+  distToStar: 1
+  planetName: Blue
+  sprite: {fileID: 0}
   blockIDsubsurface: 9
   blockIDcore: 2
   blockIDBiome00: 0
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 9
   blockIDHugeTreeTrunk: 9
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}

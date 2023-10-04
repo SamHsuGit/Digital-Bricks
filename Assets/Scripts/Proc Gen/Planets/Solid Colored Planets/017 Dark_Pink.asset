@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310320405d39bd747a911d1afc7cdf50, type: 3}
   m_Name: 017 Dark_Pink
   m_EditorClassIdentifier: 
-  distToStar: 7
+  distToStar: 1
+  planetName: Dark Pink
+  sprite: {fileID: 0}
   blockIDsubsurface: 10
   blockIDcore: 2
   blockIDBiome00: 0
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 7
   blockIDHugeTreeTrunk: 10
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}

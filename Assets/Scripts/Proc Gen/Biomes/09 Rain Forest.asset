@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 09 Rain Forest
   m_EditorClassIdentifier: 
   biomeName: Rain Forest
-  offset: 1000
-  scale: 0.08
-  terrainHeight: 5
-  terrainScale: 0.01
   surfaceBlock: 15
   smallStructures:
   - name: Rock
@@ -166,3 +162,8 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   lodes: []
+  sprites:
+  - {fileID: 21300000, guid: bf0efce025a364f41b3ea31950907e23, type: 3}
+  - {fileID: 21300000, guid: e98baeef92a5b654691a351814f1975d, type: 3}
+  - {fileID: 21300000, guid: 52d75daf25d09a0408f223ea48ac5d5c, type: 3}
+  material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}

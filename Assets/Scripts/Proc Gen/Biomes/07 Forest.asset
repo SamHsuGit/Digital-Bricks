@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 07 Forest
   m_EditorClassIdentifier: 
   biomeName: Forest
-  offset: 888
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.12
   surfaceBlock: 13
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: 1ce034cf7fb8b3b4b91e184d42c59a84, type: 3}
+  - {fileID: 21300000, guid: bf9ca3ffd06d24340b25871a47c380b2, type: 3}
+  - {fileID: 21300000, guid: cbb1a4fa5854f934796ff991cbc78fc6, type: 3}
+  material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}

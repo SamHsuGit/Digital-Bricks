@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 11 Monolith
   m_EditorClassIdentifier: 
   biomeName: Monolith
-  offset: 1200
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.12
   surfaceBlock: 2
   smallStructures:
   - name: Rock
@@ -137,3 +133,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: b4c73ad309be12b48a939a67099b8208, type: 3}
+  - {fileID: 21300000, guid: 7a21bf2f8bfba4a4c9f3c0ded7310ca7, type: 3}
+  - {fileID: 21300000, guid: cd1112e1898501f4db9a9e5aff7bc548, type: 3}
+  material: {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}

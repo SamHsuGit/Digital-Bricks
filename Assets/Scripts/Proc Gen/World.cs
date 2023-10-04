@@ -321,7 +321,7 @@ public class World : MonoBehaviour
         int minRandBlockID = 2;
         int maxRandBlockID = 10;
         int minRandBlockIDFlora = 5;
-        int numberOfHardcodedPlanets = 17;
+        int numberOfHardcodedPlanets = 18;
 
         worldData.system = GetSystem(planetNumber);
         worldData.distToStar = GetDistToStar(planetNumber);

@@ -5,6 +5,8 @@ public class Planet : ScriptableObject
 {
     [Header("Planet Attributes")]
     public int distToStar;
+    public string planetName;
+    public Sprite sprite;
     [Header("Surface Attributes")]
     public byte blockIDsubsurface;
     public byte blockIDcore;
@@ -40,4 +42,5 @@ public class Planet : ScriptableObject
     public byte blockIDHugeTreeLeaves;
     public byte blockIDHugeTreeTrunk;
     public byte blockIDColumn;
+    public Material material;
 }

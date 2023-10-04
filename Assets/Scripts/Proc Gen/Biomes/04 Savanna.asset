@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 04 Savanna
   m_EditorClassIdentifier: 
   biomeName: Savanna
-  offset: 555
-  scale: 0.08
-  terrainHeight: 20
-  terrainScale: 0.01
   surfaceBlock: 7
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: 965093db0469f4c479e5697a7cf742bb, type: 3}
+  - {fileID: 21300000, guid: 88e3c91d37a01684fb5b75604995d2d6, type: 3}
+  - {fileID: 21300000, guid: a4e51ab2a20d70543b605d134b5f0254, type: 3}
+  material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}

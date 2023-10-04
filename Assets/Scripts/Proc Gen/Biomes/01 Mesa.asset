@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: 01 Mesa
   m_EditorClassIdentifier: 
   biomeName: Mesa
-  offset: 222
-  scale: 0.08
-  terrainHeight: 25
-  terrainScale: 0.01
   surfaceBlock: 7
   smallStructures:
   - name: Rock
@@ -187,3 +183,8 @@ MonoBehaviour:
     scale: 0.06
     threshold: 0.5
     noiseOffset: 30
+  sprites:
+  - {fileID: 21300000, guid: a2430459416e5924ca49d881daa4c333, type: 3}
+  - {fileID: 21300000, guid: a88b6c9f78f7bc64f9fb03df2ce330dd, type: 3}
+  - {fileID: 21300000, guid: 85178e8956e5f364c84e1d2426e0469f, type: 3}
+  material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}

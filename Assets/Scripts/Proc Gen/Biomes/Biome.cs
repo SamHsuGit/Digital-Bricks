@@ -14,6 +14,8 @@ public class Biome : ScriptableObject
     public SurfaceOb[] largeFlora; // for best performance do not add more than 2 values
     public SurfaceOb[] XLFlora; // for best performance do not add more than 1 value
     public Lode[] lodes;
+    public Sprite[] sprites;
+    public Material material;
 }
 
 [System.Serializable]

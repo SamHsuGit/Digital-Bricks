@@ -7,6 +7,8 @@ using System.IO;
 public class SetupMenu : MonoBehaviour
 {
     public GameObject menuElements;
+    public Planet[] planets;
+    public Biome[] biomes;
     public Slider loadingSlider;
     public TextMeshProUGUI loadingPercentageText;
     public TMP_InputField playerNameInputField;
@@ -14,15 +16,23 @@ public class SetupMenu : MonoBehaviour
     public Toggle randomizeWorldCoord;
     public TMP_InputField planetSeedInputField;
     public TMP_InputField worldCoordInputField;
-    public GameObject modelsObjectToSpin;
+    public GameObject modelObjectToSpin;
     public GameObject levelLoaderObject;
     
+    public Image biomeImage;
+
+    public Slider worldDensitySlider;
     public Slider worldRenderDistanceSlider;
     public TextMeshProUGUI worldRenderText;
+    public TextMeshProUGUI worldDensityText;
+    public TextMeshProUGUI planetNameText;
+    public TextMeshProUGUI biomeNameText;
 
     public AudioSource buttonSound;
 
-    public int index;
+    public int biomeIndex;
+    int planetSeed;
+    public int densityRange;
 
     private LevelLoader levelLoader;
 
@@ -44,6 +54,8 @@ public class SetupMenu : MonoBehaviour
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
         planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
+        biomeIndex = SettingsStatic.LoadedSettings.biomeOverride;
+        worldDensitySlider.value = SettingsStatic.LoadedSettings.terrainDensity;
         worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
         if(Directory.Exists(Settings.AppSaveDataPath + "/saves/"))
         {
@@ -51,11 +63,91 @@ public class SetupMenu : MonoBehaviour
                 RandomizeWorldCoord();
         }
         loadingSlider.gameObject.SetActive(false);
+
+        SetPreviewBrickColor();
+        SetPreviewSpriteImage();
+        biomeNameText.text = biomes[SettingsStatic.LoadedSettings.biomeOverride].biomeName;
+        SetPlanetNameText();
+    }
+
+    public void IncrementBiome()
+    {
+        if (biomeIndex + 1 > 12)
+            biomeIndex = 0;
+        else
+            biomeIndex++;
+    }
+
+    public void DecrementBiome()
+    {
+        if(biomeIndex - 1 < 0)
+            biomeIndex = 12;
+        else
+            biomeIndex--;
+    }
+
+    public void CheckDensity()
+    {
+        if (worldDensitySlider.value <= 0.333f)
+        {
+            densityRange = 0;
+        }
+        else if (worldDensitySlider.value > 0.333f && worldDensitySlider.value < 0.666f)
+        {
+            densityRange = 2;
+        }
+        else
+        {
+            densityRange = 1;
+        }
+
+        worldDensityText.text = worldDensitySlider.value.ToString();
     }
 
     private void Update()
     {
-        modelsObjectToSpin.transform.Rotate(new Vector3(0, 1, 0));
+        modelObjectToSpin.transform.parent.Rotate(new Vector3(0, 1, 0));
+        SetPlanetNameText();
+    }
+
+    public void SetPlanetNameText()
+    {
+        if (planetSeed <= 18)
+            planetNameText.text = planets[planetSeed].planetName;
+        else
+            planetNameText.text = "?";
+    }
+
+    public void SetBiomeNameText()
+    {
+        if (biomeIndex <= 11)
+            biomeNameText.text = biomes[biomeIndex].biomeName;
+        else
+            biomeNameText.text = "Mixed";
+    }
+
+    public void SetPreviewSpriteImage()
+    {
+        biomeImage.sprite = biomes[biomeIndex].sprites[densityRange];
+    }
+
+    public void SetPreviewBrickColor()
+    {
+        try
+        {
+            planetSeed = System.Math.Abs(int.Parse(planetSeedInputField.text)); // Int32 can hold up to 2,147,483,647 numbers
+        }
+        catch
+        {
+            planetSeed = 3;
+        }
+
+        if (planetSeed == 3)
+            modelObjectToSpin.GetComponent<MeshRenderer>().material = biomes[biomeIndex].material;
+        else if (planetSeed <= 18)
+            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[planetSeed].material;
+        else
+            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[11].material;
     }
 
     public void SetRenderDistance()
@@ -122,39 +214,9 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
         SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn;
         SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
-
-        //// try to load the saved planet seed, otherwise default to 3
-        //try
-        //{
-        //    int planetSeed = int.Parse(planetSeedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
-        //    SettingsStatic.LoadedSettings.planetSeed = planetSeed;
-        //}
-        //catch (System.FormatException)
-        //{
-        //    SettingsStatic.LoadedSettings.planetSeed = 3;
-        //}
-
-        //// try to load the saved world coord, otherwise default to 1
-        //try
-        //{
-        //    int result = int.Parse(worldCoordInputField.text); // Int32 can hold up to 2,147,483,647 numbers
-        //    SettingsStatic.LoadedSettings.worldCoord = result;
-        //}
-        //catch (System.FormatException)
-        //{
-        //    SettingsStatic.LoadedSettings.worldCoord = 1; // default value
-        //}
-
-        // try to load the saved planet seed, otherwise default to 3
-        try
-        {
-            int planetSeed = int.Parse(planetSeedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
-            SettingsStatic.LoadedSettings.planetSeed = planetSeed;
-        }
-        catch (System.FormatException)
-        {
-            SettingsStatic.LoadedSettings.planetSeed = 3;
-        }
+        SettingsStatic.LoadedSettings.planetSeed = planetSeed;
+        SettingsStatic.LoadedSettings.biomeOverride = biomeIndex;
+        SettingsStatic.LoadedSettings.terrainDensity = worldDensitySlider.value;
 
         // try to load the saved world coord, otherwise default to 1
         try

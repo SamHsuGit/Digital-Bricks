@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310320405d39bd747a911d1afc7cdf50, type: 3}
   m_Name: 010 Light_Gray
   m_EditorClassIdentifier: 
-  distToStar: 2
+  distToStar: 1
+  planetName: Light Gray
+  sprite: {fileID: 0}
   blockIDsubsurface: 3
   blockIDcore: 2
   blockIDBiome00: 0
@@ -46,3 +48,4 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 2
   blockIDHugeTreeTrunk: 3
   blockIDColumn: 3
+  material: {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}
