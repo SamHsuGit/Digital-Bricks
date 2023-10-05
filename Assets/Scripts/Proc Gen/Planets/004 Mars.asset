@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 4
   planetName: Mars
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: b51ae3e36f29701498c409136dd6a0e6, type: 3}
+  - {fileID: 21300000, guid: 4bea7c967baffec42b81137cea67a765, type: 3}
+  - {fileID: 21300000, guid: 7f4109dea27a7784bb9b2accbaa4a19a, type: 3}
+  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}
   blockIDsubsurface: 5
   blockIDcore: 5
   blockIDBiome00: 5
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}

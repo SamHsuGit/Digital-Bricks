@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 8
   planetName: Neptune
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 72ecccc56fcd1ea4fa08bb0c722b59d1, type: 3}
+  - {fileID: 21300000, guid: e4af62f8c25d2a041ac5432e35811030, type: 3}
+  - {fileID: 21300000, guid: e1504344873157a4285ba3b1ca62d95d, type: 3}
+  material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
   blockIDsubsurface: 9
   blockIDcore: 4
   blockIDBiome00: 9
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}

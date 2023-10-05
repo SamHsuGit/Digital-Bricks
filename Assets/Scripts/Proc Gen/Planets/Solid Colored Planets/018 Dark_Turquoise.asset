@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 1
   planetName: Dark Turquoise
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 8a601cdd9535cee43ab804a7b7fc6808, type: 3}
+  - {fileID: 21300000, guid: fbb8bb31a4d0c304b862fee8a4e0e70c, type: 3}
+  - {fileID: 21300000, guid: cca9001af63a67e4c9f8ac90ecfd6006, type: 3}
+  material: {fileID: 2100000, guid: 9f05affb8bfa5da4bbb1968db9ae7519, type: 2}
   blockIDsubsurface: 11
   blockIDcore: 2
   blockIDBiome00: 0
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 7
   blockIDHugeTreeTrunk: 10
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: 9f05affb8bfa5da4bbb1968db9ae7519, type: 2}

@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 6
   planetName: Saturn
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: afa3c3ad596d8d6488da8585c4e28d18, type: 3}
+  - {fileID: 21300000, guid: 9c4a5353a5382e44aaa5e0f9b343455c, type: 3}
+  - {fileID: 21300000, guid: 47c27af24c0af324eab5f2b8aa7dd82f, type: 3}
+  material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}
   blockIDsubsurface: 7
   blockIDcore: 5
   blockIDBiome00: 7
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}

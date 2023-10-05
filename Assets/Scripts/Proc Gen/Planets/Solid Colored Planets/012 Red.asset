@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 1
   planetName: Red
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 89efc042beffcbe4a99494003cae1541, type: 3}
+  - {fileID: 21300000, guid: 0c36af406b8fe2a41b5e7eaa40387b17, type: 3}
+  - {fileID: 21300000, guid: 7ae0c39562cb37f488b1318a59fb5129, type: 3}
+  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}
   blockIDsubsurface: 5
   blockIDcore: 2
   blockIDBiome00: 0
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 5
   blockIDHugeTreeTrunk: 5
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}

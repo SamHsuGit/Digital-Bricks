@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 1
   planetName: Black
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 88cf8eefc9abb0f4391208995a562633, type: 3}
+  - {fileID: 21300000, guid: c974a4b81a8fea74088798b33a813d35, type: 3}
+  - {fileID: 21300000, guid: f15e216fb6cdaa048b528bc6b767c50c, type: 3}
+  material: {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}
   blockIDsubsurface: 2
   blockIDcore: 2
   blockIDBiome00: 0
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 3
   blockIDHugeTreeTrunk: 2
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}

@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 1
   planetName: Light Gray
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 76642becd61b04b4aa727d96cb63054b, type: 3}
+  - {fileID: 21300000, guid: a34cf71cecc1bb440a609bb90fed12d2, type: 3}
+  - {fileID: 21300000, guid: a3210a06df81f544e8a8aa0dd496c3f5, type: 3}
+  material: {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}
   blockIDsubsurface: 3
   blockIDcore: 2
   blockIDBiome00: 0
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 2
   blockIDHugeTreeTrunk: 3
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}

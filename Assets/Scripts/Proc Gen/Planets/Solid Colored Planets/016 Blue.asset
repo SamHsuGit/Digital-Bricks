@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 1
   planetName: Blue
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: b461883dce45e624f8d7b970290ac98d, type: 3}
+  - {fileID: 21300000, guid: 4957999a699607b44a4087b1f3330063, type: 3}
+  - {fileID: 21300000, guid: f6058629978794b4fa2e6b793835da9e, type: 3}
+  material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
   blockIDsubsurface: 9
   blockIDcore: 2
   blockIDBiome00: 0
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 9
   blockIDHugeTreeTrunk: 9
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}

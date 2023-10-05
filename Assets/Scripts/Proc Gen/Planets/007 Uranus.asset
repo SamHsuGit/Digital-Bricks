@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 7
   planetName: Uranus
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 478fceed2c2bd334daadaf684bcdfe90, type: 3}
+  - {fileID: 21300000, guid: fca9fac28d03a414e9074e0a11964964, type: 3}
+  - {fileID: 21300000, guid: 995602ec8af3c61438d738caa67fd59d, type: 3}
+  material: {fileID: 2100000, guid: 9f05affb8bfa5da4bbb1968db9ae7519, type: 2}
   blockIDsubsurface: 11
   blockIDcore: 4
   blockIDBiome00: 11
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 15
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: 9f05affb8bfa5da4bbb1968db9ae7519, type: 2}

@@ -108,10 +108,15 @@ public class SetupMenu : MonoBehaviour
     {
         modelObjectToSpin.transform.parent.Rotate(new Vector3(0, 1, 0));
         SetPlanetNameText();
+        SetPreviewSpriteImage();
+        SetBiomeNameText();
+        SetPreviewBrickColor();
     }
 
     public void SetPlanetNameText()
     {
+        ConvertPlanetSeedToInt();
+
         if (planetSeed <= 18)
             planetNameText.text = planets[planetSeed].planetName;
         else
@@ -120,18 +125,31 @@ public class SetupMenu : MonoBehaviour
 
     public void SetBiomeNameText()
     {
-        if (biomeIndex <= 11)
-            biomeNameText.text = biomes[biomeIndex].biomeName;
+        if (planetSeed == 3)
+        {
+            if (biomeIndex <= 11)
+                biomeNameText.text = biomes[biomeIndex].biomeName;
+            else
+                biomeNameText.text = "Mixed";
+        }
         else
-            biomeNameText.text = "Mixed";
+            biomeNameText.text = "?";
+        
     }
 
     public void SetPreviewSpriteImage()
     {
-        biomeImage.sprite = biomes[biomeIndex].sprites[densityRange];
+        ConvertPlanetSeedToInt();
+
+        if (planetSeed == 3)
+            biomeImage.sprite = biomes[biomeIndex].sprites[densityRange];
+        else if(planetSeed <= 18)
+            biomeImage.sprite = planets[planetSeed].sprites[densityRange];
+        else
+            biomeImage.sprite = planets[1].sprites[densityRange]; // dark image for mystery planet
     }
 
-    public void SetPreviewBrickColor()
+    public void ConvertPlanetSeedToInt()
     {
         try
         {
@@ -141,13 +159,18 @@ public class SetupMenu : MonoBehaviour
         {
             planetSeed = 3;
         }
+    }
+
+    public void SetPreviewBrickColor()
+    {
+        ConvertPlanetSeedToInt();
 
         if (planetSeed == 3)
             modelObjectToSpin.GetComponent<MeshRenderer>().material = biomes[biomeIndex].material;
         else if (planetSeed <= 18)
             modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[planetSeed].material;
         else
-            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[11].material;
+            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[1].material; // black material for mystery planet
     }
 
     public void SetRenderDistance()

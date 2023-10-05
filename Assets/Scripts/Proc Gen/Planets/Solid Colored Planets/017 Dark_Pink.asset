@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 1
   planetName: Dark Pink
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 46f2bc2ce12426743b136745dc0e9a66, type: 3}
+  - {fileID: 21300000, guid: ac43599267a064149abcafae8925d094, type: 3}
+  - {fileID: 21300000, guid: 48093ce10db360b4888c8208b0a6b93f, type: 3}
+  material: {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}
   blockIDsubsurface: 10
   blockIDcore: 2
   blockIDBiome00: 0
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 7
   blockIDHugeTreeTrunk: 10
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}

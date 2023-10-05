@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 1
   planetName: White
-  sprite: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 52348980bfbfa4e429026aadd07f1495, type: 3}
+  - {fileID: 21300000, guid: e112fbf8642d95e4c9b5b00ba1bd4135, type: 3}
+  - {fileID: 21300000, guid: 1086c0228056a6a4cb715eb4a70eba78, type: 3}
+  material: {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}
   blockIDsubsurface: 4
   blockIDcore: 2
   blockIDBiome00: 0
@@ -48,4 +52,3 @@ MonoBehaviour:
   blockIDHugeTreeLeaves: 4
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3
-  material: {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}
