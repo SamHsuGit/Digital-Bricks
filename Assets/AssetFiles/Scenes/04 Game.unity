@@ -1295,6 +1295,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
     - target: {fileID: 5936758643800811229, guid: 9a28e02f1d09101449f7e7ae8d58d0f8, type: 3}
+      propertyPath: onlineScene
+      value: Assets/AssetFiles/Scenes/04 Game.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 5936758643800811229, guid: 9a28e02f1d09101449f7e7ae8d58d0f8, type: 3}
+      propertyPath: offlineScene
+      value: Assets/AssetFiles/Scenes/01 Main Menu.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 5936758643800811229, guid: 9a28e02f1d09101449f7e7ae8d58d0f8, type: 3}
       propertyPath: playerPrefab
       value: 
       objectReference: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}

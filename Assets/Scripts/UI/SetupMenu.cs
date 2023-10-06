@@ -189,12 +189,12 @@ public class SetupMenu : MonoBehaviour
 
         if (Settings.Platform == 2)
         {
-            SceneManager.LoadScene(5); // mobile VR loads smaller scene
+            SceneManager.LoadScene(6); // mobile VR loads smaller scene
             //levelLoader.LoadLevel(5, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
         }
         else
         {
-            SceneManager.LoadScene(3);
+            SceneManager.LoadScene(4);
             //levelLoader.LoadLevel(3, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
         }
     }
@@ -209,12 +209,12 @@ public class SetupMenu : MonoBehaviour
 
         if (Settings.Platform == 2)
         {
-            SceneManager.LoadScene(5); // mobile VR loads smaller scene
+            SceneManager.LoadScene(6); // mobile VR loads smaller scene
             //levelLoader.LoadLevel(5, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
         }
         else
         {
-            SceneManager.LoadScene(3);
+            SceneManager.LoadScene(4);
             //levelLoader.LoadLevel(3, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
         }
     }
@@ -223,7 +223,7 @@ public class SetupMenu : MonoBehaviour
     {
         buttonSound.Play();
         SaveSettings();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void RandomizeWorldCoord()

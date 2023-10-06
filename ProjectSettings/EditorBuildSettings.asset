@@ -6,22 +6,25 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/00 Main Menu.unity
+    path: Assets/AssetFiles/Scenes/00 Intro.unity
+    guid: b0bcbbdb475d9f642b3c8230d16086ec
+  - enabled: 1
+    path: Assets/AssetFiles/Scenes/01 Main Menu.unity
     guid: 5b8c85277e3f0c443a40f9748bb99e4e
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/01 Credits.unity
+    path: Assets/AssetFiles/Scenes/02 Credits.unity
     guid: 6e3904c2351b1ce4bad72ecd993b7b02
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/02 Setup Menu.unity
+    path: Assets/AssetFiles/Scenes/03 Setup Menu.unity
     guid: 99b18406e95a1614784f37981aae2e61
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/03 Game.unity
+    path: Assets/AssetFiles/Scenes/04 Game.unity
     guid: be72a628eb50faa43a76b646c9f51f79
   - enabled: 1
-    path: Assets/AssetFiles/Scenes/04 Error.unity
+    path: Assets/AssetFiles/Scenes/05 Error.unity
     guid: fb81fff4923ed914d8d32bd4a2251e4c
   - enabled: 0
-    path: Assets/AssetFiles/Scenes/05 VR.unity
+    path: Assets/AssetFiles/Scenes/06 VR.unity
     guid: 2a37b60b7f8fac647b8174b9698a8492
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 64bf3d08b4d41044db675234603b956e, type: 2}

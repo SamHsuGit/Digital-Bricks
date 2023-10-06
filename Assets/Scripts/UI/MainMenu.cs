@@ -33,7 +33,7 @@ public class MainMenu : MonoBehaviour
     public void Play()
     {
         buttonSound.Play();
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
     public void Quit()
@@ -45,6 +45,6 @@ public class MainMenu : MonoBehaviour
     public void Credits()
     {
         buttonSound.Play();
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 }
