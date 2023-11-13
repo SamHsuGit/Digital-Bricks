@@ -53,7 +53,7 @@ public static class SettingsStatic
 
         // dev tools
         settings.developerMode = false;
-        settings.spawnBase = false;
+        settings.loadLdrawBaseFile = false;
         settings.terrainHeightMakeBase = 0;
         settings.terrainHeightOverride = 0;
         settings.terrainDensity = 0.6f;
@@ -117,7 +117,7 @@ public class Settings
 
     // dev tools
     public bool developerMode;
-    public bool spawnBase;
+    public bool loadLdrawBaseFile;
     public int terrainHeightMakeBase;
     public int terrainHeightOverride;
     public float terrainDensity;

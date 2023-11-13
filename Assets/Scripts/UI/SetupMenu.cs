@@ -14,6 +14,7 @@ public class SetupMenu : MonoBehaviour
     public TMP_InputField playerNameInputField;
     public Toggle creativeMode;
     public Toggle randomizeWorldCoord;
+    public Toggle loadLDrawBaseFile;
     public TMP_InputField planetSeedInputField;
     public TMP_InputField worldCoordInputField;
     public GameObject modelObjectToSpin;
@@ -57,6 +58,7 @@ public class SetupMenu : MonoBehaviour
         biomeIndex = SettingsStatic.LoadedSettings.biomeOverride;
         worldDensitySlider.value = SettingsStatic.LoadedSettings.terrainDensity;
         worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
+        loadLDrawBaseFile.isOn = SettingsStatic.LoadedSettings.loadLdrawBaseFile;
         if(Directory.Exists(Settings.AppSaveDataPath + "/saves/"))
         {
             if (Directory.GetDirectories(Settings.AppSaveDataPath + "/saves/").Length == 0) // if no save files, create random world coord for world generation seed
@@ -240,6 +242,7 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.planetSeed = planetSeed;
         SettingsStatic.LoadedSettings.biomeOverride = biomeIndex;
         SettingsStatic.LoadedSettings.terrainDensity = worldDensitySlider.value;
+        SettingsStatic.LoadedSettings.loadLdrawBaseFile = loadLDrawBaseFile.isOn;
 
         // try to load the saved world coord, otherwise default to 1
         try
