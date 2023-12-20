@@ -50,6 +50,7 @@ public static class SettingsStatic
         settings.currentBrickIndex = 0;
         settings.currentBrickRotation = 0;
         settings.showControls = true;
+        settings.camMode = 2;
 
         // dev tools
         settings.developerMode = false;
@@ -114,6 +115,7 @@ public class Settings
     public int currentBrickIndex;
     public int currentBrickRotation;
     public bool showControls;
+    public int camMode;
 
     // dev tools
     public bool developerMode;

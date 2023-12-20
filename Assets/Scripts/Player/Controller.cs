@@ -1,3 +1,4 @@
+
 using LDraw;
 using Mirror;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public float baseAnimRate = 2; // health script overrides this
     public float animRate = 2; // health script overrides this
-    public int camMode = 1;
+    public int camMode;
     public bool setCamMode = false;
 
     [SerializeField] float lookVelocity = 1f;
@@ -278,6 +279,7 @@ public class Controller : NetworkBehaviour
             world.gameObject.SetActive(true);
 
             LoadPlacedBricks();
+            camMode = SettingsStatic.LoadedSettings.camMode;
         }
     }
 
@@ -498,7 +500,7 @@ public class Controller : NetworkBehaviour
 
         // set reach and gun range procedurally based on imported char model size
         grabDist = cc.radius * 2f * 6f;
-        tpsDist = -cc.radius * 4;
+        tpsDist = -cc.radius * 8;
     }
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
@@ -822,12 +824,13 @@ public class Controller : NetworkBehaviour
 
     void SetTPSDist()
     {
-        if (inputHandler.scrollWheel.y > 0)
-            tpsDist++;
-        if (inputHandler.scrollWheel.y < 0)
-            tpsDist--;
-        if (tpsDist >= 0)
-            tpsDist = -1;
+        //commented out since Third Person Cam is now default, and want to use scroll wheel for inventory
+        //if (inputHandler.scrollWheel.y > 0)
+        //    tpsDist++;
+        //if (inputHandler.scrollWheel.y < 0)
+        //    tpsDist--;
+        //if (tpsDist >= 0)
+        //    tpsDist = -1;
         playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist);
     }
 

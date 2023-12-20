@@ -182,6 +182,7 @@ public class GameMenu : MonoBehaviour
         SettingsStatic.LoadedSettings.currentBrickIndex = controller.currentBrickIndex;
         SettingsStatic.LoadedSettings.currentBrickRotation = controller.currentBrickRotation;
         SettingsStatic.LoadedSettings.showControls = showControls;
+        SettingsStatic.LoadedSettings.camMode = controller.camMode;
 
         World.Instance.SetUndrawVoxels();
 
