@@ -741,38 +741,9 @@ public class Controller : NetworkBehaviour
                         if (charObRun != null && charObRun.activeSelf)
                             charObRun.SetActive(false);
 
-                        // IF PRESSED GRAB
-                        if (!holdingGrab && inputHandler.grab)
-                            PressedGrab();
-
-                        // IF HOLDING GRAB
-                        if (holdingGrab && inputHandler.grab)
-                            HoldingGrab();
-
-                        // IF RELEASED GRAB
-                        if (holdingGrab && !inputHandler.grab)
-                            ReleasedGrab();
-
-                        // IF PRESSED BUILD WHILE HOLDING GRAB
-                        if (holdingGrab && inputHandler.shoot)
-                            PressedBuildWhileGrab();
-
-                        // IF PRESSED BUILD
-                        if (!holdingBuild && inputHandler.shoot)
-                            PressedBuild();
-
-                        // IF HOLDING BUILD
-                        if (holdingBuild && inputHandler.shoot)
-                            HoldingBuild();
-
-                        // IF RELEASED BUILD
-                        if (holdingBuild && !inputHandler.shoot)
-                            ReleasedBuild();
-
-                        positionCursorBlocks();
+                        CheckWorldInteract();
 
                         lookAtConstraint.constraintActive = false;
-
                         MovePlayer(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
                         break;
                     }
@@ -789,6 +760,8 @@ public class Controller : NetworkBehaviour
                         if (world.playerCount < 2)
                             SetDOF();
                         SetTPSDist();
+
+                        CheckWorldInteract();
 
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
@@ -820,6 +793,39 @@ public class Controller : NetworkBehaviour
                     }
             }
         }
+    }
+
+    void CheckWorldInteract()
+    {
+        // IF PRESSED GRAB
+        if (!holdingGrab && inputHandler.grab)
+            PressedGrab();
+
+        // IF HOLDING GRAB
+        if (holdingGrab && inputHandler.grab)
+            HoldingGrab();
+
+        // IF RELEASED GRAB
+        if (holdingGrab && !inputHandler.grab)
+            ReleasedGrab();
+
+        // IF PRESSED BUILD WHILE HOLDING GRAB
+        if (holdingGrab && inputHandler.shoot)
+            PressedBuildWhileGrab();
+
+        // IF PRESSED BUILD
+        if (!holdingBuild && inputHandler.shoot)
+            PressedBuild();
+
+        // IF HOLDING BUILD
+        if (holdingBuild && inputHandler.shoot)
+            HoldingBuild();
+
+        // IF RELEASED BUILD
+        if (holdingBuild && !inputHandler.shoot)
+            ReleasedBuild();
+
+        positionCursorBlocks();
     }
 
     void SetTPSDist()
@@ -1280,7 +1286,7 @@ public class Controller : NetworkBehaviour
 
         // check if cursor aimed at previously spawned piece
         RaycastHit hit;
-        if (Physics.SphereCast(playerCamera.transform.position, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist))
+        if (Physics.SphereCast(playerCameraOrigin.transform.position + playerCamera.transform.forward * cc.radius * 2, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist, 11))
         {
             GameObject hitObject = hit.transform.gameObject;
             if (hitObject != null && hitObject.tag == "placedBrick")
