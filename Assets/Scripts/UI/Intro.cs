@@ -21,8 +21,11 @@ public class Intro : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Application.runInBackground = true;
-        StartCoroutine(playVideo());
+        LoadMainMenu();
+
+        //bugged for Linux
+        //Application.runInBackground = true;
+        //StartCoroutine(playVideo());
     }
 
     IEnumerator playVideo()
@@ -77,6 +80,11 @@ public class Intro : MonoBehaviour
         }
 
         Debug.Log("Done Playing Video");
+        LoadMainMenu();
+    }
+
+    private void LoadMainMenu()
+    {
         SceneManager.LoadScene(1);
     }
 }
