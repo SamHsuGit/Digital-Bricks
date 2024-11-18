@@ -76,7 +76,7 @@ public class Intro : MonoBehaviour
             yield return null;
         }
 
-        //Debug.Log("Done Playing Video");
+        Debug.Log("Done Playing Video");
         SceneManager.LoadScene(1);
     }
 }
