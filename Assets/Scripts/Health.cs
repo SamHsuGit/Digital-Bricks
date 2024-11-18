@@ -4,7 +4,7 @@ using Mirror;
 public class Health : NetworkBehaviour
 {
     public AudioSource death;
-    public PhysicMaterial physicMaterial;
+    public PhysicsMaterial physicMaterial;
 
     public int minPieces = 1; // chars must have at least 1 piece
     public int maxPieces = 500; // limited based on performance of min pc spec model load time

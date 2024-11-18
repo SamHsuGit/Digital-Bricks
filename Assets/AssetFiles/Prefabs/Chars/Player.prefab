@@ -43,6 +43,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4673335178978187722}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1608, y: 59, z: 1608}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -53,7 +54,6 @@ Transform:
   - {fileID: 4043225058426668422}
   - {fileID: 5686751940954710675}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4673335178978187712
 MonoBehaviour:
@@ -119,7 +119,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: c00ae749-87fc-41f7-a409-fa33856dfd3a
-    m_ActionName: Actions/Movement[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/downArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+    m_ActionName: 'Actions/Movement[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/downArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -135,7 +135,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: f20b4a94-0ca7-41ae-b446-cbb4fa655c77
-    m_ActionName: Actions/Look[/XInputControllerWindows/rightStick,/Mouse/delta]
+    m_ActionName: 'Actions/Look[/XInputControllerWindows/rightStick,/Mouse/delta]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -151,7 +151,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 880cb55b-ff88-494f-a381-7ac8bf565c9a
-    m_ActionName: Actions/Fire[/XInputControllerWindows/rightTrigger,/Mouse/leftButton]
+    m_ActionName: 'Actions/Fire[/XInputControllerWindows/rightTrigger,/Mouse/leftButton]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -167,7 +167,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: cdf8cf83-8323-4c3f-be6d-4e197affbdbd
-    m_ActionName: Actions/Jump[/XInputControllerWindows/buttonSouth,/Keyboard/space]
+    m_ActionName: 'Actions/Jump[/XInputControllerWindows/buttonSouth,/Keyboard/space]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -183,7 +183,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: b4f15938-878b-4411-bf99-0df23b2a0546
-    m_ActionName: Actions/ChangeMode[/XInputControllerWindows/leftTrigger,/Keyboard/shift]
+    m_ActionName: 'Actions/ChangeMode[/XInputControllerWindows/leftTrigger,/Keyboard/shift]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3963772888375218276}
@@ -199,39 +199,39 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
     m_ActionId: e48d9ee9-f7a2-4f57-8594-8e233bea0382
-    m_ActionName: Actions/Options[/Keyboard/tab,/XInputControllerWindows/start]
+    m_ActionName: 'Actions/Options[/Keyboard/tab,/XInputControllerWindows/start]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: f869d3be-b0bb-490f-802c-484ee7a2b830
-    m_ActionName: UI/Navigate[/XInputControllerWindows/leftStick/up,/XInputControllerWindows/rightStick/up,/XInputControllerWindows/leftStick/down,/XInputControllerWindows/rightStick/down,/XInputControllerWindows/leftStick/left,/XInputControllerWindows/rightStick/left,/XInputControllerWindows/leftStick/right,/XInputControllerWindows/rightStick/right,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+    m_ActionName: 'UI/Navigate[/XInputControllerWindows/leftStick/up,/XInputControllerWindows/rightStick/up,/XInputControllerWindows/leftStick/down,/XInputControllerWindows/rightStick/down,/XInputControllerWindows/leftStick/left,/XInputControllerWindows/rightStick/left,/XInputControllerWindows/leftStick/right,/XInputControllerWindows/rightStick/right,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 590f7b09-ed43-43aa-ba70-d326444a038c
-    m_ActionName: UI/Submit[/Keyboard/enter,/XInputControllerWindows/buttonSouth]
+    m_ActionName: 'UI/Submit[/Keyboard/enter,/XInputControllerWindows/buttonSouth]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: ae3e2297-4044-4c5b-9c08-5bfdb114e42e
-    m_ActionName: UI/Cancel[/Keyboard/escape,/XInputControllerWindows/buttonEast]
+    m_ActionName: 'UI/Cancel[/Keyboard/escape,/XInputControllerWindows/buttonEast]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 514e21d2-e4ba-4669-9d68-643b11ceab89
-    m_ActionName: UI/Point[/Mouse/position]
+    m_ActionName: 'UI/Point[/Mouse/position]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 8d858983-9555-4ce8-b932-042732d696f4
-    m_ActionName: UI/Click[/Mouse/leftButton]
+    m_ActionName: 'UI/Click[/Mouse/leftButton]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: e19fbd7a-855d-44d6-b0ed-d5f3a38ef2bf
-    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
+    m_ActionName: 'UI/ScrollWheel[/Mouse/scroll]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 5ca1c9cd-1be7-485b-9166-a3881bc7fa3b
-    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
+    m_ActionName: 'UI/MiddleClick[/Mouse/middleButton]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 17bc4a4f-1a22-4eb8-ba9e-c879547a8e21
-    m_ActionName: UI/RightClick[/Mouse/rightButton]
+    m_ActionName: 'UI/RightClick[/Mouse/rightButton]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: b9e8e2cf-537f-41ce-b347-48ad30c8d28a
@@ -255,7 +255,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 9973d1dc-63d8-489c-a63f-4ca1356b431f
-    m_ActionName: Actions/Create[/XInputControllerWindows/leftTrigger,/Mouse/rightButton]
+    m_ActionName: 'Actions/Create[/XInputControllerWindows/leftTrigger,/Mouse/rightButton]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -271,7 +271,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 86e9d339-d32b-481e-ace0-1c5b10b21dc4
-    m_ActionName: Actions/ScrolWheel[/Mouse/scroll]
+    m_ActionName: 'Actions/ScrolWheel[/Mouse/scroll]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3963772888375218276}
@@ -287,7 +287,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: b40ffc2f-fe48-4be8-8049-5ae3fea38100
-    m_ActionName: Actions/PhotoMode[/XInputControllerWindows/buttonNorth,/Keyboard/f]
+    m_ActionName: 'Actions/PhotoMode[/XInputControllerWindows/buttonNorth,/Keyboard/f]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5114036199920861410}
@@ -303,7 +303,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: be4ad6ca-621c-4202-9809-79c5af1c04bf
-    m_ActionName: Actions/ShowControls[/Keyboard/y,/XInputControllerWindows/buttonNorth]
+    m_ActionName: 'Actions/ShowControls[/Keyboard/y,/XInputControllerWindows/buttonNorth]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -343,11 +343,11 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: b141e51c-1a69-4696-a587-7e2d14e554aa
-    m_ActionName: Actions/Navigate[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow,/XInputControllerWindows/dpad]
+    m_ActionName: 'Actions/Navigate[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow,/XInputControllerWindows/dpad]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 365f7c25-7810-4208-aad5-62c5741b050b
-    m_ActionName: Actions/Touched[/Simulated Touchscreen/primaryTouch/press]
+    m_ActionName: 'Actions/Touched[/Simulated Touchscreen/primaryTouch/press]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -387,7 +387,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 7a85eab4-4c9a-4c5b-9999-8d73de906c4a
-    m_ActionName: Actions/NavigateDown[/Keyboard/downArrow]
+    m_ActionName: 'Actions/NavigateDown[/Keyboard/downArrow]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -427,7 +427,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 8a292e9b-34a2-4f04-913f-10df962f2c6b
-    m_ActionName: Actions/NavigateLeft[/Keyboard/leftArrow]
+    m_ActionName: 'Actions/NavigateLeft[/Keyboard/leftArrow]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -467,7 +467,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: e4769cf2-c7fc-46f0-8721-5455d87481a4
-    m_ActionName: Actions/NavigateRight[/Keyboard/rightArrow]
+    m_ActionName: 'Actions/NavigateRight[/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -495,7 +495,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: d8864d24-f971-4c48-8d97-f72fb4267cf1
-    m_ActionName: Actions/Drop[/Keyboard/q]
+    m_ActionName: 'Actions/Drop[/Keyboard/q]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5114036199920861410}
@@ -511,7 +511,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: cc161660-967f-496b-ac99-2a5d39d466eb
-    m_ActionName: Actions/Debug[/Keyboard/f3]
+    m_ActionName: 'Actions/Debug[/Keyboard/f3]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -539,7 +539,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 60e75519-f30a-4eb6-9687-05208ec4b698
-    m_ActionName: Actions/Previous[/Keyboard/q]
+    m_ActionName: 'Actions/Previous[/Keyboard/q]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Actions
@@ -717,10 +717,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4673335178978187722}
-  serializedVersion: 2
+  serializedVersion: 4
   m_Mass: 0.0001
   m_Drag: 0
   m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -734,8 +745,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4673335178978187722}
   m_Material: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2.4
   m_Direction: 1
@@ -831,6 +851,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: 44361b2f35511294e8adda197494a42f, type: 3}
+  m_Resource: {fileID: 8300000, guid: 44361b2f35511294e8adda197494a42f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -927,6 +948,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: f9e8fef4af330c4409aa5de697ba9c27, type: 3}
+  m_Resource: {fileID: 8300000, guid: f9e8fef4af330c4409aa5de697ba9c27, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1023,6 +1045,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: 67161a3642c04fe4783ba53d77f4345f, type: 3}
+  m_Resource: {fileID: 8300000, guid: 67161a3642c04fe4783ba53d77f4345f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1119,6 +1142,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: add0b630313c87949a91d64629142113, type: 3}
+  m_Resource: {fileID: 8300000, guid: add0b630313c87949a91d64629142113, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.125
   m_Pitch: 1
@@ -1215,6 +1239,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: d5468c28db07f094797ed217ed8c58d7, type: 3}
+  m_Resource: {fileID: 8300000, guid: d5468c28db07f094797ed217ed8c58d7, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1311,6 +1336,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: 8bd09086464e27145913b1dbaa1663e1, type: 3}
+  m_Resource: {fileID: 8300000, guid: 8bd09086464e27145913b1dbaa1663e1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1407,6 +1433,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: 19f15317bbe28c6479952b0567d5bf58, type: 3}
+  m_Resource: {fileID: 8300000, guid: 19f15317bbe28c6479952b0567d5bf58, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.125
   m_Pitch: 1
@@ -1503,6 +1530,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: 47715e399296e4145a88633b37800d56, type: 3}
+  m_Resource: {fileID: 8300000, guid: 47715e399296e4145a88633b37800d56, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1599,6 +1627,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 8300000, guid: a4d2eebc6fbde234caabc1ae833fc781, type: 3}
+  m_Resource: {fileID: 8300000, guid: a4d2eebc6fbde234caabc1ae833fc781, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1692,9 +1721,16 @@ CharacterController:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4673335178978187722}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Height: 2.4
   m_Radius: 0.5
   m_SlopeLimit: 45
@@ -1707,6 +1743,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4673335178978187715}
     m_Modifications:
     - target: {fileID: 2577860670346639329, guid: 16ff54cd55ffe26499574003d5d8255d, type: 3}
@@ -1758,6 +1795,9 @@ PrefabInstance:
       value: charModelOrigin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16ff54cd55ffe26499574003d5d8255d, type: 3}
 --- !u!4 &4043225058426668422 stripped
 Transform:
@@ -1774,6 +1814,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4673335178978187715}
     m_Modifications:
     - target: {fileID: 1295181518448837571, guid: 4590fadb68374024b859711f3c918706, type: 3}
@@ -1845,6 +1886,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4590fadb68374024b859711f3c918706, type: 3}
 --- !u!1 &2688012131756474887 stripped
 GameObject:
@@ -1861,6 +1905,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4673335178978187715}
     m_Modifications:
     - target: {fileID: 1528517879950106, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
@@ -3524,6 +3569,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4714d538d9e4e6046808ce08addc9a8d, type: 3}
 --- !u!1 &5374812077317162537 stripped
 GameObject:
@@ -3550,6 +3598,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4673335178978187715}
     m_Modifications:
     - target: {fileID: 76202044199857848, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
@@ -4489,6 +4538,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
 --- !u!1 &170724433810035422 stripped
 GameObject:

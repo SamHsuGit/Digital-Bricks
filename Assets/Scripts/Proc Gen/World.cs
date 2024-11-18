@@ -67,7 +67,7 @@ public class World : MonoBehaviour
     public Material blockMaterialLit;
     public Material blockMaterialUnlit;
     public Material blockMaterialTransparent;
-    public PhysicMaterial physicMaterial;
+    public PhysicsMaterial physicMaterial;
     public BlockType[] blockTypes;
     public GameObject[] voxelPrefabs;
     public AudioSource chunkLoadSound;

@@ -138,7 +138,7 @@ public class Controller : NetworkBehaviour
     private VoxelCollider playerCameraVoxelCollider;
     public PPFXSetValues worldPPFXSetValues;
     private CharacterController charController;
-    private PhysicMaterial physicMaterial;
+    private PhysicsMaterial physicMaterial;
     private CustomNetworkManager customNetworkManager;
     private Lighting lighting;
     private GameObject undefinedPrefabToSpawn;
@@ -1047,7 +1047,7 @@ public class Controller : NetworkBehaviour
             }
             else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
             {
-                heldObRb.velocity = playerCamera.transform.forward * 25; // give some velocity forwards
+                heldObRb.linearVelocity = playerCamera.transform.forward * 25; // give some velocity forwards
             }
 
             if (heldObRb != null)
@@ -1751,7 +1751,7 @@ public class Controller : NetworkBehaviour
         rb = ob.GetComponent<Rigidbody>();
         rb.mass = health.piecesRbMass;
         rb.isKinematic = false;
-        rb.velocity = spawnDir * 25; // give some velocity away from where player is looking
+        rb.linearVelocity = spawnDir * 25; // give some velocity away from where player is looking
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
         GameObject childOb;

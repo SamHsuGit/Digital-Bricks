@@ -13,7 +13,7 @@ public class LDrawImportRuntime : MonoBehaviour
     public GameObject charObRun;
     public GameObject baseOb;
     public GameObject projectileOb;
-    public PhysicMaterial physicMaterial;
+    public PhysicsMaterial physicMaterial;
     public Mesh[] _meshArray;
     public Dictionary<string, Mesh> _Meshes = new Dictionary<string, Mesh>();
 
