@@ -994,24 +994,34 @@ public class Controller : NetworkBehaviour
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if (blockID < 2 || blockID > 11) // do not spawn object if voxelID is outside defined range
+        if (blockID < 2 || blockID == 12 || blockID > 15) // do not spawn object if voxelID is outside defined range
         {
             blockID = 0;
             return;
         }
-        else // spawn brick object
+        else if (blockID == 13) //manual color override grass = green
         {
-            if (Settings.OnlinePlay) // disabled for multiplayer
-                return;
-
-            heldObjectIsBrick = true;
-            reticle.SetActive(false);
-            holdingBuild = true;
-            brickPickUp.Play();
-            int brickMaterialIndex = System.Convert.ToInt32(blockID);
-            SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
-            SpawnTempBrick(0);
+            blockID = 8;
         }
+        else if (blockID == 14) //manual color override wood = brown
+        {
+            blockID = 6;
+        }
+        else if (blockID == 15) //manual color override leaves  = green
+        {
+            blockID = 8;
+        }
+        // spawn brick object
+        if (Settings.OnlinePlay) // disabled for multiplayer
+            return;
+
+        heldObjectIsBrick = true;
+        reticle.SetActive(false);
+        holdingBuild = true;
+        brickPickUp.Play();
+        int brickMaterialIndex = System.Convert.ToInt32(blockID);
+        SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
+        SpawnTempBrick(0);
     }
 
     private void PressedShoot()
