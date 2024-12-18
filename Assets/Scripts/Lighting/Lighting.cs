@@ -4,6 +4,7 @@ using UnityEngine;
 [ExecuteAlways]
 public class Lighting : MonoBehaviour
 {
+    public GameManagerScript gameManager;
     [SerializeField] private Light sun;
     [SerializeField] private Light moon;
     [SerializeField] private LightingPreset sunProperties;
@@ -25,7 +26,9 @@ public class Lighting : MonoBehaviour
 
     private void Awake()
     {
-        if (!Settings.OnlinePlay)
+        if(gameManager.webGL)
+            timeOfDay = 6;
+        else if (!Settings.OnlinePlay)
             timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
     }
 

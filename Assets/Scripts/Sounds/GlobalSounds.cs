@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 
 public class GlobalSounds : MonoBehaviour
 {
+    public GameManagerScript gameManager;
     public GameObject globalLighting;
     public AudioMixer masterMix;
     public bool dayTime = true;
@@ -16,7 +17,7 @@ public class GlobalSounds : MonoBehaviour
     {
         lighting = globalLighting.GetComponent<Lighting>();
 
-        if (SettingsStatic.LoadedSettings.worldCoord == 3)
+        if (gameManager.worldcoordDefault == 3)
         {
             if (lighting.timeOfDay >= 6 && lighting.timeOfDay <= 18)
             {
@@ -39,7 +40,7 @@ public class GlobalSounds : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SettingsStatic.LoadedSettings.worldCoord == 3)
+        if (gameManager.webGL || SettingsStatic.LoadedSettings.worldCoord == 3)
         {
             previousDayTime = dayTime;
 

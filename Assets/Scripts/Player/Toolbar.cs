@@ -29,9 +29,9 @@ public class Toolbar : MonoBehaviour
 
     private void Start()
     {
-        if (SettingsStatic.LoadedSettings.developerMode || World.Instance.worldData.creativeMode)
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode || World.Instance.worldData.creativeMode)
             EmptyAllSlots();
-        else
+        else if (!Settings.WebGL)
             SetInventoryFromSave();
     }
 

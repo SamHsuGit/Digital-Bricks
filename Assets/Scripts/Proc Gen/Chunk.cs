@@ -69,7 +69,7 @@ public class Chunk
 
         World.Instance.AddChunkToUpdate(this);
 
-        if(SettingsStatic.LoadedSettings.chunkLoadAnim)
+        if(!Settings.WebGL && SettingsStatic.LoadedSettings.chunkLoadAnim)
         {
             chunkObject.AddComponent<ChunkLoadAnimation>();
             World.Instance.chunkLoadSound.Play();
@@ -357,7 +357,7 @@ public class Chunk
         mesh.normals = normals.ToArray();
         meshFilter.mesh = mesh;
 
-        if (SettingsStatic.LoadedSettings.drawChunkMeshes) // allows rigidbodies to collide with chunks
+        if (Settings.WebGL || SettingsStatic.LoadedSettings.drawChunkMeshes) // allows rigidbodies to collide with chunks
         {
             if (col == null)
                 col = chunkObject.AddComponent<MeshCollider>();

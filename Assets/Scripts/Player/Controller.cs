@@ -57,12 +57,16 @@ public class Controller : NetworkBehaviour
     public int camMode;
     public bool setCamMode = false;
 
-    [SerializeField] float lookVelocity = 1f;
+    public float lookVelocity = 0.1f;
+    public float lookSpeed = 0.1f;
+
+    public bool invertY = false;
 
     public byte orientation;
 
     [Header("GameObject References")]
     public Player player;
+    public GameObject charModelDefault;
     public GameObject charModelOrigin;
     public GameObject gameMenu;
     public GameObject nametag;
@@ -189,7 +193,7 @@ public class Controller : NetworkBehaviour
             // after client sends chunksServer string SyncVar, the syncVars do not update as required to have clients then save the chunks to memory...
         }
 
-        if (!Settings.OnlinePlay)
+        if (!Settings.WebGL && !Settings.OnlinePlay)
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
 
         voxelCollider = GetComponent<VoxelCollider>();
@@ -197,7 +201,8 @@ public class Controller : NetworkBehaviour
         physicMaterial = world.physicMaterial;
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();
 
-        projectile = LDrawImportRuntime.Instance.projectileOb;
+        if(!Settings.WebGL)
+            projectile = LDrawImportRuntime.Instance.projectileOb;
         cc = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -228,9 +233,18 @@ public class Controller : NetworkBehaviour
         currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
 
         // set to zero every time the game starts
-        currentBrickType = SettingsStatic.LoadedSettings.currentBrickType;
-        currentBrickIndex = SettingsStatic.LoadedSettings.currentBrickIndex;
-        currentBrickRotation = SettingsStatic.LoadedSettings.currentBrickRotation;
+        if(Settings.WebGL)
+        {
+            currentBrickType = 0;
+            currentBrickIndex = 0;
+            currentBrickRotation = 1;
+        }
+        else
+        {
+            currentBrickType = SettingsStatic.LoadedSettings.currentBrickType;
+            currentBrickIndex = SettingsStatic.LoadedSettings.currentBrickIndex;
+            currentBrickRotation = SettingsStatic.LoadedSettings.currentBrickRotation;
+        }
 
         CinematicBars.SetActive(false);
     }
@@ -240,7 +254,10 @@ public class Controller : NetworkBehaviour
         if (world.worldPlayer != null && gameObject != world.worldPlayer) // Need to work out how networked players with same name get instance added to name
         {
             // set this object's name from saved settings so it can be modified by the world script when player joins
-            playerName = SettingsStatic.LoadedSettings.playerName;
+            if(Settings.WebGL)
+                playerName = "Player";
+            else
+                playerName = SettingsStatic.LoadedSettings.playerName;
 
             player = new Player(gameObject, playerName); // create a new player, try to load player stats from save file
         }
@@ -257,17 +274,23 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            // Import character model idle pose
-            charObIdle = Instantiate(LDrawImportRuntime.Instance.charObIdle);
+            if (Settings.WebGL)
+                charObIdle = charModelDefault;
+            else
+                charObIdle = Instantiate(LDrawImportRuntime.Instance.charObIdle); // Import character model idle pose
             charObIdle.SetActive(true);
+
             charObIdle.transform.parent = charModelOrigin.transform;
             bc = charModelOrigin.transform.GetChild(0).GetComponent<BoxCollider>();
             charObIdle.transform.localPosition = new Vector3(0, 0, 0);
             charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            // Import character model run pose
-            charObRun = Instantiate(LDrawImportRuntime.Instance.charObRun);
+            if (Settings.WebGL)
+                charObRun = charModelDefault;
+            else
+                charObRun = Instantiate(LDrawImportRuntime.Instance.charObRun); // Import character model run pose
             charObRun.SetActive(false);
+
             charObRun.transform.parent = charModelOrigin.transform;
             charObRun.transform.localPosition = new Vector3(0, 0, 0);
             charObRun.transform.localEulerAngles = new Vector3(0, 180, 180);
@@ -278,8 +301,16 @@ public class Controller : NetworkBehaviour
 
             world.gameObject.SetActive(true);
 
-            LoadPlacedBricks();
-            camMode = SettingsStatic.LoadedSettings.camMode;
+            if (Settings.WebGL)
+            {
+                camMode = 0;
+            }
+            else
+            {
+                LoadPlacedBricks();
+                camMode = SettingsStatic.LoadedSettings.camMode;
+            }
+            
         }
     }
 
@@ -2073,22 +2104,36 @@ public class Controller : NetworkBehaviour
             {
                 lookVelocity = maxLookVelocity;
             }
+            else if (Settings.WebGL)
+                lookVelocity += lookVelocity;
             else
-            {
                 lookVelocity += SettingsStatic.LoadedSettings.lookAccel;
-            }
         }
         else
             lookVelocity = 1f;
 
         // rotate camera left/right, multiply by lookVelocity so controller players get look accel
-        rotationX += inputHandler.look.x * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
+        if(Settings.WebGL)
+            rotationX += inputHandler.look.x * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
+        else
+            rotationX += inputHandler.look.x * lookVelocity * lookSpeed * 0.5f;
 
         // rotate camera up/down, multiply by lookVelocity so controller players get look accel
-        if (!SettingsStatic.LoadedSettings.invertY)
-            rotationY += -inputHandler.look.y * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
+        if(Settings.WebGL)
+        {
+            if(!SettingsStatic.LoadedSettings.invertY)
+                rotationY += -inputHandler.look.y * lookVelocity * lookSpeed * 0.5f;
+            else
+                rotationY += inputHandler.look.y * lookVelocity * lookSpeed * 0.5f;
+        }
         else
-            rotationY += inputHandler.look.y * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
+        {
+            if (!invertY)
+                rotationY += -inputHandler.look.y * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
+            else
+                rotationY += inputHandler.look.y * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
+        }
+        
 
         // limit transform so player cannot look up or down past the specified angles
         rotationY = Mathf.Clamp(rotationY, minCamAngle, maxCamAngle);

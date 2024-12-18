@@ -60,6 +60,7 @@ public static class SettingsStatic
         settings.terrainDensity = 0.6f;
         settings.biomeOverride = 12;
 
+
         string path;
         if (Settings.Platform == 2)
             path = Settings.AppSaveDataPath + "/settings.cfg";
@@ -80,6 +81,7 @@ public class Settings
 {
     // private static variables
     private static bool _worldLoaded = true; // set to false to prevent players from moving or opening menus upon world load
+    private static bool _webGL = false;
     private static bool _networkPlay = false;
     private static string _appPath;
 
@@ -131,6 +133,12 @@ public class Settings
         set { _worldLoaded = value; }
     }
 
+    public static bool WebGL
+    {
+        get { return _webGL; }
+        set { _webGL = value; }
+    }
+
     public static bool OnlinePlay
     {
         get { return _networkPlay; }
@@ -148,14 +156,12 @@ public class Settings
         // mobile network
         get
         {
-            //return 1; // console
-            //return 2; // mobile
-            if (Application.isMobilePlatform)
+            if (Application.isMobilePlatform) // iPhone
                 return 2;
-            else if (Application.isConsolePlatform)
+            else if (Application.isConsolePlatform) // xbox
                 return 1;
             else
-                return 0; // then must be pc
+                return 0; // PC
         }
     }
 

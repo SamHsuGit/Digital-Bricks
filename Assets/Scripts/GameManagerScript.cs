@@ -18,15 +18,31 @@ public class GameManagerScript : MonoBehaviour
     private World world;
     private Stopwatch preWorldGenStopwatch;
 
+    public bool webGL;
+    public int worldcoordDefault = 3478;
+    public int planetNumberDefault = 3;
+
     void Awake()
     {
         preWorldGenStopwatch = new Stopwatch();
         preWorldGenStopwatch.Start();
         world = worldOb.GetComponent<World>();
 
+        Settings.WebGL = webGL;
+
         // these values are set immediately and overwritten later if necessary to match server properties
-        world.planetNumber = SettingsStatic.LoadedSettings.planetSeed;
-        world.seed = SettingsStatic.LoadedSettings.worldCoord;
+        if(webGL) // set from inspector, tells the settings to autoGenerate preset values or get from settings file (cannot write to files on WebGL builds)
+        {
+            Settings.OnlinePlay = false;
+            world.planetNumber = planetNumberDefault;
+            world.seed = worldcoordDefault;
+        }
+        else
+        {
+            world.planetNumber = SettingsStatic.LoadedSettings.planetSeed;
+            world.seed = SettingsStatic.LoadedSettings.worldCoord;
+        }
+        
 
         if (Settings.OnlinePlay)
         {
@@ -41,7 +57,9 @@ public class GameManagerScript : MonoBehaviour
         preWorldGenStopwatch.Stop();
         TimeSpan ts = preWorldGenStopwatch.Elapsed;
         world.preWorldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-        FileSystemExtension.SaveSettings(); // saved changed settings to file
+
+        if(!webGL)
+            FileSystemExtension.SaveSettings(); // saved changed settings to file
     }
 
     public void Setup() // called by NetworkMenu for online play
@@ -51,9 +69,10 @@ public class GameManagerScript : MonoBehaviour
         // network (pc = 0, console = 1)
         // mobile singleplayer
 
-        SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
+        if(!webGL)
+            SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
 
-        if (!Settings.OnlinePlay)
+        if (!webGL && !Settings.OnlinePlay)
             globalLighting.GetComponent<Lighting>().timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
 
         if (Settings.Platform == 2)
@@ -82,10 +101,21 @@ public class GameManagerScript : MonoBehaviour
             NETWORK.SetActive(false);
             PlayerManagerNetwork.SetActive(false);
 
-            LDrawImporterRuntime.SetActive(true);
+            if(webGL)
+            {
+                worldOb.SetActive(true); // normally set active by LDrawImporter but we don't run this for WebGL
+            }
+            else
+                LDrawImporterRuntime.SetActive(true);
             globalLighting.SetActive(true);
 
-            if (Settings.Platform == 2) // mobile singleplayer
+            if(webGL)
+            {
+                XRRigPrefab.SetActive(false);
+                playerManagerLocal.GetComponent<PlayerInputManager>().playerPrefab = charPrefab;
+                LOCAL.SetActive(true);
+            }
+            else if (Settings.Platform == 2) // mobile singleplayer
             {
                 LOCAL.SetActive(false);
             }

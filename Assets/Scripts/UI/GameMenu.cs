@@ -53,7 +53,10 @@ public class GameMenu : MonoBehaviour
         controller = player.GetComponent<Controller>();
         canvas = GetComponent<Canvas>();
         health = player.GetComponent<Health>();
-        showControls = SettingsStatic.LoadedSettings.showControls;
+        if(Settings.WebGL)
+            showControls = false;
+        else
+            showControls = SettingsStatic.LoadedSettings.showControls;
     }
 
     private void Start()
@@ -62,15 +65,31 @@ public class GameMenu : MonoBehaviour
         lighting = World.Instance.globalLighting;
         customNetworkManager = World.Instance.customNetworkManager;
 
-        // set settings from loaded saved file
-        volumeSlider.value = SettingsStatic.LoadedSettings.volume;
-        lookSpeedSlider.value = SettingsStatic.LoadedSettings.lookSpeed;
-        lookAccelerationSlider.value = SettingsStatic.LoadedSettings.lookAccel;
-        fovSlider.value = SettingsStatic.LoadedSettings.fov;
-        graphicsQualityDropdown.value = SettingsStatic.LoadedSettings.graphicsQuality;
-        QualitySettings.SetQualityLevel(SettingsStatic.LoadedSettings.graphicsQuality);
-        fullScreenToggle.isOn = SettingsStatic.LoadedSettings.fullscreen;
-        invertYToggle.isOn = SettingsStatic.LoadedSettings.invertY;
+        if(!Settings.WebGL)
+        {
+            // set settings from loaded saved file
+            volumeSlider.value = SettingsStatic.LoadedSettings.volume;
+            lookSpeedSlider.value = SettingsStatic.LoadedSettings.lookSpeed;
+            lookAccelerationSlider.value = SettingsStatic.LoadedSettings.lookAccel;
+            fovSlider.value = SettingsStatic.LoadedSettings.fov;
+            graphicsQualityDropdown.value = SettingsStatic.LoadedSettings.graphicsQuality;
+            QualitySettings.SetQualityLevel(SettingsStatic.LoadedSettings.graphicsQuality);
+            fullScreenToggle.isOn = SettingsStatic.LoadedSettings.fullscreen;
+            invertYToggle.isOn = SettingsStatic.LoadedSettings.invertY;
+        }
+        else
+        {
+            // set to default values
+            volumeSlider.value = 0.5f;
+            lookSpeedSlider.value = 0.1f;
+            lookAccelerationSlider.value = 0.1f;
+            fovSlider.value = 90f;
+            graphicsQualityDropdown.value = 0;
+            QualitySettings.SetQualityLevel(0);
+            fullScreenToggle.isOn = false;
+            invertYToggle.isOn = false;
+        }
+
         UpdateHP();
 
         uac = playerCamera.GetComponent<Camera>().GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
@@ -169,9 +188,12 @@ public class GameMenu : MonoBehaviour
     {
         buttonSound.Play();
         // before quit, save world
-        controller.RequestSaveWorld(); // server host and clients must save world before clients disconnect
-        // before quit, save settings
-        SaveSettings();
+        if(!Settings.WebGL)
+        {
+            controller.RequestSaveWorld(); // server host and clients must save world before clients disconnect
+            // before quit, save settings
+            SaveSettings();
+        }
     }
 
     public void SaveSettings()
@@ -237,44 +259,63 @@ public class GameMenu : MonoBehaviour
 
     public void SetVolume(float value)
     {
-        SettingsStatic.LoadedSettings.volume = value;
+        if(!Settings.WebGL)
+            SettingsStatic.LoadedSettings.volume = value;
         masterAudioMixer.SetFloat("masterVolume", Mathf.Log10(value) * 20); // uses log base 10 for log scale of master mixer volume (decibels)
     }
 
     public void SetLookSensitivity(float value)
     {
-        SettingsStatic.LoadedSettings.lookSpeed = value;
+        if(!Settings.WebGL)
+            SettingsStatic.LoadedSettings.lookSpeed = value;
+        else
+            controller.lookSpeed = value;
     }
 
     public void SetLookAccel(float value)
     {
-        SettingsStatic.LoadedSettings.lookAccel = value;
+        if(!Settings.WebGL)
+            SettingsStatic.LoadedSettings.lookAccel = value;
+        else
+            controller.lookVelocity = value;
     }
 
     public void SetFoV(float value)
     {
-        SettingsStatic.LoadedSettings.fov = value;
+        if(!Settings.WebGL)
+            SettingsStatic.LoadedSettings.fov = value;
         playerCamera.GetComponent<Camera>().fieldOfView = value;
     }
 
     public void SetGraphicsQuality(int value)
     {
-        previousGraphicsQuality = SettingsStatic.LoadedSettings.graphicsQuality;
-        SettingsStatic.LoadedSettings.graphicsQuality = value;
+        if(Settings.WebGL)
+            previousGraphicsQuality = 0;
+        else
+        {
+            previousGraphicsQuality = SettingsStatic.LoadedSettings.graphicsQuality;
+            SettingsStatic.LoadedSettings.graphicsQuality = value;
+        }
+            
         QualitySettings.SetQualityLevel(value, true);
     }
 
     public void SetFullScreen (bool value)
     {
         buttonSound.Play();
+        
+        if(!Settings.WebGL)
+            SettingsStatic.LoadedSettings.fullscreen = value;
         Screen.fullScreen = value;
-        SettingsStatic.LoadedSettings.fullscreen = value;
     }
 
     public void SetInvertY (bool value)
     {
         buttonSound.Play();
-        SettingsStatic.LoadedSettings.invertY = value;
+        if(!Settings.WebGL)
+            SettingsStatic.LoadedSettings.invertY = value;
+        else
+            controller.invertY = value;
     }
 
     public void ToggleControls()

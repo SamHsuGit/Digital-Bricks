@@ -18,6 +18,7 @@ public class World : MonoBehaviour
     // Procedural World Generation Values
     [HideInInspector] public int planetNumber;
     [HideInInspector] public int seed;
+    [HideInInspector] public float terrainDensity;
     [HideInInspector] public int worldSizeInChunks;
     [HideInInspector] public bool isEarth;
 
@@ -135,17 +136,34 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
-        useBiomes = SettingsStatic.LoadedSettings.useBiomes;
-        drawClouds = SettingsStatic.LoadedSettings.drawClouds;
-        drawLodes = SettingsStatic.LoadedSettings.drawLodes;
-        drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
-        drawVBO = SettingsStatic.LoadedSettings.drawVBO;
-        viewDistance = SettingsStatic.LoadedSettings.viewDistance;
-        undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 4;
+        if(Settings.WebGL) // set value manually
+        {
+            useBiomes = true;
+            drawClouds = true;
+            drawLodes = true;
+            drawSurfaceObjects = false;
+            drawVBO = false;
+            viewDistance = 1;
+            undrawDistance = viewDistance * 4;
+            terrainDensity = 0.6f;
+        }
+        else //get from settings file
+        {
+            useBiomes = SettingsStatic.LoadedSettings.useBiomes;
+            drawClouds = SettingsStatic.LoadedSettings.drawClouds;
+            drawLodes = SettingsStatic.LoadedSettings.drawLodes;
+            drawSurfaceObjects = SettingsStatic.LoadedSettings.drawSurfaceObjects;
+            drawVBO = SettingsStatic.LoadedSettings.drawVBO;
+            viewDistance = SettingsStatic.LoadedSettings.viewDistance;
+            undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 4;
+            terrainDensity = SettingsStatic.LoadedSettings.terrainDensity;
+        }
         worldSizeInChunks = VoxelData.WorldSizeInChunks;
         debugTimer = "notMeasured";
-
-        if (SettingsStatic.LoadedSettings.graphicsQuality == 0)
+        
+        if(Settings.WebGL)
+            blockMaterial = blockMaterialLit;
+        else if (SettingsStatic.LoadedSettings.graphicsQuality == 0)
             blockMaterial = blockMaterialUnlit;
         else
             blockMaterial = blockMaterialLit;
@@ -165,7 +183,7 @@ public class World : MonoBehaviour
         playerCount = 0;
 
         // lowest acceptable drawDistance is 1
-        if (SettingsStatic.LoadedSettings.viewDistance < 1)
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.viewDistance < 1)
             SettingsStatic.LoadedSettings.viewDistance = 1;
 
         VBORenderDistanceInChunks = 1; // keep studs render distance lower than viewDistance to avoid errors.
@@ -226,10 +244,14 @@ public class World : MonoBehaviour
             isEarth = true;
         else
             isEarth = false;
-        worldData = SaveSystem.LoadWorld(planetNumber, seed); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
+        
+        if(!Settings.WebGL)
+        {
+            worldData = SaveSystem.LoadWorld(planetNumber, seed); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
+        }
         WorldDataOverrides(planetNumber);
 
-        if (Settings.Platform == 2)
+        if (Settings.Platform == 2 || Settings.WebGL)
             blockTypes[blockIDbase].voxelBoundObject = null;
         else
         {
@@ -447,8 +469,10 @@ public class World : MonoBehaviour
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
         if (worldSizeInChunks < 100)
             loadDistance = SettingsStatic.LoadedSettings.viewDistance;
-        else
+        else if (!Settings.WebGL)
             loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); // optimal loadDistance provides enough world to hide edges with low load time (7 sec)
+        else
+            loadDistance = Mathf.CeilToInt(viewDistance * 1.333f);
 
         for (int x = (worldSizeInChunks / 2) - loadDistance; x < (worldSizeInChunks / 2) + loadDistance; x++)
         {
@@ -468,7 +492,13 @@ public class World : MonoBehaviour
         }
         else if (Settings.Platform != 2)
         {
-            player = playerGameObject.GetComponent<Controller>().player;
+            if(Settings.WebGL)
+            {
+                //playerGameObject = Instantiate(worldPlayer, new Vector3(0,0,0), Quaternion.identity);
+                player = playerGameObject.GetComponent<Controller>().player;
+            }
+            else
+                player = playerGameObject.GetComponent<Controller>().player;
             players.Add(player);
         }
         else
@@ -505,7 +535,9 @@ public class World : MonoBehaviour
         if (firstLoadDrawDistance < loadDistance) // checks to ensure that firstLoadDrawDistance is at least as large as loadDistance
             firstLoadDrawDistance = loadDistance;
 
-        FirstCheckViewDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
+
+        FirstCheckViewDistance(GetChunkCoordFromVector3(Settings.DefaultSpawnPosition), playerCount, firstLoadDrawDistance); // draw the default spawn chunk
+        //FirstCheckViewDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
 
         playerCount++;
 
@@ -517,7 +549,7 @@ public class World : MonoBehaviour
         undrawVoxels = true;
         if ((!Settings.OnlinePlay && playerCount > 2)) // cannot undraw voxels in local splitscreen with more than 1 player regardless of graphics settings
             undrawVoxels = false;
-        else if (SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local splitscreen (singleplayer) or online and graphics settings are set to ultra
+        else if (!Settings.WebGL && SettingsStatic.LoadedSettings.graphicsQuality == 3) // if local splitscreen (singleplayer) or online and graphics settings are set to ultra
             undrawVoxels = false;
         undrawVBO = undrawVoxels; // set same as undrawVoxels
     }
@@ -746,25 +778,38 @@ public class World : MonoBehaviour
 
     void FirstCheckViewDistance(ChunkCoord playerChunkCoord, int playerIndex, int firstDrawDistance) // used to load a larger portion of the world upon scene start for first player
     {
-        playerLastChunkCoords[playerIndex] = playerChunkCoord;
+        // playerLastChunkCoords[playerIndex] = playerChunkCoord;
 
-        for (int x = playerChunkCoord.x - firstDrawDistance; x < playerChunkCoord.x + firstDrawDistance; x++)
+        // for (int x = playerChunkCoord.x - firstDrawDistance; x < playerChunkCoord.x + firstDrawDistance; x++)
+        // {
+        //     for (int z = playerChunkCoord.z - firstDrawDistance; z < playerChunkCoord.z + firstDrawDistance; z++)
+        //     {
+        //         ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
+
+        //         // If the current chunk is in the world...
+        //         if (IsChunkInWorld(thisChunkCoord))
+        //         {
+        //             // Check if its in view distance, if not, mark it to be re-drawn.
+        //             if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
+        //             {
+        //                 chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
+        //             }
+        //             activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
+        //         }
+        //     }
+        // }
+
+        ChunkCoord thisChunkCoord = new ChunkCoord(playerChunkCoord.x, playerChunkCoord.z);
+
+        // If the current chunk is in the world...
+        if (IsChunkInWorld(thisChunkCoord))
         {
-            for (int z = playerChunkCoord.z - firstDrawDistance; z < playerChunkCoord.z + firstDrawDistance; z++)
+            // Check if its in view distance, if not, mark it to be re-drawn.
+            if (chunks[thisChunkCoord.x, thisChunkCoord.z] == null) // if the chunks array is empty at thisChunkCoord
             {
-                ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
-
-                // If the current chunk is in the world...
-                if (IsChunkInWorld(thisChunkCoord))
-                {
-                    // Check if its in view distance, if not, mark it to be re-drawn.
-                    if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
-                    {
-                        chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
-                    }
-                    activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
-                }
+                chunks[thisChunkCoord.x, thisChunkCoord.z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
             }
+            activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
         }
 
         for(int i = 0; i < chunksToUpdate.Count; i++)
@@ -830,7 +875,7 @@ public class World : MonoBehaviour
         byte voxelValue = 0;
         CalcTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
 
-        if (yGlobalPos > 1 && weirdness > SettingsStatic.LoadedSettings.terrainDensity) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
+        if (yGlobalPos > 1 && weirdness > terrainDensity) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
@@ -843,12 +888,12 @@ public class World : MonoBehaviour
             }
         }
 
-        if (SettingsStatic.LoadedSettings.loadLdrawBaseFile)
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile)
             CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
-        if (SettingsStatic.LoadedSettings.biomeOverride != 12)
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
             biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
         else if (!useBiomes)
             biome = biomes[0];
@@ -869,7 +914,7 @@ public class World : MonoBehaviour
 
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
         //if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.terrainDensity == 0)
-        if (yGlobalPos > 1 && weirdness > SettingsStatic.LoadedSettings.terrainDensity)
+        if (yGlobalPos > 1 && weirdness > terrainDensity)
         {
             isAir = GetIsAir(globalPos);
             if (isAir)
@@ -1030,7 +1075,7 @@ public class World : MonoBehaviour
         float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
         float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
 
-        if(SettingsStatic.LoadedSettings.terrainHeightOverride == 0)
+        if(Settings.WebGL || SettingsStatic.LoadedSettings.terrainHeightOverride == 0)
         {
             terrainHeightPercentChunk = continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor;
             terrainHeightVoxels = Mathf.Clamp(Mathf.FloorToInt(cloudHeight * terrainHeightPercentChunk - 0), 0, cloudHeight); // multiplies by number of voxels to get height in voxels

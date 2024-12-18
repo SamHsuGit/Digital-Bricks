@@ -19,7 +19,7 @@ public class Player
         name = playerName;
 
         //int[] playerStats;
-        if (Settings.Platform != 2)
+        if (!Settings.WebGL && Settings.Platform != 2)
             playerStats = SaveSystem.LoadPlayerStats(player, name); // load current player stats from save file
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(playerGameObject);
@@ -52,7 +52,7 @@ public class Player
         // default constructor
 
         playerGameObject = null;
-        name = "undefinedPlayerName";
+        name = "PlayerName";
         spawnPosition = Settings.DefaultSpawnPosition;
         hp = 1;
         //instances = 1;
