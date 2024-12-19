@@ -226,12 +226,15 @@ public class Controller : NetworkBehaviour
         holdPos = holdPosPrefab.transform;
 
         // load brick palettes
-        string[] brickTypeFilenames = LoadBrickTypeFilenames();
-        ldrawPartsTypes = new string[brickTypeFilenames.Length][];
-        for (int i = 0; i < brickTypeFilenames.Length; i++)
-            ldrawPartsTypes[i] = LoadBrickNumbers(brickTypeFilenames[i]);
-        currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-
+        if(!Settings.WebGL)
+        {
+            string[] brickTypeFilenames = LoadBrickTypeFilenames();
+            ldrawPartsTypes = new string[brickTypeFilenames.Length][];
+            for (int i = 0; i < brickTypeFilenames.Length; i++)
+                ldrawPartsTypes[i] = LoadBrickNumbers(brickTypeFilenames[i]);
+            currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+        }
+        
         // set to zero every time the game starts
         if(Settings.WebGL)
         {
