@@ -141,9 +141,9 @@ public class World : MonoBehaviour
             useBiomes = true;
             drawClouds = true;
             drawLodes = true;
-            drawSurfaceObjects = false;
+            drawSurfaceObjects = true;
             drawVBO = false;
-            viewDistance = 1;
+            viewDistance = 3;
             undrawDistance = viewDistance * 4;
             terrainDensity = 0.6f;
         }

@@ -1,0 +1,13 @@
+0 _Tile  2 x  2 Round with Hole Light Bluish Grey
+0 Name: 6055313.dat
+0 Author: [PTadmin]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 // This file is a "shortcut" with the correct number for the actual
+0 // colouring of the part (Light Bluish Grey).
+
+1 71 0 0 0 1 0 0 0 1 0 0 0 1 15535.dat
+0

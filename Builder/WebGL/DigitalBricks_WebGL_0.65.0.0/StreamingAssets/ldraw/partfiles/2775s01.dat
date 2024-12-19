@@ -1,0 +1,15 @@
+0 ~Pin/Screw f Electric Plug (Type 4) Twin Extra-Wide (Obsolete)
+0 Name: s\2775s01.dat
+0 Author: Chris Dee [cwdee]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !HISTORY 2002-11-30 [PTadmin] Official Update 2002-05
+0 !HISTORY 2007-08-29 [PTadmin] Header formatted for Contributor Agreement
+0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
+0 !HISTORY 2011-07-12 [Steffen] obsoletized, use u9134.dat and u9020.dat instead
+
+0 BFC CERTIFY CW
+
+1 16 0 0 -14 1 0 0 0 1 0 0 0 1 u9134.dat
+1 16 0 -6 -5 1 0 0 0 1 0 0 0 1 u9020.dat

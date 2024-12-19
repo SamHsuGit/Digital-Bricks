@@ -1,0 +1,15 @@
+0 Hi-Res Disc 0.0625
+0 Name: 48\1-16disc.dat
+0 Author: BLStudio
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+
+3 16 0 0 0 1 0 0 0.9914449 0 0.1305262
+3 16 0 0 0 0.9914449 0 0.1305262 0.9659258 0 0.258819
+3 16 0 0 0 0.9659258 0 0.258819 0.9238795 0 0.3826835
+
+0 end of file
+
+

@@ -1,0 +1,17 @@
+0 Minifig Chain  5L with Catenary Form (Complete)
+0 Name: 92338c02.dat
+0 Author: J.C. Tchang [tchang]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !CATEGORY Minifig Accessory
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 208.dat
+1 16 0 6.325 27.05 0 0 1 -0.8944 0.4472 0 0.4472 0.8944 0 209.dat
+1 16 0 9.05 40.751 -1 0 0 0 0.1781 -0.984 0 0.984 0.1781 209.dat
+1 16 0 9.711 54.481 0 0 -1 0.9979 -0.0654 0 0.0654 0.9979 0 209.dat
+1 16 0 6.719 68.242 1 0 0 0 -0.2146 0.9767 0 0.9767 0.2146 209.dat
+1 16 0 2.474 81.271 0 0 1 -0.9239 -0.3827 0 -0.3827 0.9239 0 209.dat
+1 16 0 0 100 -1 0 0 0 1 0 0 0 -1 208.dat

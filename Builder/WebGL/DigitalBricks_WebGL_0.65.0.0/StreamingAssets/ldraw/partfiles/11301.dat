@@ -1,0 +1,22 @@
+0 Slope Brick Curved  2 x  8 x  2 Inverted Double
+0 Name: 11301.dat
+0 Author: Kevin Roach [KROACH]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2014-02-07 [KROACH] Fixed line errors
+0 !HISTORY 2014-02-07 [KROACH] Reworked bottom area
+0 !HISTORY 2014-02-17 [KROACH] Added prims to bottom studs
+0 !HISTORY 2014-08-26 [MagFors] Moved stud adapters to subfile, unmirrored studs
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\11301s01.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 -1 s\11301s01.dat
+0 BFC INVERTNEXT
+1 16 0 42 0 2 0 0 0 2 0 0 0 2 cylj3x4.dat
+1 16 -20 42 0 1 0 0 0 -1.5 0 0 0 1 STUD4A.dat
+1 16 0 42 0 1 0 0 0 -1.5 0 0 0 1 STUD4A.dat
+1 16 20 42 0 1 0 0 0 -1.5 0 0 0 1 STUD4A.dat
+1 16 0 24 -10 1 0 0 0 1 0 0 0 1 stug2-1x4.dat
+1 16 0 24 10 1 0 0 0 1 0 0 0 1 stug2-1x4.dat

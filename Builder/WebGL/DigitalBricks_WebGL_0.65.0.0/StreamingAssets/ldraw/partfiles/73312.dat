@@ -1,0 +1,18 @@
+0 Door  1 x  4 x  5 Right with 6 Panes with Smoke Glass
+0 Name: 73312.dat
+0 Author: Steffen [Steffen]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 !HISTORY 1998-06-20 [PTadmin] Official Update 1998-06
+0 !HISTORY 1999-03-26 [PTadmin] Official Update 1999-02
+0 !HISTORY 2000-05-07 [PTadmin] Official Update 2000-01
+0 !HISTORY 2007-07-21 [PTadmin] Header formatted for Contributor Agreement
+0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
+0 !HISTORY 2010-01-31 [Steffen] factored-out 4486.dat
+0 !HISTORY 2010-01-31 [Steffen] orientation of 4486.dat has been corrected
+
+1 16 0 114 0 -1 0 0 0 -1 0 0 0 1 4486.dat
+1 39 0 0 0 1 0 0 0 1 0 0 0 1 4344.dat

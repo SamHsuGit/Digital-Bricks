@@ -1,0 +1,26 @@
+0 Electric Technic Fiber Optics Element
+0 Name: 6637.dat
+0 Author: Remco Braak  [rbraak]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+0 !HISTORY 2007-10-06 [mikeheide] corrected axle hole position, change origin to LDraw standards, BFC'ed
+0 !HISTORY 2007-10-10 [mikeheide] changed origin to previous origin, moved subfiles to \s folder
+
+1 16 0 24 0 1 0 0 0 1 0 0 0 1 s\6637a.DAT
+1 16 0 2 -19 1 0 0 0 1 0 0 0 1 s\6637c.DAT
+1 16 0 2 -19 0.707107 -0.707107 0 0.707107 0.707107 0 0 0 1 s\6637c.DAT
+1 16 0 2 -19 0 -1 0 1 0 0 0 0 1 s\6637c.DAT
+1 16 0 2 -19 -0.707107 -0.707107 0 0.707107 -0.707107 0 0 0 1 s\6637c.DAT
+1 16 0 2 -19 -1 0 0 0 -1 0 0 0 1 s\6637c.DAT
+1 16 0 2 -19 -0.707107 0.707107 0 -0.707107 -0.707107 0 0 0 1 s\6637c.DAT
+1 16 0 2 -19 0 1 0 -1 0 0 0 0 1 s\6637c.DAT
+1 16 0 2 -19 0.707107 0.707107 0 -0.707107 0.707107 0 0 0 1 s\6637c.DAT
+1 16 0 24 0 1 0 0 0 1 0 0 0 1 s\6637d.DAT
+1 16 0 2 0 1 0 0 0 1 0 0 0 1 s\6637e.dat
+0 
+1 16 0 24 0 1 0 0 0 1 0 0 0 1 s\6637b.DAT
+1 16 0 24 0 -1 0 0 0 1 0 0 0 1 s\6637b.DAT
+1 16 0 24 0 -1 0 0 0 1 0 0 0 -1 s\6637b.DAT
+1 16 0 24 0 1 0 0 0 1 0 0 0 -1 s\6637b.DAT

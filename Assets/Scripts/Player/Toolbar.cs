@@ -120,7 +120,7 @@ public class Toolbar : MonoBehaviour
 
             highlight.position = slots[slotIndex].slotIcon.transform.position;
             
-            if (SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
+            if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
             {
                 if (inputHandler.navUp)
                 {

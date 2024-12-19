@@ -1,0 +1,13 @@
+0 Stud Underside Baseplate (Fast-Draw)
+0 Name: stu2bp3.dat
+0 Author: J.C. Tchang [tchang]
+0 !LDRAW_ORG Unofficial_Primitive
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2009-12-02 [tchang] For Reduced High Quality Underside Baseplate
+
+4 16 -6 0 6 -6 0 -14 14 0 -14 14 0 6
+4 16 14 4 6 14 4 -14 -6 4 -14 -6 4 6
+0 //

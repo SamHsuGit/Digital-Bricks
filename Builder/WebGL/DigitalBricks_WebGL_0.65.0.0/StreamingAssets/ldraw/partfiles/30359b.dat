@@ -1,0 +1,35 @@
+0 Bar  1 x  8 with Brick  1 x  2 Curved Top End With Axlehole
+0 Name: 30359b.dat
+0 Author: Guy Vivan [guyvivan]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Star Wars, laser cannon, cylinder, rounded, piston rod, bar, rod
+0 !KEYWORDS brick, support, connector, ion cannon, blaster, energy, binder
+0 !KEYWORDS Podracer
+
+0 !HISTORY 2005-12-28 [PTadmin] Official Update 2005-01
+0 !HISTORY 2007-06-07 [PTadmin] Header formatted for Contributor Agreement
+0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
+0 !HISTORY 2008-07-07 [cwdee] Very minor correction to description (2005-12-29)
+0 !HISTORY 2009-05-02 [PTadmin] Official Update 2009-01
+0 !HISTORY 2020-06-04 [Sirio] Subparted and updated the use of primitives; fixed depth of axle hole
+
+0 // Subparts
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\30359s01.dat
+0 // Primitives
+1 16 0 10 -40 4 0 0 0 0 4 0 -76 0 4-4cylo.dat
+1 16 0 10 -116.75 -1 0 0 0 0 1 0 .75 0 4-4con4.dat
+1 16 0 10 -120 -5 0 0 0 0 5 0 3.25 0 4-4con1.dat
+1 16 0 10 -120 1 0 0 0 0 1 0 1 0 axlehol2.dat
+1 16 0 10 -120 1 0 0 0 0 1 0 1 0 axleend.dat
+1 16 0 10 -135 1 0 0 0 0 1 0 15 0 axlehol6.dat
+1 16 0 10 -135 0 0 1 -1 0 0 0 15 0 axlehol6.dat
+1 16 0 10 -135 -1 0 0 0 0 -1 0 15 0 axlehol6.dat
+1 16 0 10 -135 0 0 -1 1 0 0 0 15 0 axlehol6.dat
+1 16 0 10 -135 1 0 0 0 0 1 0 1 0 axlehol3.dat
+1 16 0 10 -140 6 0 0 0 0 6 0 1 0 4-4edge.dat
+0 BFC INVERTNEXT
+1 16 0 10 -120 6 0 0 0 0 6 0 -20 0 4-4cyli.dat

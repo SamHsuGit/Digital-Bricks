@@ -1,0 +1,12 @@
+0 =Technic Pin Joiner Round with Slot
+0 Name: 86849.dat
+0 Author: Rolf Osterthun [Rolf]
+0 !LDRAW_ORG Unofficial_Part Alias
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 // Alias of 62462
+0 // Part 86849 is the chromed counterpart of 62462
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 62462.dat

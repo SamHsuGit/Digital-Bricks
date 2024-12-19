@@ -1,0 +1,11 @@
+0 Windscreen  4 x  6 x  4 Cab with Hinge
+0 Name: 45406.dat
+0 Author: Michael Heidemann [mikeheide]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\45406s01.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\45406s01.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 stug2-1x4.dat

@@ -1,0 +1,21 @@
+0 ~Cloth  4.3 x 30.7 with 10 Rectangular Holes - Curve 1
+0 Name: s\94318s01.dat
+0 Author: Frank Engel [lostcontinent]
+0 !LDRAW_ORG Unofficial_Subpart 
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 !HISTORY 2015-01-30 [lostcontinent] BFC compliant
+
+0 // Top
+
+1 16 0  0 0 -0.8 0 0 0  1 0 0 0 -0.8 1-4ring9.dat
+0 // Bottom
+1 16 0 86 0 -0.8 0 0 0 -1 0 0 0 -0.8 1-4ring9.dat
+0 // outer wall
+1 16 0 0 0 -8 0 0 0 86 0 0 0 -8 1-4cylo.dat 
+0 // inner wall
+0 BFC INVERTNEXT
+1 16 0 0 0 -7.2 0 0 0 86 0 0 0 -7.2 1-4cylo.dat 
+0

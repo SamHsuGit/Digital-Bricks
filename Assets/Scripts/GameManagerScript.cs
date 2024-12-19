@@ -70,7 +70,7 @@ public class GameManagerScript : MonoBehaviour
         // mobile singleplayer
 
         if(!webGL)
-            SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
+            SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings(); // DISBLED FOR WEBGL since could not access files???
 
         if (!webGL && !Settings.OnlinePlay)
             globalLighting.GetComponent<Lighting>().timeOfDay = SettingsStatic.LoadedSettings.timeOfDay;
@@ -103,7 +103,8 @@ public class GameManagerScript : MonoBehaviour
 
             if(webGL)
             {
-                worldOb.SetActive(true); // normally set active by LDrawImporter but we don't run this for WebGL
+                LDrawImporterRuntime.SetActive(true); // set active for WebGL to test if we can place ldraw bricks
+                //worldOb.SetActive(true); // normally set active by LDrawImporter but we don't run this for WebGL
             }
             else
                 LDrawImporterRuntime.SetActive(true);

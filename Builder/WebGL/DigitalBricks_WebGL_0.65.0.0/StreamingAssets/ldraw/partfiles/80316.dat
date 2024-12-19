@@ -1,0 +1,14 @@
+0 _Minifig Shield Triangular with Black Falcon Blue Border Pattern
+0 Name: 80316.dat
+0 Author: Chris Dee [cwdee]
+0 !LDRAW_ORG Unofficial_Part Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !CATEGORY Minifig Accessory
+
+0 // This file is a "shortcut" with the correct number for the actual
+0 // colouring of the part (Light Grey).
+
+
+1 7 0 0 0 1 0 0 0 1 0 0 0 1 3846p45.dat
+0

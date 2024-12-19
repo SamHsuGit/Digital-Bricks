@@ -1,0 +1,31 @@
+0 ~Tile  2 x  2 with Two  1 x  1 Curved Cutouts without Patternable Surface
+0 Name: s\3396s01.dat
+0 Author: Gerald Lasser [GeraldLasser]
+0 !LDRAW_ORG Unofficial_Subpart 
+0 !LICENSE Licensed under CC BY 4.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3396s02.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 -1 s\3396s02.dat
+1 16 0 0 0 0 0 1 0 1 0 1 0 0 s\3396s02.dat
+1 16 0 0 0 0 0 -1 0 1 0 -1 0 0 s\3396s02.dat
+0 BFC INVERTNEXT
+1 16 9.6023 6 -9.6023 0 6.3977 0 2 0 0 0 0 -6.3977 box2-5.dat
+1 16 9.467 7.5 -9.467 0 9.5326 0 .5 0 0 0 0 -9.5326 box2-5.dat
+1 16 10 3.5 -10 0 10 0 3.5 0 0 0 0 -10 box2-5.dat
+0 BFC INVERTNEXT
+1 16 -9.6023 6 9.6023 0 -6.3977 0 2 0 0 0 0 6.3977 box2-5.dat
+1 16 -9.467 7.5 9.467 0 -9.5326 0 .5 0 0 0 0 9.5326 box2-5.dat
+1 16 -10 3.5 10 0 -10 0 3.5 0 0 0 0 10 box2-5.dat
+0 // Stud 4
+1 16 0 4 0 -1 0 0 0 -1 0 0 0 1 1-4stud4.dat
+1 16 0 4 0 1 0 0 0 -1 0 0 0 -1 1-4stud4.dat
+0 BFC INVERTNEXT
+1 16 0 4 0 6 0 0 0 4 0 0 0 6 1-4cylo.dat
+0 BFC INVERTNEXT
+1 16 0 4 0 -6 0 0 0 4 0 0 0 -6 1-4cylo.dat
+
+4 16 -5.6568 4 5.6568 -2.1736 4 10.8152 10.8152 4 -2.1736 5.6568 4 -5.6568
+4 16 -5.6568 4 5.6568 5.6568 4 -5.6568 2.1736 4 -10.8152 -10.8152 4 2.1736

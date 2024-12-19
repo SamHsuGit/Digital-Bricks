@@ -1,0 +1,12 @@
+0 =Cylinder  3 x  6 x  2.667 Horizontal
+0 Name: 93168.dat
+0 Author: Philippe Hurbain [Philo]
+0 !LDRAW_ORG Unofficial_Part Alias
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 // Alias of 30360
+0 // Differs in detail, so should really be re-modelled
+
+1 16 0 0 0  1 0 0  0 1 0  0 0 1 30360.dat

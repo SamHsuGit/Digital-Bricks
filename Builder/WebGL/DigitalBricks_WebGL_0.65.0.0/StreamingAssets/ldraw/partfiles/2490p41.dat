@@ -1,0 +1,15 @@
+0 Animal Horse Barding with Black Dragons Pattern
+0 Name: 2490p41.dat
+0 Author: Alexandre Bourdais [x-or]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS castle, black knight, dragon
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\2490s01.dat
+1 0 23.25 -20 -40 1 0 0 0 1 0 0 0 1 s\2490s04.dat
+1 0 -23.25 -20 -40 -1 0 0 0 1 0 0 0 1 s\2490s04.dat
+1 16 23.25 -10 -40 1 0 0 0 1 0 0 0 1 s\2490s05.dat
+1 16 -23.25 -10 -40 -1 0 0 0 1 0 0 0 1 s\2490s05.dat

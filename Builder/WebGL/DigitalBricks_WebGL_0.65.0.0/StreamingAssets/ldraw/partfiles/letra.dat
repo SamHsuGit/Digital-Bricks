@@ -1,0 +1,31 @@
+0 ~Mindstorms RCX Letter "R"
+0 Name: s\letra.dat
+0 Author: John Van Zwieten [jvan]
+0 !LDRAW_ORG Unofficial_Subpart 
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 1999-03-26 [PTadmin] Official Update 1999-02
+0 !HISTORY 2007-09-14 [PTadmin] Header formatted for Contributor Agreement
+0 !HISTORY 2008-07-01 [PTadmin] Official Update 2008-01
+0 !HISTORY 2014-11-21 [roland] Auto-corrected with libfix version of LDCad 1.4
+0 !HISTORY 2015-02-21 [MMR1988] BFCed, reworked
+
+1 16 2 9 0 4 0 0 0 0 -4 0 1 0 1-8chrd.dat
+1 16 2 9 0 4 0 0 0 0 4 0 1 0 1-8chrd.dat
+1 16 2 9 0 0 0 4 4 0 0 0 1 0 1-8chrd.dat
+1 16 2 9 0 0 0 4 -4 0 0 0 1 0 1-8chrd.dat
+1 16 2 9 0 2 0 0 0 0 2 0 1 0 1-4ndis.dat
+1 16 2 9 0 2 0 0 0 0 -2 0 1 0 1-4ndis.dat
+4 16 0 13 0 4 19 0 6 19 0 2 13 0
+4 16 -4 13 0 0 13 0 2 11 0 -4 11 0
+3 16 -4 13 0 -6 19 0 -4 19 0
+3 16 -4 11 0 -6 19 0 -4 13 0
+4 16 -6 19 0 -4 11 0 -4 7 0 -6 5 0
+4 16 2 5 0 -6 5 0 -4 7 0 2 7 0
+4 16 4.8284 6.1716 0 2 5 0 2 7 0 4 7 0
+4 16 6 9 0 4.8284 6.1716 0 4 7 0 4 9 0
+4 16 4.8284 11.8284 0 6 9 0 4 9 0 4 11 0
+4 16 2 13 0 4.8284 11.8284 0 4 11 0 2 11 0
+3 16 2 11 0 0 13 0 2 13 0

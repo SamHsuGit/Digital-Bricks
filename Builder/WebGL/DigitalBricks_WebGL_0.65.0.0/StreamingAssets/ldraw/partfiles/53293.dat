@@ -1,0 +1,12 @@
+0 =Technic Pin Joiner Round
+0 Name: 53293.dat
+0 Author: Rolf Osterthun [Rolf]
+0 !LDRAW_ORG Unofficial_Part Alias
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 // Alias of 75535
+0 // Part 53293 is the chromed counterpart of 75535
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 75535.dat

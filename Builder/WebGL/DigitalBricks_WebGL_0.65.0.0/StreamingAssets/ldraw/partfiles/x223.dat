@@ -1,0 +1,40 @@
+0 Technic Rubber Belt (open file for usage guide)
+0 Name: x223.dat
+0 Author: Philippe Hurbain [Philo]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !HELP Open file for usage guide
+0 !HELP Parts x224 to x228 are meant to create rubberbelts taught around
+0 !HELP pulleys when using LeoCad which doesn't allow to use directly LDraw 
+0 !HELP primitives (users of MLcad should use Rubber Belt Generator, get it at
+0 !HELP http://www.philohome.com/rubberbelt/rubberbelts.htm).
+0 !HELP There are DAT-files for 5 fragments of rubber belt which combined, 
+0 !HELP eventually overlapped, can be adapted to cover most situations:
+0 !HELP - x227.dat ~Technic Rubber Belt element R9:
+0 !HELP               1/4 turn around Technic Bush 1/2
+0 !HELP - x224.dat ~Technic Rubber Belt element R13:
+0 !HELP               1/4 turn around Technic Micromotor Pulley
+0 !HELP - x225.dat ~Technic Rubber Belt element R30.5:
+0 !HELP               1/4 turn around Technic Wedge Belt Wheel
+0 !HELP - x226.dat ~Technic Rubber Belt element R47:
+0 !HELP               1/4 turn around Technic Pulley Large
+0 !HELP - x228.dat ~Technic Rubber Belt straight:
+0 !HELP               1 straight element 1 stud wide.
+0 !HELP These elements have a square section to be correctly viewed in LeoCad 
+0 !HELP which doesn't show type 5 lines.
+
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 0.707107 -0.707107 0 0.707107 0.707107 0 0 0 1 X225.DAT
+1 16 -60 0 0 -0.358368 0.93358 0 -0.93358 -0.358368 0 0 0 1 X227.DAT
+1 16 -60 0 0 -0.93358 0.358368 0 -0.358368 -0.93358 0 0 0 1 X227.DAT
+1 16 0 0 0 0.93358 0.358368 0 -0.358368 0.93358 0 0 0 1 X225.DAT
+1 16 -28.667 -21.668 0 0.93358 0.358368 0 -0.358368 0.93358 0 0 0 1 X228.DAT
+1 16 -46.406 -14.856 0 0.93358 0.358368 0 -0.358368 0.93358 0 0 0 1 X228.DAT
+1 16 -64.144 -8.049 0 0.93358 0.358368 0 -0.358368 0.93358 0 0 0 1 X228.DAT
+1 16 0 0 0 -0.358368 -0.93358 0 0.93358 -0.358368 0 0 0 1 X225.DAT
+1 16 -28.667 21.668 0 0.93358 -0.358368 0 0.358368 0.93358 0 0 0 1 X228.DAT
+1 16 -46.406 14.856 0 0.93358 -0.358368 0 0.358368 0.93358 0 0 0 1 X228.DAT
+1 16 -64.144 8.049 0 0.93358 -0.358368 0 0.358368 0.93358 0 0 0 1 X228.DAT
+0

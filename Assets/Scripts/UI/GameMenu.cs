@@ -81,8 +81,8 @@ public class GameMenu : MonoBehaviour
         {
             // set to default values
             volumeSlider.value = 0.5f;
-            lookSpeedSlider.value = 0.1f;
-            lookAccelerationSlider.value = 0.1f;
+            lookSpeedSlider.value = 0.05f;
+            lookAccelerationSlider.value = 0.05f;
             fovSlider.value = 90f;
             graphicsQualityDropdown.value = 0;
             QualitySettings.SetQualityLevel(0);

@@ -1,0 +1,11 @@
+0 _Garage Door w/o Rear Cross w Counterweight w Yellow Ptrn Clear
+0 Name: 823.dat
+0 Author: Steffen [Steffen]
+0 !LDRAW_ORG Unofficial_Shortcut Physical_Colour
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2011-05-14 [Steffen] restructured files 822.dat, 823.dat
+
+1 47 0 0 0 1 0 0 0 1 0 0 0 1 822bp01.dat

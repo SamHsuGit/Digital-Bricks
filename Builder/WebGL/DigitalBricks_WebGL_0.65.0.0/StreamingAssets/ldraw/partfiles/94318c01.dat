@@ -1,0 +1,38 @@
+0 Cloth  4.3 x 30.7 with 10 Rectangular Holes (Formed)
+0 Name: 94318c01.dat
+0 Author: Frank Engel [lostcontinent]
+0 !LDRAW_ORG Unofficial_Shortcut 
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 !CATEGORY Canvas
+0 !KEYWORDS VW Camper, set 10220
+
+0 !HISTORY 2015-01-25 [lostcontinent] First version
+
+0 // Curve 1
+
+1 16 -55 0 -92 1 0 0 0 1 0 0 0 1 s\94318s01.dat
+0 // Longside1
+1 16 -62.6 43 -92 0.4 0 0 0 0 -43 0 150 0  box4o8a.dat 
+0 // Curve2
+1 16 -55 0 58 0 0 1 0 1 0 -1 0 0 s\94318s01.dat
+0 // Frontside
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\94318s02.dat
+0 // Back
+1 16 0 0 -34 -1 0 0 0 1 0 0 0 -1 s\94318s02.dat
+0 // Curve3
+1 16 55 0 58 -1 0 0 0 1 0 0 0 -1 s\94318s01.dat
+0 // Longside2
+1 16  62.6 43 -92  0.4 0 0  0 0 -43  0 150 0  box4o8a.dat 
+0 // Curve4
+1 16 57 0 -93  0 0 -1  0 1 0  1 0 0 s\94318s04.dat
+0 // End1
+1 16 55 43 -99.6  0 9 0  -43 0 0  0 0 0.4 box5-4a.dat
+0 // End2
+1 16 80 0 1 1 0 0 0 1 0 0 0 1 s\94318s03.dat
+0
+
+
+

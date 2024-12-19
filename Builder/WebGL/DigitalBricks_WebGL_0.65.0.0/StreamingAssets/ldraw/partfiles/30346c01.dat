@@ -1,0 +1,14 @@
+0 Electric Light and Sound Brick  4 x 12 x  2 Laser Drill
+0 Name: 30346c01.dat
+0 Author: Jason S. Mantor [Xanthra47]
+0 !LDRAW_ORG Unofficial_Shortcut
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !KEYWORDS Rock Raiders
+
+0 BFC CERTIFY CCW
+
+0 !HISTORY 2013-09-02 [theJudeAbides] Seperated into constituent files, BFCed.
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 30346.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 30348.dat

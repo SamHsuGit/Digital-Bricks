@@ -1,0 +1,17 @@
+0 Plate  1 x  1 with Black Square Centered Pattern
+0 Name: 3024p01.ldr
+0 Author: Philippe Hurbain [Philo]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 ROTATION CENTER 0 0 0 1 "Custom" 
+0 ROTATION CONFIG 0 0
+0 BFC CERTIFY CCW
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\3024s01.dat
+4 0 3.8 0.2 -10 -3.8 0.2 -10 -3.8 7.8 -10 3.8 7.8 -10
+4 16 -3.8 0.2 -10 -10 0 -10 -10 8 -10 -3.8 7.8 -10
+4 16 10 0 -10 3.8 0.2 -10 3.8 7.8 -10 10 8 -10
+4 16 -10 8 -10 10 8 -10 3.8 7.8 -10 -3.8 7.8 -10
+4 16 -10 0 -10 -3.8 0.2 -10 3.8 0.2 -10 10 0 -10
+0

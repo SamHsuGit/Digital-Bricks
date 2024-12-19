@@ -1,0 +1,25 @@
+0 ~Engine 10 x 10 with Centre Fan Subpart 2
+0 Name: s\53983s02.dat
+0 Author: Michael Heidemann [mikeheide]
+0 !LDRAW_ORG Unofficial_Subpart
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+1 16 0 1 0 20 0 0 0 1 0 0 0 20 4-4edge.dat
+1 16 0 -15 0 20 0 0 0 1 0 0 0 20 4-4edge.dat
+1 16 0 -15 0 20 0 0 0 16 0 0 0 20 4-4cyli.dat
+1 16 0 1 0 18 0 0 0 1 0 0 0 18 4-4edge.dat
+1 16 0 -13 0 18 0 0 0 1 0 0 0 18 4-4edge.dat
+0 BFC INVERTNEXT
+1 16 0 -13 0 9 0 0 0 -2 0 0 0 -9 4-4con1.dat
+1 16 0 -17 0 9 0 0 0 -2 0 0 0 -9 4-4con1.dat
+1 16 0 -15 0 2 0 0 0 -2 0 0 0 -2 4-4con9.dat
+0 BFC INVERTNEXT
+1 16 0 1 0 18 0 0 0 -14 0 0 0 18 4-4cyli.dat
+1 16 0 1 0 2 0 0 0 -1 0 0 0 -2 4-4ring9.dat
+1 16 0 1 0 9 0 0 0 -16 0 0 0 9 4-4cyli.dat
+1 16 0 1 0 9 0 0 0 -16 0 0 0 9 4-4edge.dat
+1 16 0 -15 0 9 0 0 0 -16 0 0 0 9 4-4edge.dat
+1 16 0 -19 0 9 0 0 0 -16 0 0 0 9 4-4edge.dat
+1 16 0 -9 0 1 0 0 0 -1 0 0 0 -1 connhole.dat

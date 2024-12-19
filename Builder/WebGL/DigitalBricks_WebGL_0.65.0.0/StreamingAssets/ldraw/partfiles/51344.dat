@@ -1,0 +1,63 @@
+0 Animal Dragon Head  2
+0 Name: 51344.dat
+0 Author: Stan Isachenko [angmarec]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !HELP Center Horn Position:  X: 0  Y: -32.736  Z: 5
+0 !HELP Horn 1 Position: X: 30.158   Y: -27   Z: 5
+0 !HELP Horn 2 Position: X: 30.158   Y: -27   Z: 5
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Harry Potter, Hungarian Horntail
+
+0 !HISTORY 2011-11-05 {LEGO Digital Designer} Original part shape
+0 !HISTORY 2011-11-06 [Angmarec] File preparation for LDraw Parts Tracker
+
+1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\51344s01.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\51344s01.dat
+0 // body connector
+1 16 -18.762 0 0 0 3 0 1.85 0 0 0 0 1.85 4-4cyli.dat
+1 16 -15.762 0 0 0 1 0 1.85 0 0 0 0 1.85 4-4disc.dat
+1 16 -15.762 0 0 0 1 0 1.85 0 0 0 0 1.85 4-4edge.dat
+1 16 -18.762 0 0 0 1 0 1.85 0 0 0 0 1.85 4-4edge.dat
+
+1 16 18.762 0 0 0 -3 0 1.85 0 0 0 0 1.85 4-4cyli.dat
+1 16 15.762 0 0 0 1 0 1.85 0 0 0 0 1.85 4-4disc.dat
+1 16 15.762 0 0 0 1 0 1.85 0 0 0 0 1.85 4-4edge.dat
+1 16 18.762 0 0 0 1 0 1.85 0 0 0 0 1.85 4-4edge.dat
+0 // middle horn hole
+0 BFC INVERTNEXT
+1 16 0 -32.736 -5 0 0 4 4 0 0 0 10 0 4-4cyli.dat
+1 16 0 -32.736 -5 0 0 4 4 0 0 0 -1 0 4-4disc.dat
+1 16 0 -32.736 -5 0 0 4 4 0 0 0 -1 0 4-4edge.dat
+1 16 0 -32.736 5 0 0 4 4 0 0 0 -1 0 4-4edge.dat
+0 // right hole
+0 BFC INVERTNEXT
+1 16 -30.158 -26.986 -5 0 0 4 4 0 0 0 10 0 4-4cyli.dat
+1 16 -30.158 -26.986 -5 0 0 4 4 0 0 0 -1 0 4-4disc.dat
+1 16 -30.158 -26.986 -5 0 0 4 4 0 0 0 -1 0 4-4edge.dat
+1 16 -30.158 -26.986 5 0 0 4 4 0 0 0 -1 0 4-4edge.dat
+0 // left hole
+0 BFC INVERTNEXT
+1 16 30.158 -26.986 -5 0 0 4 4 0 0 0 10 0 4-4cyli.dat
+1 16 30.158 -26.986 -5 0 0 4 4 0 0 0 -1 0 4-4disc.dat
+1 16 30.158 -26.986 -5 0 0 4 4 0 0 0 -1 0 4-4edge.dat
+1 16 30.158 -26.986 5 0 0 4 4 0 0 0 -1 0 4-4edge.dat
+0 // right flame
+0 BFC INVERTNEXT
+1 16 -10 -8.868 -68.862 0 0 2 0 4 0 -2 0 0 4-4cyli.dat
+1 16 -10 -8.868 -68.862 0 0 2 0 -1 0 -2 0 0 4-4disc.dat
+1 16 -10 -8.868 -68.862 0 0 2 0 -1 0 -2 0 0 4-4edge.dat
+0 // left flame
+0 BFC INVERTNEXT
+1 16 10 -8.868 -68.862 0 0 2 0 4 0 -2 0 0 4-4cyli.dat
+1 16 10 -8.868 -68.862 0 0 2 0 -1 0 -2 0 0 4-4disc.dat
+1 16 10 -8.868 -68.862 0 0 2 0 -1 0 -2 0 0 4-4edge.dat
+0 // middle hole
+0 BFC INVERTNEXT
+1 16 0 -2.256 -35 0 0 6 0 -16.25 0 6 0 0 4-4cyli.dat
+1 16 0 -18.506 -35 0 0 6 0 -1 0 -6 0 0 4-4disc.dat
+1 16 0 -18.506 -35 0 0 6 0 -1 0 -6 0 0 4-4edge.dat
+1 16 0 -2.256 -35 0 0 6 0 -1 0 -6 0 0 4-4edge.dat

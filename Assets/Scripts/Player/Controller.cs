@@ -303,7 +303,7 @@ public class Controller : NetworkBehaviour
 
             if (Settings.WebGL)
             {
-                camMode = 0;
+                camMode = 1;
             }
             else
             {
@@ -511,10 +511,17 @@ public class Controller : NetworkBehaviour
 
     void SetPlayerColliderSettings()
     {
+        float scale;
+
+        if(Settings.WebGL)
+            scale = 1f;
+        else
+            scale = LDrawImportRuntime.Instance.scale;
+
         // position/size capsule collider procedurally based on imported char model size
-        colliderHeight = bc.size.y * LDrawImportRuntime.Instance.scale;
-        colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * LDrawImportRuntime.Instance.scale, 2) + Mathf.Pow(bc.size.z * LDrawImportRuntime.Instance.scale, 2)) * 0.25f;
-        colliderCenter = new Vector3(0, -bc.center.y * LDrawImportRuntime.Instance.scale, 0);
+        colliderHeight = bc.size.y * scale;
+        colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * scale, 2) + Mathf.Pow(bc.size.z * scale, 2)) * 0.25f;
+        colliderCenter = new Vector3(0, -bc.center.y * scale, 0);
         cc.center = colliderCenter;
         cc.height = colliderHeight;
         cc.radius = colliderRadius;
@@ -782,7 +789,7 @@ public class Controller : NetworkBehaviour
                     {
                         rayCastStart = transform.position + transform.up * colliderHeight * 0.75f + transform.forward * colliderRadius * 4;
 
-                        if (charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.developerMode)
+                        if (!Settings.WebGL && charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.developerMode)
                         {
                             charObIdle.SetActive(true);
                             charObRun.SetActive(false);
@@ -797,7 +804,7 @@ public class Controller : NetworkBehaviour
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
-                        if (!SettingsStatic.LoadedSettings.developerMode && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
+                        if (!Settings.WebGL && !SettingsStatic.LoadedSettings.developerMode && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
                             Animate();
                         else
                         {
@@ -1266,7 +1273,7 @@ public class Controller : NetworkBehaviour
         ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
 
         // remove qty(1) voxel from slot as "cost"
-        if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
             TakeFromCurrentSlot(0);
         else
             TakeFromCurrentSlot(1);
@@ -1564,7 +1571,7 @@ public class Controller : NetworkBehaviour
     void PutAwayBrick(byte blockID)
     {
         int firstSlot;
-        if (SettingsStatic.LoadedSettings.developerMode) // determine first slot
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode) // determine first slot
             firstSlot = 1;
         else
             firstSlot = 0;
@@ -2038,7 +2045,7 @@ public class Controller : NetworkBehaviour
 
         velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 
-        if (!SettingsStatic.LoadedSettings.developerMode && inputHandler.jump)
+        if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump)
         {
             isGrounded = false;
             inputHandler.jump = false;
@@ -2070,7 +2077,7 @@ public class Controller : NetworkBehaviour
             if (isMoving) // if is moving
                 charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0); // rotate char model to face same y direction as camera
         }
-        if(camMode != 3 && SettingsStatic.LoadedSettings.developerMode)
+        if(!Settings.WebGL && (camMode != 3 && SettingsStatic.LoadedSettings.developerMode))
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);
@@ -2113,7 +2120,7 @@ public class Controller : NetworkBehaviour
             lookVelocity = 1f;
 
         // rotate camera left/right, multiply by lookVelocity so controller players get look accel
-        if(Settings.WebGL)
+        if(!Settings.WebGL)
             rotationX += inputHandler.look.x * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
         else
             rotationX += inputHandler.look.x * lookVelocity * lookSpeed * 0.5f;
@@ -2121,14 +2128,14 @@ public class Controller : NetworkBehaviour
         // rotate camera up/down, multiply by lookVelocity so controller players get look accel
         if(Settings.WebGL)
         {
-            if(!SettingsStatic.LoadedSettings.invertY)
+            if(!invertY)
                 rotationY += -inputHandler.look.y * lookVelocity * lookSpeed * 0.5f;
             else
                 rotationY += inputHandler.look.y * lookVelocity * lookSpeed * 0.5f;
         }
         else
         {
-            if (!invertY)
+            if (!SettingsStatic.LoadedSettings.invertY)
                 rotationY += -inputHandler.look.y * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;
             else
                 rotationY += inputHandler.look.y * lookVelocity * SettingsStatic.LoadedSettings.lookSpeed * 0.5f;

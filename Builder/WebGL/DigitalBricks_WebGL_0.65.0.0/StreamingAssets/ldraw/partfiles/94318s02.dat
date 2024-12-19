@@ -1,0 +1,35 @@
+0 ~Cloth  4.3 x 30.7 with 10 Rectangular Holes - Short Side
+0 Name: s\94318s02.dat
+0 Author: Frank Engel [lostcontinent]
+0 !LDRAW_ORG Unofficial_Subpart 
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CW
+
+0 !HISTORY 2015-01-30 [lostcontinent] BFC compliant
+
+0 // outer layer
+
+4 16 -26 7 -100 26 7 -100 26 13 -100 -26 13 -100 
+4 16 -26 73 -100 26 73 -100 26 79 -100 -26 79 -100 
+4 16 -54 13 -100 54 13 -100 54 73 -100 -54 73 -100
+0 // inner layer
+4 16 26 7 -99.2 -26 7 -99.2 -26 13 -99.2  26 13 -99.2
+4 16 26 73 -99.2 -26 73 -99.2 -26 79 -99.2  26 79 -99.2
+4 16 54 13 -99.2 -54 13 -99.2 -54 73 -99.2 54 73 -99.2
+
+1 16  0 7 -99.6  54 0 0 0 -7 0 0 0 -0.4  box3u10p.dat
+1 16  0 79 -99.6  54 0 0 0  7 0 0 0  0.4  box3u10p.dat
+
+1 16 -54 43 -99.6  0 -1 0   43 0 0  0 0 0.4 box4o8a.dat
+1 16 55 43 -99.6  0 -1 0   43 0 0  0 0 0.4 box4o8a.dat
+0 // holes
+0 BFC INVERTNEXT
+1 16 40 10 -100  14 0 0  0 0 -3  0 0.8 0 box4.dat
+0 BFC INVERTNEXT
+1 16 40 76 -100  14 0 0  0 0 -3  0 0.8 0 box4.dat
+0 BFC INVERTNEXT
+1 16 -40 10 -100  14 0 0  0 0 -3  0 0.8 0 box4.dat
+0 BFC INVERTNEXT
+1 16 -40 76 -100  14 0 0  0 0 -3  0 0.8 0 box4.dat
+0

@@ -1,0 +1,14 @@
+0 Boat Keel Weighted  2 x  8 x  4 with Bottom Tab (Needs Work)
+0 Name: x139a.dat
+0 Author: Michael Heidemann [mikeheide]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 // The top studs bleeds a bit and the shaft to the cylinder needs to be longer to close the gap.
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\x139s01.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 -1 s\x139s01.dat
+1 16 0 80 0 1 0 0 0 1 0 0 0 1 s\x139s03.dat
+1 16 0 80 0 -1 0 0 0 1 0 0 0 -1 s\x139s03.dat

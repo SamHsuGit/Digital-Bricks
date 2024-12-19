@@ -49,24 +49,31 @@ public class Health : NetworkBehaviour
 
     private void Start()
     {
-        brickCount = 0;
-        modelPieces = new List<GameObject>();
-        if (gameObject.layer == 10) // if this object is a single lego Piece
-            brickCount = 1;
-        else if (isAlive && gameObject == controller.gameObject && controller.charObIdle != null && controller.charObRun != null)
+        if(!Settings.WebGL)
         {
-            int idle = SimpleCountCheck(controller.charObIdle);
-            int run = SimpleCountCheck(controller.charObRun);
-            if (idle != run)
-                ErrorMessage.Show("# pieces must be same for 'charIdle.ldr' and 'charRun.ldr'");
-            AddToPiecesList(controller.charObIdle);
+            brickCount = 0;
+            modelPieces = new List<GameObject>();
+            if (gameObject.layer == 10) // if this object is a single lego Piece
+                brickCount = 1;
+            else if (isAlive && gameObject == controller.gameObject && controller.charObIdle != null && controller.charObRun != null)
+            {
+                int idle = SimpleCountCheck(controller.charObIdle);
+                int run = SimpleCountCheck(controller.charObRun);
+                if (idle != run)
+                    ErrorMessage.Show("# pieces must be same for 'charIdle.ldr' and 'charRun.ldr'");
+                AddToPiecesList(controller.charObIdle);
+            }
+            else
+            {
+                AddToPiecesList(gameObject);
+            }
+            hpMax = brickCount;
         }
         else
         {
-            AddToPiecesList(gameObject);
+            hpMax = 9;
         }
-
-        hpMax = brickCount;
+        
         hp = hpMax;
 
         if (isAlive)
@@ -129,7 +136,7 @@ public class Health : NetworkBehaviour
         else if (pieces < minPieces)
             pieces = minPieces;
 
-        if (!Settings.WebGL && !SettingsStatic.LoadedSettings.developerMode)
+        if (Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode)
             moveSpeed = 1 * (float)(maxBaseMoveSpeed - minBaseMoveSpeed) / (maxPieces - minPieces) * pieces + minBaseMoveSpeed; // positive slope (y intercept min speed) more pieces more speed
         else
             moveSpeed = maxBaseMoveSpeed; // if flight enabled, use max speed

@@ -1,0 +1,27 @@
+0 Animal Dragon Baby (Needs Work)
+0 Name: 41535.dat
+0 Author: Stan Isachenko [angmarec]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Harry Potter, Norbert, Castle
+
+0 !HISTORY 2011-11-04 {LEGO Digital Designer} Original part shape
+0 !HISTORY 2011-11-05 [angmarec] File preparation for LDraw Parts Tracker
+0 !HISTORY 2012-03-25 [Steffen]  used stud4a.dat
+
+0 // Needs Work: Shape is quite rough still. Should be re-done e.g. with 3D scanner or so.
+
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\41535s01.dat
+1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\41535s01.dat
+1 16 0 -5.25 0 1 0 0 0 -1.3125 0 0 0 -1 stud4a.dat
+0 BFC INVERTNEXT
+1 16 0 -5.25 0 6 0 0 0 -22.25 0 0 0 6 4-4cyli.dat
+1 16 0 -5.25 0 8 0 0 0 -22.25 0 0 0 8 4-4edge.dat
+1 16 0 -5.25 0 1 0 0 0 -1 0 0 0 1 4-4ring8.dat
+0 BFC INVERTNEXT
+1 16 0 -27.499 0 6 0 0 0 1 0 0 0 6 4-4disc.dat
+1 16 0 -27.499 0 6 0 0 0 1 0 0 0 6 4-4edge.dat
+1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat

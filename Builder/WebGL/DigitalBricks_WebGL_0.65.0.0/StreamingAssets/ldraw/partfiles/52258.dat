@@ -1,0 +1,74 @@
+0 Animal Dragon Body 2
+0 Name: 52258.dat
+0 Author: Stan Isachenko [angmarec]
+0 !LDRAW_ORG Unofficial_Part
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+0 !HELP Position of head: Y = 0.106, Z = -170
+0 !HELP Position of tail: Y = 16 Z = 138
+
+0 BFC CERTIFY CCW
+
+0 !KEYWORDS Harry Potter, Hungarian Horntail
+
+0 !HISTORY 2011-11-05 {LEGO Digital Designer} Original part shape
+0 !HISTORY 2011-11-06 [Angmarec] File preparation for LDraw Parts Tracker
+
+1 16 0 0 0 -1 0 0 0 1 0 0 0 1 s\52258s01.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 s\52258s01.dat
+0 // studs on back
+1 16 0 0 10 0 0 -1 0 1 0 1 0 0 stug2-4x1.dat
+1 16 0 0 -10 0 0 -1 0 1 0 1 0 0 stug2-4x1.dat
+0 // stud in the jaws
+1 16 0 32 -220 -1 0 0 0 1 0 0 0 -1 stud2a.dat
+1 16 0 32 -220 4 0 0 0 1 0 0 0 4 4-4edge.dat
+1 16 0 32 -220 6 0 0 0 1 0 0 0 6 4-4edge.dat
+0 // hole connector for the head
+0 BFC INVERTNEXT
+1 16 -18.763 0.106 -170 0 37.526 0 1.85 0 0 0 0 1.85 4-4cyli.dat
+1 16 -18.763 0.106 -170 0 1 0 1.85 0 0 0 0 1.85 4-4edge.dat
+1 16 18.763 0.106 -170 0 1 0 1.85 0 0 0 0 1.85 4-4edge.dat
+0 // tail connector
+0 BFC INVERTNEXT
+1 16 0 16 122 0 0 -6 6 0 0 0 16 0 4-4cyli.dat
+1 16 0 16 122 0 0 -6 6 0 0 0 -16 0 4-4disc.dat
+1 16 0 16 122 0 0 -6 6 0 0 0 16 0 4-4edge.dat
+1 16 0 16 138 0 0 -6 6 0 0 0 16 0 4-4edge.dat
+0 // cylinders in paw
+1 16 30 144.009 20 4 0 0 0 -23.296 0 0 0 4 4-4cyli.dat
+1 16 30 144.009 20 4 0 0 0 -1 0 0 0 4 4-4disc.dat
+1 16 30 144.009 20 4 0 0 0 -1 0 0 0 4 4-4edge.dat
+1 16 30 120.713 20 4 0 0 0 1 0 0 0 4 4-4edge.dat
+
+1 16 -30 144.009 20 4 0 0 0 -23.296 0 0 0 4 4-4cyli.dat
+1 16 -30 144.009 20 4 0 0 0 -1 0 0 0 4 4-4disc.dat
+1 16 -30 144.009 20 4 0 0 0 -1 0 0 0 4 4-4edge.dat
+1 16 -30 120.713 20 4 0 0 0 1 0 0 0 4 4-4edge.dat
+0 // studs in paws
+1 16 20 140.009 40 1 0 0 0 -1 0 0 0 1 stud4a.dat
+1 16 20 140.009 40 8 0 0 0 -14.479 0 0 0 8 4-4cyli.dat
+1 16 20 131.5 40 6 0 0 0 -1 0 0 0 6 4-4disc.dat
+1 16 20 131.5 40 6 0 0 0 -1 0 0 0 6 4-4edge.dat
+0 BFC INVERTNEXT
+1 16 20 140.009 40 6 0 0 0 -14.479 0 0 0 6 4-4cyli.dat
+
+1 16 40 140.009 40 1 0 0 0 -1 0 0 0 1 stud4a.dat
+1 16 40 140.009 40 8 0 0 0 -14.479 0 0 0 8 4-4cyli.dat
+1 16 40 131.5 40 6 0 0 0 -1 0 0 0 6 4-4disc.dat
+1 16 40 131.5 40 6 0 0 0 -1 0 0 0 6 4-4edge.dat
+0 BFC INVERTNEXT
+1 16 40 140.009 40 6 0 0 0 -14.479 0 0 0 6 4-4cyli.dat
+
+1 16 -40 140.009 40 1 0 0 0 -1 0 0 0 1 stud4a.dat
+1 16 -40 140.009 40 8 0 0 0 -14.479 0 0 0 8 4-4cyli.dat
+1 16 -40 131.5 40 6 0 0 0 -1 0 0 0 6 4-4disc.dat
+1 16 -40 131.5 40 6 0 0 0 -1 0 0 0 6 4-4edge.dat
+0 BFC INVERTNEXT
+1 16 -40 140.009 40 6 0 0 0 -14.479 0 0 0 6 4-4cyli.dat
+
+1 16 -20 140.009 40 1 0 0 0 -1 0 0 0 1 stud4a.dat
+1 16 -20 140.009 40 8 0 0 0 -14.479 0 0 0 8 4-4cyli.dat
+1 16 -20 131.5 40 6 0 0 0 -1 0 0 0 6 4-4disc.dat
+1 16 -20 131.5 40 6 0 0 0 -1 0 0 0 6 4-4edge.dat
+0 BFC INVERTNEXT
+1 16 -20 140.009 40 6 0 0 0 -14.479 0 0 0 6 4-4cyli.dat
