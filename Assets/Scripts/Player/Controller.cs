@@ -847,21 +847,24 @@ public class Controller : NetworkBehaviour
         if (holdingGrab && !inputHandler.grab)
             ReleasedGrab();
 
-        // IF PRESSED BUILD WHILE HOLDING GRAB
-        if (holdingGrab && inputHandler.shoot)
-            PressedBuildWhileGrab();
+        if(!Settings.WebGL) // DISABLED FOR WEBGL since LDraw Importer is not enabled due to inability to reference ldraw files
+        {
+                // IF PRESSED BUILD WHILE HOLDING GRAB
+            if (holdingGrab && inputHandler.shoot)
+                PressedBuildWhileGrab();
 
-        // IF PRESSED BUILD
-        if (!holdingBuild && inputHandler.shoot)
-            PressedBuild();
+            // IF PRESSED BUILD
+            if (!holdingBuild && inputHandler.shoot)
+                PressedBuild();
 
-        // IF HOLDING BUILD
-        if (holdingBuild && inputHandler.shoot)
-            HoldingBuild();
+            // IF HOLDING BUILD
+            if (holdingBuild && inputHandler.shoot)
+                HoldingBuild();
 
-        // IF RELEASED BUILD
-        if (holdingBuild && !inputHandler.shoot)
-            ReleasedBuild();
+            // IF RELEASED BUILD
+            if (holdingBuild && !inputHandler.shoot)
+                ReleasedBuild();
+        }
 
         positionCursorBlocks();
     }
@@ -1432,7 +1435,7 @@ public class Controller : NetworkBehaviour
     {
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
             TakeFromCurrentSlot(0);
         else
             TakeFromCurrentSlot(1);

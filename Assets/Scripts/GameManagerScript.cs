@@ -103,8 +103,8 @@ public class GameManagerScript : MonoBehaviour
 
             if(webGL)
             {
-                LDrawImporterRuntime.SetActive(true); // set active for WebGL to test if we can place ldraw bricks
-                //worldOb.SetActive(true); // normally set active by LDrawImporter but we don't run this for WebGL
+                //LDrawImporterRuntime.SetActive(true); // DISABLED for WebGL since we cannot access files
+                worldOb.SetActive(true); // normally set active by LDrawImporter but we don't run this for WebGL
             }
             else
                 LDrawImporterRuntime.SetActive(true);
