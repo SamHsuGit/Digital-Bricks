@@ -84,8 +84,8 @@ public class GameMenu : MonoBehaviour
             lookSpeedSlider.value = 0.05f;
             lookAccelerationSlider.value = 0.05f;
             fovSlider.value = 90f;
-            graphicsQualityDropdown.value = 0;
-            QualitySettings.SetQualityLevel(0);
+            graphicsQualityDropdown.value = 2;
+            QualitySettings.SetQualityLevel(2);
             fullScreenToggle.isOn = false;
             invertYToggle.isOn = false;
         }

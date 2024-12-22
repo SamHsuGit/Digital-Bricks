@@ -160,7 +160,7 @@ public class World : MonoBehaviour
         }
         worldSizeInChunks = VoxelData.WorldSizeInChunks;
         debugTimer = "notMeasured";
-        
+
         if(Settings.WebGL)
             blockMaterial = blockMaterialLit;
         else if (SettingsStatic.LoadedSettings.graphicsQuality == 0)
@@ -244,7 +244,7 @@ public class World : MonoBehaviour
             isEarth = true;
         else
             isEarth = false;
-        
+
         if(!Settings.WebGL)
         {
             worldData = SaveSystem.LoadWorld(planetNumber, seed); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
@@ -467,7 +467,7 @@ public class World : MonoBehaviour
     public void LoadWorld()
     {
         // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
-        if (worldSizeInChunks < 100)
+        if (!Settings.WebGL && worldSizeInChunks < 100)
             loadDistance = SettingsStatic.LoadedSettings.viewDistance;
         else if (!Settings.WebGL)
             loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); // optimal loadDistance provides enough world to hide edges with low load time (7 sec)
@@ -490,18 +490,17 @@ public class World : MonoBehaviour
             player = new Player(playerGameObject, "WorldPlayer"); // world player is needed to generate the world before the player is added
             players.Add(player);
         }
-        else if (Settings.Platform != 2)
+        else if(Settings.WebGL)
         {
-            if(Settings.WebGL)
-            {
-                //playerGameObject = Instantiate(worldPlayer, new Vector3(0,0,0), Quaternion.identity);
-                player = playerGameObject.GetComponent<Controller>().player;
-            }
-            else
-                player = playerGameObject.GetComponent<Controller>().player;
+            player = playerGameObject.GetComponent<Controller>().player;
             players.Add(player);
         }
-        else
+        else if (Settings.Platform != 2) // if platform != mobile
+        {
+            player = playerGameObject.GetComponent<Controller>().player;
+            players.Add(player);
+        }
+        else // must be mobile (VR)
         {
             player = new Player(playerGameObject, "VR Player");
             players.Add(player);
@@ -536,8 +535,7 @@ public class World : MonoBehaviour
             firstLoadDrawDistance = loadDistance;
 
 
-        FirstCheckViewDistance(GetChunkCoordFromVector3(Settings.DefaultSpawnPosition), playerCount, firstLoadDrawDistance); // draw the default spawn chunk
-        //FirstCheckViewDistance(GetChunkCoordFromVector3(playerGameObject.transform.position), playerCount, firstLoadDrawDistance); // help draw the world faster on startup for first player
+        FirstCheckViewDistance(firstLoadDrawDistance); // draw the default spawn chunk
 
         playerCount++;
 
@@ -556,7 +554,7 @@ public class World : MonoBehaviour
 
     private void Update()
     {
-        if (!worldLoaded) // don't continue with main loop if world has not been loaded.
+        if (!Settings.WebGL && !worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
 
         if(drawVBO)
@@ -653,7 +651,7 @@ public class World : MonoBehaviour
     }
 
     public void AddChunkToUpdate(Chunk chunk)
-    { 
+    {
         AddChunkToUpdate(chunk, false);
     }
 
@@ -712,7 +710,7 @@ public class World : MonoBehaviour
             for (int z = playerChunkCoord.z - viewDistance; z < playerChunkCoord.z + viewDistance; z++)
             {
                 ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
-                
+
                 // If the current chunk is in the world...
                 if (IsChunkInWorld(thisChunkCoord))
                 {
@@ -723,7 +721,7 @@ public class World : MonoBehaviour
                     chunks[x, z].isActive = true;
                     activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
                 }
-                
+
                 // if this chunk coord is in the previous list, remove it so it doesn't get undrawn
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
@@ -776,41 +774,44 @@ public class World : MonoBehaviour
         }
     }
 
-    void FirstCheckViewDistance(ChunkCoord playerChunkCoord, int playerIndex, int firstDrawDistance) // used to load a larger portion of the world upon scene start for first player
+    void FirstCheckViewDistance(int firstDrawDistance) // load first chunks independent of player join
     {
-        // playerLastChunkCoords[playerIndex] = playerChunkCoord;
+        ChunkCoord _spawnChunkCoord = GetChunkCoordFromVector3(Settings.DefaultSpawnPosition);
 
-        // for (int x = playerChunkCoord.x - firstDrawDistance; x < playerChunkCoord.x + firstDrawDistance; x++)
-        // {
-        //     for (int z = playerChunkCoord.z - firstDrawDistance; z < playerChunkCoord.z + firstDrawDistance; z++)
-        //     {
-        //         ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
+        //playerLastChunkCoords[playerIndex] = playerChunkCoord;
 
-        //         // If the current chunk is in the world...
-        //         if (IsChunkInWorld(thisChunkCoord))
-        //         {
-        //             // Check if its in view distance, if not, mark it to be re-drawn.
-        //             if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
-        //             {
-        //                 chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
-        //             }
-        //             activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
-        //         }
-        //     }
-        // }
-
-        ChunkCoord thisChunkCoord = new ChunkCoord(playerChunkCoord.x, playerChunkCoord.z);
-
-        // If the current chunk is in the world...
-        if (IsChunkInWorld(thisChunkCoord))
+        for (int x = _spawnChunkCoord.x - firstDrawDistance; x < _spawnChunkCoord.x + firstDrawDistance; x++)
         {
-            // Check if its in view distance, if not, mark it to be re-drawn.
-            if (chunks[thisChunkCoord.x, thisChunkCoord.z] == null) // if the chunks array is empty at thisChunkCoord
+            for (int z = _spawnChunkCoord.z - firstDrawDistance; z < _spawnChunkCoord.z + firstDrawDistance; z++)
             {
-                chunks[thisChunkCoord.x, thisChunkCoord.z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
+                ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
+
+                // If the current chunk is in the world...
+                if (IsChunkInWorld(thisChunkCoord))
+                {
+                    // Check if its in view distance, if not, mark it to be re-drawn.
+                    if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
+                    {
+                        chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
+                    }
+                    activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
+                }
             }
-            activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
         }
+
+        // ChunkCoord _spawnChunkCoord = GetChunkCoordFromVector3(Settings.DefaultSpawnPosition);
+        // ChunkCoord thisChunkCoord = new ChunkCoord(_spawnChunkCoord.x, _spawnChunkCoord.z);
+
+        // // If the current chunk is in the world...
+        // if (IsChunkInWorld(thisChunkCoord))
+        // {
+        //     // Check if its in view distance, if not, mark it to be re-drawn.
+        //     if (chunks[thisChunkCoord.x, thisChunkCoord.z] == null) // if the chunks array is empty at thisChunkCoord
+        //     {
+        //         chunks[thisChunkCoord.x, thisChunkCoord.z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
+        //     }
+        //     activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
+        // }
 
         for(int i = 0; i < chunksToUpdate.Count; i++)
             chunksToUpdate[i].UpdateChunk(); // draw previous chunks during first world draw
@@ -880,7 +881,7 @@ public class World : MonoBehaviour
             isAir = GetIsAir(globalPos);
             if (isAir)
             {
-                if (SettingsStatic.LoadedSettings.loadLdrawBaseFile)
+                if (!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile)
                     if (!CheckMakeBase(globalPos))
                         return 0;
                 else
@@ -905,7 +906,7 @@ public class World : MonoBehaviour
         /* TERRAIN PASS */
         // add block types determined by biome calculation
         //TerrainHeight already calculated in Basic Terrain Pass
-        if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // if surface block below sea level
+        if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // Generate water below sealevel
             voxelValue = worldData.blockIDcore;
         else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk >= seaLevelThreshold) // if surface block above sea level
             voxelValue = biome.surfaceBlock;
@@ -1340,7 +1341,7 @@ public class World : MonoBehaviour
 
                 ob.GetComponent<BoxCollider>().material = physicMaterial;
             }
-                
+
         }
     }
 
