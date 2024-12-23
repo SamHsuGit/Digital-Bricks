@@ -17,7 +17,7 @@ public class GlobalSounds : MonoBehaviour
     {
         lighting = globalLighting.GetComponent<Lighting>();
 
-        if (gameManager.worldcoordDefault == 3)
+        if (gameManager.worldCoord == 3)
         {
             if (lighting.timeOfDay >= 6 && lighting.timeOfDay <= 18)
             {

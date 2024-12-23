@@ -415,7 +415,7 @@ PrefabInstance:
       objectReference: {fileID: 4897691448219640988}
     - target: {fileID: 5523944444626184378, guid: 0d567e6f36b33804f9faf5bda9cd6993, type: 3}
       propertyPath: webGL
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5523944444626184378, guid: 0d567e6f36b33804f9faf5bda9cd6993, type: 3}
       propertyPath: world

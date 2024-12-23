@@ -8,7 +8,7 @@ public static class VoxelData
 	// original Minecraft World Height Limit = 128, found that a smaller chunkHeight is needed to reduce world load times to under 15 seconds due to poor code optimization
 	public const int ChunkHeight = 64;
 
-	public const int WorldSizeInChunks = 200; // binary data compression limits the # of chunks that can be stored to 256
+	public const int WorldSizeInChunks = 200; // binary data compression limits the # of chunks that can be stored to 256 (200 for full version, 8 for demo WebGL)
 
 	// get this value from Settings instead of setting a static readonly int
 	// was 5000, reduced since limiting choices unleashes creativity.

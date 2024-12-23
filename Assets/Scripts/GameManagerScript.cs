@@ -19,8 +19,8 @@ public class GameManagerScript : MonoBehaviour
     private Stopwatch preWorldGenStopwatch;
 
     public bool webGL;
-    public int worldcoordDefault = 3478;
     public int planetNumberDefault = 3;
+    public int worldCoord;
 
     void Awake()
     {
@@ -35,7 +35,8 @@ public class GameManagerScript : MonoBehaviour
         {
             Settings.OnlinePlay = false;
             world.planetNumber = planetNumberDefault;
-            world.seed = worldcoordDefault;
+            worldCoord = UnityEngine.Random.Range(1, 5000);
+            world.seed = worldCoord;
         }
         else
         {
