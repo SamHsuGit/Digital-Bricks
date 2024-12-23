@@ -838,8 +838,6 @@ public class Controller : NetworkBehaviour
 
     void CheckWorldInteract()
     {
-        if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
-        {
             // IF PRESSED GRAB
             if (!holdingGrab && inputHandler.grab)
                 PressedGrab();
@@ -851,7 +849,9 @@ public class Controller : NetworkBehaviour
             // IF RELEASED GRAB
             if (holdingGrab && !inputHandler.grab)
                 ReleasedGrab();
-        
+
+        if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
+        {
                 // IF PRESSED BUILD WHILE HOLDING GRAB
             if (holdingGrab && inputHandler.shoot)
                 PressedBuildWhileGrab();

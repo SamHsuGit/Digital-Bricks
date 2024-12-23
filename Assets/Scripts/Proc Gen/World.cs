@@ -13,6 +13,7 @@ public class World : MonoBehaviour
     [Header("Shown For Debug")]
     public int playerCount = 0;
     public WorldData worldData;
+    public bool multithreading = true;
 
     [Header("Public Referenced By Others")]
     // Procedural World Generation Values
@@ -123,9 +124,8 @@ public class World : MonoBehaviour
     private Vector2[] continentalnessSplinePoints;
     private Vector2[] erosionSplinePoints;
     private Vector2[] peaksAndValleysSplinePoints;
-
+    
     // hard coded values
-    private const bool multithreading = true;
     private const float seaLevelThreshold = 0.34f;
     //private const int LOD0threshold = 1;
 
@@ -146,6 +146,7 @@ public class World : MonoBehaviour
             viewDistance = 3;
             undrawDistance = viewDistance * 4;
             terrainDensity = 0.6f;
+            multithreading = false;
         }
         else //get from settings file
         {
@@ -157,6 +158,7 @@ public class World : MonoBehaviour
             viewDistance = SettingsStatic.LoadedSettings.viewDistance;
             undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 4;
             terrainDensity = SettingsStatic.LoadedSettings.terrainDensity;
+            multithreading = true;
         }
         worldSizeInChunks = VoxelData.WorldSizeInChunks;
         debugTimer = "notMeasured";
@@ -592,6 +594,15 @@ public class World : MonoBehaviour
                         CheckVBODrawDist(playerChunkCoordsCopy[i], i); // re-draw studs
                 }
             }
+        }
+
+        if (!multithreading)
+        {
+            if (!applyingModifications)
+                    ApplyModifications();
+
+                if (chunksToUpdate.Count > 0)
+                    UpdateChunks();
         }
 
         if (chunksToDraw.Count > 0)
