@@ -277,9 +277,9 @@ public class Controller : NetworkBehaviour
 
         if (!Settings.OnlinePlay)
         {
-            if (Settings.WebGL)
-                charObIdle = charModelDefault;
-            else
+            // if (Settings.WebGL)
+            //     charObIdle = charModelDefault;
+            // else
                 charObIdle = Instantiate(LDrawImportRuntime.Instance.charObIdle); // Import character model idle pose
             charObIdle.SetActive(true);
 
@@ -288,9 +288,9 @@ public class Controller : NetworkBehaviour
             charObIdle.transform.localPosition = new Vector3(0, 0, 0);
             charObIdle.transform.localEulerAngles = new Vector3(0, 180, 180);
 
-            if (Settings.WebGL)
-                charObRun = charModelDefault;
-            else
+            // if (Settings.WebGL)
+            //     charObRun = charModelDefault;
+            // else
                 charObRun = Instantiate(LDrawImportRuntime.Instance.charObRun); // Import character model run pose
             charObRun.SetActive(false);
 

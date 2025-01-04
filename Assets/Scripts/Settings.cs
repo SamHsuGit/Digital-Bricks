@@ -27,6 +27,7 @@ public static class SettingsStatic
         settings.drawSurfaceObjects = true;
         settings.drawVBO = true;
         settings.timeOfDay = 6.01f;
+        settings.dayNightCycle = false;
 
         // performance
         settings.graphicsQuality = 0;
@@ -94,6 +95,7 @@ public class Settings
     public bool drawSurfaceObjects;
     public bool drawVBO;
     public float timeOfDay;
+    public bool dayNightCycle;
 
     // performance
     public int graphicsQuality;

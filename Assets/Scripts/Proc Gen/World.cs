@@ -850,6 +850,7 @@ public class World : MonoBehaviour
 
         int yGlobalPos = Mathf.FloorToInt(globalPos.y);
         Vector2 xzCoords = new Vector2(Mathf.FloorToInt(globalPos.x), Mathf.FloorToInt(globalPos.z));
+        int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x)/VoxelData.ChunkWidth * -0.125f); //scaled for larger biomes
 
         /* IMMUTABLE PASS */
         // If outside world, return air.
@@ -912,7 +913,7 @@ public class World : MonoBehaviour
         else if (!worldData.isAlive)
             biome = biomes[11];
         else
-            biome = biomes[GetBiome(temperature, humidity)];
+            biome = biomes[GetBiome(chunkXCoord)];
 
         /* TERRAIN PASS */
         // add block types determined by biome calculation
@@ -1166,7 +1167,7 @@ public class World : MonoBehaviour
         return terrainHeight;
     }
 
-    public int GetBiome(float temperature, float humidity)
+    public int GetBiome(int chunkXCoord)
     {
         // based on https://minecraft.fandom.com/wiki/Biome
         // From https://minecraft.fandom.com/wiki/Anvil_file_format
@@ -1176,50 +1177,79 @@ public class World : MonoBehaviour
         // If this array is missing it is filled when the game starts, as well any - 1 values in the array.
         // The converter source provided for developers doesn't include any biome sources, however.
 
-        if (humidity > 0 && humidity < 0.25f) // (dry)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 0;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 1;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 2;
-            else // assumes value is between 0f and 0.25f (hot)
-                return 3;
-        }
-        else if (humidity > 0.25f && humidity < 0.5f) // (temperate)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 4;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 5;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 6;
-            else // assumes value is between 0f and 0.25f (hot)
-                return 3;
-        }
-        else if (humidity > 0.5f && humidity < 0.75f) // (damp)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 7;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 8;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 6;
-            else // assumes value is between 0f and 0.25f (hot)
-                return 3;
-        }
-        else // assumes value is between 0.75f and 1f (wet)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 9;
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 10;
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 6;
-            else // assumes value is between 0f and 0.25f (hot)
-                return 3;
-        }
+        // hard coded biomes based on lattitude
+        if (chunkXCoord >= 5)
+            return 3; // Tundra
+        else if (chunkXCoord == 4)
+            return 6; // Tiaga
+        else if (chunkXCoord == 3)
+            return 7; // Forest
+        else if (chunkXCoord == 2)
+            return 8; // Fall Forest
+        else if (chunkXCoord == 1)
+            return 5; // Woods
+        else if (chunkXCoord == 0)
+            return 2; // Grassland
+        else if (chunkXCoord == -1)
+            return 9; // Rain Forest
+        else if (chunkXCoord == -2)
+            return 10; // Swamp
+        else if (chunkXCoord == -3)
+            return 4; // Savanna
+        else if (chunkXCoord == -4)
+            return 1; // Mesa
+        else if(chunkXCoord <= -5)
+            return 0; // Desert
+        else
+            return 3; // Tundra
+
+        // // OLD ALGORITHM: Based on Minecraft, used temp and humidity from cloud calc...
+        // // too often generates snowy biomes per minecraft youtube video
+
+        // if (humidity > 0 && humidity < 0.25f) // (dry)
+        // {
+        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+        //         return 0;
+        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+        //         return 1;
+        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+        //         return 2;
+        //     else // assumes value is between 0f and 0.25f (hot)
+        //         return 3;
+        // }
+        // else if (humidity > 0.25f && humidity < 0.5f) // (temperate)
+        // {
+        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+        //         return 4;
+        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+        //         return 5;
+        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+        //         return 6;
+        //     else // assumes value is between 0f and 0.25f (hot)
+        //         return 3;
+        // }
+        // else if (humidity > 0.5f && humidity < 0.75f) // (damp)
+        // {
+        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+        //         return 7;
+        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+        //         return 8;
+        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+        //         return 6;
+        //     else // assumes value is between 0f and 0.25f (hot)
+        //         return 3;
+        // }
+        // else // assumes value is between 0.75f and 1f (wet)
+        // {
+        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+        //         return 9;
+        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+        //         return 10;
+        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+        //         return 6;
+        //     else // assumes value is between 0f and 0.25f (hot)
+        //         return 3;
+        // }
     }
 
     public int GetSurfaceObType(float percolation, float fertility)

@@ -34,7 +34,7 @@ public class Lighting : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (sunProperties == null)
+        if (sunProperties == null || !SettingsStatic.LoadedSettings.dayNightCycle)
             return;
 
         float TimeOfDayIncrement = Time.deltaTime / 60 * 12 / 5; // divide by 60 to get 24 min days, multiply by 12 to get 1 min days, divide by 5 to get 5  min day
