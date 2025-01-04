@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2322089151644113062}
   - component: {fileID: 5536030524706206958}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: charModelDefaultForWebGL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4043225058426668422}
+  m_Father: {fileID: 4673335178978187715}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8754696061551948522
 MeshFilter:
@@ -157,6 +157,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3576453261770653585}
   - {fileID: 5290477769798018411}
   - {fileID: 6443862883792577659}
   - {fileID: 4043225058426668422}
@@ -1907,10 +1908,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2577860670346639329, guid: 16ff54cd55ffe26499574003d5d8255d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3576453261770653585}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16ff54cd55ffe26499574003d5d8255d, type: 3}
 --- !u!4 &4043225058426668422 stripped
