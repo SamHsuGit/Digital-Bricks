@@ -397,10 +397,16 @@ public static class Structure
         position = new Vector3Int(position.x, position.y + 1, position.z); // ensure the large trees are above the ground
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
+        if(position.y + 30 > VoxelData.ChunkHeight)
+        {
+            //Debug.Log("Huge tree too tall for chunk");
+            return queue;
+        }
+
         int height = 30;
         int radius = Mathf.FloorToInt(height * 0.9f);
 
-        for (int y = 0; y < Mathf.FloorToInt(height * 0.6f); y++)
+        for (int y = 0; y < Mathf.FloorToInt(height * 0.6f); y++) // trunk
         {
             radius-= 1;
 
@@ -416,7 +422,7 @@ public static class Structure
             }
         }
 
-        for (int y = Mathf.FloorToInt(height * 0.6f); y < Mathf.FloorToInt(height * 0.8f); y++)
+        for (int y = Mathf.FloorToInt(height * 0.6f); y < Mathf.FloorToInt(height * 0.8f); y++) // leaves and hanging vines
         {
             radius += 6;
 

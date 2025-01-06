@@ -59,12 +59,12 @@ MonoBehaviour:
   largeStructures:
   - name: HugeTree
     floraIndex: 12
-    floraZoneScale: 20
-    floraZoneThreshold: 0.9
-    floraPlacementScale: 1
-    floraPlacementThreshold: 0.89
-    minHeight: 50
-    maxHeight: 50
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.2
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
+    minHeight: 0
+    maxHeight: 0
     minRadius: 0
     maxRadius: 0
   - name: Rock
@@ -90,10 +90,10 @@ MonoBehaviour:
     maxRadius: 0
   - name: Tree
     floraIndex: 2
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.2
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
     minHeight: 5
     maxHeight: 13
     minRadius: 2
@@ -111,10 +111,10 @@ MonoBehaviour:
     maxRadius: 0
   - name: Tree
     floraIndex: 2
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.2
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
     minHeight: 5
     maxHeight: 13
     minRadius: 2
@@ -132,10 +132,10 @@ MonoBehaviour:
     maxRadius: 0
   - name: Tree
     floraIndex: 2
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.2
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.81
     minHeight: 5
     maxHeight: 13
     minRadius: 2
