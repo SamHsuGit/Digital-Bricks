@@ -541,7 +541,7 @@ public class Controller : NetworkBehaviour
 
         // set reach and gun range procedurally based on imported char model size
         grabDist = cc.radius * 2f * 6f;
-        tpsDist = -cc.radius * 16;
+        tpsDist = -cc.radius * 16; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
     }
 
     public void SetPlanetNumberServer(int oldValue, int newValue)

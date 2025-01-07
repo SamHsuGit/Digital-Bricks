@@ -655,8 +655,6 @@ public class World : MonoBehaviour
             }
         }
 
-
-
         using (s_SimulatePerfMarker.Auto())
         {
 
