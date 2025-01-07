@@ -392,21 +392,21 @@ public class World : MonoBehaviour
         }
         if (planetNumber > numberOfHardcodedPlanets) // random colored planets based on proximity to star
         {
-            if (distToStar >= 0 && distToStar <= 3) // hot, close to star
-            {
-                minRandBlockID = 2;
-                maxRandBlockID = 4;
-            }
-            else if (distToStar >= 4 && distToStar <= 6) // temperate, medium distance from star
-            {
-                minRandBlockID = 5;
-                maxRandBlockID = 6;
-            }
-            else if (distToStar >= 7 && distToStar <= 8) // cold, far from star
-            {
-                minRandBlockID = 7;
-                maxRandBlockID = 11;
-            }
+            // if (distToStar >= 0 && distToStar <= 3) // hot, close to star
+            // {
+            //     minRandBlockID = 2;
+            //     maxRandBlockID = 4;
+            // }
+            // else if (distToStar >= 4 && distToStar <= 6) // temperate, medium distance from star
+            // {
+            //     minRandBlockID = 5;
+            //     maxRandBlockID = 6;
+            // }
+            // else if (distToStar >= 7 && distToStar <= 8) // cold, far from star
+            // {
+            //     minRandBlockID = 7;
+            //     maxRandBlockID = 11;
+            // }
             //randomize blockIDs based on seed values
             // Default ProcGen values based on seed
             worldData.blockIDsubsurface = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);

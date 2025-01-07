@@ -35,7 +35,11 @@ public class Lighting : MonoBehaviour
     private void FixedUpdate()
     {
         if (sunProperties == null || !SettingsStatic.LoadedSettings.dayNightCycle)
+        {
+            if (World.Instance != null && !World.Instance.worldData.hasAtmosphere)
+                SetSpace();
             return;
+        }
 
         float TimeOfDayIncrement = Time.deltaTime / 60 * 12 / 5; // divide by 60 to get 24 min days, multiply by 12 to get 1 min days, divide by 5 to get 5  min day
         if (daytime)
@@ -100,17 +104,10 @@ public class Lighting : MonoBehaviour
         RenderSettings.reflectionIntensity = reflectionIntensity;
 
         // SET DAY OR NIGHT BASED ON TIME
-        if (World.Instance != null && !World.Instance.worldData.hasAtmosphere)
-        {
-            SetSpace();
-        }
-        else
-        {
-            if (daytime && !wasDaytime) // only show daytime skybox and daytime for planets which host life (isAlive)
-                SetDay();
-            else if (!daytime && wasDaytime)
-                SetNight();
-        }
+        if (daytime && !wasDaytime) // only show daytime skybox and daytime for planets which host life (isAlive)
+            SetDay();
+        else if (!daytime && wasDaytime)
+            SetNight();
 
         transform.localRotation = Quaternion.Euler(new Vector3(-90f - (timePercent * 360f), 0, 0)); // rotate light
     }

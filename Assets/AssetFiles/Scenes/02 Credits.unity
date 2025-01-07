@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 1
   m_FogColor: {r: 1, g: 0.9603379, b: 0.6698454, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -104,7 +100,7 @@ NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 2
+    serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -117,7 +113,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -128,6 +124,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1341741426118646166}
     m_Modifications:
     - target: {fileID: 466427041228719044, guid: f7220a13dcd828e4f89e23bf28662677, type: 3}
@@ -179,6 +176,9 @@ PrefabInstance:
       value: MainCamera
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7220a13dcd828e4f89e23bf28662677, type: 3}
 --- !u!4 &400761057 stripped
 Transform:
@@ -190,30 +190,40 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1341741426118646166}
     m_Modifications:
     - target: {fileID: 6976479444726254940, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
       propertyPath: m_text
-      value: 'Procedural Generation
+      value: 'Digital Bricks
+
+        BY SAM HSU
+
+
+        Unity Tutorial
 
         B3agz
 
 
-        Modelling
+        LDraw
+        Parts
 
-        The
-        LDraw.org Community
+        The LDraw.org Community
+
+        James Jessiman
 
 
-        LDraw Model Importer
+        LDraw
+        Model Importer
 
         Grygory Dyadichenko
 
 
-        Multiplayer
-        Networking
+        Mirror Networking
 
-        vis2k'
+        vis2k
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 6976479444726551088, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
       propertyPath: m_IsActive
@@ -308,6 +318,9 @@ PrefabInstance:
       value: CreditsMenu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
 --- !u!4 &1341741426118646166
 Transform:
@@ -316,14 +329,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4384392898889359552}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.01, y: -0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 400761057}
   - {fileID: 8140887384488054345}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4384392898889359552
 GameObject:
@@ -346,3 +360,8 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6976479446632540400, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
   m_PrefabInstance: {fileID: 1165116077936879289}
   m_PrefabAsset: {fileID: 0}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 1341741426118646166}

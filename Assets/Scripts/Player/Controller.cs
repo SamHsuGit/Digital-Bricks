@@ -233,6 +233,11 @@ public class Controller : NetworkBehaviour
             for (int i = 0; i < brickTypeFilenames.Length; i++)
                 ldrawPartsTypes[i] = LoadBrickNumbers(brickTypeFilenames[i]);
             currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+
+            // // Debug to show the loaded brick names for a given brick type
+            // int brickType = 1;
+            // for(int i = 0; i < ldrawPartsTypes[brickType].Length; i++)
+            //     UnityEngine.Debug.Log(ldrawPartsTypes[brickType][i]);
         }
         
         // set to zero every time the game starts
@@ -362,6 +367,16 @@ public class Controller : NetworkBehaviour
 
         string ldrawPartList = File.ReadAllText(path);
         currentLDrawPartsListStringArray = ldrawPartList.Split("\n");
+
+        // remove empty entries
+        var temp = new List<string>();
+        foreach (var s in currentLDrawPartsListStringArray)
+        {
+            if (!string.IsNullOrEmpty(s))
+                temp.Add(s);
+        }
+        currentLDrawPartsListStringArray = temp.ToArray();
+
         return currentLDrawPartsListStringArray;
     }
 

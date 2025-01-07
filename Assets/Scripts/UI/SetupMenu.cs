@@ -187,7 +187,7 @@ public class SetupMenu : MonoBehaviour
         SaveSettings();
 
         Settings.OnlinePlay = false;
-        loadingSlider.gameObject.SetActive(true);
+        loadingSlider.gameObject.SetActive(false); // disabled since this doesn't work
 
         if (Settings.Platform == 2)
         {
