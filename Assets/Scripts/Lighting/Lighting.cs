@@ -138,11 +138,11 @@ public class Lighting : MonoBehaviour
         moon.gameObject.SetActive(true);
 
         RenderSettings.skybox = skyboxAtmosphere;
-        StartCoroutine(LerpSkyTintValue(0, 10));
+        StartCoroutine(LerpSkyTintValue(0.5f, 10));
 
         RenderSettings.sun = moon;
-        StartCoroutine(LerpAmbientIntensity(0.2f, 10));
-        StartCoroutine(LerpReflectionIntensity(0.2f, 10));
+        StartCoroutine(LerpAmbientIntensity(0.12f, 10));
+        StartCoroutine(LerpReflectionIntensity(0.12f, 10));
     }
 
     void SetSpace()
@@ -156,8 +156,8 @@ public class Lighting : MonoBehaviour
         StartCoroutine(LerpSkyTintValue(0, 10));
 
         RenderSettings.sun = moon;
-        StartCoroutine(LerpAmbientIntensity(0.2f, 10));
-        StartCoroutine(LerpReflectionIntensity(0.2f, 10));
+        StartCoroutine(LerpAmbientIntensity(0.75f, 10));
+        StartCoroutine(LerpReflectionIntensity(0.75f, 10));
     }
 
     IEnumerator LerpSkyTintValue(float endValue, float duration)

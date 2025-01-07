@@ -541,7 +541,7 @@ public class Controller : NetworkBehaviour
 
         // set reach and gun range procedurally based on imported char model size
         grabDist = cc.radius * 2f * 6f;
-        tpsDist = -cc.radius * 8;
+        tpsDist = -cc.radius * 16;
     }
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
