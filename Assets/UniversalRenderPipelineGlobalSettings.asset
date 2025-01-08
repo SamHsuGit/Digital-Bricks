@@ -55,17 +55,7 @@ MonoBehaviour:
       - rid: 2965228351689850976
       - rid: 6647621340204105942
     m_RuntimeSettings:
-      m_List:
-      - rid: 6647621340204105923
-      - rid: 6647621340204105925
-      - rid: 6647621340204105927
-      - rid: 6647621340204105928
-      - rid: 6647621340204105930
-      - rid: 6647621340204105931
-      - rid: 6647621340204105932
-      - rid: 6647621340204105934
-      - rid: 6647621340204105939
-      - rid: 6647621340204105942
+      m_List: []
   m_AssetVersion: 8
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}
   m_RenderingLayerNames:
@@ -131,6 +121,7 @@ MonoBehaviour:
         m_DefaultLineMaterial: {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
         m_DefaultTerrainMaterial: {fileID: 2100000, guid: 594ea882c5a793440b60ff72d896021e, type: 2}
         m_DefaultDecalMaterial: {fileID: 2100000, guid: 31d0dcc6f2dd4e4408d18036a2c93862, type: 2}
+        m_DefaultSpriteMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - rid: 2965228351689850969
       type: {class: URPShaderStrippingSetting, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.Runtime}
       data:
