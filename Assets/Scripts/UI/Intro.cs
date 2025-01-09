@@ -8,6 +8,7 @@ public class Intro : MonoBehaviour
 {
 
     //Raw Image to Show Video Images [Assign from the Editor]
+    public bool playIntroVideo;
     public RawImage image;
     //Video To Play [Assign from the Editor]
     public VideoClip videoToPlay;
@@ -21,11 +22,14 @@ public class Intro : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        LoadMainMenu();
-
-        //bugged for Linux
-        //Application.runInBackground = true;
-        //StartCoroutine(playVideo());
+        //disable for Linux Build
+        if(playIntroVideo)
+        {
+            Application.runInBackground = true;
+            StartCoroutine(playVideo());
+        }
+        else
+            LoadMainMenu();
     }
 
     IEnumerator playVideo()

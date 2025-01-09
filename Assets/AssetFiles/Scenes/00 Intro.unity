@@ -590,8 +590,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3461b7a2e3613940aadbe4be30f6879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playIntroVideo: 1
   image: {fileID: 7003259353777217221}
-  videoToPlay: {fileID: 32900000, guid: 2493e05959681d30e9b4c2b3a3864f27, type: 3}
+  videoToPlay: {fileID: 32900000, guid: 8d6324ccfd5c5b94fbc243675fe7464b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
