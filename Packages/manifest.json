@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.google.xr.cardboard": "https://github.com/googlevr/cardboard-xr-plugin.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.5",
     "com.unity.ide.rider": "3.0.34",
