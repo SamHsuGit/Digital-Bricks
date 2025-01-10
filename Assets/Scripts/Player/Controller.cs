@@ -1355,7 +1355,7 @@ public class Controller : NetworkBehaviour
 
         // check if cursor aimed at previously spawned piece
         RaycastHit hit;
-        if (Physics.SphereCast(playerCameraOrigin.transform.position + playerCamera.transform.forward * cc.radius * 2, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist, 11))
+        if (camMode == 1 && Physics.SphereCast(playerCameraOrigin.transform.position + playerCamera.transform.forward * cc.radius * 2, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist, 11))
         {
             GameObject hitObject = hit.transform.gameObject;
             if (hitObject != null && hitObject.tag == "placedBrick")
@@ -2470,10 +2470,10 @@ public class Controller : NetworkBehaviour
     private int GetLDrawColorNumber(GameObject ob)
     {
         if(ob == null || ob.transform.GetChild(0).GetComponent<MeshRenderer>() == null)
-                return 0;
+                return 2;
 
         Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
-        int color = 0;
+        int color = 2;
         for (int j = 0; j < brickMaterials.Length; j++)
         {
             if (brickMaterials[j].name + " (Instance)" == mat.name)
@@ -2485,7 +2485,7 @@ public class Controller : NetworkBehaviour
     private int GetMaterialIndex(GameObject ob)
     {
         if (ob == null || ob.transform.GetComponentInChildren<MeshRenderer>() == null)
-            return 0;
+            return 2;
 
         Material mat = ob.GetComponentInChildren<MeshRenderer>().material;
         int color = currentBrickMaterialIndex; // default is current material, if none found, return current material
@@ -2494,7 +2494,7 @@ public class Controller : NetworkBehaviour
             if (brickMaterials[j].name + " (Instance)" == mat.name || brickMaterials[j].name == mat.name)
             {
                 color = j;
-                //Debug.Log(color);
+                //UnityEngine.Debug.Log(color);
             }
                 
         }

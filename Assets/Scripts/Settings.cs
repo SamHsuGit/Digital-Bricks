@@ -36,7 +36,7 @@ public static class SettingsStatic
         // world gen
         settings.chunkLoadAnim = true;
         settings.planetSeed = 3;
-        settings.worldCoord = 1;
+        settings.worldCoord = 3478;
 
         // customization
         settings.playerName = "PlayerName";

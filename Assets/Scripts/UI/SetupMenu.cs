@@ -57,19 +57,19 @@ public class SetupMenu : MonoBehaviour
         planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
         biomeIndex = SettingsStatic.LoadedSettings.biomeOverride;
         worldDensitySlider.value = SettingsStatic.LoadedSettings.terrainDensity;
-        worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
         loadLDrawBaseFile.isOn = SettingsStatic.LoadedSettings.loadLdrawBaseFile;
-        if(Directory.Exists(Settings.AppSaveDataPath + "/saves/"))
-        {
-            if (Directory.GetDirectories(Settings.AppSaveDataPath + "/saves/").Length == 0) // if no save files, create random world coord for world generation seed
-                RandomizeWorldCoord();
-        }
+        // if(Directory.Exists(Settings.AppSaveDataPath + "/saves/")) // disabled since we want to load value from settings file
+        // {
+        //     if (Directory.GetDirectories(Settings.AppSaveDataPath + "/saves/").Length == 0) // if no save files, create random world coord for world generation seed
+        //         RandomizeWorldCoord();
+        // }
         loadingSlider.gameObject.SetActive(false);
 
         SetPreviewBrickColor();
         SetPreviewSpriteImage();
         biomeNameText.text = biomes[SettingsStatic.LoadedSettings.biomeOverride].biomeName;
         SetPlanetNameText();
+        worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString(); // moved this to end of start function, was not setting correctly
     }
 
     public void IncrementBiome()

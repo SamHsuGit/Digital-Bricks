@@ -230,7 +230,7 @@ public class LDrawImportRuntime : MonoBehaviour
             if (child.gameObject.GetComponent<MeshRenderer>() != null && child.gameObject.activeSelf)
             {
                 child.parent = _modelOb.transform;
-                child.gameObject.layer = 10; // mark as LEGO PIECE
+                child.gameObject.layer = 0; // changed from 10 (Lego Piece) to 0 Default layer to be able to use hit collision
                 child.gameObject.tag = "placedBrick"; // mark pieces to be able to pick up later
                 child.name = child.name + ".dat";
             }
