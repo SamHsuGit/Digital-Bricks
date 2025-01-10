@@ -1370,16 +1370,28 @@ public class Controller : NetworkBehaviour
 
                 // save values from brick object
                 int brickMaterialIndex = GetMaterialIndex(hitObject);
-                SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
-                Vector2Int indexAndType = GetBrickTypeAndIndex(hitObject);
-                SetCurrentBrickType(indexAndType.x, indexAndType.x);
-                SetCurrentBrickIndex(indexAndType.y, indexAndType.y);
-                currentBrickRotation = GetRotationIndexFromQuaternion(hitObject.transform.rotation);
-                
-                placedBrick = hitObject;
+                if(brickMaterialIndex ==0) // non loaded colors, move object only
+                {
+                    // no loaded colors found so reset values to default
+                    SetCurrentBrickMaterialIndex(2, 2);
+                    SetCurrentBrickType(0, 0);
+                    SetCurrentBrickIndex(0, 0);
+                    currentBrickRotation = 0;
 
+                    placedBrick = hitObject;
+                }
+                else // loaded colors found
+                {
+                    SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
+                    Vector2Int indexAndType = GetBrickTypeAndIndex(hitObject);
+                    SetCurrentBrickType(indexAndType.x, indexAndType.x);
+                    SetCurrentBrickIndex(indexAndType.y, indexAndType.y);
+                    currentBrickRotation = GetRotationIndexFromQuaternion(hitObject.transform.rotation);
+                    
+                    placedBrick = hitObject;
+                }
                 // store values for later if moving bricks
-                movingPlacedBrickUseStoredValues = true;
+                    movingPlacedBrickUseStoredValues = true;
             }
             else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
             {
@@ -2470,10 +2482,10 @@ public class Controller : NetworkBehaviour
     private int GetLDrawColorNumber(GameObject ob)
     {
         if(ob == null || ob.transform.GetChild(0).GetComponent<MeshRenderer>() == null)
-                return 2;
+                return 0;
 
         Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
-        int color = 2;
+        int color = 0;
         for (int j = 0; j < brickMaterials.Length; j++)
         {
             if (brickMaterials[j].name + " (Instance)" == mat.name)
@@ -2485,10 +2497,10 @@ public class Controller : NetworkBehaviour
     private int GetMaterialIndex(GameObject ob)
     {
         if (ob == null || ob.transform.GetComponentInChildren<MeshRenderer>() == null)
-            return 2;
+            return 0;
 
         Material mat = ob.GetComponentInChildren<MeshRenderer>().material;
-        int color = currentBrickMaterialIndex; // default is current material, if none found, return current material
+        int color = 0; // default is 0, if none found, return 0
         for (int j = 0; j < brickMaterials.Length; j++)
         {
             if (brickMaterials[j].name + " (Instance)" == mat.name || brickMaterials[j].name == mat.name)
