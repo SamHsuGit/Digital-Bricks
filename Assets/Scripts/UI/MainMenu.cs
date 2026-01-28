@@ -33,7 +33,8 @@ public class MainMenu : MonoBehaviour
     public void Play()
     {
         buttonSound.Play();
-        SceneManager.LoadScene(3);
+        Settings.OnlinePlay = true;
+        SceneManager.LoadScene(4);
     }
 
     public void Quit()

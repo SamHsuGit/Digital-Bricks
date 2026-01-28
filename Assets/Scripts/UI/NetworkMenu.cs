@@ -2,10 +2,15 @@ using UnityEngine;
 using Mirror;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System.Collections.Generic;
+using System;
 
 public class NetworkMenu : MonoBehaviour
 {
     public GameObject playerManagerNetwork;
+    public TMP_InputField playerNameInputField;
+    public TMP_Dropdown worldDropDown;
     public TMP_InputField networkAddressInputField;
     public TMP_Text connectionStatus;
     public GameObject networkMenuElements;
@@ -14,6 +19,9 @@ public class NetworkMenu : MonoBehaviour
     public GameObject loadingText;
     public GameObject gameManagerObject;
     public GameObject LDrawImporterRuntime;
+    public bool randomizeSeed;
+
+    public List<string> seeds;
 
     GameManagerScript gameManager;
     NetworkManager manager;
@@ -21,6 +29,9 @@ public class NetworkMenu : MonoBehaviour
 
     private void Awake()
     {
+        SettingsStatic.LoadedSettings.worldCoord = RandomizeWorldCoord();
+        SaveSettings();
+
         manager = playerManagerNetwork.GetComponent<CustomNetworkManager>();
 
         networkMenuElementsCanvasGroup = networkMenuElements.GetComponent<CanvasGroup>();
@@ -30,10 +41,44 @@ public class NetworkMenu : MonoBehaviour
         networkAddressInputField.text = SettingsStatic.LoadedSettings.ipAddress;
         background.GetComponent<CanvasGroup>().alpha = 1;
         gameManager = gameManagerObject.GetComponent<GameManagerScript>();
+        playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
+
+        GetSaves();
+    }
+
+    private void GetSaves()
+    {
+        // get list of strings of seeds
+        string[] seedsArray = Directory.GetDirectories(Settings.AppSaveDataPath + "/saves/");
+
+        if (seedsArray.Length == 0) // if no seeds, use current saved randomized one
+        {
+            SettingsStatic.LoadedSettings.worldCoord = RandomizeWorldCoord();
+            seeds.Add(SettingsStatic.LoadedSettings.worldCoord.ToString());
+        }
+        foreach (string seed in seedsArray)
+        {
+            string newstring;
+            int index = seed.LastIndexOf("-");
+            newstring = seed.Substring(index + 1);
+            seeds.Add(newstring);
+        }
+
+        worldDropDown.ClearOptions();
+        if (!seeds.Contains(SettingsStatic.LoadedSettings.worldCoord.ToString()))
+            seeds.Add(SettingsStatic.LoadedSettings.worldCoord.ToString());
+        worldDropDown.AddOptions(seeds);
+    }
+
+    public int RandomizeWorldCoord()
+    {
+        return UnityEngine.Random.Range(1, 5000);
+        randomizeSeed = false;
     }
 
     public void OnHostClient()
     {
+        SaveSettings();
         networkMenuElementsCanvasGroup.alpha = 0;
         networkMenuElementsCanvasGroup.interactable = false;
         loadingText.SetActive(true); // in order for this text to show before world load, would need to change scene before loading next scene with world (like Setup Menu for Splitscreen)
@@ -64,6 +109,7 @@ public class NetworkMenu : MonoBehaviour
 
     public void OnClientOnly()
     {
+        SaveSettings();
         networkMenuElementsCanvasGroup.alpha = 0;
         networkMenuElementsCanvasGroup.interactable = false;
         loadingText.SetActive(true); // in order for this text to show before world load, would need to change scene before loading next scene with world (like Setup Menu for Splitscreen)
@@ -94,11 +140,13 @@ public class NetworkMenu : MonoBehaviour
         buttonSound.Play();
         FileSystemExtension.SaveSettings();
         SceneManager.LoadScene(2);
+        SaveSettings();
     }
 
     // Used to host servers without actually adding a player
     public void OnServerOnly()
     {
+        SaveSettings();
         networkMenuElementsCanvasGroup.alpha = 0;
         networkMenuElementsCanvasGroup.interactable = false;
         loadingText.SetActive(true); // in order for this text to show before world load, would need to change scene before loading next scene with world (like Setup Menu for Splitscreen)
@@ -158,5 +206,23 @@ public class NetworkMenu : MonoBehaviour
         {
             connectionStatus.text = "Client connected to " + manager.networkAddress + " via " + Transport.activeTransport;
         }
+    }
+
+    public void SaveSettings()
+    {
+        //try to load the saved world coord, otherwise default to 1
+        try
+        {
+            int result = Int32.Parse(worldDropDown.options[worldDropDown.value].text); // Int32 can hold up to 2,147,483,647 numbers
+            SettingsStatic.LoadedSettings.worldCoord = result;
+        }
+        catch (System.FormatException)
+        {
+            SettingsStatic.LoadedSettings.worldCoord = 1; // default value
+        }
+        SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
+
+        // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
+        FileSystemExtension.SaveSettings();
     }
 }
