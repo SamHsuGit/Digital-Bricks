@@ -1955,6 +1955,9 @@ public class Controller : NetworkBehaviour
                 voxelBoundObjects.Remove(centeredPosition);
             }
         }
+
+        RequestSaveWorld(); // save the world after every time a block is placed/edited
+        gameMenu.GetComponent<GameMenu>().SaveSettings();
     }
 
     public Vector3[] GetVoxelPositionsInVolume(Vector3 center, int width)

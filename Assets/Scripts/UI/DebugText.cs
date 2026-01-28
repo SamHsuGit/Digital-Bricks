@@ -65,7 +65,7 @@ public class DebugText : MonoBehaviour
             }
 
             string debugText = "Digital Bricks v" + Application.version;
-            debugText += " planetSeed: " + SettingsStatic.LoadedSettings.planetSeed + " worldCoords: " + SettingsStatic.LoadedSettings.worldCoord;
+            debugText += " Seed: " + SettingsStatic.LoadedSettings.worldCoord;
             debugText += "\n";
             debugText += frameRate + " fps";
             debugText += "\n";

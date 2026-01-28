@@ -163,7 +163,9 @@ public class GameMenu : MonoBehaviour
         playerHUDCanvasGroup.interactable = false;
         optionsMenuCanvasGroup.alpha = 1;
         optionsMenuCanvasGroup.interactable = true;
-        PlanetSeedWorldCoordText.text = "Planet Seed = " + SettingsStatic.LoadedSettings.planetSeed + ", World Coord = " + SettingsStatic.LoadedSettings.worldCoord;
+        PlanetSeedWorldCoordText.text = "Seed: " + SettingsStatic.LoadedSettings.worldCoord;
+
+        controller.RequestSaveWorld();
     }
 
     public void ReturnToGame()

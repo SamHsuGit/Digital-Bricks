@@ -1471,6 +1471,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8786922023426107862, guid: 97ee97b043dbbb6419cb3ae00e008cfc, type: 3}
+      propertyPath: m_FirstSelected
+      value: 
+      objectReference: {fileID: 6885639080703132393}
     - target: {fileID: 8861236883428637781, guid: 97ee97b043dbbb6419cb3ae00e008cfc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -1532,6 +1536,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97ee97b043dbbb6419cb3ae00e008cfc, type: 3}
+--- !u!1 &6885639080703132393 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6885639081162736874, guid: 97ee97b043dbbb6419cb3ae00e008cfc, type: 3}
+  m_PrefabInstance: {fileID: 6885639080703132392}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

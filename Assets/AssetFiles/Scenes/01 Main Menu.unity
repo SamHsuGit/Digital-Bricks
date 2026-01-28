@@ -170,9 +170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3630708181731822627, guid: a556edc8a122ffa46889a6a67b7f9ff0, type: 3}
       propertyPath: m_text
-      value: 'DIGITAL BRICKS
-
-        SAM HSU'
+      value: DIGITAL BRICKS
       objectReference: {fileID: 0}
     - target: {fileID: 3630708181731822627, guid: a556edc8a122ffa46889a6a67b7f9ff0, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
