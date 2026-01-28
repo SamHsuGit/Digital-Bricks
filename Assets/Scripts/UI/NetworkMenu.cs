@@ -12,6 +12,7 @@ public class NetworkMenu : MonoBehaviour
     public TMP_InputField playerNameInputField;
     public TMP_Dropdown worldDropDown;
     public TMP_InputField networkAddressInputField;
+    public TMP_InputField seedInputField;
     public TMP_Text connectionStatus;
     public GameObject networkMenuElements;
     public AudioSource buttonSound;
@@ -19,7 +20,9 @@ public class NetworkMenu : MonoBehaviour
     public GameObject loadingText;
     public GameObject gameManagerObject;
     public GameObject LDrawImporterRuntime;
-    public bool randomizeSeed;
+
+    public int randomSeed;
+    public bool noSaves = false;
 
     public List<string> seeds;
 
@@ -29,9 +32,6 @@ public class NetworkMenu : MonoBehaviour
 
     private void Awake()
     {
-        SettingsStatic.LoadedSettings.worldCoord = RandomizeWorldCoord();
-        SaveSettings();
-
         manager = playerManagerNetwork.GetComponent<CustomNetworkManager>();
 
         networkMenuElementsCanvasGroup = networkMenuElements.GetComponent<CanvasGroup>();
@@ -43,6 +43,7 @@ public class NetworkMenu : MonoBehaviour
         gameManager = gameManagerObject.GetComponent<GameManagerScript>();
         playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
 
+        RandomizeSeed(); // gets and stores a random seed in seed input field
         GetSaves();
     }
 
@@ -53,9 +54,15 @@ public class NetworkMenu : MonoBehaviour
 
         if (seedsArray.Length == 0) // if no seeds, use current saved randomized one
         {
-            SettingsStatic.LoadedSettings.worldCoord = RandomizeWorldCoord();
-            seeds.Add(SettingsStatic.LoadedSettings.worldCoord.ToString());
+            noSaves = true;
+            worldDropDown.options[worldDropDown.value].text = seedInputField.text;
+            seeds.Add(randomSeed.ToString());
+            SettingsStatic.LoadedSettings.worldCoord = randomSeed;
         }
+        else
+            noSaves = false;
+
+
         foreach (string seed in seedsArray)
         {
             string newstring;
@@ -68,12 +75,6 @@ public class NetworkMenu : MonoBehaviour
         if (!seeds.Contains(SettingsStatic.LoadedSettings.worldCoord.ToString()))
             seeds.Add(SettingsStatic.LoadedSettings.worldCoord.ToString());
         worldDropDown.AddOptions(seeds);
-    }
-
-    public int RandomizeWorldCoord()
-    {
-        return UnityEngine.Random.Range(1, 5000);
-        randomizeSeed = false;
     }
 
     public void OnHostClient()
@@ -105,6 +106,57 @@ public class NetworkMenu : MonoBehaviour
 
         StatusLabels();
         gameManager.Setup(); // activate ldraw importer, etc.
+    }
+
+    public void OnChangeWorldSelect() // convert string in world select to int and save it
+    {
+        //try to load the saved world coord, otherwise default to 1
+        try
+        {
+            int result = Int32.Parse(worldDropDown.options[worldDropDown.value].text); // Int32 can hold up to 2,147,483,647 numbers
+            SettingsStatic.LoadedSettings.worldCoord = result;
+        }
+        catch (System.FormatException)
+        {
+            SettingsStatic.LoadedSettings.worldCoord = 1; // default value
+        }
+        SaveSettings();
+    }
+
+    public void RandomizeSeed() // set input field to new random int
+    {
+        randomSeed = UnityEngine.Random.Range(1, 5000); // Int32 can hold up to 2,147,483,647 numbers
+
+        //update seed input and saved world text to new random value
+        seedInputField.text = randomSeed.ToString();
+        if(noSaves)
+        {
+            //broken
+            //worldDropDown.options[0].text = seedInputField.text;
+            //worldDropDown[0].text = seedInputField.text; // error: shows different values for dropdown and option
+        }
+    }
+
+    public void PlaySelectedWorld()
+    {
+        OnChangeWorldSelect(); // use value from world select (converted string to int)
+        OnHostClient();
+    }
+
+    public void CreateNewWorld() // use input field value for seed
+    {
+        // make world coord equal input field value
+        //try to load the saved world coord, otherwise default to 1
+        try
+        {
+            int result = Int32.Parse(seedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
+            SettingsStatic.LoadedSettings.worldCoord = result;
+        }
+        catch (System.FormatException)
+        {
+            SettingsStatic.LoadedSettings.worldCoord = 1; // default value
+        }
+        OnHostClient();
     }
 
     public void OnClientOnly()
@@ -139,7 +191,7 @@ public class NetworkMenu : MonoBehaviour
     {
         buttonSound.Play();
         FileSystemExtension.SaveSettings();
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
         SaveSettings();
     }
 
@@ -210,16 +262,6 @@ public class NetworkMenu : MonoBehaviour
 
     public void SaveSettings()
     {
-        //try to load the saved world coord, otherwise default to 1
-        try
-        {
-            int result = Int32.Parse(worldDropDown.options[worldDropDown.value].text); // Int32 can hold up to 2,147,483,647 numbers
-            SettingsStatic.LoadedSettings.worldCoord = result;
-        }
-        catch (System.FormatException)
-        {
-            SettingsStatic.LoadedSettings.worldCoord = 1; // default value
-        }
         SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
 
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
