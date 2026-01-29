@@ -15,6 +15,8 @@ public class MainMenu : MonoBehaviour
         else
             Settings.AppSaveDataPath = Application.persistentDataPath;
 
+        //Debug.Log(Application.persistentDataPath); // used to find the save path for a given system
+
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
         versionText.text = Application.version;
         Screen.fullScreen = SettingsStatic.LoadedSettings.fullscreen;

@@ -358,6 +358,7 @@ public class World : MonoBehaviour
 
             worldData.blockIDsubsurface = planet.blockIDsubsurface;
             worldData.blockIDcore = planet.blockIDcore;
+            worldData.blockIDwater = planet.blockIDwater;
             worldData.blockIDBiome00 = planet.blockIDBiome00;
             worldData.blockIDBiome01 = planet.blockIDBiome01;
             worldData.blockIDBiome02 = planet.blockIDBiome02;
@@ -411,6 +412,7 @@ public class World : MonoBehaviour
             // Default ProcGen values based on seed
             worldData.blockIDsubsurface = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDcore = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
+            worldData.blockIDwater = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDBiome00 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDBiome01 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDBiome02 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
@@ -685,20 +687,23 @@ public class World : MonoBehaviour
 
     void CheckVBODrawDist(ChunkCoord playerChunkCoord, int player)
     {
-        players[player].chunksToAddVBO.Clear();
-
-        // Loop through all chunks currently within view distance of the player.
-        for (int x = playerChunkCoord.x - VBORenderDistanceInChunks; x < playerChunkCoord.x + VBORenderDistanceInChunks; x++)
+        if (SettingsStatic.LoadedSettings.drawVBO)
         {
-            for (int z = playerChunkCoord.z - VBORenderDistanceInChunks; z < playerChunkCoord.z + VBORenderDistanceInChunks; z++)
-            {
-                ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
+            players[player].chunksToAddVBO.Clear();
 
-                // If the current chunk is in the world...
-                if (IsChunkInWorld(thisChunkCoord))
+            // Loop through all chunks currently within view distance of the player.
+            for (int x = playerChunkCoord.x - VBORenderDistanceInChunks; x < playerChunkCoord.x + VBORenderDistanceInChunks; x++)
+            {
+                for (int z = playerChunkCoord.z - VBORenderDistanceInChunks; z < playerChunkCoord.z + VBORenderDistanceInChunks; z++)
                 {
-                    if (!players[player].chunksToAddVBO.Contains(thisChunkCoord)) // if the list doesn't already contain this value
-                        players[player].chunksToAddVBO.Add(thisChunkCoord); // mark chunk to draw objects
+                    ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
+
+                    // If the current chunk is in the world...
+                    if (IsChunkInWorld(thisChunkCoord))
+                    {
+                        if (!players[player].chunksToAddVBO.Contains(thisChunkCoord)) // if the list doesn't already contain this value
+                            players[player].chunksToAddVBO.Add(thisChunkCoord); // mark chunk to draw objects
+                    }
                 }
             }
         }
@@ -850,7 +855,7 @@ public class World : MonoBehaviour
 
         int yGlobalPos = Mathf.FloorToInt(globalPos.y);
         Vector2 xzCoords = new Vector2(Mathf.FloorToInt(globalPos.x), Mathf.FloorToInt(globalPos.z));
-        int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x)/VoxelData.ChunkWidth * -0.125f); //scaled for larger biomes
+        int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x)/VoxelData.ChunkWidth * -0.25f); //scale factor controls biome sizes
 
         /* IMMUTABLE PASS */
         // If outside world, return air.
@@ -875,6 +880,7 @@ public class World : MonoBehaviour
         humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud density and biome
         temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud density and biome
         percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and surface ob type
+
         if (drawClouds && yGlobalPos == cloudHeight) // determines cloud altitude
         {
             if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
@@ -901,7 +907,7 @@ public class World : MonoBehaviour
             }
         }
 
-        if (!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile)
+        if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL)
             CheckMakeBase(globalPos);
 
         /* BIOME SELECTION PASS */
@@ -919,19 +925,21 @@ public class World : MonoBehaviour
         // add block types determined by biome calculation
         //TerrainHeight already calculated in Basic Terrain Pass
         if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // Generate water below sealevel
-            voxelValue = worldData.blockIDcore;
+            voxelValue = worldData.blockIDwater;
         else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk >= seaLevelThreshold) // if surface block above sea level
             voxelValue = biome.surfaceBlock;
         else // must be subsurface block
             voxelValue = worldData.blockIDsubsurface;
 
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
-        //if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.terrainDensity == 0)
-        if (yGlobalPos > 1 && weirdness > terrainDensity)
+        if (worldData.planetSeed != 3 || SettingsStatic.LoadedSettings.terrainDensity == 0)
         {
-            isAir = GetIsAir(globalPos);
-            if (isAir)
-                return 0;
+            if (yGlobalPos > 1 && weirdness > terrainDensity)
+                {
+                    isAir = GetIsAir(globalPos);
+                    if (isAir)
+                        return 0;
+                }
         }
 
         // bottom of world layer is core block (e.g. water/lava)
@@ -941,7 +949,7 @@ public class World : MonoBehaviour
         /* LODE PASS */
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
-        if (drawLodes && yGlobalPos < terrainHeightVoxels - 5) // - 5 ensures caves do not bleed into top of terrain
+        if (drawLodes && yGlobalPos < terrainHeightVoxels - 5) // -5 offset ensures caves do not bleed into top of terrain
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -1088,14 +1096,14 @@ public class World : MonoBehaviour
         float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
         float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
 
-        if(Settings.WebGL || SettingsStatic.LoadedSettings.terrainHeightOverride == 0)
+        if (Settings.WebGL || SettingsStatic.LoadedSettings.terrainHeightOverride == 0)
         {
-            terrainHeightPercentChunk = continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor;
+            terrainHeightPercentChunk = (continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor)* SettingsStatic.LoadedSettings.squashingFactor;
             terrainHeightVoxels = Mathf.Clamp(Mathf.FloorToInt(cloudHeight * terrainHeightPercentChunk - 0), 0, cloudHeight); // multiplies by number of voxels to get height in voxels
         }
         else
         {
-            if(SettingsStatic.LoadedSettings.terrainHeightOverride > VoxelData.ChunkHeight)
+            if (SettingsStatic.LoadedSettings.terrainHeightOverride > VoxelData.ChunkHeight)
             {
                 terrainHeightPercentChunk = 1;
                 terrainHeightVoxels = VoxelData.ChunkHeight;
@@ -1178,78 +1186,78 @@ public class World : MonoBehaviour
         // The converter source provided for developers doesn't include any biome sources, however.
 
         // hard coded biomes based on lattitude
-        if (chunkXCoord >= 5)
-            return 3; // Tundra
-        else if (chunkXCoord == 4)
-            return 6; // Tiaga
-        else if (chunkXCoord == 3)
-            return 7; // Forest
-        else if (chunkXCoord == 2)
-            return 8; // Fall Forest
-        else if (chunkXCoord == 1)
-            return 5; // Woods
-        else if (chunkXCoord == 0)
-            return 2; // Grassland
-        else if (chunkXCoord == -1)
-            return 9; // Rain Forest
-        else if (chunkXCoord == -2)
-            return 10; // Swamp
-        else if (chunkXCoord == -3)
-            return 4; // Savanna
-        else if (chunkXCoord == -4)
-            return 1; // Mesa
-        else if(chunkXCoord <= -5)
-            return 0; // Desert
-        else
-            return 3; // Tundra
+        // if (chunkXCoord >= 5)
+        //     return 3; // Tundra
+        // else if (chunkXCoord == 4)
+        //     return 6; // Tiaga
+        // else if (chunkXCoord == 3)
+        //     return 7; // Forest
+        // else if (chunkXCoord == 2)
+        //     return 8; // Fall Forest
+        // else if (chunkXCoord == 1)
+        //     return 5; // Woods
+        // else if (chunkXCoord == 0)
+        //     return 2; // Grassland
+        // else if (chunkXCoord == -1)
+        //     return 9; // Rain Forest
+        // else if (chunkXCoord == -2)
+        //     return 10; // Swamp
+        // else if (chunkXCoord == -3)
+        //     return 4; // Savanna
+        // else if (chunkXCoord == -4)
+        //     return 1; // Mesa
+        // else if(chunkXCoord <= -5)
+        //     return 0; // Desert
+        // else
+        //     return 3; // Tundra
 
         // // OLD ALGORITHM: Based on Minecraft, used temp and humidity from cloud calc...
         // // too often generates snowy biomes per minecraft youtube video
 
-        // if (humidity > 0 && humidity < 0.25f) // (dry)
-        // {
-        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-        //         return 0;
-        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-        //         return 1;
-        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-        //         return 2;
-        //     else // assumes value is between 0f and 0.25f (hot)
-        //         return 3;
-        // }
-        // else if (humidity > 0.25f && humidity < 0.5f) // (temperate)
-        // {
-        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-        //         return 4;
-        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-        //         return 5;
-        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-        //         return 6;
-        //     else // assumes value is between 0f and 0.25f (hot)
-        //         return 3;
-        // }
-        // else if (humidity > 0.5f && humidity < 0.75f) // (damp)
-        // {
-        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-        //         return 7;
-        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-        //         return 8;
-        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-        //         return 6;
-        //     else // assumes value is between 0f and 0.25f (hot)
-        //         return 3;
-        // }
-        // else // assumes value is between 0.75f and 1f (wet)
-        // {
-        //     if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-        //         return 9;
-        //     else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-        //         return 10;
-        //     else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-        //         return 6;
-        //     else // assumes value is between 0f and 0.25f (hot)
-        //         return 3;
-        // }
+        if (humidity > 0 && humidity < 0.25f) // (dry)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 3; // Tundra
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 6; // Taiga
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 0; // Desert
+            else // assumes value is between 0f and 0.25f (hot)
+                return 4; // Savanna
+        }
+        else if (humidity > 0.25f && humidity < 0.5f) // (temperate)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 5; // Woods
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 8; // Fall Forest
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 2; // Grassland
+            else // assumes value is between 0f and 0.25f (hot)
+                return 1; // Mesa
+        }
+        else if (humidity > 0.5f && humidity < 0.75f) // (damp)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 7; // Forest
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 8; // Fall Forest
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 9; // Rainforest
+            else // assumes value is between 0f and 0.25f (hot)
+                return 10; // Swamp
+        }
+        else // assumes value is between 0.75f and 1f (wet)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 6; // Taiga
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 7; // Forest
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 9; // Rainforest
+            else // assumes value is between 0f and 0.25f (hot)
+                return 10; // Swamp
+        }
     }
 
     public int GetSurfaceObType(float percolation, float fertility)

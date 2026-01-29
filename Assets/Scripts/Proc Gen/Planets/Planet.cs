@@ -11,6 +11,7 @@ public class Planet : ScriptableObject
     [Header("Surface Attributes")]
     public byte blockIDsubsurface;
     public byte blockIDcore;
+    public byte blockIDwater;
     public byte blockIDBiome00;
     public byte blockIDBiome01;
     public byte blockIDBiome02;

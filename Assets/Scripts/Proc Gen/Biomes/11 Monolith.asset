@@ -14,38 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Monolith
   surfaceBlock: 2
-  smallStructures:
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  mediumStructures:
-  - name: Boulder
-    floraIndex: 17
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
+  smallStructures: []
+  mediumStructures: []
   largeStructures:
   - name: HoneyComb
     floraIndex: 11
@@ -69,60 +39,27 @@ MonoBehaviour:
     maxRadius: 0
   smallFlora: []
   mediumFlora: []
-  largeFlora:
-  - name: HoneyComb
-    floraIndex: 11
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.8
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.3
-    minHeight: 13
-    maxHeight: 24
-    minRadius: 0
-    maxRadius: 0
-  - name: Monolith
-    floraIndex: 5
-    floraZoneScale: 1.2
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 5
-    floraPlacementThreshold: 0.88
-    minHeight: 1
-    maxHeight: 24
-    minRadius: 0
-    maxRadius: 0
-  XLFlora:
-  - name: HoneyComb
-    floraIndex: 11
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.8
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.3
-    minHeight: 13
-    maxHeight: 24
-    minRadius: 0
-    maxRadius: 0
-  - name: Monolith
-    floraIndex: 5
-    floraZoneScale: 1.2
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 5
-    floraPlacementThreshold: 0.88
-    minHeight: 1
-    maxHeight: 24
-    minRadius: 0
-    maxRadius: 0
+  largeFlora: []
+  XLFlora: []
   lodes:
   - nodeName: Crystals
     blockID: 16
     minHeight: 1
-    maxHeight: 64
+    maxHeight: 256
     scale: 2
     threshold: 0.68
     noiseOffset: 1
+  - nodeName: CaveLarge
+    blockID: 0
+    minHeight: 1
+    maxHeight: 256
+    scale: 0.001
+    threshold: 0.8
+    noiseOffset: 30
   - nodeName: Cave
     blockID: 0
     minHeight: 1
-    maxHeight: 64
+    maxHeight: 256
     scale: 0.01
     threshold: 0.6
     noiseOffset: 40

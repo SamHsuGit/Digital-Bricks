@@ -14,80 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Tundra
   surfaceBlock: 4
-  smallStructures:
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Grass
-    floraIndex: 6
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  mediumStructures:
-  - name: Boulder
-    floraIndex: 17
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  largeStructures:
-  - name: Column
-    floraIndex: 13
-    floraZoneScale: 1.1
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 5
-    floraPlacementThreshold: 0.8
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
+  smallStructures: []
+  mediumStructures: []
+  largeStructures: []
   smallFlora:
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
   - name: Grass
     floraIndex: 6
     floraZoneScale: 1.3
@@ -98,81 +28,28 @@ MonoBehaviour:
     maxHeight: 0
     minRadius: 0
     maxRadius: 0
-  mediumFlora:
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Grass
-    floraIndex: 6
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  largeFlora:
-  - name: Rock
-    floraIndex: 16
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Grass
-    floraIndex: 6
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  XLFlora:
-  - name: Grass
-    floraIndex: 6
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
-  - name: Flower
-    floraIndex: 9
-    floraZoneScale: 1.06
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 8
-    floraPlacementThreshold: 0.83
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
+  mediumFlora: []
+  largeFlora: []
+  XLFlora: []
   lodes:
   - nodeName: Crystals
     blockID: 16
     minHeight: 1
-    maxHeight: 64
+    maxHeight: 256
     scale: 2
     threshold: 0.68
     noiseOffset: 1
+  - nodeName: CaveLarge
+    blockID: 0
+    minHeight: 1
+    maxHeight: 256
+    scale: 0.001
+    threshold: 0.8
+    noiseOffset: 30
   - nodeName: Cave
     blockID: 0
     minHeight: 1
-    maxHeight: 64
+    maxHeight: 256
     scale: 0.01
     threshold: 0.6
     noiseOffset: 40

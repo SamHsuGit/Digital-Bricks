@@ -11,7 +11,6 @@ public static class VoxelData
 	public const int WorldSizeInChunks = 200; // binary data compression limits the # of chunks that can be stored to 256 (200 for full version, 8 for demo WebGL)
 
 	// get this value from Settings instead of setting a static readonly int
-	// was 5000, reduced since limiting choices unleashes creativity.
 	// Lego Worlds "Medium" world size = 100x100 chunks, 5000x16 = 80,000 bricks (meters) long / 25 mps = 3,200s to fly across world (1,600s from center to border)
 	//public static readonly int WorldSizeInChunks = 5;
 

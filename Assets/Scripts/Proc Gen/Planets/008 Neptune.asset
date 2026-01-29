@@ -21,6 +21,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
   blockIDsubsurface: 9
   blockIDcore: 4
+  blockIDwater: 4
   blockIDBiome00: 9
   blockIDBiome01: 9
   blockIDBiome02: 9

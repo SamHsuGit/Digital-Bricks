@@ -59,6 +59,7 @@ public static class SettingsStatic
         settings.terrainHeightMakeBase = 0;
         settings.terrainHeightOverride = 0;
         settings.terrainDensity = 0.6f;
+        settings.squashingFactor = 0.5f;
         settings.biomeOverride = 12;
 
 
@@ -127,6 +128,7 @@ public class Settings
     public int terrainHeightMakeBase;
     public int terrainHeightOverride;
     public float terrainDensity;
+    public float squashingFactor;
     public int biomeOverride;
 
     public static bool WorldLoaded
