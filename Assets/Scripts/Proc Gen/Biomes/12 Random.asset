@@ -44,11 +44,32 @@ MonoBehaviour:
   lodes:
   - nodeName: Crystals
     blockID: 16
-    minHeight: 1
+    minHeight: 12
     maxHeight: 256
     scale: 2
-    threshold: 0.68
+    threshold: 0.69
     noiseOffset: 1
+  - nodeName: CrystalsDeep
+    blockID: 16
+    minHeight: 1
+    maxHeight: 11
+    scale: 2
+    threshold: 0.64
+    noiseOffset: 1
+  - nodeName: Gold
+    blockID: 19
+    minHeight: 12
+    maxHeight: 256
+    scale: 2
+    threshold: 0.62
+    noiseOffset: 5
+  - nodeName: GoldDeep
+    blockID: 19
+    minHeight: 1
+    maxHeight: 11
+    scale: 2
+    threshold: 0.69
+    noiseOffset: 5
   - nodeName: CaveLarge
     blockID: 0
     minHeight: 1

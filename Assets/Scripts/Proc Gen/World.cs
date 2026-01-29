@@ -188,7 +188,7 @@ public class World : MonoBehaviour
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.viewDistance < 1)
             SettingsStatic.LoadedSettings.viewDistance = 1;
 
-        VBORenderDistanceInChunks = 1; // keep studs render distance lower than viewDistance to avoid errors.
+        VBORenderDistanceInChunks = SettingsStatic.LoadedSettings.viewDistance - 1; // keep studs render distance lower than viewDistance to avoid errors.
 
         // If the instance value is not null and not *this*, we've somehow ended up with more than one World component.
         // Since another one has already been assigned, delete this one.
@@ -954,7 +954,7 @@ public class World : MonoBehaviour
             foreach (Lode lode in biome.lodes)
             {
                 if (yGlobalPos > lode.minHeight && yGlobalPos < lode.maxHeight) // if position is within allowable lode range
-                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold))
+                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold)) // look into spawning more ores if air block to sides
                         voxelValue = lode.blockID;
             }
             return voxelValue;

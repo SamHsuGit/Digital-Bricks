@@ -1162,14 +1162,14 @@ public class Controller : NetworkBehaviour
                 SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
             }
         }
-        else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
-        {
-            if (Settings.OnlinePlay)
-                CmdSpawnObject(2, 0, rayCastStart);
-            else
-                SpawnObject(2, 0, rayCastStart);
-            //TakeFromCurrentSlot(1);
-        }
+        // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
+        // {
+        //     if (Settings.OnlinePlay)
+        //         CmdSpawnObject(2, 0, rayCastStart);
+        //     else
+        //         SpawnObject(2, 0, rayCastStart);
+        //     //TakeFromCurrentSlot(1);
+        // }
     }
 
     private void SpawnTempBrick(int materialIndex)
