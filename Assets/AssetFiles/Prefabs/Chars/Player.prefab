@@ -252,22 +252,6 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
-        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
-        m_MethodName: OnShoot
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 880cb55b-ff88-494f-a381-7ac8bf565c9a
-    m_ActionName: 'Actions/Fire[/XInputControllerWindows/rightTrigger,/Mouse/leftButton]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4390896333885380563}
         m_TargetAssemblyTypeName: PlayerInputHandlerLocal, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
@@ -353,22 +337,6 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 385cdae8-f851-4d70-a79c-5fce4a242708
     m_ActionName: UI/TrackedDeviceOrientation
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4390896333885380563}
-        m_TargetAssemblyTypeName: InputHandlerLocal, Assembly-CSharp
-        m_MethodName: OnGrab
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 9973d1dc-63d8-489c-a63f-4ca1356b431f
-    m_ActionName: 'Actions/Create[/XInputControllerWindows/leftTrigger,/Mouse/rightButton]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
@@ -653,6 +621,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 60e75519-f30a-4eb6-9687-05208ec4b698
     m_ActionName: 'Actions/Previous[/Keyboard/q]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4390896333885380563}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnUse
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c9376011-60c9-46c3-87e0-9a9ce3e47a53
+    m_ActionName: 'Actions/Use[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4390896333885380563}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnMine
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 84e9d2a5-a398-4561-8361-6870676ea35a
+    m_ActionName: 'Actions/Mine[/Mouse/leftButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Actions
@@ -681,8 +681,8 @@ MonoBehaviour:
   scrollWheel: {x: 0, y: 0}
   jump: 0
   sprint: 0
-  grab: 0
-  shoot: 0
+  use: 0
+  mine: 0
 --- !u!114 &3963772888375218276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -709,6 +709,7 @@ MonoBehaviour:
   isGrounded: 0
   isMoving: 0
   isSprinting: 0
+  dropButtonPressed: 0
   options: 0
   setBrickType: 0
   setBrickIndex: 0
@@ -720,7 +721,7 @@ MonoBehaviour:
   blockID: 0
   checkIncrement: 0.1
   sphereCastRadius: 0
-  grabDist: 4
+  grabDist: 6
   tpsDist: 0
   maxFocusDistance: 2
   focusDistanceIncrement: 0.03

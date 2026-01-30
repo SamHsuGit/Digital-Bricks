@@ -120,7 +120,7 @@ public class Toolbar : MonoBehaviour
 
             highlight.position = slots[slotIndex].slotIcon.transform.position;
             
-            if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
+            if (!Settings.WebGL && !controller.holdingBuild && SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && (inputHandler.navUp || inputHandler.navDown))
             {
                 if (inputHandler.navUp)
                 {
@@ -148,22 +148,34 @@ public class Toolbar : MonoBehaviour
         }
     }
 
-    public void DropItemsFromSlot(int slotIndexValue)
+    public void DropAllItemsFromSlot(int slotIndexValue) // empties entire slot
     {
         if(player != null && slots[slotIndexValue].itemSlot.stack != null)
         {
             int amount = slots[slotIndexValue].itemSlot.stack.amount;
             for (int i = 0; i < amount; i++) // for each item in slot
             {
-                Vector3 position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z) + player.transform.forward * 4;
-                byte blockID = slots[slotIndexValue].itemSlot.stack.id;
-                if(Settings.OnlinePlay)
-                    controller.CmdSpawnObject(0, blockID, position);
-                else
-                    controller.SpawnObject(0, blockID, position);
+                SpawnObject(slotIndexValue);
             }
             slots[slotIndexValue].itemSlot.EmptySlot();
         }
+    }
+
+    private void SpawnObject(int _slotIndexValue)
+    {
+        // spawn a dropped item at player's position
+        Vector3 position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z) + player.transform.forward * 1;
+        byte blockID = slots[_slotIndexValue].itemSlot.stack.id;
+        if(Settings.OnlinePlay)
+            controller.CmdSpawnObject(0, blockID, position);
+        else
+            controller.SpawnObject(0, blockID, position);
+    }
+
+    public void DropItemFromSlot(int slotIndexValue) //drop a single item from slot
+    {
+        // method in controller script subtracts one qty from slot (see TakeFromCurrentSlot(1))
+        SpawnObject(slotIndexValue);
     }
 
     public void EmptyToolbar()

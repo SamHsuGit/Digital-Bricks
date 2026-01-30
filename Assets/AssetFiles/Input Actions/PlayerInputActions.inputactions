@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PlayerInputActions",
     "maps": [
         {
@@ -33,19 +34,19 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Grab",
+                    "name": "Use",
                     "type": "Button",
-                    "id": "9973d1dc-63d8-489c-a63f-4ca1356b431f",
-                    "expectedControlType": "Button",
+                    "id": "c9376011-60c9-46c3-87e0-9a9ce3e47a53",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shoot",
+                    "name": "Mine",
                     "type": "Button",
-                    "id": "880cb55b-ff88-494f-a381-7ac8bf565c9a",
-                    "expectedControlType": "Button",
+                    "id": "84e9d2a5-a398-4561-8361-6870676ea35a",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -54,7 +55,7 @@
                     "name": "Previous",
                     "type": "Button",
                     "id": "60e75519-f30a-4eb6-9687-05208ec4b698",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -259,28 +260,6 @@
                 },
                 {
                     "name": "",
-                    "id": "10f7cb09-8153-4e85-a344-01c29eeeacc8",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "886a7faf-12b8-4cfd-82c8-1c0930467253",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "220390b4-c172-4723-bf9b-626a057a2be6",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -342,28 +321,6 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "ToggleOptions",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ee3507f7-ec74-4fa4-9edc-8b951cfa02a4",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Grab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "65441acc-39c9-4350-8a5c-54be7aa15fa6",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Grab",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -584,6 +541,50 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Previous",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee3507f7-ec74-4fa4-9edc-8b951cfa02a4",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Use",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "65441acc-39c9-4350-8a5c-54be7aa15fa6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Use",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10f7cb09-8153-4e85-a344-01c29eeeacc8",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Mine",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "886a7faf-12b8-4cfd-82c8-1c0930467253",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Mine",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

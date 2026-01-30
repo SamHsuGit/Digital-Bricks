@@ -100,8 +100,8 @@ public class VoxelCollider : MonoBehaviour
                 currentJumps = 0;
 
             // can jump off sides of objects
-            if (isPlayer && (front || back || left || right))
-                currentJumps = 0;
+            // if (isPlayer && (front || back || left || right))
+            //     currentJumps = 0;
 
             // apply jump force
             if (jumpRequest && currentJumps < maxJumps)

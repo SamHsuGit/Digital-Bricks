@@ -116,30 +116,30 @@ public class SceneObject : NetworkBehaviour
         ob.transform.parent = transform;
     }
 
-    private void OnCollisionEnter(Collision collision) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS
-    {
-        if (collisions < 4) // only count a few collisions not all
-        {
-            collisions++;
-            if (gameObject.tag == "voxelRb" && controller != null && collisions > 2) // after a few collisions break into pieces
-            {
-                Vector3 pos = transform.position;
-                if (Settings.OnlinePlay)
-                {
-                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                }
-                else
-                {
-                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                    controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-                }
-                Destroy(gameObject);
-            }
-        }
-    }
+    // private void OnCollisionEnter(Collision collision) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS
+    // {
+    //     if (collisions < 4) // only count a few collisions not all
+    //     {
+    //         collisions++;
+    //         if (gameObject.tag == "voxelRb" && controller != null && collisions > 2) // after a few collisions break into pieces
+    //         {
+    //             Vector3 pos = transform.position;
+    //             if (Settings.OnlinePlay)
+    //             {
+    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+    //             }
+    //             else
+    //             {
+    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+    //             }
+    //             Destroy(gameObject);
+    //         }
+    //     }
+    // }
 }

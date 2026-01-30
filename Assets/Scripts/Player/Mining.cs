@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
 
-public class Gun : NetworkBehaviour
+public class Mining : NetworkBehaviour
 {
     public float fireRate = 2f;
     public float impactForce = 0.01f;
@@ -33,9 +33,9 @@ public class Gun : NetworkBehaviour
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
     }
 
-    // Disabled since we are using the shoot button to place bricks
-    //private void FixedUpdate()
-    //{
+    // Disabled since we are using the mine button to place bricks
+    private void FixedUpdate()
+    {
     //    if (Settings.OnlinePlay && !isLocalPlayer) return;
 
     //    target = null; // reset target
@@ -54,16 +54,17 @@ public class Gun : NetworkBehaviour
     //            break;
     //    }
 
-    //    if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
-    //    {
-    //        if (inputHandler.shoot)
-    //        {
-    //            nextTimeToFire = Time.time + 1f / fireRate;
-    //            pewpew.Play();
-    //            Shoot();
-    //        }
-    //    }
-    //}
+        // increment time to prevent spamming buttons
+        if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
+        {
+           if (inputHandler.mine)
+           {
+               nextTimeToFire = Time.time + 1f / fireRate;
+               //pewpew.Play();
+               //Shoot();
+           }
+        }
+    }
 
     // if raycast hits a destructible object (with health but not this player), turn outer reticle red
     public Health FindTarget()
@@ -96,7 +97,7 @@ public class Gun : NetworkBehaviour
             return null;
     }
 
-    // Server calculated shoot logic gives players the authority to change hp of other preregistered gameObjects
+    // Server calculated mine logic gives players the authority to change hp of other preregistered gameObjects
     public void Shoot()
     {
         if (hit.transform != null && hit.transform.tag == "BaseObPiece") // hit base object

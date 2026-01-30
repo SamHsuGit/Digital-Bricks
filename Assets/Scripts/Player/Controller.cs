@@ -37,6 +37,7 @@ public class Controller : NetworkBehaviour
     public bool isGrounded;
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
     public bool isSprinting;
+    public bool dropButtonPressed;
     public bool options = false;
     public bool setBrickType = false;
     public bool setBrickIndex = false;
@@ -48,7 +49,7 @@ public class Controller : NetworkBehaviour
     public byte blockID;
     public float checkIncrement = 0.1f;
     public float sphereCastRadius;
-    public float grabDist = 4f; // defines how far player can reach to grab/place voxels
+    public float grabDist = 4f; // defines how far player can reach to use/use voxels (updated later to match player created models)
     public float tpsDist;
     public float maxFocusDistance = 2f;
     public float focusDistanceIncrement = 0.03f;
@@ -135,7 +136,7 @@ public class Controller : NetworkBehaviour
     private PlayerInput playerInput;
     private InputHandler inputHandler;
     private Health health;
-    private Gun gun;
+    private Mining mining;
     private CanvasGroup backgroundMaskCanvasGroup;
     private GameMenu gameMenuComponent;
     private BoxCollider playerCameraBoxCollider;
@@ -208,7 +209,7 @@ public class Controller : NetworkBehaviour
         rb.isKinematic = true;
         inputHandler = GetComponent<InputHandler>();
         health = GetComponent<Health>();
-        gun = GetComponent<Gun>();
+        mining = GetComponent<Mining>();
         
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
         gameMenuComponent = gameMenu.GetComponent<GameMenu>();
@@ -554,8 +555,8 @@ public class Controller : NetworkBehaviour
         // position nametag procedurally based on imported char model size
         nametag.transform.localPosition = new Vector3(0, colliderCenter.y + colliderHeight * 0.55f, 0);
 
-        // set reach and gun range procedurally based on imported char model size
-        grabDist = cc.radius * 2f * 6f;
+        // set reach and mining range procedurally based on imported char model size
+        grabDist = cc.radius * 2f * 3f;
         tpsDist = -cc.radius * 16; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
     }
 
@@ -741,9 +742,6 @@ public class Controller : NetworkBehaviour
         }
         else
         {
-            if (inputHandler.next)
-                PressedShoot();
-
             setBrickType = false;
             setBrickIndex = false;
             rotateBrick = false;
@@ -770,6 +768,9 @@ public class Controller : NetworkBehaviour
 
         if (Settings.OnlinePlay)
             SetTimeOfDayServer();
+
+        if(dropButtonPressed && !inputHandler.previous)
+            dropButtonPressed = false;
 
         //disable virtual camera and exit from FixedUpdate if this is not the local player
         if (Settings.OnlinePlay && !isLocalPlayer)
@@ -853,34 +854,41 @@ public class Controller : NetworkBehaviour
 
     void CheckWorldInteract()
     {
-            // IF PRESSED GRAB
-            if (!holdingGrab && inputHandler.grab)
+            // IF PRESSED USE
+            if (!holdingGrab && inputHandler.use)
                 PressedGrab();
 
-            // IF HOLDING GRAB
-            if (holdingGrab && inputHandler.grab)
+            // IF HOLDING USE
+            if (holdingGrab && inputHandler.use)
                 HoldingGrab();
 
-            // IF RELEASED GRAB
-            if (holdingGrab && !inputHandler.grab)
+            // IF RELEASED USE
+            if (holdingGrab && !inputHandler.use)
                 ReleasedGrab();
+
+            // IF DROP ITEM
+            if(!holdingBuild && !holdingGrab && inputHandler.previous)
+                DropItemInSlot();
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
-                // IF PRESSED BUILD WHILE HOLDING GRAB
-            if (holdingGrab && inputHandler.shoot)
-                PressedBuildWhileGrab();
+            if(!holdingGrab && !holdingBuild && inputHandler.mine) // instant mine causes issues when placing bricks?
+                PressedShoot();
 
-            // IF PRESSED BUILD
-            if (!holdingBuild && inputHandler.shoot)
-                PressedBuild();
+            // IF PRESSED GRAB WHILE HOLDING MINE
+            if (holdingGrab && inputHandler.mine)
+                PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
 
-            // IF HOLDING BUILD
-            if (holdingBuild && inputHandler.shoot)
+            // IF PRESSED MINE (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
+            if (!holdingBuild && inputHandler.mine)
+                PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
+
+            // IF HOLDING MINE
+            if (holdingBuild && inputHandler.mine)
                 HoldingBuild();
 
-            // IF RELEASED BUILD
-            if (holdingBuild && !inputHandler.shoot)
+            // IF RELEASED MINE
+            if (holdingBuild && !inputHandler.mine)
                 ReleasedBuild();
         }
 
@@ -1045,7 +1053,7 @@ public class Controller : NetworkBehaviour
     {
         // SPAWN A BRICK
 
-        if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this
             return;
 
         if (toolbar.slots[toolbar.slotIndex].itemSlot.stack == null) // do not spawn object if no voxel in current inventory slot
@@ -1071,8 +1079,8 @@ public class Controller : NetworkBehaviour
             blockID = 8;
         }
         // spawn brick object
-        if (Settings.OnlinePlay) // disabled for multiplayer
-            return;
+        // if (Settings.OnlinePlay) // disabled for multiplayer
+        //     return;
 
         heldObjectIsBrick = true;
         reticle.SetActive(false);
@@ -1085,7 +1093,7 @@ public class Controller : NetworkBehaviour
 
     private void PressedShoot()
     {
-        if (Time.time < gun.nextTimeToFire) // limit how fast can shoot
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this
             return;
 
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
@@ -1126,6 +1134,26 @@ public class Controller : NetworkBehaviour
             }
             heldObRb = null;
         }
+        else if (mining.hit.transform != null && mining.hit.transform.gameObject.tag == "placedBrick") // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
+        {
+            GameObject hitObject = mining.hit.transform.gameObject;
+            Destroy(mining.hit.transform.gameObject);
+            Vector3 pos = hitObject.transform.position;
+            // if (Settings.OnlinePlay)
+            // {
+            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            // }
+            // else
+            // {
+            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+            // }
+        }
         else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
         {
             Vector3 position = shootPos.position;
@@ -1141,26 +1169,6 @@ public class Controller : NetworkBehaviour
             shootBricks.Play();
 
             SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
-        }
-        else if (gun.hit.transform != null && gun.hit.transform.gameObject.tag == "voxelRb") // IF SHOT VOXELRB SITTING IN WORLD, DESTROY IT
-        {
-            GameObject hitObject = gun.hit.transform.gameObject;
-            Destroy(gun.hit.transform.gameObject);
-            Vector3 pos = hitObject.transform.position;
-            if (Settings.OnlinePlay)
-            {
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            }
-            else
-            {
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-                SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            }
         }
         // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
         // {
@@ -1228,7 +1236,7 @@ public class Controller : NetworkBehaviour
             //    break;
         }
 
-        // while holding shoot, spawn an object with current partname parented to cursor with light blue material
+        // while holding mine, spawn an object with current partname parented to cursor with light blue material
         string color = "43"; // spawns objects with trans light blue for temp color
         // block position/rotation are not applied to subparts with the ldraw importer plugin so we set these values to default since we are rotating the new parent object.
         string x = "0.000000"; // position x
@@ -1248,7 +1256,7 @@ public class Controller : NetworkBehaviour
         Vector3 pos = new Vector3(0, 1, 0);
         string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
 
-        if(!Settings.OnlinePlay || (Settings.OnlinePlay && holdingBuild) || (Settings.OnlinePlay && holdingGrab)) // if online and holding build or grab, only spawn local temp brick, not on server
+        if(!Settings.OnlinePlay || (Settings.OnlinePlay && holdingBuild) || (Settings.OnlinePlay && holdingGrab)) // if online and holding build or use, only spawn local temp brick, not on server
             PlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
         else if (Settings.OnlinePlay && hasAuthority)
             CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material (HOST SPAWNS OBJECT ON CLIENT MACHINES)
@@ -1279,7 +1287,7 @@ public class Controller : NetworkBehaviour
         int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
 
-        if (blockID < 2 || blockID > 11) // cannot place bricks using voxels outside the defined color range
+        if (blockID < 2 || blockID > 11) // cannot use bricks using voxels outside the defined color range
         {
             // remove temp piece
             if (!heldObjectIsBrick)
@@ -1317,15 +1325,21 @@ public class Controller : NetworkBehaviour
             SpawnObject(0, blockID, position);
     }
     
-    public void DropItemsInSlot()
+    public void DropItemInSlot()
     {
+        if(dropButtonPressed)
+            return;
+        dropButtonPressed = true;
+
+
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot run this function if creative mode and first slot selected
             return;
 
         if (!options && camMode == 1 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
         {
-            // this function is needed to able to empty slot with many pieces all at once (otherwise players would need to manually remove blocks one at a time)
-            toolbar.DropItemsFromSlot(toolbar.slotIndex);
+            // drop a single item from slot
+            toolbar.DropItemFromSlot(toolbar.slotIndex);
+            TakeFromCurrentSlot(1);
         }
     }
 
@@ -1347,8 +1361,8 @@ public class Controller : NetworkBehaviour
 
     public void PressedGrab()
     {
-        //if (Time.time < gun.nextTimeToFire) // cannot grab right after shooting
-        //    return;
+        // if (Time.time < mining.nextTimeToFire) // limit time to use again
+        //     return;
 
         if (!World.Instance.IsGlobalPosInsideBorder(removePos.position)) // do not let player do this for blocks outside border of world (glitches)
             return;
@@ -1360,8 +1374,8 @@ public class Controller : NetworkBehaviour
             GameObject hitObject = hit.transform.gameObject;
             if (hitObject != null && hitObject.tag == "placedBrick")
             {
-                if (Settings.OnlinePlay) // disabled for multiplayer
-                    return;
+                // if (Settings.OnlinePlay) // disabled for multiplayer
+                //     return;
 
                 reticle.SetActive(false);
                 holdingGrab = true;
@@ -1587,8 +1601,8 @@ public class Controller : NetworkBehaviour
 
         if (!heldObjectIsBrick)
             return;
-        inputHandler.grab = false; // force the input to false
-        inputHandler.shoot = false; // force the input to false
+        inputHandler.use = false; // force the input to false
+        inputHandler.mine = false; // force the input to false
 
         holdingGrab = false;
         reticle.SetActive(true);
@@ -1635,7 +1649,7 @@ public class Controller : NetworkBehaviour
                 }
             }
 
-            // if made it here, toolbar has no empty slots to put voxels into so shoot held voxel off into space
+            // if made it here, toolbar has no empty slots to put voxels into so mine held voxel off into space
             //PressedShoot();
             return; // if made it here, toolbar has no empty slots to put voxels into so do not add any bricks to slots
         }
@@ -1821,9 +1835,9 @@ public class Controller : NetworkBehaviour
     {
         Vector3 spawnDir;
         if (camMode == 1) // first person camera spawn object in direction camera
-            spawnDir = playerCamera.transform.forward;
+            spawnDir = playerCamera.transform.up;
         else // all other camera modes, spawn object in direction of playerObject
-            spawnDir = transform.forward;
+            spawnDir = transform.up;
 
         GameObject ob = Instantiate(sceneObjectPrefab, pos, Quaternion.identity);
         Rigidbody rb;
@@ -1832,7 +1846,7 @@ public class Controller : NetworkBehaviour
         rb = ob.GetComponent<Rigidbody>();
         rb.mass = health.piecesRbMass;
         rb.isKinematic = false;
-        rb.linearVelocity = spawnDir * 25; // give some velocity away from where player is looking
+        rb.linearVelocity = spawnDir + Vector3.up * 7; // give some velocity away from where player is looking
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
         GameObject childOb;
@@ -1939,7 +1953,7 @@ public class Controller : NetworkBehaviour
     {
         
         byte oldBlockID = World.Instance.GetChunkFromVector3(position).GetVoxelFromGlobalVector3(position).id;
-        if (oldBlockID == 1) // cannot place barrier blocks
+        if (oldBlockID == 1) // cannot use barrier blocks
             return;
 
         Chunk chunk = World.Instance.GetChunkFromVector3(position);

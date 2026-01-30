@@ -292,7 +292,7 @@ public class Health : NetworkBehaviour
         // Drop items out of toolbar slot
         Toolbar toolbar = controller.toolbar;
         for (int i = 1; i < toolbar.slots.Length; i++) // empty all but first slot
-            toolbar.DropItemsFromSlot(i);
+            toolbar.DropAllItemsFromSlot(i);
 
         // teleport player to last save point (do not destroy as it breaks the multiplayer network connection)
         int[] playerStats = controller.player.playerStats;

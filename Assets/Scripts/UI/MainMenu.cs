@@ -32,7 +32,14 @@ public class MainMenu : MonoBehaviour
         Application.targetFrameRate = 60;
     }
 
-    public void Play()
+    public void SinglePlayer()
+    {
+        buttonSound.Play();
+        Settings.OnlinePlay = false;
+        SceneManager.LoadScene(3);
+    }
+
+    public void MultiPlayer()
     {
         buttonSound.Play();
         Settings.OnlinePlay = true;
