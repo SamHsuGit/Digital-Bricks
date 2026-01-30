@@ -9,6 +9,7 @@ namespace LDraw
 {
     [CreateAssetMenu(fileName = "LDrawConfigRuntime", menuName = "Scriptables/LDrawConfigRuntime", order = 1)]
     public class LDrawConfigRuntime : ScriptableObject
+    //public class LDrawConfigRuntime : MonoBehaviour
     {
         [SerializeField] private string _MaterialsPath;
         [SerializeField] private string _MeshesPath;
@@ -155,6 +156,7 @@ namespace LDraw
             _ModelFileNames = new Dictionary<string, string>();
             //Debug.Log("SEARCHING FOR MODELS IN " + _ModelsPath);
             var files = Directory.GetFiles(Settings.ModelsPath, "*.*", SearchOption.AllDirectories); // MacOS cannot search all directories with Directory.GetFiles so put all ldraw part files into same directory
+            //var files = Directory.GetFiles(Settings.CustomModelsPath, "*.*", SearchOption.AllDirectories); // use player model from world folder instead of streaming assets folder (Broken)
             _Models = new Dictionary<string, string>();
             foreach (var file in files)
             {

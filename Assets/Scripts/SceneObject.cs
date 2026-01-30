@@ -17,7 +17,7 @@ public class SceneObject : NetworkBehaviour
     public GameObject[] voxelBit;
     public GameObject[] undefinedPrefab;
     public Controller controller;
-    int collisions = 0;
+    //int collisions = 0;
 
     void SetVoxel(int oldValue, int newValue)
     {

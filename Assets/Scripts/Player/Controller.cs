@@ -556,7 +556,7 @@ public class Controller : NetworkBehaviour
         nametag.transform.localPosition = new Vector3(0, colliderCenter.y + colliderHeight * 0.55f, 0);
 
         // set reach and mining range procedurally based on imported char model size
-        grabDist = cc.radius * 2f * 3f;
+        grabDist = cc.radius * 10f;
         tpsDist = -cc.radius * 16; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
     }
 

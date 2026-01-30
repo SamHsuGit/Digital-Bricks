@@ -86,6 +86,7 @@ public class Settings
     private static bool _webGL = false;
     private static bool _networkPlay = false;
     private static string _appPath;
+    private static string _customModelsPath;
 
     // not configured in UI
     public bool projectilesHurt;
@@ -147,6 +148,12 @@ public class Settings
     {
         get { return _networkPlay; }
         set {  _networkPlay = value; }
+    }
+
+    public static string CustomModelsPath
+    {
+        get { return _customModelsPath; }
+        set { _customModelsPath = value; }
     }
 
     public static int Platform

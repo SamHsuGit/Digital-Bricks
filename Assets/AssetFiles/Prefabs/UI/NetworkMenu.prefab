@@ -1406,7 +1406,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7794035836426201736}
         m_TargetAssemblyTypeName: NetworkMenu, Assembly-CSharp
-        m_MethodName: SaveSettings
+        m_MethodName: OnChangeWorldSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2245,6 +2245,8 @@ MonoBehaviour:
   loadingText: {fileID: 3134939849204132585}
   gameManagerObject: {fileID: 0}
   LDrawImporterRuntime: {fileID: 0}
+  randomSeed: 0
+  noSaves: 0
   seeds: []
 --- !u!82 &3139788332195023822
 AudioSource:
@@ -2521,7 +2523,7 @@ GameObject:
   m_Component:
   - component: {fileID: 112364730994094346}
   m_Layer: 0
-  m_Name: Multiplayer
+  m_Name: Multiplayer Join
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4012,7 +4014,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4941086373874750409}
   m_Layer: 0
-  m_Name: Singleplayer
+  m_Name: Multiplayer Host
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

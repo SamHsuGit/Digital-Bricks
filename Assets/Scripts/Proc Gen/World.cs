@@ -855,7 +855,7 @@ public class World : MonoBehaviour
 
         int yGlobalPos = Mathf.FloorToInt(globalPos.y);
         Vector2 xzCoords = new Vector2(Mathf.FloorToInt(globalPos.x), Mathf.FloorToInt(globalPos.z));
-        int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x)/VoxelData.ChunkWidth * -0.25f); //scale factor controls biome sizes
+        int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x)/VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
 
         /* IMMUTABLE PASS */
         // If outside world, return air.

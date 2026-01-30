@@ -23,7 +23,6 @@ public class NetworkMenu : MonoBehaviour
 
     public int randomSeed;
     public bool noSaves = false;
-
     public List<string> seeds;
 
     GameManagerScript gameManager;
@@ -156,7 +155,31 @@ public class NetworkMenu : MonoBehaviour
         {
             SettingsStatic.LoadedSettings.worldCoord = 1; // default value
         }
+        //CopyModelFiles(); // broken, could not resolve issue with loading from Settings.CustomModelsPath in LDrawConfigRuntime
         OnHostClient();
+    }
+
+    public void CopyModelFiles()
+    {
+        string savePath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/";
+
+        //copy all files from ldraw streamedAssets/ldraw/models folder to this folder
+        if(!Settings.WebGL)
+        {
+            string sourceDir = Settings.ModelsPath;
+            string destDir = savePath + "models/";
+            Directory.CreateDirectory(destDir);
+            Settings.CustomModelsPath = destDir; // save new model path to be referenced later by ldraw importer
+
+            string[] modelFiles = Directory.GetFiles(sourceDir);
+            foreach (string f in modelFiles)
+            {
+                string fName = f.Substring(sourceDir.Length);
+                //Debug.Log("source: " + Path.Combine(sourceDir, fName));
+                //Debug.Log("dest: " + Path.Combine(destDir, fName));
+                File.Copy(Path.Combine(sourceDir, fName), Path.Combine(destDir, fName), true);
+            }
+        }
     }
 
     public void OnClientOnly()

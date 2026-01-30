@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.IO;
+using System.Collections.Generic;
+using System;
 
 public class SetupMenu : MonoBehaviour
 {
@@ -13,10 +15,9 @@ public class SetupMenu : MonoBehaviour
     public TextMeshProUGUI loadingPercentageText;
     public TMP_InputField playerNameInputField;
     public Toggle creativeMode;
-    public Toggle randomizeWorldCoord;
+    public TMP_Dropdown worldDropDown;
+    public TMP_InputField seedInputField;
     public Toggle loadLDrawBaseFile;
-    public TMP_InputField planetSeedInputField;
-    public TMP_InputField worldCoordInputField;
     public GameObject modelObjectToSpin;
     public GameObject levelLoaderObject;
     
@@ -31,8 +32,12 @@ public class SetupMenu : MonoBehaviour
 
     public AudioSource buttonSound;
 
+    public int seed;
+    public int randomSeed;
+    public bool noSaves = false;
+    public List<string> seeds;
+
     public int biomeIndex;
-    int planetSeed;
     public int densityRange;
 
     private LevelLoader levelLoader;
@@ -43,6 +48,9 @@ public class SetupMenu : MonoBehaviour
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
 
         levelLoader = levelLoaderObject.GetComponent<LevelLoader>();
+
+        RandomizeSeed(); // gets and stores a random seed in seed input field
+        GetSaves();
     }
 
     private void Start()
@@ -54,10 +62,8 @@ public class SetupMenu : MonoBehaviour
         creativeMode.isOn = SettingsStatic.LoadedSettings.developerMode;
         worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
         worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
-        planetSeedInputField.text = SettingsStatic.LoadedSettings.planetSeed.ToString();
         biomeIndex = SettingsStatic.LoadedSettings.biomeOverride;
         worldDensitySlider.value = SettingsStatic.LoadedSettings.terrainDensity;
-        worldCoordInputField.text = SettingsStatic.LoadedSettings.worldCoord.ToString();
         loadLDrawBaseFile.isOn = SettingsStatic.LoadedSettings.loadLdrawBaseFile;
         // if(Directory.Exists(Settings.AppSaveDataPath + "/saves/")) // disabled since we want to load value from settings file
         // {
@@ -70,6 +76,36 @@ public class SetupMenu : MonoBehaviour
         SetPreviewSpriteImage();
         biomeNameText.text = biomes[SettingsStatic.LoadedSettings.biomeOverride].biomeName;
         SetPlanetNameText();
+    }
+
+    private void GetSaves()
+    {
+        // get list of strings of seeds
+        string[] seedsArray = Directory.GetDirectories(Settings.AppSaveDataPath + "/saves/");
+
+        if (seedsArray.Length == 0) // if no seeds, use current saved randomized one
+        {
+            noSaves = true;
+            worldDropDown.options[worldDropDown.value].text = seedInputField.text;
+            seeds.Add(randomSeed.ToString());
+            SettingsStatic.LoadedSettings.worldCoord = randomSeed;
+        }
+        else
+            noSaves = false;
+
+
+        foreach (string seed in seedsArray)
+        {
+            string newstring;
+            int index = seed.LastIndexOf("-");
+            newstring = seed.Substring(index + 1);
+            seeds.Add(newstring);
+        }
+
+        worldDropDown.ClearOptions();
+        if (!seeds.Contains(SettingsStatic.LoadedSettings.worldCoord.ToString()))
+            seeds.Add(SettingsStatic.LoadedSettings.worldCoord.ToString());
+        worldDropDown.AddOptions(seeds);
     }
 
     public void IncrementBiome()
@@ -117,17 +153,17 @@ public class SetupMenu : MonoBehaviour
 
     public void SetPlanetNameText()
     {
-        ConvertPlanetSeedToInt();
+        ConvertseedToInt();
 
-        if (planetSeed <= 18)
-            planetNameText.text = planets[planetSeed].planetName;
+        if (seed <= 18)
+            planetNameText.text = planets[seed].planetName;
         else
             planetNameText.text = "?";
     }
 
     public void SetBiomeNameText()
     {
-        if (planetSeed == 3)
+        if (seed == 3)
         {
             if (biomeIndex <= 11)
                 biomeNameText.text = biomes[biomeIndex].biomeName;
@@ -141,36 +177,36 @@ public class SetupMenu : MonoBehaviour
 
     public void SetPreviewSpriteImage()
     {
-        ConvertPlanetSeedToInt();
+        ConvertseedToInt();
 
-        if (planetSeed == 3)
+        if (seed == 3)
             biomeImage.sprite = biomes[biomeIndex].sprites[densityRange];
-        else if(planetSeed <= 18)
-            biomeImage.sprite = planets[planetSeed].sprites[densityRange];
+        else if(seed <= 18)
+            biomeImage.sprite = planets[seed].sprites[densityRange];
         else
             biomeImage.sprite = planets[1].sprites[densityRange]; // dark image for mystery planet
     }
 
-    public void ConvertPlanetSeedToInt()
+    public void ConvertseedToInt()
     {
         try
         {
-            planetSeed = System.Math.Abs(int.Parse(planetSeedInputField.text)); // Int32 can hold up to 2,147,483,647 numbers
+            seed = System.Math.Abs(int.Parse(seedInputField.text)); // Int32 can hold up to 2,147,483,647 numbers
         }
         catch
         {
-            planetSeed = 3;
+            seed = 3;
         }
     }
 
     public void SetPreviewBrickColor()
     {
-        ConvertPlanetSeedToInt();
+        ConvertseedToInt();
 
-        if (planetSeed == 3)
+        if (seed == 3)
             modelObjectToSpin.GetComponent<MeshRenderer>().material = biomes[biomeIndex].material;
-        else if (planetSeed <= 18)
-            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[planetSeed].material;
+        else if (seed <= 18)
+            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[seed].material;
         else
             modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[1].material; // black material for mystery planet
     }
@@ -228,32 +264,94 @@ public class SetupMenu : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void RandomizeWorldCoord()
+    public void PlaySelectedWorld()
     {
-        worldCoordInputField.text = Random.Range(1, 5000).ToString();
-        randomizeWorldCoord.isOn = false;
+        OnChangeWorldSelect(); // use value from world select (converted string to int)
+
+        if(noSaves)
+            CreateNewWorld();
+
+        Local();
     }
 
-    public void SaveSettings()
+    public void CreateNewWorld() // use input field value for seed
     {
-        SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
-        SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn;
-        SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
-        SettingsStatic.LoadedSettings.planetSeed = planetSeed;
-        SettingsStatic.LoadedSettings.biomeOverride = biomeIndex;
-        SettingsStatic.LoadedSettings.terrainDensity = worldDensitySlider.value;
-        SettingsStatic.LoadedSettings.loadLdrawBaseFile = loadLDrawBaseFile.isOn;
-
-        // try to load the saved world coord, otherwise default to 1
+        // make world coord equal input field value
+        //try to load the saved world coord, otherwise default to 1
         try
         {
-            int result = int.Parse(worldCoordInputField.text); // Int32 can hold up to 2,147,483,647 numbers
+            int result = Int32.Parse(seedInputField.text); // Int32 can hold up to 2,147,483,647 numbers
             SettingsStatic.LoadedSettings.worldCoord = result;
         }
         catch (System.FormatException)
         {
             SettingsStatic.LoadedSettings.worldCoord = 1; // default value
         }
+        //CopyModelFiles(); // broken, could not resolve issue with loading from Settings.CustomModelsPath in LDrawConfigRuntime
+        Local();
+    }
+
+    public void CopyModelFiles()
+    {
+        string savePath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/";
+
+        //copy all files from ldraw streamedAssets/ldraw/models folder to this folder
+        if(!Settings.WebGL)
+        {
+            string sourceDir = Settings.ModelsPath;
+            string destDir = savePath + "models/";
+            Directory.CreateDirectory(destDir);
+            Settings.CustomModelsPath = destDir; // save new model path to be referenced later by ldraw importer
+
+            string[] modelFiles = Directory.GetFiles(sourceDir);
+            foreach (string f in modelFiles)
+            {
+                string fName = f.Substring(sourceDir.Length);
+                //Debug.Log("source: " + Path.Combine(sourceDir, fName));
+                //Debug.Log("dest: " + Path.Combine(destDir, fName));
+                File.Copy(Path.Combine(sourceDir, fName), Path.Combine(destDir, fName), true);
+            }
+        }
+    }
+
+    public void OnChangeWorldSelect() // convert string in world select to int and save it
+    {
+        //try to load the saved world coord, otherwise default to 1
+        try
+        {
+            int result = Int32.Parse(worldDropDown.options[worldDropDown.value].text); // Int32 can hold up to 2,147,483,647 numbers
+            SettingsStatic.LoadedSettings.worldCoord = result;
+        }
+        catch (System.FormatException)
+        {
+            SettingsStatic.LoadedSettings.worldCoord = 1; // default value
+        }
+        SaveSettings();
+    }
+
+    public void RandomizeSeed() // set input field to new random int
+    {
+        randomSeed = UnityEngine.Random.Range(1, 5000); // Int32 can hold up to 2,147,483,647 numbers
+
+        //update seed input and saved world text to new random value
+        seedInputField.text = randomSeed.ToString();
+        if(noSaves)
+        {
+            //broken
+            //worldDropDown.options[0].text = seedInputField.text;
+            //worldDropDown[0].text = seedInputField.text; // error: shows different values for dropdown and option
+        }
+    }
+
+    public void SaveSettings()
+    {
+        //SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
+        SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn;
+        //SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
+        //SettingsStatic.LoadedSettings.biomeOverride = biomeIndex;
+        //SettingsStatic.LoadedSettings.worldCoord = seed;
+        //SettingsStatic.LoadedSettings.terrainDensity = worldDensitySlider.value;
+        //SettingsStatic.LoadedSettings.loadLdrawBaseFile = loadLDrawBaseFile.isOn;
 
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
         FileSystemExtension.SaveSettings();
