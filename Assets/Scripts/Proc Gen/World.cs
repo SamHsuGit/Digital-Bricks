@@ -22,6 +22,7 @@ public class World : MonoBehaviour
     [HideInInspector] public float terrainDensity;
     [HideInInspector] public int worldSizeInChunks;
     [HideInInspector] public bool isEarth;
+    [HideInInspector] public float randValue;
     
     // Cached Perlin Noise Map Values (10 2D perlin noise, 1 3D perlin noise, minecraft 1.18 uses 3 2D (continentalness, erosion, weirdness) and 3 3D (temp/humid/caves))
     [HideInInspector] public float continentalness = 0; // continentalness, defines distance from ocean
@@ -558,6 +559,8 @@ public class World : MonoBehaviour
 
     private void Update()
     {
+        randValue = UnityEngine.Random.Range(0f, 1f); // get random value for studs generation
+
         if (!Settings.WebGL && !worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
 
@@ -773,7 +776,9 @@ public class World : MonoBehaviour
                 ApplyModifications();
 
             if (chunksToUpdate.Count > 0)
+            {
                 UpdateChunks();
+            }
         }
     }
 
@@ -837,6 +842,7 @@ public class World : MonoBehaviour
 
     public byte GetVoxel(Vector3Int globalPos)
     {
+
         //// For performance testing
         //return 0;
 
