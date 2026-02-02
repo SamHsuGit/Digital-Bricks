@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 [System.Serializable]
 public class VoxelState
 {
     public byte id; // 1 byte = 2^8 (256) unique block IDs
     public byte orientation; // 1 byte used to store block state into such as orientation
+    public bool hasStuds = false;
+    public float randFloat;
+    public static float studsThreshold = 0.90f;
     [System.NonSerialized] public ChunkData chunkData;
     [System.NonSerialized] public VoxelNeighbors neighbors;
     [System.NonSerialized] public Vector3Int position;
@@ -19,6 +23,15 @@ public class VoxelState
         chunkData = _chunkData;
         neighbors = new VoxelNeighbors(this);
         position = _position;
+
+        if(SettingsStatic.LoadedSettings.useStuds)
+        {
+            randFloat = StaticRandom.RandFloat();
+            if(randFloat >= studsThreshold) // controls if studs are visible on top of bricks
+                hasStuds = true;
+            else
+                hasStuds = false;
+        }
     }
 
     public Vector3Int globalPosition
@@ -79,4 +92,17 @@ public class VoxelNeighbors
             _neighbors[index].neighbors[VoxelData.revFaceCheckIndex[index]] = parent;
     }
 
+}
+
+public static class StaticRandom
+{
+    static int seed = System.Environment.TickCount;
+
+    static readonly ThreadLocal<System.Random> random =
+        new ThreadLocal<System.Random>(() => new System.Random(Interlocked.Increment(ref seed)));
+
+    public static float RandFloat()
+    {
+        return (float)random.Value.NextDouble();
+    }
 }

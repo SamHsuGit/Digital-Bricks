@@ -20,7 +20,6 @@ MonoBehaviour:
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 1159639000735656762, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   isActive: 0
-  studs: {fileID: 2620124397277145217, guid: 05ad328eb23b80c40b04cbe788c33b51, type: 3}
   voxelBoundObject: {fileID: 0}
   backFaceTexture: 16
   frontFaceTexture: 16
@@ -28,3 +27,4 @@ MonoBehaviour:
   bottomFaceTexture: 15
   leftFaceTexture: 16
   rightFaceTexture: 16
+  topFaceSmoothTexture: 50

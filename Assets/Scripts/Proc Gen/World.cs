@@ -22,7 +22,6 @@ public class World : MonoBehaviour
     [HideInInspector] public float terrainDensity;
     [HideInInspector] public int worldSizeInChunks;
     [HideInInspector] public bool isEarth;
-    [HideInInspector] public float randValue;
     
     // Cached Perlin Noise Map Values (10 2D perlin noise, 1 3D perlin noise, minecraft 1.18 uses 3 2D (continentalness, erosion, weirdness) and 3 3D (temp/humid/caves))
     [HideInInspector] public float continentalness = 0; // continentalness, defines distance from ocean

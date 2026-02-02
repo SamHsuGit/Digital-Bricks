@@ -20,7 +20,6 @@ public class Chunk
     List<Vector3> normals = new List<Vector3>();
 
     public Vector3 position;
-    public static float studsThreshold = 0.5f; // controls the probability that a block is rendered with studs (higher threshold means less likely to be studs)
 
     private bool _isInLoadDist;
     private bool _isInStructDrawDist;
@@ -283,14 +282,13 @@ public class Chunk
         }
 
         VoxelState neighborAbove = CheckVoxel(pos + VoxelData.faceChecks[2]); // if block above is transparent, use studs mesh data, otherwise leave as a standard block
-        float randomValue = Random.Range(0f, 1f); // random.range can only be called from the main thread
         VoxelMeshData meshData;
-        if(World.Instance.randValue >= studsThreshold)
+        if(SettingsStatic.LoadedSettings.useStuds && voxel.hasStuds)
             meshData = voxel.properties.studsMeshData; // use studs mesh data
         else
             meshData = voxel.properties.standardMeshData; // use regular mesh data
 
-            for (int p = 0; p < 6; p++)
+        for (int p = 0; p < 6; p++)
         {
             int translatedP = p;
 
@@ -332,7 +330,11 @@ public class Chunk
                     VertData vertData = meshData.faces[p].GetVertData(i);
                     vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
                     normals.Add(VoxelData.faceChecks[p]);
-                    AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
+
+                    if(p == 2 && !voxel.hasStuds)
+                        AddTexture(voxel.properties.GetTextureID(6), vertData.uv);
+                    else
+                        AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
                     faceVertCount++;
                 }
 

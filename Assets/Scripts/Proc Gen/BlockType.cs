@@ -22,6 +22,7 @@ public class BlockType : ScriptableObject
     public int bottomFaceTexture;
     public int leftFaceTexture;
     public int rightFaceTexture;
+    public int topFaceSmoothTexture;
 
     // Back, Front, Top, Bottom, Left, Right
 
@@ -41,6 +42,8 @@ public class BlockType : ScriptableObject
                 return leftFaceTexture;
             case 5:
                 return rightFaceTexture;
+            case 6:
+                return topFaceSmoothTexture;
             default:
                 Debug.Log("Error in GetTextureID; invalid face index");
                 return 0;

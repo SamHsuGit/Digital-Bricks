@@ -27,3 +27,4 @@ MonoBehaviour:
   bottomFaceTexture: 38
   leftFaceTexture: 39
   rightFaceTexture: 39
+  topFaceSmoothTexture: 54
