@@ -283,7 +283,7 @@ public class Chunk
         }
 
         VoxelState neighborAbove = CheckVoxel(pos + VoxelData.faceChecks[2]); // if block above is transparent, use studs mesh data, otherwise leave as a standard block
-        //float randomValue = Random.Range(0f, 1f); // random.range can only be called from the main thread
+        float randomValue = Random.Range(0f, 1f); // random.range can only be called from the main thread
         VoxelMeshData meshData;
         if(World.Instance.randValue >= studsThreshold)
             meshData = voxel.properties.studsMeshData; // use studs mesh data

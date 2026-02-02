@@ -559,8 +559,6 @@ public class World : MonoBehaviour
 
     private void Update()
     {
-        randValue = UnityEngine.Random.Range(0f, 1f); // get random value for studs generation
-
         if (!Settings.WebGL && !worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
 
