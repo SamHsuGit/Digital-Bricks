@@ -346,7 +346,7 @@ public class SetupMenu : MonoBehaviour
     public void SaveSettings()
     {
         //SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
-        SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn;
+        //SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn;
         //SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
         //SettingsStatic.LoadedSettings.biomeOverride = biomeIndex;
         //SettingsStatic.LoadedSettings.worldCoord = seed;

@@ -30,22 +30,12 @@ MonoBehaviour:
     maxRadius: 0
   mediumFlora: []
   largeFlora:
-  - name: SmallMushroom
-    floraIndex: 7
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.5
-    minHeight: 0
-    maxHeight: 0
-    minRadius: 0
-    maxRadius: 0
   - name: TreeFall
     floraIndex: 14
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.2
+    floraZoneThreshold: 0.7
     floraPlacementScale: 15
-    floraPlacementThreshold: 0.81
+    floraPlacementThreshold: 0.78
     minHeight: 14
     maxHeight: 24
     minRadius: 4
@@ -54,7 +44,7 @@ MonoBehaviour:
   - name: SmallMushroom
     floraIndex: 7
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.7
+    floraZoneThreshold: 0.1
     floraPlacementScale: 15
     floraPlacementThreshold: 0.78
     minHeight: 0

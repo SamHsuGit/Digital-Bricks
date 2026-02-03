@@ -33,7 +33,7 @@ public class World : MonoBehaviour
     [HideInInspector] public bool isAir = false; // used for 3D Perlin Noise pass
 
     // eventually derive these values from original perlin noise samples
-    private int terrainHeightVoxels = 0; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
+    private int terrainHeightVoxels = 32; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
     private float terrainHeightPercentChunk; // defines height of terrain as percentage of total chunkHeight
 
     [HideInInspector] public float fertility = 0; // defines surfaceOb size, eventually derive from weirdness?
@@ -199,6 +199,7 @@ public class World : MonoBehaviour
             _instance = this;
 
         cloudHeight = VoxelData.ChunkHeight - 15;
+
 
         // define spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
         continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
@@ -843,13 +844,6 @@ public class World : MonoBehaviour
         //// For performance testing
         //return 0;
 
-        //// For 3D Noise Testing
-        //isAir = GetIsAir(globalPos);
-        //if (isAir)
-        //    return 0;
-        //else
-        //    return 2;
-
         // The main algorithm used in the procedural world generation
         // used to determine voxelID at each position in a chunk if not previously calculated.
         // Runs whenever voxel ids need to be calculated (only modified voxels are saved to the serialized file).
@@ -865,6 +859,27 @@ public class World : MonoBehaviour
         if (!IsGlobalPosInWorld(globalPos))
             return 0;
 
+        /* BASIC TERRAIN PASS */
+        // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
+        CalcTerrainHeight(xzCoords);
+        // Calculate air blocks based on 3D Noise
+        isAir = GetIsAir(globalPos);
+        if (isAir)
+           return 0;
+
+        //if (weirdness > terrainDensity) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
+        // {
+        //     isAir = GetIsAir(globalPos); // carves holes into landscape based on density
+        //     if (isAir)
+        //     {
+        //         if (!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile)
+        //             if (!CheckMakeBase(globalPos))
+        //                 return 0;
+        //         else
+        //             return 0;
+        //     }
+        // }
+
         //// for small worlds, return air outside world border to enable edges to render all faces and not block camera movement
         //if (!IsGlobalPosInsideBorder(globalPos))
         //    return 0;
@@ -874,6 +889,8 @@ public class World : MonoBehaviour
         if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
         {
             if (!drawClouds)
+                return 0;
+            else if (yGlobalPos > cloudHeight)
                 return 0;
             else if (yGlobalPos < cloudHeight || yGlobalPos > cloudHeight)
                 return 0;
@@ -892,26 +909,8 @@ public class World : MonoBehaviour
                 return 0;
         }
 
-        /* BASIC TERRAIN PASS */
-        // Adds base terrain using spline points to GetTerrainHeight
-        byte voxelValue = 0;
-        CalcTerrainHeight(xzCoords); // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
-
-        if (yGlobalPos > 1 && weirdness > terrainDensity) // uses weirdness perlin noise to determine if use 3D noise to remove blocks
-        {
-            isAir = GetIsAir(globalPos);
-            if (isAir)
-            {
-                if (!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile)
-                    if (!CheckMakeBase(globalPos))
-                        return 0;
-                else
-                    return 0;
-            }
-        }
-
-        if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL)
-            CheckMakeBase(globalPos);
+        if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos)) // reserve space for imported base file
+            return 0;
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
@@ -927,6 +926,7 @@ public class World : MonoBehaviour
         /* TERRAIN PASS */
         // add block types determined by biome calculation
         //TerrainHeight already calculated in Basic Terrain Pass
+        byte voxelValue = 0;
         if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk < seaLevelThreshold) // Generate water below sealevel
             voxelValue = worldData.blockIDwater;
         else if (yGlobalPos == terrainHeightVoxels && terrainHeightPercentChunk >= seaLevelThreshold) // if surface block above sea level
@@ -1123,28 +1123,28 @@ public class World : MonoBehaviour
     {
         //// Broken, eventually turn this into a single function for terrainHeight using 3D Perlin Noise and (3) other 2D Perlin Noise maps to determine height and squashing?
         //// based on https://youtu.be/CSa5O6knuwI
-
-        //// used if terrainHeightPercentChunk is not already calculated
-        //CalcTerrainHeight(new Vector2(globalPos.x, globalPos.z));
-
         // squashing factor is like slope of function
         // terrain height offset is like y intercept
-        float x1 = 0;
-        float y1 = 1;
-        float m = -(1 - weirdness)*0.01f; // larger values of weirdness give less weird results so we take the inverse and scale to achieve wierdness close to values of -0.014f
-        float b = terrainHeightPercentChunk; // density function moves up/down based on terrainHeight
-        float x2 = globalPos.y;
-        float y2 = m * x2 + b;
-        float density;
-
-        if (globalPos.y >= cloudHeight) // ensures air at top of level
-            density = 0;
-        else
-            density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y); // density is a linear function, high density at low elevation, low density at high elevation
-        return Noise.Get3DPerlin(globalPos, 0, 0.1f, density);
-
-        //float density = terrainHeightPercentChunk;
-        //return Noise.Get3DPerlin(globalPos, 0, 0.1f, density); // scale sets size of perlin noise, high density = higher perlin noise threshold to return true (isAir)
+        // input x (globalPos.y) get result y (density)
+        float y1 = 0;
+        float x2 = 0;
+        float y2 = 0.1f;
+        float density = 1f;
+        if(globalPos.y >= terrainHeightVoxels) // at surface
+        {
+            y1 = 1f; // more likely block
+            x2 = terrainHeightVoxels; // at surface
+            y2 = 0.75f; // chance could generate air
+        }
+        else if (globalPos.y < terrainHeightVoxels) // below surface
+        {
+            y1 = 0.45f; // more likely block just below and at surface
+            x2 = 0; // bottom of chunk
+            y2 = 0.5f; // never go completely to 0 at bottom
+        }
+        density = GetValueBetweenPoints(new Vector2(terrainHeightVoxels, y1), new Vector2(x2, y2), globalPos.y); // higher density near surface, lower density deeper you go
+        return Noise.Get3DPerlin(globalPos, 0, 0.1f, density); // density (between 0 and 1) fed into noise threshold, returns true for air and false for block
+                //.Get3DPerlin(globalPos, offset, scale, threshold)
     }
 
     public float GetValueBetweenPoints(Vector2 first, Vector2 last, float x)
