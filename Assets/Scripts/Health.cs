@@ -300,6 +300,7 @@ public class Health : NetworkBehaviour
         transform.position = respawnPoint;
 
         hp = hpMax;
+        // game menu updates hp UI based on this scripts hp value in its own update function
 
         // turn on components again, do not disable gameobject since multiplayer networking needs a reference to the object and disabling gameobject breaks this reference!
         for (int i = 0; i < modelPieces.Count; i++)

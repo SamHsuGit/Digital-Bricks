@@ -18,28 +18,23 @@ public static class SettingsStatic
     {
         Settings settings = new Settings();
 
-        // not configured in UI
-        settings.projectilesHurt = false;
-        settings.drawChunkMeshes = false;
-        settings.useBiomes = true;
-        settings.drawClouds = true;
-        settings.drawLodes = true;
-        settings.drawSurfaceObjects = true;
-        settings.drawVBO = true;
-        settings.timeOfDay = 6.01f;
-        settings.dayNightCycle = false;
-        settings.useStuds = true;
-
-        // performance
-        settings.graphicsQuality = 0;
-        settings.viewDistance = 3;
-
-        // world gen
-        settings.chunkLoadAnim = true;
+        // world gen values needed to be saved between scenes
         settings.planetSeed = 3;
         settings.worldCoord = 3478;
 
-        // customization
+        // dev tools (not configured in UI)
+        settings.developerMode = false;
+        settings.loadLdrawBaseFile = false;
+        settings.biomeOverride = 12;
+        settings.projectilesHurt = false;
+        settings.drawChunkMeshes = false;
+        settings.timeOfDay = 6.01f;
+        settings.dayNightCycle = false;
+        settings.useStuds = true;
+        settings.chunkLoadAnim = true;
+        settings.viewDistance = 3;
+
+        // configured in game menu UI
         settings.playerName = "PlayerName";
         settings.ipAddress = "localhost";
         settings.volume = 0.5f;
@@ -48,21 +43,14 @@ public static class SettingsStatic
         settings.fov = 90f;
         settings.invertY = false;
         settings.fullscreen = true;
+        settings.graphicsQuality = 0;
+
+        // needed to save current value between game play sessions
         settings.currentBrickType = 0;
         settings.currentBrickIndex = 0;
         settings.currentBrickRotation = 0;
         settings.showControls = true;
         settings.camMode = 2;
-
-        // dev tools
-        settings.developerMode = false;
-        settings.loadLdrawBaseFile = false;
-        settings.terrainHeightMakeBase = 0;
-        settings.terrainHeightOverride = 0;
-        settings.terrainDensity = 0.6f;
-        settings.squashingFactor = 0.5f;
-        settings.biomeOverride = 12;
-
 
         string path;
         if (Settings.Platform == 2)
@@ -89,28 +77,23 @@ public class Settings
     private static string _appPath;
     private static string _customModelsPath;
 
-    // not configured in UI
-    public bool projectilesHurt;
-    public bool drawChunkMeshes;
-    public bool useBiomes;
-    public bool drawClouds;
-    public bool drawLodes;
-    public bool drawSurfaceObjects;
-    public bool drawVBO;
-    public float timeOfDay;
-    public bool dayNightCycle;
-    public bool useStuds;
-
-    // performance
-    public int graphicsQuality;
-    public int viewDistance; // loadDistance > viewDistance to reduce lag by ensuring player is always moving in loaded chunks. viewDistance is a radius, just like in Minecraft.
-
-    // world gen
-    public bool chunkLoadAnim;
+    // world gen values needed to be saved between scenes
     public int planetSeed; // can be 0 to 2,147,483,647 inclusively
     public int worldCoord; // can be 0 to 2,147,483,647 inclusively
 
-    // customization
+    // dev tools (not configured in UI)
+    public bool developerMode;
+    public bool loadLdrawBaseFile;
+    public int biomeOverride;
+    public bool projectilesHurt;
+    public bool drawChunkMeshes;
+    public float timeOfDay;
+    public bool dayNightCycle;
+    public bool useStuds;
+    public bool chunkLoadAnim;
+    public int viewDistance; // loadDistance > viewDistance to reduce lag by ensuring player is always moving in loaded chunks
+
+    // configured in game menu UI
     public string playerName;
     public string ipAddress;
     [Range(0.0001f, 1f)] public float volume;
@@ -119,20 +102,14 @@ public class Settings
     public float fov;
     public bool invertY;
     public bool fullscreen;
-    public int currentBrickType;
+    public int graphicsQuality;
+
+    // needed to save current value between game play sessions
+    public int currentBrickType; 
     public int currentBrickIndex;
     public int currentBrickRotation;
     public bool showControls;
     public int camMode;
-
-    // dev tools
-    public bool developerMode;
-    public bool loadLdrawBaseFile;
-    public int terrainHeightMakeBase;
-    public int terrainHeightOverride;
-    public float terrainDensity;
-    public float squashingFactor;
-    public int biomeOverride;
 
     public static bool WorldLoaded
     {

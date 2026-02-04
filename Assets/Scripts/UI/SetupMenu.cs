@@ -9,38 +9,21 @@ using System;
 public class SetupMenu : MonoBehaviour
 {
     public GameObject menuElements;
-    public Planet[] planets;
-    public Biome[] biomes;
     public Slider loadingSlider;
     public TextMeshProUGUI loadingPercentageText;
-    public TMP_InputField playerNameInputField;
     public Toggle creativeMode;
     public TMP_Dropdown worldDropDown;
     public TMP_InputField seedInputField;
     public Toggle loadLDrawBaseFile;
     public GameObject modelObjectToSpin;
     public GameObject levelLoaderObject;
-    
-    public Image biomeImage;
-
-    public Slider worldDensitySlider;
-    public Slider worldRenderDistanceSlider;
-    public TextMeshProUGUI worldRenderText;
-    public TextMeshProUGUI worldDensityText;
-    public TextMeshProUGUI planetNameText;
-    public TextMeshProUGUI biomeNameText;
-
     public AudioSource buttonSound;
+    private LevelLoader levelLoader;
 
     public int seed;
     public int randomSeed;
     public bool noSaves = false;
     public List<string> seeds;
-
-    public int biomeIndex;
-    public int densityRange;
-
-    private LevelLoader levelLoader;
 
     private void Awake()
     {
@@ -57,25 +40,8 @@ public class SetupMenu : MonoBehaviour
     {
         //reset framerate of game for video animation
         Application.targetFrameRate = 60;
-        
-        playerNameInputField.text = SettingsStatic.LoadedSettings.playerName;
         creativeMode.isOn = SettingsStatic.LoadedSettings.developerMode;
-        worldRenderDistanceSlider.value = SettingsStatic.LoadedSettings.viewDistance;
-        worldRenderText.text = SettingsStatic.LoadedSettings.viewDistance.ToString();
-        biomeIndex = SettingsStatic.LoadedSettings.biomeOverride;
-        worldDensitySlider.value = SettingsStatic.LoadedSettings.terrainDensity;
-        loadLDrawBaseFile.isOn = SettingsStatic.LoadedSettings.loadLdrawBaseFile;
-        // if(Directory.Exists(Settings.AppSaveDataPath + "/saves/")) // disabled since we want to load value from settings file
-        // {
-        //     if (Directory.GetDirectories(Settings.AppSaveDataPath + "/saves/").Length == 0) // if no save files, create random world coord for world generation seed
-        //         RandomizeWorldCoord();
-        // }
         loadingSlider.gameObject.SetActive(false);
-
-        SetPreviewBrickColor();
-        SetPreviewSpriteImage();
-        biomeNameText.text = biomes[SettingsStatic.LoadedSettings.biomeOverride].biomeName;
-        SetPlanetNameText();
     }
 
     private void GetSaves()
@@ -108,86 +74,12 @@ public class SetupMenu : MonoBehaviour
         worldDropDown.AddOptions(seeds);
     }
 
-    public void IncrementBiome()
-    {
-        if (biomeIndex + 1 > 12)
-            biomeIndex = 0;
-        else
-            biomeIndex++;
-    }
-
-    public void DecrementBiome()
-    {
-        if(biomeIndex - 1 < 0)
-            biomeIndex = 12;
-        else
-            biomeIndex--;
-    }
-
-    public void CheckDensity()
-    {
-        if (worldDensitySlider.value <= 0.333f)
-        {
-            densityRange = 0;
-        }
-        else if (worldDensitySlider.value > 0.333f && worldDensitySlider.value < 0.666f)
-        {
-            densityRange = 2;
-        }
-        else
-        {
-            densityRange = 1;
-        }
-
-        worldDensityText.text = worldDensitySlider.value.ToString();
-    }
-
     private void Update()
     {
         modelObjectToSpin.transform.parent.Rotate(new Vector3(0, 1, 0));
-        SetPlanetNameText();
-        SetPreviewSpriteImage();
-        SetBiomeNameText();
-        SetPreviewBrickColor();
     }
 
-    public void SetPlanetNameText()
-    {
-        ConvertseedToInt();
-
-        if (seed <= 18)
-            planetNameText.text = planets[seed].planetName;
-        else
-            planetNameText.text = "?";
-    }
-
-    public void SetBiomeNameText()
-    {
-        if (seed == 3)
-        {
-            if (biomeIndex <= 11)
-                biomeNameText.text = biomes[biomeIndex].biomeName;
-            else
-                biomeNameText.text = "Mixed";
-        }
-        else
-            biomeNameText.text = "?";
-        
-    }
-
-    public void SetPreviewSpriteImage()
-    {
-        ConvertseedToInt();
-
-        if (seed == 3)
-            biomeImage.sprite = biomes[biomeIndex].sprites[densityRange];
-        else if(seed <= 18)
-            biomeImage.sprite = planets[seed].sprites[densityRange];
-        else
-            biomeImage.sprite = planets[1].sprites[densityRange]; // dark image for mystery planet
-    }
-
-    public void ConvertseedToInt()
+    public void ConvertSeedStringToInt()
     {
         try
         {
@@ -199,24 +91,7 @@ public class SetupMenu : MonoBehaviour
         }
     }
 
-    public void SetPreviewBrickColor()
-    {
-        ConvertseedToInt();
-
-        if (seed == 3)
-            modelObjectToSpin.GetComponent<MeshRenderer>().material = biomes[biomeIndex].material;
-        else if (seed <= 18)
-            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[seed].material;
-        else
-            modelObjectToSpin.GetComponent<MeshRenderer>().material = planets[1].material; // black material for mystery planet
-    }
-
-    public void SetRenderDistance()
-    {
-        worldRenderText.text = worldRenderDistanceSlider.value.ToString();
-    }
-
-    public void Local()
+    public void Play()
     {
         buttonSound.Play();
         menuElements.SetActive(false);
@@ -224,26 +99,6 @@ public class SetupMenu : MonoBehaviour
 
         Settings.OnlinePlay = false;
         loadingSlider.gameObject.SetActive(false); // disabled since this doesn't work
-
-        if (Settings.Platform == 2)
-        {
-            SceneManager.LoadScene(6); // mobile VR loads smaller scene
-            //levelLoader.LoadLevel(5, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
-        }
-        else
-        {
-            SceneManager.LoadScene(4);
-            //levelLoader.LoadLevel(3, loadingSlider, loadingPercentageText); // doesn't work since most of level loading is done by world after scene is loaded
-        }
-    }
-
-    public void Online()
-    {
-        buttonSound.Play();
-        menuElements.SetActive(false);
-        SaveSettings();
-
-        Settings.OnlinePlay = true;
 
         if (Settings.Platform == 2)
         {
@@ -271,7 +126,7 @@ public class SetupMenu : MonoBehaviour
         if(noSaves)
             CreateNewWorld();
 
-        Local();
+        Play();
     }
 
     public void CreateNewWorld() // use input field value for seed
@@ -288,10 +143,10 @@ public class SetupMenu : MonoBehaviour
             SettingsStatic.LoadedSettings.worldCoord = 1; // default value
         }
         //CopyModelFiles(); // broken, could not resolve issue with loading from Settings.CustomModelsPath in LDrawConfigRuntime
-        Local();
+        Play();
     }
 
-    public void CopyModelFiles()
+    public void CopyModelFiles() // Not currently implemented, was testing to see if could read files from world files instead of streamingAssets folder
     {
         string savePath = Settings.AppSaveDataPath + "/saves/" + SettingsStatic.LoadedSettings.planetSeed + "-" + SettingsStatic.LoadedSettings.worldCoord + "/";
 
@@ -345,13 +200,7 @@ public class SetupMenu : MonoBehaviour
 
     public void SaveSettings()
     {
-        //SettingsStatic.LoadedSettings.playerName = playerNameInputField.text;
-        //SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn;
-        //SettingsStatic.LoadedSettings.viewDistance = (int)worldRenderDistanceSlider.value;
-        //SettingsStatic.LoadedSettings.biomeOverride = biomeIndex;
-        //SettingsStatic.LoadedSettings.worldCoord = seed;
-        //SettingsStatic.LoadedSettings.terrainDensity = worldDensitySlider.value;
-        //SettingsStatic.LoadedSettings.loadLdrawBaseFile = loadLDrawBaseFile.isOn;
+        //SettingsStatic.LoadedSettings.developerMode = creativeMode.isOn; // set manually not with UI button
 
         // Save setttings when this function is called, otherwise settings will load from latest settings file upon game start
         FileSystemExtension.SaveSettings();

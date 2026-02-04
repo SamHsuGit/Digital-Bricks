@@ -105,6 +105,7 @@ public class GameMenu : MonoBehaviour
 
     private void Update()
     {
+        UpdateHP();
         CheckSplitscreenCanvasRenderMode();
 
         if (showControls)
