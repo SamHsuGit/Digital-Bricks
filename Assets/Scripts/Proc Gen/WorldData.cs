@@ -115,7 +115,7 @@ public class WorldData
         }
         else
         {
-            // generate new chunk data using the World GetVoxel procGen algorithm
+            // generate new chunk data using the World.GetVoxel algorithm
             chunks.Add(coord, new ChunkData(coord));
             chunks[coord].Populate();
         }

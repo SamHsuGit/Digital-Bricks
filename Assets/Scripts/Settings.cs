@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System.Threading;
 
 // a static class that can be accesssed from anywhere
 public static class SettingsStatic
@@ -211,5 +212,18 @@ public static class FileSystemExtension
     public static void SaveStringToFile(string jsonExport, string savePathAndFileName)
     {
         File.WriteAllText(savePathAndFileName, jsonExport);
+    }
+}
+
+public static class StaticRandom
+{
+    static int seed = System.Environment.TickCount;
+
+    static readonly ThreadLocal<System.Random> random =
+        new ThreadLocal<System.Random>(() => new System.Random(Interlocked.Increment(ref seed)));
+
+    public static float GetRandom()
+    {
+        return (float)random.Value.NextDouble();
     }
 }

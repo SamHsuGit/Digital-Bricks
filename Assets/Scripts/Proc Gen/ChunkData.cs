@@ -29,7 +29,7 @@ public class ChunkData
     // Minecraft uses Named Binary Tag Format to efficiently store binary data related to chunks in region files
     // Minecraft Chunks were originally stored as individual ".dat" files with the chunk position encoded in Base36
 
-    // MCRegion began storing groups of 32×32 chunks in individual ".mcr" files
+    // MCRegion began storing groups of 32ï¿½32 chunks in individual ".mcr" files
     // with coordinates in Base10 to reduce disk usage by cutting down on the number of file handles Minecraft had open at once
     // (because Minecraft is constantly reading/writing to world data as it saves in run-time and ran up against a hard limit of 1024 open handles)
 
@@ -72,7 +72,7 @@ public class ChunkData
 
     private Dictionary<Vector3Int, byte> voxelTypeMemo = new Dictionary<Vector3Int, byte>();
 
-    public byte GetVoxel(Vector3Int pos) //memoization function recommended as performance improvement by chatGPT
+    public byte GetVoxel(Vector3Int pos) //memorization function recommended as performance improvement by chatGPT
     {
         // checks if we already know the value of the voxel stored in voxelTypeMemo, if so return it
         if (voxelTypeMemo.ContainsKey(pos))
@@ -135,7 +135,7 @@ public class ChunkData
                         }
                         else
                         {
-                            voxelType = GetVoxel(voxelGlobalPos); // call memoization function recommended as performance improvement by chatGPT
+                            voxelType = GetVoxel(voxelGlobalPos); // call memorization function recommended as performance improvement by chatGPT
                             voxelTypeMemo[voxelGlobalPos] = voxelType;
                             map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
                         }

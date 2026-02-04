@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading;
 
 [System.Serializable]
 public class VoxelState
@@ -26,7 +25,7 @@ public class VoxelState
 
         if(SettingsStatic.LoadedSettings.useStuds)
         {
-            randFloat = StaticRandom.RandFloat();
+            randFloat = StaticRandom.GetRandom();
             if(randFloat >= studsThreshold) // controls if studs are visible on top of bricks
                 hasStuds = true;
             else
@@ -92,17 +91,4 @@ public class VoxelNeighbors
             _neighbors[index].neighbors[VoxelData.revFaceCheckIndex[index]] = parent;
     }
 
-}
-
-public static class StaticRandom
-{
-    static int seed = System.Environment.TickCount;
-
-    static readonly ThreadLocal<System.Random> random =
-        new ThreadLocal<System.Random>(() => new System.Random(Interlocked.Increment(ref seed)));
-
-    public static float RandFloat()
-    {
-        return (float)random.Value.NextDouble();
-    }
 }

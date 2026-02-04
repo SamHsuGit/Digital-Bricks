@@ -70,27 +70,6 @@ MonoBehaviour:
     scale: 2
     threshold: 0.69
     noiseOffset: 5
-  - nodeName: CaveLarge
-    blockID: 0
-    minHeight: 1
-    maxHeight: 256
-    scale: 0.001
-    threshold: 0.8
-    noiseOffset: 30
-  - nodeName: Cave
-    blockID: 0
-    minHeight: 1
-    maxHeight: 256
-    scale: 0.01
-    threshold: 0.6
-    noiseOffset: 40
-  - nodeName: CaveSmall
-    blockID: 0
-    minHeight: 1
-    maxHeight: 64
-    scale: 0.06
-    threshold: 0.5
-    noiseOffset: 30
   sprites:
   - {fileID: 21300000, guid: d0c3614280bfa6446a597eefba3a395f, type: 3}
   - {fileID: 21300000, guid: dab9715a4c02f9343a8e7342b6e7a8c8, type: 3}
