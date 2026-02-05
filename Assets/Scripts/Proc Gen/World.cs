@@ -1123,7 +1123,7 @@ public class World : MonoBehaviour
         //terrainHeightPercentChunk = erosionFactor;
         //terrainHeightPercentChunk = peaksAndValleysFactor;
 
-        float reductionFactor = 0.25f; // reduce impact of peaks and valleys as was pushing land up where should have been ocean
+        float reductionFactor = 0.40f; // reduce impact of peaks and valleys as was pushing land up where should have been ocean
 
         terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor + peaksAndValleysFactor * reductionFactor), 0, 0.99f);
         int _terrainHeightVoxels;
