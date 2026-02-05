@@ -191,25 +191,31 @@ public class World : MonoBehaviour
             _instance = this;
 
         //cloudHeight = VoxelData.ChunkHeight - 15;
-
-
+        float mainlandElevationPercent = 0.10f;
+        float plateauElevationPercent = 0.50f;
+        float step = 0.05f;
+        
         // define spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
+        // guide: keep at least 0.02 between shelves to create stark contrast, jumping height too fast stretches terrain
         continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
         {
             // rules: leave 0.2 between shelves, do not increase more than 0.3 between shelves
-            new Vector2(0.00f, seaLevelPercentChunk - 0.04f), // sea bed
-            new Vector2(0.30f, seaLevelPercentChunk), // sea 30%
-            new Vector2(0.31f, seaLevelPercentChunk + 0.05f), // coast 2% (make more gradual coast)
-            new Vector2(0.315f, seaLevelPercentChunk + 0.07f),
-            // insert small chance to generate high plateau right next to sea (no coast)
-            new Vector2(0.36f, seaLevelPercentChunk + 0.20f), // mainland 60%
-            new Vector2(0.50f, seaLevelPercentChunk + 0.30f),
-            new Vector2(0.70f, seaLevelPercentChunk + 0.25f),
-            new Vector2(0.72f, seaLevelPercentChunk + 0.40f), // plateau 30%
-            new Vector2(0.85f, seaLevelPercentChunk + 0.55f),
-            new Vector2(1.00f, seaLevelPercentChunk + 0.53f),
+            new Vector2(0.00f, seaLevelPercentChunk - 0.10f), // deep ocean
+            new Vector2(0.10f, seaLevelPercentChunk - 0.10f), // deep ocean only 10% to avoid interfering with caves
+            new Vector2(0.11f, seaLevelPercentChunk - 0.04f), // ocean
+            new Vector2(0.49f, seaLevelPercentChunk - 0.04f), // ocean is 40% to create continents
+            new Vector2(0.50f, seaLevelPercentChunk), // sea level
+            new Vector2(0.51f, seaLevelPercentChunk), // beach 2% and has the chance to get eroded into cliff
+            new Vector2(0.58f, seaLevelPercentChunk),
+            new Vector2(0.586f, seaLevelPercentChunk + step),
+            new Vector2(0.589f, seaLevelPercentChunk + mainlandElevationPercent), // mainland 30%
+            new Vector2(0.80f, seaLevelPercentChunk + mainlandElevationPercent + step),
+            new Vector2(0.82f, seaLevelPercentChunk + plateauElevationPercent), // plateau 20%
+            new Vector2(1.00f, seaLevelPercentChunk + plateauElevationPercent + step),
         };
 
+        // badlands, eroded badlands -  controlled by erosion
+        // river - controlled by erosion
         erosionSplinePoints = new Vector2[] // low erosion = peaks
         {
             new Vector2(0.00f, 0.61f),
@@ -225,6 +231,7 @@ public class World : MonoBehaviour
             new Vector2(1.00f, 0.04f),
         };
 
+        // jagged peaks - controlled by peaks and valleys
         peaksAndValleysSplinePoints = new Vector2[] // high peaks and valley = high peaks
         {
             new Vector2(0.05f, 0.34f),
