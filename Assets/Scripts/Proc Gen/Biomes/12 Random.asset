@@ -15,30 +15,7 @@ MonoBehaviour:
   biomeName: Random
   surfaceBlock: 2
   smallStructures: []
-  mediumStructures: []
-  largeStructures:
-  - name: HoneyComb
-    floraIndex: 11
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.8
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.3
-    minHeight: 13
-    maxHeight: 24
-    minRadius: 0
-    maxRadius: 0
-  - name: Monolith
-    floraIndex: 5
-    floraZoneScale: 1.2
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 5
-    floraPlacementThreshold: 0.88
-    minHeight: 1
-    maxHeight: 24
-    minRadius: 0
-    maxRadius: 0
   smallFlora: []
-  mediumFlora: []
   largeFlora: []
   XLFlora: []
   lodes:
@@ -47,28 +24,28 @@ MonoBehaviour:
     minHeight: 12
     maxHeight: 256
     scale: 2
-    threshold: 0.69
+    threshold: 0.78
     noiseOffset: 1
   - nodeName: CrystalsDeep
     blockID: 16
     minHeight: 1
     maxHeight: 11
     scale: 2
-    threshold: 0.64
+    threshold: 0.68
     noiseOffset: 1
   - nodeName: Gold
     blockID: 19
     minHeight: 12
     maxHeight: 256
     scale: 2
-    threshold: 0.62
+    threshold: 0.65
     noiseOffset: 5
   - nodeName: GoldDeep
     blockID: 19
     minHeight: 1
     maxHeight: 11
     scale: 2
-    threshold: 0.69
+    threshold: 0.78
     noiseOffset: 5
   sprites:
   - {fileID: 21300000, guid: d0c3614280bfa6446a597eefba3a395f, type: 3}

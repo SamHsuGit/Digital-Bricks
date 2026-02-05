@@ -34,13 +34,13 @@ public class SurfaceOb
 {
     public string name;
     public int floraIndex;
-    //public float floraZoneScale = 1.3f;
-    //[Range(0.1f, 1f)]
-    //public float floraZoneThreshold = 0.6f;
-    // public float floraPlacementScale = 15f;
-    // [Range(0.1f, 1f)]
-    // public float floraPlacementThreshold = 0.8f;
-    // public float placementOffset = 1;
+    public float floraZoneScale = 1.3f;
+    [Range(0.1f, 1f)]
+    public float floraZoneThreshold = 0.6f;
+    public float floraPlacementScale = 15f;
+    [Range(0.1f, 1f)]
+    public float floraPlacementThreshold = 0.8f;
+    public float placementOffset = 1;
     public int minHeight = 5;
     public int maxHeight = 12;
     public int minRadius = 4;
