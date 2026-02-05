@@ -32,7 +32,7 @@ public class World : MonoBehaviour
     [HideInInspector] public bool isAir = false; // used for 3D Perlin Noise pass
 
     // eventually derive these values from original perlin noise samples
-    private int terrainHeightOffset = 32; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
+    private int terrainHeight = 32; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
     private float squashingFactor = 0.5f; // drives values away from 0.5f
     private float terrainHeightPercentChunk; // defines height of terrain as percentage of total chunkHeight
 
@@ -127,7 +127,7 @@ public class World : MonoBehaviour
     private Vector2[] peaksAndValleysSplinePoints;
     
     // hard coded values
-    private const float seaLevelThreshold = 0.34f;
+    private const float seaLevelPercentChunk = 0.34f;
     //private const int LOD0threshold = 1;
 
     private static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
@@ -198,12 +198,12 @@ public class World : MonoBehaviour
         continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
         {
             new Vector2(0.00f, 0.00f),
-            new Vector2(seaLevelThreshold, 0.01f),
+            new Vector2(seaLevelPercentChunk, 0.01f),
             new Vector2(0.38f, 0.35f),
             new Vector2(0.51f, 0.36f),
             new Vector2(0.52f, 0.70f),
             new Vector2(0.73f, 0.76f),
-            new Vector2(1.00f, 0.90f),
+            new Vector2(1.00f, 0.99f),
         };
 
         erosionSplinePoints = new Vector2[] // low erosion = peaks
@@ -229,7 +229,7 @@ public class World : MonoBehaviour
             new Vector2(0.50f, 0.32f),
             new Vector2(0.68f, 0.54f),
             new Vector2(0.90f, 0.80f),
-            new Vector2(1.00f, 0.90f),
+            new Vector2(1.00f, 0.99f),
         };
     }
 
@@ -892,24 +892,28 @@ public class World : MonoBehaviour
 
         /* TERRAIN HEIGHT CALC */
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
-        terrainHeightOffset = CalcTerrainHeightOffset(xzCoords);
+        terrainHeight = CalcTerrainHeight(xzCoords);
 
-        // /* CARVE OUT USING 3D NOISE */
-        // // Calculate air blocks based on 3D Noise
-        // isAir = GetIsAir(globalPos);
-        // if (isAir)
-        //     voxelValue = 0; // air
-        // else
-        //     voxelValue = worldData.blockIDsubsurface; // stone
-
-        /* SURFACE BLOCKS PASS */
-        // add block types determined by biome calculation
-        if (yGlobalPos == terrainHeightOffset && terrainHeightPercentChunk <= seaLevelThreshold) // Generate water below sealevel
+        /* CARVE OUT USING 3D NOISE */
+        // Calculate air blocks based on 3D Noise
+        isAir = GetIsAir(globalPos);
+        if (isAir)
+            voxelValue = 0; // air
+        else if (yGlobalPos < terrainHeight)
+            voxelValue = worldData.blockIDsubsurface; // stone
+        if (voxelValue == 0 && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
             voxelValue = worldData.blockIDwater;
-        if (yGlobalPos == terrainHeightOffset)// && terrainHeightPercentChunk >= seaLevelThreshold) // if surface block above sea level
-            voxelValue = biome.surfaceBlock;
-        else if (yGlobalPos < terrainHeightOffset) // must be subsurface block
-            voxelValue = worldData.blockIDsubsurface;
+        if (yGlobalPos == terrainHeight)
+            voxelValue = biome.surfaceBlock; // dirt
+
+        //return voxelValue; // for testing without LODES or SURFACE OBJECTS
+        
+        /* OLD SURFACE BLOCKS PASS */
+        // add block types determined by biome calculation
+        // if (yGlobalPos == terrainHeight)// && terrainHeightPercentChunk >= seaLevelPercentChunk) // if surface block above sea level
+        //     voxelValue = biome.surfaceBlock;
+        // else if (yGlobalPos < terrainHeight) // must be subsurface block
+        //     voxelValue = worldData.blockIDsubsurface;
 
         // /* CAVE PASS */
         // //3D noise used for caves can occur above or below surface
@@ -919,14 +923,6 @@ public class World : MonoBehaviour
         //     return 0;
         // else if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f)) // small cave
         //     return 0;
-
-        /* WATER PASS */
-        // int seaLevel = Mathf.FloorToInt(VoxelData.ChunkHeight * 0.125f); // sea level definition
-        // if (yGlobalPos <= seaLevel  && yGlobalPos > seaLevel - 3 && voxelValue == 0) // empty air blocks below sealevel filled with water
-        //      voxelValue = worldData.blockIDwater;
-        //return voxelValue; // use for 3D noise testing, otherwise continue down algorithm
-
-        return voxelValue; // for testing without LODES or SURFACE OBJECTS
 
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
         if (worldData.planetSeed != 3)
@@ -945,7 +941,7 @@ public class World : MonoBehaviour
         // noise used to determine if to use cheese, spaghetti, or noodle caves
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
-        if (drawLodes && yGlobalPos < terrainHeightOffset - 5) // -5 offset ensures caves do not bleed into top of terrain
+        if (drawLodes && yGlobalPos < terrainHeight - 5) // -5 offset ensures caves do not bleed into top of terrain
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -963,7 +959,7 @@ public class World : MonoBehaviour
         // add structures like monoliths and flora like trees and plants and mushrooms
         // uses the tallest object height to limit the altitude at which objects can spawn
         int tallestStructureHeight = 25;
-        if (drawSurfaceObjects && (yGlobalPos == terrainHeightOffset && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelThreshold && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+        if (drawSurfaceObjects && (yGlobalPos == terrainHeight && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             // fertility adds random values to determine which surface object to generate and what height it will be
             //fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
@@ -979,7 +975,7 @@ public class World : MonoBehaviour
                     {
                         // if (Noise.Get2DPerlin(xzCoords, 0, biome.smallStructures[i].floraZoneScale) > biome.smallStructures[i].floraZoneThreshold)
                         // {
-                            if(StaticRandom.GetRandom() > 0.99f) // 1% chance to generate (random value changes every time game is loaded but voxels saved to memory)
+                            if(StaticRandom.GetRandom() > 0.999f) // 1% chance to generate (random value changes every time game is loaded but voxels saved to memory)
                             //if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.smallStructures[i].floraPlacementScale) > biome.smallStructures[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallStructures[i].floraIndex, globalPos, biome.smallStructures[i].minHeight, +
@@ -1019,7 +1015,7 @@ public class World : MonoBehaviour
                     {
                         // if (Noise.Get2DPerlin(xzCoords, 0, biome.smallFlora[i].floraZoneScale) > biome.smallFlora[i].floraZoneThreshold)
                         // {
-                            if(StaticRandom.GetRandom() > 0.90f) // 10% chance to generate (random value changes every time game is loaded but voxels saved to memory)
+                            if(StaticRandom.GetRandom() > 0.98f) // 10% chance to generate (random value changes every time game is loaded but voxels saved to memory)
                             //if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.smallFlora[i].floraPlacementScale) > biome.smallFlora[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallFlora[i].floraIndex, globalPos, biome.smallFlora[i].minHeight, +
@@ -1046,7 +1042,7 @@ public class World : MonoBehaviour
                     {
                         // if (Noise.Get2DPerlin(xzCoords, 0, biome.largeFlora[i].floraZoneScale) > biome.largeFlora[i].floraZoneThreshold)
                         // {
-                            if(StaticRandom.GetRandom() > 0.96f) // 4% chance to generate (random value changes every time game is loaded but voxels saved to memory)
+                            if(StaticRandom.GetRandom() > 0.98f) // 4% chance to generate (random value changes every time game is loaded but voxels saved to memory)
                             //if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.largeFlora[i].floraPlacementScale) > biome.largeFlora[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.largeFlora[i].floraIndex, globalPos, biome.largeFlora[i].minHeight, +
@@ -1060,7 +1056,7 @@ public class World : MonoBehaviour
                     {
                         // if (Noise.Get2DPerlin(xzCoords, 0, biome.XLFlora[i].floraZoneScale) > biome.XLFlora[i].floraZoneThreshold)
                         // {
-                            if(StaticRandom.GetRandom() > 0.89f) // 11% chance to generate (random value changes every time game is loaded but voxels saved to memory)
+                            if(StaticRandom.GetRandom() > 0.98f) // 11% chance to generate (random value changes every time game is loaded but voxels saved to memory)
                             //if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.XLFlora[i].floraPlacementScale) > biome.XLFlora[i].floraPlacementThreshold)
                             {
                                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.XLFlora[i].floraIndex, globalPos, biome.XLFlora[i].minHeight, +
@@ -1076,7 +1072,7 @@ public class World : MonoBehaviour
 
     public bool CheckMakeBase(Vector3Int globalPos)
     {
-        int baseTerrainHeight = terrainHeightOffset;
+        int baseTerrainHeight = terrainHeight;
 
         if (Settings.Platform != 2 && globalPos.y == baseTerrainHeight && globalPos.x == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
         {
@@ -1087,7 +1083,7 @@ public class World : MonoBehaviour
             return false;
     }
 
-    public int CalcTerrainHeightOffset(Vector2 xzCoords)
+    public int CalcTerrainHeight(Vector2 xzCoords)
     {
         // get values for continentalness, erosion, and wierdness from 3 Perlin Noise maps
         continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast
@@ -1095,7 +1091,7 @@ public class World : MonoBehaviour
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants
 
         // larger values expose weird 3D noise terrain
-        weirdness = Mathf.Clamp(Noise.Get2DPerlin(xzCoords, 321, 0.08f),0, 0.49f);
+        weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.02f);
 
         // use spline points to determine terrainHeight for each component
         float continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
@@ -1106,8 +1102,8 @@ public class World : MonoBehaviour
         //terrainHeightPercentChunk = continentalnessFactor;
         //terrainHeightPercentChunk = erosionFactor;
         //terrainHeightPercentChunk = peaksAndValleysFactor;
-        terrainHeightPercentChunk = seaLevelThreshold + continentalnessFactor * erosionFactor * peaksAndValleysFactor; // sea level plus factors multiplied together
-        terrainHeightPercentChunk = Mathf.Abs(Mathf.Clamp(terrainHeightPercentChunk, 0, 0.99f)); // must be a positive value between 0.5f and 0.9f
+        terrainHeightPercentChunk = seaLevelPercentChunk + continentalnessFactor * erosionFactor * peaksAndValleysFactor; // sea level plus factors multiplied together
+        terrainHeightPercentChunk = Mathf.Abs(Mathf.Clamp(terrainHeightPercentChunk, 0, 0.99f)); // must be a positive value between 0f and 0.99f
         //terrainHeightPercentChunk = (continentalness * continentalnessFactor + erosion * erosionFactor + peaksAndValleys * peaksAndValleysFactor);
         int _terrainHeightVoxels;
         // multiplies by number of voxels to get height in voxels
@@ -1120,38 +1116,46 @@ public class World : MonoBehaviour
     {
         // Broken, eventually turn this into a single function for terrainHeight using 3D Perlin Noise and (3) other 2D Perlin Noise maps to determine height and squashing?
         // based on https://youtu.be/CSa5O6knuwI
+        // chance of block is a function of height:
+        // chance of block (density) gradually decreased to 0 at top
+        // chance of block (density) gradually increased to 1 at bottom
+        // squashing factor hides the 3D noise by reducing the amount the density was changed
+        // terrainHeight controls the base height of the terrain
         
-        //float terrainHeightOffset = VoxelData.ChunkHeight / 2; // for testing purposes
+        //float terrainHeight = VoxelData.ChunkHeight / 2; // for testing purposes
         // use to find good values for limits, eventually drive these values by adding 0.1f times the driving factors
 
         // high density is block, low density is air
         float density = 1f; // initialize
 
-        // default values
-        float x1 = 0; // bottom of chunk
-        float y1 = 0.9f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
-        float x2 = terrainHeightOffset; // position at terrainHeight
-        float y2 = 0.25f; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
+        // // default values
+        // float x1 = 0; // bottom of chunk
+        // float y1 = 0.6f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
+        // float x2 = terrainHeight; // position at terrainHeight
+        // weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1 to keep y2 positive
+        // float y2 = 1.0f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
 
         // float x1 = 0; // bottom of chunk
         // float y1 = 0.51f + weirdness; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
-        // float x2 = terrainHeightOffset; // position at terrainHeight
+        // float x2 = terrainHeight; // position at terrainHeight
         // float y2 = 0.49f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
         
-        // float x1 = terrainHeightOffset; // 1st point always the terrainHeight
-        // float y1 = 1f; // density unchanged at terrainHeight
-        // float x2 = terrainHeightOffset; // assume at terrainHeight, otherwise change this value
-        // float y2 = 0.5f - squashingFactor; // small threshold at high elevations
-        // if(globalPos.y > terrainHeightOffset) // above surface
-        // {
-        //     x2 = VoxelData.ChunkHeight; // top of chunk
-        //     y2 = 0.5f - squashingFactor; // small threshold at high elevations
-        // } 
-        // else if (globalPos.y < terrainHeightOffset) // below surface
-        // {
-        //     x2 = 0; // bottom of chunk
-        //     y2 = 0.5f + squashingFactor; // large threshold at low elevations
-        // }
+        float x1 = terrainHeight; // terrainHeight
+        float y1 = 0.5f; // density at terrainHeight
+        float x2 = 0; // bottom of chunk
+        float y2 = 1f; // density unchanged at terrainHeight
+        if(globalPos.y > terrainHeight) // above surface
+        {
+            x2 = VoxelData.ChunkHeight; // top of chunk
+            weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1
+            y2 = y1 - weirdness; // density decreased above terrain height
+        } 
+        else if (globalPos.y < terrainHeight) // below surface
+        {
+            x2 = 0; // bottom of chunk
+            weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1
+            y2 = y1 + weirdness; // density increased below terrain height
+        }
 
         // input elevation, output density (cannot be negative)
         density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y);
