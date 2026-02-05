@@ -196,13 +196,18 @@ public class World : MonoBehaviour
         // define spline points to define terrain shape like in https://www.youtube.com/watch?v=CSa5O6knuwI&t=1198s
         continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
         {
-            new Vector2(0.00f, 0.38f),
-            new Vector2(0.34f, 0.39f),
-            new Vector2(0.38f, 0.35f),
-            new Vector2(0.51f, 0.36f),
-            new Vector2(0.52f, 0.58f),
-            new Vector2(0.73f, 0.59f),
-            new Vector2(1.00f, 0.60f),
+            // rules: leave 0.2 between shelves, do not increase more than 0.3 between shelves
+            new Vector2(0.00f, seaLevelPercentChunk - 0.04f), // sea bed
+            new Vector2(0.30f, seaLevelPercentChunk), // sea 30%
+            new Vector2(0.31f, seaLevelPercentChunk + 0.05f), // coast 2% (make more gradual coast)
+            new Vector2(0.315f, seaLevelPercentChunk + 0.07f),
+            // insert small chance to generate high plateau right next to sea (no coast)
+            new Vector2(0.36f, seaLevelPercentChunk + 0.20f), // mainland 60%
+            new Vector2(0.50f, seaLevelPercentChunk + 0.30f),
+            new Vector2(0.70f, seaLevelPercentChunk + 0.25f),
+            new Vector2(0.72f, seaLevelPercentChunk + 0.40f), // plateau 30%
+            new Vector2(0.85f, seaLevelPercentChunk + 0.55f),
+            new Vector2(1.00f, seaLevelPercentChunk + 0.53f),
         };
 
         erosionSplinePoints = new Vector2[] // low erosion = peaks
@@ -1092,22 +1097,21 @@ public class World : MonoBehaviour
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants
 
-        
-
         // use spline points to determine terrainHeight for each component
+        // from example https://www.youtube.com/watch?v=CSa5O6knuwI&t=1360s continentalness spline point feeds into erosion and peaks and valleys
         float continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
-        float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
-        float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
+        float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints); // higher continentalness leads to less erosion
+        float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints); // less erosion leads to higher peaksandvalleys
 
         // larger values expose weird 3D noise terrain
         weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.01f);
         //weirdness = peaksAndValleysFactor; // weird only where there are large peaks to obfuscate the perlin hills
 
         // for testing to individually visualize the spline points
-        //terrainHeightPercentChunk = continentalnessFactor;
+        terrainHeightPercentChunk = continentalnessFactor;
         //terrainHeightPercentChunk = erosionFactor;
         //terrainHeightPercentChunk = peaksAndValleysFactor;
-        terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor + peaksAndValleysFactor), 0, 0.99f);
+        //terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor + peaksAndValleysFactor), 0, 0.99f);
         int _terrainHeightVoxels;
         // multiplies by number of voxels to get height in voxels
         int maxHeight = VoxelData.ChunkHeight - 1;
