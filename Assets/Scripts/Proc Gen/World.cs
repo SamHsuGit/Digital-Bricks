@@ -216,7 +216,7 @@ public class World : MonoBehaviour
 
         // badlands, eroded badlands -  controlled by erosion
         // river - controlled by erosion
-        erosionSplinePoints = new Vector2[] // low erosion = peaks
+        erosionSplinePoints = new Vector2[] // low erosion = high terrain height
         {
             new Vector2(0.00f, 0.61f),
             new Vector2(0.10f, 0.60f),
@@ -1099,26 +1099,43 @@ public class World : MonoBehaviour
 
     public int CalcTerrainHeight(Vector2 xzCoords)
     {
+        float continentalnessFactor;
+        float erosionFactor;
+        float peaksAndValleysFactor;
+
         // get values for continentalness, erosion, and wierdness from 3 Perlin Noise maps
         continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast
-        erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous
-        peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants
 
         // use spline points to determine terrainHeight for each component
         // from example https://www.youtube.com/watch?v=CSa5O6knuwI&t=1360s continentalness spline point feeds into erosion and peaks and valleys
-        float continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
-        float erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints); // higher continentalness leads to less erosion
-        float peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints); // less erosion leads to higher peaksandvalleys
+        continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
+
+        if(continentalness < 0.5f)
+        {
+            erosionFactor = 0;
+            peaksAndValleysFactor = 0;
+        }
+        else
+        {
+            erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous
+            peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants
+
+            erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints); // higher continentalness leads to less erosion
+            peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints); // less erosion leads to higher peaksandvalleys
+        }
 
         // larger values expose weird 3D noise terrain
         weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.01f);
         //weirdness = peaksAndValleysFactor; // weird only where there are large peaks to obfuscate the perlin hills
 
         // for testing to individually visualize the spline points
-        terrainHeightPercentChunk = continentalnessFactor;
+        //terrainHeightPercentChunk = continentalnessFactor;
         //terrainHeightPercentChunk = erosionFactor;
         //terrainHeightPercentChunk = peaksAndValleysFactor;
-        //terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor + peaksAndValleysFactor), 0, 0.99f);
+        
+        float reductionFactor = 0.5f; // need to update values in spline table
+
+        terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor * reductionFactor + peaksAndValleysFactor * reductionFactor), 0, 0.99f);
         int _terrainHeightVoxels;
         // multiplies by number of voxels to get height in voxels
         int maxHeight = VoxelData.ChunkHeight - 1;
