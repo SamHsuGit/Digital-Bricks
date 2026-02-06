@@ -203,7 +203,7 @@ public class World : MonoBehaviour
             new Vector2(0.00f, seaLevelPercentChunk - 0.20f), // deep ocean
             new Vector2(0.10f, seaLevelPercentChunk - 0.20f), // deep ocean only 10% to avoid interfering with caves
             new Vector2(0.11f, seaLevelPercentChunk - 0.10f), // ocean
-            new Vector2(0.49f, seaLevelPercentChunk - 0.10f), // ocean is majority to create continents
+            new Vector2(0.59f, seaLevelPercentChunk - 0.10f), // ocean is majority to create continents
             new Vector2(0.60f, seaLevelPercentChunk), // beach 2% and has the chance to get eroded into cliff
             new Vector2(0.61f, seaLevelPercentChunk),
             new Vector2(0.68f, seaLevelPercentChunk),
@@ -241,7 +241,7 @@ public class World : MonoBehaviour
             new Vector2(0.50f, 0.37f),
             new Vector2(0.68f, 0.54f),
             new Vector2(0.90f, 0.69f),
-            new Vector2(1.00f, 0.70f),
+            new Vector2(1.00f, 0.99f),
         };
     }
 
@@ -939,6 +939,13 @@ public class World : MonoBehaviour
                 return 0;
         }
 
+        // ABOVE GROUND WEIRD TERRAIN CARVING
+        if(yGlobalPos > seaLevelPercentChunk * VoxelData.ChunkHeight)
+        {
+            if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f)) // small cave
+                return 0;
+        }
+
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
         if (worldData.planetSeed != 3)
         {
@@ -1110,10 +1117,10 @@ public class World : MonoBehaviour
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
 
         // use spline points to determine terrainHeight for each component
-        // from example https://www.youtube.com/watch?v=CSa5O6knuwI&t=1360s continentalness spline point feeds into erosion and peaks and valleys
+        // from example https://www.youtube.com/watch?v=CSa5O6knuwI&t=1360s
         continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
-        erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints); // increase at continentalness < 0.5f
-        peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints); // reduce at continentalness < 0.5f (only should have impact where continentalness > 0.5f)
+        erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
+        peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
         
         // larger values expose weird 3D noise terrain
         weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.01f);
@@ -1123,7 +1130,8 @@ public class World : MonoBehaviour
         //terrainHeightPercentChunk = erosionFactor;
         //terrainHeightPercentChunk = peaksAndValleysFactor;
 
-        float reductionFactor = 0.30f; // reduce impact of peaks and valleys as was pushing land up where should have been ocean
+        // reduce impact of peaks and valleys as was pushing land up where should have been ocean
+        float reductionFactor = 0.3f;
 
         terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor + peaksAndValleysFactor * reductionFactor), 0, 0.99f);
         int _terrainHeightVoxels;
@@ -1149,34 +1157,18 @@ public class World : MonoBehaviour
         // high density is block, low density is air
         float density = 1f; // initialize
 
+        // FOR TESTING
         // float x1 = 0; // bottom of chunk
         // float y1 = 1f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
         // float x2 = terrainHeight; // position at terrainHeight
         // float y2 = 0; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
 
-        // default values
+        // MAIN ALGORITHM
         float x1 = 0; // bottom of chunk
         float y1 = 0.6f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
         float x2 = terrainHeight; // position at terrainHeight
         weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1 to keep y2 positive
         float y2 = 1.0f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
-        
-        // float x1 = terrainHeight; // terrainHeight
-        // float y1 = 0.5f; // density at terrainHeight
-        // float x2 = 0; // bottom of chunk
-        // float y2 = 1f; // density unchanged at terrainHeight
-        // if(globalPos.y > terrainHeight) // above surface
-        // {
-        //     x2 = VoxelData.ChunkHeight; // top of chunk
-        //     weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1
-        //     y2 = y1 - weirdness; // density decreased above terrain height
-        // } 
-        // else if (globalPos.y < terrainHeight) // below surface
-        // {
-        //     x2 = 0; // bottom of chunk
-        //     weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1
-        //     y2 = y1 + weirdness; // density increased below terrain height
-        // }
 
         // input elevation, output density (cannot be negative)
         density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y);
