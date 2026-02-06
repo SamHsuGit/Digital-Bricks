@@ -910,15 +910,15 @@ public class World : MonoBehaviour
 
         /* 3D NOISE BASE TERRAIN GENERATION */
         // Calculate air blocks based on 3D Noise
-        isAir = GetIsAir(globalPos);
-        if (isAir)
-            voxelValue = 0; // air
-        else if (yGlobalPos < terrainHeight)
-            voxelValue = worldData.blockIDsubsurface; // stone
-        if (yGlobalPos == terrainHeight)
-            voxelValue = biome.surfaceBlock; // dirt
-        if (voxelValue == 0 && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
-            voxelValue = worldData.blockIDwater; // water
+        // isAir = GetIsAir(globalPos);
+        // if (isAir)
+        //     voxelValue = 0; // air
+        // else if (yGlobalPos < terrainHeight)
+        //     voxelValue = worldData.blockIDsubsurface; // stone
+        // if (yGlobalPos == terrainHeight)
+        //     voxelValue = biome.surfaceBlock; // dirt
+        // if (voxelValue == 0 && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
+        //     voxelValue = worldData.blockIDwater; // water
 
         // /* OLD BASE TERRAIN GENERATION */
         // // add block types determined by biome calculation
@@ -927,7 +927,19 @@ public class World : MonoBehaviour
         // else if (yGlobalPos < terrainHeight) // must be subsurface block
         //     voxelValue = worldData.blockIDsubsurface;
 
-        //return voxelValue; // for testing without LODES or SURFACE OBJECTS
+        // TESTING (more critical blocks at bottom as they overwrite blocks above)
+        isAir = GetIsAir(globalPos);
+        if (yGlobalPos <= terrainHeight)
+        {
+            voxelValue = worldData.blockIDsubsurface; // create stone world for base terrain
+            if (yGlobalPos > terrainHeight - 5f);
+                voxelValue = biome.surfaceBlock; // replace topsoil with dirt
+        }
+        if (isAir)
+            voxelValue = 0; // carve out air using 3d noise at any elevation
+        if (voxelValue == 0 && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
+            voxelValue = worldData.blockIDwater; // water
+        return voxelValue; // for testing without LODES or SURFACE OBJECTS
 
         /* CAVE PASS */
         //3D noise used for caves
@@ -940,7 +952,6 @@ public class World : MonoBehaviour
             else if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f)) // small cave
                 return 0;
         }
-
         // ABOVE GROUND WEIRD TERRAIN CARVING
         if(yGlobalPos > seaLevelPercentChunk * VoxelData.ChunkHeight)
         {
@@ -1139,7 +1150,7 @@ public class World : MonoBehaviour
         //terrainHeightPercentChunk = peaksAndValleysFactor;
 
         // reduce impact of peaks and valleys as was pushing land up where should have been ocean
-        float reductionFactor = 0.3f;
+        float reductionFactor = 0.75f;
 
         terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor + peaksAndValleysFactor * reductionFactor), 0, 0.99f);
         int _terrainHeightVoxels;
@@ -1173,7 +1184,7 @@ public class World : MonoBehaviour
 
         // MAIN ALGORITHM
         float x1 = 0; // bottom of chunk
-        float y1 = 0.6f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
+        float y1 = 0.9f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
         float x2 = terrainHeight; // position at terrainHeight
         weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1 to keep y2 positive
         float y2 = 1.0f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
