@@ -18,9 +18,12 @@ public class ChunkData
     // Therefore, each chunk file should be only 24 KB (actual is 361 KB for 96 chunkHeight, 961 KB for 256 chunkHeight, 15 times larger, perhaps due to Unity Serialization?
 
     // Optimized Data storage (possibly slow random access) 3D byte array into 1D string with Run Length Encoding
+    // https://eisenwave.github.io/voxel-compression-docs/rle/rle.html // voxel run length encoding
     // Non Run Length Encoded bytes (theoretical) = 16x16x96 = 24,796 bytes (24.8 KB)
     // Non Run Length Encoded bytes (actual) = 361,000 bytes (361 KB)
     // Run Length Encoded Memory Usage = 5,000 bytes (5KB) (~20% compression)
+    // every minecraft region (32x32 chunks = 1024 chunks) is roughly 8 MB so each chunk roughly ( 8 MB / 1024 = 7.8 KB = 7,800 bytes)
+    // using RLE, each chunk currently about 3,000 bytes for 383 block world height (same as Minecraft)
 
     // Future Optimizations:
     // Only save the voxel states of modified voxels instead of an entire chunk
@@ -40,6 +43,18 @@ public class ChunkData
     // Minecraft further divides world into regions = 32x32 chunks https://docs.safe.com/fme/html/FME_Desktop_Documentation/FME_ReadersWriters/minecraft/minecraft.htm
     // Minecraft compresses save data to reduce level.data to 2 kB?!
 
+    //    Currently storing block ids as bytes
+    // TO-DO: store the blocks as literally as possible in memory to reduce computation needed by CPU to read blocks from memory since memory is cheap and compute has performance drawbacks
+    //https://www.youtube.com/watch?v=qnGoGq7DWMc
+    //https://www.youtube.com/watch?v=LxVLqCiDqd8 Binary Meshing
+
+    //Revamp data structure to store chunks as list of 2D arrays of Int32, each int32 is a number representing 0 or 1 for block
+    //or air(number of 2D arrays = # of block types) with 820 unique block types in minecraft this would mean working
+    //through 820 arrays x 16 for each chunk with most of the arrays containing only zeros, could optimize by making
+    //such that each chunk has a list of which blocktype arrays are non-zero and only process those
+    //Minecraft  used to store blocks as byte arrays but bytes can only have values from 0 to 256,
+    // when there were more than 256 block types minecraft instead stores the list of used blocks as a
+    // palette and then indexes the palette.There are lists for each stored voxel state (orientation, light level, etc)
 
     // The global position of the chunk. ie, (16, 16) NOT (1, 1). We want to be able to
     // access it as a Vector2Int, but Vector2Int's are not serialized so we won't be able

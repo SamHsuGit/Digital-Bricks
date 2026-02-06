@@ -200,15 +200,17 @@ public class World : MonoBehaviour
         continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
         {
             // rules: leave 0.2 between shelves, do not increase more than 0.3 between shelves
+            // earth's surface is 71% covered by water, for aesthetic gameplay purposes make 50% of world ocean
+            // use noise to vary scale of continentalness to make large continents or small islands
             new Vector2(0.00f, seaLevelPercentChunk - 0.20f), // deep ocean
             new Vector2(0.10f, seaLevelPercentChunk - 0.20f), // deep ocean only 10% to avoid interfering with caves
             new Vector2(0.11f, seaLevelPercentChunk - 0.10f), // ocean
-            new Vector2(0.59f, seaLevelPercentChunk - 0.10f), // ocean is majority to create continents
-            new Vector2(0.60f, seaLevelPercentChunk), // beach 2% and has the chance to get eroded into cliff
-            new Vector2(0.61f, seaLevelPercentChunk),
-            new Vector2(0.68f, seaLevelPercentChunk),
-            new Vector2(0.686f, seaLevelPercentChunk + step),
-            new Vector2(0.689f, seaLevelPercentChunk + mainlandElevationPercent), // mainland 30%
+            new Vector2(0.49f, seaLevelPercentChunk - 0.10f), // ocean is majority to create continents
+            new Vector2(0.50f, seaLevelPercentChunk), // beach 2% and has the chance to get eroded into cliff
+            new Vector2(0.51f, seaLevelPercentChunk),
+            new Vector2(0.58f, seaLevelPercentChunk),
+            new Vector2(0.586f, seaLevelPercentChunk + step),
+            new Vector2(0.589f, seaLevelPercentChunk + mainlandElevationPercent), // mainland 30%
             new Vector2(0.80f, seaLevelPercentChunk + mainlandElevationPercent + step),
             new Vector2(0.82f, seaLevelPercentChunk + plateauElevationPercent), // plateau 20%
             new Vector2(1.00f, seaLevelPercentChunk + plateauElevationPercent + step),
@@ -1107,12 +1109,18 @@ public class World : MonoBehaviour
 
     public int CalcTerrainHeight(Vector2 xzCoords)
     {
+        float continentalnessScaleFactor;
         float continentalnessFactor;
         float erosionFactor;
         float peaksAndValleysFactor;
 
+        continentalnessScaleFactor = Noise.Get2DPerlin(xzCoords, 4, 0.01f); // scale of noise is 0.01 to sample large patches, determines continent size (large or islands)
+        // use math operation to change continentalnessScaleFactor from value between 0 and 1 to value between 0.1 and 0.01
+        continentalnessScaleFactor *= 0.75f; // multiply by 0.1f to reduce scale factory by 10 (large areas)
+        // clamp values between 0.75 and 0.075?
+
         // 3 different Perlin Noise maps create 3 distinct modifiers that can interact when the noise is overlayed
-        continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast
+        continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.01f); // how far from coast
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast)
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
 
