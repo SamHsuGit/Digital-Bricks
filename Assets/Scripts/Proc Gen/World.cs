@@ -81,6 +81,7 @@ public class World : MonoBehaviour
     [HideInInspector] public static World Instance { get { return _instance; } }
 
     // PRIVATE VARIABLES
+    private float biomeScale;
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
     //private int cloudHeight;
@@ -177,6 +178,11 @@ public class World : MonoBehaviour
 
         playerCount = 0;
 
+        if(useBiomes && !SettingsStatic.LoadedSettings.developerMode)
+            biomeScale = 0.02f;
+        else
+            biomeScale = 0.08f;
+
         // lowest acceptable drawDistance is 1
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.viewDistance < 1)
             SettingsStatic.LoadedSettings.viewDistance = 1;
@@ -251,8 +257,8 @@ public class World : MonoBehaviour
         weirdnessSplinePoints = new Vector2[]
         {
             new Vector2(0.00f, 0.00f),
-            new Vector2(0.50f, 0.35f),
-            new Vector2(0.51f, 0.80f),
+            new Vector2(0.60f, 0.35f),
+            new Vector2(0.61f, 0.80f), // large jump such that 60% of terrain is weird
             new Vector2(1.00f, 1.00f),
         };
     }
@@ -902,8 +908,8 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
-        temperature = Noise.Get2DPerlin(xzCoords, 6666, 0.06f); // determines cloud threshold and biome
-        humidity = Noise.Get2DPerlin(xzCoords, 2222, 0.07f); // determines cloud threshold and biome
+        temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines biome
+        humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines biome
 
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
             biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
@@ -946,6 +952,13 @@ public class World : MonoBehaviour
                 return 0;
         }
 
+        // // ABOVE GROUND WEIRD TERRAIN CARVING
+        // if(continentalness > 0.6f)
+        // {
+        //     if (Noise.Get3DPerlin(globalPos, 40, 0.06f, 0.5f)) // small cave entrance
+        //         voxelValue = 0;
+        // }
+
         //WEIRD TERRAIN GEN FOR ALL BUT WORLD 3
         if (worldData.planetSeed != 3)
         {
@@ -963,7 +976,7 @@ public class World : MonoBehaviour
         // noise used to determine if to use cheese, spaghetti, or noodle caves
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
-        if (drawLodes && yGlobalPos < terrainHeight - 5) // -5 offset ensures caves do not bleed into top of terrain
+        if (drawLodes && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight) // lodes should not appear above sea level, must mine for them
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -981,7 +994,7 @@ public class World : MonoBehaviour
         // add structures like monoliths and flora like trees and plants and mushrooms
         // uses the tallest object height to limit the altitude at which objects can spawn
         int tallestStructureHeight = 25;
-        if (drawSurfaceObjects && (yGlobalPos == terrainHeight && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+        if (weirdness < 0.8f && drawSurfaceObjects && (yGlobalPos == terrainHeight && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             // fertility adds random values to determine which surface object to generate and what height it will be
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);

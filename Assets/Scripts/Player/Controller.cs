@@ -1093,7 +1093,7 @@ public class Controller : NetworkBehaviour
 
     private void PressedShoot()
     {
-        if (Time.time < mining.nextTimeToFire) // limit how fast can use this
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this and cannot use in 3rd person cam mode
             return;
 
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
@@ -1107,33 +1107,33 @@ public class Controller : NetworkBehaviour
             eat.Play();
             TakeFromCurrentSlot(1);
         }
-        else if (holdingGrab) // IF HOLDING SOMETHING
-        {
-            holdingGrab = false;
-            reticle.SetActive(true);
+        // else if (holdingGrab) // IF HOLDING SOMETHING
+        // {
+        //     holdingGrab = false;
+        //     reticle.SetActive(true);
 
-            if (grabbedPrefab != null) // IF HOLDING VOXEL
-            {
-                Vector3 position = holdPos.position;
+        //     if (grabbedPrefab != null) // IF HOLDING VOXEL
+        //     {
+        //         Vector3 position = holdPos.position;
 
-                shootBricks.Play();
+        //         shootBricks.Play();
 
-                SpawnVoxelRbFromWorld(position, blockID);
+        //         SpawnVoxelRbFromWorld(position, blockID);
 
-                UpdateGrabObject(blockID);
-            }
-            else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
-            {
-                heldObRb.linearVelocity = playerCamera.transform.forward * 25; // give some velocity forwards
-            }
+        //         UpdateGrabObject(blockID);
+        //     }
+        //     else if (heldObRb != null) // IF HOLDING NON-VOXEL RB
+        //     {
+        //         heldObRb.linearVelocity = playerCamera.transform.forward * 25; // give some velocity forwards
+        //     }
 
-            if (heldObRb != null)
-            {
-                heldObRb.useGravity = true;
-                heldObRb.detectCollisions = true;
-            }
-            heldObRb = null;
-        }
+        //     if (heldObRb != null)
+        //     {
+        //         heldObRb.useGravity = true;
+        //         heldObRb.detectCollisions = true;
+        //     }
+        //     heldObRb = null;
+        // }
         else if (mining.hit.transform != null && mining.hit.transform.gameObject.tag == "placedBrick") // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
         {
             GameObject hitObject = mining.hit.transform.gameObject;
@@ -1168,7 +1168,9 @@ public class Controller : NetworkBehaviour
 
             shootBricks.Play();
 
-            SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+            PlayerRemoveVoxel();
+
+            //SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
         }
         // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
         // {
@@ -1178,6 +1180,8 @@ public class Controller : NetworkBehaviour
         //         SpawnObject(2, 0, rayCastStart);
         //     //TakeFromCurrentSlot(1);
         // }
+
+        reticle.SetActive(true);
     }
 
     private void SpawnTempBrick(int materialIndex)
@@ -1251,7 +1255,7 @@ public class Controller : NetworkBehaviour
         string g = "0.000000";
         string h = "0.000000";
         string i = "1.000000";
-
+        
         string partname = ldrawPartsTypes[currentBrickType][currentBrickIndex];
         Vector3 pos = new Vector3(0, 1, 0);
         string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
