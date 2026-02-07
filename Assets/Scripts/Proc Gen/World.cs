@@ -124,7 +124,8 @@ public class World : MonoBehaviour
     private Vector2[] continentalnessSplinePoints;
     private Vector2[] erosionSplinePoints;
     private Vector2[] peaksAndValleysSplinePoints;
-    
+    private Vector2[] weirdnessSplinePoints;
+
     // hard coded values
     private const float seaLevelPercentChunk = 0.34f;
     //private const int LOD0threshold = 1;
@@ -244,6 +245,15 @@ public class World : MonoBehaviour
             new Vector2(0.68f, 0.54f),
             new Vector2(0.90f, 0.69f),
             new Vector2(1.00f, 0.99f),
+        };
+
+        // weirdness - exposes 3d noise above terrain elevation
+        weirdnessSplinePoints = new Vector2[]
+        {
+            new Vector2(0.00f, 0.00f),
+            new Vector2(0.50f, 0.35f),
+            new Vector2(0.51f, 0.80f),
+            new Vector2(1.00f, 1.00f),
         };
     }
 
@@ -908,35 +918,19 @@ public class World : MonoBehaviour
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         terrainHeight = CalcTerrainHeight(xzCoords);
 
-        /* 3D NOISE BASE TERRAIN GENERATION */
-        // Calculate air blocks based on 3D Noise
+        /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
+        // TERRAIN DIRT PASS
+        if (yGlobalPos == terrainHeight)
+           voxelValue = biome.surfaceBlock; // dirt
+
+        // 3D NOISE PASS
         isAir = GetIsAir(globalPos);
         if (isAir)
-            voxelValue = 0; // air
+           voxelValue = 0; // air
         else if (yGlobalPos < terrainHeight)
-            voxelValue = worldData.blockIDsubsurface; // stone
-        if (yGlobalPos == terrainHeight)
-            voxelValue = biome.surfaceBlock; // dirt
+           voxelValue = worldData.blockIDsubsurface; // stone
         if (voxelValue == 0 && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
-            voxelValue = worldData.blockIDwater; // water
-
-        // /* OLD BASE TERRAIN GENERATION */
-        // // add block types determined by biome calculation
-        // if (yGlobalPos == terrainHeight)// && terrainHeightPercentChunk >= seaLevelPercentChunk) // if surface block above sea level
-        //     voxelValue = biome.surfaceBlock;
-        // else if (yGlobalPos < terrainHeight) // must be subsurface block
-        //     voxelValue = worldData.blockIDsubsurface;
-
-        //// TESTING (trying to use 3d noise at all elevations
-        //isAir = GetIsAir(globalPos);
-        //if (isAir)
-        //    voxelValue = 0; // air
-        //else if (yGlobalPos < terrainHeight)
-        //    voxelValue = worldData.blockIDsubsurface; // stone
-        //if (yGlobalPos == terrainHeight)
-        //    voxelValue = biome.surfaceBlock; // dirt
-        //if (voxelValue == 0 && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
-        //    voxelValue = worldData.blockIDwater; // water
+           voxelValue = worldData.blockIDwater; // water
 
         //return voxelValue; // for testing without LODES or SURFACE OBJECTS
 
@@ -949,13 +943,6 @@ public class World : MonoBehaviour
             else if (Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f)) // medium cave
                 return 0;
             else if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f)) // small cave
-                return 0;
-        }
-
-        // ABOVE GROUND WEIRD TERRAIN CARVING
-        if (yGlobalPos > seaLevelPercentChunk * VoxelData.ChunkHeight)
-        {
-            if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f)) // small cave
                 return 0;
         }
 
@@ -1120,18 +1107,16 @@ public class World : MonoBehaviour
 
     public int CalcTerrainHeight(Vector2 xzCoords)
     {
-        float continentalnessScaleFactor;
+        float continentScaleFactor;
         float continentalnessFactor;
         float erosionFactor;
         float peaksAndValleysFactor;
 
-        continentalnessScaleFactor = Noise.Get2DPerlin(xzCoords, 4, 0.01f); // scale of noise is 0.01 to sample large patches, determines continent size (large or islands)
-        // use math operation to change continentalnessScaleFactor from value between 0 and 1 to value between 0.1 and 0.01
-        continentalnessScaleFactor *= 0.75f; // multiply by 0.1f to reduce scale factory by 10 (large areas)
-        // clamp values between 0.75 and 0.075?
+        //continentScaleFactor = Noise.Get2DPerlin(xzCoords, 4, 0.01f) * 0.1f; // scale of noise is 0.01 to sample large patches, determines continent size (large or islands)
+        // use math operation to change continentScaleFactor from value between 0 and 1 to value between 0.08 and 0.0
 
         // 3 different Perlin Noise maps create 3 distinct modifiers that can interact when the noise is overlayed
-        continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.01f); // how far from coast
+        continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast, spline points scaled for 0.08f noise scale
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast)
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
 
@@ -1142,17 +1127,14 @@ public class World : MonoBehaviour
         peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
         
         // larger values expose weird 3D noise terrain
-        weirdness = Noise.Get2DPerlin(xzCoords, 321, 0.01f);
+        weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.01f), weirdnessSplinePoints);
 
         // for testing to individually visualize the effects of the spline points
         //terrainHeightPercentChunk = continentalnessFactor;
         //terrainHeightPercentChunk = erosionFactor;
         //terrainHeightPercentChunk = peaksAndValleysFactor;
 
-        // reduce impact of peaks and valleys as was pushing land up where should have been ocean
-        float reductionFactor = 0.75f;
-
-        terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor - erosionFactor + peaksAndValleysFactor * reductionFactor), 0, 0.99f);
+        terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor + peaksAndValleysFactor * erosionFactor), 0, 0.99f);
         int _terrainHeightVoxels;
         // multiplies by number of voxels to get height in voxels
         int maxHeight = VoxelData.ChunkHeight - 1;
