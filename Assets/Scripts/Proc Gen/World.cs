@@ -927,7 +927,11 @@ public class World : MonoBehaviour
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
         if (yGlobalPos == terrainHeight)
-           voxelValue = biome.surfaceBlock; // dirt
+            voxelValue = biome.surfaceBlock; // dirt
+        if (yGlobalPos == terrainHeight && yGlobalPos > 0.7 * VoxelData.ChunkHeight)
+            voxelValue = worldData.blockIDsubsurface; // rocky mountains
+        if (yGlobalPos == terrainHeight && yGlobalPos > 0.8 * VoxelData.ChunkHeight)
+            voxelValue = 4; // snow on mountain tops
 
         // 3D NOISE PASS
         isAir = GetIsAir(globalPos);
