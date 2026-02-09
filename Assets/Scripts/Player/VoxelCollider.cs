@@ -49,7 +49,7 @@ public class VoxelCollider : MonoBehaviour
 
                 halfColliderHeight = height / 2;
                 stepHeight = 1;
-                colliderOffset = 1;
+                colliderOffset = 0;
                 stepUpOffset = new Vector3(0, stepHeight, 0);
                 maxJumps = 2;
             }

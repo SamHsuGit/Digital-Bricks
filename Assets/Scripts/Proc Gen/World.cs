@@ -179,9 +179,13 @@ public class World : MonoBehaviour
         playerCount = 0;
 
         if(useBiomes && !SettingsStatic.LoadedSettings.developerMode)
+        {
             biomeScale = 0.02f;
+        }
         else
+        {
             biomeScale = 0.08f;
+        }
 
         // lowest acceptable drawDistance is 1
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.viewDistance < 1)
@@ -924,6 +928,9 @@ public class World : MonoBehaviour
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         terrainHeight = CalcTerrainHeight(xzCoords);
 
+        if (terrainHeight == seaLevelPercentChunk * VoxelData.ChunkHeight)
+            return 7; // sand for beaches (doesn't work)
+
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
         if (yGlobalPos == terrainHeight)
@@ -939,8 +946,8 @@ public class World : MonoBehaviour
            voxelValue = 0; // air
         else if (yGlobalPos < terrainHeight)
            voxelValue = worldData.blockIDsubsurface; // stone
-        if (voxelValue == 0 && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
-           voxelValue = worldData.blockIDwater; // water
+        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
+           return worldData.blockIDwater; // water
 
         //return voxelValue; // for testing without LODES or SURFACE OBJECTS
 

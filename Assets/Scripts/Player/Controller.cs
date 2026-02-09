@@ -96,17 +96,26 @@ public class Controller : NetworkBehaviour
     public World world;
     public Material[] brickMaterials;
 
+    public bool canMine = false;
     public int miningCounter = 0;
-    public int currentTool = 0;
-    public int[] currentToolMiningSpeed = new int[]
+    public int toolID = 0;
+    private int[] toolMiningSpeeds = new int[] // defines the mining speed of a given toolID
         {
-            20, // fist
-            12, // wood
-            8, // stone
-            4, // gold
-            1, // diamond
-            0, // crystal
+            45, // tool ID 0 = punch
+            30, // tool ID 1 = wood
+            20, // tool ID 2 = stone
+            10, // tool ID 3 = gold
+            0, // tool ID 4 = crystal
         };
+    public int[][] allowableMiningMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
+    {
+        // defines blocks that the given tool cannot mine
+        new int[] {            6,                  13, 14,         17, 18,     20 }, // tool ID 0 = punch (can only mine wood, grass, mushroom, flower)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20 }, // tool ID 2 = stone (cannot mine black or crystal)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 3 = gold (cannot mine black)
+        new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 4 = crystal
+    };
 
     public int[] ldrawHexValues = new int[]
         {
@@ -238,8 +247,17 @@ public class Controller : NetworkBehaviour
         placePos = Instantiate(placePosPrefab).transform;
         holdPos = holdPosPrefab.transform;
 
+        if (SettingsStatic.LoadedSettings.developerMode) // set values if developer mode or not
+        {
+            toolID = 4; // highest tier tool for developer/creative mode
+        }
+        else
+        {
+            toolID = 0; // otherwise initialize to 0, need to set based off toolbar inventory later
+        }
+
         // load brick palettes
-        if(!Settings.WebGL)
+        if (!Settings.WebGL)
         {
             string[] brickTypeFilenames = LoadBrickTypeFilenames();
             ldrawPartsTypes = new string[brickTypeFilenames.Length][];
@@ -331,7 +349,6 @@ public class Controller : NetworkBehaviour
                 LoadPlacedBricks();
                 camMode = SettingsStatic.LoadedSettings.camMode;
             }
-            
         }
     }
 
@@ -877,7 +894,6 @@ public class Controller : NetworkBehaviour
 
     void CheckActiveHotbarSlot()
     {
-        currentTool = 0;
         if (toolbar.slots[toolbar.slotIndex].HasItem)
             blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
@@ -893,17 +909,25 @@ public class Controller : NetworkBehaviour
         else
             miningCounter = 0;
 
-        // IF PRESSED USE
-        if (!holdingGrab && inputHandler.use)
-            PressedGrab();
+        // NORMAL MINING
+        if (!holdingGrab && !holdingBuild && inputHandler.mine) // instant mine causes issues when placing bricks?
+            PressedMine();
 
-        // IF HOLDING USE
-        if (holdingGrab && inputHandler.use)
-            HoldingGrab();
+        // NORMAL VOXEL BUILDING
+        if (!holdingGrab && !holdingBuild && inputHandler.use)
+            PressedPlaceBlock();
 
-        // IF RELEASED USE
-        if (holdingGrab && !inputHandler.use)
-            ReleasedGrab();
+        //// IF PRESSED GRAB
+        //if (!holdingGrab && inputHandler.use)
+        //    PressedGrab();
+
+        //// IF HOLDING GRAB
+        //if (holdingGrab && inputHandler.use)
+        //    HoldingGrab();
+
+        //// IF RELEASED GRAB
+        //if (holdingGrab && !inputHandler.use)
+        //    ReleasedGrab();
 
         // IF DROP ITEM
         if(!holdingBuild && !holdingGrab && inputHandler.previous)
@@ -911,24 +935,21 @@ public class Controller : NetworkBehaviour
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
-            if(!holdingGrab && !holdingBuild && inputHandler.mine) // instant mine causes issues when placing bricks?
-                PressedMine();
+            //// IF PRESSED GRAB WHILE HOLDING BUILD
+            //if (holdingGrab && inputHandler.mine)
+            //    PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
 
-            // IF PRESSED GRAB WHILE HOLDING MINE
-            if (holdingGrab && inputHandler.mine)
-                PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
+            //// IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
+            //if (!holdingBuild && inputHandler.mine)
+            //    PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
 
-            // IF PRESSED MINE (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
-            if (!holdingBuild && inputHandler.mine)
-                PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
+            //// IF HOLDING BUILD
+            //if (holdingBuild && inputHandler.mine)
+            //    HoldingBuild();
 
-            // IF HOLDING MINE
-            if (holdingBuild && inputHandler.mine)
-                HoldingBuild();
-
-            // IF RELEASED MINE
-            if (holdingBuild && !inputHandler.mine)
-                ReleasedBuild();
+            //// IF RELEASED BUILD
+            //if (holdingBuild && !inputHandler.mine)
+            //    ReleasedBuild();
         }
 
         positionCursorBlocks();
@@ -1100,7 +1121,7 @@ public class Controller : NetworkBehaviour
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if (blockID < 2 || blockID == 12 || blockID > 15) // do not spawn object if voxelID is outside defined range
+        if (blockID < 2 || blockID == 12)// || blockID == 17 || blockID == 18 || blockID == 20) // ignore these blockIDs
         {
             blockID = 0;
             return;
@@ -1132,7 +1153,7 @@ public class Controller : NetworkBehaviour
 
     private void PressedMine()
     {
-        if (Time.time < mining.nextTimeToFire) // limit how fast can use this and cannot use in 3rd person cam mode
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this to avoid spamming
             return;
 
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
@@ -1175,7 +1196,7 @@ public class Controller : NetworkBehaviour
         // }
         else if (mining.hit.transform != null && mining.hit.transform.gameObject.tag == "placedBrick") // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
         {
-            if(miningCounter >= currentToolMiningSpeed[currentTool])
+            if(miningCounter >= toolMiningSpeeds[toolID])
             {
                 GameObject hitObject = mining.hit.transform.gameObject;
                 Destroy(mining.hit.transform.gameObject);
@@ -1196,9 +1217,18 @@ public class Controller : NetworkBehaviour
             //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
             // }
         }
-        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
+        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
         {
-            if(miningCounter >= currentToolMiningSpeed[currentTool])
+            blockID = World.Instance.GetVoxelState(removePos.position).id; // need current blockID to test if can mine
+
+            canMine = false; // set to true only if block is found in allowable matrix
+            for (int i = 0; i < allowableMiningMatrix[toolID].Length; i++) // for every block in matrix for given toolID
+            {
+                if (allowableMiningMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
+                    canMine = true; // allow the next code to mine the block
+            }
+
+            if(canMine && miningCounter >= toolMiningSpeeds[toolID])
             {
                 Vector3 position = shootPos.position;
 
@@ -1213,6 +1243,7 @@ public class Controller : NetworkBehaviour
                 shootBricks.Play();
                 PlayerRemoveVoxel();
 
+                //PutAwayBrick(blockID); // give player a voxel for removing one from world (do not spawn drops are too big in world, need to make smaller)
                 SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
             }
         }
@@ -1225,6 +1256,27 @@ public class Controller : NetworkBehaviour
         //     //TakeFromCurrentSlot(1);
         // }
 
+        reticle.SetActive(true);
+    }
+
+    private void PressedPlaceBlock()
+    {
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this to prevent spamming
+            return;
+
+        if (!toolbar.slots[toolbar.slotIndex].HasItem) // cannot use if no item in slot
+            return;
+
+        if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
+        {
+            health.blockCounter++;
+            PlayerPickBrickFromInventory();
+            PlaceVoxel(placePos.position);
+        }
+
+        placedBrick = null;
+        heldObjectIsBrick = false;
+        movingPlacedBrickUseStoredValues = false;
         reticle.SetActive(true);
     }
 
@@ -1519,7 +1571,7 @@ public class Controller : NetworkBehaviour
             brickPickUp.Play();
         }
 
-        reticle.SetActive(false);
+        //reticle.SetActive(false);
 
         UpdateGrabObject(blockID);
     }
