@@ -1243,8 +1243,8 @@ public class Controller : NetworkBehaviour
                 shootBricks.Play();
                 PlayerRemoveVoxel();
 
-                //PutAwayBrick(blockID); // give player a voxel for removing one from world (do not spawn drops are too big in world, need to make smaller)
-                SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+                PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
+                //SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
             }
         }
         // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
