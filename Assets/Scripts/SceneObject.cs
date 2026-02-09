@@ -17,7 +17,7 @@ public class SceneObject : NetworkBehaviour
     public GameObject[] voxelBit;
     public GameObject[] undefinedPrefab;
     public Controller controller;
-    //int collisions = 0;
+    //int collisionsCounter = 0;
 
     void SetVoxel(int oldValue, int newValue)
     {
@@ -116,30 +116,36 @@ public class SceneObject : NetworkBehaviour
         ob.transform.parent = transform;
     }
 
-    // private void OnCollisionEnter(Collision collision) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS
-    // {
-    //     if (collisions < 4) // only count a few collisions not all
-    //     {
-    //         collisions++;
-    //         if (gameObject.tag == "voxelRb" && controller != null && collisions > 2) // after a few collisions break into pieces
-    //         {
-    //             Vector3 pos = transform.position;
-    //             if (Settings.OnlinePlay)
-    //             {
-    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-    //                 controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-    //             }
-    //             else
-    //             {
-    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-    //                 controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-    //             }
-    //             Destroy(gameObject);
-    //         }
-    //     }
-    // }
+    private void OnCollisionEnter(Collision collision) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS
+    {
+        if (gameObject.tag == "voxelRb" && collision.gameObject.tag == "Player") // method used to pick up dropped items
+        {
+            controller.PutAwayBrick((byte)typeVoxel); // put item into player toolbar
+            Destroy(gameObject);
+        }
+
+        //if (collisionsCounter < 4) // only count a few collisions not all
+        //{
+        //    collisionsCounter++;
+        //    if (gameObject.tag == "voxelRb" && controller != null && collisionsCounter > 2) // after a few collisions break into pieces
+        //    {
+        //        Vector3 pos = transform.position;
+        //        if (Settings.OnlinePlay)
+        //        {
+        //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+        //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+        //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+        //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+        //        }
+        //        else
+        //        {
+        //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
+        //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
+        //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
+        //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
+        //        }
+        //        Destroy(gameObject);
+        //    }
+        //}
+    }
 }

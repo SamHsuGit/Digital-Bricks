@@ -1124,12 +1124,12 @@ public class World : MonoBehaviour
 
     public int CalcTerrainHeight(Vector2 xzCoords)
     {
-        float continentScaleFactor;
+        //float continentScaleFactor;
         float continentalnessFactor;
         float erosionFactor;
         float peaksAndValleysFactor;
 
-        //continentScaleFactor = Noise.Get2DPerlin(xzCoords, 4, 0.01f) * 0.1f; // scale of noise is 0.01 to sample large patches, determines continent size (large or islands)
+        //continentScaleFactor = Noise.Get2DPerlin(xzCoords, 4, 0.01f) * 0.1f; // scale of noise is 0.01 to sample large patches, determines continent size (large or islands) - was not used as screwed up terrain beaches
         // use math operation to change continentScaleFactor from value between 0 and 1 to value between 0.08 and 0.0
 
         // 3 different Perlin Noise maps create 3 distinct modifiers that can interact when the noise is overlayed
