@@ -51,7 +51,7 @@ public class VoxelCollider : MonoBehaviour
                 stepHeight = 1;
                 colliderOffset = 0;
                 stepUpOffset = new Vector3(0, stepHeight, 0);
-                maxJumps = 2;
+                maxJumps = 1;
             }
         }
         else if (isCamera)
