@@ -244,7 +244,7 @@ public class Controller : NetworkBehaviour
         // set to zero every time the game starts
         if(Settings.WebGL)
         {
-            currentBrickType = 0;
+            currentBrickType = 6;
             currentBrickIndex = 0;
             currentBrickRotation = 1;
         }
@@ -334,6 +334,16 @@ public class Controller : NetworkBehaviour
 
         originalStringArray = Directory.GetFiles(path);
 
+        // ignore files _DS STORE
+        // for(int i = 0; i < originalStringArray.Length; i++)
+        // {
+        //     originalStringArray[i] = Path.GetFileName(originalStringArray[i]);
+        //     if (!originalStringArray[i].Contains(".txt"))
+        //     {
+                
+        //     }
+        // }
+
         // count the number of instances that need to be ignored
         int count = 0;
         for(int i = 0; i < originalStringArray.Length; i++)
@@ -355,6 +365,7 @@ public class Controller : NetworkBehaviour
                 returnStringArray[count] = originalStringArray[i];
                 count++;
             }
+            //Debug.Log(returnStringArray[i]);
         }
 
         return returnStringArray;
@@ -1255,7 +1266,7 @@ public class Controller : NetworkBehaviour
         string g = "0.000000";
         string h = "0.000000";
         string i = "1.000000";
-        
+
         string partname = ldrawPartsTypes[currentBrickType][currentBrickIndex];
         Vector3 pos = new Vector3(0, 1, 0);
         string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
