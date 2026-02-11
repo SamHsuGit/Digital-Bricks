@@ -253,6 +253,87 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot1"",
+                    ""type"": ""Button"",
+                    ""id"": ""b010a11f-ca6d-4344-83ce-99d9c56ef216"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot2"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a39cf46-e790-42f9-ada2-e258a5bdbbcb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot3"",
+                    ""type"": ""Button"",
+                    ""id"": ""2846cde4-5f82-492d-8c63-1739cadf25d7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot4"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d1b339f-4d87-44b2-90af-bcd0256671c5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot5"",
+                    ""type"": ""Button"",
+                    ""id"": ""eef67f61-3399-492e-a815-668a4e35008b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot6"",
+                    ""type"": ""Button"",
+                    ""id"": ""a15ecc3f-4c9f-472e-8645-3eb4f8abd229"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot7"",
+                    ""type"": ""Button"",
+                    ""id"": ""951acb42-0d6d-4be1-98bd-4e74da509ac3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot8"",
+                    ""type"": ""Button"",
+                    ""id"": ""b4242f0c-3920-4925-ac81-032f9c29bf97"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot9"",
+                    ""type"": ""Button"",
+                    ""id"": ""da8a4237-21b3-47e6-b80d-2ca6aa2cf972"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -671,6 +752,105 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""Mine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01f50e32-3bf3-4caa-9537-c20ebd857799"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e6ac1ca-fc1b-4318-a553-2786de68ccd3"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35495ed7-1d71-43eb-aa37-6aa861adab3a"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a81010cb-b925-4741-a078-3b60a4ea43e6"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d37f79a8-21a7-4dbe-a599-45f5204bed20"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""faf0311d-5aaf-4fd1-93f7-f146c3c46ff8"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a70ac372-2d07-401b-8387-eab5c9c3345c"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot7"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a9b239b-f4df-40c3-bf30-3c81d764ed2a"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot8"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c92a2648-9f75-48ce-9625-9e46e7ad1dad"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slot9"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1309,6 +1489,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Actions_NavigateRight = m_Actions.FindAction("NavigateRight", throwIfNotFound: true);
         m_Actions_Touched = m_Actions.FindAction("Touched", throwIfNotFound: true);
         m_Actions_Debug = m_Actions.FindAction("Debug", throwIfNotFound: true);
+        m_Actions_Slot1 = m_Actions.FindAction("Slot1", throwIfNotFound: true);
+        m_Actions_Slot2 = m_Actions.FindAction("Slot2", throwIfNotFound: true);
+        m_Actions_Slot3 = m_Actions.FindAction("Slot3", throwIfNotFound: true);
+        m_Actions_Slot4 = m_Actions.FindAction("Slot4", throwIfNotFound: true);
+        m_Actions_Slot5 = m_Actions.FindAction("Slot5", throwIfNotFound: true);
+        m_Actions_Slot6 = m_Actions.FindAction("Slot6", throwIfNotFound: true);
+        m_Actions_Slot7 = m_Actions.FindAction("Slot7", throwIfNotFound: true);
+        m_Actions_Slot8 = m_Actions.FindAction("Slot8", throwIfNotFound: true);
+        m_Actions_Slot9 = m_Actions.FindAction("Slot9", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1420,6 +1609,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_NavigateRight;
     private readonly InputAction m_Actions_Touched;
     private readonly InputAction m_Actions_Debug;
+    private readonly InputAction m_Actions_Slot1;
+    private readonly InputAction m_Actions_Slot2;
+    private readonly InputAction m_Actions_Slot3;
+    private readonly InputAction m_Actions_Slot4;
+    private readonly InputAction m_Actions_Slot5;
+    private readonly InputAction m_Actions_Slot6;
+    private readonly InputAction m_Actions_Slot7;
+    private readonly InputAction m_Actions_Slot8;
+    private readonly InputAction m_Actions_Slot9;
     /// <summary>
     /// Provides access to input actions defined in input action map "Actions".
     /// </summary>
@@ -1504,6 +1702,42 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Debug => m_Wrapper.m_Actions_Debug;
         /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot1".
+        /// </summary>
+        public InputAction @Slot1 => m_Wrapper.m_Actions_Slot1;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot2".
+        /// </summary>
+        public InputAction @Slot2 => m_Wrapper.m_Actions_Slot2;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot3".
+        /// </summary>
+        public InputAction @Slot3 => m_Wrapper.m_Actions_Slot3;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot4".
+        /// </summary>
+        public InputAction @Slot4 => m_Wrapper.m_Actions_Slot4;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot5".
+        /// </summary>
+        public InputAction @Slot5 => m_Wrapper.m_Actions_Slot5;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot6".
+        /// </summary>
+        public InputAction @Slot6 => m_Wrapper.m_Actions_Slot6;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot7".
+        /// </summary>
+        public InputAction @Slot7 => m_Wrapper.m_Actions_Slot7;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot8".
+        /// </summary>
+        public InputAction @Slot8 => m_Wrapper.m_Actions_Slot8;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Slot9".
+        /// </summary>
+        public InputAction @Slot9 => m_Wrapper.m_Actions_Slot9;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Actions; }
@@ -1583,6 +1817,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Debug.started += instance.OnDebug;
             @Debug.performed += instance.OnDebug;
             @Debug.canceled += instance.OnDebug;
+            @Slot1.started += instance.OnSlot1;
+            @Slot1.performed += instance.OnSlot1;
+            @Slot1.canceled += instance.OnSlot1;
+            @Slot2.started += instance.OnSlot2;
+            @Slot2.performed += instance.OnSlot2;
+            @Slot2.canceled += instance.OnSlot2;
+            @Slot3.started += instance.OnSlot3;
+            @Slot3.performed += instance.OnSlot3;
+            @Slot3.canceled += instance.OnSlot3;
+            @Slot4.started += instance.OnSlot4;
+            @Slot4.performed += instance.OnSlot4;
+            @Slot4.canceled += instance.OnSlot4;
+            @Slot5.started += instance.OnSlot5;
+            @Slot5.performed += instance.OnSlot5;
+            @Slot5.canceled += instance.OnSlot5;
+            @Slot6.started += instance.OnSlot6;
+            @Slot6.performed += instance.OnSlot6;
+            @Slot6.canceled += instance.OnSlot6;
+            @Slot7.started += instance.OnSlot7;
+            @Slot7.performed += instance.OnSlot7;
+            @Slot7.canceled += instance.OnSlot7;
+            @Slot8.started += instance.OnSlot8;
+            @Slot8.performed += instance.OnSlot8;
+            @Slot8.canceled += instance.OnSlot8;
+            @Slot9.started += instance.OnSlot9;
+            @Slot9.performed += instance.OnSlot9;
+            @Slot9.canceled += instance.OnSlot9;
         }
 
         /// <summary>
@@ -1648,6 +1909,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Debug.started -= instance.OnDebug;
             @Debug.performed -= instance.OnDebug;
             @Debug.canceled -= instance.OnDebug;
+            @Slot1.started -= instance.OnSlot1;
+            @Slot1.performed -= instance.OnSlot1;
+            @Slot1.canceled -= instance.OnSlot1;
+            @Slot2.started -= instance.OnSlot2;
+            @Slot2.performed -= instance.OnSlot2;
+            @Slot2.canceled -= instance.OnSlot2;
+            @Slot3.started -= instance.OnSlot3;
+            @Slot3.performed -= instance.OnSlot3;
+            @Slot3.canceled -= instance.OnSlot3;
+            @Slot4.started -= instance.OnSlot4;
+            @Slot4.performed -= instance.OnSlot4;
+            @Slot4.canceled -= instance.OnSlot4;
+            @Slot5.started -= instance.OnSlot5;
+            @Slot5.performed -= instance.OnSlot5;
+            @Slot5.canceled -= instance.OnSlot5;
+            @Slot6.started -= instance.OnSlot6;
+            @Slot6.performed -= instance.OnSlot6;
+            @Slot6.canceled -= instance.OnSlot6;
+            @Slot7.started -= instance.OnSlot7;
+            @Slot7.performed -= instance.OnSlot7;
+            @Slot7.canceled -= instance.OnSlot7;
+            @Slot8.started -= instance.OnSlot8;
+            @Slot8.performed -= instance.OnSlot8;
+            @Slot8.canceled -= instance.OnSlot8;
+            @Slot9.started -= instance.OnSlot9;
+            @Slot9.performed -= instance.OnSlot9;
+            @Slot9.canceled -= instance.OnSlot9;
         }
 
         /// <summary>
@@ -2074,6 +2362,69 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDebug(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot5" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot5(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot6" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot6(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot7" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot7(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot8" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot8(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot9" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot9(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

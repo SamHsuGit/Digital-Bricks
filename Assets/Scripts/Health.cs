@@ -151,7 +151,7 @@ public class Health : NetworkBehaviour
     {
         if (gameObject.layer == 11) // if it is a player
         {
-            //Hunger(); // Disabled (causes hp issues upon spawning which breaks online multiplayer)
+            //CheckDamage(); // Disabled (causes hp issues upon spawning which breaks online multiplayer) need to update spawning code to spawn on ground vs in air
 
             // Respawn
             if (hp < 1)
@@ -173,7 +173,7 @@ public class Health : NetworkBehaviour
         }
     }
 
-    public void Hunger()
+    public void CheckDamage()
     {
         // https://gaming.stackexchange.com/questions/30618/does-the-hunger-meter-decrease-at-a-constant-rate
         // Minecraft: if player walked more than 800 blocks cause hunger
@@ -185,6 +185,11 @@ public class Health : NetworkBehaviour
                 EditSelfHealth(-1);
             lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
         }
+
+        // code for fall damage
+        // store last position
+        // get current position
+        // if current pos.y - lastpos.y > threshold then damage player equivalent to # of blocks fallen
 
         // causes hunger if jumpCounter > jumpHungerThreshold
         if (jumpCounter > jumpHungerThreshold)
@@ -297,7 +302,7 @@ public class Health : NetworkBehaviour
         // teleport player to last save point (do not destroy as it breaks the multiplayer network connection)
         int[] playerStats = controller.player.playerStats;
         Vector3 respawnPoint = new Vector3(playerStats[0], playerStats[1], playerStats[2]);
-        transform.position = respawnPoint;
+        transform.position = respawnPoint; // reset spawn point to current location (eventually add beds to reset spawn point again)
 
         hp = hpMax;
         // game menu updates hp UI based on this scripts hp value in its own update function

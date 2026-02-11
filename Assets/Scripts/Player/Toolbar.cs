@@ -98,6 +98,60 @@ public class Toolbar : MonoBehaviour
         setNavigate = true;
     }
 
+    public void Slot1()
+    {
+        slotIndex = 0;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot2()
+    {
+        slotIndex = 1;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot3()
+    {
+        slotIndex = 2;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot4()
+    {
+        slotIndex = 3;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot5()
+    {
+        slotIndex = 4;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot6()
+    {
+        slotIndex = 5;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot7()
+    {
+        slotIndex = 6;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot8()
+    {
+        slotIndex = 7;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
+    public void Slot9()
+    {
+        slotIndex = 8;
+        highlight.position = slots[slotIndex].slotIcon.transform.position;
+    }
+
     private void Update()
     {
         if (player == null)

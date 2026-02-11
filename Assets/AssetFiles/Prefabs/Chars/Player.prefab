@@ -653,6 +653,150 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 84e9d2a5-a398-4561-8361-6870676ea35a
     m_ActionName: 'Actions/Mine[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot1
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b010a11f-ca6d-4344-83ce-99d9c56ef216
+    m_ActionName: 'Actions/Slot1[/Keyboard/1]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot2
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8a39cf46-e790-42f9-ada2-e258a5bdbbcb
+    m_ActionName: 'Actions/Slot2[/Keyboard/2]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot3
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2846cde4-5f82-492d-8c63-1739cadf25d7
+    m_ActionName: 'Actions/Slot3[/Keyboard/3]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot4
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4d1b339f-4d87-44b2-90af-bcd0256671c5
+    m_ActionName: 'Actions/Slot4[/Keyboard/4]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot5
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: eef67f61-3399-492e-a815-668a4e35008b
+    m_ActionName: 'Actions/Slot5[/Keyboard/5]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot6
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a15ecc3f-4c9f-472e-8645-3eb4f8abd229
+    m_ActionName: 'Actions/Slot6[/Keyboard/6]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot7
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 951acb42-0d6d-4be1-98bd-4e74da509ac3
+    m_ActionName: 'Actions/Slot7[/Keyboard/7]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot8
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b4242f0c-3920-4925-ac81-032f9c29bf97
+    m_ActionName: 'Actions/Slot8[/Keyboard/8]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115402795134791110}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: Slot9
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: da8a4237-21b3-47e6-b80d-2ca6aa2cf972
+    m_ActionName: 'Actions/Slot9[/Keyboard/9]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Actions
