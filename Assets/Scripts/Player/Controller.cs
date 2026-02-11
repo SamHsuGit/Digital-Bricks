@@ -96,21 +96,42 @@ public class Controller : NetworkBehaviour
     public World world;
     public Material[] brickMaterials;
 
-    public int[] ldrawHexValues = new int[]
+    public bool canMine = false;
+    public int miningCounter = 0;
+    public int toolID = 0;
+    private int[] toolMiningSpeeds = new int[] // defines the mining speed of a given toolID
+        {
+            45, // tool ID 0 = punch
+            30, // tool ID 1 = wood
+            20, // tool ID 2 = stone
+            10, // tool ID 3 = gold
+            0, // tool ID 4 = crystal
+        };
+    public int[][] allowableMiningMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
-        43,
-        43,
-        0,
-        7,
-        15,
-        4,
-        6,
-        14,
-        2,
-        1,
-        5,
-        3
+        // defines blocks that the given tool cannot mine
+        new int[] {            6,                  13, 14,         17, 18,     20 }, // tool ID 0 = punch (can only mine wood, grass, mushroom, flower)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20 }, // tool ID 2 = stone (cannot mine black or crystal)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 3 = gold (cannot mine black)
+        new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 4 = crystal
     };
+
+    public int[] ldrawHexValues = new int[]
+        {
+            43,
+            43,
+            0,
+            7,
+            15,
+            4,
+            6,
+            14,
+            2,
+            1,
+            5,
+            3
+        };
 
     [HideInInspector] public GameObject placedBrick;
 
@@ -226,8 +247,17 @@ public class Controller : NetworkBehaviour
         placePos = Instantiate(placePosPrefab).transform;
         holdPos = holdPosPrefab.transform;
 
+        if (SettingsStatic.LoadedSettings.developerMode) // set values if developer mode or not
+        {
+            toolID = 4; // highest tier tool for developer/creative mode
+        }
+        else
+        {
+            toolID = 0; // otherwise initialize to 0, need to set based off toolbar inventory later
+        }
+
         // load brick palettes
-        if(!Settings.WebGL)
+        if (!Settings.WebGL)
         {
             string[] brickTypeFilenames = LoadBrickTypeFilenames();
             ldrawPartsTypes = new string[brickTypeFilenames.Length][];
@@ -319,7 +349,6 @@ public class Controller : NetworkBehaviour
                 LoadPlacedBricks();
                 camMode = SettingsStatic.LoadedSettings.camMode;
             }
-            
         }
     }
 
@@ -863,44 +892,64 @@ public class Controller : NetworkBehaviour
         }
     }
 
+    void CheckActiveHotbarSlot()
+    {
+        if (toolbar.slots[toolbar.slotIndex].HasItem)
+            blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+
+        // insert code for setting tool based on certain block (item id)
+    }
+
     void CheckWorldInteract()
     {
-            // IF PRESSED USE
-            if (!holdingGrab && inputHandler.use)
-                PressedGrab();
+        CheckActiveHotbarSlot();
 
-            // IF HOLDING USE
-            if (holdingGrab && inputHandler.use)
-                HoldingGrab();
+        if (inputHandler.mine && removePos.gameObject.activeSelf)
+            miningCounter++;
+        else
+            miningCounter = 0;
 
-            // IF RELEASED USE
-            if (holdingGrab && !inputHandler.use)
-                ReleasedGrab();
+        // NORMAL MINING
+        if (!holdingGrab && !holdingBuild && inputHandler.mine) // instant mine causes issues when placing bricks?
+            PressedMine();
 
-            // IF DROP ITEM
-            if(!holdingBuild && !holdingGrab && inputHandler.previous)
-                DropItemInSlot();
+        // NORMAL VOXEL BUILDING
+        if (!holdingGrab && !holdingBuild && inputHandler.use)
+            PressedPlaceBlock();
+
+        //// IF PRESSED GRAB
+        //if (!holdingGrab && inputHandler.use)
+        //    PressedGrab();
+
+        //// IF HOLDING GRAB
+        //if (holdingGrab && inputHandler.use)
+        //    HoldingGrab();
+
+        //// IF RELEASED GRAB
+        //if (holdingGrab && !inputHandler.use)
+        //    ReleasedGrab();
+
+        // IF DROP ITEM
+        if(!holdingBuild && !holdingGrab && inputHandler.previous)
+            DropItemInSlot();
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
-            if(!holdingGrab && !holdingBuild && inputHandler.mine) // instant mine causes issues when placing bricks?
-                PressedShoot();
+            //// IF PRESSED GRAB WHILE HOLDING BUILD
+            //if (holdingGrab && inputHandler.mine)
+            //    PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
 
-            // IF PRESSED GRAB WHILE HOLDING MINE
-            if (holdingGrab && inputHandler.mine)
-                PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
+            //// IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
+            //if (!holdingBuild && inputHandler.mine)
+            //    PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
 
-            // IF PRESSED MINE (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
-            if (!holdingBuild && inputHandler.mine)
-                PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
+            //// IF HOLDING BUILD
+            //if (holdingBuild && inputHandler.mine)
+            //    HoldingBuild();
 
-            // IF HOLDING MINE
-            if (holdingBuild && inputHandler.mine)
-                HoldingBuild();
-
-            // IF RELEASED MINE
-            if (holdingBuild && !inputHandler.mine)
-                ReleasedBuild();
+            //// IF RELEASED BUILD
+            //if (holdingBuild && !inputHandler.mine)
+            //    ReleasedBuild();
         }
 
         positionCursorBlocks();
@@ -1072,7 +1121,7 @@ public class Controller : NetworkBehaviour
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if (blockID < 2 || blockID == 12 || blockID > 15) // do not spawn object if voxelID is outside defined range
+        if (blockID < 2 || blockID == 12)// || blockID == 17 || blockID == 18 || blockID == 20) // ignore these blockIDs
         {
             blockID = 0;
             return;
@@ -1102,9 +1151,9 @@ public class Controller : NetworkBehaviour
         SpawnTempBrick(0);
     }
 
-    private void PressedShoot()
+    private void PressedMine()
     {
-        if (Time.time < mining.nextTimeToFire) // limit how fast can use this and cannot use in 3rd person cam mode
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this to avoid spamming
             return;
 
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
@@ -1147,9 +1196,12 @@ public class Controller : NetworkBehaviour
         // }
         else if (mining.hit.transform != null && mining.hit.transform.gameObject.tag == "placedBrick") // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
         {
-            GameObject hitObject = mining.hit.transform.gameObject;
-            Destroy(mining.hit.transform.gameObject);
-            Vector3 pos = hitObject.transform.position;
+            if(miningCounter >= toolMiningSpeeds[toolID])
+            {
+                GameObject hitObject = mining.hit.transform.gameObject;
+                Destroy(mining.hit.transform.gameObject);
+                Vector3 pos = hitObject.transform.position;
+            }
             // if (Settings.OnlinePlay)
             // {
             //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
@@ -1165,23 +1217,35 @@ public class Controller : NetworkBehaviour
             //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
             // }
         }
-        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF SHOT WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
+        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
         {
-            Vector3 position = shootPos.position;
+            blockID = World.Instance.GetVoxelState(removePos.position).id; // need current blockID to test if can mine
 
-            if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
-                return;
+            canMine = false; // set to true only if block is found in allowable matrix
+            for (int i = 0; i < allowableMiningMatrix[toolID].Length; i++) // for every block in matrix for given toolID
+            {
+                if (allowableMiningMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
+                    canMine = true; // allow the next code to mine the block
+            }
 
-            blockID = World.Instance.GetVoxelState(position).id;
+            if(canMine && miningCounter >= toolMiningSpeeds[toolID])
+            {
+                Vector3 position = shootPos.position;
 
-            if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
-                return;
+                if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
+                    return;
 
-            shootBricks.Play();
+                blockID = World.Instance.GetVoxelState(position).id;
 
-            PlayerRemoveVoxel();
+                if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
+                    return;
 
-            //SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+                shootBricks.Play();
+                PlayerRemoveVoxel();
+
+                PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
+                //SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+            }
         }
         // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
         // {
@@ -1192,6 +1256,27 @@ public class Controller : NetworkBehaviour
         //     //TakeFromCurrentSlot(1);
         // }
 
+        reticle.SetActive(true);
+    }
+
+    private void PressedPlaceBlock()
+    {
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this to prevent spamming
+            return;
+
+        if (!toolbar.slots[toolbar.slotIndex].HasItem) // cannot use if no item in slot
+            return;
+
+        if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
+        {
+            health.blockCounter++;
+            PlayerPickBrickFromInventory();
+            PlaceVoxel(placePos.position);
+        }
+
+        placedBrick = null;
+        heldObjectIsBrick = false;
+        movingPlacedBrickUseStoredValues = false;
         reticle.SetActive(true);
     }
 
@@ -1387,6 +1472,7 @@ public class Controller : NetworkBehaviour
         if (camMode == 1 && Physics.SphereCast(playerCameraOrigin.transform.position + playerCamera.transform.forward * cc.radius * 2, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist, 11))
         {
             GameObject hitObject = hit.transform.gameObject;
+            //if (hitObject != null && (hitObject.tag == "placedBrick" || hitObject.tag == "voxelRb")) // allow players to pickup dropped items
             if (hitObject != null && hitObject.tag == "placedBrick")
             {
                 // if (Settings.OnlinePlay) // disabled for multiplayer
@@ -1485,7 +1571,7 @@ public class Controller : NetworkBehaviour
             brickPickUp.Play();
         }
 
-        reticle.SetActive(false);
+        //reticle.SetActive(false);
 
         UpdateGrabObject(blockID);
     }
@@ -1630,7 +1716,7 @@ public class Controller : NetworkBehaviour
         movingPlacedBrickUseStoredValues = false;
     }
 
-    void PutAwayBrick(byte blockID)
+    public void PutAwayBrick(byte blockID)
     {
         int firstSlot;
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode) // determine first slot
@@ -1860,8 +1946,10 @@ public class Controller : NetworkBehaviour
         ob.transform.rotation = Quaternion.LookRotation(spawnDir); // orient forwards in direction of camera
         rb = ob.GetComponent<Rigidbody>();
         rb.mass = health.piecesRbMass;
+        
         rb.isKinematic = false;
-        rb.linearVelocity = spawnDir + Vector3.up * 7; // give some velocity away from where player is looking
+        rb.useGravity = true;
+        rb.linearVelocity = Vector3.up * 7; // spawnDir + Vector3.up * 7; // give some velocity up
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
         GameObject childOb;
@@ -1874,6 +1962,8 @@ public class Controller : NetworkBehaviour
                 BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                 VoxelBc.material = physicMaterial;
                 VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
+                VoxelBc.size = new Vector3 (1f, 1f, 1f); // set slightly larger to help players pick up items?
+                VoxelBc.isTrigger = false; // set to not trigger so can collide with world
                 ob.tag = "voxelRb";
                 sceneObject.controller = this;
                 break;

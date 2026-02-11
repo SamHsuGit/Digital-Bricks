@@ -4,7 +4,7 @@ using Mirror;
 
 public class Mining : NetworkBehaviour
 {
-    public float fireRate = 2f;
+    public float fireRate = 6f;
     public float impactForce = 0.01f;
     private int damage = 1;
     public float nextTimeToFire = 0f;
@@ -57,7 +57,7 @@ public class Mining : NetworkBehaviour
         // increment time to prevent spamming buttons
         if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
         {
-           if (inputHandler.mine)
+           if (inputHandler.mine || inputHandler.use)
            {
                nextTimeToFire = Time.time + 1f / fireRate;
                //pewpew.Play();
