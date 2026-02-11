@@ -23,6 +23,7 @@ public class VoxelState
         neighbors = new VoxelNeighbors(this);
         position = _position;
 
+
         if(SettingsStatic.LoadedSettings.useStuds)
         {
             randFloat = StaticRandom.GetRandom();

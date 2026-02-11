@@ -99,14 +99,16 @@ public class Controller : NetworkBehaviour
     public bool canMine = false;
     public int miningCounter = 0;
     public int toolID = 0;
+
     private int[] toolMiningSpeeds = new int[] // defines the mining speed of a given toolID
-        {
-            45, // tool ID 0 = punch
-            30, // tool ID 1 = wood
-            20, // tool ID 2 = stone
-            10, // tool ID 3 = gold
-            0, // tool ID 4 = crystal
-        };
+    {
+        45, // tool ID 0 = punch
+        30, // tool ID 1 = wood
+        20, // tool ID 2 = stone
+        10, // tool ID 3 = gold
+        0, // tool ID 4 = crystal
+    };
+
     public int[][] allowableMiningMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
         // defines blocks that the given tool cannot mine
@@ -1228,14 +1230,14 @@ public class Controller : NetworkBehaviour
                     canMine = true; // allow the next code to mine the block
             }
 
-            if(canMine && miningCounter >= toolMiningSpeeds[toolID])
-            {
-                Vector3 position = shootPos.position;
+            Vector3 position = shootPos.position;
+            blockID = World.Instance.GetVoxelState(position).id;
 
+            // MINING DELAY
+            if(canMine && miningCounter >= toolMiningSpeeds[toolID] + World.Instance.blockTypes[blockID].hardness)
+            {
                 if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
                     return;
-
-                blockID = World.Instance.GetVoxelState(position).id;
 
                 if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
                     return;
@@ -1245,6 +1247,8 @@ public class Controller : NetworkBehaviour
 
                 PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
                 //SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+                
+                miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
             }
         }
         // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile

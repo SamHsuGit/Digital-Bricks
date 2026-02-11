@@ -262,7 +262,7 @@ public class World : MonoBehaviour
         {
             new Vector2(0.00f, 0.00f),
             new Vector2(0.60f, 0.35f),
-            new Vector2(0.61f, 0.80f), // large jump such that 60% of terrain is weird
+            new Vector2(0.61f, 0.90f), // large jump such that only 10% of terrain is weird
             new Vector2(1.00f, 1.00f),
         };
     }
@@ -928,12 +928,16 @@ public class World : MonoBehaviour
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         terrainHeight = CalcTerrainHeight(xzCoords);
 
-        if (terrainHeight == seaLevelPercentChunk * VoxelData.ChunkHeight)
-            return 7; // sand for beaches (doesn't work)
+        if(continentalness > 0.5f && yGlobalPos == 2)
+            return worldData.blockIDsubsurface; // stone at bottom of caves where there is land
+
+        // if on land and at sea level
+        if (continentalness >= 0.5f && yGlobalPos == Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
+            voxelValue = 7; // sand for beaches (can be overwritten by cave
 
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
-        if (yGlobalPos == terrainHeight)
+        if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
             voxelValue = biome.surfaceBlock; // dirt
         if (yGlobalPos == terrainHeight && yGlobalPos > 0.7 * VoxelData.ChunkHeight)
             voxelValue = worldData.blockIDsubsurface; // rocky mountains
@@ -953,13 +957,14 @@ public class World : MonoBehaviour
 
         /* CAVE PASS */
         //3D noise used for caves
+        // weirdness varies size of caves
         if (yGlobalPos < terrainHeight - 10)
         {
-            if (Noise.Get3DPerlin(globalPos, 30, 0.001f, 0.8f)) // large cave
-                return 0;
-            else if (Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f)) // medium cave
-                return 0;
-            else if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f)) // small cave
+            // if (Noise.Get3DPerlin(globalPos, 30, 0.001f, 0.8f + 0.1f * weirdness)) // large cave (very rare)
+            //     return 0;
+            // if (Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f + 0.1f * weirdness)) // medium cave (somewhat rare)
+            //     return 0;
+            if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f + 0.1f * weirdness)) // small cave (common)
                 return 0;
         }
 
@@ -1150,8 +1155,8 @@ public class World : MonoBehaviour
         erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
         peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
         
-        // larger values expose weird 3D noise terrain
-        weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.01f), weirdnessSplinePoints);
+        // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
+        weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.1f), weirdnessSplinePoints);
 
         // for testing to individually visualize the effects of the spline points
         //terrainHeightPercentChunk = continentalnessFactor;

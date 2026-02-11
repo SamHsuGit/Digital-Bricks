@@ -16,11 +16,11 @@ MonoBehaviour:
   isDrawn: 0
   isSolid: 1
   isTransparent: 1
+  hardness: 5
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 8627043524693180128, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   isActive: 0
-  studs: {fileID: 0}
   voxelBoundObject: {fileID: 2630247148938265349, guid: 50205679261b18b48a2bf62f59cc3cd5, type: 3}
   backFaceTexture: 0
   frontFaceTexture: 0
@@ -28,3 +28,4 @@ MonoBehaviour:
   bottomFaceTexture: 0
   leftFaceTexture: 0
   rightFaceTexture: 0
+  topFaceSmoothTexture: 0

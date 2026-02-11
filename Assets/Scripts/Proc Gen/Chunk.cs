@@ -15,6 +15,7 @@ public class Chunk
     List<Vector3> vertices = new List<Vector3>();
     List<int> triangles = new List<int>();
     List<int> transparentTriangles = new List<int>();
+    List<int> waterTriangles = new List<int>();
     Material[] materials = new Material[2];
     List<Vector2> uvs = new List<Vector2>();
     List<Vector3> normals = new List<Vector3>();
@@ -320,8 +321,8 @@ public class Chunk
             Vector3 neighborPos = pos + VoxelData.faceChecks[translatedP];
             VoxelState neighbor = CheckVoxel(neighborPos);
             //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // DOES NOT WORK. Chunks loaded from file do not have neighbors which causes chunk to not render
-
-            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent)
+            // do not render if this voxel is water AND neighbor above is also water
+            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent)// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
                 int faceVertCount = 0;
                 
@@ -338,15 +339,23 @@ public class Chunk
                     faceVertCount++;
                 }
 
-                if (!World.Instance.blockTypes[voxel.id].isTransparent)
+                if (!World.Instance.blockTypes[voxel.id].isTransparent) // basic blocks not transparent
                 {
                     for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
                         triangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
                 }
                 else
                 {
-                    for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
+                    // if(World.Instance.blockTypes[voxel.id].isWater) // water blocks (which are transparent)
+                    // {
+                    //     for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
+                    //     waterTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
+                    // }
+                    // else // transparent blocks (not water blocks)
+                    {
+                        for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
                         transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
+                    }
                 }
 
                 vertexIndex += faceVertCount;
@@ -361,6 +370,7 @@ public class Chunk
         mesh.subMeshCount = 3; // used for block and transBlock materials?
         mesh.SetTriangles(triangles.ToArray(), 0);
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
+        mesh.SetTriangles(waterTriangles.ToArray(), 2);
         mesh.uv = uvs.ToArray();
         mesh.normals = normals.ToArray();
         meshFilter.mesh = mesh;
