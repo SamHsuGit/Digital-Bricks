@@ -38,8 +38,8 @@ public class Mining : NetworkBehaviour
     {
     //    if (Settings.OnlinePlay && !isLocalPlayer) return;
 
-    //    target = null; // reset target
-    //    target = FindTarget(); // get target gameObject
+    // target = null; // reset target
+    // target = FindTarget(); // get target gameObject
 
     //    switch (controller.camMode)
     //    {

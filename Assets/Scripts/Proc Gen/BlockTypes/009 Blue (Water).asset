@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: 
   isDrawn: 1
-  isSolid: 0
+  isSolid: 1
   isTransparent: 1
   isWater: 1
   hardness: 5

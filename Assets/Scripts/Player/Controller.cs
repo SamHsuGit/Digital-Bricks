@@ -911,25 +911,37 @@ public class Controller : NetworkBehaviour
         else
             miningCounter = 0;
 
+
+        // NORMAL CONTROLS IF PICKAXE IN HAND
+        //if(// add code for if has pickaxe here)
+        //{
+
         // NORMAL MINING
-        if (!holdingGrab && !holdingBuild && inputHandler.mine) // instant mine causes issues when placing bricks?
+        if (!holdingGrab && !holdingBuild && inputHandler.mine)
             PressedMine();
 
-        // NORMAL VOXEL BUILDING
-        if (!holdingGrab && !holdingBuild && inputHandler.use)
-            PressedPlaceBlock();
+        // // NORMAL VOXEL BUILDING
+        // if (!holdingGrab && !holdingBuild && inputHandler.use)
+        //     PressedPlaceBlock();
 
-        //// IF PRESSED GRAB
-        //if (!holdingGrab && inputHandler.use)
-        //    PressedGrab();
+        //     positionCursorBlocks();
 
-        //// IF HOLDING GRAB
-        //if (holdingGrab && inputHandler.use)
-        //    HoldingGrab();
+        //     return;
+        //}
 
-        //// IF RELEASED GRAB
-        //if (holdingGrab && !inputHandler.use)
-        //    ReleasedGrab();
+        // ELSE GRAB CONTROLS
+
+        // IF PRESSED GRAB
+        if (!holdingGrab && inputHandler.use)
+           PressedGrab();
+
+        // IF HOLDING GRAB
+        if (holdingGrab && inputHandler.use)
+           HoldingGrab();
+
+        // IF RELEASED GRAB
+        if (holdingGrab && !inputHandler.use)
+           ReleasedGrab();
 
         // IF DROP ITEM
         if(!holdingBuild && !holdingGrab && inputHandler.previous)
@@ -937,21 +949,21 @@ public class Controller : NetworkBehaviour
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
-            //// IF PRESSED GRAB WHILE HOLDING BUILD
-            //if (holdingGrab && inputHandler.mine)
-            //    PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
+            // IF PRESSED GRAB WHILE HOLDING BUILD
+            if (holdingGrab && inputHandler.mine)
+               PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
 
-            //// IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
-            //if (!holdingBuild && inputHandler.mine)
-            //    PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
+            // IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
+            if (!holdingBuild && inputHandler.mine)
+               PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
 
-            //// IF HOLDING BUILD
-            //if (holdingBuild && inputHandler.mine)
-            //    HoldingBuild();
+            // IF HOLDING BUILD
+            if (holdingBuild && inputHandler.mine)
+               HoldingBuild();
 
-            //// IF RELEASED BUILD
-            //if (holdingBuild && !inputHandler.mine)
-            //    ReleasedBuild();
+            // IF RELEASED BUILD
+            if (holdingBuild && !inputHandler.mine)
+               ReleasedBuild();
         }
 
         positionCursorBlocks();
@@ -1115,6 +1127,9 @@ public class Controller : NetworkBehaviour
     {
         // SPAWN A BRICK
 
+        if(shootPos.gameObject.activeSelf) // do not do if looking at voxel
+            return;
+
         if (Time.time < mining.nextTimeToFire) // limit how fast can use this
             return;
 
@@ -1151,6 +1166,14 @@ public class Controller : NetworkBehaviour
         int brickMaterialIndex = System.Convert.ToInt32(blockID);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
         SpawnTempBrick(0);
+
+        ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
+
+        // remove qty(1) voxel from slot as "cost"
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
+            TakeFromCurrentSlot(0);
+        else
+            TakeFromCurrentSlot(1);
     }
 
     private void PressedMine()
@@ -1160,6 +1183,8 @@ public class Controller : NetworkBehaviour
 
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
             return;
+
+        RaycastHit hit;
 
         // if has mushroom, and health is not max and the selected slot has a stack
         if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDmushroom && health.hp < health.hpMax)
@@ -1196,14 +1221,20 @@ public class Controller : NetworkBehaviour
         //     }
         //     heldObRb = null;
         // }
-        else if (mining.hit.transform != null && mining.hit.transform.gameObject.tag == "placedBrick") // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
+        // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
+        else if (camMode == 1 && Physics.SphereCast(playerCameraOrigin.transform.position + playerCamera.transform.forward * cc.radius * 2, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist, 11) && hit.transform.gameObject.tag == "placedBrick")
         {
-            if(miningCounter >= toolMiningSpeeds[toolID])
+            //if(miningCounter >= toolMiningSpeeds[toolID])
+            if(!toolbar.slots[toolbar.slotIndex].HasItem)
             {
-                GameObject hitObject = mining.hit.transform.gameObject;
-                Destroy(mining.hit.transform.gameObject);
-                Vector3 pos = hitObject.transform.position;
+                GameObject hitObject = hit.transform.gameObject;
+                //Vector3 pos = hitObject.transform.position;
+                int currentBrickMaterialIndex = GetMaterialIndex(hitObject);
+                //PutAwayBrick((byte)currentBrickMaterialIndex);
+                SpawnVoxelRbFromWorld(hit.transform.position, (byte)currentBrickMaterialIndex);
+                Destroy(hit.transform.gameObject);
             }
+
             // if (Settings.OnlinePlay)
             // {
             //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
@@ -1221,7 +1252,7 @@ public class Controller : NetworkBehaviour
         }
         else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
         {
-            blockID = World.Instance.GetVoxelState(removePos.position).id; // need current blockID to test if can mine
+            blockID = World.Instance.GetVoxelState(shootPos.position).id; // need current blockID to test if can mine
 
             canMine = false; // set to true only if block is found in allowable matrix
             for (int i = 0; i < allowableMiningMatrix[toolID].Length; i++) // for every block in matrix for given toolID
@@ -1245,8 +1276,8 @@ public class Controller : NetworkBehaviour
                 shootBricks.Play();
                 PlayerRemoveVoxel();
 
-                PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
-                //SpawnVoxelRbFromWorld(position, blockID); // if not holding anything and pointing at a voxel, then spawn a voxel rigidbody at position
+                //PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
+                SpawnVoxelRbFromWorld(position, blockID);
                 
                 miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
             }
@@ -1405,11 +1436,7 @@ public class Controller : NetworkBehaviour
         brickPlaceDown.Play();
         ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
 
-        // remove qty(1) voxel from slot as "cost"
-        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // do not reduce item count from first slot (creative)
-            TakeFromCurrentSlot(0);
-        else
-            TakeFromCurrentSlot(1);
+        
 
         // reset values
         heldObjectIsBrick = false;
@@ -1512,23 +1539,23 @@ public class Controller : NetworkBehaviour
                 // store values for later if moving bricks
                     movingPlacedBrickUseStoredValues = true;
             }
-            else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
-            {
-                holdingGrab = true;
-                heldObjectIsBrick = false;
+            // else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
+            // {
+            //     holdingGrab = true;
+            //     heldObjectIsBrick = false;
 
-                PlayerRemoveVoxel();
-            }
+            //     PlayerRemoveVoxel();
+            // }
             else
                 return; // do not spawn object if hit previously existing object
         }
-        else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
-        {
-            holdingGrab = true;
-            heldObjectIsBrick = false;
+        // else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
+        // {
+        //     holdingGrab = true;
+        //     heldObjectIsBrick = false;
 
-            PlayerRemoveVoxel();
-        }
+        //     PlayerRemoveVoxel();
+        // }
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
         {
             holdingGrab = true;
