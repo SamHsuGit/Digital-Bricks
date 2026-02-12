@@ -1045,6 +1045,7 @@ MonoBehaviour:
   currentJumps: 0
   world: {fileID: 0}
   controller: {fileID: 3963772888375218276}
+  rb: {fileID: 0}
   center: {x: 0, y: 0, z: 0}
   halfColliderHeight: 0
   stepHeight: 0
@@ -1052,6 +1053,7 @@ MonoBehaviour:
   colliderOffset: 0
   isPlayer: 1
   isCamera: 0
+  isItem: 0
   voxelID: 0
   voxelBits: []
   width: 0

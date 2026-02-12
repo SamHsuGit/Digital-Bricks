@@ -111,7 +111,7 @@ public class Controller : NetworkBehaviour
 
     public int[][] allowableMiningMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
-        // defines blocks that the given tool cannot mine
+        // defines blocks that the given tool can create a drop for
         new int[] {            6,                  13, 14,         17, 18,     20 }, // tool ID 0 = punch (can only mine wood, grass, mushroom, flower)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20 }, // tool ID 2 = stone (cannot mine black or crystal)
@@ -1265,7 +1265,7 @@ public class Controller : NetworkBehaviour
             blockID = World.Instance.GetVoxelState(position).id;
 
             // MINING DELAY
-            if(canMine && miningCounter >= toolMiningSpeeds[toolID] + World.Instance.blockTypes[blockID].hardness)
+            if(miningCounter >= toolMiningSpeeds[toolID] + World.Instance.blockTypes[blockID].hardness)
             {
                 if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
                     return;
@@ -1277,7 +1277,8 @@ public class Controller : NetworkBehaviour
                 PlayerRemoveVoxel();
 
                 //PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
-                SpawnVoxelRbFromWorld(position, blockID);
+                if(canMine)
+                    SpawnVoxelRbFromWorld(position, blockID); // give drop
                 
                 miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
             }
@@ -1980,7 +1981,7 @@ public class Controller : NetworkBehaviour
         
         rb.isKinematic = false;
         rb.useGravity = true;
-        rb.linearVelocity = Vector3.up * 7; // spawnDir + Vector3.up * 7; // give some velocity up
+        //rb.linearVelocity = Vector3.up * 0.5f; // spawnDir + Vector3.up * 2; // give some velocity up
 
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
         GameObject childOb;
@@ -1997,6 +1998,12 @@ public class Controller : NetworkBehaviour
                 VoxelBc.isTrigger = false; // set to not trigger so can collide with world
                 ob.tag = "voxelRb";
                 sceneObject.controller = this;
+                rb = ob.GetComponent<Rigidbody>();
+                rb.useGravity = false;
+                rb.isKinematic = false;
+                ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
+                ob.transform.localScale = new Vector3(1, 1, 1) * 0.5f; // scale
+                ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
                 break;
             case 2: // IF PROJECTILE
                 if (Settings.OnlinePlay)

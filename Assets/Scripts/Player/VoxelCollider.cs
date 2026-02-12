@@ -12,6 +12,7 @@ public class VoxelCollider : MonoBehaviour
 
     public World world;
     public Controller controller;
+    public Rigidbody rb;
     public Vector3 center;
     public float halfColliderHeight;
     public int stepHeight;
@@ -20,6 +21,7 @@ public class VoxelCollider : MonoBehaviour
 
     public bool isPlayer = false;
     public bool isCamera = false;
+    public bool isItem = false;
     public int voxelID = 0;
 
     public GameObject[] voxelBits;
@@ -62,26 +64,23 @@ public class VoxelCollider : MonoBehaviour
             stepHeight = 1;
             colliderOffset = 1;
         }
-        //else if (voxelID != 0)
-        //{
-        //    height = 1;
-        //    halfColliderHeight = height / 2;
-        //    colliderOffset = 0;
-        //}
+        else if (isItem)
+        {
+            rb = GetComponentInParent<Rigidbody>();
+        }
     }
 
-    //private void FixedUpdate()
-    //{
-    //    if (voxelID == 0)
-    //        return;
+    private void FixedUpdate()
+    {
+        if (isPlayer || isCamera || !isItem) //only apply this to items
+            return;
 
-    //    if (front || back || left || right || CheckDownSpeed(1) == 0 || CheckUpSpeed(1) == 0)
-    //    {
-    //        Debug.Log("Collision Detected");
-    //        //GameObject ob = Instantiate(voxelBits[voxelID], transform.position, Quaternion.identity);
-    //        //Destroy(this);
-    //    }
-    //}
+        //Vector3 velocity = CalculateVelocityItem(rb.linearVelocity);
+        //rb.linearVelocity += velocity; // add velocity to existing rigidbody velocity instead of replacing it
+
+        // hover the position until picked up
+        //transform.position = new Vector3(transform.position.x, transform.position.y + Mathf.Sin(2 * Time.deltaTime) * 0.1f, transform.position.z);
+    }
 
     public Vector3 CalculateVelocity(float horizontal, float vertical, bool isSprinting, bool jumpRequest)
     {
@@ -152,6 +151,41 @@ public class VoxelCollider : MonoBehaviour
         }
 
         return velocityPlayer;
+    }
+
+    public Vector3 CalculateVelocityItem(Vector3 velocity)
+    {
+        if(!isItem)
+            return Vector3.zero;
+
+        if (cc != null)
+            center = cc.transform.position + cc.center; // cache current center of collider position
+        
+        // // apply gravity
+        // if (verticalMomentum > gravity)
+        //     verticalMomentum += Time.fixedDeltaTime * gravity;
+
+        // // Apply vertical momentum (falling)
+        // velocity += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
+
+        isGrounded = CheckGrounded(velocity.y);
+        if(isGrounded)
+            return Vector3.zero;
+
+        // voxel based collision detection (no chunk meshes due to performance cost of updating chunk meshes)
+        if (Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode)
+        {
+            if ((velocity.z > 0 && front) || (velocity.z < 0 && back))
+                velocity.z = 0;
+            if ((velocity.x > 0 && right) || (velocity.x < 0 && left))
+                velocity.x = 0;
+            if (velocity.y < 0)
+                velocity.y = CheckDownSpeed(velocity.y);
+            if (velocity.y > 0)
+                velocity.y = CheckUpSpeed(velocity.y);
+        }
+
+        return velocity;
     }
 
     public Vector3 CalculateVelocityCamera(float horizontal, float vertical, bool isSprinting)
