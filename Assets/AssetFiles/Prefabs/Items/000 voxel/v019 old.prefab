@@ -410,7 +410,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7460669768858021843}
   m_Layer: 0
-  m_Name: v019
+  m_Name: Voxel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -495,7 +495,7 @@ MonoBehaviour:
   colliderOffset: 1
   isPlayer: 0
   isCamera: 0
-  isItem: 1
+  isItem: 0
   voxelID: 19
   voxelBits:
   - {fileID: 3563555514074976273, guid: 967547552de3f4c4eab1cca614c42484, type: 3}

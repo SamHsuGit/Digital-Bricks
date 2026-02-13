@@ -62,7 +62,7 @@ MonoBehaviour:
   colliderOffset: 1
   isPlayer: 0
   isCamera: 0
-  isItem: 1
+  isItem: 0
   voxelID: 4
   voxelBits:
   - {fileID: 3563555514074976273, guid: 967547552de3f4c4eab1cca614c42484, type: 3}

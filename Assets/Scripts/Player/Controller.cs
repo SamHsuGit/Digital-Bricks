@@ -109,10 +109,10 @@ public class Controller : NetworkBehaviour
         0, // tool ID 4 = crystal
     };
 
-    public int[][] allowableMiningMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
+    public int[][] allowableDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
         // defines blocks that the given tool can create a drop for
-        new int[] {            6,                  13, 14,         17, 18,     20 }, // tool ID 0 = punch (can only mine wood, grass, mushroom, flower)
+        new int[] {            6,       9,         13, 14,         17, 18,     20 }, // tool ID 0 = punch (can only mine wood, water, grass, mushroom, flower)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20 }, // tool ID 2 = stone (cannot mine black or crystal)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 3 = gold (cannot mine black)
@@ -1255,9 +1255,9 @@ public class Controller : NetworkBehaviour
             blockID = World.Instance.GetVoxelState(shootPos.position).id; // need current blockID to test if can mine
 
             canMine = false; // set to true only if block is found in allowable matrix
-            for (int i = 0; i < allowableMiningMatrix[toolID].Length; i++) // for every block in matrix for given toolID
+            for (int i = 0; i < allowableDropMatrix[toolID].Length; i++) // for every block in matrix for given toolID
             {
-                if (allowableMiningMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
+                if (allowableDropMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
                     canMine = true; // allow the next code to mine the block
             }
 
@@ -1791,7 +1791,7 @@ public class Controller : NetworkBehaviour
     void PlaceVoxel(Vector3 pos)
     {
         // a switch function to call the correct function depending on online play or not
-        if (!World.Instance.CheckForVoxel(placePos.position))
+        if (!World.Instance.CheckForVoxel(placePos.position, false))
         {
             if (blockID == blockIDcrystal)
                 crystal.Play();
@@ -1983,7 +1983,9 @@ public class Controller : NetworkBehaviour
         rb.useGravity = true;
         //rb.linearVelocity = Vector3.up * 0.5f; // spawnDir + Vector3.up * 2; // give some velocity up
 
+        
         SceneObject sceneObject = ob.GetComponent<SceneObject>();
+        
         GameObject childOb;
         BoxCollider sceneObBc;
         switch (type)
@@ -1994,13 +1996,15 @@ public class Controller : NetworkBehaviour
                 BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                 VoxelBc.material = physicMaterial;
                 VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
-                VoxelBc.size = new Vector3 (1f, 1f, 1f); // set slightly larger to help players pick up items?
+                VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items
                 VoxelBc.isTrigger = false; // set to not trigger so can collide with world
                 ob.tag = "voxelRb";
                 sceneObject.controller = this;
                 rb = ob.GetComponent<Rigidbody>();
                 rb.useGravity = false;
                 rb.isKinematic = false;
+                VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
+                    vc.isItem = true; // set true to spin object
                 ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
                 ob.transform.localScale = new Vector3(1, 1, 1) * 0.5f; // scale
                 ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
@@ -2165,7 +2169,7 @@ public class Controller : NetworkBehaviour
         {
             Vector3 pos = playerCamera.transform.position + (playerCamera.transform.forward * step);
 
-            if (world.CheckForVoxel(pos))
+            if (world.CheckForVoxel(pos, false))
             {
                 removePos.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
                 placePos.position = lastPos;

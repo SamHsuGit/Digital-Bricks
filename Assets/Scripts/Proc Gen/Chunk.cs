@@ -338,7 +338,7 @@ public class Chunk
                         AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
                     faceVertCount++;
                 }
-
+                
                 if (!World.Instance.blockTypes[voxel.id].isTransparent) // basic blocks not transparent
                 {
                     for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
@@ -346,15 +346,15 @@ public class Chunk
                 }
                 else
                 {
-                    // if(World.Instance.blockTypes[voxel.id].isWater) // water blocks (which are transparent)
-                    // {
-                    //     for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
-                    //     waterTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
-                    // }
-                    // else // transparent blocks (not water blocks)
+                    if(World.Instance.blockTypes[voxel.id].isWater) // water blocks
                     {
                         for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
-                        transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
+                            transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]); // need to apply the transparent material for water
+                    }
+                    else
+                    {
+                        for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
+                            transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
                     }
                 }
 

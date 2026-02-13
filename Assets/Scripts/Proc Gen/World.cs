@@ -261,9 +261,9 @@ public class World : MonoBehaviour
         weirdnessSplinePoints = new Vector2[]
         {
             new Vector2(0.00f, 0.00f),
-            new Vector2(0.60f, 0.35f),
-            new Vector2(0.61f, 0.90f), // large jump such that only 10% of terrain is weird
-            new Vector2(1.00f, 1.00f),
+            new Vector2(0.80f, 0.35f),
+            new Vector2(0.81f, 0.80f), // large jump such that only smaller percentage of terrain is weird
+            new Vector2(1.00f, 0.80f),
         };
     }
 
@@ -950,6 +950,8 @@ public class World : MonoBehaviour
            voxelValue = 0; // air
         else if (yGlobalPos < terrainHeight)
            voxelValue = worldData.blockIDsubsurface; // stone
+        // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
+        // voxelValue = biome.surfaceBlock; // dirt
         if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
            return worldData.blockIDwater; // water
 
@@ -1157,6 +1159,7 @@ public class World : MonoBehaviour
         
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
         weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.1f), weirdnessSplinePoints);
+        //weirdness = Noise.Get2DPerlin(xzCoords, 321, 2f);
 
         // for testing to individually visualize the effects of the spline points
         //terrainHeightPercentChunk = continentalnessFactor;
@@ -1561,7 +1564,7 @@ public class World : MonoBehaviour
         return chunks[x, z];
     }
 
-    public bool CheckForVoxel(Vector3 pos)
+    public bool CheckForVoxel(Vector3 pos, bool forCollisionCheck)
     {
         VoxelState voxel = worldData.GetVoxel(pos); // gets the voxel state from saved worldData
 
@@ -1570,6 +1573,9 @@ public class World : MonoBehaviour
 
         if (voxel.id == blockIDprocGen || voxel.id == blockIDbase)
             return true; // VBO placeholder to prevent player from replacing with a voxel
+
+        if(forCollisionCheck && blockTypes[voxel.id].isWater) // a special case for water
+            return false;
 
         if (blockTypes[voxel.id].isSolid) // gives error if the player starts outside of the world
             return true;

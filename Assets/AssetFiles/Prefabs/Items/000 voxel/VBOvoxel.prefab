@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 1360652618168102747}
   - component: {fileID: 3821010787410746257}
   m_Layer: 0
-  m_Name: VBOvoxel
+  m_Name: VBOVoxel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
