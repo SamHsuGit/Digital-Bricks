@@ -34,6 +34,7 @@ public static class SaveSystem
 
         SavePlayerStats(world, savePath);
 
+        // Sharing Violation Error caused by multiple threads accessing same chunk file?
         Thread thread = new Thread(() => SaveChunks(worldData));
         thread.Start();
     }
