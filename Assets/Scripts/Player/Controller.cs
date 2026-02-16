@@ -380,7 +380,7 @@ public class Controller : NetworkBehaviour
         for(int i = 0; i < originalStringArray.Length; i++)
         {
             originalStringArray[i] = Path.GetFileName(originalStringArray[i]);
-            if (!originalStringArray[i].Contains("meta"))
+            if (!originalStringArray[i].Contains("meta") && !originalStringArray[i].Contains("DS_Store"))
                 count++;
         }
         returnStringArray = new string[count]; // set the correct size of the final string array
@@ -391,14 +391,14 @@ public class Controller : NetworkBehaviour
         for (int i = 0; i < originalStringArray.Length; i++)
         {
             originalStringArray[i] = Path.GetFileName(originalStringArray[i]);
-            if (!originalStringArray[i].Contains("meta"))
+            if (!originalStringArray[i].Contains("meta") && !originalStringArray[i].Contains("DS_Store"))
             {
                 returnStringArray[count] = originalStringArray[i];
                 count++;
             }
             //Debug.Log(returnStringArray[i]);
         }
-
+        //Debug.Log(returnStringArray[0]);
         return returnStringArray;
     }
 
