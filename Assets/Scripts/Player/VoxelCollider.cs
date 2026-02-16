@@ -39,9 +39,15 @@ public class VoxelCollider : MonoBehaviour
 
     byte[] adjacentVoxelIDs;
 
+    byte waterBlockID;
+    byte roadBlockID;
+
     // Start is called before the first frame update
     void Start()
     {
+        waterBlockID = World.Instance.worldData.blockIDwater;
+        roadBlockID = World.Instance.worldData.blockIDsubsurface;
+
         if (isPlayer)
         {
             //set initial char size
@@ -108,7 +114,7 @@ public class VoxelCollider : MonoBehaviour
         if (Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode)
         {
             // reset jumps when grounded
-            if (isGrounded || (isPlayer && controller.isGrounded))
+            if (isGrounded || (isPlayer && controller.isGrounded) || PlayerIsTouchingBlockID(waterBlockID))
                 currentJumps = 0;
 
             // can jump off sides of objects
@@ -128,8 +134,8 @@ public class VoxelCollider : MonoBehaviour
         }
 
         // if we're running on road, increase road multiplier.
-        int roadFactor;
-        if (PlayerIsTouchingBlockID(3))
+        int roadFactor = 1;
+        if (PlayerIsTouchingBlockID(roadBlockID))
             roadFactor = 2;
         else
             roadFactor = 1;
@@ -367,6 +373,7 @@ public class VoxelCollider : MonoBehaviour
     {
         bool isTouching = false;
 
+        // BROKEN, NEED TO DEFINE POSITIONS?
         if(playerChunkIsActive && adjacentVoxelIDs != null)
         {
             for (int i = 0; i < adjacentVoxelIDs.Length; i++) // for all check positions around player
@@ -376,6 +383,12 @@ public class VoxelCollider : MonoBehaviour
                     isTouching = true;
             }
         }
+
+        // // BROKEN
+        // Vector3Int playerPos = new Vector3Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y), Mathf.FloorToInt(transform.position.z));
+        // if(World.Instance.GetVoxel(playerPos) == blockID)
+        //     isTouching = true;
+
         return isTouching;
     }
 }

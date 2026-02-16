@@ -213,6 +213,8 @@ public class World : MonoBehaviour
             // rules: leave 0.2 between shelves, do not increase more than 0.3 between shelves
             // earth's surface is 71% covered by water, for aesthetic gameplay purposes make 50% of world ocean
             // use noise to vary scale of continentalness to make large continents or small islands
+            // new Vector2(0.00f, seaLevelPercentChunk + mainlandElevationPercent * 2 + step), // cliffs (broken)
+            // new Vector2(0.10f, seaLevelPercentChunk + mainlandElevationPercent * 2), // cliffs (broken)
             new Vector2(0.00f, seaLevelPercentChunk - 0.20f), // deep ocean
             new Vector2(0.10f, seaLevelPercentChunk - 0.20f), // deep ocean only 10% to avoid interfering with caves
             new Vector2(0.11f, seaLevelPercentChunk - 0.10f), // ocean
@@ -561,7 +563,7 @@ public class World : MonoBehaviour
         if (playerCount < 1 && playerGameObject.transform.position == defaultSpawnPosition) // for world player
             firstLoadDrawDistance = loadDistance; // SettingsStatic.LoadedSettings.drawDistance; // first load distance is just large enough to render world for world player
         else
-            firstLoadDrawDistance = loadDistance; // max value is 3 to ensure older PCs can still perform this
+            firstLoadDrawDistance = loadDistance; // consider making same to ensure older PCs can still perform this
 
         if (firstLoadDrawDistance < loadDistance) // checks to ensure that firstLoadDrawDistance is at least as large as loadDistance
             firstLoadDrawDistance = loadDistance;
