@@ -53,8 +53,8 @@ public class ChunkData
     //through 820 arrays x 16 for each chunk with most of the arrays containing only zeros, could optimize by making
     //such that each chunk has a list of which blocktype arrays are non-zero and only process those
     //Minecraft  used to store blocks as byte arrays but bytes can only have values from 0 to 256,
-    // when there were more than 256 block types minecraft instead stores the list of used blocks as a
-    // palette and then indexes the palette.There are lists for each stored voxel state (orientation, light level, etc)
+    //when there were more than 256 block types minecraft instead stores the list of used blocks as a
+    //palette and then indexes the palette.There are lists for each stored voxel state (orientation, light level, etc)
 
     // The global position of the chunk. ie, (16, 16) NOT (1, 1). We want to be able to
     // access it as a Vector2Int, but Vector2Int's are not serialized so we won't be able
@@ -95,7 +95,7 @@ public class ChunkData
             return voxelTypeMemo[pos];
         }
 
-        // if we do not know the value, calculated it normally with the GetVoxel function defined in the world class (slow)
+        // if we do not know the value, calculated it normally with the GetVoxel function defined in the world class (slower)
         byte voxelType = World.Instance.GetVoxel(pos);
         voxelTypeMemo[pos] = voxelType;
         return voxelType;
@@ -135,7 +135,7 @@ public class ChunkData
         else
         {
             //Debug.Log("ChunkData.Populate");
-            // currently populates all voxel data, but only needs to populate voxels which are adjacent to air
+            // currently populates all voxel data, but only needs to populate voxels which are adjacent to air?
             for (int z = 0; z < VoxelData.ChunkWidth; z++)
             {
                 for (int x = 0; x < VoxelData.ChunkWidth; x++)
@@ -144,14 +144,14 @@ public class ChunkData
                     {
                         Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
                         byte voxelType;
-                        if (voxelTypeMemo.TryGetValue(voxelGlobalPos, out voxelType))
+                        if (voxelTypeMemo.TryGetValue(voxelGlobalPos, out voxelType)) // try to get voxel id from dictionary
                         {
                             map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
                         }
                         else
                         {
-                            voxelType = GetVoxel(voxelGlobalPos); // call memorization function recommended as performance improvement by chatGPT
-                            voxelTypeMemo[voxelGlobalPos] = voxelType;
+                            voxelType = GetVoxel(voxelGlobalPos); // get block id from memorization function recommended as performance improvement by chatGPT
+                            voxelTypeMemo[voxelGlobalPos] = voxelType; // store block id to dictionary
                             map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
                         }
                     }
@@ -283,9 +283,11 @@ public class ChunkData
         "?", // 81
     };
 
+    // creates an array of byte pairs, first in pair is id, second in pair is orientation
     public byte[] EncodeByteArray(ChunkData chunkData)
     {
         byte[] voxelBytes = new byte[2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight) * 2];
+        //header 
         voxelBytes[0] = (byte)(chunkData.position.x / VoxelData.ChunkWidth);
         voxelBytes[1] = (byte)(chunkData.position.y / VoxelData.ChunkWidth);
         int i = 2;
@@ -304,6 +306,135 @@ public class ChunkData
         }
         voxelBytes = Compressor.Compress(voxelBytes);
         return voxelBytes;
+    }
+
+    // WIP TESTING CREATE A 16 BIT INTEGER ARRAY FROM CHUNK DATA, ABANDONED
+    // creates an array of 16 bit integers that represent 1 and 0 for block or not for a given block id
+    public UInt16[] CreateChunkArray(ChunkData chunkData, byte blockID)
+    {
+        UInt16[] returnArray = new UInt16[3 + (VoxelData.ChunkHeight * VoxelData.ChunkWidth)];
+        // header
+        returnArray[0] = (UInt16)blockID;
+        returnArray[1] = (UInt16)(chunkData.position.x / VoxelData.ChunkWidth);
+        returnArray[2] = (UInt16)(chunkData.position.y / VoxelData.ChunkWidth);
+        int i = 3; // i is the position in the final array, used to skip the first few header values for blockID and chunk position
+
+        // iterate thru all levels in chunk
+        for (int y = 0; y < VoxelData.ChunkHeight; y++)
+        {
+            // iterate thru rows
+            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            {
+                returnArray[i + x] = EncodeRowToShort(chunkData, x, y, blockID); // returns an unsigned 16 bit integer for each row at a given y level
+            }
+            i = i + 16; // skip ahead 16 to next set of 16 rows for next y level
+        }
+        return returnArray;
+    }
+
+    // WIP TESTING ENCODE ROW OF VOXELSTATES TO 16 BIT INTEGER, ABANDONED
+    // each row in a chunk represented by an unsigned 16 bit integer (0 to 65,535)
+    // 1 are block, 0 are air
+    // this number must be generated for each block type in the chunk to describe if a given block id exists here or not
+    // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types
+    public UInt16 EncodeRowToShort(ChunkData chunkData, int x, int y, byte blockID)
+    {
+        UInt16 returnInt = 0; // starts as 0000000000000000 (16 bit integer, unsigned)
+
+        //for a given block type, return an int that represents 1 or 0 at each z position (16 bits in UInt16)
+        for (int z = 0; z < VoxelData.ChunkWidth; z++)
+        {
+            if(chunkData.map[x,y,z].id == blockID) // if block detected at given z position
+            {
+                // convert the z position to a binary number
+                UInt16 newZ = (UInt16)(2^z); // example block at z = 3 would be adding 2^3 = 8 so would be 0000000000001000
+
+                // add the binary number to the final 16 bit number
+                returnInt += newZ; // 0010 (2) + 0001 (1) = 0011 (3) binary addition means you can add the positions to get the new number
+            }
+        }
+
+        return returnInt;
+    }
+
+    // WIP TESTING DECODING 16 BIT INTEGER BACK INTO VOXEL MAPS
+    public ChunkData DecodeChunkArray(UInt16[] intArray)
+    {
+        byte blockID = (byte)intArray[0];
+        int xChunkPos = (int)intArray[1];
+        int zChunkPos = (int)intArray[2];
+
+        ChunkData chunkData = new ChunkData(xChunkPos, zChunkPos);
+        // fill chunk with air done during constructor?
+        
+        // EXAMPLE:
+        // i = 4 thru 19 are the x integers for y = 0
+        // NEED x = 0 to 15 every time
+        // NEED to calculate y based on dividing i by 16 = Mathf.FloorToInt((i-3)/16) = 0
+        // z = Convert.ToInt32(voxelBytes[4],2) = 8 PUTS BLOCK ID at z position 8
+
+        // 2 ways to do it, loop thru all values in the integer array or loop thru every position in a chunk (wasted effort for 0 air blocks)
+        // for this reason we choose to loop thru the values in the integer array, assigning values where detected a value of 1
+        for (int i = 3; i < intArray.Length; i++) // loop thru all values, every 16 values is a y level
+        {
+            int y = Mathf.FloorToInt((i - 4)/16);
+            int x = i - y * 16 - 4;
+
+            byte[] bytes = DecodeShortToByteArray(intArray[i]);
+
+            // populate the chunk data for the new chunk
+            for (int z = 0; z < bytes.Length; z++)
+            {
+                if(bytes[z] == 1)
+                    chunkData.map[x, y, z] = new VoxelState(blockID, chunkData, new Vector3Int(x, y, z), 0); // set orientation to zero for now
+            }
+            
+        }
+        return chunkData;
+    }
+
+    // WIP TESTING TO TURN 16 BIT INTEGER NUMBER INTO BYTE ARRAY, ABANDONED
+    public byte[] DecodeShortToByteArray(UInt16 integerNumber)
+    {
+        byte[] returnArray = new byte[VoxelData.ChunkWidth];
+        // for each position in integer if bit = 1 then add a value to array at that position
+        // Example: convert 0000000000000011 to [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1]
+        string testString = integerNumber.ToString();
+        for(int i = 0; i < testString.Length; i++)
+        {
+            returnArray[i] = (byte)testString[i]; // convert the string of 0 and 1 to byte array
+        }
+
+        return returnArray;
+    }
+
+    // WAS FOR TESTING VERTICAL BINARY SAVE DATA, ABAONDONED: wanted to make save data expandable vertically (not limited by number of bits)
+    // creates a 2D array of 32 bit integers representing 1 or 0 if a given block ID exists at each position in chunk
+    public int[,] Create2DChunkArray(ChunkData chunkData, byte blockID)
+    {
+        int[,] returnArray = new int[VoxelData.ChunkWidth, VoxelData.ChunkWidth];
+        for (int z = 0; z < VoxelData.ChunkWidth; z++)
+        {
+            for (int x = 0; x < VoxelData.ChunkWidth; x++)
+            {
+                returnArray[x,z] = EncodeSliceToInt(chunkData, x, z, blockID);
+            }
+        }
+
+        return returnArray;
+    }
+
+    // WAS FOR TESTING VERTICAL BINARY SAVE DATA, ABANDONED: wanted to make save data expandable vertically (not limited by number of bits)
+    // for a given position in world, save slide of world as a 32 bit integer
+    public int EncodeSliceToInt(ChunkData chunkData, int x, int z, byte blockID)
+    {
+        int returnInt = 0;
+        //for a given block type, return an int that represents 1 or 0 at each y level (32 bits in int32)
+        for (int y = 0; y < VoxelData.ChunkHeight; y++)
+            if(chunkData.map[x,y,z].id == blockID)
+                returnInt += 2^y; // example block at y = 3 would be adding 2^3 = 8 so would be 00000000000000000000000000001000, need to use RLE compression?
+    
+        return returnInt;
     }
 
     public ChunkData DecodeByteArray(byte[] voxelBytes)
@@ -329,7 +460,8 @@ public class ChunkData
     }
 
 
-    // THE FOLLOWING FUNCTIONS NEEDED TO SEND STRINGS OVER NETWORK (MIRROR DOCUMENTATION: https://mirror-networking.gitbook.io/docs/guides/data-types)
+
+    // THE FOLLOWING FUNCTIONS ARE NEEDED TO SEND STRINGS OVER NETWORK (MIRROR DOCUMENTATION: https://mirror-networking.gitbook.io/docs/guides/data-types)
     public string EncodeString(ChunkData chunkData)
     {
         // Encodes chunks into a list of voxelStates runs from bottom to top of chunk, then to next increments x position, then next z position

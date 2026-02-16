@@ -196,6 +196,26 @@ public static class SaveSystem
             Directory.CreateDirectory(savePath);
         }
 
+        // // TESTING
+        // // for each block type create an array of 1 or 0 describing if that block type exists at a given position
+        // // an 8-bit byte can store numbers from 0 (00000000) to 255 (11111111)
+        // // each vertical slice in a world is given an 8 bit number and the number describes a 1 or zero at each of the 8 y values
+        // // expand this idea to a 32 bit integer int32 and there are now 32 y levels
+        // // 00000000000000000000000000000000 = 0 in 32 bit binary (int32) minimum
+        // // 11111111111111111111111111111111 = 2,147,483,647 in 32 bit binary (int32) maximum
+        // for(int i = 2; i < World.Instance.blockTypes.Length; i++)
+        // {
+        //     BinaryFormatter formatter = new BinaryFormatter();
+        //     FileStream stream;
+        //     stream = new FileStream(savePath + chunkName + ".chunk-" + i, FileMode.Create); // overwrites any existing files by default
+        //     //BinaryWriter w = new BinaryWriter(stream, System.Text.Encoding.UTF8);
+        //     UInt16[] integerArray = chunkData.CreateChunkArray(chunkData, (byte)i);
+        //     // test if all values are 0 then do not save
+        //     formatter.Serialize(stream, integerArray); // save chunk array
+        //     stream.Close();
+        // }
+
+
         // saving byte array as binary file is faster than reading strings from text files
         // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
         FileStream stream;
@@ -252,27 +272,53 @@ public static class SaveSystem
         // worldSizeInChunks = 0, renders correctly but doesn't use saved data
         string loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "/chunks/" + chunkName + ".chunk";
 
-        if (File.Exists(loadPath))
-        {
-            // saving byte array as binary file is faster than reading strings from text files
-            // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
-            FileStream stream;
-            stream = new FileStream(loadPath, FileMode.Open, FileAccess.Read);
-            BinaryReader r = new BinaryReader(stream, System.Text.Encoding.UTF8);
-            int count = 2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight);
-            byte[] byteArray = r.ReadBytes(count);
-            chunkData = chunkData.DecodeByteArray(byteArray);
-            stream.Close();
+        // WAS FOR TESTING NEW SAVE DATA SYSTEM THAT USED 16 BIT INTEGERS, ABANDONED
+        // ChunkData tempChunkData;
+        // for(int i = 2; i < World.Instance.blockTypes.Length; i++)
+        // {
+        //     loadPath = Settings.AppSaveDataPath + "/saves/" + _planetSeed + "-" + _worldCoord + "/chunks/" + chunkName + "-" + i + ".chunk";
+            
+            if (File.Exists(loadPath))
+            {
 
-            // // uses strings for a human readable format (slower). Kept for debugging
-            // BinaryFormatter formatter = new BinaryFormatter();
-            // FileStream stream = new FileStream(loadPath, FileMode.Open);
-            // string str = formatter.Deserialize(stream) as string;
-            // chunkData = chunkData.DecodeString(str);
-            // stream.Close();
-        }
-        else
-            chunkData = null;
+                // // TESTING 16 BIT INTEGER SAVE DATA, ABANDONED
+                // BinaryFormatter formatter = new BinaryFormatter();
+                // FileStream stream = new FileStream(loadPath, FileMode.Open);
+                // UInt16[] intArray = formatter.Deserialize(stream) as UInt16[];
+                // tempChunkData = chunkData.DecodeChunkArray(intArray);// TESTING
+                // stream.Close();
+                // for(int x = 0; x < VoxelData.ChunkWidth; x++)
+                // {
+                //     for (int z = 0; z < VoxelData.ChunkWidth; z++)
+                //     {
+                //         for(int y = 0; y < VoxelData.ChunkHeight; y++)
+                //         {
+                //             if(tempChunkData.map[x,y,z].id != 0)
+                //                 chunkData.map[x,y,z].id = tempChunkData.map[x,y,z].id;
+                //         }
+                //     }
+                // }
+
+                // saving byte array as binary file is faster than reading strings from text files
+                // https://answers.unity.com/questions/1259263/fastest-way-to-read-in-data.html
+                FileStream stream;
+                stream = new FileStream(loadPath, FileMode.Open, FileAccess.Read);
+                BinaryReader r = new BinaryReader(stream, System.Text.Encoding.UTF8);
+                int count = 2 + (VoxelData.ChunkWidth * VoxelData.ChunkWidth * VoxelData.ChunkHeight);
+                byte[] byteArray = r.ReadBytes(count);
+                chunkData = chunkData.DecodeByteArray(byteArray);
+                stream.Close();
+
+                // // uses strings for a human readable format (slower). Kept for debugging
+                // BinaryFormatter formatter = new BinaryFormatter();
+                // FileStream stream = new FileStream(loadPath, FileMode.Open);
+                // string str = formatter.Deserialize(stream) as string;
+                // chunkData = chunkData.DecodeString(str);
+                // stream.Close();
+            }
+            else
+                chunkData = null;
+        // }
 
         if (chunkData != null)
             return chunkData;
