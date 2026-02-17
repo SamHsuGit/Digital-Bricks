@@ -912,36 +912,27 @@ public class Controller : NetworkBehaviour
             miningCounter = 0;
 
 
-        // NORMAL CONTROLS IF PICKAXE IN HAND
-        //if(// add code for if has pickaxe here)
-        //{
-
+        // NORMAL CONTROLS IF PICKAXE IN HAND?
         // NORMAL MINING
         if (!holdingGrab && !holdingBuild && inputHandler.mine)
             PressedMine();
+            
+        // NORMAL VOXEL BUILDING
+        if (!holdingGrab && !holdingBuild && inputHandler.use)
+            PressedPlaceBlock();
 
-        // // NORMAL VOXEL BUILDING
-        // if (!holdingGrab && !holdingBuild && inputHandler.use)
-        //     PressedPlaceBlock();
+        // // GRAB CONTROLS
+        // // IF PRESSED GRAB
+        // if (!holdingGrab && inputHandler.use)
+        //    PressedGrab();
 
-        //     positionCursorBlocks();
+        // // IF HOLDING GRAB
+        // if (holdingGrab && inputHandler.use)
+        //    HoldingGrab();
 
-        //     return;
-        //}
-
-        // ELSE GRAB CONTROLS
-
-        // IF PRESSED GRAB
-        if (!holdingGrab && inputHandler.use)
-           PressedGrab();
-
-        // IF HOLDING GRAB
-        if (holdingGrab && inputHandler.use)
-           HoldingGrab();
-
-        // IF RELEASED GRAB
-        if (holdingGrab && !inputHandler.use)
-           ReleasedGrab();
+        // // IF RELEASED GRAB
+        // if (holdingGrab && !inputHandler.use)
+        //    ReleasedGrab();
 
         // IF DROP ITEM
         if(!holdingBuild && !holdingGrab && inputHandler.previous)
@@ -949,6 +940,7 @@ public class Controller : NetworkBehaviour
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
+            // BUILD CONTROLS
             // IF PRESSED GRAB WHILE HOLDING BUILD
             if (holdingGrab && inputHandler.mine)
                PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
