@@ -873,6 +873,7 @@ MonoBehaviour:
   animRate: 2
   camMode: 1
   setCamMode: 0
+  inInventoryUI: 0
   lookVelocity: 1
   lookSpeed: 0.1
   invertY: 0
@@ -922,6 +923,7 @@ MonoBehaviour:
   toolID: 0
   ldrawHexValues: 2b0000002b00000000000000070000000f00000004000000060000000e00000002000000010000000500000003000000
   placedBrick: {fileID: 0}
+  inputHandler: {fileID: 0}
   worldPPFXSetValues: {fileID: 0}
 --- !u!114 &8694146929136081849
 MonoBehaviour:
@@ -4343,6 +4345,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4207408443850452475, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 3963772888375218276}
+    - target: {fileID: 4207408443850452475, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: creativeInventory
+      value: 
+      objectReference: {fileID: 1115402795395955848}
     - target: {fileID: 4319578954632969371, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -4898,6 +4908,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 457a89a86776f504f83e5035c69e4588, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1115402795395955848 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6143453991454651663, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+  m_PrefabInstance: {fileID: 6501889674470066567}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115402795395955849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38ca60334b8e2ac43bc552019e564fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1115402795395955849 stripped

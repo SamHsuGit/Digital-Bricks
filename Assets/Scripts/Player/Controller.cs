@@ -57,6 +57,7 @@ public class Controller : NetworkBehaviour
     public float animRate = 2; // health script overrides this
     public int camMode;
     public bool setCamMode = false;
+    public bool inInventoryUI = false;
 
     public float lookVelocity = 0.1f;
     public float lookSpeed = 0.1f;
@@ -157,7 +158,7 @@ public class Controller : NetworkBehaviour
     private VoxelCollider voxelCollider;
     private Animator animator;
     private PlayerInput playerInput;
-    private InputHandler inputHandler;
+    public InputHandler inputHandler;
     private Health health;
     private Mining mining;
     private CanvasGroup backgroundMaskCanvasGroup;
@@ -757,6 +758,11 @@ public class Controller : NetworkBehaviour
         }
         else if (!options)
             gameMenuComponent.ReturnToGame();
+
+        if(!options && inputHandler.next)
+            inInventoryUI = !inInventoryUI;
+        // else if (!options && inInventoryUI && inputHandler.next)
+        //     inInventoryUI = false;
 
         if (holdingBuild || holdingGrab)
         {
