@@ -759,8 +759,19 @@ public class Controller : NetworkBehaviour
         else if (!options)
             gameMenuComponent.ReturnToGame();
 
-        if(!options && inputHandler.next)
-            inInventoryUI = !inInventoryUI;
+        if(!options && !inInventoryUI && inputHandler.next)
+        {
+            inInventoryUI = true;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else if (!options && inInventoryUI && inputHandler.next)
+        {
+            inInventoryUI = false;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
         // else if (!options && inInventoryUI && inputHandler.next)
         //     inInventoryUI = false;
 
@@ -833,7 +844,7 @@ public class Controller : NetworkBehaviour
         // player normally uses voxel collision in voxelCollider to check grounded, unless standing on imported ldraw parts which have physics collisions, then mark player as grounded
         isGrounded = CheckGroundedCollider();
 
-        if (!options)
+        if (!options && !inInventoryUI) // Prevent moving/interacting with world during UI Menus
         {
             switch (camMode)
             {

@@ -14,7 +14,7 @@ public class CreativeInventory : MonoBehaviour
 
         world = World.Instance;
 
-        for (int i = 1; i < world.blockTypes.Length; i++)
+        for (int i = 2; i < world.blockTypes.Length; i++) // start at i = 2 to skip barrier and air blocks
         {
 
             GameObject newSlot = Instantiate(slotPrefab, transform);
