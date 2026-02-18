@@ -33,17 +33,25 @@ public class DragAndDropHandler : MonoBehaviour {
 
         cursorSlot.transform.position = Input.mousePosition;
 
-        if (controller.inputHandler.mine) {
-
+        if (Input.GetMouseButtonDown(0))//controller.inputHandler.mine) // controller.inputHandler.mine causes 2 clicks, one on press, one on release...
+        {
             HandleSlotClick(CheckForSlot());
-
         }
 
     }
 
     private void HandleSlotClick (UIItemSlot clickedSlot) {
 
-        if (clickedSlot == null)
+        if (clickedSlot == null && cursorSlot.HasItem) // if clicked air while holding block
+        {
+            byte blockID = cursorSlot.itemSlot.stack.id;
+            for(int i = 0; i < cursorSlot.itemSlot.stack.amount; i++)
+            {
+                controller.toolbar.SpawnObject(blockID); // spawn blocks
+            }
+            cursorSlot.itemSlot.EmptySlot(); // empty cursor slot
+        }
+        else if (clickedSlot == null)
             return;
 
         if (!cursorSlot.HasItem && !clickedSlot.HasItem)
@@ -95,11 +103,13 @@ public class DragAndDropHandler : MonoBehaviour {
         List<RaycastResult> results = new List<RaycastResult>();
         m_Raycaster.Raycast(m_PointerEventData, results);
 
-        foreach (RaycastResult result in results) {
-
+        foreach (RaycastResult result in results)
+        {
+            //Debug.Log("found object " + result.gameObject.name + " of tag: " + result.gameObject.tag);
             if (result.gameObject.tag == "UIItemSlot")
+            {
                 return result.gameObject.GetComponent<UIItemSlot>();
-
+            }
         }
 
         return null;

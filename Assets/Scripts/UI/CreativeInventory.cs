@@ -14,12 +14,14 @@ public class CreativeInventory : MonoBehaviour
 
         world = World.Instance;
 
+        
         for (int i = 2; i < world.blockTypes.Length; i++) // start at i = 2 to skip barrier and air blocks
         {
 
             GameObject newSlot = Instantiate(slotPrefab, transform);
 
-            ItemStack stack = new ItemStack((byte)i, 64);
+            // fills slots with stacks of 64 blocks of each type for "creative mode"
+            ItemStack stack = new ItemStack((byte)0, 64);
             ItemSlot slot = new ItemSlot(newSlot.GetComponent<UIItemSlot>(), stack);
             slot.isCreative = true;
 
