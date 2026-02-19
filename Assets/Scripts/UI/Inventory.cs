@@ -25,7 +25,7 @@ public class Inventory : MonoBehaviour
         {
             
             GameObject newSlot = Instantiate(this.slotPrefab, transform);
-            //ItemSlot slot = new ItemSlot(newSlot.GetComponent<UIItemSlot>());
+            ItemSlot slot = new ItemSlot(newSlot.GetComponent<UIItemSlot>());
             inventorySlots[i] = newSlot.GetComponent<UIItemSlot>();
 
             // // fills slots with stacks of 64 blocks of each type for "creative mode"

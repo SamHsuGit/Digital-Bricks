@@ -837,6 +837,13 @@ public class Controller : NetworkBehaviour
 
         if (!options) // Prevent moving/interacting with world during UI Menus
         {
+            if(camMode != 3)
+            {
+                // IF DROP ITEM
+                if(!holdingBuild && !holdingGrab && inputHandler.previous)
+                    DropItemInSlot();
+            }
+
             switch (camMode)
             {
                 case 1: // FIRST PERSON CAMERA
@@ -950,10 +957,6 @@ public class Controller : NetworkBehaviour
         // // IF RELEASED GRAB
         // if (holdingGrab && !inputHandler.use)
         //    ReleasedGrab();
-
-        // IF DROP ITEM
-        if(!holdingBuild && !holdingGrab && inputHandler.previous)
-            DropItemInSlot();
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {

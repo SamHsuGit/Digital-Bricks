@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 009 Blue (Water)
   m_EditorClassIdentifier: 
   blockName: 
+  stackMax: 64
   isDrawn: 1
   isSolid: 1
   isTransparent: 1

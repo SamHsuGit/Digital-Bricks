@@ -109,19 +109,21 @@ public class ItemSlot
         {
             int _amt = stack.amount;
             //EmptySlot();
-            return _amt;
+            return _amt; // do not change value
         }
         else if (amt <= stack.amount) // if amount request to take is less than or equal to whats available in stack
         {
-            stack.amount -= amt;
+            stack.amount -= amt; // subtract one from amount
             uiItemSlot.UpdateSlot();
             return amt;
         }
+        // else if (stack.amount - amt <= 0) // if removing the amount would result in negative or zero, empty slot completely (causes issue diving by zero?)
+        // {
+        //     EmptySlot();
+        //     return amt;
+        // }
         else
-        {
-            //EmptySlot();
             return amt;
-        }
     }
 
     public int Give(int amt)

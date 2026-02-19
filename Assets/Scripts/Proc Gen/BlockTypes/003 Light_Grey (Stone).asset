@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: 003 Light_Grey (Stone)
   m_EditorClassIdentifier: 
   blockName: 
+  stackMax: 64
   isDrawn: 1
   isSolid: 1
   isTransparent: 0
+  isWater: 0
   hardness: 50
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
