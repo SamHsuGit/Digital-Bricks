@@ -844,20 +844,23 @@ public class Controller : NetworkBehaviour
         // player normally uses voxel collision in voxelCollider to check grounded, unless standing on imported ldraw parts which have physics collisions, then mark player as grounded
         isGrounded = CheckGroundedCollider();
 
-        if (!options && !inInventoryUI) // Prevent moving/interacting with world during UI Menus
+        if (!options) // Prevent moving/interacting with world during UI Menus
         {
             switch (camMode)
             {
                 case 1: // FIRST PERSON CAMERA
                     {
-                        rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
+                        if(!inInventoryUI) // only do if not in inventory
+                        {
+                            rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
 
-                        if (charObIdle != null && charObIdle.activeSelf)
-                            charObIdle.SetActive(false);
-                        if (charObRun != null && charObRun.activeSelf)
-                            charObRun.SetActive(false);
+                            if (charObIdle != null && charObIdle.activeSelf)
+                                charObIdle.SetActive(false);
+                            if (charObRun != null && charObRun.activeSelf)
+                                charObRun.SetActive(false);
 
-                        CheckWorldInteract();
+                            CheckWorldInteract();
+                        }
 
                         lookAtConstraint.constraintActive = false;
                         MovePlayer(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
@@ -865,24 +868,27 @@ public class Controller : NetworkBehaviour
                     }
                 case 2: // THIRD PERSON CAMERA
                     {
-                        rayCastStart = transform.position + transform.up * colliderHeight * 0.75f + transform.forward * colliderRadius * 4;
-
-                        if (!Settings.WebGL && charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.developerMode)
+                        if(!inInventoryUI)
                         {
-                            charObIdle.SetActive(true);
-                            charObRun.SetActive(false);
+                            rayCastStart = transform.position + transform.up * colliderHeight * 0.75f + transform.forward * colliderRadius * 4;
+
+                            if (!Settings.WebGL && charObIdle != null && !charObIdle.activeSelf && SettingsStatic.LoadedSettings.developerMode)
+                            {
+                                charObIdle.SetActive(true);
+                                charObRun.SetActive(false);
+                            }
+
+                            if (world.playerCount < 2)
+                                SetDOF();
+                            SetTPSDist();
+
+                            CheckWorldInteract();
                         }
-
-                        if (world.playerCount < 2)
-                            SetDOF();
-                        SetTPSDist();
-
-                        CheckWorldInteract();
 
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
-                        if (!Settings.WebGL && !SettingsStatic.LoadedSettings.developerMode && health.hp < 50) // only animate characters with less than 50 pieces due to rendering performance issues
+                        if (!Settings.WebGL && !SettingsStatic.LoadedSettings.developerMode && health.hp < 50 && !inInventoryUI) // only animate characters with less than 50 pieces due to rendering performance issues
                             Animate();
                         else
                         {
@@ -893,15 +899,18 @@ public class Controller : NetworkBehaviour
                     }
                 case 3: // PHOTO MODE
                     {
-                        rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
+                        if(!inInventoryUI)
+                        {
+                            rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
 
-                        if (charObIdle != null && !charObIdle.activeSelf)
-                            charObIdle.SetActive(true);
-                        if (charObRun != null && charObRun.activeSelf)
-                            charObRun.SetActive(false);
+                            if (charObIdle != null && !charObIdle.activeSelf)
+                                charObIdle.SetActive(true);
+                            if (charObRun != null && charObRun.activeSelf)
+                                charObRun.SetActive(false);
 
-                        if (world.playerCount < 2)
-                            SetDOF();
+                            if (world.playerCount < 2)
+                                SetDOF();
+                        }
 
                         lookAtConstraint.constraintActive = false;
                         MoveCamera(); // MUST BE IN FIXED UPDATE (Causes lag if limited by update framerate)
@@ -2239,26 +2248,29 @@ public class Controller : NetworkBehaviour
 
     public void MovePlayer()
     {
-        if (inputHandler.move != Vector2.zero)
+        if (inputHandler.move != Vector2.zero && !inInventoryUI)
             isMoving = true;
         else
             isMoving = false;
 
-        if (inputHandler.sprint)
+        if (inputHandler.sprint && !inInventoryUI)
             isSprinting = true;
         else
             isSprinting = false;
 
+        // APPLY GRAVITY AND MOVE FORCES
         velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 
-        if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump)
+        if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump && !inInventoryUI)
         {
             isGrounded = false;
             inputHandler.jump = false;
             health.jumpCounter++;
         }
 
-        if(camMode == 1)
+
+        // PLAYER LOOK ROTATION
+        if(camMode == 1 && !inInventoryUI)
         {
             if (charController.enabled && World.Instance.IsGlobalPosInsideBorder(transform.position + velocityPlayer)) // keep player inside world borders
                 charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
@@ -2267,7 +2279,7 @@ public class Controller : NetworkBehaviour
             playerCamera.transform.localEulerAngles = new Vector3(rotation.y, 0f, 0f);
             gameObject.transform.localEulerAngles = new Vector3(0f, rotation.x, 0f);
         }
-        else if(camMode == 2)
+        else if(camMode == 2 && !inInventoryUI)
         {
             if (isMoving)
                 gameObject.transform.eulerAngles = new Vector3(0f, playerCameraOrigin.transform.rotation.eulerAngles.y, 0f); // rotate gameobject to face same y direction as camera
@@ -2283,7 +2295,10 @@ public class Controller : NetworkBehaviour
             if (isMoving) // if is moving
                 charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0); // rotate char model to face same y direction as camera
         }
-        if(!Settings.WebGL && (camMode != 3 && SettingsStatic.LoadedSettings.developerMode))
+
+
+        // PLAYER JUMP/SPRINT
+        if(!Settings.WebGL && (camMode != 3 && SettingsStatic.LoadedSettings.developerMode && !inInventoryUI))
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);

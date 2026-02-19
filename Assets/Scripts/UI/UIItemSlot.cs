@@ -38,7 +38,7 @@ public class UIItemSlot : MonoBehaviour
 
     public void UpdateSlot()
     {
-        if (itemSlot != null && itemSlot.HasItem)
+        if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length)
         {
             slotIcon.sprite = World.Instance.blockTypes[itemSlot.stack.id].icon;
             slotAmount.text = itemSlot.stack.amount.ToString();
