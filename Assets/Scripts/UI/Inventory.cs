@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreativeInventory : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
 
     public GameObject slotPrefab;

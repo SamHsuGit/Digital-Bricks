@@ -15,7 +15,7 @@ public class DragAndDropHandler : MonoBehaviour {
 
     public Controller controller;
 
-    public CreativeInventory creativeInventory;
+    public Inventory inventory;
 
     private void Start()
     {
@@ -26,18 +26,57 @@ public class DragAndDropHandler : MonoBehaviour {
 
         if (!controller.inInventoryUI)
         {
-            creativeInventory.gameObject.SetActive(false);
+            inventory.gameObject.SetActive(false);
             return;
         }
-        creativeInventory.gameObject.SetActive(true);
+        inventory.gameObject.SetActive(true);
 
         cursorSlot.transform.position = Input.mousePosition;
 
-        if (Input.GetMouseButtonDown(0))//controller.inputHandler.mine) // controller.inputHandler.mine causes 2 clicks, one on press, one on release...
+        bool clicked = Input.GetMouseButtonDown(0);
+
+        if (clicked)//controller.inputHandler.mine) // controller.inputHandler.mine causes 2 clicks, one on press, one on release...
         {
             HandleSlotClick(CheckForSlot());
         }
+        if(controller.inputHandler.sprint && clicked)
+        {
+            HandleStackQuickMove(CheckForSlot());
+        }
+    }
 
+    private void HandleStackQuickMove(UIItemSlot clickedSlot)
+    {
+        if(clickedSlot == null)
+            return;
+
+        if(cursorSlot.itemSlot.HasItem)
+        {
+            // drop 1 item into slot and subtract one from stack
+        }
+        else if(clickedSlot.inHotbar)
+        {
+            // move entire stack to first empty slot in inventory slots
+            for(int i = 0; i < inventory.inventorySlots.Length; i++)
+            {
+                if(!inventory.inventorySlots[i].HasItem) // if the inventory slot does not have a stack
+                {
+                    inventory.inventorySlots[i].InsertStack(clickedSlot.itemSlot.stack); // insert the stack at this position
+                    clickedSlot.itemSlot.EmptySlot(); // empty slot
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < controller.toolbar.slots.Length; i++)
+            {
+                if(!controller.toolbar.slots[i].HasItem) // if the toolbar slot does not have a stack
+                {
+                    controller.toolbar.slots[i].itemSlot.InsertStack(clickedSlot.itemSlot.stack); // insert the stack at this position
+                    clickedSlot.itemSlot.EmptySlot(); // empty slot
+                }
+            }
+        }
     }
 
     private void HandleSlotClick (UIItemSlot clickedSlot) {
@@ -57,42 +96,35 @@ public class DragAndDropHandler : MonoBehaviour {
         if (clickedSlot!= null && !cursorSlot.HasItem && !clickedSlot.HasItem) // if no items to move then exit
             return;
 
-        if (clickedSlot != null && clickedSlot.itemSlot.isCreative) {
-
+        if (clickedSlot != null && clickedSlot.itemSlot.isCreative)
+        {
             cursorItemSlot.EmptySlot();
             cursorItemSlot.InsertStack(clickedSlot.itemSlot.stack);
-
         }
 
-        if (clickedSlot != null && !cursorSlot.HasItem && clickedSlot.HasItem) {
-
+        if (clickedSlot != null && !cursorSlot.HasItem && clickedSlot.HasItem) // pickup stack
+        {
             cursorItemSlot.InsertStack(clickedSlot.itemSlot.TakeAll());
             return;
-
         }
 
-        if (clickedSlot != null && cursorSlot.HasItem && !clickedSlot.HasItem) {
-
+        if (clickedSlot != null && cursorSlot.HasItem && !clickedSlot.HasItem)
+        {
             clickedSlot.itemSlot.InsertStack(cursorItemSlot.TakeAll());
             return;
-
         }
 
-        if (clickedSlot != null && cursorSlot.HasItem && clickedSlot.HasItem) {
-
-            if (cursorSlot.itemSlot.stack.id != clickedSlot.itemSlot.stack.id) {
-
+        if (clickedSlot != null && cursorSlot.HasItem && clickedSlot.HasItem) // drop stack into slot
+        {
+            if (cursorSlot.itemSlot.stack.id != clickedSlot.itemSlot.stack.id)
+            {
                 ItemStack oldCursorSlot = cursorSlot.itemSlot.TakeAll();
                 ItemStack oldSlot = clickedSlot.itemSlot.TakeAll();
 
                 clickedSlot.itemSlot.InsertStack(oldCursorSlot);
                 cursorSlot.itemSlot.InsertStack(oldSlot);
-
             }
-
         }
-
-
     }
 
     private UIItemSlot CheckForSlot () {
@@ -111,9 +143,6 @@ public class DragAndDropHandler : MonoBehaviour {
                 return result.gameObject.GetComponent<UIItemSlot>();
             }
         }
-
         return null;
-
     }
-
 }
