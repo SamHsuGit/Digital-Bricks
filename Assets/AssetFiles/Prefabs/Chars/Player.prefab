@@ -575,6 +575,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3963772888375218276}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: ToggleInventory
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d8864d24-f971-4c48-8d97-f72fb4267cf1
     m_ActionName: 'Actions/Drop[/Keyboard/q]'
   - m_PersistentCalls:
@@ -881,6 +893,7 @@ MonoBehaviour:
   charModelDefault: {fileID: 1382797557371332204}
   charModelOrigin: {fileID: 6156733249479519148}
   gameMenu: {fileID: 5290477769798018415}
+  dragAndDropHandler: {fileID: 6942559984420840572}
   nametag: {fileID: 2688012131756474887}
   backgroundMask: {fileID: 6861918821474845234}
   brickPickUp: {fileID: 166922554488734142}
@@ -4988,3 +5001,14 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 360627694452526005, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
   m_PrefabInstance: {fileID: 6501889674470066567}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6942559984420840572 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4207408443850452475, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+  m_PrefabInstance: {fileID: 6501889674470066567}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290477769798018415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31e05f9125544e7ab161b5f0d88d711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DragAndDropHandler

@@ -11,12 +11,12 @@ public class Inventory : MonoBehaviour
 
     private static int numberOfInventorySlots = 27;
 
-    public ItemSlot[] inventorySlots;
+    public UIItemSlot[] inventorySlots;
 
     private void Start()
     {
 
-        inventorySlots = new ItemSlot[numberOfInventorySlots];
+        inventorySlots = new UIItemSlot[numberOfInventorySlots];
 
         world = World.Instance;
 
@@ -25,8 +25,8 @@ public class Inventory : MonoBehaviour
         {
             
             GameObject newSlot = Instantiate(this.slotPrefab, transform);
-            ItemSlot slot = new ItemSlot(newSlot.GetComponent<UIItemSlot>());
-            inventorySlots[i] = slot;
+            //ItemSlot slot = new ItemSlot(newSlot.GetComponent<UIItemSlot>());
+            inventorySlots[i] = newSlot.GetComponent<UIItemSlot>();
 
             // // fills slots with stacks of 64 blocks of each type for "creative mode"
             // // chose not to do this since eventually will have more blocks than inventory slots

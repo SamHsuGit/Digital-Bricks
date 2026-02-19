@@ -22,26 +22,65 @@ public class DragAndDropHandler : MonoBehaviour {
         cursorItemSlot = new ItemSlot(cursorSlot);
     }
 
-    private void Update() {
-
-        if (!controller.inInventoryUI)
-        {
-            inventory.gameObject.SetActive(false);
+    private void Update()
+    {
+        if(!controller.inInventoryUI) // only do following if controller.inInventoryUI = true
             return;
-        }
-        inventory.gameObject.SetActive(true);
 
         cursorSlot.transform.position = Input.mousePosition;
 
         bool clicked = Input.GetMouseButtonDown(0);
 
-        if (clicked)//controller.inputHandler.mine) // controller.inputHandler.mine causes 2 clicks, one on press, one on release...
+        // controller.inputHandler.mine causes 2 clicks, one on press, one on release...
+        if (!controller.inputHandler.sprint && clicked)//controller.inputHandler.mine)
         {
             HandleSlotClick(CheckForSlot());
         }
-        if(controller.inputHandler.sprint && clicked)
+        else if(controller.inputHandler.sprint && clicked)
         {
             HandleStackQuickMove(CheckForSlot());
+        }
+        else if (Input.GetMouseButtonDown(1)) // if right clicked
+        {
+            HandlePartialStackMove(CheckForSlot());
+        }
+    }
+
+    public void OnInventory() // toggle bool to track state
+    {
+        inventory.gameObject.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void ReturnToGame()
+    {
+        inventory.gameObject.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void HandlePartialStackMove(UIItemSlot clickedSlot)
+    {
+        if(clickedSlot == null)
+            return;
+
+        if(cursorSlot.itemSlot.HasItem && !clickedSlot.HasItem) // if right clicked empty slot and holding items
+        {
+            // drop 1 item into slot and subtract one from stack
+            cursorSlot.itemSlot.Take(1);
+            if(cursorSlot.itemSlot.stack.amount <= 0)
+                cursorSlot.itemSlot.EmptySlot();
+            ItemStack newStack = new ItemStack(cursorSlot.itemSlot.stack.id, 1);
+            clickedSlot.itemSlot.InsertStack(newStack);
+        }
+        else if (!cursorSlot.itemSlot.HasItem && clickedSlot.HasItem) // if right clicked stack of items
+        {
+            int originalAmount = clickedSlot.itemSlot.stack.amount;
+            int amount = Mathf.FloorToInt(clickedSlot.itemSlot.stack.amount / 2f);
+            clickedSlot.itemSlot.Take(amount);
+            ItemStack newStack = new ItemStack(clickedSlot.itemSlot.stack.id, originalAmount - amount);
+            cursorSlot.itemSlot.InsertStack(newStack);
         }
     }
 
@@ -49,32 +88,37 @@ public class DragAndDropHandler : MonoBehaviour {
     {
         if(clickedSlot == null)
             return;
+        
+        ItemStack clickedStack = clickedSlot.itemSlot.stack;
+        UIItemSlot[] slotArray;
 
-        if(cursorSlot.itemSlot.HasItem)
+        if(clickedSlot.inHotbar)
         {
-            // drop 1 item into slot and subtract one from stack
-        }
-        else if(clickedSlot.inHotbar)
-        {
-            // move entire stack to first empty slot in inventory slots
-            for(int i = 0; i < inventory.inventorySlots.Length; i++)
-            {
-                if(!inventory.inventorySlots[i].HasItem) // if the inventory slot does not have a stack
-                {
-                    inventory.inventorySlots[i].InsertStack(clickedSlot.itemSlot.stack); // insert the stack at this position
-                    clickedSlot.itemSlot.EmptySlot(); // empty slot
-                }
-            }
+            slotArray = inventory.inventorySlots;
         }
         else
         {
-            for(int i = 0; i < controller.toolbar.slots.Length; i++)
+            slotArray = controller.toolbar.slots;
+            // for(int i = 0; i < slotArray.Length; i++)
+            // {
+            //     if(!slotArray[i].HasItem) // if the toolbar slot does not have a stack
+            //     {
+            //         slotArray[i].itemSlot.InsertStack(clickedSlot.itemSlot.stack); // insert the stack at this position
+            //         clickedSlot.itemSlot.EmptySlot(); // empty slot
+            //     }
+            // }
+        }
+        // move entire stack to first empty slot in inventory slots
+        for(int i = 0; i < slotArray.Length; i++)
+        {
+            if(!slotArray[i].itemSlot.HasItem) // if the inventory slot does not have a stack
             {
-                if(!controller.toolbar.slots[i].HasItem) // if the toolbar slot does not have a stack
-                {
-                    controller.toolbar.slots[i].itemSlot.InsertStack(clickedSlot.itemSlot.stack); // insert the stack at this position
-                    clickedSlot.itemSlot.EmptySlot(); // empty slot
-                }
+                slotArray[i].itemSlot.InsertStack(clickedStack); // insert the stack at this position
+                clickedSlot.itemSlot.EmptySlot(); // empty slot
+            }
+            else if (slotArray[i].itemSlot.stack.id == clickedStack.id) // if inventory slot already has item
+            {
+                slotArray[i].itemSlot.Give(clickedStack.amount); // add to stack
             }
         }
     }

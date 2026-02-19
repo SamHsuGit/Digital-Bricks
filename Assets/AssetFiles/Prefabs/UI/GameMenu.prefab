@@ -1612,7 +1612,7 @@ MonoBehaviour:
   m_Raycaster: {fileID: 1391849460458908907}
   m_EventSystem: {fileID: 6344648603474066950}
   controller: {fileID: 0}
-  creativeInventory: {fileID: 6143453991454651663}
+  inventory: {fileID: 6143453991454651663}
 --- !u!1 &1391849460477524182
 GameObject:
   m_ObjectHideFlags: 0

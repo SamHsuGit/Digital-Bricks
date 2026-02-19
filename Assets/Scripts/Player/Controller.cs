@@ -71,6 +71,7 @@ public class Controller : NetworkBehaviour
     public GameObject charModelDefault;
     public GameObject charModelOrigin;
     public GameObject gameMenu;
+    public DragAndDropHandler dragAndDropHandler;
     public GameObject nametag;
     public GameObject backgroundMask;
     public AudioSource brickPickUp;
@@ -753,24 +754,14 @@ public class Controller : NetworkBehaviour
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
         if (options)
-        {
             gameMenuComponent.OnOptions();
-        }
         else if (!options)
             gameMenuComponent.ReturnToGame();
-
-        if(!options && !inInventoryUI && inputHandler.next)
-        {
-            inInventoryUI = true;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else if (!options && inInventoryUI && inputHandler.next)
-        {
-            inInventoryUI = false;
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        
+        if(inInventoryUI)
+            dragAndDropHandler.OnInventory();
+        else if (!inInventoryUI)
+            dragAndDropHandler.ReturnToGame();
 
         // else if (!options && inInventoryUI && inputHandler.next)
         //     inInventoryUI = false;
@@ -2445,6 +2436,11 @@ public class Controller : NetworkBehaviour
     public void ToggleOptions()
     {
         options = !options;
+    }
+
+    public void ToggleInventory()
+    {
+        inInventoryUI = !inInventoryUI;
     }
 
     void Animate()
