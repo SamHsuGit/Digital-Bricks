@@ -5,38 +5,15 @@ public class Inventory : MonoBehaviour
 {
 
     public GameObject slotPrefab;
-    World world;
 
     List<ItemSlot> slots = new List<ItemSlot>();
-
-    private static int numberOfInventorySlots = 27;
 
     public UIItemSlot[] inventorySlots;
 
     private void Start()
     {
-
-        inventorySlots = new UIItemSlot[numberOfInventorySlots];
-
-        world = World.Instance;
-
-        
-        for (int i = 0; i < numberOfInventorySlots; i++) // create inventory storage slots
-        {
-            
-            GameObject newSlot = Instantiate(this.slotPrefab, transform);
-            ItemSlot slot = new ItemSlot(newSlot.GetComponent<UIItemSlot>());
-            inventorySlots[i] = newSlot.GetComponent<UIItemSlot>();
-
-            // // fills slots with stacks of 64 blocks of each type for "creative mode"
-            // // chose not to do this since eventually will have more blocks than inventory slots
-            // if(SettingsStatic.LoadedSettings.developerMode && i > 1 && i <= numberOfInventorySlots)
-            // {
-            //     ItemStack stack = new ItemStack((byte)i, 64);
-            //     inventorySlots[i - 2].InsertStack(stack);
-            //     slot.isCreative = true;
-            // }
-        }
+        for (int i = 0; i < inventorySlots.Length; i++) // create inventory storage slots
+            ItemSlot slot = new ItemSlot(inventorySlots[i].gameObject.GetComponent<UIItemSlot>()); // create a data driven ItemSlot for each slot
     }
 
 }
