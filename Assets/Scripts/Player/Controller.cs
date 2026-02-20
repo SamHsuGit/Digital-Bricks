@@ -2008,7 +2008,7 @@ public class Controller : NetworkBehaviour
                 BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                 VoxelBc.material = physicMaterial;
                 VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
-                VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items
+                VoxelBc.size = new Vector3 (1f, 1f, 1f) * 1f; // set slightly larger to help players pick up items?
                 VoxelBc.isTrigger = false; // set to not trigger so can collide with world
                 ob.tag = "voxelRb";
                 sceneObject.controller = this;
