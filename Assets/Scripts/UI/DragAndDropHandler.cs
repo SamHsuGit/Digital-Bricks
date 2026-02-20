@@ -124,11 +124,14 @@ public class DragAndDropHandler : MonoBehaviour {
                 clickedSlot.itemSlot.EmptySlot(); // empty slot
                 return;
             }
-            else if (slotArray[i].itemSlot.stack.id == clickedStack.id) // if inventory slot already has item (check for overflow exceeding stack limit)
+            else if (slotArray[i].itemSlot.stack.id == clickedStack.id) // only if inventory slot id matches clicked slot id
             {
-                // do not do if putting values would exceed the stack max, instead continue thru loop and move on to next slot
+                if(slotArray[i].itemSlot.stack.amount == stackMax) // if # of items already meets stack limit
+                {
+                    // do nothing, go to next slot, this slot is full
+                }
                 // if adding the items would not exceed the stack limit
-                if(slotArray[i].itemSlot.stack.amount + clickedStack.amount <= stackMax)
+                else if(slotArray[i].itemSlot.stack.amount + clickedStack.amount <= stackMax)
                 {
                     slotArray[i].itemSlot.Give(clickedStack.amount); // add to stack
                     clickedSlot.itemSlot.EmptySlot(); // empty slot
@@ -136,11 +139,15 @@ public class DragAndDropHandler : MonoBehaviour {
                 }
                 else // IF OVERFLOW and adding the items would exceed stack limit, max slot and loop again to next slot[i] with reduced clicked stack amount
                 {
-                    ItemStack stack = new ItemStack(clickedStack.id, stackMax);
-                    slotArray[i].itemSlot.InsertStack(stack); // max out this slot
-                    clickedStack.amount = stackMax - slotArray[i].itemSlot.stack.amount; // loop again to next slot with reduced clicked stack amount
+                    //calculate how many would take to max out stack
+                    int numberItemsTillFull = stackMax - slotArray[i].itemSlot.stack.amount;
 
-                    // ERROR this is putting stack of amount zero in next open slot
+                    clickedSlot.itemSlot.stack.amount -= numberItemsTillFull; // subtract the number of items would take to fill inventory slot and loop again
+                    clickedSlot.UpdateSlot();
+
+                     // max out this slot and insert the stack
+                    ItemStack stack = new ItemStack(clickedStack.id, stackMax);
+                    slotArray[i].itemSlot.InsertStack(stack);
                 }
             }
         }
