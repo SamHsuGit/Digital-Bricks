@@ -142,7 +142,8 @@ public class DragAndDropHandler : MonoBehaviour {
                     //calculate how many would take to max out stack
                     int numberItemsTillFull = stackMax - slotArray[i].itemSlot.stack.amount;
 
-                    clickedSlot.itemSlot.stack.amount -= numberItemsTillFull; // subtract the number of items would take to fill inventory slot and loop again
+                    // subtract the number of items would take to fill inventory slot and loop again recursively to next slot
+                    clickedSlot.itemSlot.stack.amount -= numberItemsTillFull; 
                     clickedSlot.UpdateSlot();
 
                      // max out this slot and insert the stack
@@ -151,6 +152,12 @@ public class DragAndDropHandler : MonoBehaviour {
                 }
             }
         }
+        // if(clickedSlot.itemSlot.HasItem) // if no open slots found, do not move or drop items
+        // {
+        //     controller.toolbar.DropItemFromSlot(clickedSlot.itemSlot);
+        //     clickedSlot.itemSlot.EmptySlot();
+        // }
+        
     }
 
     private void HandleLeftClickSlot (UIItemSlot clickedSlot) {
