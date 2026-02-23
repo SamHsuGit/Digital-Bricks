@@ -57,7 +57,7 @@ public class Controller : NetworkBehaviour
     public float animRate = 2; // health script overrides this
     public int camMode;
     public bool setCamMode = false;
-    public bool inInventoryUI = false;
+    public int inventoryUIMode = 0;
 
     public float lookVelocity = 0.1f;
     public float lookSpeed = 0.1f;
@@ -314,6 +314,8 @@ public class Controller : NetworkBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        options = false;
+        inventoryUIMode = 0;
 
         if (!Settings.OnlinePlay)
         {
@@ -758,13 +760,10 @@ public class Controller : NetworkBehaviour
         else if (!options)
             gameMenuComponent.ReturnToGame();
         
-        if(inInventoryUI)
+        if(inventoryUIMode != 0)
             dragAndDropHandler.OnInventory();
-        else if (!inInventoryUI)
+        else if (inventoryUIMode == 0)
             dragAndDropHandler.ReturnToGame();
-
-        // else if (!options && inInventoryUI && inputHandler.next)
-        //     inInventoryUI = false;
 
         if (holdingBuild || holdingGrab)
         {
@@ -848,7 +847,7 @@ public class Controller : NetworkBehaviour
             {
                 case 1: // FIRST PERSON CAMERA
                     {
-                        if(!inInventoryUI) // only do if not in inventory
+                        if(inventoryUIMode == 0) // only do if not in inventory
                         {
                             rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
 
@@ -866,7 +865,7 @@ public class Controller : NetworkBehaviour
                     }
                 case 2: // THIRD PERSON CAMERA
                     {
-                        if(!inInventoryUI)
+                        if(inventoryUIMode == 0)
                         {
                             rayCastStart = transform.position + transform.up * colliderHeight * 0.75f + transform.forward * colliderRadius * 4;
 
@@ -886,7 +885,7 @@ public class Controller : NetworkBehaviour
                         lookAtConstraint.constraintActive = true;
                         MovePlayer();
 
-                        if (!Settings.WebGL && !SettingsStatic.LoadedSettings.developerMode && health.hp < 50 && !inInventoryUI) // only animate characters with less than 50 pieces due to rendering performance issues
+                        if (!Settings.WebGL && !SettingsStatic.LoadedSettings.developerMode && health.hp < 50 && inventoryUIMode == 0) // only animate characters with less than 50 pieces due to rendering performance issues
                             Animate();
                         else
                         {
@@ -897,7 +896,7 @@ public class Controller : NetworkBehaviour
                     }
                 case 3: // PHOTO MODE
                     {
-                        if(!inInventoryUI)
+                        if(inventoryUIMode == 0)
                         {
                             rayCastStart = playerCamera.transform.position + playerCamera.transform.forward * colliderRadius * 4;
 
@@ -1312,7 +1311,23 @@ public class Controller : NetworkBehaviour
         if (Time.time < mining.nextTimeToFire) // limit how fast can use this to prevent spamming
             return;
 
-        if (!toolbar.slots[toolbar.slotIndex].HasItem) // cannot use if no item in slot
+        // IF Pressed place block while looking at certain voxel id's enter crafting/furnace UI and exit this function, do not continue with placing block code
+        blockID = World.Instance.GetVoxelState(shootPos.position).id;
+        switch(blockID)
+        {
+            case 21: // crafting table
+                {
+                    inventoryUIMode = 2; //enter crafting table UI
+                    return;
+                }
+            case 22: // furnace
+                {
+                    inventoryUIMode = 3; //enter furnace UI
+                    return;
+                }
+        }
+
+        if (!toolbar.slots[toolbar.slotIndex].HasItem) // cannot place block if no item in slot
             return;
 
         if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
@@ -2242,12 +2257,12 @@ public class Controller : NetworkBehaviour
 
     public void MovePlayer()
     {
-        if (inputHandler.move != Vector2.zero && !inInventoryUI)
+        if (inputHandler.move != Vector2.zero && inventoryUIMode == 0)
             isMoving = true;
         else
             isMoving = false;
 
-        if (inputHandler.sprint && !inInventoryUI)
+        if (inputHandler.sprint && inventoryUIMode == 0)
             isSprinting = true;
         else
             isSprinting = false;
@@ -2255,7 +2270,7 @@ public class Controller : NetworkBehaviour
         // APPLY GRAVITY AND MOVE FORCES
         velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 
-        if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump && !inInventoryUI)
+        if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump && inventoryUIMode == 0)
         {
             isGrounded = false;
             inputHandler.jump = false;
@@ -2264,7 +2279,7 @@ public class Controller : NetworkBehaviour
 
 
         // PLAYER LOOK ROTATION
-        if(camMode == 1 && !inInventoryUI)
+        if(camMode == 1 && inventoryUIMode == 0)
         {
             if (charController.enabled && World.Instance.IsGlobalPosInsideBorder(transform.position + velocityPlayer)) // keep player inside world borders
                 charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
@@ -2273,7 +2288,7 @@ public class Controller : NetworkBehaviour
             playerCamera.transform.localEulerAngles = new Vector3(rotation.y, 0f, 0f);
             gameObject.transform.localEulerAngles = new Vector3(0f, rotation.x, 0f);
         }
-        else if(camMode == 2 && !inInventoryUI)
+        else if(camMode == 2 && inventoryUIMode == 0)
         {
             if (isMoving)
                 gameObject.transform.eulerAngles = new Vector3(0f, playerCameraOrigin.transform.rotation.eulerAngles.y, 0f); // rotate gameobject to face same y direction as camera
@@ -2292,7 +2307,7 @@ public class Controller : NetworkBehaviour
 
 
         // PLAYER JUMP/SPRINT
-        if(!Settings.WebGL && (camMode != 3 && SettingsStatic.LoadedSettings.developerMode && !inInventoryUI))
+        if(!Settings.WebGL && (camMode != 3 && SettingsStatic.LoadedSettings.developerMode && inventoryUIMode == 0))
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);
@@ -2438,12 +2453,21 @@ public class Controller : NetworkBehaviour
 
     public void ToggleOptions()
     {
+        if(!options && inventoryUIMode != 0) // if not in options menu and in inventoryUIMode
+        {
+            ToggleInventory(); // exit inventory first before can go into options
+            return;
+        }
+
         options = !options;
     }
 
-    public void ToggleInventory()
+    public void ToggleInventory() // can also be triggered by "E" key or by right clicking certain blocks
     {
-        inInventoryUI = !inInventoryUI;
+        if(inventoryUIMode != 0) // if inventory not hidden and triggered by ESCAPE or E,  hide all inventory UI
+            inventoryUIMode = 0;
+        else if(!options && inventoryUIMode == 0) // if not in options and inventory is hidden, show basic inventory
+            inventoryUIMode = 1; // inventory
     }
 
     void Animate()

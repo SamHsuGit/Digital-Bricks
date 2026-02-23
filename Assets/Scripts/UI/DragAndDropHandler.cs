@@ -17,6 +17,8 @@ public class DragAndDropHandler : MonoBehaviour {
 
     public Inventory inventory;
 
+    public Crafting crafting;
+
     private UIItemSlot[] slotArray;
 
     private void Start()
@@ -26,7 +28,7 @@ public class DragAndDropHandler : MonoBehaviour {
 
     private void Update()
     {
-        if(!controller.inInventoryUI) // only do following if controller.inInventoryUI = true
+        if(controller.inventoryUIMode == 0) // do not do if not in any inventory
             return;
 
         cursorSlot.transform.position = Input.mousePosition;
@@ -50,13 +52,24 @@ public class DragAndDropHandler : MonoBehaviour {
 
     public void OnInventory() // toggle bool to track state
     {
+        if(controller.inventoryUIMode == 0)
+            return;
+
         inventory.gameObject.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        
+        crafting.uiMenus[0].SetActive(true); // show output slot
+        crafting.uiMenus[controller.inventoryUIMode].SetActive(true); // turn on ui menu with associated inventoryUIMode
+        
     }
 
     public void ReturnToGame()
     {
+        // hide all crafting slots (output slots, 2x2 crafting, 3x3 crafting, furnace)
+        for(int i = 0; i < crafting.uiMenus.Length; i++)
+            crafting.uiMenus[i].SetActive(false);
+
         inventory.gameObject.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -66,6 +79,10 @@ public class DragAndDropHandler : MonoBehaviour {
     {
         if(clickedSlot == null)
             return;
+
+        // trigger event that checks crafting slots to convert item
+        if(clickedSlot != null && clickedSlot.isCrafting)
+            crafting.CheckCraftingSlots(controller.inventoryUIMode);
 
         if(cursorSlot.itemSlot.HasItem && !clickedSlot.HasItem) // if right clicked empty slot and holding items
         {
@@ -106,6 +123,10 @@ public class DragAndDropHandler : MonoBehaviour {
     {
         if(clickedSlot == null)
             return;
+
+        // trigger event that checks crafting slots to convert item
+        if(clickedSlot != null && clickedSlot.isCrafting)
+            crafting.CheckCraftingSlots(controller.inventoryUIMode);
         
         ItemStack clickedStack = clickedSlot.itemSlot.stack;
 
@@ -160,7 +181,11 @@ public class DragAndDropHandler : MonoBehaviour {
         
     }
 
-    private void HandleLeftClickSlot (UIItemSlot clickedSlot) {
+    private void HandleLeftClickSlot (UIItemSlot clickedSlot)
+    {
+        // trigger event that checks crafting slots to convert item
+        if(clickedSlot != null && clickedSlot.isCrafting)
+            crafting.CheckCraftingSlots(controller.inventoryUIMode);
 
         if (clickedSlot == null && cursorSlot.HasItem) // if clicked air while holding block
         {

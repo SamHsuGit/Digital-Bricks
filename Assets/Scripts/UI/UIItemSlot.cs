@@ -6,6 +6,9 @@ public class UIItemSlot : MonoBehaviour
 
     public bool isLinked = false;
     public bool inHotbar = false;
+
+    public bool isCrafting = false;
+
     public ItemSlot itemSlot;
     public Image slotImage;
     public Image slotIcon;

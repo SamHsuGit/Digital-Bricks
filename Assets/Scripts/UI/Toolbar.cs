@@ -158,7 +158,7 @@ public class Toolbar : MonoBehaviour
             return;
 
         // if not in options or if in inventory, allow scrolling of toolbar
-        if((optionsMenuCanvasGroup.alpha != 1 || controller.inInventoryUI) && !controller.holdingBuild && !controller.heldObjectIsBrick && (setNavigate || inputHandler.scrollWheel != Vector2.zero))
+        if((optionsMenuCanvasGroup.alpha != 1 || controller.inventoryUIMode != 0) && !controller.holdingBuild && !controller.heldObjectIsBrick && (setNavigate || inputHandler.scrollWheel != Vector2.zero))
         {
             if (setNavigate)
                 setNavigate = false;
