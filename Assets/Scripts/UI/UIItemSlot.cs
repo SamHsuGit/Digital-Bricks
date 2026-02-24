@@ -8,6 +8,8 @@ public class UIItemSlot : MonoBehaviour
     public bool inHotbar = false;
 
     public bool isCrafting = false;
+    public bool isOutput = false;
+    public bool isInventory = false;
 
     public ItemSlot itemSlot;
     public Image slotImage;

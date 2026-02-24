@@ -23,5 +23,32 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  output: 0
-  outputQty: 0
+  - slot1: 0
+    slot2: 14
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 14
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 14
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  output: 6
+  outputQty: 1

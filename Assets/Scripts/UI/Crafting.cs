@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Crafting : MonoBehaviour
 {
@@ -22,19 +23,9 @@ public class Crafting : MonoBehaviour
     public UIItemSlot[] craft3x3Slots;
     public Recipe[] recipes;
 
-    public int[] blocksInSlots;
+    private UIItemSlot[] slotsToCheck;
 
     public GameObject[] uiMenus;
-
-    private void Awake()
-    {
-        
-    }
-
-    private void Start()
-    {
-        
-    }
 
     private void Update()
     {
@@ -47,16 +38,21 @@ public class Crafting : MonoBehaviour
     // triggered when item dropped into slot marked crafting
     public void CheckCraftingSlots(int _inventoryUIMode)
     {
+        if(outputSlot.itemSlot.HasItem) // ensures when slots are clicked to move from crafting, it empties the output slot
+            outputSlot.itemSlot.EmptySlot();
+        
         switch(_inventoryUIMode)
         {
             case 1: // if item dropped in 2x2 crafting slot
                 {
                     // for all loaded 2x2 recipes, if item sequence in slots match recipe, output 1 item into output slot
+                    CheckSlots(_inventoryUIMode);
                     break;
                 }
             case 2: // if item dropped in to 3x3 crafting slot
                 {
                     // for all loaded 3x3 recipes, if item sequence in slots match recipe, output 1 item into output slot
+                    CheckSlots(_inventoryUIMode);
                     break;
                 }
             case 3: // if item dropped into furnace
@@ -70,10 +66,85 @@ public class Crafting : MonoBehaviour
         }
     }
 
+    private void CheckSlots(int _inventoryUIMode)
+    {
+        if(_inventoryUIMode == 1)
+            slotsToCheck = craft2x2Slots;
+        else if (_inventoryUIMode == 2)
+            slotsToCheck = craft3x3Slots;
+        
+        if(slotsToCheck == null)
+            return;
+
+        // build an array of block ids that can be compared to the recipeShapes
+        string craftSlotString = "";
+        for(int i = 0; i < slotsToCheck.Length; i++)
+        {
+            if(slotsToCheck[i].itemSlot.HasItem)
+                craftSlotString += slotsToCheck[i].itemSlot.stack.id + ",";
+            else
+                craftSlotString += "0,";
+        }
+        //Debug.Log(craftSlotString);
+
+        // for all recipes in list, if checkIntArray matches one, then output the corresponding block in output slot
+        foreach (Recipe recipe in recipes)
+        {
+            foreach (RecipeShape shape in recipe.recipeShapes)
+            {
+                // build recipe string
+                List<int> slots = new List<int>(){};
+                if(_inventoryUIMode == 1)
+                    slots = new List<int>()
+                    {
+                        shape.slot1,
+                        shape.slot2,
+                        shape.slot3,
+                        shape.slot4,
+                    };
+                else if(_inventoryUIMode == 2)
+                    slots = new List<int>()
+                    {
+                        shape.slot1,
+                        shape.slot2,
+                        shape.slot3,
+                        shape.slot4,
+                        shape.slot5,
+                        shape.slot6,
+                        shape.slot7,
+                        shape.slot8,
+                        shape.slot9,
+                    };
+                string recipeString = string.Join(",", slots) + ",";
+
+                //Debug.Log(recipeString);
+                if(craftSlotString == recipeString)
+                {
+                    //Debug.Log(craftSlotString + " matches " + recipeString);
+                    PutInOutputSlot(recipe.output, recipe.outputQty); // output the crafting recipe output item and qty
+                    return;
+                }
+            }
+        }
+    }
+
     public void PutInOutputSlot(byte stackID, int stackQty)
     {
-
         ItemStack stack = new ItemStack(stackID, stackQty);
         outputSlot.itemSlot.InsertStack(stack);
+    }
+
+    public void ClickedOutputSlot()
+    {
+        // subtract one from each crafting slot, if crafting slot is empty, empty slot
+        foreach(UIItemSlot slot in slotsToCheck)
+        {
+            if(slot.itemSlot.HasItem)
+            {
+                slot.itemSlot.Take(1);
+                if(slot.itemSlot.stack.amount <= 0)
+                    slot.itemSlot.EmptySlot();
+            }
+        }
     }
 }

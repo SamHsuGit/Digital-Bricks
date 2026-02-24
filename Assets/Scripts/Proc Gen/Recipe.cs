@@ -14,13 +14,13 @@ public class Recipe : ScriptableObject
 [System.Serializable]
 public class RecipeShape
 {
-    public byte slot1;
-    public byte slot2;
-    public byte slot3;
-    public byte slot4;
-    public byte slot5;
-    public byte slot6;
-    public byte slot7;
-    public byte slot8;
-    public byte slot9;
+    public int slot1;
+    public int slot2;
+    public int slot3;
+    public int slot4;
+    public int slot5;
+    public int slot6;
+    public int slot7;
+    public int slot8;
+    public int slot9;
 }
