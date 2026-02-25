@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class Crafting : MonoBehaviour
 {
@@ -95,26 +96,28 @@ public class Crafting : MonoBehaviour
         if(craftingSlotsEmpty)
             return; // do nothing, ie do not fill output slot if nothing in crafting slots
 
-        // // flag non matching colors in crafting slots to ignore placedbrick recipes if detected (optional Game optimization)
-        //  // since placedBricks must always use same color bricks to craft
-        // bool nonmatchingcolors = false;
-        // byte color = 0;
-        // byte prevColor = 0;
-        // for(int i = 0; i < slotsToCheck.Length; i++)
-        // {
-        //     if(color != prevColor && prevColor != 0 && color != 0)
-        //         nonmatchingcolors = true;
-        //     if(slotsToCheck[i].HasItem)
-        //         color = slotsToCheck[i].itemSlot.stack.id;
-        //     prevColor = color;
-        // }
-
+        // flag non matching colors in crafting slots
+         // since placedBricks must always use same color bricks to craft
+        bool nonmatchingcolors = false;
+        byte color = 0;
+        byte prevColor = 0;
+        for(int i = 0; i < slotsToCheck.Length; i++)
+        {
+            if(slotsToCheck[i].HasItem)
+                color = slotsToCheck[i].itemSlot.stack.id;
+            if(color != prevColor && prevColor != 0 && color != 0)
+                nonmatchingcolors = true;
+            prevColor = color;
+        }
         // if(nonmatchingcolors)
         //     Debug.Log("nonmatchingcolors = true");
 
         // for all recipes in list, if checkIntArray matches one, then output the corresponding block in output slot
         foreach (Recipe recipe in recipes)
         {
+            if(nonmatchingcolors && recipe.outputPlacedBrickName != "" && recipe.outputPlacedBrickName != null) // skip placed brick recipes if colors not all same
+                continue;
+            
             foreach (RecipeShape shape in recipe.recipeShapes)
             {
                 // build recipe string
@@ -142,11 +145,17 @@ public class Crafting : MonoBehaviour
                     };
                 string recipeString = string.Join(",", slots) + ",";
 
+                if(!nonmatchingcolors && recipe.colorless) // if colors all match, change colorless recipes to match color of crafting slots to find match
+                {
+                    recipeString.Replace("1",color.ToString());
+                    recipe.outputID = 0;
+                }
+
                 //Debug.Log(recipeString);
-                if(craftSlotString == recipeString)
+                if(craftSlotString == recipeString) // if match is found exit the loop
                 {
                     //Debug.Log(craftSlotString + " matches " + recipeString);
-                    PutInOutputSlot(recipe.outputID, recipe.outputPlacedBrickID, recipe.outputQty); // output the crafting recipe output item and qty
+                    PutInOutputSlot(recipe.outputID, recipe.outputPlacedBrickName, recipe.outputQty); // output the crafting recipe output item and qty
                     return;
                 }
             }

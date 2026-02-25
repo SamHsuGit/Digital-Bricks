@@ -18,7 +18,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
     [SyncVar(hook = nameof(SetCurrentBrickType))] public int currentBrickType;
     [SyncVar(hook = nameof(SetCurrentBrickIndex))] public int currentBrickIndex;
-    [SyncVar(hook = nameof(SetCurrentBrickName))] public string currentBrickName;
+    [SyncVar(hook = nameof(SetCurrentBrickName))] public string placedBrickName;
     [SyncVar(hook = nameof(SetCurrentBrickMaterialIndex))] public int currentBrickMaterialIndex;
     [SyncVar(hook = nameof(SetCurrentBrickRotation))] public int currentBrickRotation;
 
@@ -731,7 +731,7 @@ public class Controller : NetworkBehaviour
 
     public void SetCurrentBrickName(string oldValue, string newValue)
     {
-        currentBrickName = newValue;
+        placedBrickName = newValue;
     }
 
     public void SetCurrentBrickRotation(int oldValue, int newValue)
@@ -1767,7 +1767,7 @@ public class Controller : NetworkBehaviour
             PlaceVoxel(placePos.position);
         }
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
-            PutAwayBrick(blockID);
+            PutAwayBrick(blockID, placedBrickName);
 
         placedBrick = null;
         heldObjectIsBrick = false;
@@ -1786,7 +1786,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
         brickPlaceDown.Play();
-        PutAwayBrick((byte)currentBrickMaterialIndex);
+        PutAwayBrick((byte)currentBrickMaterialIndex, placedBrickName);
         Destroy(placedBrick);
 
         placedBrick = null;
@@ -1794,7 +1794,7 @@ public class Controller : NetworkBehaviour
         movingPlacedBrickUseStoredValues = false;
     }
 
-    public void PutAwayBrick(byte blockID)
+    public void PutAwayBrick(byte blockID, string _placedBrickName)
     {
         int firstSlot;
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode) // determine first slot
@@ -1802,35 +1802,72 @@ public class Controller : NetworkBehaviour
         else
             firstSlot = 0;
 
-        if (blockID != 0 && blockID != 1) // if block is not air or barrier block
+        UIItemSlot[] slotsToCheck;
+
+        for(int iteration = 0; iteration < 2; iteration++) // run code 2X, once for toolbar, then again for slots
         {
-            for (int i = firstSlot; i < toolbar.slots.Length; i++) // for all slots in toolbar
+            if(iteration == 0)
+                slotsToCheck = toolbar.slots;
+            else
+                slotsToCheck = gameMenu.GetComponent<DragAndDropHandler>().inventory.inventorySlots;
+
+            if (blockID != 0 && blockID != 1) // if block is not air or barrier block
             {
-                if (toolbar.slots[i].itemSlot.stack != null && toolbar.slots[i].itemSlot.stack.id == blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
+                for (int i = firstSlot; i < slotsToCheck.Length; i++) // for all slots in toolbar
                 {
-                    if (toolbar.slots[i].itemSlot.stack.amount < 64) // limit stack size to 64 items
+                    // FIRST CHECK PLACEDBRICKS
+                    if(_placedBrickName != null && _placedBrickName != "")
                     {
-                        // edit voxel, give to toolbar, play sound
-                        toolbar.slots[i].itemSlot.Give(1);
+                        if(slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.placedBrickID == _placedBrickName)
+                        {
+                            if(slotsToCheck[i].itemSlot.stack.amount < 64)
+                            {
+                                slotsToCheck[i].itemSlot.Give(1);
+                                return;
+                            }
+                        }
+                    }
+
+                    // SECOND CHECK VOXELS
+                    if (slotsToCheck[i].itemSlot.stack != null && slotsToCheck[i].itemSlot.stack.id == blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
+                    {
+                        if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[blockID].stackMax) // limit stack size to 64 items
+                        {
+                            // edit voxel, give to toolbar, play sound
+                            slotsToCheck[i].itemSlot.Give(1);
+                            return;
+                        }
+                    }
+                }
+
+                for (int j = 0; j < slotsToCheck.Length; j++) // for all stacks in toolbar
+                {
+                    // // FIRST CHECK PLACED BRICKS
+                    // if(_placedBrickName != null && _placedBrickName != "")
+                    // {
+                    //     if (!toolslotsToCheckbar.slots[j].itemSlot.HasItem) // if there is an empty slot
+                    //     {
+                    //         // insert a new stack with qty 1 of blockID
+                    //         ItemStack stack = new ItemStack(blockID, currentBrickName, 1);
+                    //         slotsToCheck[j].itemSlot.InsertStack(stack);
+                    //         return;
+                    //     }
+                    // }
+
+                    //// SECOND CHECK VOXELS
+                    if (!slotsToCheck[j].itemSlot.HasItem) // if there is an empty slot
+                    {
+                        // insert a new stack with qty 1 of blockID and currentBrickName
+                        ItemStack stack = new ItemStack(blockID, _placedBrickName, 1);
+                        slotsToCheck[j].itemSlot.InsertStack(stack);
                         return;
                     }
                 }
-            }
 
-            for (int j = 0; j < toolbar.slots.Length; j++) // for all stacks in toolbar
-            {
-                if (toolbar.slots[j].itemSlot.stack == null) // if there is an empty slot
-                {
-                    // insert a new stack with qty 1 of blockID
-                    ItemStack stack = new ItemStack(blockID, currentBrickName, 1);
-                    toolbar.slots[j].itemSlot.InsertStack(stack);
-                    return;
-                }
+                // if made it here, toolbar has no empty slots to put voxels into so drop block
+                //PressedShoot();
+                //return; // if made it here, toolbar has no empty slots to put voxels into so do not add any bricks to slots
             }
-
-            // if made it here, toolbar has no empty slots to put voxels into so mine held voxel off into space
-            //PressedShoot();
-            return; // if made it here, toolbar has no empty slots to put voxels into so do not add any bricks to slots
         }
     }
 
@@ -1992,7 +2029,7 @@ public class Controller : NetworkBehaviour
         VoxelBc.material = physicMaterial;
         placedBrick.SetActive(true);
         placedBrick.name = _partname;
-        currentBrickName = _partname;
+        placedBrickName = _partname;
         placedBrick.tag = "placedBrick";
         placedBrick.layer = 0;
         placedBrick.isStatic = true;
@@ -2011,6 +2048,7 @@ public class Controller : NetworkBehaviour
         SpawnObject(type, item, pos);
     }
 
+    // USED TO SPAWN DROPPED ITEMS THAT CAN BE LATER PICKED UP
     public void SpawnObject(int type, int item, Vector3 pos, GameObject obToSpawn = null)
     {
         Vector3 spawnDir;
@@ -2038,75 +2076,106 @@ public class Controller : NetworkBehaviour
         switch (type)
         {
             case 0: // IF VOXEL
-                sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
-                BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
-                VoxelBc.material = physicMaterial;
-                VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
-                VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items?
-                VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player?
-                ob.tag = "voxelRb";
-                sceneObject.controller = this;
-                rb = ob.GetComponent<Rigidbody>();
-                rb.useGravity = false;
-                rb.isKinematic = false;
-                VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
-                    vc.isItem = true; // set true to spin object
-                ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
-                ob.transform.localScale = new Vector3(1, 1, 1) * 0.5f; // scale
-                ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
-                break;
-            case 2: // IF PROJECTILE
-                if (Settings.OnlinePlay)
-                    sceneObject.projectileString = playerProjectile;
-                else
-                    sceneObject.projectile[0] = projectile;
-                sceneObject.typeProjectile = item; // should be 0 for first item in array
-                if(SettingsStatic.LoadedSettings.projectilesHurt)
-                    ob.tag = "Hazard";
-                sceneObject.SetEquippedItem(type, item); // update the child object on the server
-
-                // WIP collider is slightly off center for some reason, has to do with LDrawImportRuntime
-                childOb = ob.transform.GetChild(0).gameObject; // get the projectile (clone) object
-                if (childOb.GetComponent<BoxCollider>() != null)
                 {
-                    BoxCollider childObBc = childOb.GetComponent<BoxCollider>();
-                    childOb.GetComponent<BoxCollider>().enabled = false;
-                    sceneObBc = ob.AddComponent<BoxCollider>();
-                    float childScale = childOb.transform.localScale.x;
-                    sceneObBc.size = childObBc.size * childScale;
-                    sceneObBc.center = childObBc.center * childScale;
-                    sceneObBc.material = physicMaterial;
-                }
-                break;
-            case 3: // IF VOXEL BIT
-                sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                sceneObject.typeVoxelBit = item;
-                BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();
-                voxelBitBc.material = physicMaterial;
-                voxelBitBc.center = new Vector3(0, -.047f, 0);
-                voxelBitBc.size = new Vector3(0.5f, 0.3f, 0.5f);
-                ob.tag = "voxelBit";
-                break;
-            case 4: // IF GAMEOBJECT REFERENCE (WIP cannot pass gameobject reference into server commands, so this is not used for now)
-                if(obToSpawn != null)
-                {
-                    sceneObject.undefinedPrefab = new GameObject[] { obToSpawn };
-                    sceneObject.typeUndefinedPrefab = item; // should be 0 for first item in array
                     sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                    ob.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
-                    childOb = ob.transform.GetChild(0).gameObject;
-                    if(childOb.GetComponent<BoxCollider>() != null)
+                    sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
+                    BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
+                    VoxelBc.material = physicMaterial;
+                    VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
+                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items?
+                    VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player?
+                    ob.tag = "voxelRb";
+                    sceneObject.controller = this;
+                    rb = ob.GetComponent<Rigidbody>();
+                    rb.useGravity = false;
+                    rb.isKinematic = false;
+                    VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
+                        vc.isItem = true; // set true to spin object
+                    ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
+                    ob.transform.localScale = new Vector3(1, 1, 1) * 0.5f; // scale
+                    ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
+                    break;
+                }
+            case 2: // IF PROJECTILE
+                {
+                    if (Settings.OnlinePlay)
+                        sceneObject.projectileString = playerProjectile;
+                    else
+                        sceneObject.projectile[0] = projectile;
+                    sceneObject.typeProjectile = item; // should be 0 for first item in array
+                    if(SettingsStatic.LoadedSettings.projectilesHurt)
+                        ob.tag = "Hazard";
+                    sceneObject.SetEquippedItem(type, item); // update the child object on the server
+
+                    // WIP collider is slightly off center for some reason, has to do with LDrawImportRuntime
+                    childOb = ob.transform.GetChild(0).gameObject; // get the projectile (clone) object
+                    if (childOb.GetComponent<BoxCollider>() != null)
                     {
                         BoxCollider childObBc = childOb.GetComponent<BoxCollider>();
-                        //childObBc.enabled = false;
+                        childOb.GetComponent<BoxCollider>().enabled = false;
                         sceneObBc = ob.AddComponent<BoxCollider>();
-                        sceneObBc.size = childObBc.size;
-                        sceneObBc.center = childObBc.center;
+                        float childScale = childOb.transform.localScale.x;
+                        sceneObBc.size = childObBc.size * childScale;
+                        sceneObBc.center = childObBc.center * childScale;
                         sceneObBc.material = physicMaterial;
                     }
+                    break;
                 }
-                break;
+            case 3: // IF VOXEL BIT
+                {
+                    sceneObject.SetEquippedItem(type, item); // set the child object on the server
+                    sceneObject.typeVoxelBit = item;
+                    BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();
+                    voxelBitBc.material = physicMaterial;
+                    voxelBitBc.center = new Vector3(0, -.047f, 0);
+                    voxelBitBc.size = new Vector3(0.5f, 0.3f, 0.5f);
+                    ob.tag = "voxelBit";
+                    break;
+                }
+            case 4: // IF PLACED BRICK DROPPED ITEM
+                {
+                    sceneObject.placedBrickName = placedBrickName;
+                    sceneObject.SetEquippedItem(type, item); // set the child object on the server
+                    sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
+                    sceneObject.placedBrickName = placedBrickName; // set the SyncVar on the scene object for clients
+                    BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
+                    VoxelBc.material = physicMaterial;
+                    VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
+                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items?
+                    VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player?
+                    ob.tag = "voxelRb";
+                    sceneObject.controller = this;
+                    rb = ob.GetComponent<Rigidbody>();
+                    rb.useGravity = false;
+                    rb.isKinematic = false;
+                    VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
+                        vc.isItem = true; // set true to spin object
+                    ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
+                    ob.transform.localScale = new Vector3(1, 1, 1) * 0.5f; // scale
+                    ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
+                    break;
+                }
+            case 5: // IF GAMEOBJECT REFERENCE (WIP cannot pass gameobject reference into server commands, so this is not used for now)
+                {
+                    if(obToSpawn != null)
+                    {
+                        sceneObject.undefinedPrefab = new GameObject[] { obToSpawn };
+                        sceneObject.typeUndefinedPrefab = item; // should be 0 for first item in array
+                        sceneObject.SetEquippedItem(type, item); // set the child object on the server
+                        ob.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
+                        childOb = ob.transform.GetChild(0).gameObject;
+                        if(childOb.GetComponent<BoxCollider>() != null)
+                        {
+                            BoxCollider childObBc = childOb.GetComponent<BoxCollider>();
+                            //childObBc.enabled = false;
+                            sceneObBc = ob.AddComponent<BoxCollider>();
+                            sceneObBc.size = childObBc.size;
+                            sceneObBc.center = childObBc.center;
+                            sceneObBc.material = physicMaterial;
+                        }
+                    }
+                    break;
+                }
         }
 
         if (Settings.OnlinePlay)

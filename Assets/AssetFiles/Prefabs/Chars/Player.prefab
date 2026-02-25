@@ -859,6 +859,7 @@ MonoBehaviour:
   playerProjectile: 
   currentBrickType: 0
   currentBrickIndex: 0
+  currentBrickName: 
   currentBrickMaterialIndex: 0
   currentBrickRotation: 0
   collisionDamage: 0

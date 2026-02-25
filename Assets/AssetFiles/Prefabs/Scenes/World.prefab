@@ -92,7 +92,6 @@ MonoBehaviour:
   multithreading: 1
   planetNumber: 0
   seed: 0
-  terrainDensity: 0
   worldSizeInChunks: 0
   isEarth: 0
   continentalness: 0
@@ -180,6 +179,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ac903c4711666dd40bc5275e5a059c31, type: 2}
   - {fileID: 11400000, guid: fffc8b0f71de7ed41b1d6220c1687b05, type: 2}
   - {fileID: 11400000, guid: 872fb16cb6f9a704094175c5e66ba79f, type: 2}
+  placedBricks:
+  - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
+  - {fileID: 11400000, guid: b5acb9489738848e2b83646e3fc81cbd, type: 2}
   voxelPrefabs:
   - {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}
   - {fileID: 8436909742428498496, guid: dbb5fd4476c044b419ca217aa0edfe12, type: 3}

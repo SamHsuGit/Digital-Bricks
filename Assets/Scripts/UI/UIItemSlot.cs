@@ -44,7 +44,20 @@ public class UIItemSlot : MonoBehaviour
 
     public void UpdateSlot()
     {
-        if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length)
+        if(itemSlot != null && itemSlot.HasItem && itemSlot.stack.placedBrickID != "")
+        {
+            int index = 0;
+            for (int i = 0; i < World.Instance.placedBricks.Length; i++)
+            {
+                if(World.Instance.placedBricks[i].name == itemSlot.stack.placedBrickID) // if itemslot stringname matches a stringname in world list, return index
+                    index = i;
+            }
+            slotIcon.sprite = World.Instance.placedBricks[index].icon;
+            slotAmount.text = itemSlot.stack.amount.ToString();
+            slotIcon.enabled = true;
+            slotAmount.enabled = true;
+        }
+        else if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length && itemSlot.stack.id >= 3)
         {
             slotIcon.sprite = World.Instance.blockTypes[itemSlot.stack.id].icon;
             slotAmount.text = itemSlot.stack.amount.ToString();

@@ -8,7 +8,7 @@ public class Recipe : ScriptableObject
     public bool colorless;
     public RecipeShape[] recipeShapes;
     public byte outputID;
-    public string outputPlacedBrickID;
+    public string outputPlacedBrickName;
     public int outputQty;
 }
 

@@ -84,6 +84,9 @@ public class DragAndDropHandler : MonoBehaviour {
 
     public void ReturnToGame()
     {
+        // clear crafting
+        crafting.outputSlot.itemSlot.EmptySlot();
+
         // move all items from crafting slots to inventory
         foreach(UIItemSlot slot in crafting.craft2x2Slots)
         {

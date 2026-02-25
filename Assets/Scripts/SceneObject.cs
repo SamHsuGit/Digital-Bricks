@@ -5,6 +5,7 @@ using Mirror;
 public class SceneObject : NetworkBehaviour
 {
     [SyncVar(hook = nameof(SetVoxel))] public int typeVoxel;
+    [SyncVar(hook = nameof(SetPlacedBrickName))] public string placedBrickName;
     [SyncVar(hook = nameof(SetTool))] public int typeTool;
     [SyncVar(hook = nameof(SetProjectileInt))] public int typeProjectile;
     [SyncVar(hook = nameof(SetProjectileString))] public string projectileString;
@@ -16,6 +17,7 @@ public class SceneObject : NetworkBehaviour
     public GameObject[] tool;
     public GameObject[] projectile;
     public GameObject[] voxelBit;
+    public GameObject[] placedBrick;
     public GameObject[] undefinedPrefab;
     public Controller controller;
     //int collisionsCounter = 0;
@@ -23,6 +25,10 @@ public class SceneObject : NetworkBehaviour
     void SetVoxel(int oldValue, int newValue)
     {
         StartCoroutine(ChangeEquipment(0, newValue));
+    }
+    void SetPlacedBrickName(string oldValue, string newValue)
+    {
+        placedBrickName = newValue;
     }
 
     void SetTool(int oldValue, int newValue)
@@ -91,7 +97,12 @@ public class SceneObject : NetworkBehaviour
                     array = voxelBit;
                     break;
                 }
-            case 4: // not used right now since gameobjects cannot be passed into server commands
+            case 4:
+                {
+                    array = placedBrick;
+                    break;
+                }
+            case 5: // not used right now since gameobjects cannot be passed into server commands
                 {
                     array = undefinedPrefab;
                     break;
@@ -123,7 +134,7 @@ public class SceneObject : NetworkBehaviour
         {
             //Debug.Log("collision");
             if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
-                controller.PutAwayBrick((byte)typeVoxel); // put item into player toolbar
+                controller.PutAwayBrick((byte)typeVoxel, placedBrickName); // put item into player toolbar
             pickedUp = true;
             Destroy(gameObject);
 
