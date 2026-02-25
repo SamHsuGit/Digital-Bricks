@@ -33,23 +33,38 @@ public class DragAndDropHandler : MonoBehaviour {
 
         cursorSlot.transform.position = Input.mousePosition;
 
-        bool clicked = Input.GetMouseButtonDown(0);
+        bool clickedLMB = Input.GetMouseButtonDown(0);
+        bool clickedRMB = Input.GetMouseButtonDown(1);
 
-        // controller.inputHandler.mine causes 2 clicks, one on press, one on release...
-        if (!controller.inputHandler.sprint && clicked)//controller.inputHandler.mine)
+        if (!controller.inputHandler.sprint && clickedLMB) // left mouse click
         {
-            HandleLeftClickSlot(CheckForSlot());
-            crafting.CheckCraftingSlots(controller.inventoryUIMode);
+            UIItemSlot slot = CheckForSlot();
+
+            HandleLeftClickSlot(slot);
+
+            crafting.outputSlot.itemSlot.EmptySlot();
+            if(slot != null && slot.isCrafting)
+                crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
-        else if(controller.inputHandler.sprint && clicked)
+        else if(controller.inputHandler.sprint && clickedLMB) // shift + left mouse click
         {
-            HandleStackQuickMove(CheckForSlot());
-            crafting.CheckCraftingSlots(controller.inventoryUIMode);
+            UIItemSlot slot = CheckForSlot();
+
+            HandleStackQuickMove(slot);
+
+            crafting.outputSlot.itemSlot.EmptySlot();
+            if(slot != null && slot.isCrafting)
+                crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
-        else if (Input.GetMouseButtonDown(1)) // if right clicked
+        else if (clickedRMB) // if right clicked
         {
-            HandleRightClickSlot(CheckForSlot());
-            crafting.CheckCraftingSlots(controller.inventoryUIMode);
+            UIItemSlot slot = CheckForSlot();
+
+            HandleRightClickSlot(slot);
+            
+            crafting.outputSlot.itemSlot.EmptySlot();
+            if(slot != null && slot.isCrafting)
+                crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
     }
 

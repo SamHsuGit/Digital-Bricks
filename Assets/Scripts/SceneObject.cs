@@ -116,10 +116,12 @@ public class SceneObject : NetworkBehaviour
         ob.transform.parent = transform;
     }
 
-    private void OnCollisionEnter(Collision collision) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS
+    private void OnTriggerEnter(Collider collider) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS (was OnCollisionEnter for Rb)
     {
-        if (gameObject.tag == "voxelRb" && collision.gameObject.tag == "Player") // method used to pick up dropped items
+        // // moved to player controller script
+        if (gameObject.tag == "voxelRb" && collider.gameObject.tag == "Player") // method used to pick up dropped items
         {
+            //Debug.Log("collision");
             controller.PutAwayBrick((byte)typeVoxel); // put item into player toolbar
             Destroy(gameObject);
         }

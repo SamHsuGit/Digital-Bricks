@@ -68,6 +68,7 @@ public class Crafting : MonoBehaviour
 
     private void CheckSlots(int _inventoryUIMode)
     {
+        
         if(_inventoryUIMode == 1)
             slotsToCheck = craft2x2Slots;
         else if (_inventoryUIMode == 2)
@@ -76,16 +77,23 @@ public class Crafting : MonoBehaviour
         if(slotsToCheck == null)
             return;
 
+        bool craftingSlotsEmpty = true;
+
         // build an array of block ids that can be compared to the recipeShapes
         string craftSlotString = "";
         for(int i = 0; i < slotsToCheck.Length; i++)
         {
             if(slotsToCheck[i].itemSlot.HasItem)
+            {
                 craftSlotString += slotsToCheck[i].itemSlot.stack.id + ",";
+                craftingSlotsEmpty = false;
+            }
             else
                 craftSlotString += "0,";
         }
         //Debug.Log(craftSlotString);
+        if(craftingSlotsEmpty)
+            return; // do nothing, ie do not fill output slot if nothing in crafting slots
 
         // for all recipes in list, if checkIntArray matches one, then output the corresponding block in output slot
         foreach (Recipe recipe in recipes)

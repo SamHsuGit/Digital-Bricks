@@ -749,6 +749,12 @@ public class Controller : NetworkBehaviour
         // hazards hurt player
         if (collision.gameObject.tag == "Hazard")
             health.EditSelfHealth(-1);
+
+        // if (collision.gameObject.tag == "voxelRb" && collision.gameObject.GetComponent<SceneObject>() != null) // method used to pick up dropped items
+        // {
+        //     PutAwayBrick((byte)collision.gameObject.GetComponent<SceneObject>().typeVoxel); // put item into player toolbar
+        //     Destroy(collision.gameObject);
+        // }
     }
 
     private void Update()
@@ -959,22 +965,22 @@ public class Controller : NetworkBehaviour
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
-            // BUILD CONTROLS
-            // IF PRESSED GRAB WHILE HOLDING BUILD
-            if (holdingGrab && inputHandler.mine)
-               PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
+            // // BUILD CONTROLS
+            // // IF PRESSED GRAB WHILE HOLDING BUILD
+            // if (holdingGrab && inputHandler.mine)
+            //    PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
 
-            // IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
-            if (!holdingBuild && inputHandler.mine)
-               PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
+            // // IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
+            // if (!holdingBuild && inputHandler.mine)
+            //    PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
 
-            // IF HOLDING BUILD
-            if (holdingBuild && inputHandler.mine)
-               HoldingBuild();
+            // // IF HOLDING BUILD
+            // if (holdingBuild && inputHandler.mine)
+            //    HoldingBuild();
 
-            // IF RELEASED BUILD
-            if (holdingBuild && !inputHandler.mine)
-               ReleasedBuild();
+            // // IF RELEASED BUILD
+            // if (holdingBuild && !inputHandler.mine)
+            //    ReleasedBuild();
         }
 
         positionCursorBlocks();
@@ -2023,8 +2029,8 @@ public class Controller : NetworkBehaviour
                 BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                 VoxelBc.material = physicMaterial;
                 VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
-                VoxelBc.size = new Vector3 (1f, 1f, 1f) * 1f; // set slightly larger to help players pick up items?
-                VoxelBc.isTrigger = false; // set to not trigger so can collide with world
+                VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items?
+                VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player?
                 ob.tag = "voxelRb";
                 sceneObject.controller = this;
                 rb = ob.GetComponent<Rigidbody>();
