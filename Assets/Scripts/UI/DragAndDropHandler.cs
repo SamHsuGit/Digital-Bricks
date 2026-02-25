@@ -124,7 +124,7 @@ public class DragAndDropHandler : MonoBehaviour {
         {
             // drop 1 item into slot and subtract one from stack
             cursorSlot.itemSlot.Take(1);
-            ItemStack newStack = new ItemStack(cursorSlot.itemSlot.stack.id, 1);
+            ItemStack newStack = new ItemStack(cursorSlot.itemSlot.stack.id, cursorSlot.itemSlot.stack.placedBrickID, cursorSlot.itemSlot.stack.id, 1);
             clickedSlot.itemSlot.InsertStack(newStack);
             if(cursorSlot.itemSlot.stack.amount <= 0)
                 cursorSlot.itemSlot.EmptySlot();
@@ -137,7 +137,7 @@ public class DragAndDropHandler : MonoBehaviour {
             if((clickedSlot.itemSlot.stack.amount % 2) != 0) // if not divisible by 2 (e.g. 3)
                 makeUpAmount = 1; // take away a little extra to not give extra blocks
             clickedSlot.itemSlot.Take(originalAmount - amount + makeUpAmount);
-            ItemStack newStack = new ItemStack(clickedSlot.itemSlot.stack.id, amount);
+            ItemStack newStack = new ItemStack(clickedSlot.itemSlot.stack.id, clickedSlot.itemSlot.stack.placedBrickID, clickedSlot.itemSlot.stack.id, amount);
             cursorSlot.itemSlot.InsertStack(newStack);
         }
         else if (cursorSlot.itemSlot.HasItem && clickedSlot.HasItem) // right clicking a slot with item while holding item
@@ -212,7 +212,7 @@ public class DragAndDropHandler : MonoBehaviour {
                     clickedSlot.UpdateSlot();
 
                      // max out this slot and insert the stack
-                    ItemStack stack = new ItemStack(clickedStack.id, stackMax);
+                    ItemStack stack = new ItemStack(clickedStack.id, clickedStack.placedBrickID, clickedStack.id, stackMax);
                     slotArray[i].itemSlot.InsertStack(stack);
                 }
             }

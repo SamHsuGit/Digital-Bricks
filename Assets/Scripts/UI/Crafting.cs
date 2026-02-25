@@ -129,16 +129,16 @@ public class Crafting : MonoBehaviour
                 if(craftSlotString == recipeString)
                 {
                     //Debug.Log(craftSlotString + " matches " + recipeString);
-                    PutInOutputSlot(recipe.output, recipe.outputQty); // output the crafting recipe output item and qty
+                    PutInOutputSlot(recipe.outputID, recipe.outputPlacedBrickID, recipe.outputPlacedBrickColorID, recipe.outputQty); // output the crafting recipe output item and qty
                     return;
                 }
             }
         }
     }
 
-    public void PutInOutputSlot(byte stackID, int stackQty)
+    public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, int _stackPlacedBrickColorID, int _stackQty)
     {
-        ItemStack stack = new ItemStack(stackID, stackQty);
+        ItemStack stack = new ItemStack(_stackID, _stackPlacedBrickID, _stackPlacedBrickColorID, _stackQty);
         outputSlot.itemSlot.InsertStack(stack);
     }
 

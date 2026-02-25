@@ -1660,6 +1660,7 @@ MonoBehaviour:
   - {fileID: 2707302508234719130}
   recipes:
   - {fileID: 11400000, guid: 712b699783e5d478099a46a7ee157b3c, type: 2}
+  - {fileID: 11400000, guid: 950ca446cb79a4233b4455dc23137b09, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}

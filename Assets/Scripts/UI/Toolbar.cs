@@ -8,6 +8,7 @@ public class Toolbar : MonoBehaviour
     public RectTransform highlight;
     public int slotIndex = 0;
     public byte creativeBlockID = 2;
+    public string creativePlacedBlockID = "3005.dat";
     public bool setNavigate = false;
 
     CanvasGroup optionsMenuCanvasGroup;
@@ -49,7 +50,7 @@ public class Toolbar : MonoBehaviour
     private void ResetCreativeSlot()
     {
         creativeBlockID = 2;
-        ItemStack creativeStack = new ItemStack(creativeBlockID, creativeBlockID);
+        ItemStack creativeStack = new ItemStack(creativeBlockID, creativePlacedBlockID, creativeBlockID, creativeBlockID);
         controller.toolbar.slots[0].itemSlot.EmptySlot();
         controller.toolbar.slots[0].itemSlot.InsertStack(creativeStack);
     }
@@ -72,7 +73,7 @@ public class Toolbar : MonoBehaviour
 
             if (blockID != 0)
             {
-                ItemStack stack = new ItemStack((byte)blockID, qty);
+                ItemStack stack = new ItemStack((byte)blockID, creativePlacedBlockID, blockID, qty);
                 if (slot.itemSlot.HasItem)
                     slot.itemSlot.EmptySlot();
                 slot.itemSlot.InsertStack(stack);
@@ -196,7 +197,7 @@ public class Toolbar : MonoBehaviour
                     creativeBlockID = 11;
 
                 slots[slotIndex].itemSlot.EmptySlot();
-                ItemStack stack = new ItemStack(creativeBlockID, creativeBlockID);
+                ItemStack stack = new ItemStack(creativeBlockID, creativePlacedBlockID, creativeBlockID, World.Instance.blockTypes[creativeBlockID].stackMax);
                 slots[slotIndex].itemSlot.InsertStack(stack);
             }
             

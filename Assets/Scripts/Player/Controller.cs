@@ -18,6 +18,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
     [SyncVar(hook = nameof(SetCurrentBrickType))] public int currentBrickType;
     [SyncVar(hook = nameof(SetCurrentBrickIndex))] public int currentBrickIndex;
+    [SyncVar(hook = nameof(SetCurrentBrickName))] public string currentBrickName;
     [SyncVar(hook = nameof(SetCurrentBrickMaterialIndex))] public int currentBrickMaterialIndex;
     [SyncVar(hook = nameof(SetCurrentBrickRotation))] public int currentBrickRotation;
 
@@ -726,6 +727,11 @@ public class Controller : NetworkBehaviour
     public void SetCurrentBrickIndex(int oldValue, int newValue)
     {
         currentBrickIndex = newValue;
+    }
+
+    public void SetCurrentBrickName(string oldValue, string newValue)
+    {
+        currentBrickName = newValue;
     }
 
     public void SetCurrentBrickRotation(int oldValue, int newValue)
@@ -1492,6 +1498,13 @@ public class Controller : NetworkBehaviour
     
     public void DropItemInSlot()
     {
+        // cannot do if moving since this causes an item duplication glitch with colliding with dropped items
+        if(isMoving)
+            return;
+
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this to avoid spamming
+            return;
+
         if(dropButtonPressed)
             return;
         dropButtonPressed = true;
@@ -1809,7 +1822,7 @@ public class Controller : NetworkBehaviour
                 if (toolbar.slots[j].itemSlot.stack == null) // if there is an empty slot
                 {
                     // insert a new stack with qty 1 of blockID
-                    ItemStack stack = new ItemStack(blockID, 1);
+                    ItemStack stack = new ItemStack(blockID, currentBrickName, blockID, 1);
                     toolbar.slots[j].itemSlot.InsertStack(stack);
                     return;
                 }
@@ -1979,6 +1992,7 @@ public class Controller : NetworkBehaviour
         VoxelBc.material = physicMaterial;
         placedBrick.SetActive(true);
         placedBrick.name = _partname;
+        currentBrickName = _partname;
         placedBrick.tag = "placedBrick";
         placedBrick.layer = 0;
         placedBrick.isStatic = true;

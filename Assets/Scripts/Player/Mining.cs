@@ -57,12 +57,13 @@ public class Mining : NetworkBehaviour
         // increment time to prevent spamming buttons
         if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
         {
-           if (inputHandler.mine || inputHandler.use)
-           {
-               nextTimeToFire = Time.time + 1f / fireRate;
-               //pewpew.Play();
-               //Shoot();
-           }
+            // trigger timer if mine, use or drop item are pressed
+            if (inputHandler.mine || inputHandler.use || inputHandler.previous)
+            {
+                nextTimeToFire = Time.time + 1f / fireRate;
+                //pewpew.Play();
+                //Shoot();
+            }
         }
     }
 
