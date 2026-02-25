@@ -1822,7 +1822,7 @@ public class Controller : NetworkBehaviour
                 if (toolbar.slots[j].itemSlot.stack == null) // if there is an empty slot
                 {
                     // insert a new stack with qty 1 of blockID
-                    ItemStack stack = new ItemStack(blockID, currentBrickName, blockID, 1);
+                    ItemStack stack = new ItemStack(blockID, currentBrickName, 1);
                     toolbar.slots[j].itemSlot.InsertStack(stack);
                     return;
                 }

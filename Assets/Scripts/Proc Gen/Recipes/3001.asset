@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: Wood Planks
+  m_Name: 3001
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  shapeless: 1
+  colorless: 1
   recipeShapes:
-  - slot1: 14
-    slot2: 0
+  - slot1: 1
+    slot2: 1
     slot3: 0
     slot4: 0
     slot5: 0
@@ -24,17 +24,8 @@ MonoBehaviour:
     slot8: 0
     slot9: 0
   - slot1: 0
-    slot2: 14
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - slot1: 0
-    slot2: 0
-    slot3: 14
+    slot2: 1
+    slot3: 1
     slot4: 0
     slot5: 0
     slot6: 0
@@ -44,8 +35,8 @@ MonoBehaviour:
   - slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 14
-    slot5: 0
+    slot4: 1
+    slot5: 1
     slot6: 0
     slot7: 0
     slot8: 0
@@ -54,17 +45,8 @@ MonoBehaviour:
     slot2: 0
     slot3: 0
     slot4: 0
-    slot5: 14
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 14
+    slot5: 1
+    slot6: 1
     slot7: 0
     slot8: 0
     slot9: 0
@@ -74,8 +56,8 @@ MonoBehaviour:
     slot4: 0
     slot5: 0
     slot6: 0
-    slot7: 14
-    slot8: 0
+    slot7: 1
+    slot8: 1
     slot9: 0
   - slot1: 0
     slot2: 0
@@ -84,16 +66,8 @@ MonoBehaviour:
     slot5: 0
     slot6: 0
     slot7: 0
-    slot8: 14
-    slot9: 0
-  - slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 14
-  output: 6
+    slot8: 1
+    slot9: 1
+  outputID: 0
+  outputPlacedBrickID: 3001
   outputQty: 1

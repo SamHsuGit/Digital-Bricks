@@ -141,7 +141,7 @@ public class ItemSlot
     public ItemStack TakeAll()
     {
 
-        ItemStack handOver = new ItemStack(stack.id, stack.placedBrickID, stack.placedBrickColorID, stack.amount);
+        ItemStack handOver = new ItemStack(stack.id, stack.placedBrickID, stack.amount);
         EmptySlot();
         return handOver;
 

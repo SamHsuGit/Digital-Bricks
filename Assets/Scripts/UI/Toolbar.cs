@@ -50,7 +50,7 @@ public class Toolbar : MonoBehaviour
     private void ResetCreativeSlot()
     {
         creativeBlockID = 2;
-        ItemStack creativeStack = new ItemStack(creativeBlockID, creativePlacedBlockID, creativeBlockID, creativeBlockID);
+        ItemStack creativeStack = new ItemStack(creativeBlockID, creativePlacedBlockID, creativeBlockID);
         controller.toolbar.slots[0].itemSlot.EmptySlot();
         controller.toolbar.slots[0].itemSlot.InsertStack(creativeStack);
     }
@@ -73,7 +73,7 @@ public class Toolbar : MonoBehaviour
 
             if (blockID != 0)
             {
-                ItemStack stack = new ItemStack((byte)blockID, creativePlacedBlockID, blockID, qty);
+                ItemStack stack = new ItemStack((byte)blockID, creativePlacedBlockID, qty);
                 if (slot.itemSlot.HasItem)
                     slot.itemSlot.EmptySlot();
                 slot.itemSlot.InsertStack(stack);
@@ -197,7 +197,7 @@ public class Toolbar : MonoBehaviour
                     creativeBlockID = 11;
 
                 slots[slotIndex].itemSlot.EmptySlot();
-                ItemStack stack = new ItemStack(creativeBlockID, creativePlacedBlockID, creativeBlockID, World.Instance.blockTypes[creativeBlockID].stackMax);
+                ItemStack stack = new ItemStack(creativeBlockID, creativePlacedBlockID, World.Instance.blockTypes[creativeBlockID].stackMax);
                 slots[slotIndex].itemSlot.InsertStack(stack);
             }
             
