@@ -45,7 +45,7 @@ public class UIItemSlot : MonoBehaviour
 
     public void UpdateSlot()
     {
-        if(itemSlot != null && itemSlot.HasItem && itemSlot.stack.placedBrickID != "") // IF PLACEDBRICK
+        if(itemSlot != null && itemSlot.HasItem && itemSlot.stack.isPlacedBrick) // IF PLACEDBRICK
         {
             int index = 0;
             for (int i = 0; i < World.Instance.placedBricks.Length; i++)
@@ -58,7 +58,7 @@ public class UIItemSlot : MonoBehaviour
             float red = float.Parse(hexValue.Substring(0,2));
             float green = float.Parse(hexValue.Substring(2,2));
             float blue = float.Parse(hexValue.Substring(4,2));
-            slotIcon.color = new Color(red, green, blue); // bug where icon color does not change
+            slotIcon.color = new Color32((byte)red, (byte)green, (byte)blue, 255);
             slotAmount.text = itemSlot.stack.amount.ToString();
             slotIcon.enabled = true;
             slotAmount.enabled = true;
@@ -66,7 +66,7 @@ public class UIItemSlot : MonoBehaviour
         else if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length && itemSlot.stack.id >= 3) // IF VOXEL
         {
             slotIcon.sprite = World.Instance.blockTypes[itemSlot.stack.id].icon;
-            slotIcon.color = new Color(255, 255, 255); // set to white if voxel
+            slotIcon.color = new Color32(255, 255, 255, 255); // set to white if voxel
             slotAmount.text = itemSlot.stack.amount.ToString();
             slotIcon.enabled = true;
             slotAmount.enabled = true;
@@ -78,6 +78,7 @@ public class UIItemSlot : MonoBehaviour
     public void Clear()
     {
         slotIcon.sprite = null;
+        slotIcon.color = new Color32(255, 255, 255, 255); // reset color to white
         slotAmount.text = "";
         slotIcon.enabled = false;
         slotAmount.enabled = false;
@@ -161,7 +162,7 @@ public class ItemSlot
     public ItemStack TakeAll()
     {
 
-        ItemStack handOver = new ItemStack(stack.id, stack.placedBrickID, stack.amount);
+        ItemStack handOver = new ItemStack(stack.id, stack.placedBrickID, stack.isPlacedBrick, stack.amount);
         EmptySlot();
         return handOver;
 

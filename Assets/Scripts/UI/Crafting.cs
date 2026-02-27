@@ -117,7 +117,8 @@ public class Crafting : MonoBehaviour
         // for all recipes in list, if checkIntArray matches one, then output the corresponding block in output slot
         foreach (Recipe recipe in recipes)
         {
-            if(nonmatchingcolors && recipe.outputPlacedBrickName != "" && recipe.outputPlacedBrickName != null) // skip placed brick recipes if colors not all same
+            // cannot craft placedbricks if the colors do not all match
+            if(nonmatchingcolors && recipe.isPlacedBrick)
                 continue;
             
             foreach (RecipeShape shape in recipe.recipeShapes)
@@ -157,12 +158,12 @@ public class Crafting : MonoBehaviour
                 if(craftSlotString == recipeString) // if match is found exit the loop
                 {
                     byte outputID;
-                    if(recipe.isPlacedBrick && !nonmatchingcolors)
+                    if(recipe.isPlacedBrick) // placedbricks take the color of the last placed brick
                         outputID = lastSlotID;
                     else
                         outputID = recipe.outputID;
-                    //Debug.Log(craftSlotString + " matches " + recipeString);
-                    PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.outputQty); // output the crafting recipe output item and qty
+                    Debug.Log(craftSlotString + " matches " + recipeString);
+                    PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty); // output the crafting recipe output item and qty
                     // bug where recipes not crafting correct item
                     return;
                 }
@@ -170,9 +171,9 @@ public class Crafting : MonoBehaviour
         }
     }
 
-    public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, int _stackQty)
+    public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)
     {
-        ItemStack stack = new ItemStack(_stackID, _stackPlacedBrickID, _stackQty);
+        ItemStack stack = new ItemStack(_stackID, _stackPlacedBrickID, _isPlacedBrick, _stackQty);
         outputSlot.itemSlot.InsertStack(stack);
     }
 

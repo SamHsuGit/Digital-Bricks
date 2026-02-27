@@ -1858,7 +1858,7 @@ public class Controller : NetworkBehaviour
                     if (!slotsToCheck[j].itemSlot.HasItem) // if there is an empty slot
                     {
                         // insert a new stack with qty 1 of blockID and currentBrickName
-                        ItemStack stack = new ItemStack(blockID, _placedBrickName, 1);
+                        ItemStack stack = new ItemStack(blockID, _placedBrickName, false, 1);
                         slotsToCheck[j].itemSlot.InsertStack(stack);
                         return;
                     }
