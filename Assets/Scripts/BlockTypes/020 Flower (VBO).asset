@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 017 Grass (VBO)
+  m_Name: 020 Flower (VBO)
   m_EditorClassIdentifier: 
   blockName: 
   stackMax: 64
@@ -21,9 +21,10 @@ MonoBehaviour:
   hardness: 5
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
-  icon: {fileID: 8627043524693180128, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  icon: {fileID: 109434020790643247, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: 00852B
   isActive: 0
-  voxelBoundObject: {fileID: 2630247148938265349, guid: 50205679261b18b48a2bf62f59cc3cd5, type: 3}
+  voxelBoundObject: {fileID: 37570108828818984, guid: 349121dd2cf6def48acebf10f0f0170f, type: 3}
   backFaceTexture: 0
   frontFaceTexture: 0
   topFaceTexture: 0

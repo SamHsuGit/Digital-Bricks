@@ -10,24 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 020 Flower (VBO)
+  m_Name: 005 Red (Lava)
   m_EditorClassIdentifier: 
   blockName: 
   stackMax: 64
-  isDrawn: 0
+  isDrawn: 1
   isSolid: 1
-  isTransparent: 1
+  isTransparent: 0
   isWater: 0
   hardness: 5
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
-  icon: {fileID: 109434020790643247, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  icon: {fileID: -7538633921802359561, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: B40000
   isActive: 0
-  voxelBoundObject: {fileID: 37570108828818984, guid: 349121dd2cf6def48acebf10f0f0170f, type: 3}
-  backFaceTexture: 0
-  frontFaceTexture: 0
-  topFaceTexture: 0
-  bottomFaceTexture: 0
-  leftFaceTexture: 0
-  rightFaceTexture: 0
-  topFaceSmoothTexture: 0
+  voxelBoundObject: {fileID: 0}
+  backFaceTexture: 10
+  frontFaceTexture: 10
+  topFaceTexture: 11
+  bottomFaceTexture: 9
+  leftFaceTexture: 10
+  rightFaceTexture: 10
+  topFaceSmoothTexture: 48

@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Recipe", menuName = "ProcGen/Recipe")]
 public class Recipe : ScriptableObject
 {
-    public bool colorless;
+    public bool isPlacedBrick;
     public RecipeShape[] recipeShapes;
     public byte outputID;
     public string outputPlacedBrickName;

@@ -15,6 +15,7 @@ public class BlockType : ScriptableObject
     public VoxelMeshData standardMeshData;
     public VoxelMeshData studsMeshData;
     public Sprite icon;
+    public string colorHexValue;
     public bool isActive;
     public GameObject voxelBoundObject;
 

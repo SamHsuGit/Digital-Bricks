@@ -79,6 +79,7 @@ public class Crafting : MonoBehaviour
             return;
 
         bool craftingSlotsEmpty = true;
+        byte lastSlotID = 0;
 
         // build an array of block ids that can be compared to the recipeShapes
         string craftSlotString = "";
@@ -86,6 +87,7 @@ public class Crafting : MonoBehaviour
         {
             if(slotsToCheck[i].itemSlot.HasItem)
             {
+                lastSlotID = slotsToCheck[i].itemSlot.stack.id;
                 craftSlotString += slotsToCheck[i].itemSlot.stack.id + ",";
                 craftingSlotsEmpty = false;
             }
@@ -145,17 +147,23 @@ public class Crafting : MonoBehaviour
                     };
                 string recipeString = string.Join(",", slots) + ",";
 
-                if(!nonmatchingcolors && recipe.colorless) // if colors all match, change colorless recipes to match color of crafting slots to find match
-                {
-                    recipeString.Replace("1",color.ToString());
-                    recipe.outputID = 0;
-                }
+                // if(!nonmatchingcolors && recipe.colorless) // if colors all match, change colorless recipes to match color of crafting slots to find match
+                // {
+                //     recipeString.Replace("1",color.ToString());
+                //     recipe.outputID = 0;
+                // }
 
                 //Debug.Log(recipeString);
                 if(craftSlotString == recipeString) // if match is found exit the loop
                 {
+                    byte outputID;
+                    if(recipe.isPlacedBrick && !nonmatchingcolors)
+                        outputID = lastSlotID;
+                    else
+                        outputID = recipe.outputID;
                     //Debug.Log(craftSlotString + " matches " + recipeString);
-                    PutInOutputSlot(recipe.outputID, recipe.outputPlacedBrickName, recipe.outputQty); // output the crafting recipe output item and qty
+                    PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.outputQty); // output the crafting recipe output item and qty
+                    // bug where recipes not crafting correct item
                     return;
                 }
             }

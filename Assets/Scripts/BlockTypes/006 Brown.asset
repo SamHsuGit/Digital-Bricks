@@ -22,6 +22,7 @@ MonoBehaviour:
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: -1501523072523359806, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: 543324
   isActive: 0
   voxelBoundObject: {fileID: 0}
   backFaceTexture: 13

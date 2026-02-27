@@ -851,7 +851,7 @@ public class Controller : NetworkBehaviour
             if(camMode != 3)
             {
                 // IF DROP ITEM
-                if(!holdingBuild && !holdingGrab && inputHandler.previous)
+                if(!holdingBuild && !holdingGrab && inputHandler.previous && inventoryUIMode == 0) // added if inventoryUIMode == 0 due to duplication glitch
                     DropItemInSlot();
             }
 

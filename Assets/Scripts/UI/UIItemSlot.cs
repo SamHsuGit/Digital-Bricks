@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class UIItemSlot : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class UIItemSlot : MonoBehaviour
 
     public void UpdateSlot()
     {
-        if(itemSlot != null && itemSlot.HasItem && itemSlot.stack.placedBrickID != "")
+        if(itemSlot != null && itemSlot.HasItem && itemSlot.stack.placedBrickID != "") // IF PLACEDBRICK
         {
             int index = 0;
             for (int i = 0; i < World.Instance.placedBricks.Length; i++)
@@ -53,13 +54,19 @@ public class UIItemSlot : MonoBehaviour
                     index = i;
             }
             slotIcon.sprite = World.Instance.placedBricks[index].icon;
+            string hexValue = World.Instance.blockTypes[itemSlot.stack.id].colorHexValue;
+            float red = float.Parse(hexValue.Substring(0,2));
+            float green = float.Parse(hexValue.Substring(2,2));
+            float blue = float.Parse(hexValue.Substring(4,2));
+            slotIcon.color = new Color(red, green, blue); // bug where icon color does not change
             slotAmount.text = itemSlot.stack.amount.ToString();
             slotIcon.enabled = true;
             slotAmount.enabled = true;
         }
-        else if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length && itemSlot.stack.id >= 3)
+        else if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length && itemSlot.stack.id >= 3) // IF VOXEL
         {
             slotIcon.sprite = World.Instance.blockTypes[itemSlot.stack.id].icon;
+            slotIcon.color = new Color(255, 255, 255); // set to white if voxel
             slotAmount.text = itemSlot.stack.amount.ToString();
             slotIcon.enabled = true;
             slotAmount.enabled = true;

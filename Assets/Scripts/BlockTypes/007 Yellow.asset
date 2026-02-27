@@ -10,24 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 016 Crystal (VBO)
+  m_Name: 007 Yellow
   m_EditorClassIdentifier: 
   blockName: 
   stackMax: 64
-  isDrawn: 0
+  isDrawn: 1
   isSolid: 1
   isTransparent: 0
   isWater: 0
-  hardness: 30
+  hardness: 5
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
-  icon: {fileID: -1973033367, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  icon: {fileID: 1159639000735656762, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: FAC80A
   isActive: 0
-  voxelBoundObject: {fileID: 3225992526758807777, guid: 388ab21a301ce4f2390889211b5751db, type: 3}
-  backFaceTexture: 44
-  frontFaceTexture: 44
-  topFaceTexture: 5
-  bottomFaceTexture: 3
-  leftFaceTexture: 43
-  rightFaceTexture: 43
-  topFaceSmoothTexture: 46
+  voxelBoundObject: {fileID: 0}
+  backFaceTexture: 16
+  frontFaceTexture: 16
+  topFaceTexture: 17
+  bottomFaceTexture: 15
+  leftFaceTexture: 16
+  rightFaceTexture: 16
+  topFaceSmoothTexture: 50
