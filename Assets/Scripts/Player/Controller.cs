@@ -971,22 +971,22 @@ public class Controller : NetworkBehaviour
 
         if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
-            // // BUILD CONTROLS
-            // // IF PRESSED GRAB WHILE HOLDING BUILD
-            // if (holdingGrab && inputHandler.mine)
-            //    PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
+            // BUILD CONTROLS
+            // IF PRESSED GRAB WHILE HOLDING BUILD
+            if (holdingGrab && inputHandler.mine)
+               PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
 
-            // // IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
-            // if (!holdingBuild && inputHandler.mine)
-            //    PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
+            // IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
+            if (!holdingBuild && inputHandler.mine)
+               PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
 
-            // // IF HOLDING BUILD
-            // if (holdingBuild && inputHandler.mine)
-            //    HoldingBuild();
+            // IF HOLDING BUILD
+            if (holdingBuild && inputHandler.mine)
+               HoldingBuild();
 
-            // // IF RELEASED BUILD
-            // if (holdingBuild && !inputHandler.mine)
-            //    ReleasedBuild();
+            // IF RELEASED BUILD
+            if (holdingBuild && !inputHandler.mine)
+               ReleasedBuild();
         }
 
         positionCursorBlocks();
@@ -1148,7 +1148,7 @@ public class Controller : NetworkBehaviour
 
     public void PressedBuild()
     {
-        // SPAWN A BRICK
+        // SPAWN A PLACED BRICK
 
         if(shootPos.gameObject.activeSelf) // do not do if looking at voxel
             return;
@@ -1156,28 +1156,39 @@ public class Controller : NetworkBehaviour
         if (Time.time < mining.nextTimeToFire) // limit how fast can use this
             return;
 
-        if (toolbar.slots[toolbar.slotIndex].itemSlot.stack == null) // do not spawn object if no voxel in current inventory slot
+        if (!toolbar.slots[toolbar.slotIndex].itemSlot.HasItem) // do not spawn object if no voxel in current inventory slot
             return;
+
+        if(!toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick) // do not do if item is not a placed brick, use normal placement for regular voxels
+            return;
+
+        // INSERT CODE TO SEARCH FOR MATCHING BRICK AND MATERIAL INDEX AND SET FROM FILE
+        for(int i = 0; i <currentLDrawPartsListStringArray.Length; i++)
+        {
+            Debug.Log(currentLDrawPartsListStringArray[i]);
+            if(currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID)
+                currentBrickIndex = i;
+        }
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if (blockID < 2 || blockID == 12)// || blockID == 17 || blockID == 18 || blockID == 20) // ignore these blockIDs
-        {
-            blockID = 0;
-            return;
-        }
-        else if (blockID == 13) //manual color override grass = green
-        {
-            blockID = 8;
-        }
-        else if (blockID == 14) //manual color override wood = brown
-        {
-            blockID = 6;
-        }
-        else if (blockID == 15) //manual color override leaves  = green
-        {
-            blockID = 8;
-        }
+        // if (blockID < 2 || blockID == 12)// || blockID == 17 || blockID == 18 || blockID == 20) // ignore these blockIDs
+        // {
+        //     blockID = 0;
+        //     return;
+        // }
+        // else if (blockID == 13) //manual color override grass = green
+        // {
+        //     blockID = 8;
+        // }
+        // else if (blockID == 14) //manual color override wood = brown
+        // {
+        //     blockID = 6;
+        // }
+        // else if (blockID == 15) //manual color override leaves  = green
+        // {
+        //     blockID = 8;
+        // }
         // spawn brick object
         // if (Settings.OnlinePlay) // disabled for multiplayer
         //     return;
