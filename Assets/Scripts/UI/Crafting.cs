@@ -162,7 +162,7 @@ public class Crafting : MonoBehaviour
                         outputID = lastSlotID;
                     else
                         outputID = recipe.outputID;
-                    Debug.Log(craftSlotString + " matches " + recipeString);
+                    //Debug.Log(craftSlotString + " matches " + recipeString);
                     PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty); // output the crafting recipe output item and qty
                     // bug where recipes not crafting correct item
                     return;
@@ -174,6 +174,7 @@ public class Crafting : MonoBehaviour
     public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)
     {
         ItemStack stack = new ItemStack(_stackID, _stackPlacedBrickID, _isPlacedBrick, _stackQty);
+        Debug.Log("_stackPlacedBrickID = " + _stackPlacedBrickID);
         outputSlot.itemSlot.InsertStack(stack);
     }
 

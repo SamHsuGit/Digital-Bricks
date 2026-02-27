@@ -1021,40 +1021,44 @@ public class Controller : NetworkBehaviour
 
     public void IncrementBrickType()
     {
-        if (currentBrickType + 1 <= ldrawPartsTypes.Length - 1)
-            currentBrickType++;
-        else
-            currentBrickType = 0;
+        return; // disabled
 
-        SetCurrentBrickType(currentBrickType, currentBrickType);
-        currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-        if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
-            currentBrickIndex = 0;
-        if (currentBrickIndex < 0)
-            currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
-        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+        // if (currentBrickType + 1 <= ldrawPartsTypes.Length - 1)
+        //     currentBrickType++;
+        // else
+        //     currentBrickType = 0;
 
-        UpdateGrabObject(0);
-        setBrickType = false;
+        // SetCurrentBrickType(currentBrickType, currentBrickType);
+        // currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+        // if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
+        //     currentBrickIndex = 0;
+        // if (currentBrickIndex < 0)
+        //     currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
+        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+
+        // UpdateGrabObject(0);
+        // setBrickType = false;
     }
 
     public void DecrementBrickType()
     {
-        if (currentBrickType - 1 >= 0)
-            currentBrickType--;
-        else
-            currentBrickType = ldrawPartsTypes.Length - 1;
+        return; // disabled
 
-        SetCurrentBrickType(currentBrickType, currentBrickType);
-        currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-        if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
-            currentBrickIndex = 0;
-        if (currentBrickIndex < 0)
-            currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
-        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+        // if (currentBrickType - 1 >= 0)
+        //     currentBrickType--;
+        // else
+        //     currentBrickType = ldrawPartsTypes.Length - 1;
 
-        UpdateGrabObject(0);
-        setBrickType = false;
+        // SetCurrentBrickType(currentBrickType, currentBrickType);
+        // currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+        // if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
+        //     currentBrickIndex = 0;
+        // if (currentBrickIndex < 0)
+        //     currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
+        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+
+        // UpdateGrabObject(0);
+        // setBrickType = false;
     }
 
     public void IncrementBrickIndex()
@@ -1162,12 +1166,24 @@ public class Controller : NetworkBehaviour
         if(!toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick) // do not do if item is not a placed brick, use normal placement for regular voxels
             return;
 
-        // INSERT CODE TO SEARCH FOR MATCHING BRICK AND MATERIAL INDEX AND SET FROM FILE
         for(int i = 0; i <currentLDrawPartsListStringArray.Length; i++)
         {
-            Debug.Log(currentLDrawPartsListStringArray[i]);
+            //Debug.Log("checking if " + currentLDrawPartsListStringArray[i] + " matches " + toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID);
             if(currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID)
-                currentBrickIndex = i;
+            {
+                //Debug.Log("found " + currentLDrawPartsListStringArray[i] + " matches " + toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID);
+                currentBrickType = 0; // set as 0 for long list of imported bricks
+                currentBrickIndex = i; // set current brick as the one that matches
+            }
+            else
+            {
+                Debug.Log("no matching placedBrickID found for: " + 
+                toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID + 
+                " try adding brickID to 000 - placedBricks.txt");
+                currentBrickType = 0;
+                currentBrickIndex = 0;
+            }
+                
         }
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
