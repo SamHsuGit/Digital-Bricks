@@ -1063,40 +1063,44 @@ public class Controller : NetworkBehaviour
 
     public void IncrementBrickIndex()
     {
-        if (currentBrickIndex + 1 <= currentLDrawPartsListStringArray.Length - 1)
-            currentBrickIndex++;
-        else
-            currentBrickIndex = 0;
+        return; // disabled
 
-        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+        // if (currentBrickIndex + 1 <= currentLDrawPartsListStringArray.Length - 1)
+        //     currentBrickIndex++;
+        // else
+        //     currentBrickIndex = 0;
 
-        UpdateGrabObject(0);
+        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        if (!movingPlacedBrickUseStoredValues)
-        {
-            SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-        }
+        // UpdateGrabObject(0);
 
-        setBrickIndex = false;
+        // if (!movingPlacedBrickUseStoredValues)
+        // {
+        //     SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+        // }
+
+        // setBrickIndex = false;
     }
 
     public void DecrementBrickIndex()
     {
-        if (currentBrickIndex - 1 >= 0)
-            currentBrickIndex--;
-        else
-            currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
+        return; // disabled
 
-        SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+        // if (currentBrickIndex - 1 >= 0)
+        //     currentBrickIndex--;
+        // else
+        //     currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
 
-        UpdateGrabObject(0);
+        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
 
-        if (!movingPlacedBrickUseStoredValues)
-        {
-            SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-        }
+        // UpdateGrabObject(0);
 
-        setBrickIndex = false;
+        // if (!movingPlacedBrickUseStoredValues)
+        // {
+        //     SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
+        // }
+
+        // setBrickIndex = false;
     }
 
     public void RotateBrickLeft()
@@ -1107,7 +1111,7 @@ public class Controller : NetworkBehaviour
             currentBrickRotation = 0;
         SetCurrentBrickRotation(currentBrickRotation, currentBrickRotation);
 
-        UpdateGrabObject(0);
+        UpdateGrabObject((byte)currentBrickMaterialIndex); // changed from UpdateGrabObject(0) temp color since could not return brick color after rotating
         
         if (!movingPlacedBrickUseStoredValues)
         {
@@ -1124,7 +1128,7 @@ public class Controller : NetworkBehaviour
         else
             currentBrickRotation = 3;
 
-        UpdateGrabObject(0);
+        UpdateGrabObject((byte)currentBrickMaterialIndex); // changed from UpdateGrabObject(0) temp color since could not return brick color after rotating
         
         if(!movingPlacedBrickUseStoredValues)
         {
@@ -1166,8 +1170,13 @@ public class Controller : NetworkBehaviour
         if(!toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick) // do not do if item is not a placed brick, use normal placement for regular voxels
             return;
 
+        // default values overridden by match
+        currentBrickType = 0;
+        currentBrickIndex = 0;
+
         for(int i = 0; i <currentLDrawPartsListStringArray.Length; i++)
         {
+            //Debug.Log("checking match for " + currentLDrawPartsListStringArray[i]);
             //Debug.Log("checking if " + currentLDrawPartsListStringArray[i] + " matches " + toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID);
             if(currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID)
             {
@@ -1177,11 +1186,10 @@ public class Controller : NetworkBehaviour
             }
             else
             {
-                Debug.Log("no matching placedBrickID found for: " + 
-                toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID + 
-                " try adding brickID to 000 - placedBricks.txt");
-                currentBrickType = 0;
-                currentBrickIndex = 0;
+                // Debug.Log("no matching placedBrickID found for: " + 
+                // toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID + 
+                // " try adding brickID to 000 - placedBricks.txt");
+                // Debug.Log("number of imported parts = " + currentLDrawPartsListStringArray.Length);
             }
                 
         }
@@ -1486,7 +1494,7 @@ public class Controller : NetworkBehaviour
 
         UpdateGrabObject((byte)currentBrickMaterialIndex);
 
-        int brickMaterialIndex = System.Convert.ToInt32(toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
+        int brickMaterialIndex = System.Convert.ToInt32(blockID);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
 
         if (blockID < 2 || blockID > 11) // cannot use bricks using voxels outside the defined color range
@@ -1501,9 +1509,7 @@ public class Controller : NetworkBehaviour
 
         // when released, change material to voxelID from slot and stop moving part
         brickPlaceDown.Play();
-        ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
-
-        
+        ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex); // bug, does not reset material after rotating... so don't turn rotated brick Blue
 
         // reset values
         heldObjectIsBrick = false;

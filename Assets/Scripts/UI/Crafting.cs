@@ -39,7 +39,7 @@ public class Crafting : MonoBehaviour
     // triggered when item dropped into slot marked crafting
     public void CheckCraftingSlots(int _inventoryUIMode)
     {
-        if(outputSlot.itemSlot.HasItem) // ensures when slots are clicked to move from crafting, it empties the output slot
+        if(AllCraftingSlotsEmpty()) // ensures when slots are clicked to move from crafting, it empties the output slot
             outputSlot.itemSlot.EmptySlot();
         
         switch(_inventoryUIMode)
@@ -65,6 +65,28 @@ public class Crafting : MonoBehaviour
                     break;
                 }
         }
+    }
+
+    public bool AllCraftingSlotsEmpty()
+    {
+        if(CraftingSlotsEmpty(craft2x2Slots) && CraftingSlotsEmpty(craft3x3Slots))
+            return true;
+        else
+            return false;
+    }
+
+    private bool CraftingSlotsEmpty(UIItemSlot[] _slotsToCheck)
+    {
+        for (int i = 0; i < _slotsToCheck.Length; i++)
+        {
+            if(_slotsToCheck[i].itemSlot.HasItem)
+            {
+                //Debug.Log("item detected in " + i);
+                return false;
+            }
+                
+        }
+        return true;
     }
 
     private void CheckSlots(int _inventoryUIMode)
@@ -125,15 +147,15 @@ public class Crafting : MonoBehaviour
             {
                 // build recipe string
                 List<int> slots = new List<int>(){};
-                if(_inventoryUIMode == 1)
+                if(shape.is2x2) // only check first 4 slots if marked 2x2 recipeShape
                     slots = new List<int>()
                     {
                         shape.slot1,
                         shape.slot2,
+                        shape.slot3,
                         shape.slot4,
-                        shape.slot5,
                     };
-                else if(_inventoryUIMode == 2)
+                else
                     slots = new List<int>()
                     {
                         shape.slot1,
@@ -174,7 +196,7 @@ public class Crafting : MonoBehaviour
     public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)
     {
         ItemStack stack = new ItemStack(_stackID, _stackPlacedBrickID, _isPlacedBrick, _stackQty);
-        Debug.Log("_stackPlacedBrickID = " + _stackPlacedBrickID);
+        //Debug.Log("_stackPlacedBrickID = " + _stackPlacedBrickID);
         outputSlot.itemSlot.InsertStack(stack);
     }
 

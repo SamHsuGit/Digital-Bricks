@@ -42,8 +42,9 @@ public class DragAndDropHandler : MonoBehaviour {
 
             HandleLeftClickSlot(slot);
 
-            crafting.outputSlot.itemSlot.EmptySlot();
-            if(slot != null && slot.isCrafting)
+            // if(crafting.AllCraftingSlotsEmpty())
+            //     crafting.outputSlot.itemSlot.EmptySlot();
+            if(slot != null && (slot.isCrafting || slot.isOutput))
                 crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
         else if(controller.inputHandler.sprint && clickedLMB) // shift + left mouse click
@@ -52,8 +53,9 @@ public class DragAndDropHandler : MonoBehaviour {
 
             HandleStackQuickMove(slot);
 
-            crafting.outputSlot.itemSlot.EmptySlot();
-            if(slot != null && slot.isCrafting)
+            // if(crafting.AllCraftingSlotsEmpty())
+            //     crafting.outputSlot.itemSlot.EmptySlot();
+            if(slot != null && (slot.isCrafting || slot.isOutput))
                 crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
         else if (clickedRMB) // if right clicked
@@ -62,8 +64,9 @@ public class DragAndDropHandler : MonoBehaviour {
 
             HandleRightClickSlot(slot);
             
-            crafting.outputSlot.itemSlot.EmptySlot();
-            if(slot != null && slot.isCrafting)
+            // if(crafting.AllCraftingSlotsEmpty())
+            //     crafting.outputSlot.itemSlot.EmptySlot();
+            if(slot != null && (slot.isCrafting || slot.isOutput))
                 crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
     }
