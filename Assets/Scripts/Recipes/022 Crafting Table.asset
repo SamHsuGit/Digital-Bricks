@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
   m_Name: 022 Crafting Table
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  colorless: 0
+  isPlacedBrick: 0
   recipeShapes:
-  - slot1: 6
+  - is2x2: 0
+    slot1: 6
     slot2: 6
     slot3: 0
     slot4: 6
@@ -23,7 +24,8 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - slot1: 0
+  - is2x2: 0
+    slot1: 0
     slot2: 6
     slot3: 6
     slot4: 0
@@ -32,7 +34,8 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - slot1: 0
+  - is2x2: 0
+    slot1: 0
     slot2: 0
     slot3: 0
     slot4: 6
@@ -41,7 +44,8 @@ MonoBehaviour:
     slot7: 6
     slot8: 6
     slot9: 0
-  - slot1: 0
+  - is2x2: 0
+    slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -50,6 +54,16 @@ MonoBehaviour:
     slot7: 0
     slot8: 6
     slot9: 6
+  - is2x2: 1
+    slot1: 6
+    slot2: 6
+    slot3: 6
+    slot4: 6
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
   outputID: 14
-  outputPlacedBrickID: 
+  outputPlacedBrickName: 
   outputQty: 1
