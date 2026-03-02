@@ -165,6 +165,7 @@ public class Controller : NetworkBehaviour
     private Mining mining;
     private CanvasGroup backgroundMaskCanvasGroup;
     private GameMenu gameMenuComponent;
+    private Crafting craftingComponent;
     private BoxCollider playerCameraBoxCollider;
     private VoxelCollider playerCameraVoxelCollider;
     public PPFXSetValues worldPPFXSetValues;
@@ -239,6 +240,7 @@ public class Controller : NetworkBehaviour
         
         backgroundMaskCanvasGroup = backgroundMask.GetComponent<CanvasGroup>();
         gameMenuComponent = gameMenu.GetComponent<GameMenu>();
+        craftingComponent = gameMenu.GetComponent<Crafting>();
         playerCameraOrigin = playerCamera.transform.parent.gameObject;
         lookAtConstraint = playerCamera.GetComponent<LookAtConstraint>();
         playerCameraBoxCollider = playerCamera.GetComponent<BoxCollider>();
@@ -1286,10 +1288,19 @@ public class Controller : NetworkBehaviour
             if(!toolbar.slots[toolbar.slotIndex].HasItem)
             {
                 GameObject hitObject = hit.transform.gameObject;
-                //Vector3 pos = hitObject.transform.position;
+                Vector3 pos = hitObject.transform.position;
                 int currentBrickMaterialIndex = GetMaterialIndex(hitObject);
                 //PutAwayBrick((byte)currentBrickMaterialIndex);
-                SpawnVoxelRbFromWorld(hit.transform.position, (byte)currentBrickMaterialIndex);
+                string placedBrickName = hitObject.GetComponent<SceneObject>().placedBrickName;
+                int dropCount = LookupPlacedBrickSize(placedBrickName);
+                for(int i = 0; i < dropCount; i++)
+                {
+                    if(Settings.OnlinePlay)
+                        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, pos);
+                    else
+                        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, pos);
+                    //SpawnVoxelRbFromWorld(hit.transform.position, (byte)currentBrickMaterialIndex);
+                }
                 Destroy(hit.transform.gameObject);
             }
 
@@ -1336,7 +1347,22 @@ public class Controller : NetworkBehaviour
 
                 //PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
                 if(canMine)
-                    SpawnVoxelRbFromWorld(position, blockID); // give drop
+                {
+                    if(blockID > 15) // special non solid color voxels
+                        SpawnVoxelRbFromWorld(position, blockID); // drop voxel item instead
+                    else
+                    {
+                        int dropCount = 12; // voxels are comprised of 12 bits
+                        for(int i = 0; i < dropCount; i++)
+                        {
+                            if(Settings.OnlinePlay)
+                                CmdSpawnObject(3, blockID, position);
+                            else
+                                SpawnObject(3, blockID, position);
+                            
+                        }
+                    }
+                }
                 
                 miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
             }
@@ -1351,6 +1377,17 @@ public class Controller : NetworkBehaviour
         // }
 
         reticle.SetActive(true);
+    }
+
+    private int LookupPlacedBrickSize(string _name)
+    {
+        int returnValue = 12;
+        for(int i = 0; i < currentLDrawPartsListStringArray.Length; i++)
+        {
+            if(_name == currentLDrawPartsListStringArray[i])
+                return craftingComponent.recipes[i].studs; // if name matches list, output matching number of studs
+        }
+        return returnValue;
     }
 
     private void PressedPlaceBlock()
@@ -1827,7 +1864,7 @@ public class Controller : NetworkBehaviour
         movingPlacedBrickUseStoredValues = false;
     }
 
-    public void PutAwayBrick(byte blockID, string _placedBrickName)
+    public void PutAwayBrick(byte _blockID, string _placedBrickName)
     {
         int firstSlot;
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode) // determine first slot
@@ -1844,14 +1881,14 @@ public class Controller : NetworkBehaviour
             else
                 slotsToCheck = gameMenu.GetComponent<DragAndDropHandler>().inventory.inventorySlots;
 
-            if (blockID != 0 && blockID != 1) // if block is not air or barrier block
+            if (_blockID != 0 && _blockID != 1) // if block is not air or barrier block
             {
-                for (int i = firstSlot; i < slotsToCheck.Length; i++) // for all slots in toolbar
+                for (int i = firstSlot; i < slotsToCheck.Length; i++) // for all slots
                 {
                     // FIRST CHECK PLACEDBRICKS
                     if(_placedBrickName != null && _placedBrickName != "")
                     {
-                        if(slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.placedBrickID == _placedBrickName)
+                        if(slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.placedBrickID == _placedBrickName) // matching id
                         {
                             if(slotsToCheck[i].itemSlot.stack.amount < 64)
                             {
@@ -1862,9 +1899,9 @@ public class Controller : NetworkBehaviour
                     }
 
                     // SECOND CHECK VOXELS
-                    if (slotsToCheck[i].itemSlot.stack != null && slotsToCheck[i].itemSlot.stack.id == blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
+                    if (slotsToCheck[i].itemSlot.stack != null && slotsToCheck[i].itemSlot.stack.id == _blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
                     {
-                        if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[blockID].stackMax) // limit stack size to 64 items
+                        if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[_blockID].stackMax) // limit stack size to 64 items
                         {
                             // edit voxel, give to toolbar, play sound
                             slotsToCheck[i].itemSlot.Give(1);
@@ -1873,25 +1910,25 @@ public class Controller : NetworkBehaviour
                     }
                 }
 
-                for (int j = 0; j < slotsToCheck.Length; j++) // for all stacks in toolbar
+                for (int j = 0; j < slotsToCheck.Length; j++) // for all slots
                 {
-                    // // FIRST CHECK PLACED BRICKS
-                    // if(_placedBrickName != null && _placedBrickName != "")
-                    // {
-                    //     if (!toolslotsToCheckbar.slots[j].itemSlot.HasItem) // if there is an empty slot
-                    //     {
-                    //         // insert a new stack with qty 1 of blockID
-                    //         ItemStack stack = new ItemStack(blockID, currentBrickName, 1);
-                    //         slotsToCheck[j].itemSlot.InsertStack(stack);
-                    //         return;
-                    //     }
-                    // }
+                    // FIRST CHECK PLACED BRICKS
+                    if(_placedBrickName != null && _placedBrickName != "")
+                    {
+                        if (!slotsToCheck[j].itemSlot.HasItem) // if there is an empty slot
+                        {
+                            // insert a new stack with qty 1 of blockID
+                            ItemStack stack = new ItemStack(_blockID, _placedBrickName, true, 1);
+                            slotsToCheck[j].itemSlot.InsertStack(stack);
+                            return;
+                        }
+                    }
 
                     //// SECOND CHECK VOXELS
                     if (!slotsToCheck[j].itemSlot.HasItem) // if there is an empty slot
                     {
                         // insert a new stack with qty 1 of blockID and currentBrickName
-                        ItemStack stack = new ItemStack(blockID, _placedBrickName, false, 1);
+                        ItemStack stack = new ItemStack(_blockID, _placedBrickName, false, 1);
                         slotsToCheck[j].itemSlot.InsertStack(stack);
                         return;
                     }
@@ -2116,7 +2153,7 @@ public class Controller : NetworkBehaviour
                     VoxelBc.material = physicMaterial;
                     VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
                     VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items?
-                    VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player?
+                    VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player
                     ob.tag = "voxelRb";
                     sceneObject.controller = this;
                     rb = ob.GetComponent<Rigidbody>();
@@ -2162,7 +2199,17 @@ public class Controller : NetworkBehaviour
                     voxelBitBc.material = physicMaterial;
                     voxelBitBc.center = new Vector3(0, -.047f, 0);
                     voxelBitBc.size = new Vector3(0.5f, 0.3f, 0.5f);
+                    voxelBitBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player
+                    rb = ob.GetComponent<Rigidbody>();
+                    rb.useGravity = false;
+                    rb.isKinematic = false;
+                    VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
+                        vc.isItem = true; // set true to spin object
+                    ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
+                    ob.transform.localScale = new Vector3(1, 1, 1) * 1.0f; // scale
+                    ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
                     ob.tag = "voxelBit";
+                    sceneObject.controller = this;
                     break;
                 }
             case 4: // IF PLACED BRICK DROPPED ITEM

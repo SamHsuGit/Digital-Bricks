@@ -10,6 +10,8 @@ public class Recipe : ScriptableObject
     public byte outputID;
     public string outputPlacedBrickName;
     public int outputQty;
+
+    public int studs;
 }
 
 [System.Serializable]

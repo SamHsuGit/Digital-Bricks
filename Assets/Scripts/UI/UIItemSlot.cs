@@ -52,6 +52,8 @@ public class UIItemSlot : MonoBehaviour
             {
                 if(World.Instance.placedBricks[i].name == itemSlot.stack.placedBrickID) // if itemslot stringname matches a stringname in world list, return index
                     index = i;
+                else if (World.Instance.placedBricks[i].name + ".dat" == itemSlot.stack.placedBrickID)
+                    index = i;
             }
             slotIcon.sprite = World.Instance.placedBricks[index].icon;
             string hexValue = World.Instance.blockTypes[itemSlot.stack.id].colorHexValue;

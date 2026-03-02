@@ -130,37 +130,46 @@ public class SceneObject : NetworkBehaviour
 
     private void OnTriggerEnter(Collider collider) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS (was OnCollisionEnter for Rb)
     {
-        if (gameObject.tag == "voxelRb" && collider.gameObject.tag == "Player") // method used to pick up dropped items
+        if(collider.gameObject.tag != "Player")
+            return;
+        if (gameObject.tag == "voxelRb") // method used to pick up dropped items
         {
             //Debug.Log("collision");
             if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
                 controller.PutAwayBrick((byte)typeVoxel, placedBrickName); // put item into player toolbar
             pickedUp = true;
             Destroy(gameObject);
-
-                //if (collisionsCounter < 4) // only count a few collisions not all
-            //{
-            //    collisionsCounter++;
-            //    if (gameObject.tag == "voxelRb" && controller != null && collisionsCounter > 2) // after a few collisions break into pieces
-            //    {
-            //        Vector3 pos = transform.position;
-            //        if (Settings.OnlinePlay)
-            //        {
-            //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-            //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-            //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-            //            controller.CmdSpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            //        }
-            //        else
-            //        {
-            //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-            //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-            //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-            //            controller.SpawnObject(3, typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            //        }
-            //        Destroy(gameObject);
-            //    }
-            //}
         }
+        else if (gameObject.tag == "voxelBit")
+        {
+            //Debug.Log("collision");
+            placedBrickName = "3024.dat";
+
+            // special case exceptions
+            switch(typeVoxelBit)
+            {
+                case 13: // grass/dirt = green
+                    {
+                        typeVoxelBit = 8;
+                        break;
+                    }
+                case 14: // wood = brown
+                    {
+                        typeVoxelBit = 6;
+                        break;
+                    }
+                case 15: // leaves = green
+                    {
+                        typeVoxelBit = 8;
+                        break;
+                    }
+            }
+
+            if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
+                controller.PutAwayBrick((byte)typeVoxelBit, placedBrickName); // put item into player toolbar
+            pickedUp = true;
+            Destroy(gameObject);
+        }
+        
     }
 }
