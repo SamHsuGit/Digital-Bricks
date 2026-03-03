@@ -127,7 +127,8 @@ public class DragAndDropHandler : MonoBehaviour {
         if(clickedSlot == null)
             return;
 
-        if(cursorSlot.itemSlot.HasItem && !clickedSlot.HasItem) // if right clicked empty slot and holding items
+        // if right clicked empty slot and holding items
+        if(cursorSlot.itemSlot.HasItem && !clickedSlot.HasItem) 
         {
             // drop 1 item into slot and subtract one from stack
             cursorSlot.itemSlot.Take(1);
@@ -136,7 +137,8 @@ public class DragAndDropHandler : MonoBehaviour {
             if(cursorSlot.itemSlot.stack.amount <= 0)
                 cursorSlot.itemSlot.EmptySlot();
         }
-        else if (!cursorSlot.itemSlot.HasItem && clickedSlot.HasItem && clickedSlot.itemSlot.stack.amount > 1) // if right clicked stack of items with more than 1 item
+        // if right clicked stack of items with more than 1 item
+        else if (!cursorSlot.itemSlot.HasItem && clickedSlot.HasItem && clickedSlot.itemSlot.stack.amount > 1)
         {
             int originalAmount = clickedSlot.itemSlot.stack.amount;
             int amount = Mathf.CeilToInt(clickedSlot.itemSlot.stack.amount / 2f); // try and divide by 2
@@ -147,12 +149,13 @@ public class DragAndDropHandler : MonoBehaviour {
             ItemStack newStack = new ItemStack(clickedSlot.itemSlot.stack.id, clickedSlot.itemSlot.stack.placedBrickID, clickedSlot.itemSlot.stack.isPlacedBrick, amount);
             cursorSlot.itemSlot.InsertStack(newStack);
         }
-        else if (cursorSlot.itemSlot.HasItem && clickedSlot.HasItem) // right clicking a slot with item while holding item
+        // right clicking a slot with item while holding item
+        else if (cursorSlot.itemSlot.HasItem && clickedSlot.HasItem)
         {
             ItemStack cursorStack = cursorSlot.itemSlot.stack;
             ItemStack clickedStack = clickedSlot.itemSlot.stack;
-            // try and add one of the blocks to destination slot if blockIDs match, do not do if would put over the maximum
-            if(cursorStack.id == clickedStack.id && clickedStack.amount + 1 <= World.Instance.blockTypes[clickedStack.id].stackMax)
+            // try and add one of the blocks to destination slot if blockIDs and placedBrickIDs match, do not do if would put over the maximum
+            if(cursorStack.id == clickedStack.id && cursorStack.placedBrickID == clickedStack.placedBrickID && clickedStack.amount + 1 <= World.Instance.blockTypes[clickedStack.id].stackMax)
             {
                 cursorSlot.itemSlot.Take(1); // drop off only one item
                 clickedSlot.itemSlot.Give(1);
@@ -169,6 +172,9 @@ public class DragAndDropHandler : MonoBehaviour {
     private void HandleStackQuickMove(UIItemSlot clickedSlot)
     {
         if(clickedSlot == null)
+            return;
+
+        if(!clickedSlot.HasItem)
             return;
 
         // // trigger event that checks crafting slots to convert item (commented out, cannot quick move into crafting slots)
@@ -190,13 +196,15 @@ public class DragAndDropHandler : MonoBehaviour {
         {
             int stackMax = World.Instance.blockTypes[clickedStack.id].stackMax; // cache stack max value
 
-            if(!slotArray[i].itemSlot.HasItem) // if the inventory slot does not have a stack
+            // if the inventory slot does not have a stack
+            if(!slotArray[i].itemSlot.HasItem)
             {
                 slotArray[i].itemSlot.InsertStack(clickedStack); // insert the stack at this position
                 clickedSlot.itemSlot.EmptySlot(); // empty slot
                 return;
             }
-            else if (slotArray[i].itemSlot.stack.id == clickedStack.id) // only if inventory slot id matches clicked slot id
+            // only if blockIDs and placedBrickIDs match
+            else if (slotArray[i].itemSlot.stack.id == clickedStack.id && slotArray[i].itemSlot.stack.placedBrickID == clickedStack.placedBrickID)
             {
                 if(slotArray[i].itemSlot.stack.amount == stackMax) // if # of items already meets stack limit
                 {
@@ -278,7 +286,9 @@ public class DragAndDropHandler : MonoBehaviour {
             //     clickedSlot.itemSlot.InsertStack(oldCursorSlot);
             //     cursorSlot.itemSlot.InsertStack(oldSlot);
             // }
-            if (cursorSlot.itemSlot.stack.id == clickedSlot.itemSlot.stack.id) // if same block id, try and add up items in clicked slot to stack maximum
+
+            // if blockIDs and placedBrickIDs match, then try and add up items in clicked slot to stack maximum
+            if (cursorSlot.itemSlot.stack.id == clickedSlot.itemSlot.stack.id && cursorSlot.itemSlot.stack.placedBrickID == clickedSlot.itemSlot.stack.placedBrickID)
             {
                 int stackMax = World.Instance.blockTypes[clickedSlot.itemSlot.stack.id].stackMax; // cache max stack value for clicked slot
 

@@ -181,7 +181,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 872fb16cb6f9a704094175c5e66ba79f, type: 2}
   placedBricks:
   - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
+  - {fileID: 11400000, guid: d6c3ed8e1592c435281ffca1a304282d, type: 2}
   - {fileID: 11400000, guid: b5acb9489738848e2b83646e3fc81cbd, type: 2}
+  - {fileID: 11400000, guid: 78c89ab927a3d4d8486f71fa7f33488c, type: 2}
   - {fileID: 11400000, guid: b1d566a849d4d48acbd1aef13f785d8a, type: 2}
   voxelPrefabs:
   - {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}

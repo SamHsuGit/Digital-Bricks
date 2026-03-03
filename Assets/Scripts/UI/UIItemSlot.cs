@@ -57,10 +57,9 @@ public class UIItemSlot : MonoBehaviour
             }
             slotIcon.sprite = World.Instance.placedBricks[index].icon;
             string hexValue = World.Instance.blockTypes[itemSlot.stack.id].colorHexValue;
-            float red = float.Parse(hexValue.Substring(0,2));
-            float green = float.Parse(hexValue.Substring(2,2));
-            float blue = float.Parse(hexValue.Substring(4,2));
-            slotIcon.color = new Color32((byte)red, (byte)green, (byte)blue, 255);
+            Color newColor = new Color(255, 255, 255, 255);
+            ColorUtility.TryParseHtmlString(hexValue, out newColor);
+            slotIcon.color = newColor;
             slotAmount.text = itemSlot.stack.amount.ToString();
             slotIcon.enabled = true;
             slotAmount.enabled = true;

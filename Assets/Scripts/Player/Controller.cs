@@ -115,7 +115,7 @@ public class Controller : NetworkBehaviour
     public int[][] allowableDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
         // defines blocks that the given tool can create a drop for
-        new int[] {            6,       9,         13, 14,         17, 18,     20 }, // tool ID 0 = punch (can only mine wood, water, grass, mushroom, flower)
+        new int[] {            6,       9,         13, 14, 15,     17, 18,     20 }, // tool ID 0 = punch (can only mine wood, leaves, water, grass, mushroom, flower)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20 }, // tool ID 2 = stone (cannot mine black or crystal)
         new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 3 = gold (cannot mine black)
@@ -1186,6 +1186,12 @@ public class Controller : NetworkBehaviour
                 currentBrickType = 0; // set as 0 for long list of imported bricks
                 currentBrickIndex = i; // set current brick as the one that matches
             }
+            else if (currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID + ".dat") // in case suffix was omitted
+            {
+                //Debug.Log("found " + currentLDrawPartsListStringArray[i] + " matches " + toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID);
+                currentBrickType = 0; // set as 0 for long list of imported bricks
+                currentBrickIndex = i; // set current brick as the one that matches
+            }
             else
             {
                 // Debug.Log("no matching placedBrickID found for: " + 
@@ -1288,17 +1294,30 @@ public class Controller : NetworkBehaviour
             if(!toolbar.slots[toolbar.slotIndex].HasItem)
             {
                 GameObject hitObject = hit.transform.gameObject;
+                
                 Vector3 pos = hitObject.transform.position;
                 int currentBrickMaterialIndex = GetMaterialIndex(hitObject);
                 //PutAwayBrick((byte)currentBrickMaterialIndex);
-                string placedBrickName = hitObject.GetComponent<SceneObject>().placedBrickName;
-                int dropCount = LookupPlacedBrickSize(placedBrickName);
+
+                string _lookupName;
+                if(hitObject.GetComponent<SceneObject>() != null) // IF VBO
+                {
+                    _lookupName = hitObject.GetComponent<SceneObject>().placedBrickName;
+                    blockID = (byte)hitObject.GetComponent<SceneObject>().typeVoxel;
+                }
+                else // IF PLACED BRICK
+                {
+                    _lookupName = hitObject.name;
+                    blockID = LookupPlacedBrickMaterial(hitObject.GetComponent<MeshRenderer>().material);
+                }
+
+                int dropCount = LookupPlacedBrickSize(_lookupName);
                 for(int i = 0; i < dropCount; i++)
                 {
                     if(Settings.OnlinePlay)
-                        CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, pos);
+                        CmdSpawnObject(3, blockID, pos);
                     else
-                        SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, pos);
+                        SpawnObject(3, blockID, pos);
                     //SpawnVoxelRbFromWorld(hit.transform.position, (byte)currentBrickMaterialIndex);
                 }
                 Destroy(hit.transform.gameObject);
@@ -1319,9 +1338,10 @@ public class Controller : NetworkBehaviour
             //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
             // }
         }
-        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD (NOT HELD) VOXEL (only destroy world in fps camMode)
+        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD/VOXEL (can only destroy world in fps camMode)
         {
-            blockID = World.Instance.GetVoxelState(shootPos.position).id; // need current blockID to test if can mine
+            Vector3 position = shootPos.position;
+            blockID = World.Instance.GetVoxelState(position).id; // need current blockID to test if can mine
 
             canMine = false; // set to true only if block is found in allowable matrix
             for (int i = 0; i < allowableDropMatrix[toolID].Length; i++) // for every block in matrix for given toolID
@@ -1329,9 +1349,6 @@ public class Controller : NetworkBehaviour
                 if (allowableDropMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
                     canMine = true; // allow the next code to mine the block
             }
-
-            Vector3 position = shootPos.position;
-            blockID = World.Instance.GetVoxelState(position).id;
 
             // MINING DELAY
             if(miningCounter >= toolMiningSpeeds[toolID] + World.Instance.blockTypes[blockID].hardness)
@@ -1352,7 +1369,7 @@ public class Controller : NetworkBehaviour
                         SpawnVoxelRbFromWorld(position, blockID); // drop voxel item instead
                     else
                     {
-                        int dropCount = 12; // voxels are comprised of 12 bits
+                        int dropCount = 20; // voxels are comprised of 20 1x1 plates (bits)
                         for(int i = 0; i < dropCount; i++)
                         {
                             if(Settings.OnlinePlay)
@@ -1381,12 +1398,24 @@ public class Controller : NetworkBehaviour
 
     private int LookupPlacedBrickSize(string _name)
     {
-        int returnValue = 12;
-        for(int i = 0; i < currentLDrawPartsListStringArray.Length; i++)
+        int returnValue = 20;
+        for(int i = 0; i < craftingComponent.recipes.Length; i++)
         {
-            if(_name == currentLDrawPartsListStringArray[i])
+            if(_name == craftingComponent.recipes[i].outputPlacedBrickName || _name == craftingComponent.recipes[i].outputPlacedBrickName + ".dat")
                 return craftingComponent.recipes[i].studs; // if name matches list, output matching number of studs
         }
+        return returnValue;
+    }
+
+    private byte LookupPlacedBrickMaterial(Material _mat)
+    {
+        byte returnValue = 3;
+        for(int i = 0; i < brickMaterials.Length; i++)
+        {
+            if(_mat.name == brickMaterials[i].name + " (Instance)") // if matched material then return value as blockID
+                return (byte)i;
+        }
+        Debug.Log("no matching material found for " + _mat.name);
         return returnValue;
     }
 
@@ -1890,7 +1919,7 @@ public class Controller : NetworkBehaviour
                     {
                         if(slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.placedBrickID == _placedBrickName) // matching id
                         {
-                            if(slotsToCheck[i].itemSlot.stack.amount < 64)
+                            if(slotsToCheck[i].itemSlot.stack.amount < 64) // limit stack size. Eventually update to base on World.Instance.placedBricks[].stackMax
                             {
                                 slotsToCheck[i].itemSlot.Give(1);
                                 return;
@@ -1899,9 +1928,9 @@ public class Controller : NetworkBehaviour
                     }
 
                     // SECOND CHECK VOXELS
-                    if (slotsToCheck[i].itemSlot.stack != null && slotsToCheck[i].itemSlot.stack.id == _blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
+                    if (slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.id == _blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
                     {
-                        if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[_blockID].stackMax) // limit stack size to 64 items
+                        if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[_blockID].stackMax)
                         {
                             // edit voxel, give to toolbar, play sound
                             slotsToCheck[i].itemSlot.Give(1);
@@ -2119,8 +2148,28 @@ public class Controller : NetworkBehaviour
     }
 
     // USED TO SPAWN DROPPED ITEMS THAT CAN BE LATER PICKED UP
-    public void SpawnObject(int type, int item, Vector3 pos, GameObject obToSpawn = null)
+    public void SpawnObject(int type, int id, Vector3 pos, GameObject obToSpawn = null)
     {
+        // special case exceptions
+        switch(id)
+        {
+            case 13: // grass/dirt = green
+                {
+                    id = 8;
+                    break;
+                }
+            case 14: // wood = brown
+                {
+                    id = 6;
+                    break;
+                }
+            case 15: // leaves = green
+                {
+                    id = 8;
+                    break;
+                }
+        }
+
         Vector3 spawnDir;
         if (camMode == 1) // first person camera spawn object in direction camera
             spawnDir = playerCamera.transform.up;
@@ -2147,8 +2196,8 @@ public class Controller : NetworkBehaviour
         {
             case 0: // IF VOXEL
                 {
-                    sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                    sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
+                    sceneObject.SetEquippedItem(type, id); // set the child object on the server
+                    sceneObject.typeVoxel = id; // set the SyncVar on the scene object for clients
                     BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                     VoxelBc.material = physicMaterial;
                     VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
@@ -2172,10 +2221,10 @@ public class Controller : NetworkBehaviour
                         sceneObject.projectileString = playerProjectile;
                     else
                         sceneObject.projectile[0] = projectile;
-                    sceneObject.typeProjectile = item; // should be 0 for first item in array
+                    sceneObject.typeProjectile = id; // should be 0 for first item in array
                     if(SettingsStatic.LoadedSettings.projectilesHurt)
                         ob.tag = "Hazard";
-                    sceneObject.SetEquippedItem(type, item); // update the child object on the server
+                    sceneObject.SetEquippedItem(type, id); // update the child object on the server
 
                     // WIP collider is slightly off center for some reason, has to do with LDrawImportRuntime
                     childOb = ob.transform.GetChild(0).gameObject; // get the projectile (clone) object
@@ -2193,8 +2242,8 @@ public class Controller : NetworkBehaviour
                 }
             case 3: // IF VOXEL BIT
                 {
-                    sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                    sceneObject.typeVoxelBit = item;
+                    sceneObject.SetEquippedItem(type, id); // set the child object on the server
+                    sceneObject.typeVoxelBit = id;
                     BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();
                     voxelBitBc.material = physicMaterial;
                     voxelBitBc.center = new Vector3(0, -.047f, 0);
@@ -2215,8 +2264,8 @@ public class Controller : NetworkBehaviour
             case 4: // IF PLACED BRICK DROPPED ITEM
                 {
                     sceneObject.placedBrickName = placedBrickName;
-                    sceneObject.SetEquippedItem(type, item); // set the child object on the server
-                    sceneObject.typeVoxel = item; // set the SyncVar on the scene object for clients
+                    sceneObject.SetEquippedItem(type, id); // set the child object on the server
+                    sceneObject.typeVoxel = id; // set the SyncVar on the scene object for clients
                     sceneObject.placedBrickName = placedBrickName; // set the SyncVar on the scene object for clients
                     BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                     VoxelBc.material = physicMaterial;
@@ -2240,8 +2289,8 @@ public class Controller : NetworkBehaviour
                     if(obToSpawn != null)
                     {
                         sceneObject.undefinedPrefab = new GameObject[] { obToSpawn };
-                        sceneObject.typeUndefinedPrefab = item; // should be 0 for first item in array
-                        sceneObject.SetEquippedItem(type, item); // set the child object on the server
+                        sceneObject.typeUndefinedPrefab = id; // should be 0 for first item in array
+                        sceneObject.SetEquippedItem(type, id); // set the child object on the server
                         ob.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
                         childOb = ob.transform.GetChild(0).gameObject;
                         if(childOb.GetComponent<BoxCollider>() != null)
@@ -2635,8 +2684,8 @@ public class Controller : NetworkBehaviour
     {
         if(inventoryUIMode != 0) // if inventory not hidden and triggered by ESCAPE or E,  hide all inventory UI
             inventoryUIMode = 0;
-        else if(!options && inventoryUIMode == 0) // if not in options and inventory is hidden, show basic inventory
-            inventoryUIMode = 1; // inventory
+        else if(!options && inventoryUIMode == 0) // if not in options and inventory is hidden, show 3x3 crafting inventory
+            inventoryUIMode = 2; // inventory
     }
 
     void Animate()

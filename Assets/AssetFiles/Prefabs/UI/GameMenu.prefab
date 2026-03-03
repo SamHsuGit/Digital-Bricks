@@ -1659,13 +1659,19 @@ MonoBehaviour:
   - {fileID: 2031589112994122132}
   - {fileID: 2707302508234719130}
   recipes:
+  - {fileID: 11400000, guid: 8167a7f41f0384bc28cfd74aca56f134, type: 2}
   - {fileID: 11400000, guid: 712b699783e5d478099a46a7ee157b3c, type: 2}
   - {fileID: 11400000, guid: 950ca446cb79a4233b4455dc23137b09, type: 2}
+  - {fileID: 11400000, guid: 2cbfc6fc2e0ca4d75a09b8dfc35badf5, type: 2}
+  - {fileID: 11400000, guid: 23cd5c3ba72194c8ea81a05c52024b0d, type: 2}
+  - {fileID: 11400000, guid: 08d0d8e79a52c44a1826d4e673d03316, type: 2}
+  - {fileID: 11400000, guid: 64f6a38c0567442e2b95c4272bb86193, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}
   - {fileID: 8981262882479005988}
   - {fileID: 1515134558120941906}
+  craftSlotString: 
 --- !u!1 &1391849460477524182
 GameObject:
   m_ObjectHideFlags: 0

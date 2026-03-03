@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 022 Crafting Table
+  m_Name: 3022 2x2p
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  isPlacedBrick: 0
+  isPlacedBrick: 1
   recipeShapes:
   - is2x2: 0
-    slot1: 6
-    slot2: 6
+    slot1: 3024
+    slot2: 3024
     slot3: 0
-    slot4: 6
-    slot5: 6
+    slot4: 3024
+    slot5: 3024
     slot6: 0
     slot7: 0
     slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
-    slot2: 6
-    slot3: 6
+    slot2: 3024
+    slot3: 3024
     slot4: 0
-    slot5: 6
-    slot6: 6
+    slot5: 3024
+    slot6: 3024
     slot7: 0
     slot8: 0
     slot9: 0
@@ -38,33 +38,23 @@ MonoBehaviour:
     slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 6
-    slot5: 6
+    slot4: 3024
+    slot5: 3024
     slot6: 0
-    slot7: 6
-    slot8: 6
+    slot7: 3024
+    slot8: 3024
     slot9: 0
   - is2x2: 0
     slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
-    slot5: 6
-    slot6: 6
+    slot5: 3024
+    slot6: 3024
     slot7: 0
-    slot8: 6
-    slot9: 6
-  - is2x2: 1
-    slot1: 6
-    slot2: 6
-    slot3: 6
-    slot4: 6
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  outputID: 14
-  outputPlacedBrickName: 
+    slot8: 3024
+    slot9: 3024
+  outputID: 3
+  outputPlacedBrickName: 3022
   outputQty: 1
-  studs: 20
+  studs: 4

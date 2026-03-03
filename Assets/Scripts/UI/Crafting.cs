@@ -23,11 +23,9 @@ public class Crafting : MonoBehaviour
     public UIItemSlot[] craft2x2Slots;
     public UIItemSlot[] craft3x3Slots;
     public Recipe[] recipes;
-
     private UIItemSlot[] slotsToCheck;
-
     public GameObject[] uiMenus;
-
+    public string craftSlotString;
     private void Update()
     {
         // if input slot is not empty, constantly tick conversion of furnace to convert blocks into output slot
@@ -104,13 +102,16 @@ public class Crafting : MonoBehaviour
         byte lastSlotID = 0;
 
         // build an array of block ids that can be compared to the recipeShapes
-        string craftSlotString = "";
+        craftSlotString = ""; // reset every time check slots
         for(int i = 0; i < slotsToCheck.Length; i++)
         {
             if(slotsToCheck[i].itemSlot.HasItem)
             {
                 lastSlotID = slotsToCheck[i].itemSlot.stack.id;
-                craftSlotString += slotsToCheck[i].itemSlot.stack.id + ",";
+                if(slotsToCheck[i].itemSlot.stack.placedBrickID != "")
+                    craftSlotString += slotsToCheck[i].itemSlot.stack.placedBrickID + ",";
+                else
+                    craftSlotString += slotsToCheck[i].itemSlot.stack.id + ",";
                 craftingSlotsEmpty = false;
             }
             else
@@ -140,7 +141,7 @@ public class Crafting : MonoBehaviour
         foreach (Recipe recipe in recipes)
         {
             // cannot craft placedbricks if the colors do not all match
-            if(nonmatchingcolors && recipe.isPlacedBrick)
+            if(recipe.isPlacedBrick && nonmatchingcolors)
                 continue;
             
             foreach (RecipeShape shape in recipe.recipeShapes)
@@ -170,27 +171,42 @@ public class Crafting : MonoBehaviour
                     };
                 string recipeString = string.Join(",", slots) + ",";
 
-                // if(!nonmatchingcolors && recipe.colorless) // if colors all match, change colorless recipes to match color of crafting slots to find match
-                // {
-                //     recipeString.Replace("1",color.ToString());
-                //     recipe.outputID = 0;
-                // }
+                // if colors all match, allow placed bricks to adapt to any color
+                if(recipe.isPlacedBrick && !nonmatchingcolors)
+                {
+                    recipeString.Replace("1",color.ToString());
+                    recipe.outputID = color;
+                }
 
                 //Debug.Log(recipeString);
                 if(craftSlotString == recipeString) // if match is found exit the loop
                 {
                     byte outputID;
-                    if(recipe.isPlacedBrick) // placedbricks take the color of the last placed brick
-                        outputID = lastSlotID;
-                    else
+                    if(recipe.isPlacedBrick || recipe.outputPlacedBrickName == "0") // placedbricks
+                        outputID = color;
+                    else // regular voxel recipe
                         outputID = recipe.outputID;
-                    //Debug.Log(craftSlotString + " matches " + recipeString);
-                    PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty); // output the crafting recipe output item and qty
-                    // bug where recipes not crafting correct item
+                    //Debug.Log("MATCH FOUND! " + craftSlotString + " matches " + recipeString);
+
+                    // simple check if crafting voxel again, overrides other crafting checks below
+                    if(recipe.outputPlacedBrickName == "0")
+                    {
+                        Debug.Log(outputID);
+                        PutInOutputSlot(outputID, "", false, recipe.outputQty); // force slot to turn into voxel by setting isPlacedBrick flag to false
+                        return;
+                    }
+
+                    // give output block but do some checks first
+                    if(!recipe.isPlacedBrick) // if normal crafting recipe
+                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
+                    else if (!nonmatchingcolors) // if is a placed brick and colors all match can give an output block
+                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
                     return;
                 }
             }
         }
+
+        outputSlot.itemSlot.EmptySlot(); // if made it here, no matching crafting recipe so empty the output slot
     }
 
     public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)

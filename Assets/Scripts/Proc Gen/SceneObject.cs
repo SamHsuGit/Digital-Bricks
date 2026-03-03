@@ -143,27 +143,7 @@ public class SceneObject : NetworkBehaviour
         else if (gameObject.tag == "voxelBit")
         {
             //Debug.Log("collision");
-            placedBrickName = "3024.dat";
-
-            // special case exceptions
-            switch(typeVoxelBit)
-            {
-                case 13: // grass/dirt = green
-                    {
-                        typeVoxelBit = 8;
-                        break;
-                    }
-                case 14: // wood = brown
-                    {
-                        typeVoxelBit = 6;
-                        break;
-                    }
-                case 15: // leaves = green
-                    {
-                        typeVoxelBit = 8;
-                        break;
-                    }
-            }
+            placedBrickName = "3024";
 
             if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
                 controller.PutAwayBrick((byte)typeVoxelBit, placedBrickName); // put item into player toolbar
