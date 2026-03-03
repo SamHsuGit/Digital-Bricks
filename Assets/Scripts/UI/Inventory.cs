@@ -13,6 +13,11 @@ public class Inventory : MonoBehaviour
 
     private void Start()
     {
+        
+    }
+
+    public void InitSlots() // moved to controller to ensure toolbar and inventory have slots initialized
+    {
         for (int i = 0; i < inventorySlots.Length; i++) // create inventory linked item slots
         {
             ItemSlot slot = new ItemSlot(inventorySlots[i].gameObject.GetComponent<UIItemSlot>()); // create a data driven ItemSlot for each slot

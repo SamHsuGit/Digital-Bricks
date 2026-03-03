@@ -359,6 +359,12 @@ public class Controller : NetworkBehaviour
                 camMode = SettingsStatic.LoadedSettings.camMode;
             }
         }
+        toolbar.InitSlots();
+        dragAndDropHandler.inventory.InitSlots();
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode || World.Instance.worldData.creativeMode)
+            toolbar.EmptyAllSlots();
+        else if(!Settings.WebGL)
+            toolbar.SetInventoryFromSave();
     }
 
     private string[] LoadBrickTypeFilenames()
@@ -1365,20 +1371,20 @@ public class Controller : NetworkBehaviour
                 //PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
                 if(canMine)
                 {
-                    if(blockID > 15) // special non solid color voxels
-                        SpawnVoxelRbFromWorld(position, blockID); // drop voxel item instead
-                    else
-                    {
-                        int dropCount = 20; // voxels are comprised of 20 1x1 plates (bits)
-                        for(int i = 0; i < dropCount; i++)
-                        {
-                            if(Settings.OnlinePlay)
-                                CmdSpawnObject(3, blockID, position);
-                            else
-                                SpawnObject(3, blockID, position);
+                    //if(blockID > 15) // special non solid color voxels
+                        SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
+                    // else
+                    // {
+                    //     int dropCount = 20; // voxels are comprised of 20 1x1 plates (bits)
+                    //     for(int i = 0; i < dropCount; i++)
+                    //     {
+                    //         if(Settings.OnlinePlay)
+                    //             CmdSpawnObject(3, blockID, position);
+                    //         else
+                    //             SpawnObject(3, blockID, position);
                             
-                        }
-                    }
+                    //     }
+                    // }
                 }
                 
                 miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
@@ -2149,27 +2155,7 @@ public class Controller : NetworkBehaviour
 
     // USED TO SPAWN DROPPED ITEMS THAT CAN BE LATER PICKED UP
     public void SpawnObject(int type, int id, Vector3 pos, GameObject obToSpawn = null)
-    {
-        // special case exceptions
-        switch(id)
-        {
-            case 13: // grass/dirt = green
-                {
-                    id = 8;
-                    break;
-                }
-            case 14: // wood = brown
-                {
-                    id = 6;
-                    break;
-                }
-            case 15: // leaves = green
-                {
-                    id = 8;
-                    break;
-                }
-        }
-
+    {   
         Vector3 spawnDir;
         if (camMode == 1) // first person camera spawn object in direction camera
             spawnDir = playerCamera.transform.up;
@@ -2242,6 +2228,25 @@ public class Controller : NetworkBehaviour
                 }
             case 3: // IF VOXEL BIT
                 {
+                    // special case exceptions
+                    switch(id)
+                    {
+                        case 13: // grass/dirt = green
+                            {
+                                id = 8;
+                                break;
+                            }
+                        case 14: // wood = brown
+                            {
+                                id = 6;
+                                break;
+                            }
+                        case 15: // leaves = green
+                            {
+                                id = 8;
+                                break;
+                            }
+                    }
                     sceneObject.SetEquippedItem(type, id); // set the child object on the server
                     sceneObject.typeVoxelBit = id;
                     BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();

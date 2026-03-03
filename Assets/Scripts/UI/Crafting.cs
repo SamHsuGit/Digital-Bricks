@@ -126,14 +126,20 @@ public class Crafting : MonoBehaviour
         bool nonmatchingcolors = false;
         byte color = 0;
         byte prevColor = 0;
+        int slotsWithItemsCount = 0;
         for(int i = 0; i < slotsToCheck.Length; i++)
         {
             if(slotsToCheck[i].HasItem)
+            {
                 color = slotsToCheck[i].itemSlot.stack.id;
+                slotsWithItemsCount++;
+            }
             if(color != prevColor && prevColor != 0 && color != 0)
                 nonmatchingcolors = true;
             prevColor = color;
         }
+        if(slotsWithItemsCount < 2) // if 0 or 1 items in all crafting slots, then nonmatching colors cannot be true
+            nonmatchingcolors = false;
         // if(nonmatchingcolors)
         //     Debug.Log("nonmatchingcolors = true");
 
@@ -174,10 +180,12 @@ public class Crafting : MonoBehaviour
                 // if colors all match, allow placed bricks to adapt to any color
                 if(recipe.isPlacedBrick && !nonmatchingcolors)
                 {
-                    recipeString.Replace("1",color.ToString());
+                    color = CheckColorOverrides(color);
+                    recipeString = recipeString.Replace("1",color.ToString());
+                    //Debug.Log(recipeString);
                     recipe.outputID = color;
+                    //Debug.Log("replaced placedBrick values with " + color.ToString());
                 }
-
                 //Debug.Log(recipeString);
                 if(craftSlotString == recipeString) // if match is found exit the loop
                 {
@@ -207,6 +215,26 @@ public class Crafting : MonoBehaviour
         }
 
         outputSlot.itemSlot.EmptySlot(); // if made it here, no matching crafting recipe so empty the output slot
+    }
+
+    private byte CheckColorOverrides(byte _blockID)
+    {
+        switch(_blockID)
+        {
+            case 13:
+                {
+                    return 8;
+                }
+            case 14:
+                {
+                    return 6;
+                }
+            case 15:
+                {
+                    return 8;
+                }
+        }
+        return _blockID;
     }
 
     public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)

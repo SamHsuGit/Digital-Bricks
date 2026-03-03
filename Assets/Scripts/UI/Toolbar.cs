@@ -17,12 +17,6 @@ public class Toolbar : MonoBehaviour
 
     private void Awake()
     {
-        for (byte i = 2; i < 11; i++)
-        {
-            UIItemSlot s = slots[i - 2];
-            ItemSlot slot = new ItemSlot(s, null);
-        }
-
         optionsMenuCanvasGroup = optionsMenu.GetComponent<CanvasGroup>();
         inputHandler = player.GetComponent<InputHandler>();
         controller = player.GetComponent<Controller>();
@@ -30,13 +24,22 @@ public class Toolbar : MonoBehaviour
 
     private void Start()
     {
-        if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode || World.Instance.worldData.creativeMode)
-            EmptyAllSlots();
-        else if (!Settings.WebGL)
-            SetInventoryFromSave();
+        // if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode || World.Instance.worldData.creativeMode)
+        //     EmptyAllSlots();
+        // else if (!Settings.WebGL)
+        //     SetInventoryFromSave();
     }
 
-    private void EmptyAllSlots()
+    public void InitSlots()
+    {
+        for (byte i = 2; i < 11; i++)
+        {
+            UIItemSlot s = slots[i - 2];
+            ItemSlot slot = new ItemSlot(s, null);
+        }
+    }
+
+    public void EmptyAllSlots()
     {
         for(int i = 0; i < controller.toolbar.slots.Length; i++)
         {
@@ -55,7 +58,7 @@ public class Toolbar : MonoBehaviour
         controller.toolbar.slots[0].itemSlot.InsertStack(creativeStack);
     }
 
-    private void SetInventoryFromSave() // moved from player to Toolbar to ensure the slots exist before trying to set inventory from save
+    public void SetInventoryFromSave() // moved from player to Toolbar to ensure the slots exist before trying to set inventory from save
     {
         int[] playerStats;
         if (Settings.Platform != 2)
@@ -63,34 +66,58 @@ public class Toolbar : MonoBehaviour
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(player);
 
-        // Set player inventory
-        for (int i = 4; i < 22; i += 2)
+        for (int i = 4; i < 22; i += 2) // SET TOOLBAR SLOTS
         {
             int slotIndex = (i - 4) / 2;
             UIItemSlot slot = controller.toolbar.slots[slotIndex];
             int blockID = playerStats[i];
             int qty = playerStats[i + 1];
 
-            if (blockID != 0)
+            if(qty == 0)
+                continue; // do not store any voxels or placed bricks for qty 0
+
+            ItemStack stack = new ItemStack(0, "", false, 0);
+            if (blockID != 0) // VOXEL
             {
-                ItemStack stack = new ItemStack((byte)blockID, creativePlacedBlockID, false, qty);
-                if (slot.itemSlot.HasItem)
-                    slot.itemSlot.EmptySlot();
-                slot.itemSlot.InsertStack(stack);
+                stack = new ItemStack((byte)blockID, creativePlacedBlockID, false, qty);
 
                 // for creative slot, set slot index to saved blockID
                 if (slotIndex == 0)
                     creativeBlockID = (byte)blockID; // set creative slot to saved value
             }
-            else
+            else if (blockID == 0) // PLACEDBRICK
+                stack = new ItemStack(0, blockID.ToString(), true, qty);
+
+            if (slot.itemSlot.HasItem)
+                    slot.itemSlot.EmptySlot();
+                slot.itemSlot.InsertStack(stack);
+            
+            if (SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && blockID < 2) // for creative mode and slot and blockID < 2
             {
-                // for creative mode and slot and blockID < 2
-                if (SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && blockID < 2)
-                {
-                    // if no saved blockID, then set creative slot to blockID 2
-                    ResetCreativeSlot();
-                }
+                // if no saved blockID, then set creative slot to blockID 2
+                ResetCreativeSlot();
             }
+        }
+
+        for(int i = 22; i < 49; i+=2) // SET INVENTORY SLOTS
+        {
+            int slotIndex = (i - 22) / 2;
+            UIItemSlot slot = controller.dragAndDropHandler.inventory.inventorySlots[slotIndex];
+            int blockID = playerStats[i];
+            int qty = playerStats[i + 1];
+
+            if(qty == 0)
+                continue; // do not store any voxels or placed bricks for qty 0
+
+            ItemStack stack = new ItemStack(0, "", false, 0);
+            if(blockID != 0) // VOXEL
+                stack = new ItemStack((byte)blockID, "", false, qty);
+            else if (blockID == 0) // PLACEDBRICK
+                stack = new ItemStack(0, blockID.ToString(), true, qty);
+
+            if(slot.itemSlot.HasItem)
+                    slot.itemSlot.EmptySlot();
+                slot.itemSlot.InsertStack(stack);
         }
     }
 

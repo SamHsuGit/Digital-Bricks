@@ -32,6 +32,10 @@ public static class SaveSystem
         formatter.Serialize(stream, worldData);
         stream.Close();
 
+ 
+        // Error when trying to do this multithreaded
+        // Thread playerDataThread = new Thread(() => SavePlayerStats(world, savePath));
+        // playerDataThread.Start();
         SavePlayerStats(world, savePath);
 
         // Sharing Violation Error caused by multiple threads accessing same chunk file?
@@ -74,34 +78,126 @@ public static class SaveSystem
             Mathf.FloorToInt(playerGameObject.transform.position.y + 1), // add 1 unit to ensure player is not inside ground
             Mathf.FloorToInt(playerGameObject.transform.position.z),
             Mathf.FloorToInt(playerGameObject.GetComponent<Health>().hp),
-            0, // slot 1 blockID (CREATIVE SLOT)
+            1, // slot 1 blockID (CREATIVE SLOT)
             0, // slot 1 qty (CREATIVE SLOT)
-            0, // slot 2 blockID
+            1, // slot 2 blockID
             0, // slot 2 qty
-            0, // slot 3 blockID
+            1, // slot 3 blockID
             0, // slot 3 qty
-            0, // slot 4 blockID
+            1, // slot 4 blockID
             0, // slot 4 qty
-            0, // slot 5 blockID
+            1, // slot 5 blockID
             0, // slot 5 qty
-            0, // slot 6 blockID
+            1, // slot 6 blockID
             0, // slot 6 qty
-            0, // slot 7 blockID
+            1, // slot 7 blockID
             0, // slot 7 qty
-            0, // slot 8 blockID
+            1, // slot 8 blockID
             0, // slot 8 qty
-            0, // slot 9 blockID
+            1, // slot 9 blockID
             0, // slot 9 qty
+            1, // inventory slot 01 blockID
+            0, // inventory slot 01 qty
+            1, // inventory slot 02 blockID
+            0, // inventory slot 02 qty
+            1, // inventory slot 03 blockID
+            0, // inventory slot 03 qty
+            1, // inventory slot 04 blockID
+            0, // inventory slot 04 qty
+            1, // inventory slot 05 blockID
+            0, // inventory slot 05 qty
+            1, // inventory slot 06 blockID
+            0, // inventory slot 06 qty
+            1, // inventory slot 07 blockID
+            0, // inventory slot 07 qty
+            1, // inventory slot 08 blockID
+            0, // inventory slot 08 qty
+            1, // inventory slot 09 blockID
+            0, // inventory slot 09 qty
+            1, // inventory slot 10 blockID
+            0, // inventory slot 10 qty
+            1, // inventory slot 11 blockID
+            0, // inventory slot 11 qty
+            1, // inventory slot 12 blockID
+            0, // inventory slot 12 qty
+            1, // inventory slot 13 blockID
+            0, // inventory slot 13 qty
+            1, // inventory slot 14 blockID
+            0, // inventory slot 14 qty
+            1, // inventory slot 15 blockID
+            0, // inventory slot 15 qty
+            1, // inventory slot 16 blockID
+            0, // inventory slot 16 qty
+            1, // inventory slot 17 blockID
+            0, // inventory slot 17 qty
+            1, // inventory slot 18 blockID
+            0, // inventory slot 18 qty
+            1, // inventory slot 19 blockID
+            0, // inventory slot 19 qty
+            1, // inventory slot 20 blockID
+            0, // inventory slot 20 qty
+            1, // inventory slot 21 blockID
+            0, // inventory slot 21 qty
+            1, // inventory slot 22 blockID
+            0, // inventory slot 22 qty
+            1, // inventory slot 23 blockID
+            0, // inventory slot 23 qty
+            1, // inventory slot 24 blockID
+            0, // inventory slot 24 qty
+            1, // inventory slot 25 blockID
+            0, // inventory slot 25 qty
+            1, // inventory slot 26 blockID
+            0, // inventory slot 26 qty
+            1, // inventory slot 27 blockID
+            0, // inventory slot 27 qty
         };
         if(playerGameObject != World.Instance.worldPlayer.gameObject) // do not save player stats for world player
         {
+            Controller controller = playerGameObject.GetComponent<Controller>();
+            Inventory inventory = controller.dragAndDropHandler.inventory;
             // overwrite zero place holders with values from player toolbar if not in creative mode
-            for (int i = 4; i < 22; i += 2)
+            for (int i = 4; i < 22; i += 2) // for toolbar slots
             {
-                if (!SettingsStatic.LoadedSettings.developerMode && playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
+                if (!SettingsStatic.LoadedSettings.developerMode && controller.toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
                 {
-                    playerStats[i] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.id;
-                    playerStats[i + 1] = playerGameObject.GetComponent<Controller>().toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
+                    byte _blockID = controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.id;
+                    if(_blockID != 0) // VOXEL
+                        playerStats[i] = _blockID;
+                    else // PLACEDBRICK
+                    {
+                        int x = 0;
+                        if(Int32.TryParse(controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.placedBrickID, out x))
+                        {
+                            // parsing was successful
+                            Debug.Log(x);
+                        }
+                        playerStats[i] = x;
+                    }
+                    playerStats[i + 1] = controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
+                }
+                else
+                {
+                    playerStats[i] = 0;
+                    playerStats[i + 1] = 0;
+                }
+            }
+            for(int i = 22; i < 49; i+=2) // for Inventory slots
+            {
+                if(inventory.inventorySlots[(i - 22) / 2].itemSlot.HasItem)
+                {
+                    byte _blockID = inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.id;
+                    if(_blockID != 0) // VOXEL
+                        playerStats[i] = _blockID;
+                    else // PLACEDBRICK
+                    {
+                        int x = 0;
+                        if(Int32.TryParse(inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.placedBrickID, out x))
+                        {
+                            // parsing was successful
+                        }
+                        playerStats[i] = x;
+                    }
+                    playerStats[i + 1] = inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.amount;
                 }
                 else
                 {
@@ -141,28 +237,82 @@ public static class SaveSystem
         //Debug.Log(loadPath + playerName + ".playerStats" + " not found. Creating.");
         int[] stats = new int[]
         {
-                Mathf.FloorToInt(Settings.DefaultSpawnPosition.x),
-                Mathf.FloorToInt(Settings.DefaultSpawnPosition.y),
-                Mathf.FloorToInt(Settings.DefaultSpawnPosition.x),
-                hpMax,
-                0, // slot 1 blockID (CREATIVE SLOT)
-                0, // slot 1 qty (CREATIVE SLOT)
-                0, // slot 2 blockID
-                0, // slot 2 qty
-                0, // slot 3 blockID
-                0, // slot 3 qty
-                0, // slot 4 blockID
-                0, // slot 4 qty
-                0, // slot 5 blockID
-                0, // slot 5 qty
-                0, // slot 6 blockID
-                0, // slot 6 qty
-                0, // slot 7 blockID
-                0, // slot 7 qty
-                0, // slot 8 blockID
-                0, // slot 8 qty
-                0, // slot 9 blockID
-                0, // slot 9 qty
+            Mathf.FloorToInt(Settings.DefaultSpawnPosition.x),
+            Mathf.FloorToInt(Settings.DefaultSpawnPosition.y),
+            Mathf.FloorToInt(Settings.DefaultSpawnPosition.x),
+            hpMax,
+            1, // slot 1 blockID (CREATIVE SLOT)
+            0, // slot 1 qty (CREATIVE SLOT)
+            1, // slot 2 blockID
+            0, // slot 2 qty
+            1, // slot 3 blockID
+            0, // slot 3 qty
+            1, // slot 4 blockID
+            0, // slot 4 qty
+            1, // slot 5 blockID
+            0, // slot 5 qty
+            1, // slot 6 blockID
+            0, // slot 6 qty
+            1, // slot 7 blockID
+            0, // slot 7 qty
+            1, // slot 8 blockID
+            0, // slot 8 qty
+            1, // slot 9 blockID
+            0, // slot 9 qty
+            1, // inventory slot 01 blockID
+            0, // inventory slot 01 qty
+            1, // inventory slot 02 blockID
+            0, // inventory slot 02 qty
+            1, // inventory slot 03 blockID
+            0, // inventory slot 03 qty
+            1, // inventory slot 04 blockID
+            0, // inventory slot 04 qty
+            1, // inventory slot 05 blockID
+            0, // inventory slot 05 qty
+            1, // inventory slot 06 blockID
+            0, // inventory slot 06 qty
+            1, // inventory slot 07 blockID
+            0, // inventory slot 07 qty
+            1, // inventory slot 08 blockID
+            0, // inventory slot 08 qty
+            1, // inventory slot 09 blockID
+            0, // inventory slot 09 qty
+            1, // inventory slot 10 blockID
+            0, // inventory slot 10 qty
+            1, // inventory slot 11 blockID
+            0, // inventory slot 11 qty
+            1, // inventory slot 12 blockID
+            0, // inventory slot 12 qty
+            1, // inventory slot 13 blockID
+            0, // inventory slot 13 qty
+            1, // inventory slot 14 blockID
+            0, // inventory slot 14 qty
+            1, // inventory slot 15 blockID
+            0, // inventory slot 15 qty
+            1, // inventory slot 16 blockID
+            0, // inventory slot 16 qty
+            1, // inventory slot 17 blockID
+            0, // inventory slot 17 qty
+            1, // inventory slot 18 blockID
+            0, // inventory slot 18 qty
+            1, // inventory slot 19 blockID
+            0, // inventory slot 19 qty
+            1, // inventory slot 20 blockID
+            0, // inventory slot 20 qty
+            1, // inventory slot 21 blockID
+            0, // inventory slot 21 qty
+            1, // inventory slot 22 blockID
+            0, // inventory slot 22 qty
+            1, // inventory slot 23 blockID
+            0, // inventory slot 23 qty
+            1, // inventory slot 24 blockID
+            0, // inventory slot 24 qty
+            1, // inventory slot 25 blockID
+            0, // inventory slot 25 qty
+            1, // inventory slot 26 blockID
+            0, // inventory slot 26 qty
+            1, // inventory slot 27 blockID
+            0, // inventory slot 27 qty
         };
         return stats;
     }
@@ -345,3 +495,38 @@ public static class SaveSystem
         return strArray;
     }
 }
+
+// public class PlayerStats // not used, instead used serialized int array to represent byte id of block and qty for each inventory and toolbar slot
+// {
+//     int hp;
+//     Vector3 position;
+//     ItemStack[] inventoryStacks;
+//     ItemStack[] toolbarStacks;
+
+//     public PlayerStats(GameObject _playerGameObject) // default constructor
+//     {
+//         Controller controller = _playerGameObject.GetComponent<Controller>();
+//         UIItemSlot[] inventorySlots = controller.dragAndDropHandler.inventory;
+//         UIItemSlot[] toolbarSlots = controller.toolbar.slots;
+//         int inventorySlotsSize = inventorySlots.Length;
+//         int toolbarSlotsSize = toolbarSlots.Length;
+
+//         // Init values
+//         hp = _playerGameObject.GetComponent<Health>().hp;
+//         position = _playerGameObject.transform.position;
+//         for(int i = 0; i < inventorySlotsSize; i++)
+//         {
+//             if(inventorySlots[i].HasItem)
+//                 inventoryStacks[i] = inventorySlots[i].stack;
+//             else
+//                 inventoryStacks[i] = new ItemStack(0, "", false, 0);
+//         }
+//         for(int i = 0; i < toolbarSlotsSize; i++)
+//         {
+//             if(toolbarSlots[i].HasItem)
+//                 toolbarStacks[i] = toolbarSlots[i];
+//             else
+//                 toolbarStacks[i] = new ItemStack(0, "", false, 0);
+//         }
+//     }
+// }

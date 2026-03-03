@@ -166,6 +166,9 @@ public class GameMenu : MonoBehaviour
         optionsMenuCanvasGroup.interactable = true;
         PlanetSeedWorldCoordText.text = "Seed: " + SettingsStatic.LoadedSettings.worldCoord;
 
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         controller.RequestSaveWorld();
     }
 
