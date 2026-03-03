@@ -108,8 +108,8 @@ public class Crafting : MonoBehaviour
             if(slotsToCheck[i].itemSlot.HasItem)
             {
                 lastSlotID = slotsToCheck[i].itemSlot.stack.id;
-                if(slotsToCheck[i].itemSlot.stack.placedBrickID != "")
-                    craftSlotString += slotsToCheck[i].itemSlot.stack.placedBrickID + ",";
+                if(slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() != "")
+                    craftSlotString += slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() + ",";
                 else
                     craftSlotString += slotsToCheck[i].itemSlot.stack.id + ",";
                 craftingSlotsEmpty = false;
@@ -190,17 +190,17 @@ public class Crafting : MonoBehaviour
                 if(craftSlotString == recipeString) // if match is found exit the loop
                 {
                     byte outputID;
-                    if(recipe.isPlacedBrick || recipe.outputPlacedBrickName == "0") // placedbricks
+                    if(recipe.isPlacedBrick || recipe.outputPlacedBrickName == 0) // placedbricks
                         outputID = color;
                     else // regular voxel recipe
                         outputID = recipe.outputID;
                     //Debug.Log("MATCH FOUND! " + craftSlotString + " matches " + recipeString);
 
                     // simple check if crafting voxel again, overrides other crafting checks below
-                    if(recipe.outputPlacedBrickName == "0")
+                    if(recipe.outputPlacedBrickName == 0)
                     {
                         Debug.Log(outputID);
-                        PutInOutputSlot(outputID, "", false, recipe.outputQty); // force slot to turn into voxel by setting isPlacedBrick flag to false
+                        PutInOutputSlot(outputID, 0, false, recipe.outputQty); // force slot to turn into voxel by setting isPlacedBrick flag to false
                         return;
                     }
 
@@ -237,7 +237,7 @@ public class Crafting : MonoBehaviour
         return _blockID;
     }
 
-    public void PutInOutputSlot(byte _stackID, string _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)
+    public void PutInOutputSlot(byte _stackID, int _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)
     {
         ItemStack stack = new ItemStack(_stackID, _stackPlacedBrickID, _isPlacedBrick, _stackQty);
         //Debug.Log("_stackPlacedBrickID = " + _stackPlacedBrickID);

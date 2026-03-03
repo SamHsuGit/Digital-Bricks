@@ -3,6 +3,7 @@ using LDraw;
 using Mirror;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -18,7 +19,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
     [SyncVar(hook = nameof(SetCurrentBrickType))] public int currentBrickType;
     [SyncVar(hook = nameof(SetCurrentBrickIndex))] public int currentBrickIndex;
-    [SyncVar(hook = nameof(SetCurrentBrickName))] public string placedBrickName;
+    [SyncVar(hook = nameof(SetCurrentBrickName))] public int placedBrickName;
     [SyncVar(hook = nameof(SetCurrentBrickMaterialIndex))] public int currentBrickMaterialIndex;
     [SyncVar(hook = nameof(SetCurrentBrickRotation))] public int currentBrickRotation;
 
@@ -504,15 +505,24 @@ public class Controller : NetworkBehaviour
             float roty = float.Parse(strs[5]);
             float rotz = float.Parse(strs[6]);
             float rotw = float.Parse(strs[7]);
-            string partname = strs[8];
-            Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
+            string partName = strs[8];
+            partName = partName.Substring(0,partName.IndexOf("."));
+            int x = 0;
+            if(Int32.TryParse(partName, out x))
+            {
+                // sucessfully parsed
+            
+                Quaternion rot = new Quaternion(rotx, roty, rotz, rotw);
 
-            string commandstring = "1 " + color + " 0.000000 0.000000 0.000000" + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
+                string commandstring = "1 " + color + " 0.000000 0.000000 0.000000" + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partName;
 
-            if (Settings.OnlinePlay && hasAuthority)
-                CmdPlaceBrick(true, partname, commandstring, color, pos, rot);
+                if (Settings.OnlinePlay && hasAuthority)
+                    CmdPlaceBrick(true, x, commandstring, color, pos, rot);
+                else
+                    PlaceBrick(true, x, commandstring, color, pos, rot);
+            }
             else
-                PlaceBrick(true, partname, commandstring, color, pos, rot);
+                Debug.Log("Parse failed");
         }
     }
 
@@ -737,7 +747,7 @@ public class Controller : NetworkBehaviour
         currentBrickIndex = newValue;
     }
 
-    public void SetCurrentBrickName(string oldValue, string newValue)
+    public void SetCurrentBrickName(int oldValue, int newValue)
     {
         placedBrickName = newValue;
     }
@@ -1186,13 +1196,13 @@ public class Controller : NetworkBehaviour
         {
             //Debug.Log("checking match for " + currentLDrawPartsListStringArray[i]);
             //Debug.Log("checking if " + currentLDrawPartsListStringArray[i] + " matches " + toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID);
-            if(currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID)
+            if(currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID.ToString())
             {
                 //Debug.Log("found " + currentLDrawPartsListStringArray[i] + " matches " + toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID);
                 currentBrickType = 0; // set as 0 for long list of imported bricks
                 currentBrickIndex = i; // set current brick as the one that matches
             }
-            else if (currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID + ".dat") // in case suffix was omitted
+            else if (currentLDrawPartsListStringArray[i] == toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID.ToString() + ".dat") // in case suffix was omitted
             {
                 //Debug.Log("found " + currentLDrawPartsListStringArray[i] + " matches " + toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID);
                 currentBrickType = 0; // set as 0 for long list of imported bricks
@@ -1305,7 +1315,7 @@ public class Controller : NetworkBehaviour
                 int currentBrickMaterialIndex = GetMaterialIndex(hitObject);
                 //PutAwayBrick((byte)currentBrickMaterialIndex);
 
-                string _lookupName;
+                int _lookupName;
                 if(hitObject.GetComponent<SceneObject>() != null) // IF VBO
                 {
                     _lookupName = hitObject.GetComponent<SceneObject>().placedBrickName;
@@ -1313,7 +1323,7 @@ public class Controller : NetworkBehaviour
                 }
                 else // IF PLACED BRICK
                 {
-                    _lookupName = hitObject.name;
+                    _lookupName = Int32.Parse(hitObject.name);
                     blockID = LookupPlacedBrickMaterial(hitObject.GetComponent<MeshRenderer>().material);
                 }
 
@@ -1402,12 +1412,12 @@ public class Controller : NetworkBehaviour
         reticle.SetActive(true);
     }
 
-    private int LookupPlacedBrickSize(string _name)
+    private int LookupPlacedBrickSize(int _name)
     {
         int returnValue = 20;
         for(int i = 0; i < craftingComponent.recipes.Length; i++)
         {
-            if(_name == craftingComponent.recipes[i].outputPlacedBrickName || _name == craftingComponent.recipes[i].outputPlacedBrickName + ".dat")
+            if(_name.ToString() == craftingComponent.recipes[i].outputPlacedBrickName.ToString() || _name.ToString() == craftingComponent.recipes[i].outputPlacedBrickName.ToString() + ".dat")
                 return craftingComponent.recipes[i].studs; // if name matches list, output matching number of studs
         }
         return returnValue;
@@ -1534,14 +1544,21 @@ public class Controller : NetworkBehaviour
         string h = "0.000000";
         string i = "1.000000";
 
-        string partname = ldrawPartsTypes[currentBrickType][currentBrickIndex];
-        Vector3 pos = new Vector3(0, 1, 0);
-        string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partname;
+        string partName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+        int partNameInt = 0;
+        if(Int32.TryParse(partName.Substring(0, partName.IndexOf(".")), out partNameInt))
+        {
+            Vector3 pos = new Vector3(0, 1, 0);
+            string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partName;
 
-        if(!Settings.OnlinePlay || (Settings.OnlinePlay && holdingBuild) || (Settings.OnlinePlay && holdingGrab)) // if online and holding build or use, only spawn local temp brick, not on server
-            PlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
-        else if (Settings.OnlinePlay && hasAuthority)
-            CmdPlaceBrick(false, partname, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material (HOST SPAWNS OBJECT ON CLIENT MACHINES)
+            if(!Settings.OnlinePlay || (Settings.OnlinePlay && holdingBuild) || (Settings.OnlinePlay && holdingGrab)) // if online and holding build or use, only spawn local temp brick, not on server
+                PlaceBrick(false, partNameInt, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material
+            else if (Settings.OnlinePlay && hasAuthority)
+                CmdPlaceBrick(false, partNameInt, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material (HOST SPAWNS OBJECT ON CLIENT MACHINES)
+        }
+        else
+            Debug.Log("Failed to parse " + partName + " to Int32");
+        
     }
 
     void HoldingBuild()
@@ -1899,7 +1916,7 @@ public class Controller : NetworkBehaviour
         movingPlacedBrickUseStoredValues = false;
     }
 
-    public void PutAwayBrick(byte _blockID, string _placedBrickName)
+    public void PutAwayBrick(byte _blockID, int _placedBrickName)
     {
         int firstSlot;
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode) // determine first slot
@@ -1921,9 +1938,9 @@ public class Controller : NetworkBehaviour
                 for (int i = firstSlot; i < slotsToCheck.Length; i++) // for all slots
                 {
                     // FIRST CHECK PLACEDBRICKS
-                    if(_placedBrickName != null && _placedBrickName != "")
+                    if(_placedBrickName.ToString() != null && _placedBrickName.ToString() != "")
                     {
-                        if(slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.placedBrickID == _placedBrickName) // matching id
+                        if(slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() == _placedBrickName.ToString()) // matching id
                         {
                             if(slotsToCheck[i].itemSlot.stack.amount < 64) // limit stack size. Eventually update to base on World.Instance.placedBricks[].stackMax
                             {
@@ -1948,7 +1965,7 @@ public class Controller : NetworkBehaviour
                 for (int j = 0; j < slotsToCheck.Length; j++) // for all slots
                 {
                     // FIRST CHECK PLACED BRICKS
-                    if(_placedBrickName != null && _placedBrickName != "")
+                    if(_placedBrickName.ToString() != null && _placedBrickName.ToString() != "")
                     {
                         if (!slotsToCheck[j].itemSlot.HasItem) // if there is an empty slot
                         {
@@ -2087,18 +2104,18 @@ public class Controller : NetworkBehaviour
     }
 
     [Command]
-    void CmdPlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
+    void CmdPlaceBrick(bool fromFile, int _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
     {
         RpcPlaceBrick(fromFile, _partname, cmdstr, materialIndex, pos, rot);
     }
 
     [ClientRpc]
-    void RpcPlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
+    void RpcPlaceBrick(bool fromFile, int _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
     {
         PlaceBrick(fromFile, _partname, cmdstr, materialIndex, pos, rot);
     }
 
-    public GameObject PlaceBrick(bool fromFile, string _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
+    public GameObject PlaceBrick(bool fromFile, int _partname, string cmdstr, int materialIndex, Vector3 pos, Quaternion rot)
     {
         GameObject returnOb;
 
@@ -2133,7 +2150,7 @@ public class Controller : NetworkBehaviour
         VoxelBc.enabled = true;
         VoxelBc.material = physicMaterial;
         placedBrick.SetActive(true);
-        placedBrick.name = _partname;
+        placedBrick.name = _partname.ToString();
         placedBrickName = _partname;
         placedBrick.tag = "placedBrick";
         placedBrick.layer = 0;
@@ -2367,7 +2384,7 @@ public class Controller : NetworkBehaviour
             }
         }
 
-        RequestSaveWorld(); // save the world after every time a block is placed/edited
+        //RequestSaveWorld(); // save the world after every time a block is placed/edited
         gameMenu.GetComponent<GameMenu>().SaveSettings();
     }
 
@@ -2767,7 +2784,7 @@ public class Controller : NetworkBehaviour
             {
                 Vector3 pos = ob.transform.position;
                 Quaternion rot = ob.transform.rotation;
-                string partname = ob.name;
+                string partname = ob.name + ".dat";
                 if (ob.GetComponentInChildren<MeshRenderer>() == null)
                     continue;
                 Material mat = ob.GetComponentInChildren<MeshRenderer>().material;

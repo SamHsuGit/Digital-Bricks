@@ -165,13 +165,14 @@ public static class SaveSystem
                         playerStats[i] = _blockID;
                     else // PLACEDBRICK
                     {
-                        int x = 0;
-                        if(Int32.TryParse(controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.placedBrickID, out x))
-                        {
-                            // parsing was successful
-                            Debug.Log(x);
-                        }
-                        playerStats[i] = x;
+                        // int x = 0;
+                        // if(Int32.TryParse(controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.placedBrickID, out x))
+                        // {
+                        //     // parsing was successful
+                        //     Debug.Log(x);
+                        // }
+                        // playerStats[i] = x;
+                        playerStats[i] = controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.placedBrickID;
                     }
                     playerStats[i + 1] = controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
                 }
@@ -190,12 +191,13 @@ public static class SaveSystem
                         playerStats[i] = _blockID;
                     else // PLACEDBRICK
                     {
-                        int x = 0;
-                        if(Int32.TryParse(inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.placedBrickID, out x))
-                        {
-                            // parsing was successful
-                        }
-                        playerStats[i] = x;
+                        // int x = 0;
+                        // if(Int32.TryParse(inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.placedBrickID, out x))
+                        // {
+                        //     // parsing was successful
+                        // }
+                        // playerStats[i] = x;
+                        playerStats[i] = inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.placedBrickID;
                     }
                     playerStats[i + 1] = inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.amount;
                 }

@@ -8,7 +8,7 @@ public class Recipe : ScriptableObject
     public bool isPlacedBrick;
     public RecipeShape[] recipeShapes;
     public byte outputID;
-    public string outputPlacedBrickName;
+    public int outputPlacedBrickName;
     public int outputQty;
 
     public int studs;

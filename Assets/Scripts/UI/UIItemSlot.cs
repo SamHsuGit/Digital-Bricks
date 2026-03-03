@@ -50,9 +50,9 @@ public class UIItemSlot : MonoBehaviour
             int index = 0;
             for (int i = 0; i < World.Instance.placedBricks.Length; i++)
             {
-                if(World.Instance.placedBricks[i].name == itemSlot.stack.placedBrickID) // if itemslot stringname matches a stringname in world list, return index
+                if(World.Instance.placedBricks[i].name == itemSlot.stack.placedBrickID.ToString()) // if itemslot stringname matches a stringname in world list, return index
                     index = i;
-                else if (World.Instance.placedBricks[i].name + ".dat" == itemSlot.stack.placedBrickID)
+                else if (World.Instance.placedBricks[i].name + ".dat" == itemSlot.stack.placedBrickID.ToString())
                     index = i;
             }
             slotIcon.sprite = World.Instance.placedBricks[index].icon;

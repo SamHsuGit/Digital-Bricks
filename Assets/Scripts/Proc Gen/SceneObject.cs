@@ -5,7 +5,7 @@ using Mirror;
 public class SceneObject : NetworkBehaviour
 {
     [SyncVar(hook = nameof(SetVoxel))] public int typeVoxel;
-    [SyncVar(hook = nameof(SetPlacedBrickName))] public string placedBrickName;
+    [SyncVar(hook = nameof(SetPlacedBrickName))] public int placedBrickName;
     [SyncVar(hook = nameof(SetTool))] public int typeTool;
     [SyncVar(hook = nameof(SetProjectileInt))] public int typeProjectile;
     [SyncVar(hook = nameof(SetProjectileString))] public string projectileString;
@@ -26,7 +26,7 @@ public class SceneObject : NetworkBehaviour
     {
         StartCoroutine(ChangeEquipment(0, newValue));
     }
-    void SetPlacedBrickName(string oldValue, string newValue)
+    void SetPlacedBrickName(int oldValue, int newValue)
     {
         placedBrickName = newValue;
     }
@@ -143,7 +143,7 @@ public class SceneObject : NetworkBehaviour
         else if (gameObject.tag == "voxelBit")
         {
             //Debug.Log("collision");
-            placedBrickName = "3024";
+            placedBrickName = 3024;
 
             if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
                 controller.PutAwayBrick((byte)typeVoxelBit, placedBrickName); // put item into player toolbar

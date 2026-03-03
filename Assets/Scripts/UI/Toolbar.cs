@@ -8,7 +8,7 @@ public class Toolbar : MonoBehaviour
     public RectTransform highlight;
     public int slotIndex = 0;
     public byte creativeBlockID = 2;
-    public string creativePlacedBlockID = "3005.dat";
+    public int creativePlacedBlockID = 3005;
     public bool setNavigate = false;
 
     CanvasGroup optionsMenuCanvasGroup;
@@ -76,7 +76,7 @@ public class Toolbar : MonoBehaviour
             if(qty == 0)
                 continue; // do not store any voxels or placed bricks for qty 0
 
-            ItemStack stack = new ItemStack(0, "", false, 0);
+            ItemStack stack = new ItemStack(0, 0, false, 0);
             if (blockID != 0) // VOXEL
             {
                 stack = new ItemStack((byte)blockID, creativePlacedBlockID, false, qty);
@@ -86,7 +86,7 @@ public class Toolbar : MonoBehaviour
                     creativeBlockID = (byte)blockID; // set creative slot to saved value
             }
             else if (blockID == 0) // PLACEDBRICK
-                stack = new ItemStack(0, blockID.ToString(), true, qty);
+                stack = new ItemStack(0, blockID, true, qty);
 
             if (slot.itemSlot.HasItem)
                     slot.itemSlot.EmptySlot();
@@ -109,11 +109,11 @@ public class Toolbar : MonoBehaviour
             if(qty == 0)
                 continue; // do not store any voxels or placed bricks for qty 0
 
-            ItemStack stack = new ItemStack(0, "", false, 0);
+            ItemStack stack = new ItemStack(0, 0, false, 0);
             if(blockID != 0) // VOXEL
-                stack = new ItemStack((byte)blockID, "", false, qty);
+                stack = new ItemStack((byte)blockID, 0, false, qty);
             else if (blockID == 0) // PLACEDBRICK
-                stack = new ItemStack(0, blockID.ToString(), true, qty);
+                stack = new ItemStack(0, blockID, true, qty);
 
             if(slot.itemSlot.HasItem)
                     slot.itemSlot.EmptySlot();

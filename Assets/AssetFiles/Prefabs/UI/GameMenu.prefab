@@ -8386,6 +8386,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Toolbar
       objectReference: {fileID: 0}
+    - target: {fileID: 959026912654647991, guid: 462bf8ace809b58459ff2e7364f6bccf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1097382266230998141, guid: 462bf8ace809b58459ff2e7364f6bccf, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
