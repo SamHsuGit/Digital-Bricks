@@ -33,8 +33,12 @@ public class DragAndDropHandler : MonoBehaviour {
 
         cursorSlot.transform.position = Input.mousePosition;
 
+        // cache input
         bool clickedLMB = Input.GetMouseButtonDown(0);
         bool clickedRMB = Input.GetMouseButtonDown(1);
+
+        if(clickedLMB || clickedRMB)
+            SaveSystem.SaveWorldDataToFile(World.Instance.worldData, controller.world); // save inventory if clicked in inventory to preserve stack states between saves
 
         if (!controller.inputHandler.sprint && clickedLMB) // left mouse click
         {

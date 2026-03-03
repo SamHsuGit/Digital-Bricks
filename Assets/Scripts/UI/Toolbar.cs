@@ -99,7 +99,7 @@ public class Toolbar : MonoBehaviour
             }
         }
 
-        for(int i = 22; i < 49; i+=2) // SET INVENTORY SLOTS
+        for(int i = 22; i < 76; i+=2) // SET INVENTORY SLOTS
         {
             int slotIndex = (i - 22) / 2;
             UIItemSlot slot = controller.dragAndDropHandler.inventory.inventorySlots[slotIndex];

@@ -181,7 +181,7 @@ public static class SaveSystem
                     playerStats[i + 1] = 0;
                 }
             }
-            for(int i = 22; i < 49; i+=2) // for Inventory slots
+            for(int i = 22; i < 76; i+=2) // for Inventory slots
             {
                 if(inventory.inventorySlots[(i - 22) / 2].itemSlot.HasItem)
                 {
