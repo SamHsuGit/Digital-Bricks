@@ -1635,7 +1635,9 @@ public class Controller : NetworkBehaviour
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot run this function if creative mode and first slot selected
             return;
 
-        if (!options && camMode == 1 && toolbar.slots[toolbar.slotIndex].HasItem) // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
+        // IF NOT IN OPTIONS AND IN FPS VIEW AND ITEM IN SLOT
+        // disabled for placedBricks until placed brick meshes can be drawn for drops
+        if (!options && camMode == 1 && toolbar.slots[toolbar.slotIndex].HasItem && !toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
         {
             // drop a single item from slot
             toolbar.DropItemFromSlot(toolbar.slotIndex);
@@ -2519,14 +2521,18 @@ public class Controller : NetworkBehaviour
 
 
         // PLAYER LOOK ROTATION
-        if(camMode == 1 && inventoryUIMode == 0)
+        if(camMode == 1)
         {
+            // apply gravity and move forces
             if (charController.enabled && World.Instance.IsGlobalPosInsideBorder(transform.position + velocityPlayer)) // keep player inside world borders
                 charController.Move(velocityPlayer); // used character controller since that was only thing found to collide with imported ldraw models
-
-            Vector2 rotation = CalculateRotation();
-            playerCamera.transform.localEulerAngles = new Vector3(rotation.y, 0f, 0f);
-            gameObject.transform.localEulerAngles = new Vector3(0f, rotation.x, 0f);
+            
+            if(inventoryUIMode == 0)
+            {
+                Vector2 rotation = CalculateRotation();
+                playerCamera.transform.localEulerAngles = new Vector3(rotation.y, 0f, 0f);
+                gameObject.transform.localEulerAngles = new Vector3(0f, rotation.x, 0f);
+            }
         }
         else if(camMode == 2 && inventoryUIMode == 0)
         {

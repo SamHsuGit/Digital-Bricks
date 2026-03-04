@@ -107,6 +107,14 @@ public class DragAndDropHandler : MonoBehaviour {
                 HandleStackQuickMove(slot); // tries to move items to inventory
         }
 
+        // if holding item, store in inventory before exiting the menu
+        if(cursorSlot != null && cursorSlot.itemSlot != null && cursorSlot.itemSlot.HasItem)
+        {
+            HandleStackQuickMove(cursorSlot);
+            cursorSlot.itemSlot.EmptySlot();
+        }
+            
+
         // hide all crafting slots (output slots, 2x2 crafting, 3x3 crafting, furnace)
         for(int i = 0; i < crafting.uiMenus.Length; i++)
             crafting.uiMenus[i].SetActive(false);
@@ -248,13 +256,13 @@ public class DragAndDropHandler : MonoBehaviour {
         if(clickedSlot != null && clickedSlot.HasItem && clickedSlot.isOutput)
             crafting.ClickedOutputSlot();
 
-        if (clickedSlot == null && cursorSlot.HasItem) // if clicked air while holding block
+        // if clicked air while holding block
+        // disabled for placedBricks until placedBrick meshes can be drawn for drops
+        if (clickedSlot == null && cursorSlot.HasItem && !cursorSlot.itemSlot.stack.isPlacedBrick) 
         {
             byte blockID = cursorSlot.itemSlot.stack.id;
-            for(int i = 0; i <= cursorSlot.itemSlot.stack.amount; i++)
-            {
-                controller.toolbar.SpawnObject(blockID); // spawn blocks
-            }
+            for(int i = 0; i <= cursorSlot.itemSlot.stack.amount - 1; i++)
+                controller.toolbar.SpawnObject(blockID); // spawn blocks repeatedly for each qty in stack
             cursorSlot.itemSlot.EmptySlot(); // empty cursor slot
         }
         else if (clickedSlot == null || clickedSlot.itemSlot == null)

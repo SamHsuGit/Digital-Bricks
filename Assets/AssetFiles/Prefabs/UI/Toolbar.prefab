@@ -493,6 +493,7 @@ MonoBehaviour:
   highlight: {fileID: 959026912128838330}
   slotIndex: 0
   creativeBlockID: 2
+  creativePlacedBlockID: 3005
   setNavigate: 0
 --- !u!1 &2642786423344932816
 GameObject:
@@ -2846,11 +2847,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2966597107702410864, guid: 7fe30e5dfc99eb94d98431c2e6ddc904, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2966597107702410864, guid: 7fe30e5dfc99eb94d98431c2e6ddc904, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2966597107702410864, guid: 7fe30e5dfc99eb94d98431c2e6ddc904, type: 3}
       propertyPath: m_LocalPosition.x
