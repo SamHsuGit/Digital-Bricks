@@ -135,6 +135,7 @@ public class SceneObject : NetworkBehaviour
         if (gameObject.tag == "voxelRb") // method used to pick up dropped items
         {
             //Debug.Log("collision");
+            placedBrickName = 0;
             if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
                 controller.PutAwayBrick((byte)typeVoxel, placedBrickName); // put item into player toolbar
             pickedUp = true;

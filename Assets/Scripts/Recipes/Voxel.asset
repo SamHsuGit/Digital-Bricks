@@ -45,6 +45,6 @@ MonoBehaviour:
     slot8: 0
     slot9: 3022
   outputID: 3
-  outputPlacedBrickName: 0
+  outputPlacedBrickName: 1
   outputQty: 1
   studs: 20

@@ -80,131 +80,153 @@ public static class SaveSystem
             Mathf.FloorToInt(playerGameObject.GetComponent<Health>().hp),
             1, // slot 1 blockID (CREATIVE SLOT)
             0, // slot 1 qty (CREATIVE SLOT)
+            0, // slot 1 placedBrickID
             1, // slot 2 blockID
             0, // slot 2 qty
+            0, // slot 2 placedBrickID
             1, // slot 3 blockID
             0, // slot 3 qty
+            0, // slot 3 placedBrickID
             1, // slot 4 blockID
             0, // slot 4 qty
+            0, // slot 4 placedBrickID
             1, // slot 5 blockID
             0, // slot 5 qty
+            0, // slot 5 placedBrickID
             1, // slot 6 blockID
             0, // slot 6 qty
+            0, // slot 6 placedBrickID
             1, // slot 7 blockID
             0, // slot 7 qty
+            0, // slot 7 placedBrickID
             1, // slot 8 blockID
             0, // slot 8 qty
+            0, // slot 8 placedBrickID
             1, // slot 9 blockID
             0, // slot 9 qty
+            0, // slot 9 placedBrickID
             1, // inventory slot 01 blockID
             0, // inventory slot 01 qty
+            0, // inventory slot 01 placedBrickID
             1, // inventory slot 02 blockID
             0, // inventory slot 02 qty
+            0, // inventory slot 02 placedBrickID
             1, // inventory slot 03 blockID
             0, // inventory slot 03 qty
+            0, // inventory slot 03 placedBrickID
             1, // inventory slot 04 blockID
             0, // inventory slot 04 qty
+            0, // inventory slot 04 placedBrickID
             1, // inventory slot 05 blockID
             0, // inventory slot 05 qty
+            0, // inventory slot 05 placedBrickID
             1, // inventory slot 06 blockID
             0, // inventory slot 06 qty
+            0, // inventory slot 06 placedBrickID
             1, // inventory slot 07 blockID
             0, // inventory slot 07 qty
+            0, // inventory slot 07 placedBrickID
             1, // inventory slot 08 blockID
             0, // inventory slot 08 qty
+            0, // inventory slot 08 placedBrickID
             1, // inventory slot 09 blockID
             0, // inventory slot 09 qty
+            0, // inventory slot 09 placedBrickID
             1, // inventory slot 10 blockID
             0, // inventory slot 10 qty
+            0, // inventory slot 10 placedBrickID
             1, // inventory slot 11 blockID
             0, // inventory slot 11 qty
+            0, // inventory slot 11 placedBrickID
             1, // inventory slot 12 blockID
             0, // inventory slot 12 qty
+            0, // inventory slot 12 placedBrickID
             1, // inventory slot 13 blockID
             0, // inventory slot 13 qty
+            0, // inventory slot 13 placedBrickID
             1, // inventory slot 14 blockID
             0, // inventory slot 14 qty
+            0, // inventory slot 14 placedBrickID
             1, // inventory slot 15 blockID
             0, // inventory slot 15 qty
+            0, // inventory slot 15 placedBrickID
             1, // inventory slot 16 blockID
             0, // inventory slot 16 qty
+            0, // inventory slot 16 placedBrickID
             1, // inventory slot 17 blockID
             0, // inventory slot 17 qty
+            0, // inventory slot 17 placedBrickID
             1, // inventory slot 18 blockID
             0, // inventory slot 18 qty
+            0, // inventory slot 18 placedBrickID
             1, // inventory slot 19 blockID
             0, // inventory slot 19 qty
+            0, // inventory slot 19 placedBrickID
             1, // inventory slot 20 blockID
             0, // inventory slot 20 qty
+            0, // inventory slot 20 placedBrickID
             1, // inventory slot 21 blockID
             0, // inventory slot 21 qty
+            0, // inventory slot 21 placedBrickID
             1, // inventory slot 22 blockID
             0, // inventory slot 22 qty
+            0, // inventory slot 22 placedBrickID
             1, // inventory slot 23 blockID
             0, // inventory slot 23 qty
+            0, // inventory slot 23 placedBrickID
             1, // inventory slot 24 blockID
             0, // inventory slot 24 qty
+            0, // inventory slot 24 placedBrickID
             1, // inventory slot 25 blockID
             0, // inventory slot 25 qty
+            0, // inventory slot 25 placedBrickID
             1, // inventory slot 26 blockID
             0, // inventory slot 26 qty
+            0, // inventory slot 26 placedBrickID
             1, // inventory slot 27 blockID
             0, // inventory slot 27 qty
+            0, // inventory slot 27 placedBrickID
         };
+        int _startPos = 4;
+        int _types = 3;
         if(playerGameObject != World.Instance.worldPlayer.gameObject) // do not save player stats for world player
         {
             Controller controller = playerGameObject.GetComponent<Controller>();
             Inventory inventory = controller.dragAndDropHandler.inventory;
             // overwrite zero place holders with values from player toolbar if not in creative mode
-            for (int i = 4; i < 22; i += 2) // for toolbar slots
+            for (int i = _startPos; i < 22; i += _types) // for toolbar slots
             {
-                if (!SettingsStatic.LoadedSettings.developerMode && controller.toolbar.slots[(i - 4) / 2].itemSlot.HasItem)
+                int _slotIndex = (i - _startPos) / _types;
+                if (!SettingsStatic.LoadedSettings.developerMode && controller.toolbar.slots[_slotIndex].itemSlot.HasItem)
                 {
-                    byte _blockID = controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.id;
-                    if(_blockID != 0) // VOXEL
-                        playerStats[i] = _blockID;
-                    else // PLACEDBRICK
-                    {
-                        // int x = 0;
-                        // if(Int32.TryParse(controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.placedBrickID, out x))
-                        // {
-                        //     // parsing was successful
-                        //     Debug.Log(x);
-                        // }
-                        // playerStats[i] = x;
-                        playerStats[i] = controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.placedBrickID;
-                    }
-                    playerStats[i + 1] = controller.toolbar.slots[(i - 4) / 2].itemSlot.stack.amount;
+                    playerStats[i] = controller.toolbar.slots[_slotIndex].itemSlot.stack.id;
+                    playerStats[i + 1] = controller.toolbar.slots[_slotIndex].itemSlot.stack.amount;
+                    playerStats[i + 2] = controller.toolbar.slots[_slotIndex].itemSlot.stack.placedBrickID;
                 }
                 else
                 {
                     playerStats[i] = 0;
                     playerStats[i + 1] = 0;
+                    playerStats[i + 2] = 0;
                 }
             }
-            for(int i = 22; i < 76; i+=2) // for Inventory slots
+            _startPos = _startPos + 9 * _types;
+            for(int i = _startPos; i < playerStats.Length; i += _types) // for Inventory slots
             {
-                if(inventory.inventorySlots[(i - 22) / 2].itemSlot.HasItem)
+                int _slotIndex = (i - _startPos) / _types;
+                if(inventory.inventorySlots[_slotIndex].itemSlot.HasItem)
                 {
-                    byte _blockID = inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.id;
-                    if(_blockID != 0) // VOXEL
-                        playerStats[i] = _blockID;
-                    else // PLACEDBRICK
-                    {
-                        // int x = 0;
-                        // if(Int32.TryParse(inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.placedBrickID, out x))
-                        // {
-                        //     // parsing was successful
-                        // }
-                        // playerStats[i] = x;
-                        playerStats[i] = inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.placedBrickID;
-                    }
-                    playerStats[i + 1] = inventory.inventorySlots[(i - 22) / 2].itemSlot.stack.amount;
+                    playerStats[i] = inventory.inventorySlots[_slotIndex].itemSlot.stack.id;
+                    playerStats[i + 1] = inventory.inventorySlots[_slotIndex].itemSlot.stack.amount;
+                    playerStats[i + 2] = inventory.inventorySlots[_slotIndex].itemSlot.stack.placedBrickID;
+                    // if(playerStats[i + 2] != 0)
+                    //     Debug.Log("saved placebrick with id " + playerStats[i + 2] + " at position " + (i + 2));
                 }
                 else
                 {
                     playerStats[i] = 0;
                     playerStats[i + 1] = 0;
+                    playerStats[i + 2] = 0;
                 }
             }
         }
@@ -222,6 +244,14 @@ public static class SaveSystem
 
             int[] playerStats = formatter.Deserialize(stream) as int[];
             stream.Close();
+
+            // // Debug to show loaded values in slots for toolbar and inventory
+            // for(int i = 4; i < playerStats.Length; i++)
+            // {
+            //     if(playerStats[i] != 1 && playerStats[i] != 0)
+            //         Debug.Log("Loaded value at " + i + " = " + playerStats[i]);
+            // }
+
             return playerStats;
         }
         else // SET PLAYER STATS TO DEFAULT VALUES
@@ -245,76 +275,112 @@ public static class SaveSystem
             hpMax,
             1, // slot 1 blockID (CREATIVE SLOT)
             0, // slot 1 qty (CREATIVE SLOT)
+            0, // slot 1 placedBrickID
             1, // slot 2 blockID
             0, // slot 2 qty
+            0, // slot 2 placedBrickID
             1, // slot 3 blockID
             0, // slot 3 qty
+            0, // slot 3 placedBrickID
             1, // slot 4 blockID
             0, // slot 4 qty
+            0, // slot 4 placedBrickID
             1, // slot 5 blockID
             0, // slot 5 qty
+            0, // slot 5 placedBrickID
             1, // slot 6 blockID
             0, // slot 6 qty
+            0, // slot 6 placedBrickID
             1, // slot 7 blockID
             0, // slot 7 qty
+            0, // slot 7 placedBrickID
             1, // slot 8 blockID
             0, // slot 8 qty
+            0, // slot 8 placedBrickID
             1, // slot 9 blockID
             0, // slot 9 qty
+            0, // slot 9 placedBrickID
             1, // inventory slot 01 blockID
             0, // inventory slot 01 qty
+            0, // inventory slot 01 placedBrickID
             1, // inventory slot 02 blockID
             0, // inventory slot 02 qty
+            0, // inventory slot 02 placedBrickID
             1, // inventory slot 03 blockID
             0, // inventory slot 03 qty
+            0, // inventory slot 03 placedBrickID
             1, // inventory slot 04 blockID
             0, // inventory slot 04 qty
+            0, // inventory slot 04 placedBrickID
             1, // inventory slot 05 blockID
             0, // inventory slot 05 qty
+            0, // inventory slot 05 placedBrickID
             1, // inventory slot 06 blockID
             0, // inventory slot 06 qty
+            0, // inventory slot 06 placedBrickID
             1, // inventory slot 07 blockID
             0, // inventory slot 07 qty
+            0, // inventory slot 07 placedBrickID
             1, // inventory slot 08 blockID
             0, // inventory slot 08 qty
+            0, // inventory slot 08 placedBrickID
             1, // inventory slot 09 blockID
             0, // inventory slot 09 qty
+            0, // inventory slot 09 placedBrickID
             1, // inventory slot 10 blockID
             0, // inventory slot 10 qty
+            0, // inventory slot 10 placedBrickID
             1, // inventory slot 11 blockID
             0, // inventory slot 11 qty
+            0, // inventory slot 11 placedBrickID
             1, // inventory slot 12 blockID
             0, // inventory slot 12 qty
+            0, // inventory slot 12 placedBrickID
             1, // inventory slot 13 blockID
             0, // inventory slot 13 qty
+            0, // inventory slot 13 placedBrickID
             1, // inventory slot 14 blockID
             0, // inventory slot 14 qty
+            0, // inventory slot 14 placedBrickID
             1, // inventory slot 15 blockID
             0, // inventory slot 15 qty
+            0, // inventory slot 15 placedBrickID
             1, // inventory slot 16 blockID
             0, // inventory slot 16 qty
+            0, // inventory slot 16 placedBrickID
             1, // inventory slot 17 blockID
             0, // inventory slot 17 qty
+            0, // inventory slot 17 placedBrickID
             1, // inventory slot 18 blockID
             0, // inventory slot 18 qty
+            0, // inventory slot 18 placedBrickID
             1, // inventory slot 19 blockID
             0, // inventory slot 19 qty
+            0, // inventory slot 19 placedBrickID
             1, // inventory slot 20 blockID
             0, // inventory slot 20 qty
+            0, // inventory slot 20 placedBrickID
             1, // inventory slot 21 blockID
             0, // inventory slot 21 qty
+            0, // inventory slot 21 placedBrickID
             1, // inventory slot 22 blockID
             0, // inventory slot 22 qty
+            0, // inventory slot 22 placedBrickID
             1, // inventory slot 23 blockID
             0, // inventory slot 23 qty
+            0, // inventory slot 23 placedBrickID
             1, // inventory slot 24 blockID
             0, // inventory slot 24 qty
+            0, // inventory slot 24 placedBrickID
             1, // inventory slot 25 blockID
             0, // inventory slot 25 qty
+            0, // inventory slot 25 placedBrickID
             1, // inventory slot 26 blockID
             0, // inventory slot 26 qty
+            0, // inventory slot 26 placedBrickID
             1, // inventory slot 27 blockID
             0, // inventory slot 27 qty
+            0, // inventory slot 27 placedBrickID
         };
         return stats;
     }

@@ -1938,7 +1938,7 @@ public class Controller : NetworkBehaviour
                 for (int i = firstSlot; i < slotsToCheck.Length; i++) // for all slots
                 {
                     // FIRST CHECK PLACEDBRICKS
-                    if(_placedBrickName.ToString() != null && _placedBrickName.ToString() != "")
+                    if(_placedBrickName.ToString() != null && _placedBrickName != 0)
                     {
                         if(slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() == _placedBrickName.ToString()) // matching id
                         {
@@ -1965,7 +1965,7 @@ public class Controller : NetworkBehaviour
                 for (int j = 0; j < slotsToCheck.Length; j++) // for all slots
                 {
                     // FIRST CHECK PLACED BRICKS
-                    if(_placedBrickName.ToString() != null && _placedBrickName.ToString() != "")
+                    if(_placedBrickName.ToString() != null && _placedBrickName != 0)
                     {
                         if (!slotsToCheck[j].itemSlot.HasItem) // if there is an empty slot
                         {

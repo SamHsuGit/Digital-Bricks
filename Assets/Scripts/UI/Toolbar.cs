@@ -66,58 +66,57 @@ public class Toolbar : MonoBehaviour
         else
             playerStats = SaveSystem.GetDefaultPlayerStats(player);
 
-        for (int i = 4; i < 22; i += 2) // SET TOOLBAR SLOTS
+        int _startPos = 4;
+        int _types = 3;
+        for (int i = _startPos; i < 22; i += _types) // SET TOOLBAR SLOTS
         {
-            int slotIndex = (i - 4) / 2;
-            UIItemSlot slot = controller.toolbar.slots[slotIndex];
-            int blockID = playerStats[i];
-            int qty = playerStats[i + 1];
+            int _slotIndex = (i - _startPos) / _types;
+            UIItemSlot slot = controller.toolbar.slots[_slotIndex];
+            int _blockID = playerStats[i];
+            int _qty = playerStats[i + 1];
+            int _placedBrickID = playerStats[i + 2];
 
-            if(qty == 0)
+            if(_qty == 0)
                 continue; // do not store any voxels or placed bricks for qty 0
-
-            ItemStack stack = new ItemStack(0, 0, false, 0);
-            if (blockID != 0) // VOXEL
-            {
-                stack = new ItemStack((byte)blockID, creativePlacedBlockID, false, qty);
-
-                // for creative slot, set slot index to saved blockID
-                if (slotIndex == 0)
-                    creativeBlockID = (byte)blockID; // set creative slot to saved value
-            }
-            else if (blockID == 0) // PLACEDBRICK
-                stack = new ItemStack(0, blockID, true, qty);
+            bool _isPlacedBrick = false;
+            if(_placedBrickID > 1)
+                _isPlacedBrick = true;
+            ItemStack stack = new ItemStack((byte)_blockID, _placedBrickID, _isPlacedBrick, _qty);
 
             if (slot.itemSlot.HasItem)
-                    slot.itemSlot.EmptySlot();
-                slot.itemSlot.InsertStack(stack);
+                slot.itemSlot.EmptySlot();
+            slot.itemSlot.InsertStack(stack);
             
-            if (SettingsStatic.LoadedSettings.developerMode && slotIndex == 0 && blockID < 2) // for creative mode and slot and blockID < 2
+            if (SettingsStatic.LoadedSettings.developerMode && _slotIndex == 0 && _blockID < 2) // for creative mode and slot and blockID < 2
             {
                 // if no saved blockID, then set creative slot to blockID 2
                 ResetCreativeSlot();
             }
         }
-
-        for(int i = 22; i < 76; i+=2) // SET INVENTORY SLOTS
+        _startPos = _startPos + 9 * _types;
+        for(int i = _startPos; i < playerStats.Length; i += _types) // SET INVENTORY SLOTS
         {
-            int slotIndex = (i - 22) / 2;
-            UIItemSlot slot = controller.dragAndDropHandler.inventory.inventorySlots[slotIndex];
-            int blockID = playerStats[i];
-            int qty = playerStats[i + 1];
+            int _slotIndex = (i - _startPos) / _types;
 
-            if(qty == 0)
+            if(_slotIndex >= controller.dragAndDropHandler.inventory.inventorySlots.Length)
+                continue;
+
+            UIItemSlot slot = controller.dragAndDropHandler.inventory.inventorySlots[_slotIndex];
+            int _blockID = playerStats[i];
+            int _qty = playerStats[i + 1];
+            int _placedBrickID = playerStats[i + 2];
+
+            if(_qty == 0)
                 continue; // do not store any voxels or placed bricks for qty 0
+            bool isPlacedBrick = false;
+            if(_placedBrickID > 2)
+                isPlacedBrick = true;
 
-            ItemStack stack = new ItemStack(0, 0, false, 0);
-            if(blockID != 0) // VOXEL
-                stack = new ItemStack((byte)blockID, 0, false, qty);
-            else if (blockID == 0) // PLACEDBRICK
-                stack = new ItemStack(0, blockID, true, qty);
+            ItemStack stack = new ItemStack((byte)_blockID, _placedBrickID, isPlacedBrick, _qty);
 
             if(slot.itemSlot.HasItem)
-                    slot.itemSlot.EmptySlot();
-                slot.itemSlot.InsertStack(stack);
+                slot.itemSlot.EmptySlot();
+            slot.itemSlot.InsertStack(stack);
         }
     }
 
