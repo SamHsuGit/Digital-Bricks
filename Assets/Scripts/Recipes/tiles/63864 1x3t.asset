@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 3001 2x4b
+  m_Name: 63864 1x3t
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 1
   recipeShapes:
   - is2x2: 0
-    slot1: 3003
-    slot2: 3003
+    slot1: 3069
+    slot2: 3070
     slot3: 0
     slot4: 0
     slot5: 0
@@ -26,8 +26,8 @@ MonoBehaviour:
     slot9: 0
   - is2x2: 0
     slot1: 0
-    slot2: 3003
-    slot3: 3003
+    slot2: 3069
+    slot3: 3070
     slot4: 0
     slot5: 0
     slot6: 0
@@ -38,8 +38,8 @@ MonoBehaviour:
     slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 3003
-    slot5: 3003
+    slot4: 3069
+    slot5: 3070
     slot6: 0
     slot7: 0
     slot8: 0
@@ -49,8 +49,8 @@ MonoBehaviour:
     slot2: 0
     slot3: 0
     slot4: 0
-    slot5: 3003
-    slot6: 3003
+    slot5: 3069
+    slot6: 3070
     slot7: 0
     slot8: 0
     slot9: 0
@@ -61,8 +61,8 @@ MonoBehaviour:
     slot4: 0
     slot5: 0
     slot6: 0
-    slot7: 3003
-    slot8: 3003
+    slot7: 3069
+    slot8: 3070
     slot9: 0
   - is2x2: 0
     slot1: 0
@@ -72,9 +72,69 @@ MonoBehaviour:
     slot5: 0
     slot6: 0
     slot7: 0
-    slot8: 3003
-    slot9: 3003
+    slot8: 3069
+    slot9: 3070
+  - is2x2: 0
+    slot1: 3070
+    slot2: 3069
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 3070
+    slot3: 3069
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 3070
+    slot5: 3069
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 3070
+    slot6: 3069
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 3070
+    slot8: 3069
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 3070
+    slot9: 3069
   outputID: 3
-  outputPlacedBrickName: 3001
+  outputPlacedBrickName: 63864
   outputQty: 1
-  studs: 24
+  studs: 3

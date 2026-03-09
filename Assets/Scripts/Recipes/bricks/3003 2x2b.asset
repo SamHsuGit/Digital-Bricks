@@ -15,52 +15,32 @@ MonoBehaviour:
   isPlacedBrick: 1
   recipeShapes:
   - is2x2: 0
-    slot1: 3022
+    slot1: 3004
     slot2: 0
     slot3: 0
-    slot4: 3022
+    slot4: 3004
     slot5: 0
     slot6: 0
-    slot7: 3022
+    slot7: 0
     slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
-    slot2: 3022
+    slot2: 3004
     slot3: 0
     slot4: 0
-    slot5: 3022
+    slot5: 3004
     slot6: 0
     slot7: 0
-    slot8: 3022
+    slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
     slot2: 0
-    slot3: 3022
+    slot3: 3004
     slot4: 0
     slot5: 0
-    slot6: 3022
-    slot7: 0
-    slot8: 0
-    slot9: 3022
-  - is2x2: 0
-    slot1: 3005
-    slot2: 3005
-    slot3: 0
-    slot4: 3005
-    slot5: 3005
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 3005
-    slot3: 3005
-    slot4: 0
-    slot5: 3005
-    slot6: 3005
+    slot6: 3004
     slot7: 0
     slot8: 0
     slot9: 0
@@ -68,23 +48,33 @@ MonoBehaviour:
     slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 3005
-    slot5: 3005
+    slot4: 3004
+    slot5: 0
     slot6: 0
-    slot7: 3005
-    slot8: 3005
+    slot7: 3004
+    slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
-    slot5: 3005
-    slot6: 3005
+    slot5: 3004
+    slot6: 0
     slot7: 0
-    slot8: 3005
-    slot9: 3005
-  outputID: 3
+    slot8: 3004
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 3004
+    slot7: 0
+    slot8: 0
+    slot9: 3004
+  outputID: 6
   outputPlacedBrickName: 3003
   outputQty: 1
   studs: 12

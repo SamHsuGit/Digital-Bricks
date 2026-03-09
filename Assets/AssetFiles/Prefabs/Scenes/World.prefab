@@ -181,10 +181,34 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 872fb16cb6f9a704094175c5e66ba79f, type: 2}
   placedBricks:
   - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
+  - {fileID: 11400000, guid: c69ddb3e123724e23b67f5bbf17b9798, type: 2}
   - {fileID: 11400000, guid: d6c3ed8e1592c435281ffca1a304282d, type: 2}
+  - {fileID: 11400000, guid: 4f5388abd5d5d449a9136c26f5b3f368, type: 2}
   - {fileID: 11400000, guid: b5acb9489738848e2b83646e3fc81cbd, type: 2}
+  - {fileID: 11400000, guid: 5c674635c0a194a35bfd8f20f3e7762a, type: 2}
+  - {fileID: 11400000, guid: 6405a1654df714dd0b28de9d71e12816, type: 2}
+  - {fileID: 11400000, guid: 8ce426c5fad554c5c9e04c851da7ff9f, type: 2}
+  - {fileID: 11400000, guid: f09f84dbad4674f9983bcb212588172d, type: 2}
   - {fileID: 11400000, guid: 78c89ab927a3d4d8486f71fa7f33488c, type: 2}
+  - {fileID: 11400000, guid: 6e9c0648c3cc046149ba4a58ccfe79d8, type: 2}
   - {fileID: 11400000, guid: b1d566a849d4d48acbd1aef13f785d8a, type: 2}
+  - {fileID: 11400000, guid: f2891f77a1f7146d9a0faaab29092ed5, type: 2}
+  - {fileID: 11400000, guid: 6a9a32a8fd98841e6affe1b14bf5014a, type: 2}
+  - {fileID: 11400000, guid: 58073bbf8579c4a65af9f02d8d2f26a5, type: 2}
+  - {fileID: 11400000, guid: c8f4296ecb6f3464a8805bb990af190a, type: 2}
+  - {fileID: 11400000, guid: b187adc7bfc7a407caaf062749b71e84, type: 2}
+  - {fileID: 11400000, guid: 65827d9fcbf5d41cc91c1cbf7718f52b, type: 2}
+  - {fileID: 11400000, guid: 083666631ade24baca20cf7c0e0c8582, type: 2}
+  - {fileID: 11400000, guid: 6eb9ee62454fe4e53aa1002607d902c7, type: 2}
+  - {fileID: 11400000, guid: 01a115ea51a154781ab7692e2b9fcacc, type: 2}
+  - {fileID: 11400000, guid: 08184bf78cb474fc598b75388ea206a2, type: 2}
+  - {fileID: 11400000, guid: 92c1f14fef55146fd969ad295ad0f818, type: 2}
+  - {fileID: 11400000, guid: 31d67be76f0c340b589bedca4a6db5ee, type: 2}
+  - {fileID: 11400000, guid: 2129f7cabe3d146ddbe486a1c07d8549, type: 2}
+  - {fileID: 11400000, guid: f73593005f97e40b5bd9ece733bee891, type: 2}
+  - {fileID: 11400000, guid: 29d747212cb34440d89a0dade2876602, type: 2}
+  - {fileID: 11400000, guid: 148741fd8fc6c439bae0e7d42610bfad, type: 2}
+  - {fileID: 11400000, guid: 9208ba8cad2db41f1a86c37d18fd9b74, type: 2}
   voxelPrefabs:
   - {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}
   - {fileID: 8436909742428498496, guid: dbb5fd4476c044b419ca217aa0edfe12, type: 3}
