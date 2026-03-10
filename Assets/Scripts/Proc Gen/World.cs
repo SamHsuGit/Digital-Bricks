@@ -14,6 +14,7 @@ public class World : MonoBehaviour
     public int playerCount = 0;
     public WorldData worldData;
     public bool multithreading = true;
+    public bool setSpawnPos = false;
 
     [Header("Public Referenced By Others")]
     // Procedural World Generation Values
@@ -272,6 +273,7 @@ public class World : MonoBehaviour
 
     private void Start()
     {
+        setSpawnPos = false;
         worldLoaded = false;
         if (planetNumber == 3) // cache result for use in GetVoxel
             isEarth = true;
@@ -300,7 +302,6 @@ public class World : MonoBehaviour
         }
 
         LoadWorld();
-
         worldPlayer.transform.position = defaultSpawnPosition;
 
         JoinPlayer(worldPlayer); // needed to load world before player joins?
@@ -549,11 +550,14 @@ public class World : MonoBehaviour
             CharacterController charController = playerGameObject.GetComponent<CharacterController>();
             bool playerCharControllerActive = charController.enabled; // save active state of player character controller to reset to old value after teleport
             charController.enabled = false; // disable character controller since this prevents teleporting to saved locations
-            playerGameObject.transform.position = player.spawnPosition; // teleport player to saved location
+            playerGameObject.transform.position = player.spawnPosition; // teleport player to saved location OR default spawn position
             charController.enabled = playerCharControllerActive; // reset character controller to previous state we saved earlier
         }
         else // if player pos is not in world
+        {
             playerGameObject.transform.position = defaultSpawnPosition; // spawn at world spawn point
+        }
+            
 
         ChunkCoord coord = GetChunkCoordFromVector3(playerGameObject.transform.position);
         playerChunkCoords.Add(coord);
@@ -575,6 +579,65 @@ public class World : MonoBehaviour
         playerCount++;
 
         SetUndrawVoxels();
+    }
+
+    public Vector3 SetValidSpawnPoint()
+    {
+        return defaultSpawnPosition;
+
+        // // function tries to find a spawn point on dry land if the current one is in the air or water
+        // int xPos = Mathf.FloorToInt(defaultSpawnPosition.x);
+        // int yPos = VoxelData.ChunkHeight - 1;
+        // int zPos = Mathf.FloorToInt(defaultSpawnPosition.z);
+
+        // int maxTries = VoxelData.ChunkHeight * 1000; // try at least 1000 times for full chunk height
+
+        // // iterate thru positions until continentalness is greater than 0.5f
+        // for(int i = 0; i < maxTries; i++) // try up to 1000 times to find a good spawn point (not air and on land)
+        // {
+        //     Vector3Int currentPos = new Vector3Int(xPos, yPos, zPos);
+
+        //     UnityEngine.Debug.Log("checking pos " + currentPos);
+        //     if(GetVoxelState(currentPos) == null)
+        //     {
+        //         // iterate thru y positions until block is not air
+        //         if(yPos - 1 >= 0)
+        //             yPos--;
+        //         else
+        //             yPos = VoxelData.ChunkHeight;
+
+        //         if(yPos == 0) // not finding valid points, need to increment zPos also?
+        //             xPos++;
+                
+        //         continue;
+        //     }
+                
+
+        //     byte currentPosBlockID = GetVoxelState(currentPos).id;
+        //     UnityEngine.Debug.Log("checking position " + currentPos + " with blockID = " + currentPosBlockID);
+
+        //     // check for valid position and
+        //     // exit if the block is not air or water
+        //     if(IsGlobalPosInsideBorder(currentPos) && currentPosBlockID != 0 && currentPosBlockID != worldData.blockIDwater)
+        //     {
+        //          // set spawn point to new position
+        //         //defaultSpawnPosition = currentPos;
+        //         UnityEngine.Debug.Log("new spawn point found at " + currentPos);
+        //         break;
+        //     }
+        //     else
+        //     {
+        //         // iterate thru y positions until block is not air
+        //         if(yPos - 1 >= 0)
+        //             yPos--;
+        //         else
+        //             yPos = VoxelData.ChunkHeight;
+
+        //         if(yPos == 0) // not finding valid points, need to increment zPos also?
+        //             xPos++;
+        //     }
+        // }
+        // UnityEngine.Debug.Log("No valid position found");
     }
 
     public void SetUndrawVoxels()
@@ -941,7 +1004,18 @@ public class World : MonoBehaviour
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
         if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
+        {
             voxelValue = biome.surfaceBlock; // dirt
+
+            // trouble setting player position to new spawn point
+            // if(!setSpawnPos)
+            // {   // do this once
+            //     int chunkWidth = VoxelData.ChunkWidth;
+            //     defaultSpawnPosition = new Vector3(globalPos.x * chunkWidth, globalPos.y + 5, globalPos.z * chunkWidth);
+            //     setSpawnPos = true;
+            //     //UnityEngine.Debug.Log("set Spawn Point to " + defaultSpawnPosition); 
+            // }
+        }
         if (yGlobalPos == terrainHeight && yGlobalPos > 0.7 * VoxelData.ChunkHeight)
             voxelValue = worldData.blockIDsubsurface; // rocky mountains
         if (yGlobalPos == terrainHeight && yGlobalPos > 0.8 * VoxelData.ChunkHeight)

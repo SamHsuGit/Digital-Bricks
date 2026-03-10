@@ -1303,6 +1303,52 @@ public class Controller : NetworkBehaviour
         //     }
         //     heldObRb = null;
         // }
+        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD/VOXEL (can only destroy world in fps camMode)
+        {
+            Vector3 position = shootPos.position;
+            blockID = World.Instance.GetVoxelState(position).id; // need current blockID to test if can mine
+
+            canMine = false; // set to true only if block is found in allowable matrix
+            for (int i = 0; i < allowableDropMatrix[toolID].Length; i++) // for every block in matrix for given toolID
+            {
+                if (allowableDropMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
+                    canMine = true; // allow the next code to mine the block
+            }
+
+            // MINING DELAY
+            if(miningCounter >= toolMiningSpeeds[toolID] + World.Instance.blockTypes[blockID].hardness)
+            {
+                if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
+                    return;
+
+                if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
+                    return;
+
+                shootBricks.Play();
+                PlayerRemoveVoxel();
+
+                //PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
+                if(canMine)
+                {
+                    //if(blockID > 15) // special non solid color voxels
+                        SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
+                    // else
+                    // {
+                    //     int dropCount = 20; // voxels are comprised of 20 1x1 plates (bits)
+                    //     for(int i = 0; i < dropCount; i++)
+                    //     {
+                    //         if(Settings.OnlinePlay)
+                    //             CmdSpawnObject(3, blockID, position);
+                    //         else
+                    //             SpawnObject(3, blockID, position);
+                            
+                    //     }
+                    // }
+                }
+                
+                miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
+            }
+        }
         // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
         else if (camMode == 1 && Physics.SphereCast(playerCameraOrigin.transform.position + playerCamera.transform.forward * cc.radius * 2, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist, 11) && hit.transform.gameObject.tag == "placedBrick")
         {
@@ -1354,52 +1400,6 @@ public class Controller : NetworkBehaviour
             //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
             //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
             // }
-        }
-        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD/VOXEL (can only destroy world in fps camMode)
-        {
-            Vector3 position = shootPos.position;
-            blockID = World.Instance.GetVoxelState(position).id; // need current blockID to test if can mine
-
-            canMine = false; // set to true only if block is found in allowable matrix
-            for (int i = 0; i < allowableDropMatrix[toolID].Length; i++) // for every block in matrix for given toolID
-            {
-                if (allowableDropMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
-                    canMine = true; // allow the next code to mine the block
-            }
-
-            // MINING DELAY
-            if(miningCounter >= toolMiningSpeeds[toolID] + World.Instance.blockTypes[blockID].hardness)
-            {
-                if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
-                    return;
-
-                if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
-                    return;
-
-                shootBricks.Play();
-                PlayerRemoveVoxel();
-
-                //PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
-                if(canMine)
-                {
-                    //if(blockID > 15) // special non solid color voxels
-                        SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
-                    // else
-                    // {
-                    //     int dropCount = 20; // voxels are comprised of 20 1x1 plates (bits)
-                    //     for(int i = 0; i < dropCount; i++)
-                    //     {
-                    //         if(Settings.OnlinePlay)
-                    //             CmdSpawnObject(3, blockID, position);
-                    //         else
-                    //             SpawnObject(3, blockID, position);
-                            
-                    //     }
-                    // }
-                }
-                
-                miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
-            }
         }
         // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
         // {
@@ -1959,7 +1959,8 @@ public class Controller : NetworkBehaviour
                     }
 
                     // SECOND CHECK VOXELS
-                    if (slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.id == _blockID) // if toolbar slot has a stack and toolbar stack id matches highlighted block id
+                    // if toolbar slot has a stack and toolbar stack id matches highlighted block id and current slot stack is not marked placedbrick
+                    if (slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.id == _blockID && !slotsToCheck[i].itemSlot.stack.isPlacedBrick)
                     {
                         if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[_blockID].stackMax)
                         {
@@ -1970,6 +1971,7 @@ public class Controller : NetworkBehaviour
                     }
                 }
 
+                // Run thru all slots again checking for empty slots since not matching slots were found to stack
                 for (int j = 0; j < slotsToCheck.Length; j++) // for all slots
                 {
                     // FIRST CHECK PLACED BRICKS

@@ -187,12 +187,15 @@ public class Crafting : MonoBehaviour
                 if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors) // if has placed bricks in slot
                 {
                     color = CheckColorOverrides(color);
-                    recipeString = recipeString.Replace("1",color.ToString());
+                    if(slotsWithPlacedBricksCount == 0) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
+                        recipeString = recipeString.Replace("1",color.ToString()); // special case to craft 1x1 plates from voxels
                     //Debug.Log(recipeString);
                     recipe.outputID = color;
                     //Debug.Log("replaced placedBrick values with " + color.ToString());
                 }
-                //Debug.Log(recipeString);
+
+                //if(recipe.name == "3020 2x4p")
+                //    Debug.Log("checking " + recipe.name + " if " + craftSlotString + " matches " + recipeString);
                 if(craftSlotString == recipeString) // if match is found exit the loop
                 {
                     byte outputID;

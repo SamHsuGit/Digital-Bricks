@@ -18,6 +18,9 @@ public class DragAndDropHandler : MonoBehaviour {
     public Inventory inventory;
 
     public Crafting crafting;
+    public int cursorSlotPlacedBlockName;
+    public bool cursorSlotIsPlacedBlock;
+    public byte cursorSlotBlockID;
 
     private UIItemSlot[] slotArray;
 
@@ -352,7 +355,14 @@ public class DragAndDropHandler : MonoBehaviour {
             //Debug.Log("found object " + result.gameObject.name + " of tag: " + result.gameObject.tag);
             if (result.gameObject.tag == "UIItemSlot")
             {
-                return result.gameObject.GetComponent<UIItemSlot>();
+                UIItemSlot returnSlot = result.gameObject.GetComponent<UIItemSlot>();
+                if(returnSlot.itemSlot.HasItem)
+                {
+                    cursorSlotIsPlacedBlock = returnSlot.itemSlot.stack.isPlacedBrick;
+                    cursorSlotPlacedBlockName = returnSlot.itemSlot.stack.placedBrickID;
+                    cursorSlotBlockID = returnSlot.itemSlot.stack.id;
+                }
+                return returnSlot;
             }
         }
         return null;

@@ -82,7 +82,7 @@ public class Health : NetworkBehaviour
             controller.baseAnimRate = 9f; // animation speed is fixed regardless of # of pieces
             voxelCollider.baseSprintSpeed = 2 * voxelCollider.baseWalkSpeed;
             lastPlayerPos = Mathf.FloorToInt(gameObject.transform.position.magnitude);
-        }  
+        }
     }
 
     int SimpleCountCheck(GameObject ob)
@@ -317,5 +317,4 @@ public class Health : NetworkBehaviour
                 ob.GetComponent<BoxCollider>().enabled = true;
         }
     }
-
 }
