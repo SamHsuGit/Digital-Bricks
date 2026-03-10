@@ -160,6 +160,7 @@ public class DragAndDropHandler : MonoBehaviour {
             clickedSlot.itemSlot.InsertStack(newStack);
             if(cursorSlot.itemSlot.stack.amount <= 0)
                 cursorSlot.itemSlot.EmptySlot();
+            controller.brickPlaceDown.Play();
         }
         // if right clicked stack of items with more than 1 item
         else if (!cursorSlot.itemSlot.HasItem && clickedSlot.HasItem && clickedSlot.itemSlot.stack.amount > 1)
@@ -172,6 +173,7 @@ public class DragAndDropHandler : MonoBehaviour {
             clickedSlot.itemSlot.Take(originalAmount - amount + makeUpAmount);
             ItemStack newStack = new ItemStack(clickedSlot.itemSlot.stack.id, clickedSlot.itemSlot.stack.placedBrickID, clickedSlot.itemSlot.stack.isPlacedBrick, amount);
             cursorSlot.itemSlot.InsertStack(newStack);
+            controller.brickPickUp.Play();
         }
         // right clicking a slot with item while holding item
         else if (cursorSlot.itemSlot.HasItem && clickedSlot.HasItem)
@@ -185,6 +187,7 @@ public class DragAndDropHandler : MonoBehaviour {
                 clickedSlot.itemSlot.Give(1);
                 if(cursorSlot.itemSlot.HasItem && cursorSlot.itemSlot.stack.amount <= 0)
                     cursorSlot.itemSlot.EmptySlot();
+                controller.brickPlaceDown.Play();
             }
         }
 
@@ -200,6 +203,9 @@ public class DragAndDropHandler : MonoBehaviour {
 
         if(!clickedSlot.HasItem)
             return;
+
+        controller.brickPickUp.Play();
+        controller.brickPlaceDown.Play();
 
         // // trigger event that checks crafting slots to convert item (commented out, cannot quick move into crafting slots)
         // if(clickedSlot.isOutput)
@@ -292,12 +298,15 @@ public class DragAndDropHandler : MonoBehaviour {
         if (clickedSlot != null && !cursorSlot.HasItem && clickedSlot.HasItem) // pickup stack
         {
             cursorItemSlot.InsertStack(clickedSlot.itemSlot.TakeAll());
+            controller.brickPickUp.Play();
             return;
         }
 
         if (clickedSlot != null && cursorSlot.HasItem && !clickedSlot.HasItem) // if holding item and empty slot, put items in empty slot
         {
             clickedSlot.itemSlot.InsertStack(cursorItemSlot.TakeAll());
+            controller.brickPlaceDown.Play();
+            return;
         }
 
         if (clickedSlot != null && cursorSlot.HasItem && clickedSlot.HasItem) // if holding item and slot has item, drop stack into slot
@@ -334,6 +343,8 @@ public class DragAndDropHandler : MonoBehaviour {
                 // catch check for cursor slot has amount zero or less, just remove all items
                 if(cursorSlot.itemSlot.HasItem && cursorSlot.itemSlot.stack.amount <= 0)
                     cursorSlot.itemSlot.EmptySlot();
+
+                controller.brickPlaceDown.Play();
             }
         }
 

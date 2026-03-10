@@ -82,6 +82,8 @@ public class Controller : NetworkBehaviour
     public AudioSource crystal;
     public AudioSource mushroom;
     public AudioSource shootBricks;
+    public AudioSource brickHit;
+    public AudioSource brickMove;
     public GameObject playerCamera;
     public GameObject removePosPrefab;
     public GameObject shootPosPrefab;
@@ -1305,6 +1307,8 @@ public class Controller : NetworkBehaviour
         // }
         else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD/VOXEL (can only destroy world in fps camMode)
         {
+            brickHit.Play(); // if block detected, play sound of hitting block
+
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id; // need current blockID to test if can mine
 
@@ -1352,6 +1356,9 @@ public class Controller : NetworkBehaviour
         // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT
         else if (camMode == 1 && Physics.SphereCast(playerCameraOrigin.transform.position + playerCamera.transform.forward * cc.radius * 2, sphereCastRadius, playerCamera.transform.forward, out hit, grabDist, 11) && hit.transform.gameObject.tag == "placedBrick")
         {
+
+            brickHit.Play(); // if brick detected, play sound of hitting brick
+
             //if(miningCounter >= toolMiningSpeeds[toolID])
             if(!toolbar.slots[toolbar.slotIndex].HasItem)
             {
