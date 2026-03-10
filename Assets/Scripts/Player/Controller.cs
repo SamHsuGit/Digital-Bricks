@@ -1336,6 +1336,7 @@ public class Controller : NetworkBehaviour
                         SpawnObject(3, blockID, pos);
                     //SpawnVoxelRbFromWorld(hit.transform.position, (byte)currentBrickMaterialIndex);
                 }
+                shootBricks.Play();
                 Destroy(hit.transform.gameObject);
             }
 
@@ -1456,7 +1457,12 @@ public class Controller : NetworkBehaviour
                 }
         }
 
-        if (!toolbar.slots[toolbar.slotIndex].HasItem) // cannot place block if no item in slot
+        // cannot place block if no item in slot
+        if (!toolbar.slots[toolbar.slotIndex].HasItem)
+            return;
+
+        // cannot place voxel for placedbricks
+        if(toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
             return;
 
         if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL

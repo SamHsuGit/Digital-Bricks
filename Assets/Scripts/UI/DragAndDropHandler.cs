@@ -44,6 +44,9 @@ public class DragAndDropHandler : MonoBehaviour {
         {
             UIItemSlot slot = CheckForSlot();
 
+            if(slot != null && slot.isOutput && cursorSlot.itemSlot.HasItem) // can only interact with output slot if not holding item
+                return;
+
             HandleLeftClickSlot(slot);
 
             // if(crafting.AllCraftingSlotsEmpty())
@@ -55,6 +58,9 @@ public class DragAndDropHandler : MonoBehaviour {
         {
             UIItemSlot slot = CheckForSlot();
 
+            if(slot != null && slot.isOutput && cursorSlot.itemSlot.HasItem) // can only interact with output slot if not holding item
+                return;
+
             HandleStackQuickMove(slot);
 
             // if(crafting.AllCraftingSlotsEmpty())
@@ -65,6 +71,9 @@ public class DragAndDropHandler : MonoBehaviour {
         else if (clickedRMB) // if right clicked
         {
             UIItemSlot slot = CheckForSlot();
+
+            if(slot != null && slot.isOutput && cursorSlot.itemSlot.HasItem) // can only interact with output slot if not holding item
+                return;
 
             HandleRightClickSlot(slot);
             

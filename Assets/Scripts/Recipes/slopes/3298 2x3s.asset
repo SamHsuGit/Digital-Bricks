@@ -16,29 +16,19 @@ MonoBehaviour:
   recipeShapes:
   - is2x2: 0
     slot1: 4286
-    slot2: 4286
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 4286
-    slot3: 4286
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
     slot2: 0
     slot3: 0
     slot4: 4286
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 4286
+    slot3: 0
+    slot4: 0
     slot5: 4286
     slot6: 0
     slot7: 0
@@ -47,9 +37,9 @@ MonoBehaviour:
   - is2x2: 0
     slot1: 0
     slot2: 0
-    slot3: 0
+    slot3: 4286
     slot4: 0
-    slot5: 4286
+    slot5: 0
     slot6: 4286
     slot7: 0
     slot8: 0
@@ -58,10 +48,20 @@ MonoBehaviour:
     slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 0
+    slot4: 4286
     slot5: 0
     slot6: 0
     slot7: 4286
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 4286
+    slot6: 0
+    slot7: 0
     slot8: 4286
     slot9: 0
   - is2x2: 0
@@ -70,11 +70,11 @@ MonoBehaviour:
     slot3: 0
     slot4: 0
     slot5: 0
-    slot6: 0
-    slot7: 4286
-    slot8: 4286
-    slot9: 0
-  outputID: 3
+    slot6: 4286
+    slot7: 0
+    slot8: 0
+    slot9: 4286
+  outputID: 6
   outputPlacedBrickName: 3298
   outputQty: 1
   studs: 12
