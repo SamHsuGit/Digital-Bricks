@@ -1615,6 +1615,9 @@ MonoBehaviour:
   controller: {fileID: 0}
   inventory: {fileID: 6143453991454651663}
   crafting: {fileID: 7091356892110421563}
+  cursorSlotPlacedBlockName: 0
+  cursorSlotIsPlacedBlock: 0
+  cursorSlotBlockID: 0
 --- !u!114 &7091356892110421563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1690,6 +1693,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b838e3a18dac6477fa5318b87d68b105, type: 2}
   - {fileID: 11400000, guid: eb7c77752f61842509479402801ca7b7, type: 2}
   - {fileID: 11400000, guid: 0ae5b0c02e4b24c7e8a2a089c22a556b, type: 2}
+  - {fileID: 11400000, guid: 97a9f73e8ec854f1fa5ffe96100763b9, type: 2}
+  - {fileID: 11400000, guid: d497e4aa1463141dc9db47ef40738cce, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}

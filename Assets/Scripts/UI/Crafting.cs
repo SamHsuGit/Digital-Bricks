@@ -153,7 +153,8 @@ public class Crafting : MonoBehaviour
         foreach (Recipe recipe in recipes)
         {
             // cannot craft placedbricks if the colors do not all match
-            if(recipe.isPlacedBrick && nonmatchingcolors)
+            // allow non matching colors for special items crafting (e.g. pickaxe)
+            if(recipe.isPlacedBrick && nonmatchingcolors && recipe.outputPlacedBrickName != 3841)
                 continue;
             
             foreach (RecipeShape shape in recipe.recipeShapes)
@@ -184,7 +185,8 @@ public class Crafting : MonoBehaviour
                 string recipeString = string.Join(",", slots) + ",";
 
                 // if colors all match, allow placed bricks to adapt to any color
-                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors) // if has placed bricks in slot
+                // need to allow non matching colors and placedbrick recipes thru for special item crafting (e.g. pickaxe)
+                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors && recipe.outputPlacedBrickName != 3841) // if has placed bricks in slot
                 {
                     color = CheckColorOverrides(color);
                     if(slotsWithPlacedBricksCount == 0) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
@@ -194,8 +196,8 @@ public class Crafting : MonoBehaviour
                     //Debug.Log("replaced placedBrick values with " + color.ToString());
                 }
 
-                //if(recipe.name == "3020 2x4p")
-                //    Debug.Log("checking " + recipe.name + " if " + craftSlotString + " matches " + recipeString);
+                // if(recipe.name == "3841 Pickaxe")
+                //     Debug.Log("checking " + recipe.name + " if " + craftSlotString + " matches " + recipeString);
                 if(craftSlotString == recipeString) // if match is found exit the loop
                 {
                     byte outputID;
@@ -205,7 +207,32 @@ public class Crafting : MonoBehaviour
                         outputID = recipe.outputID;
                     //Debug.Log("MATCH FOUND! " + craftSlotString + " matches recipe " + recipe.name + " " + recipeString + " which outputs " + recipe.outputID);
 
-                    // simple check if crafting voxel again, overrides other crafting checks below
+
+                    // Override for crafting certain items
+                    if (recipe.outputPlacedBrickName == 3841) // pickaxe
+                    {
+                        // can only craft pickaxe under certain conditions
+                        // top 3 slots must have items
+                        if(slotsToCheck[0].HasItem && slotsToCheck[1].HasItem && slotsToCheck[2].HasItem)
+                        {
+                            int firstSlotID = slotsToCheck[0].itemSlot.stack.id; // use first slot (top left) for definition of color
+                            int secondSlotID = slotsToCheck[1].itemSlot.stack.id;
+                            int thirdSlotID = slotsToCheck[2].itemSlot.stack.id;
+
+                            bool matchingTopColors = false;
+                            if(firstSlotID == secondSlotID && secondSlotID == thirdSlotID)
+                                matchingTopColors = true;
+
+                            // only output pickaxe for valid colors
+                            if(matchingTopColors && (firstSlotID == 6 || firstSlotID == 3 || firstSlotID == 7 || firstSlotID == 13))
+                            {
+                                PutInOutputSlot((byte)firstSlotID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
+                                return;
+                            }
+                        }
+                    }
+
+                    // Override for crafting a voxel
                     if(recipe.outputPlacedBrickName == 1)
                     {
                         //Debug.Log("Crafting back into voxel with color " + outputID);

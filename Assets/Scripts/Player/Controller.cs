@@ -866,6 +866,8 @@ public class Controller : NetworkBehaviour
         // player normally uses voxel collision in voxelCollider to check grounded, unless standing on imported ldraw parts which have physics collisions, then mark player as grounded
         isGrounded = CheckGroundedCollider();
 
+        toolID = GetToolID();
+
         if (!options) // Prevent moving/interacting with world during UI Menus
         {
             if(camMode != 3)
@@ -1258,6 +1260,60 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(0);
         else
             TakeFromCurrentSlot(1);
+    }
+
+    private int GetToolID()
+    {
+        int returnValue = 0;
+
+        if(!toolbar.slots[toolbar.slotIndex].HasItem || !toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
+            return 0;
+        
+        int partNumber = toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID;
+        byte _itemBlockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+
+        if(partNumber == 3841)
+        {
+            switch(_itemBlockID)
+            {
+                case 6: // wood
+                    {
+                        return 1; // wood
+                    }
+                case 3: // stone
+                    {
+                        return 2; // stone
+                    }
+                case 7: // yellow
+                    {
+                        return 3; // gold
+                    }
+                case 16: // crystal
+                    {
+                        return 4; // crystal
+                    }
+            }
+        }
+
+        // switch(partNumber)
+        // {
+        //     case 3841: // pickaxe
+        //         {
+                    
+        //             break;
+        //         }
+        //     case 3835: // axe
+        //         {
+
+        //             break;
+        //         }
+        //     case 3837: // shovel
+        //         {
+
+        //             break;
+        //         }
+        // }
+        return returnValue; // returns 0 if not found a tool
     }
 
     private void PressedMine()
@@ -1940,6 +1996,8 @@ public class Controller : NetworkBehaviour
             firstSlot = 0;
 
         UIItemSlot[] slotsToCheck;
+
+        brickPickUp.Play();
 
         for(int iteration = 0; iteration < 2; iteration++) // run code 2X, once for toolbar, then again for slots
         {

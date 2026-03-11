@@ -10,27 +10,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 4032 2x2rp
+  m_Name: 30374 Stick
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 1
   recipeShapes:
   - is2x2: 0
-    slot1: 4073
-    slot2: 4073
+    slot1: 6
+    slot2: 0
     slot3: 0
-    slot4: 4073
-    slot5: 4073
+    slot4: 6
+    slot5: 0
     slot6: 0
     slot7: 0
     slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
-    slot2: 4073
-    slot3: 4073
+    slot2: 6
+    slot3: 0
     slot4: 0
-    slot5: 4073
-    slot6: 4073
+    slot5: 6
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 6
+    slot4: 0
+    slot5: 0
+    slot6: 6
     slot7: 0
     slot8: 0
     slot9: 0
@@ -38,23 +48,33 @@ MonoBehaviour:
     slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 4073
-    slot5: 4073
+    slot4: 6
+    slot5: 0
     slot6: 0
-    slot7: 4073
-    slot8: 4073
+    slot7: 6
+    slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
-    slot5: 4073
-    slot6: 4073
+    slot5: 6
+    slot6: 0
     slot7: 0
-    slot8: 4073
-    slot9: 4073
+    slot8: 6
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 6
+    slot7: 0
+    slot8: 0
+    slot9: 6
   outputID: 6
-  outputPlacedBrickName: 4032
-  outputQty: 1
-  studs: 4
+  outputPlacedBrickName: 30374
+  outputQty: 4
+  studs: 2

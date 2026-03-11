@@ -90,6 +90,7 @@ MonoBehaviour:
     blockIDHugeTreeTrunk: 0
     blockIDColumn: 0
   multithreading: 1
+  setSpawnPos: 0
   planetNumber: 0
   seed: 0
   worldSizeInChunks: 0
@@ -209,6 +210,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 29d747212cb34440d89a0dade2876602, type: 2}
   - {fileID: 11400000, guid: 148741fd8fc6c439bae0e7d42610bfad, type: 2}
   - {fileID: 11400000, guid: 9208ba8cad2db41f1a86c37d18fd9b74, type: 2}
+  - {fileID: 11400000, guid: aaf0d25e63e714a2db34e5e580f8ed0b, type: 2}
+  - {fileID: 11400000, guid: a39777cd48eb14c0ab871a31ed13592b, type: 2}
+  - {fileID: 11400000, guid: 11e8c8422519842729380ebbf6e57b5d, type: 2}
+  - {fileID: 11400000, guid: a020a7be977314380af0482cef110b8a, type: 2}
+  - {fileID: 11400000, guid: f64c7919a62ae4363b2a5cc46e3e452c, type: 2}
   voxelPrefabs:
   - {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}
   - {fileID: 8436909742428498496, guid: dbb5fd4476c044b419ca217aa0edfe12, type: 3}

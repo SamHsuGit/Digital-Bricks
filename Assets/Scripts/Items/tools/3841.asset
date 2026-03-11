@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d235f00861cbd426fb6866df1d2c34f0, type: 3}
-  m_Name: Pickaxe Wood
+  m_Name: 3841
   m_EditorClassIdentifier: Assembly-CSharp::PlacedBrick
   stackMax: 64
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9f129de8f8dbb43fa925a386838310eb, type: 3}
