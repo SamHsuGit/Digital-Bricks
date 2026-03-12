@@ -118,11 +118,11 @@ public class Controller : NetworkBehaviour
     public int[][] allowableDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
         // defines blocks that the given tool can create a drop for
-        new int[] {            6,       9,         13, 14, 15,     17, 18,     20 }, // tool ID 0 = punch (can only mine wood, leaves, water, grass, mushroom, flower)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20 }, // tool ID 2 = stone (cannot mine black or crystal)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 3 = gold (cannot mine black)
-        new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20 }, // tool ID 4 = crystal
+        new int[] {            6,       9,         13, 14, 15,     17, 18,     20     }, // tool ID 0 = punch (can only mine wood, leaves, water, grass, mushroom, flower)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20, 21 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20, 21 }, // tool ID 2 = stone (cannot mine black or crystal)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 3 = gold (cannot mine black)
+        new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 4 = crystal
     };
 
     public int[] ldrawHexValues = new int[]
@@ -1190,6 +1190,9 @@ public class Controller : NetworkBehaviour
             return;
 
         if(!toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick) // do not do if item is not a placed brick, use normal placement for regular voxels
+            return;
+
+        if(toolID != 0) // do not place bricks if holding tool
             return;
 
         // default values overridden by match
