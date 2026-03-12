@@ -12,15 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 012 base.ldr
   m_EditorClassIdentifier: 
-  blockName: 
+  blockName: base
+  id: 12
+  dropID: 0
+  stackMax: 0
   isDrawn: 0
   isSolid: 0
   isTransparent: 1
+  isWater: 0
+  hardness: 0
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 8874480006941658528, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: 
   isActive: 0
-  studs: {fileID: 0}
   voxelBoundObject: {fileID: 0}
   backFaceTexture: 0
   frontFaceTexture: 0
@@ -28,3 +33,4 @@ MonoBehaviour:
   bottomFaceTexture: 0
   leftFaceTexture: 0
   rightFaceTexture: 0
+  topFaceSmoothTexture: 0

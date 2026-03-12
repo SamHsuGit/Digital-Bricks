@@ -6,6 +6,8 @@ using UnityEngine;
 public class BlockType : ScriptableObject
 {
     public string blockName;
+    public byte id;
+    public byte dropID;
     public int stackMax;
     public bool isDrawn;
     public bool isSolid;

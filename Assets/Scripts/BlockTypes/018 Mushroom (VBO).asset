@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 018 Mushroom (VBO)
   m_EditorClassIdentifier: 
-  blockName: 
+  blockName: Mushroom
+  id: 18
+  dropID: 18
   stackMax: 64
   isDrawn: 0
   isSolid: 1

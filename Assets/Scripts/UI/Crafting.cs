@@ -25,6 +25,7 @@ public class Crafting : MonoBehaviour
     public Recipe[] recipes;
     private UIItemSlot[] slotsToCheck;
     public GameObject[] uiMenus;
+    public GameMenu gameMenu;
     public string craftSlotString;
     private void Update()
     {
@@ -278,6 +279,7 @@ public class Crafting : MonoBehaviour
         ItemStack stack = new ItemStack(_stackID, _stackPlacedBrickID, _isPlacedBrick, _stackQty);
         //Debug.Log("_stackPlacedBrickID = " + _stackPlacedBrickID);
         outputSlot.itemSlot.InsertStack(stack);
+        gameMenu.controller.brickPlaceDown.Play(); // eventually change to unique crafting sound
     }
 
     public void ClickedOutputSlot()

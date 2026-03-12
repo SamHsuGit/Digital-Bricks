@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 005 Red (Lava)
   m_EditorClassIdentifier: 
-  blockName: 
+  blockName: Lava
+  id: 5
+  dropID: 5
   stackMax: 64
   isDrawn: 1
   isSolid: 1

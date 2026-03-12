@@ -180,6 +180,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ac903c4711666dd40bc5275e5a059c31, type: 2}
   - {fileID: 11400000, guid: fffc8b0f71de7ed41b1d6220c1687b05, type: 2}
   - {fileID: 11400000, guid: 872fb16cb6f9a704094175c5e66ba79f, type: 2}
+  - {fileID: 11400000, guid: df68e1c61085144269075105836ff612, type: 2}
   placedBricks:
   - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
   - {fileID: 11400000, guid: c69ddb3e123724e23b67f5bbf17b9798, type: 2}

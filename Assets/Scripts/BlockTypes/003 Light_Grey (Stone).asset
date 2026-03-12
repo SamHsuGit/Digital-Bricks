@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 003 Light_Grey (Stone)
   m_EditorClassIdentifier: 
-  blockName: 
+  blockName: Stone
+  id: 3
+  dropID: 21
   stackMax: 64
   isDrawn: 1
   isSolid: 1

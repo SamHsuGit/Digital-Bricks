@@ -1506,19 +1506,19 @@ public class Controller : NetworkBehaviour
 
         // IF Pressed place block while looking at certain voxel id's enter crafting/furnace UI and exit this function, do not continue with placing block code
         blockID = World.Instance.GetVoxelState(shootPos.position).id;
-        switch(blockID)
-        {
-            case 21: // crafting table
-                {
-                    inventoryUIMode = 2; //enter crafting table UI
-                    return;
-                }
-            case 22: // furnace
-                {
-                    inventoryUIMode = 3; //enter furnace UI
-                    return;
-                }
-        }
+        // switch(blockID)
+        // {
+        //     case 21: // crafting table
+        //         {
+        //             inventoryUIMode = 2; //enter crafting table UI
+        //             return;
+        //         }
+        //     case 22: // furnace
+        //         {
+        //             inventoryUIMode = 3; //enter furnace UI
+        //             return;
+        //         }
+        // }
 
         // cannot place block if no item in slot
         if (!toolbar.slots[toolbar.slotIndex].HasItem)
@@ -2274,8 +2274,9 @@ public class Controller : NetworkBehaviour
         {
             case 0: // IF VOXEL
                 {
-                    sceneObject.SetEquippedItem(type, id); // set the child object on the server
-                    sceneObject.typeVoxel = id; // set the SyncVar on the scene object for clients
+                    byte dropID = World.Instance.blockTypes[id].dropID;
+                    sceneObject.SetEquippedItem(type, dropID); // set the child object on the server
+                    sceneObject.typeVoxel = dropID; // set the SyncVar on the scene object for clients
                     BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                     VoxelBc.material = physicMaterial;
                     VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
@@ -2320,27 +2321,9 @@ public class Controller : NetworkBehaviour
                 }
             case 3: // IF VOXEL BIT
                 {
-                    // special case exceptions
-                    switch(id)
-                    {
-                        case 13: // grass/dirt = green
-                            {
-                                id = 8;
-                                break;
-                            }
-                        case 14: // wood = brown
-                            {
-                                id = 6;
-                                break;
-                            }
-                        case 15: // leaves = green
-                            {
-                                id = 8;
-                                break;
-                            }
-                    }
-                    sceneObject.SetEquippedItem(type, id); // set the child object on the server
-                    sceneObject.typeVoxelBit = id;
+                    byte dropID = World.Instance.blockTypes[id].dropID;
+                    sceneObject.SetEquippedItem(type, dropID); // set the child object on the server
+                    sceneObject.typeVoxelBit = dropID;
                     BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();
                     voxelBitBc.material = physicMaterial;
                     voxelBitBc.center = new Vector3(0, -.047f, 0);
@@ -2360,9 +2343,10 @@ public class Controller : NetworkBehaviour
                 }
             case 4: // IF PLACED BRICK DROPPED ITEM
                 {
+                    byte dropID = World.Instance.blockTypes[id].dropID;
                     sceneObject.placedBrickName = placedBrickName;
-                    sceneObject.SetEquippedItem(type, id); // set the child object on the server
-                    sceneObject.typeVoxel = id; // set the SyncVar on the scene object for clients
+                    sceneObject.SetEquippedItem(type, dropID); // set the child object on the server
+                    sceneObject.typeVoxel = dropID; // set the SyncVar on the scene object for clients
                     sceneObject.placedBrickName = placedBrickName; // set the SyncVar on the scene object for clients
                     BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                     VoxelBc.material = physicMaterial;

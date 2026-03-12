@@ -38,7 +38,7 @@ public class GameMenu : MonoBehaviour
     CanvasGroup playerHUDCanvasGroup;
     CanvasGroup optionsMenuCanvasGroup;
     Lighting lighting;
-    Controller controller;
+    public Controller controller;
     Canvas canvas;
     Health health;
     CustomNetworkManager customNetworkManager;

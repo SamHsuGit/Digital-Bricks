@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 001 Barrier
   m_EditorClassIdentifier: 
-  blockName: 
+  blockName: Barrier
+  id: 1
+  dropID: 1
   stackMax: 64
   isDrawn: 0
   isSolid: 1
@@ -22,6 +24,7 @@ MonoBehaviour:
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 0}
+  colorHexValue: 
   isActive: 0
   voxelBoundObject: {fileID: 0}
   backFaceTexture: 2

@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 011 Dark_Turquoise
   m_EditorClassIdentifier: 
-  blockName: 
+  blockName: Slime
+  id: 11
+  dropID: 11
   stackMax: 64
   isDrawn: 1
   isSolid: 1

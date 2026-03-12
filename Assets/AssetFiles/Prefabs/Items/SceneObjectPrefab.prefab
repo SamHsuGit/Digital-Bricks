@@ -77,6 +77,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   typeVoxel: 0
+  placedBrickName: 0
   typeTool: 0
   typeProjectile: 0
   projectileString: 
@@ -104,6 +105,7 @@ MonoBehaviour:
   - {fileID: 6413844807415285134, guid: fee1129e358d38a4c9a075378d9ea333, type: 3}
   - {fileID: 3225992526758807777, guid: 0be4eb7a3a7cb44958dcf7100be23755, type: 3}
   - {fileID: 37570108828818984, guid: 349121dd2cf6def48acebf10f0f0170f, type: 3}
+  - {fileID: 3225992526758807777, guid: 243038b8ba1494ea385f04a3eb07a736, type: 3}
   tool:
   - {fileID: 1684644973282001674, guid: a47fd261cef04894b90dcaf9fd4ada92, type: 3}
   - {fileID: 704852059749648236, guid: 81adc6bf23045754eb5f5700f74819c0, type: 3}
@@ -229,6 +231,7 @@ MonoBehaviour:
   - {fileID: 3563555514074976273, guid: 5666a0386e3c7e74ebf13a3c1707909f, type: 3}
   - {fileID: 3563555514074976273, guid: 086ab1a452e6f82459d4b7ac47a141f9, type: 3}
   - {fileID: 3563555514074976273, guid: 04e3903f8aabb6843970eac98697ae64, type: 3}
+  placedBrick: []
   undefinedPrefab: []
   controller: {fileID: 0}
 --- !u!114 &4647136236267966918

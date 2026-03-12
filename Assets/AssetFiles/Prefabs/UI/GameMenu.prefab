@@ -1390,6 +1390,7 @@ MonoBehaviour:
   brickControlsText: {fileID: 7689141250103445252}
   camControlsText: {fileID: 6254423454352055963}
   showControls: 0
+  controller: {fileID: 0}
 --- !u!223 &1391849460458908909
 Canvas:
   m_ObjectHideFlags: 0
@@ -1704,6 +1705,7 @@ MonoBehaviour:
   - {fileID: 7700088744635102066}
   - {fileID: 8981262882479005988}
   - {fileID: 1515134558120941906}
+  gameMenu: {fileID: 2072762906999785829}
   craftSlotString: 
 --- !u!1 &1391849460477524182
 GameObject:
