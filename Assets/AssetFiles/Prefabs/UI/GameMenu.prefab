@@ -1693,8 +1693,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b838e3a18dac6477fa5318b87d68b105, type: 2}
   - {fileID: 11400000, guid: eb7c77752f61842509479402801ca7b7, type: 2}
   - {fileID: 11400000, guid: 0ae5b0c02e4b24c7e8a2a089c22a556b, type: 2}
-  - {fileID: 11400000, guid: 97a9f73e8ec854f1fa5ffe96100763b9, type: 2}
+  - {fileID: 11400000, guid: d3ed86e41092c4a9bba8cad3349419e4, type: 2}
+  - {fileID: 11400000, guid: 10da3a9258fa948d1b244170ea43d45b, type: 2}
+  - {fileID: 11400000, guid: 94ef7f3c51175472f8ba157dcd5d9962, type: 2}
+  - {fileID: 11400000, guid: 75191cff93cda445cb59546cca56a71f, type: 2}
   - {fileID: 11400000, guid: d497e4aa1463141dc9db47ef40738cce, type: 2}
+  - {fileID: 11400000, guid: 97a9f73e8ec854f1fa5ffe96100763b9, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}
