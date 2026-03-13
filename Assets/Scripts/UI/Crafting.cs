@@ -83,7 +83,6 @@ public class Crafting : MonoBehaviour
                 //Debug.Log("item detected in " + i);
                 return false;
             }
-                
         }
         return true;
     }
@@ -225,7 +224,7 @@ public class Crafting : MonoBehaviour
                                 matchingTopColors = true;
 
                             // only output pickaxe for valid colors
-                            if(matchingTopColors && (firstSlotID == 6 || firstSlotID == 3 || firstSlotID == 7 || firstSlotID == 13))
+                            if(matchingTopColors && (firstSlotID == 6 || firstSlotID == 3 || firstSlotID == 21 || firstSlotID == 7 || firstSlotID == 13))
                             {
                                 PutInOutputSlot((byte)firstSlotID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
                                 return;

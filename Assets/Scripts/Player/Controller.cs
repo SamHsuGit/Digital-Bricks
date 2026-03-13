@@ -108,11 +108,11 @@ public class Controller : NetworkBehaviour
 
     private int[] toolMiningSpeeds = new int[] // defines the mining speed of a given toolID
     {
-        45, // tool ID 0 = punch
-        30, // tool ID 1 = wood
-        20, // tool ID 2 = stone
-        10, // tool ID 3 = gold
-        0, // tool ID 4 = crystal
+        0, // tool ID 0 = punch
+        15, // tool ID 1 = wood
+        30, // tool ID 2 = stone
+        40, // tool ID 3 = gold
+        50, // tool ID 4 = crystal
     };
 
     public int[][] allowableDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
@@ -1287,6 +1287,10 @@ public class Controller : NetworkBehaviour
                     {
                         return 2; // stone
                     }
+                case 21: // cobblestone
+                    {
+                        return 2; // stone
+                    }
                 case 7: // yellow
                     {
                         return 3; // gold
@@ -1379,7 +1383,7 @@ public class Controller : NetworkBehaviour
             }
 
             // MINING DELAY
-            if(miningCounter >= toolMiningSpeeds[toolID] + World.Instance.blockTypes[blockID].hardness)
+            if(miningCounter >= World.Instance.blockTypes[blockID].hardness - toolMiningSpeeds[toolID])
             {
                 if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
                     return;

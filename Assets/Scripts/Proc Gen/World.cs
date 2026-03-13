@@ -265,9 +265,9 @@ public class World : MonoBehaviour
         weirdnessSplinePoints = new Vector2[]
         {
             new Vector2(0.00f, 0.00f),
-            new Vector2(0.80f, 0.35f),
-            new Vector2(0.81f, 0.80f), // large jump such that only smaller percentage of terrain is weird
-            new Vector2(1.00f, 0.80f),
+            new Vector2(0.75f, 0.35f),
+            new Vector2(0.76f, 0.99f), // large jump such that only smaller percentage of terrain is weird
+            new Vector2(1.00f, 0.99f),
         };
     }
 
@@ -1029,7 +1029,7 @@ public class World : MonoBehaviour
            voxelValue = worldData.blockIDsubsurface; // stone
         // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
         // voxelValue = biome.surfaceBlock; // dirt
-        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
+        if (voxelValue == 0 && continentalness < 0.5f && weirdness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
            return worldData.blockIDwater; // water
 
         //return voxelValue; // for testing without LODES or SURFACE OBJECTS
@@ -1071,7 +1071,7 @@ public class World : MonoBehaviour
         // noise used to determine if to use cheese, spaghetti, or noodle caves
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
-        if (drawLodes && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight) // lodes should not appear above sea level, must mine for them
+        if (!isAir && voxelValue != 0 && drawLodes && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight) // lodes should not appear above sea level, must mine for them
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -1235,7 +1235,7 @@ public class World : MonoBehaviour
         peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
         
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
-        weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.1f), weirdnessSplinePoints);
+        weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.06f), weirdnessSplinePoints);
         //weirdness = Noise.Get2DPerlin(xzCoords, 321, 2f);
 
         // for testing to individually visualize the effects of the spline points

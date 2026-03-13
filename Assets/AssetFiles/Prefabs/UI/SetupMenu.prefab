@@ -1755,63 +1755,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuElements: {fileID: 6885639081671787491}
-  planets:
-  - {fileID: 11400000, guid: b73d8e9e976e21b4687e3a312ddccda5, type: 2}
-  - {fileID: 11400000, guid: 4adf5206650f2a44abfcf9fe9f966d7b, type: 2}
-  - {fileID: 11400000, guid: 615afd6c849daee40aeec2f7e464ea48, type: 2}
-  - {fileID: 11400000, guid: ce5bf94516745e140ae79c79c921957a, type: 2}
-  - {fileID: 11400000, guid: 6c5d25dc7de6ea04db8dc7de8f6c7f7b, type: 2}
-  - {fileID: 11400000, guid: 7e5e7c06c77aa8948af1d031607a9897, type: 2}
-  - {fileID: 11400000, guid: f7b28ecebbcb45840819387e106a7215, type: 2}
-  - {fileID: 11400000, guid: 8775edaf3cb1bce45a9f080bbd30c214, type: 2}
-  - {fileID: 11400000, guid: 4dc9f5e6a92fce84886fa172944ef08b, type: 2}
-  - {fileID: 11400000, guid: 45a8b6c081dfbc643912815cb6a1dc2c, type: 2}
-  - {fileID: 11400000, guid: a0f72f59f05688946b66eafe3b7cd359, type: 2}
-  - {fileID: 11400000, guid: edf657da258cae945bff8f59b8f92763, type: 2}
-  - {fileID: 11400000, guid: aed1a4e360421f4428af20289e905ef7, type: 2}
-  - {fileID: 11400000, guid: be975631a24f8a14a91ffebfc2ca44c9, type: 2}
-  - {fileID: 11400000, guid: c5d8e326c3689234eb0e5720a0123aa2, type: 2}
-  - {fileID: 11400000, guid: 53c3152d50ed6a748a893bd66c4d4587, type: 2}
-  - {fileID: 11400000, guid: 78f1d230b23b3914790b36f34a9de652, type: 2}
-  - {fileID: 11400000, guid: b161c0a8f46853b459c51464427d9546, type: 2}
-  - {fileID: 11400000, guid: df6d8a7035b9d6a4889ddb44eccd92fc, type: 2}
-  biomes:
-  - {fileID: 11400000, guid: ded51579f62eb3649b111ae5893355f7, type: 2}
-  - {fileID: 11400000, guid: f877be86e53ede244bf49ee3ed657d1b, type: 2}
-  - {fileID: 11400000, guid: d0d70b4cc760084459d142b0b9f73f5a, type: 2}
-  - {fileID: 11400000, guid: 11ce2b544a934b84a9656e3c6ffead84, type: 2}
-  - {fileID: 11400000, guid: 5fa0ec5829f5d6a4abac31e2c06b6f1f, type: 2}
-  - {fileID: 11400000, guid: 4ef2e4af07c6f5740b4b4490bc4d4e61, type: 2}
-  - {fileID: 11400000, guid: 8e73a1f6ca6be1a42b7b13b5c72e3536, type: 2}
-  - {fileID: 11400000, guid: e695c40dc6c234e479ed41f5c7b84394, type: 2}
-  - {fileID: 11400000, guid: 6c27e0c2668c4b84fb11f405be34a5c7, type: 2}
-  - {fileID: 11400000, guid: ec4e646aa2a44e643a56e5d85af0dcfe, type: 2}
-  - {fileID: 11400000, guid: 1f79fc23f66fa9c48b216cef8c3ef390, type: 2}
-  - {fileID: 11400000, guid: f7e9971761b16e441b2cb2465b306386, type: 2}
-  - {fileID: 11400000, guid: c93828172f0392249b9c79f3912be397, type: 2}
   loadingSlider: {fileID: 5850858195228258593}
   loadingPercentageText: {fileID: 6848971453528390958}
-  playerNameInputField: {fileID: 6885639081722275123}
   creativeMode: {fileID: 8740281561265370809}
   worldDropDown: {fileID: 4064242399538662991}
   seedInputField: {fileID: 8105276141930825943}
   loadLDrawBaseFile: {fileID: 2823185232013938437}
   modelObjectToSpin: {fileID: 8020913392846687152}
   levelLoaderObject: {fileID: 8171499485749620121}
-  biomeImage: {fileID: 4874919029759951102}
-  worldDensitySlider: {fileID: 918701370786728229}
-  worldRenderDistanceSlider: {fileID: 6885639080702157682}
-  worldRenderText: {fileID: 6885639080494798141}
-  worldDensityText: {fileID: 1636300131246204661}
-  planetNameText: {fileID: 7436314385778821595}
-  biomeNameText: {fileID: 672058305606412969}
   buttonSound: {fileID: 2776061181525321054}
   seed: 0
   randomSeed: 0
   noSaves: 0
   seeds: []
-  biomeIndex: 0
-  densityRange: 0
 --- !u!82 &2776061181525321054
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3038,7 +2994,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -172.49997, y: 51.500633}
+  m_AnchoredPosition: {x: 0, y: 62.62462}
   m_SizeDelta: {x: 525.7, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6408628023084473138
@@ -3095,7 +3051,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 4064242399538662991}
-    m_SelectOnDown: {fileID: 6885639080844121917}
+    m_SelectOnDown: {fileID: 8105276141930825943}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -3311,7 +3267,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -223.50021, y: 88.00082}
+  m_AnchoredPosition: {x: 0, y: 99.1248}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1731141214661795042
@@ -3458,7 +3414,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -194.00008, y: -58.99991}
+  m_AnchoredPosition: {x: 0, y: -91.44487}
   m_SizeDelta: {x: 492.6, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &628741436927412346
@@ -3514,7 +3470,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 8105276141930825943}
+    m_SelectOnUp: {fileID: 6489322240886307488}
     m_SelectOnDown: {fileID: 6885639081814093113}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -4305,7 +4261,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -65.49948, y: -25.999756}
+  m_AnchoredPosition: {x: 0, y: -61.225708}
   m_SizeDelta: {x: 295.01, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7889056567121115514
@@ -4361,9 +4317,9 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 3218486030792187026}
+    m_SelectOnUp: {fileID: 8105276141930825943}
     m_SelectOnDown: {fileID: 3271022870543843190}
-    m_SelectOnLeft: {fileID: 8105276141930825943}
+    m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -4618,7 +4574,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -224.0002, y: -25.499748}
+  m_AnchoredPosition: {x: 0, y: -23.64575}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2583493309734854187
@@ -4675,9 +4631,9 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 3218486030792187026}
-    m_SelectOnDown: {fileID: 3271022870543843190}
+    m_SelectOnDown: {fileID: 6489322240886307488}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 6489322240886307488}
+    m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
