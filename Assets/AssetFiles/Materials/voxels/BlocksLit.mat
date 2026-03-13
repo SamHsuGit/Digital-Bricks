@@ -26,7 +26,6 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DETAIL_MULX2
-  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   - _SPECULAR_SETUP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -37,7 +36,7 @@ Material:
     RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _ReceiveShadows
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -110,7 +109,7 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
-    - _DetailNormalMapScale: 0.05
+    - _DetailNormalMapScale: 0.2
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -126,9 +125,9 @@ Material:
     - _ReceiveShadows: 1
     - _SampleGI: 0
     - _Shininess: 0
-    - _Smoothness: 0.6
+    - _Smoothness: 0.1
     - _SmoothnessSource: 0
-    - _SmoothnessTextureChannel: 1
+    - _SmoothnessTextureChannel: 0
     - _SpecSource: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -136,6 +135,7 @@ Material:
     - _Surface: 0
     - _UVSec: 0
     - _WorkflowMode: 0
+    - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

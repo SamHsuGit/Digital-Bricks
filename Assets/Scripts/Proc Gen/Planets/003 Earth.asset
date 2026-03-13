@@ -40,8 +40,8 @@ MonoBehaviour:
   blockIDTreeLeavesWinter: 4
   blockIDTreeLeavesSpring: 15
   blockIDTreeLeavesSummer: 15
-  blockIDTreeLeavesFall1: 7
-  blockIDTreeLeavesFall2: 5
+  blockIDTreeLeavesFall1: 10
+  blockIDTreeLeavesFall2: 10
   blockIDTreeTrunk: 14
   blockIDCacti: 8
   blockIDMushroomLargeCap: 14

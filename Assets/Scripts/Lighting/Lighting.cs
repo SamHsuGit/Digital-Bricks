@@ -19,7 +19,7 @@ public class Lighting : MonoBehaviour
     [SerializeField] private float ambientIntensity;
     [SerializeField] private float reflectionIntensity;
 
-    [SerializeField, Range(0, 24)] public float timeOfDay = 6.01f;
+    [SerializeField, Range(0, 24)] public float timeOfDay = 9.01f;
     public float maxFogDensity = 0.00f;
 
     //NOTE: MacBook Air requires Gamma Color Space. Cannot use Linear.
