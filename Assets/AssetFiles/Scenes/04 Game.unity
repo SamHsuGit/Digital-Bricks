@@ -32,12 +32,12 @@ RenderSettings:
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 0
+  m_DefaultReflectionMode: 1
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
-  m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_CustomReflection: {fileID: 8900000, guid: 3628358b1eb2e40eb884de553fe4fc8f, type: 3}
+  m_Sun: {fileID: 2529205028307385183}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -700,6 +700,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!108 &2529205028307385183 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 1564743102805949143, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
+  m_PrefabInstance: {fileID: 2529205028307385178}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2706858914729487416
 PrefabInstance:
   m_ObjectHideFlags: 0

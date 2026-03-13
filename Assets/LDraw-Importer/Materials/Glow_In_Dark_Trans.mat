@@ -102,7 +102,7 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
-    - _DetailNormalMapScale: 0.05
+    - _DetailNormalMapScale: 0.3
     - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _EnvironmentReflections: 1
@@ -123,6 +123,7 @@ Material:
     - _Surface: 1
     - _UVSec: 0
     - _WorkflowMode: 0
+    - _XRMotionVectorsPass: 1
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.7411765, g: 0.7764706, b: 0.6784314, a: 0.69803923}
