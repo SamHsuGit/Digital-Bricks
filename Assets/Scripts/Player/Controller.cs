@@ -2573,6 +2573,13 @@ public class Controller : NetworkBehaviour
         else
             isSprinting = false;
 
+        if(options || inventoryUIMode != 0)
+        {
+            inputHandler.move.x = 0;
+            inputHandler.move.y = 0;
+            inputHandler.jump = false;
+        }
+
         // APPLY GRAVITY AND MOVE FORCES
         velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
 

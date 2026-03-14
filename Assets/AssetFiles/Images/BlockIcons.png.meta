@@ -525,7 +525,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 016 old
+      name: 052
       rect:
         serializedVersion: 2
         x: 458
@@ -750,13 +750,13 @@ TextureImporter:
       014: -2610892883229420862
       015: -4771556272078792200
       016: -1973033367
-      016 old: -6246070551821309166
       017: 8627043524693180128
       018: -7523670994549806873
       019: 646287831
       019 old: -2283223821045826522
       020: 109434020790643247
       021: 8675960657628198209
+      052: -6246070551821309166
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

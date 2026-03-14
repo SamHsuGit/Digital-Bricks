@@ -220,6 +220,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 81c43dddcbcdb461db9b351381c65a84, type: 2}
   - {fileID: 11400000, guid: dbaf2ec9c30044d38ba24e664130e324, type: 2}
   - {fileID: 11400000, guid: ddca672b0b09e45018ab738f3cb8754f, type: 2}
+  - {fileID: 11400000, guid: 7f03954d14f44465aab070b9f945b7f2, type: 2}
   voxelPrefabs:
   - {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}
   - {fileID: 8436909742428498496, guid: dbb5fd4476c044b419ca217aa0edfe12, type: 3}
