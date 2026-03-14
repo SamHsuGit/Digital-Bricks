@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.jiaozi158.unityssgiurp": {
+      "version": "https://github.com/jiaozi158/UnitySSGIURP.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.render-pipelines.universal": "14.0.11"
+      },
+      "hash": "8450297537b658218be1abbc973e9240a2aab71c"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.jiaozi158.unityssgiurp": "https://github.com/jiaozi158/UnitySSGIURP.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.ide.rider": "3.0.38",
