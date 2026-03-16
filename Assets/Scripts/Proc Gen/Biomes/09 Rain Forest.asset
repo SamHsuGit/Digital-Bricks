@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 09 Rain Forest
   m_EditorClassIdentifier: 
   biomeName: Rain Forest
-  surfaceBlock: 15
+  surfaceBlock: 13
   smallStructures: []
   smallFlora:
   - name: Grass

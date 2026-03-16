@@ -937,7 +937,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a204f1a941db0ea4dad4cca63ed9eb83, type: 2}
   - {fileID: 2100000, guid: 9f05affb8bfa5da4bbb1968db9ae7519, type: 2}
   canMine: 0
-  miningCounter: 0
+  blockDamage: 0
   toolID: 0
   ldrawHexValues: 2b0000002b00000000000000070000000f00000004000000060000000e00000002000000010000000500000003000000
   placedBrick: {fileID: 0}

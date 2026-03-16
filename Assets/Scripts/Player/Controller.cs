@@ -103,26 +103,27 @@ public class Controller : NetworkBehaviour
     public Material[] brickMaterials;
 
     public bool canMine = false;
-    public int miningCounter = 0;
+    public int blockDamage = 0;
     public int toolID = 0;
 
-    private int[] toolMiningSpeeds = new int[] // defines the mining speed of a given toolID
+    private int[] toolMultiplier = new int[] // defines the mining speed of a given toolID
     {
-        0, // tool ID 0 = punch
-        15, // tool ID 1 = wood
-        30, // tool ID 2 = stone
-        40, // tool ID 3 = gold
-        50, // tool ID 4 = crystal
+        1, // tool ID 0 = punch
+        2, // tool ID 1 = wood
+        4, // tool ID 2 = stone
+        6, // tool ID 3 = gold
+        8, // tool ID 4 = crystal
     };
 
     public int[][] allowableDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
+        // 2 = blackstone, 3 = stone, 16 = crystal, 19 = gold
         // defines blocks that the given tool can create a drop for
-        new int[] {            6,       9,         13, 14, 15,     17, 18,     20     }, // tool ID 0 = punch (can only mine wood, leaves, water, grass, mushroom, flower)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20, 21 }, // tool ID 1 = wood (cannot mine black, gold, or crystal)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20, 21 }, // tool ID 2 = stone (cannot mine black or crystal)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 3 = gold (cannot mine black)
-        new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 4 = crystal
+        new int[] {      4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20, 21 }, // tool ID 0 = punch
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20, 21 }, // tool ID 1 = wood (allows to mine stone)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20, 21 }, // tool ID 2 = stone (allows to mine gold)
+        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 3 = gold (allows to mine crystal)
+        new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 4 = crystal (allows to mine black)
     };
 
     public int[] ldrawHexValues = new int[]
@@ -964,9 +965,9 @@ public class Controller : NetworkBehaviour
         CheckActiveHotbarSlot();
 
         if (inputHandler.mine && removePos.gameObject.activeSelf)
-            miningCounter++;
+            blockDamage++;
         else
-            miningCounter = 0;
+            blockDamage = 0;
 
 
         // NORMAL CONTROLS IF PICKAXE IN HAND?
@@ -1283,6 +1284,10 @@ public class Controller : NetworkBehaviour
                     {
                         return 1; // wood
                     }
+                case 14: // wood
+                    {
+                        return 1; // wood
+                    }
                 case 3: // stone
                     {
                         return 2; // stone
@@ -1383,37 +1388,24 @@ public class Controller : NetworkBehaviour
             }
 
             // MINING DELAY
-            if(miningCounter >= World.Instance.blockTypes[blockID].hardness - toolMiningSpeeds[toolID])
+
+            if(blockDamage * toolMultiplier[toolID] >= World.Instance.blockTypes[blockID].hardness * 30)
             {
                 if (!World.Instance.IsGlobalPosInsideBorder(position)) // do not let player do this for blocks outside border of world (glitches)
                     return;
 
                 if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot destroy procGen.ldr or base.ldr (imported VBO)
                     return;
-
-                shootBricks.Play();
-                PlayerRemoveVoxel();
-
+                
                 //PutAwayBrick(blockID); // give player a voxel for removing one from world (give player voxel until drops can use voxelCollider/no chunk meshes to collide with)
                 if(canMine)
                 {
-                    //if(blockID > 15) // special non solid color voxels
-                        SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
-                    // else
-                    // {
-                    //     int dropCount = 20; // voxels are comprised of 20 1x1 plates (bits)
-                    //     for(int i = 0; i < dropCount; i++)
-                    //     {
-                    //         if(Settings.OnlinePlay)
-                    //             CmdSpawnObject(3, blockID, position);
-                    //         else
-                    //             SpawnObject(3, blockID, position);
-                            
-                    //     }
-                    // }
+                    shootBricks.Play();
+                    PlayerRemoveVoxel();
+                    SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
                 }
                 
-                miningCounter = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
+                blockDamage = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
             }
         }
         // IF SHOT PLACEDBRICK SITTING IN WORLD, DESTROY IT

@@ -13,7 +13,7 @@ public class BlockType : ScriptableObject
     public bool isSolid;
     public bool isTransparent;
     public bool isWater;
-    public int hardness;
+    public float hardness;
     public VoxelMeshData standardMeshData;
     public VoxelMeshData studsMeshData;
     public Sprite icon;

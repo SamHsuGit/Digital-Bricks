@@ -27,6 +27,16 @@ public class Crafting : MonoBehaviour
     public GameObject[] uiMenus;
     public GameMenu gameMenu;
     public string craftSlotString;
+
+    public int[] toolBlockIDs = new int[]
+    {
+        1, // wood
+        3, // stone
+        21, // cobblestone
+        7, // gold
+        16, // crystal
+    };
+
     private void Update()
     {
         // if input slot is not empty, constantly tick conversion of furnace to convert blocks into output slot
@@ -223,8 +233,19 @@ public class Crafting : MonoBehaviour
                             if(firstSlotID == secondSlotID && secondSlotID == thirdSlotID)
                                 matchingTopColors = true;
 
+                            bool matchesToolBlockID = false;
+
+                            for(int i = 0; i < toolBlockIDs.Length; i++)
+                            {
+                                if(firstSlotID == toolBlockIDs[i])
+                                {
+                                    matchesToolBlockID = true;
+                                    break;
+                                }
+                            }
+
                             // only output pickaxe for valid colors
-                            if(matchingTopColors && (firstSlotID == 6 || firstSlotID == 3 || firstSlotID == 21 || firstSlotID == 7 || firstSlotID == 13))
+                            if(matchingTopColors && matchesToolBlockID)
                             {
                                 PutInOutputSlot((byte)firstSlotID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
                                 return;
@@ -257,17 +278,17 @@ public class Crafting : MonoBehaviour
     {
         switch(_blockID)
         {
-            case 13:
+            case 13: // grass
                 {
-                    return 8;
+                    return 8; // green
                 }
-            case 14:
+            case 14: // wood
                 {
-                    return 6;
+                    return 6; // brown
                 }
-            case 15:
+            case 15: // leaves
                 {
-                    return 8;
+                    return 8; // green
                 }
         }
         return _blockID;

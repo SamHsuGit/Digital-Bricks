@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 52 Crystal
+  m_Name: 30374 Stick
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 1
   recipeShapes:
   - is2x2: 0
-    slot1: 16
+    slot1: 6
     slot2: 0
     slot3: 0
-    slot4: 0
+    slot4: 6
     slot5: 0
     slot6: 0
     slot7: 0
@@ -26,10 +26,10 @@ MonoBehaviour:
     slot9: 0
   - is2x2: 0
     slot1: 0
-    slot2: 16
+    slot2: 6
     slot3: 0
     slot4: 0
-    slot5: 0
+    slot5: 6
     slot6: 0
     slot7: 0
     slot8: 0
@@ -37,10 +37,10 @@ MonoBehaviour:
   - is2x2: 0
     slot1: 0
     slot2: 0
-    slot3: 16
+    slot3: 6
     slot4: 0
     slot5: 0
-    slot6: 0
+    slot6: 6
     slot7: 0
     slot8: 0
     slot9: 0
@@ -48,10 +48,10 @@ MonoBehaviour:
     slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 16
+    slot4: 6
     slot5: 0
     slot6: 0
-    slot7: 0
+    slot7: 6
     slot8: 0
     slot9: 0
   - is2x2: 0
@@ -59,10 +59,10 @@ MonoBehaviour:
     slot2: 0
     slot3: 0
     slot4: 0
-    slot5: 16
+    slot5: 6
     slot6: 0
     slot7: 0
-    slot8: 0
+    slot8: 6
     slot9: 0
   - is2x2: 0
     slot1: 0
@@ -70,41 +70,11 @@ MonoBehaviour:
     slot3: 0
     slot4: 0
     slot5: 0
-    slot6: 16
+    slot6: 6
     slot7: 0
     slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 16
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 16
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 16
-  outputID: 6
-  outputPlacedBrickName: 52
-  outputQty: 1
-  studs: 3
+    slot9: 6
+  outputID: 16
+  outputPlacedBrickName: 30374
+  outputQty: 4
+  studs: 2

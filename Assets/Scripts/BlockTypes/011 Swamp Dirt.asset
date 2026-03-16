@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 005 Red (Lava)
+  m_Name: 011 Swamp Dirt
   m_EditorClassIdentifier: 
-  blockName: Lava
-  id: 5
-  dropID: 5
+  blockName: Swamp Dirt
+  id: 11
+  dropID: 11
   stackMax: 64
   isDrawn: 1
   isSolid: 1
-  isTransparent: 1
-  isWater: 1
-  hardness: 10
+  isTransparent: 0
+  isWater: 0
+  hardness: 0.5
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
-  icon: {fileID: -7538633921802359561, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-  colorHexValue: '#B40000'
+  icon: {fileID: 8874480006941658528, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: '#069D9F'
   isActive: 0
   voxelBoundObject: {fileID: 0}
-  backFaceTexture: 10
-  frontFaceTexture: 10
-  topFaceTexture: 11
-  bottomFaceTexture: 9
-  leftFaceTexture: 10
-  rightFaceTexture: 10
-  topFaceSmoothTexture: 48
+  backFaceTexture: 39
+  frontFaceTexture: 39
+  topFaceTexture: 40
+  bottomFaceTexture: 38
+  leftFaceTexture: 39
+  rightFaceTexture: 39
+  topFaceSmoothTexture: 54
