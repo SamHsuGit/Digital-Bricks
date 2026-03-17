@@ -271,7 +271,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
         m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
-        m_MethodName: OnSprint
+        m_MethodName: OnCrouch
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -413,18 +413,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3963772888375218276}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: ToggleBrickIndex
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
     m_ActionId: b141e51c-1a69-4696-a587-7e2d14e554aa
     m_ActionName: 'Actions/Navigate[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow,/XInputControllerWindows/dpad]'
   - m_PersistentCalls:
@@ -448,18 +436,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1115402795134791110}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: toggleNavigate
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3963772888375218276}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: ToggleBrickIndex
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -555,20 +531,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
         m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
-        m_MethodName: OnNext
+        m_MethodName: OnInventory
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3963772888375218276}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: ToggleBrickType
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -611,20 +575,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4390896333885380563}
         m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
-        m_MethodName: OnPrevious
+        m_MethodName: OnDrop
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3963772888375218276}
-        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
-        m_MethodName: ToggleBrickType
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -830,15 +782,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move: {x: 0, y: 0}
   look: {x: 0, y: 0}
-  next: 0
-  previous: 0
+  inventory: 0
+  drop: 0
   navUp: 0
   navDown: 0
   navLeft: 0
   navRight: 0
   scrollWheel: {x: 0, y: 0}
   jump: 0
-  sprint: 0
+  crouch: 0
   use: 0
   mine: 0
 --- !u!114 &3963772888375218276
@@ -867,11 +819,9 @@ MonoBehaviour:
   collisionDamage: 0
   isGrounded: 0
   isMoving: 0
-  isSprinting: 0
+  isCrouching: 0
   dropButtonPressed: 0
   options: 0
-  setBrickType: 0
-  setBrickIndex: 0
   rotateBrick: 0
   holdingGrab: 0
   holdingBuild: 0

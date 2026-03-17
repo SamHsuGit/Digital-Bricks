@@ -52,7 +52,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Previous",
+                    "name": "Drop",
                     "type": "Button",
                     "id": "60e75519-f30a-4eb6-9687-05208ec4b698",
                     "expectedControlType": "",
@@ -61,7 +61,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Next",
+                    "name": "Inventory",
                     "type": "Button",
                     "id": "d8864d24-f971-4c48-8d97-f72fb4267cf1",
                     "expectedControlType": "",
@@ -73,16 +73,16 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "cdf8cf83-8323-4c3f-be6d-4e197affbdbd",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Sprint",
+                    "name": "Crouch",
                     "type": "Button",
                     "id": "b4f15938-878b-4411-bf99-0df23b2a0546",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -100,7 +100,7 @@
                     "name": "ToggleCamMode",
                     "type": "Button",
                     "id": "b40ffc2f-fe48-4be8-8049-5ae3fea38100",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -109,43 +109,43 @@
                     "name": "ToggleControls",
                     "type": "Button",
                     "id": "be4ad6ca-621c-4202-9809-79c5af1c04bf",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
                     "name": "NavigateUp",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "b141e51c-1a69-4696-a587-7e2d14e554aa",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
                     "name": "NavigateDown",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "7a85eab4-4c9a-4c5b-9999-8d73de906c4a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
                     "name": "NavigateLeft",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "8a292e9b-34a2-4f04-913f-10df962f2c6b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
                     "name": "NavigateRight",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "e4769cf2-c7fc-46f0-8721-5455d87481a4",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -154,7 +154,7 @@
                     "name": "Touched",
                     "type": "Button",
                     "id": "365f7c25-7810-4208-aad5-62c5741b050b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -364,11 +364,11 @@
                 {
                     "name": "",
                     "id": "fe4603cb-9706-4c62-bffa-4c5a45a7acad",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Sprint",
+                    "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -379,7 +379,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Sprint",
+                    "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -419,7 +419,7 @@
                 {
                     "name": "",
                     "id": "c7165efe-3a5f-48ec-aaea-90c525b54777",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -566,18 +566,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Next",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "d352c633-d7ad-4cba-a103-234e76fdf852",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Next",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -610,7 +610,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Previous",
+                    "action": "Drop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -621,7 +621,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Previous",
+                    "action": "Drop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

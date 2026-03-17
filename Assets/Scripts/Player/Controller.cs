@@ -38,11 +38,9 @@ public class Controller : NetworkBehaviour
     [SerializeField] float collisionDamage;
     public bool isGrounded;
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
-    public bool isSprinting;
+    public bool isCrouching;
     public bool dropButtonPressed;
     public bool options = false;
-    public bool setBrickType = false;
-    public bool setBrickIndex = false;
     public bool rotateBrick = false;
     public bool holdingGrab = false;
     public bool holdingBuild = false;
@@ -212,6 +210,8 @@ public class Controller : NetworkBehaviour
     private string[] currentLDrawPartsListStringArray = new string[] { };
     private bool obfuscateBRXFILE = true; // set to true to prevent cheaters from importing a base using ldraw file format
 
+    private float originalColliderHeight;
+
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
     // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
     // Order of SyncVars: https://mirror-networking.gitbook.io/docs/guides/synchronization/syncvars
@@ -281,10 +281,21 @@ public class Controller : NetworkBehaviour
         if (!Settings.WebGL)
         {
             string[] brickTypeFilenames = LoadBrickTypeFilenames();
-            ldrawPartsTypes = new string[brickTypeFilenames.Length][];
-            for (int i = 0; i < brickTypeFilenames.Length; i++)
-                ldrawPartsTypes[i] = LoadBrickNumbers(brickTypeFilenames[i]);
-            currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+            //Debug.Log(brickTypeFilenames[0]);
+            //Debug.Log(brickTypeFilenames.Length);
+
+            currentLDrawPartsListStringArray = new string[brickTypeFilenames.Length];
+            for(int i = 0; i < brickTypeFilenames.Length; i++)
+                currentLDrawPartsListStringArray[i] = brickTypeFilenames[i];
+
+            //ldrawPartsTypes = new string[brickTypeFilenames.Length][];
+            //for (int i = 0; i < brickTypeFilenames.Length; i++)
+                //ldrawPartsTypes[i] = LoadBrickNumbers(brickTypeFilenames[i]);
+            // currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
+
+            ldrawPartsTypes = new string[1][];
+            ldrawPartsTypes[0] = currentLDrawPartsListStringArray;
+            //Debug.Log("first value is " + currentLDrawPartsListStringArray[0] + " of length " + currentLDrawPartsListStringArray.Length);
 
             // // Debug to show the loaded brick names for a given brick type
             // int brickType = 1;
@@ -386,7 +397,7 @@ public class Controller : NetworkBehaviour
         string[] originalStringArray;
         string[] returnStringArray;
 
-        string path = Application.streamingAssetsPath + "/ldraw/bricktypes/";
+        string path = Application.streamingAssetsPath + "/ldraw/partfiles/";
         if (!Directory.Exists(path))
             ErrorMessage.Show("Error: Could not find Directory: " + path);
 
@@ -624,6 +635,7 @@ public class Controller : NetworkBehaviour
         cc.height = colliderHeight;
         cc.radius = colliderRadius;
         charController.height = colliderHeight;
+        originalColliderHeight = charController.height;
         charController.radius = colliderRadius;
         charController.center = colliderCenter;
 
@@ -811,20 +823,6 @@ public class Controller : NetworkBehaviour
 
         if (holdingBuild || holdingGrab)
         {
-            if (setBrickType)
-            {
-                if (inputHandler.next)
-                    IncrementBrickType();
-                else if (inputHandler.previous)
-                    DecrementBrickType();
-            }
-            if (setBrickIndex)
-            {
-                if (inputHandler.navUp)
-                    IncrementBrickIndex();
-                else if (inputHandler.navDown)
-                    DecrementBrickIndex();
-            }
             if (rotateBrick)
             {
                 if (inputHandler.navLeft)
@@ -835,8 +833,6 @@ public class Controller : NetworkBehaviour
         }
         else
         {
-            setBrickType = false;
-            setBrickIndex = false;
             rotateBrick = false;
         }
 
@@ -862,7 +858,7 @@ public class Controller : NetworkBehaviour
         if (Settings.OnlinePlay)
             SetTimeOfDayServer();
 
-        if(dropButtonPressed && !inputHandler.previous)
+        if(dropButtonPressed && !inputHandler.drop)
             dropButtonPressed = false;
 
         //disable virtual camera and exit from FixedUpdate if this is not the local player
@@ -885,7 +881,7 @@ public class Controller : NetworkBehaviour
             if(camMode != 3)
             {
                 // IF DROP ITEM
-                if(!holdingBuild && !holdingGrab && inputHandler.previous && inventoryUIMode == 0) // added if inventoryUIMode == 0 due to duplication glitch
+                if(!holdingBuild && !holdingGrab && inputHandler.drop && inventoryUIMode == 0) // added if inventoryUIMode == 0 due to duplication glitch
                     DropItemInSlot();
             }
 
@@ -1038,103 +1034,9 @@ public class Controller : NetworkBehaviour
         playerCamera.transform.localPosition = new Vector3(0, cc.height / 4, tpsDist);
     }
 
-    public void ToggleBrickType()
-    {
-        setBrickType = true;
-    }
-
-    public void ToggleBrickIndex()
-    {
-        setBrickIndex = true;
-    }
-
     public void ToggleRotateBrick()
     {
         rotateBrick = true;
-    }
-
-    public void IncrementBrickType()
-    {
-        return; // disabled
-
-        // if (currentBrickType + 1 <= ldrawPartsTypes.Length - 1)
-        //     currentBrickType++;
-        // else
-        //     currentBrickType = 0;
-
-        // SetCurrentBrickType(currentBrickType, currentBrickType);
-        // currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-        // if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
-        //     currentBrickIndex = 0;
-        // if (currentBrickIndex < 0)
-        //     currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
-        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-
-        // UpdateGrabObject(0);
-        // setBrickType = false;
-    }
-
-    public void DecrementBrickType()
-    {
-        return; // disabled
-
-        // if (currentBrickType - 1 >= 0)
-        //     currentBrickType--;
-        // else
-        //     currentBrickType = ldrawPartsTypes.Length - 1;
-
-        // SetCurrentBrickType(currentBrickType, currentBrickType);
-        // currentLDrawPartsListStringArray = ldrawPartsTypes[currentBrickType];
-        // if (currentBrickIndex > currentLDrawPartsListStringArray.Length - 1)
-        //     currentBrickIndex = 0;
-        // if (currentBrickIndex < 0)
-        //     currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
-        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-
-        // UpdateGrabObject(0);
-        // setBrickType = false;
-    }
-
-    public void IncrementBrickIndex()
-    {
-        return; // disabled
-
-        // if (currentBrickIndex + 1 <= currentLDrawPartsListStringArray.Length - 1)
-        //     currentBrickIndex++;
-        // else
-        //     currentBrickIndex = 0;
-
-        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-
-        // UpdateGrabObject(0);
-
-        // if (!movingPlacedBrickUseStoredValues)
-        // {
-        //     SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-        // }
-
-        // setBrickIndex = false;
-    }
-
-    public void DecrementBrickIndex()
-    {
-        return; // disabled
-
-        // if (currentBrickIndex - 1 >= 0)
-        //     currentBrickIndex--;
-        // else
-        //     currentBrickIndex = currentLDrawPartsListStringArray.Length - 1;
-
-        // SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-
-        // UpdateGrabObject(0);
-
-        // if (!movingPlacedBrickUseStoredValues)
-        // {
-        //     SetCurrentBrickIndex(currentBrickIndex, currentBrickIndex);
-        // }
-
-        // setBrickIndex = false;
     }
 
     public void RotateBrickLeft()
@@ -1443,9 +1345,17 @@ public class Controller : NetworkBehaviour
                 }
                 else // IF PLACED BRICK
                 {
+                    //Debug.Log(hitObject.name);
                     //_lookupName = Int32.Parse(hitObject.name);
+
+                    string nameToParse;
+                    if(hitObject.name.Contains("."))
+                        nameToParse = hitObject.name.Substring(0, hitObject.name.IndexOf("."));
+                    else
+                        nameToParse = hitObject.name;
+
                     int parsedObjectName = 0;
-                    if(Int32.TryParse(hitObject.name.Substring(0, hitObject.name.IndexOf(".")), out parsedObjectName))
+                    if(Int32.TryParse(nameToParse, out parsedObjectName))
                     {
                         _lookupName = parsedObjectName;
                         blockID = LookupPlacedBrickMaterial(hitObject.GetComponent<MeshRenderer>().material);
@@ -1507,12 +1417,17 @@ public class Controller : NetworkBehaviour
     private byte LookupPlacedBrickMaterial(Material _mat)
     {
         byte returnValue = 3;
+
+        string nameToCheck = _mat.name;
+        if(nameToCheck.Contains("Gray"))
+            nameToCheck = nameToCheck.Replace("Gray", "Grey");
+
         for(int i = 0; i < brickMaterials.Length; i++)
         {
-            if(_mat.name == brickMaterials[i].name + " (Instance)") // if matched material then return value as blockID
+            if(nameToCheck == brickMaterials[i].name + " (Instance)") // if matched material then return value as blockID
                 return (byte)i;
         }
-        Debug.Log("no matching material found for " + _mat.name);
+        Debug.Log("no matching material found for " + nameToCheck);
         return returnValue;
     }
 
@@ -2581,10 +2496,18 @@ public class Controller : NetworkBehaviour
         else
             isMoving = false;
 
-        if (inputHandler.sprint && inventoryUIMode == 0)
-            isSprinting = true;
+        if (inputHandler.crouch && inventoryUIMode == 0)
+            isCrouching = true;
         else
-            isSprinting = false;
+            isCrouching = false;
+
+        // if(isCrouching)
+        //     charController.height = originalColliderHeight * 0.7f; // reduces collider height (doesn't work)
+        // else
+        //     charController.height = originalColliderHeight;
+        // cc.height = charController.height;
+        // voxelCollider.height = cc.height;
+        // voxelCollider.halfColliderHeight = voxelCollider.height / 2;
 
         if(options || inventoryUIMode != 0)
         {
@@ -2594,7 +2517,7 @@ public class Controller : NetworkBehaviour
         }
 
         // APPLY GRAVITY AND MOVE FORCES
-        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, isSprinting, inputHandler.jump);
+        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, true, inputHandler.jump);
 
         if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump && inventoryUIMode == 0)
         {
@@ -2641,7 +2564,7 @@ public class Controller : NetworkBehaviour
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);
-            if (charController.enabled && inputHandler.sprint)
+            if (charController.enabled && inputHandler.crouch)
                 charController.Move(Vector3.down * 0.5f);
         }
     }
@@ -2653,7 +2576,7 @@ public class Controller : NetworkBehaviour
         else
             isMoving = false;
 
-        Vector3 cameraMoveVelocity = playerCameraVoxelCollider.CalculateVelocityCamera(inputHandler.move.x, inputHandler.move.y, inputHandler.sprint);
+        Vector3 cameraMoveVelocity = playerCameraVoxelCollider.CalculateVelocityCamera(inputHandler.move.x, inputHandler.move.y, inputHandler.crouch);
 
         charController.enabled = false;
         playerCamera.transform.position += cameraMoveVelocity;
@@ -2807,8 +2730,8 @@ public class Controller : NetworkBehaviour
         {
             if (isMoving)
             {
-                if (isSprinting)
-                    animRate = baseAnimRate; // animate same but here provides option to increase anim rate
+                if (isCrouching)
+                    animRate = baseAnimRate; // animate same but here provides option to decrease anim rate
                 else
                     animRate = baseAnimRate;
 

@@ -290,7 +290,7 @@ public class World : MonoBehaviour
             blockTypes[blockIDbase].voxelBoundObject = null;
         else
         {
-            LoadSpawnedPiecesOnlinePlay();
+            //LoadSpawnedPiecesOnlinePlay(); // broken for online play, commented out
 
             blockTypes[blockIDbase].voxelBoundObject = baseOb;
 
@@ -334,9 +334,6 @@ public class World : MonoBehaviour
     {
         if (Settings.OnlinePlay && baseObString != null)
         {
-            // load pieces
-            //LoadSpawnedPieces(baseObString);
-
             if(SettingsStatic.LoadedSettings.loadLdrawBaseFile)
             {
                 baseOb = LDrawImportRuntime.Instance.ImportLDrawOnline("baseNew", baseObString, LDrawImportRuntime.Instance.importPosition, true); // needs to have unique name (not base) for multiplayer
@@ -1201,6 +1198,8 @@ public class World : MonoBehaviour
     public bool CheckMakeBase(Vector3Int globalPos)
     {
         int baseTerrainHeight = terrainHeight;
+        if(continentalness < 0.5f)
+            baseTerrainHeight = Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight + 2f); // put base above ocean if at ocean
 
         if (Settings.Platform != 2 && globalPos.y == baseTerrainHeight && globalPos.x == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
         {

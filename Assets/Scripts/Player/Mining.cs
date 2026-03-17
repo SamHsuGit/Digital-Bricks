@@ -58,7 +58,7 @@ public class Mining : NetworkBehaviour
         if (Time.time >= nextTimeToFire && !controller.holdingGrab && backgroundMaskCanvasGroup.alpha == 0 && (controller.camMode == 1 || controller.camMode == 2))
         {
             // trigger timer if mine, use or drop item are pressed
-            if (inputHandler.mine || inputHandler.use || inputHandler.previous)
+            if (inputHandler.mine || inputHandler.use || inputHandler.drop)
             {
                 nextTimeToFire = Time.time + 1f / fireRate;
                 //pewpew.Play();

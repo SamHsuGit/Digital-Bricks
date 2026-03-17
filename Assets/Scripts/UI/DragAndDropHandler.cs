@@ -43,7 +43,7 @@ public class DragAndDropHandler : MonoBehaviour {
         if(clickedLMB || clickedRMB)
             SaveSystem.SaveWorldDataToFile(World.Instance.worldData, controller.world); // save inventory if clicked in inventory to preserve stack states between saves
 
-        if (!controller.inputHandler.sprint && clickedLMB) // left mouse click
+        if (!controller.inputHandler.crouch && clickedLMB) // left mouse click
         {
             UIItemSlot slot = CheckForSlot();
 
@@ -57,7 +57,7 @@ public class DragAndDropHandler : MonoBehaviour {
             if(slot != null && (slot.isCrafting || slot.isOutput))
                 crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
-        else if(controller.inputHandler.sprint && clickedLMB) // shift + left mouse click
+        else if(controller.inputHandler.crouch && clickedLMB) // shift + left mouse click
         {
             UIItemSlot slot = CheckForSlot();
 
