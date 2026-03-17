@@ -15,46 +15,16 @@ MonoBehaviour:
   isPlacedBrick: 1
   recipeShapes:
   - is2x2: 0
-    slot1: 16
-    slot2: 16
-    slot3: 0
-    slot4: 16
-    slot5: 16
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 16
-    slot3: 16
-    slot4: 0
-    slot5: 16
-    slot6: 16
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 16
-    slot5: 16
-    slot6: 0
-    slot7: 16
-    slot8: 16
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 16
-    slot6: 16
-    slot7: 0
-    slot8: 16
-    slot9: 16
-  outputID: 6
+    slot1: 3024
+    slot2: 3024
+    slot3: 3024
+    slot4: 3024
+    slot5: 3024
+    slot6: 3024
+    slot7: 3024
+    slot8: 3024
+    slot9: 3024
+  outputID: 16
   outputPlacedBrickName: 52
   outputQty: 1
-  studs: 3
+  studs: 9

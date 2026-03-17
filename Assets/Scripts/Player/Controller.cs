@@ -1546,8 +1546,13 @@ public class Controller : NetworkBehaviour
         string i = "1.000000";
 
         string partName = ldrawPartsTypes[currentBrickType][currentBrickIndex];
+
+        string nameToParse = partName;
+        if(nameToParse.Contains("."))
+            nameToParse = nameToParse.Substring(0, nameToParse.IndexOf("."));
+
         int partNameInt = 0;
-        if(Int32.TryParse(partName.Substring(0, partName.IndexOf(".")), out partNameInt))
+        if(Int32.TryParse(nameToParse, out partNameInt))
         {
             Vector3 pos = new Vector3(0, 1, 0);
             string cmdstr = "1" + " " + color + " " + x + " " + y + " " + z + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partName;
@@ -1558,7 +1563,7 @@ public class Controller : NetworkBehaviour
                 CmdPlaceBrick(false, partNameInt, cmdstr, materialIndex, pos, rot); // spawn with transparent "temp" material (HOST SPAWNS OBJECT ON CLIENT MACHINES)
         }
         else
-            Debug.Log("Failed to parse " + partName + " to Int32");
+            Debug.Log("Failed to parse " + nameToParse + " to Int32");
         
     }
 
@@ -2989,7 +2994,11 @@ public class Controller : NetworkBehaviour
     private Vector2Int GetBrickTypeAndIndex(GameObject ob)
     {
         if (ob == null)
+        {
+            Debug.Log("null object");
             return new Vector2Int(0, 0);
+        }
+            
 
         //bool typeAndIndexFound = false;
 

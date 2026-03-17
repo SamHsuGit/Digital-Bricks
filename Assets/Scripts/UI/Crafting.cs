@@ -37,6 +37,12 @@ public class Crafting : MonoBehaviour
         16, // crystal
     };
 
+    public int[] itemNames = new int[]
+    {
+        3841,
+        52,
+    };
+
     private void Update()
     {
         // if input slot is not empty, constantly tick conversion of furnace to convert blocks into output slot
@@ -162,9 +168,11 @@ public class Crafting : MonoBehaviour
         // for all recipes in list, if checkIntArray matches one, then output the corresponding block in output slot
         foreach (Recipe recipe in recipes)
         {
+            bool isItem = CheckNameForItems(recipe.outputPlacedBrickName);
+
             // cannot craft placedbricks if the colors do not all match
             // allow non matching colors for special items crafting (e.g. pickaxe)
-            if(recipe.isPlacedBrick && nonmatchingcolors && recipe.outputPlacedBrickName != 3841)
+            if(recipe.isPlacedBrick && nonmatchingcolors && !isItem)
                 continue;
             
             foreach (RecipeShape shape in recipe.recipeShapes)
@@ -196,7 +204,7 @@ public class Crafting : MonoBehaviour
 
                 // if colors all match, allow placed bricks to adapt to any color
                 // need to allow non matching colors and placedbrick recipes thru for special item crafting (e.g. pickaxe)
-                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors && recipe.outputPlacedBrickName != 3841) // if has placed bricks in slot
+                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors && !isItem) // if has placed bricks in slot
                 {
                     color = CheckColorOverrides(color);
                     if(slotsWithPlacedBricksCount == 0) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
@@ -217,6 +225,11 @@ public class Crafting : MonoBehaviour
                         outputID = recipe.outputID;
                     //Debug.Log("MATCH FOUND! " + craftSlotString + " matches recipe " + recipe.name + " " + recipeString + " which outputs " + recipe.outputID);
 
+                    // if(recipe.outputPlacedBrickName == 52 && !nonmatchingcolors) // crystal
+                    // {
+                    //     if(color != 16) // skip unless color is crystal
+                    //         continue;
+                    // }
 
                     // Override for crafting certain items
                     if (recipe.outputPlacedBrickName == 3841) // pickaxe
@@ -272,6 +285,17 @@ public class Crafting : MonoBehaviour
         }
 
         outputSlot.itemSlot.EmptySlot(); // if made it here, no matching crafting recipe so empty the output slot
+    }
+
+    private bool CheckNameForItems(int _outputPlacedBrickName)
+    {
+        for(int i = 0; i < itemNames.Length; i++)
+        {
+            if(_outputPlacedBrickName == itemNames[i])
+                return true;
+        }
+
+        return false;
     }
 
     private byte CheckColorOverrides(byte _blockID)
