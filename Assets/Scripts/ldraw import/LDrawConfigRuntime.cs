@@ -83,7 +83,6 @@ namespace LDraw
             try
             {
                 name = name.ToLower();
-
                 if (name.Substring(0, 2).Contains(@"\"))
                 {
                     name = name.Substring(3, name.Length);

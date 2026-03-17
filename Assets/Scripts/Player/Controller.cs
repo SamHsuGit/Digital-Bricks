@@ -509,6 +509,7 @@ public class Controller : NetworkBehaviour
             float rotz = float.Parse(strs[6]);
             float rotw = float.Parse(strs[7]);
             string partName = strs[8];
+            Debug.Log(partName);
             partName = partName.Substring(0,partName.IndexOf("."));
             int x = 0;
             if(Int32.TryParse(partName, out x))
@@ -1227,6 +1228,7 @@ public class Controller : NetworkBehaviour
         }
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+        Debug.Log(blockID);
 
         // if (blockID < 2 || blockID == 12)// || blockID == 17 || blockID == 18 || blockID == 20) // ignore these blockIDs
         // {
@@ -2853,7 +2855,10 @@ public class Controller : NetworkBehaviour
             {
                 Vector3 pos = ob.transform.position;
                 Quaternion rot = ob.transform.rotation;
-                string partname = ob.name + ".dat";
+                string partname = ob.name;
+                if(!partname.Contains(".dat")) // add prefix only if not present
+                    partname += ".dat";
+                Debug.Log("modified = " + partname);
                 if (ob.GetComponentInChildren<MeshRenderer>() == null)
                     continue;
                 Material mat = ob.GetComponentInChildren<MeshRenderer>().material;
