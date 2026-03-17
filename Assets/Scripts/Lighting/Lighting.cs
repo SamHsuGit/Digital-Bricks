@@ -123,7 +123,7 @@ public class Lighting : MonoBehaviour
         StartCoroutine(LerpSkyTintValue(1, 10));
 
         RenderSettings.sun = sun;
-        StartCoroutine(LerpAmbientIntensity(1f, 10));
+        StartCoroutine(LerpAmbientIntensity(0.5f, 10));
         StartCoroutine(LerpReflectionIntensity(1f, 10));
     }
 

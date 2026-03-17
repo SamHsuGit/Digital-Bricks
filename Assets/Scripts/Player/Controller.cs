@@ -139,7 +139,17 @@ public class Controller : NetworkBehaviour
             2,
             1,
             5,
-            3
+            3,
+            43,
+            8,
+            6,
+            8,
+            42,
+            8,
+            4,
+            7,
+            8,
+            3,
         };
 
     [HideInInspector] public GameObject placedBrick;
@@ -509,10 +519,10 @@ public class Controller : NetworkBehaviour
             float rotz = float.Parse(strs[6]);
             float rotw = float.Parse(strs[7]);
             string partName = strs[8];
-            Debug.Log(partName);
-            partName = partName.Substring(0,partName.IndexOf("."));
-            int x = 0;
-            if(Int32.TryParse(partName, out x))
+
+            string partNameCopy = partName.Substring(0,partName.IndexOf("."));
+            int _partNameInt = 0;
+            if(Int32.TryParse(partNameCopy, out _partNameInt))
             {
                 // sucessfully parsed
             
@@ -521,9 +531,9 @@ public class Controller : NetworkBehaviour
                 string commandstring = "1 " + color + " 0.000000 0.000000 0.000000" + " " + a + " " + b + " " + c + " " + d + " " + e + " " + f + " " + g + " " + h + " " + i + " " + partName;
 
                 if (Settings.OnlinePlay && hasAuthority)
-                    CmdPlaceBrick(true, x, commandstring, color, pos, rot);
+                    CmdPlaceBrick(true, _partNameInt, commandstring, color, pos, rot);
                 else
-                    PlaceBrick(true, x, commandstring, color, pos, rot);
+                    PlaceBrick(true, _partNameInt, commandstring, color, pos, rot);
             }
             else
                 Debug.Log("Parse failed");
@@ -1228,7 +1238,7 @@ public class Controller : NetworkBehaviour
         }
 
         blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
-        Debug.Log(blockID);
+        //Debug.Log(blockID);
 
         // if (blockID < 2 || blockID == 12)// || blockID == 17 || blockID == 18 || blockID == 20) // ignore these blockIDs
         // {
@@ -1433,8 +1443,14 @@ public class Controller : NetworkBehaviour
                 }
                 else // IF PLACED BRICK
                 {
-                    _lookupName = Int32.Parse(hitObject.name);
-                    blockID = LookupPlacedBrickMaterial(hitObject.GetComponent<MeshRenderer>().material);
+                    //_lookupName = Int32.Parse(hitObject.name);
+                    int parsedObjectName = 0;
+                    if(Int32.TryParse(hitObject.name.Substring(0, hitObject.name.IndexOf(".")), out parsedObjectName))
+                    {
+                        _lookupName = parsedObjectName;
+                        blockID = LookupPlacedBrickMaterial(hitObject.GetComponent<MeshRenderer>().material);
+                    }
+                    else _lookupName = 3024;
                 }
 
                 int dropCount = LookupPlacedBrickSize(_lookupName);
@@ -2226,8 +2242,11 @@ public class Controller : NetworkBehaviour
         VoxelBc.enabled = true;
         VoxelBc.material = physicMaterial;
         placedBrick.SetActive(true);
-        placedBrick.name = _partname.ToString();
         placedBrickName = _partname;
+        string objectName = _partname.ToString();
+        // if(!objectName.Contains(".dat")) // add prefix in case was ommitted
+        //     objectName += ".dat";
+        placedBrick.name = objectName;
         placedBrick.tag = "placedBrick";
         placedBrick.layer = 0;
         placedBrick.isStatic = true;
@@ -2856,9 +2875,8 @@ public class Controller : NetworkBehaviour
                 Vector3 pos = ob.transform.position;
                 Quaternion rot = ob.transform.rotation;
                 string partname = ob.name;
-                if(!partname.Contains(".dat")) // add prefix only if not present
-                    partname += ".dat";
-                Debug.Log("modified = " + partname);
+                // if(!partname.Contains(".dat")) // add prefix only if not present
+                //     partname += ".dat";
                 if (ob.GetComponentInChildren<MeshRenderer>() == null)
                     continue;
                 Material mat = ob.GetComponentInChildren<MeshRenderer>().material;
@@ -2907,7 +2925,12 @@ public class Controller : NetworkBehaviour
             {
                 
                 string partname = ob.name;
+                if(!partname.Contains(".dat")) // add prefix only if not present
+                    partname += ".dat";
                 string color = GetLDrawColorNumber(ob).ToString();
+
+                if(color == "43") // skip light blue duplicate bricks
+                    continue;
 
                 // CALCULATE 4x4 MATRIX ROTATION VALUES
                 float scaleFactor = 40f;
@@ -3011,6 +3034,8 @@ public class Controller : NetworkBehaviour
 
         Material mat = ob.transform.GetChild(0).GetComponent<MeshRenderer>().material;
         int color = 0;
+        if(brickMaterials.Length != ldrawHexValues.Length)
+            Debug.Log("brickMaterials.Length = " + brickMaterials.Length + " ldrawHexValues.Length = " + ldrawHexValues.Length + " (error: must be same length) ");
         for (int j = 0; j < brickMaterials.Length; j++)
         {
             if (brickMaterials[j].name + " (Instance)" == mat.name)

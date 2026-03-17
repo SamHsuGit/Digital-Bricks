@@ -997,10 +997,6 @@ public class World : MonoBehaviour
         if(continentalness > 0.5f && yGlobalPos == 2)
             return worldData.blockIDsubsurface; // stone at bottom of caves where there is land
 
-        // if on land and at sea level
-        if (continentalness >= 0.5f && yGlobalPos == Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
-            voxelValue = 7; // sand for beaches (can be overwritten by cave
-
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
         if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
@@ -1041,10 +1037,10 @@ public class World : MonoBehaviour
         // weirdness varies size of caves
         if (yGlobalPos < terrainHeight - 10)
         {
-            // if (Noise.Get3DPerlin(globalPos, 30, 0.001f, 0.8f + 0.1f * weirdness)) // large cave (very rare)
-            //     return 0;
-            // if (Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f + 0.1f * weirdness)) // medium cave (somewhat rare)
-            //     return 0;
+            if (Noise.Get3DPerlin(globalPos, 30, 0.001f, 0.8f + 0.1f * weirdness)) // large cave (very rare)
+                return 0;
+            if (Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f + 0.1f * weirdness)) // medium cave (somewhat rare)
+                return 0;
             if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f + 0.1f * weirdness)) // small cave (common)
                 return 0;
         }

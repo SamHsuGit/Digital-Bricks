@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 01 Mesa
   m_EditorClassIdentifier: 
   biomeName: Mesa
-  surfaceBlock: 7
+  surfaceBlock: 4
   smallStructures: []
   smallFlora:
   - name: Grass
