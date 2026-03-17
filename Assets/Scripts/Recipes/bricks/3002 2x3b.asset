@@ -74,6 +74,26 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 3622
+  - is2x2: 0
+    slot1: 3005
+    slot2: 3005
+    slot3: 3005
+    slot4: 3005
+    slot5: 3005
+    slot6: 3005
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 3005
+    slot5: 3005
+    slot6: 3005
+    slot7: 3005
+    slot8: 3005
+    slot9: 3005
   outputID: 6
   outputPlacedBrickName: 3002
   outputQty: 1

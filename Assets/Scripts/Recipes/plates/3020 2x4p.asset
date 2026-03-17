@@ -74,6 +74,66 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 3710
+  - is2x2: 0
+    slot1: 3022
+    slot2: 3022
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 3022
+    slot3: 3022
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 3022
+    slot5: 3022
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 3022
+    slot6: 3022
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 3022
+    slot8: 3022
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 3022
+    slot9: 3022
   outputID: 6
   outputPlacedBrickName: 3020
   outputQty: 1
