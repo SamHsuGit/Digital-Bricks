@@ -171,6 +171,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2820705477626373711, guid: f7220a13dcd828e4f89e23bf28662677, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066836801271572324, guid: f7220a13dcd828e4f89e23bf28662677, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066836801271572325, guid: f7220a13dcd828e4f89e23bf28662677, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066836801271572346, guid: f7220a13dcd828e4f89e23bf28662677, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3066836801271572347, guid: f7220a13dcd828e4f89e23bf28662677, type: 3}
       propertyPath: m_Name
       value: MainCamera
@@ -223,7 +239,11 @@ PrefabInstance:
 
         vis2k
 
-'
+
+        SSGI
+        for URP
+
+        jiaozi158'
       objectReference: {fileID: 0}
     - target: {fileID: 6976479444726551088, guid: 45f2ba7082bc3174781694f977f37a37, type: 3}
       propertyPath: m_IsActive

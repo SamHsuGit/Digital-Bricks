@@ -39,6 +39,7 @@ public static class SettingsStatic
         settings.playerName = "PlayerName";
         settings.ipAddress = "localhost";
         settings.volume = 0.5f;
+        settings.volumeSoundtrack = 0.5f;
         settings.lookSpeed = 0.1f;
         settings.lookAccel = 0.1f;
         settings.fov = 90f;
@@ -98,6 +99,7 @@ public class Settings
     public string playerName;
     public string ipAddress;
     [Range(0.0001f, 1f)] public float volume;
+    [Range(0.0001f, 1f)] public float volumeSoundtrack;
     [Range(0.001f, 10f)] public float lookSpeed;
     public float lookAccel;
     public float fov;

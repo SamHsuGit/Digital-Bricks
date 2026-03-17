@@ -10,6 +10,7 @@ public class GameMenu : MonoBehaviour
 {
     public Slider hpSlider;
     public Slider volumeSlider;
+    public Slider volumeSoundtrackSlider;
     public Slider lookSpeedSlider;
     public Slider lookAccelerationSlider;
     public Slider fovSlider;
@@ -69,6 +70,7 @@ public class GameMenu : MonoBehaviour
         {
             // set settings from loaded saved file
             volumeSlider.value = SettingsStatic.LoadedSettings.volume;
+            volumeSoundtrackSlider.value = SettingsStatic.LoadedSettings.volumeSoundtrack;
             lookSpeedSlider.value = SettingsStatic.LoadedSettings.lookSpeed;
             lookAccelerationSlider.value = SettingsStatic.LoadedSettings.lookAccel;
             fovSlider.value = SettingsStatic.LoadedSettings.fov;
@@ -81,6 +83,7 @@ public class GameMenu : MonoBehaviour
         {
             // set to default values
             volumeSlider.value = 0.5f;
+            volumeSoundtrackSlider.value = 0.5f;
             lookSpeedSlider.value = 0.05f;
             lookAccelerationSlider.value = 0.05f;
             fovSlider.value = 90f;
@@ -268,6 +271,13 @@ public class GameMenu : MonoBehaviour
         if(!Settings.WebGL)
             SettingsStatic.LoadedSettings.volume = value;
         masterAudioMixer.SetFloat("masterVolume", Mathf.Log10(value) * 20); // uses log base 10 for log scale of master mixer volume (decibels)
+    }
+
+    public void SetMusicVolume(float value)
+    {
+        if(!Settings.WebGL)
+            SettingsStatic.LoadedSettings.volumeSoundtrack = value;
+        masterAudioMixer.SetFloat("soundtrackVolume", Mathf.Log10(value) * 20); // uses log base 10 for log scale of master mixer volume (decibels)
     }
 
     public void SetLookSensitivity(float value)
