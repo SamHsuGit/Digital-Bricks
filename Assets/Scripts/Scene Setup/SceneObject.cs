@@ -108,7 +108,6 @@ public class SceneObject : NetworkBehaviour
                     break;
                 }
         }
-        
         GameObject ob = Instantiate(array[typeItem], transform.position, Quaternion.identity);
 
         // manually remove any unwanted -submodel objects (messy, need to improve by preventing submodel from spawning in first place)

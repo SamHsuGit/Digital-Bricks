@@ -1363,6 +1363,7 @@ public class Controller : NetworkBehaviour
                     else _lookupName = 3024;
                 }
 
+                // causes issue when shooting placed bricks loaded from file
                 int dropCount = LookupPlacedBrickSize(_lookupName);
                 for(int i = 0; i < dropCount; i++)
                 {
@@ -1375,30 +1376,7 @@ public class Controller : NetworkBehaviour
                 shootBricks.Play();
                 Destroy(hit.transform.gameObject);
             }
-
-            // if (Settings.OnlinePlay)
-            // {
-            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-            //     CmdSpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            // }
-            // else
-            // {
-            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z + 0.25f));
-            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + -0.25f, pos.y + 0, pos.z - 0.25f));
-            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z + 0.25f));
-            //     SpawnObject(3, hitObject.GetComponent<SceneObject>().typeVoxel, new Vector3(pos.x + 0.25f, pos.y + 0, pos.z - 0.25f));
-            // }
         }
-        // else //if (toolbar.slots[toolbar.slotIndex].HasItem && toolbar.slots[toolbar.slotIndex].itemSlot.stack.id == blockIDcrystal) // if has crystal, spawn projectile
-        // {
-        //     if (Settings.OnlinePlay)
-        //         CmdSpawnObject(2, 0, rayCastStart);
-        //     else
-        //         SpawnObject(2, 0, rayCastStart);
-        //     //TakeFromCurrentSlot(1);
-        // }
 
         reticle.SetActive(true);
     }
@@ -1427,7 +1405,7 @@ public class Controller : NetworkBehaviour
             if(nameToCheck == brickMaterials[i].name + " (Instance)") // if matched material then return value as blockID
                 return (byte)i;
         }
-        Debug.Log("no matching material found for " + nameToCheck);
+        Debug.Log("no matching material found for " + nameToCheck + " instead returning value of " + returnValue);
         return returnValue;
     }
 

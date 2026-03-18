@@ -231,6 +231,7 @@ MonoBehaviour:
   - {fileID: 3563555514074976273, guid: 5666a0386e3c7e74ebf13a3c1707909f, type: 3}
   - {fileID: 3563555514074976273, guid: 086ab1a452e6f82459d4b7ac47a141f9, type: 3}
   - {fileID: 3563555514074976273, guid: 04e3903f8aabb6843970eac98697ae64, type: 3}
+  - {fileID: 3563555514074976273, guid: adabc1d85d6984b4590b9a1fafc2ec2c, type: 3}
   placedBrick: []
   undefinedPrefab: []
   controller: {fileID: 0}
