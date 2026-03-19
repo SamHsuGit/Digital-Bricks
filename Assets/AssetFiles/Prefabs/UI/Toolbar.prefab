@@ -493,7 +493,7 @@ MonoBehaviour:
   highlight: {fileID: 959026912128838330}
   slotIndex: 0
   creativeBlockID: 2
-  creativePlacedBlockID: 3005
+  creativePlacedBlockID: 0
   setNavigate: 0
 --- !u!1 &2642786423344932816
 GameObject:

@@ -1777,8 +1777,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 97a9f73e8ec854f1fa5ffe96100763b9, type: 2}
   - {fileID: 11400000, guid: d3263cbc57de04da6ba8f16ca58b8b1e, type: 2}
   - {fileID: 11400000, guid: f9471608d670648e4ba9e80fef294f6c, type: 2}
-  - {fileID: 11400000, guid: f6e12a3b0377c41719488c5e150c5afe, type: 2}
   - {fileID: 11400000, guid: a08999025b1a448be9745d4cc016d03d, type: 2}
+  - {fileID: 11400000, guid: 33b7bad27bbe24745a10a06ebaac6157, type: 2}
+  - {fileID: 11400000, guid: f6e12a3b0377c41719488c5e150c5afe, type: 2}
+  - {fileID: 11400000, guid: 8c3e1f6184bd04795b971358ae907a9d, type: 2}
+  - {fileID: 11400000, guid: 7efdab73447cd4a0cb2d5dffddf626cc, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}
@@ -1787,6 +1790,7 @@ MonoBehaviour:
   gameMenu: {fileID: 2072762906999785829}
   craftSlotString: 
   toolBlockIDs: 0e00000003000000150000000700000010000000
+  itemNames: 010f000034000000
 --- !u!1 &1391849460477524182
 GameObject:
   m_ObjectHideFlags: 0
@@ -8960,6 +8964,10 @@ PrefabInstance:
       propertyPath: optionsMenu
       value: 
       objectReference: {fileID: 1391849460525943594}
+    - target: {fileID: 959026912654647989, guid: 462bf8ace809b58459ff2e7364f6bccf, type: 3}
+      propertyPath: creativePlacedBlockID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 959026912654647991, guid: 462bf8ace809b58459ff2e7364f6bccf, type: 3}
       propertyPath: m_Name
       value: Toolbar

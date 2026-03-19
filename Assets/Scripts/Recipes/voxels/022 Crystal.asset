@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 52 Crystal
+  m_Name: 022 Crystal
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  isPlacedBrick: 1
+  isPlacedBrick: 0
   recipeShapes:
   - is2x2: 0
     slot1: 3024
@@ -25,6 +25,6 @@ MonoBehaviour:
     slot8: 3024
     slot9: 3024
   outputID: 16
-  outputPlacedBrickName: 52
+  outputPlacedBrickName: 0
   outputQty: 1
   studs: 9

@@ -896,10 +896,11 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}
   - {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
   - {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}
+  - {fileID: 2100000, guid: 830691d9f7fe95e4eb42abe60abbc8eb, type: 2}
   canMine: 0
   blockDamage: 0
   toolID: 0
-  ldrawHexValues: 2b0000002b00000000000000070000000f00000004000000060000000e000000020000000100000005000000030000002b0000000800000006000000080000002a0000000800000004000000070000000800000003000000
+  ldrawHexValues: 2b0000002b00000000000000070000000f00000004000000060000000e000000020000000100000005000000030000002b0000000800000006000000080000002a00000008000000040000000700000008000000030000002a000000
   placedBrick: {fileID: 0}
   inputHandler: {fileID: 0}
   worldPPFXSetValues: {fileID: 0}
@@ -5533,6 +5534,14 @@ PrefabInstance:
       propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6979641702897308544, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979641702897308544, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7027489877294470472, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -5887,6 +5896,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8878902156289080996, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
       propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8916162870949660886, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8916162870949660886, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8916162870949660886, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8965143489101958986, guid: 3d19cc3d1f9b877449baa2296722f596, type: 3}

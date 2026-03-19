@@ -8,7 +8,7 @@ public class Toolbar : MonoBehaviour
     public RectTransform highlight;
     public int slotIndex = 0;
     public byte creativeBlockID = 2;
-    public int creativePlacedBlockID = 3005;
+    public int creativePlacedBlockID = 0;
     public bool setNavigate = false;
 
     CanvasGroup optionsMenuCanvasGroup;

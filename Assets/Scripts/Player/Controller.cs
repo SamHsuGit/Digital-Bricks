@@ -113,15 +113,15 @@ public class Controller : NetworkBehaviour
         8, // tool ID 4 = crystal
     };
 
-    public int[][] allowableDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
+    public int[][] cannotMineDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
         // 2 = blackstone, 3 = stone, 16 = crystal, 19 = gold
-        // defines blocks that the given tool can create a drop for
-        new int[] {      4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20, 21 }, // tool ID 0 = punch
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18,     20, 21 }, // tool ID 1 = wood (allows to mine stone)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15,     17, 18, 19, 20, 21 }, // tool ID 2 = stone (allows to mine gold)
-        new int[] {   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 3 = gold (allows to mine crystal)
-        new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21 }, // tool ID 4 = crystal (allows to mine black)
+        // defines blocks that the given tool cannot create a drop for
+        new int[] {2, 3,                                       16,         19,        }, // tool ID 0 = punch (cannot create drop for blackstone, stone, crystal, or gold)
+        new int[] {2,                                          16,         19,        }, // tool ID 1 = wood (allows to mine stone)
+        new int[] {2,                                          16,                    }, // tool ID 2 = stone (allows to mine gold)
+        new int[] {2,                                                                 }, // tool ID 3 = gold (allows to mine crystal)
+        new int[] {                                                                   }, // tool ID 4 = crystal (allows to mine all)
     };
 
     public int[] ldrawHexValues = new int[]
@@ -148,6 +148,7 @@ public class Controller : NetworkBehaviour
             7,
             8,
             3,
+            42,
         };
 
     [HideInInspector] public GameObject placedBrick;
@@ -1294,11 +1295,11 @@ public class Controller : NetworkBehaviour
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id; // need current blockID to test if can mine
 
-            canMine = false; // set to true only if block is found in allowable matrix
-            for (int i = 0; i < allowableDropMatrix[toolID].Length; i++) // for every block in matrix for given toolID
+            canMine = true; // set to true by default
+            for (int i = 0; i < cannotMineDropMatrix[toolID].Length; i++) // for every block in matrix for given toolID
             {
-                if (allowableDropMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
-                    canMine = true; // allow the next code to mine the block
+                if (cannotMineDropMatrix[toolID][i] == blockID) // if the current block matches an allowable mineable block
+                    canMine = false; // allow the next code to mine the block
             }
 
             // MINING DELAY
@@ -2500,7 +2501,7 @@ public class Controller : NetworkBehaviour
         }
 
         // APPLY GRAVITY AND MOVE FORCES
-        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, true, inputHandler.jump);
+        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, false, inputHandler.jump);
 
         if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump && inventoryUIMode == 0)
         {
@@ -2829,6 +2830,9 @@ public class Controller : NetworkBehaviour
             "0 NumOfBricks: " + placedBrickObs.Length + "\n";
             foreach (GameObject ob in placedBrickObs)
             {
+                // do not export the base dummy object and only export the clone
+                if(ob.transform.parent != null && ob.transform.parent.transform.parent != null && !ob.transform.parent.transform.parent.gameObject.name.Contains("base(Clone)"))
+                    continue;
                 
                 string partname = ob.name;
                 if(!partname.Contains(".dat")) // add prefix only if not present
@@ -2837,6 +2841,8 @@ public class Controller : NetworkBehaviour
 
                 if(color == "43") // skip light blue duplicate bricks
                     continue;
+
+                //Debug.Log("saving ldraw brick with partname = " + partname);
 
                 // CALCULATE 4x4 MATRIX ROTATION VALUES
                 float scaleFactor = 40f;
