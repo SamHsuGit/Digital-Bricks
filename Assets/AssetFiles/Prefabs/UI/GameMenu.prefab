@@ -1775,12 +1775,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 75191cff93cda445cb59546cca56a71f, type: 2}
   - {fileID: 11400000, guid: d497e4aa1463141dc9db47ef40738cce, type: 2}
   - {fileID: 11400000, guid: 97a9f73e8ec854f1fa5ffe96100763b9, type: 2}
-  - {fileID: 11400000, guid: d3263cbc57de04da6ba8f16ca58b8b1e, type: 2}
   - {fileID: 11400000, guid: f9471608d670648e4ba9e80fef294f6c, type: 2}
   - {fileID: 11400000, guid: a08999025b1a448be9745d4cc016d03d, type: 2}
   - {fileID: 11400000, guid: 33b7bad27bbe24745a10a06ebaac6157, type: 2}
   - {fileID: 11400000, guid: f6e12a3b0377c41719488c5e150c5afe, type: 2}
   - {fileID: 11400000, guid: 8c3e1f6184bd04795b971358ae907a9d, type: 2}
+  - {fileID: 11400000, guid: d3263cbc57de04da6ba8f16ca58b8b1e, type: 2}
   - {fileID: 11400000, guid: 7efdab73447cd4a0cb2d5dffddf626cc, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
