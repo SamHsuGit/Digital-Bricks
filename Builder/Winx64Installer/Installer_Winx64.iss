@@ -2,10 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Digital-Bricks"
-#define MyAppVersion "0.66.0.0"
+#define MyAppVersion "0.67.0.0"
 #define MyAppPublisher "Sam Hsu"
 #define MyAppExeName "Digital Bricks.exe"
-#define MyAppAssocName MyAppName + "Installer_Winx64_0.66.0.0.exe"
+#define MyAppAssocName MyAppName + "Installer_Winx64_0.67.0.0.exe"
 #define MyAppAssocExt ".exe"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
@@ -26,7 +26,7 @@ LicenseFile=C:\Users\hsu3s\OneDrive\Documents\GitHub\Digital-Bricks\Builder\Winx
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=C:\Users\hsu3s\OneDrive\Documents\GitHub\Digital-Bricks\Builder\Winx64Installer
-OutputBaseFilename=DigitalBricksInstaller_Winx64_0.66.0.0
+OutputBaseFilename=DigitalBricksInstaller_Winx64_0.67.0.0
 SetupIconFile=C:\Users\hsu3s\OneDrive\Documents\GitHub\Digital-Bricks\Builder\Winx64Installer\LogoBlack.ico
 Compression=lzma
 SolidCompression=yes
