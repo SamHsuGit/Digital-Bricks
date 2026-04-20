@@ -463,6 +463,8 @@ public static class SaveSystem
 
             WorldData worldData = formatter.Deserialize(stream) as WorldData;
 
+            worldData.singleChunk = false;
+
             stream.Close();
             return new WorldData(worldData);
         }
@@ -475,6 +477,8 @@ public static class SaveSystem
                 worldData.creativeMode = false;
             SettingsStatic.LoadedSettings.timeOfDay = 6.0f; // reset time of day to morning for new worlds
             FileSystemExtension.SaveSettings();
+
+            worldData.singleChunk = true;
 
             return worldData;
         }

@@ -61,9 +61,8 @@ public class Controller : NetworkBehaviour
 
     public float lookVelocity = 0.1f;
     public float lookSpeed = 0.1f;
-
     public bool invertY = false;
-
+    public bool mined = false;
     public byte orientation;
 
     [Header("GameObject References")]
@@ -110,7 +109,7 @@ public class Controller : NetworkBehaviour
         2, // tool ID 1 = wood
         4, // tool ID 2 = stone
         6, // tool ID 3 = gold
-        8, // tool ID 4 = crystal
+        64, // tool ID 4 = crystal
     };
 
     public int[][] cannotMineDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
@@ -812,6 +811,16 @@ public class Controller : NetworkBehaviour
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
 
+        // if (!mined && World.Instance.singleChunk) // broken
+        // {
+        //     foreach(Transform child in world.transform)
+        //     {
+        //         Debug.Log(child.gameObject.name);
+        //         if(child.gameObject.name != "Chunk 100, 100")
+        //             child.gameObject.SetActive(false);
+        //     }
+        // }
+
         if (options)
             gameMenuComponent.OnOptions();
         else if (!options)
@@ -1318,6 +1327,12 @@ public class Controller : NetworkBehaviour
                     shootBricks.Play();
                     PlayerRemoveVoxel();
                     SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
+
+                    // spawn some particles when mining
+                    CmdSpawnObject(6, blockID, shootPos.transform.position);
+                    CmdSpawnObject(6, blockID, shootPos.transform.position);
+
+                    mined = true; // used to stop turning off all chunks but first chunk
                 }
                 
                 blockDamage = 0; // reset mining counter after successful mine to avoid instamine after mine 1 block
@@ -2238,7 +2253,7 @@ public class Controller : NetworkBehaviour
                     }
                     break;
                 }
-            case 3: // IF VOXEL BIT
+            case 3: // IF VOXEL BIT (used when destroying placedBricks)
                 {
                     byte dropID = World.Instance.blockTypes[id].dropID;
                     sceneObject.SetEquippedItem(type, dropID); // set the child object on the server
@@ -2303,6 +2318,29 @@ public class Controller : NetworkBehaviour
                             sceneObBc.material = physicMaterial;
                         }
                     }
+                    break;
+                }
+            case 6: // IF BREAK BLOCK PARTICLE
+                {
+                    byte dropID = World.Instance.blockTypes[id].dropID;
+                    sceneObject.SetEquippedItem(3, dropID); // set the child object on the server
+                    sceneObject.typeVoxelBit = dropID;
+                    BoxCollider voxelBitBc = ob.AddComponent<BoxCollider>();
+                    voxelBitBc.material = physicMaterial;
+                    voxelBitBc.center = new Vector3(0, -.047f, 0);
+                    voxelBitBc.size = new Vector3(0.5f, 0.3f, 0.5f);
+                    voxelBitBc.isTrigger = false; // if is trigger cannot collide with world but more easily picked up by player
+                    rb = ob.GetComponent<Rigidbody>();
+                    rb.useGravity = true;
+                    rb.isKinematic = false;
+                    rb.linearVelocity = Vector3.up; // give some velocity up
+                    // VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
+                    //     vc.isItem = true; // set true to spin object
+                    // ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
+                    // ob.transform.localScale = new Vector3(1, 1, 1) * 1.0f; // scale
+                    // ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
+                    ob.tag = "voxelBit";
+                    sceneObject.controller = this;
                     break;
                 }
         }

@@ -74,6 +74,7 @@ public class World : MonoBehaviour
     public PlacedBrick[] placedBricks;
     public GameObject[] voxelPrefabs;
     public AudioSource chunkLoadSound;
+    public bool singleChunk;
 
     // public chunk update lists, dictionaries, queues used by Chunk script
     [HideInInspector] public Dictionary<ChunkCoord, Chunk> chunksDict = new Dictionary<ChunkCoord, Chunk>();
@@ -825,7 +826,8 @@ public class World : MonoBehaviour
                     if (chunks[x, z] == null) // if the chunks array is empty at thisChunkCoord
                         chunks[x, z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position - CREATING NEW CHUNKS TAKES UP 90% OF CPU TIME WHEN PROFILING WHEN RUNNING THE POPULATE > GET VOXEL FUNCTION (Profiling get voxel runs out of memory)
 
-                    chunks[x, z].isActive = true;
+                    if(!singleChunk)
+                        chunks[x, z].isActive = true;
                     activeChunks.Add(thisChunkCoord); // marks chunk to be re-drawn by thread
                 }
 
@@ -967,11 +969,9 @@ public class World : MonoBehaviour
         if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos))
             return 0;
 
-        // bottom of world layer is core block (e.g. water/lava)
+        // bottom of world is bedrock
         if(yGlobalPos == 0)
             return 2; // bedrock
-        else if (yGlobalPos == 1)
-            return worldData.blockIDcore; // planet core block (e.g. lava)
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
@@ -1026,6 +1026,9 @@ public class World : MonoBehaviour
         // voxelValue = biome.surfaceBlock; // dirt
         if (voxelValue == 0 && continentalness < 0.5f && weirdness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
            return worldData.blockIDwater; // water
+
+        if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 2))
+            voxelValue = 2; // black core for all worlds
 
         //return voxelValue; // for testing without LODES or SURFACE OBJECTS
 
