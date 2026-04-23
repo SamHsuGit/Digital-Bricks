@@ -109,18 +109,26 @@ public class Controller : NetworkBehaviour
         2, // tool ID 1 = wood
         4, // tool ID 2 = stone
         6, // tool ID 3 = gold
-        64, // tool ID 4 = crystal
+        12, // tool ID 4 = crystal light green
+        16, // tool ID 5 = crystal dark green
+        36, // tool ID 6 = crystal blue
+        48, // tool ID 7 = crystal orange
+        64, // tool ID 8 = crystal red
     };
 
     public int[][] cannotMineDropMatrix = new int[][] // 2d array (array of arrays) that defines which blocks can be mined with various tool ids
     {
-        // 2 = blackstone, 3 = stone, 16 = crystal, 19 = gold
+        // 2 = blackstone, 3 = stone, 19 = gold, 16/22 = crystal light green, 23/24 = crystal dark green, 25/26 = crystal blue, 27/28 = crystal orange, 29/30 = crystal red
         // defines blocks that the given tool cannot create a drop for
-        new int[] {2, 3,                                       16,         19,        }, // tool ID 0 = punch (cannot create drop for blackstone, stone, crystal, or gold)
-        new int[] {2,                                          16,         19,        }, // tool ID 1 = wood (allows to mine stone)
-        new int[] {2,                                          16,                    }, // tool ID 2 = stone (allows to mine gold)
-        new int[] {2,                                                                 }, // tool ID 3 = gold (allows to mine crystal)
-        new int[] {                                                                   }, // tool ID 4 = crystal (allows to mine all)
+        new int[] {2, 3,                                       16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30,}, // tool ID 0 = punch (cannot create drop for blackstone, stone, crystal, or gold)
+        new int[] {2,                                          16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30,}, // tool ID 1 = wood (allows to mine stone)
+        new int[] {2,                                          16,                    22, 23, 24, 25, 26, 27, 28, 29, 30,}, // tool ID 2 = stone (allows to mine gold)
+        new int[] {2,                                                                     23, 24, 25, 26, 27, 28, 29, 30,}, // tool ID 3 = gold (allows to mine crystal)
+        new int[] {2,                                                                             25, 26, 27, 28, 29, 30,}, // tool ID 4 = crystal light green (allows to mine crystal dark green)
+        new int[] {2,                                                                                     27, 28, 29, 30,}, // tool ID 5 = crystal dark green (allows to mine crystal blue)
+        new int[] {2,                                                                                             29, 30,}, // tool ID 6 = crystal blue (allows to mine crystal orange)
+        new int[] {2,                                                                                                    }, // tool ID 7 = crystal orange (allows to mine crystal red)
+        new int[] {                                                                                                      }, // tool ID 8 = crystal red (allows to mine bedrock)
     };
 
     public int[] ldrawHexValues = new int[]
@@ -148,6 +156,14 @@ public class Controller : NetworkBehaviour
             8,
             3,
             42,
+            34,
+            34,
+            33,
+            33,
+            38,
+            38,
+            36,
+            36,
         };
 
     [HideInInspector] public GameObject placedBrick;
@@ -268,14 +284,14 @@ public class Controller : NetworkBehaviour
         placePos = Instantiate(placePosPrefab).transform;
         holdPos = holdPosPrefab.transform;
 
-        if (SettingsStatic.LoadedSettings.developerMode) // set values if developer mode or not
-        {
-            toolID = 4; // highest tier tool for developer/creative mode
-        }
-        else
-        {
-            toolID = 0; // otherwise initialize to 0, need to set based off toolbar inventory later
-        }
+        // if (SettingsStatic.LoadedSettings.developerMode) // set values if developer mode or not
+        // {
+        //     toolID = 8; // highest tier tool for developer/creative mode
+        // }
+        // else
+        // {
+        //     toolID = 0; // otherwise initialize to 0, need to set based off toolbar inventory later
+        // }
 
         // load brick palettes
         if (!Settings.WebGL)
@@ -1226,7 +1242,23 @@ public class Controller : NetworkBehaviour
                     }
                 case 16: // crystal
                     {
-                        return 4; // crystal
+                        return 4; // crystal light green
+                    }
+                case 23:
+                    {
+                        return 5; // crystal dark green
+                    }
+                case 25:
+                    {
+                        return 6; // crystal blue
+                    }
+                case 27:
+                    {
+                        return 7; // crystal orange
+                    }
+                case 29:
+                    {
+                        return 8; // crystal red
                     }
             }
         }

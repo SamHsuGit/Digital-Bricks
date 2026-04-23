@@ -10,27 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 022 Crystal (VBO)
+  m_Name: 029 Crystal Ore Red
   m_EditorClassIdentifier: 
-  blockName: Crystal (VBO)
-  id: 22
-  dropID: 22
+  blockName: Crystal Ore Red
+  id: 29
+  dropID: 29
   stackMax: 64
   isDrawn: 0
   isSolid: 1
   isTransparent: 1
   isWater: 0
-  hardness: 0
+  hardness: 4.5
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
-  icon: {fileID: -6246070551821309166, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-  colorHexValue: '#C0FF00'
+  icon: {fileID: 842819126, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: '#C91A09'
+  ldrawHexValueCodeNumber: 36
+  material: {fileID: 2100000, guid: 5614c425159eeeb4d857612406d89a70, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 6649896901485739460, guid: 1bd16d96cabde844d819dddf944f92af, type: 3}
-  backFaceTexture: 44
-  frontFaceTexture: 44
+  voxelBoundObject: {fileID: 3225992526758807777, guid: e5be9585302814cadb674b04ed576d99, type: 3}
+  backFaceTexture: 62
+  frontFaceTexture: 62
   topFaceTexture: 5
   bottomFaceTexture: 3
-  leftFaceTexture: 43
-  rightFaceTexture: 43
+  leftFaceTexture: 63
+  rightFaceTexture: 63
   topFaceSmoothTexture: 46

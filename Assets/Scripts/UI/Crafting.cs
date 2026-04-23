@@ -34,7 +34,25 @@ public class Crafting : MonoBehaviour
         3, // stone
         21, // cobblestone
         7, // gold
-        16, // crystal
+        16, // crystal light green ore
+        24, // crystal dark green ore
+        26, // crystal blue ore
+        28, // crystal orange ore
+        30, // crystal red ore
+    };
+
+    public int[] crystalBlockIDs = new int[]
+    {
+        16,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
     };
 
     public int[] itemNames = new int[]
@@ -127,7 +145,7 @@ public class Crafting : MonoBehaviour
                 if(slotsToCheck[i].itemSlot.stack.placedBrickID != 0)
                     craftSlotString += slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() + ",";
                 else
-                    craftSlotString += slotsToCheck[i].itemSlot.stack.id + ",";
+                    craftSlotString += World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].dropID + ","; // use dropID for crystals
                 craftingSlotsEmpty = false;
             }
             else
@@ -139,7 +157,7 @@ public class Crafting : MonoBehaviour
 
         // GATHER INFO ON CRAFTING SLOTS
         // flag non matching colors in crafting slots
-         // since placedBricks must always use same color bricks to craft
+        // since placedBricks must always use same color bricks to craft
         bool nonmatchingcolors = false;
         byte color = 0;
         byte prevColor = 0;
@@ -149,7 +167,7 @@ public class Crafting : MonoBehaviour
         {
             if(slotsToCheck[i].HasItem)
             {
-                color = slotsToCheck[i].itemSlot.stack.id;
+                color = World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].dropID; // updated to use dropID for crystals
                 slotsWithItemsCount++;
                 if(slotsToCheck[i].itemSlot.stack.isPlacedBrick)
                     slotsWithPlacedBricksCount++;
@@ -163,6 +181,16 @@ public class Crafting : MonoBehaviour
         // if(nonmatchingcolors)
         //     Debug.Log("nonmatchingcolors = true");
 
+        bool isCrystal = false;
+        for(int i = 0; i < crystalBlockIDs.Length; i++)
+        {
+            if(color == crystalBlockIDs[i])
+            {
+                isCrystal = true;
+                break;
+            }
+        }
+        //Debug.Log(isCrystal);
 
         // LOOP THRU ALL LOADED RECIPES AND SHAPES
         // for all recipes in list, if checkIntArray matches one, then output the corresponding block in output slot
@@ -207,10 +235,8 @@ public class Crafting : MonoBehaviour
                 if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors && isItem == 0) // if has placed bricks in slot
                 {
                     color = World.Instance.blockTypes[color].dropID;
-                    //color = CheckColorOverrideExceptions(color);
                     if(slotsWithPlacedBricksCount == 0) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
                         recipeString = recipeString.Replace("1",color.ToString()); // special case to craft 1x1 plates from voxels
-                    //Debug.Log(recipeString);
                     recipe.outputID = color;
                     //Debug.Log("replaced placedBrick values with " + color.ToString());
                 }
@@ -264,7 +290,7 @@ public class Crafting : MonoBehaviour
 
                             if(!nonmatchingcolors && recipe.outputPlacedBrickName == itemNames[1]) // crystal
                             {
-                                if(color != 16) // skip unless color is crystal
+                                if(!isCrystal) // skip unless color is crystal
                                     continue;
                             }
                         }
@@ -301,30 +327,6 @@ public class Crafting : MonoBehaviour
 
         return 0;
     }
-
-    // private byte CheckColorOverrideExceptions(byte _blockID)
-    // {
-    //     switch(_blockID)
-    //     {
-    //         case 13: // grass
-    //             {
-    //                 return 8; // green
-    //             }
-    //         case 14: // wood
-    //             {
-    //                 return 6; // brown
-    //             }
-    //         case 15: // leaves
-    //             {
-    //                 return 8; // green
-    //             }
-    //         case 22: // crystal vbo
-    //             {
-    //                 return 16; // crystal
-    //             }
-    //     }
-    //     return _blockID;
-    // }
 
     public void PutInOutputSlot(byte _stackID, int _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)
     {

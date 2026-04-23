@@ -52,6 +52,7 @@ MonoBehaviour:
     planetSeed: 3
     worldCoord: 1
     creativeMode: 0
+    singleChunk: 0
     distToStar: 0
     system: 0
     galaxy: 0
@@ -182,6 +183,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 872fb16cb6f9a704094175c5e66ba79f, type: 2}
   - {fileID: 11400000, guid: df68e1c61085144269075105836ff612, type: 2}
   - {fileID: 11400000, guid: 4c1778e58d3894587b78c2ee01943dbb, type: 2}
+  - {fileID: 11400000, guid: fc9134d0a9a28486c86fc0c840a84a96, type: 2}
+  - {fileID: 11400000, guid: 57ecb28b81043434abc1102771721c27, type: 2}
+  - {fileID: 11400000, guid: 43fcb48cdd76b4dd790d8ff4cbe83e43, type: 2}
+  - {fileID: 11400000, guid: ba6929a9e5b724fdeab7e10838eb4582, type: 2}
+  - {fileID: 11400000, guid: 11ccab145e0364c85ba75c8d6689ba94, type: 2}
+  - {fileID: 11400000, guid: 159fc12af56db4c7db996aa337299b0e, type: 2}
+  - {fileID: 11400000, guid: 03278d0c14c404d81b007699db6b59df, type: 2}
+  - {fileID: 11400000, guid: a7ae14965134647f582ac236c606262e, type: 2}
   placedBricks:
   - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
   - {fileID: 11400000, guid: c69ddb3e123724e23b67f5bbf17b9798, type: 2}
@@ -246,7 +255,16 @@ MonoBehaviour:
   - {fileID: 37570108828818984, guid: 349121dd2cf6def48acebf10f0f0170f, type: 3}
   - {fileID: 3225992526758807777, guid: 243038b8ba1494ea385f04a3eb07a736, type: 3}
   - {fileID: 6649896901485739460, guid: 1bd16d96cabde844d819dddf944f92af, type: 3}
+  - {fileID: 3225992526758807777, guid: 5f8ba38923ebd4314bf167457da29edc, type: 3}
+  - {fileID: 6649896901485739460, guid: fe54e4a7b30ee49c09cda086dc4c7a6d, type: 3}
+  - {fileID: 3225992526758807777, guid: 33f6f1dc842bf4b20b6f82689b381384, type: 3}
+  - {fileID: 6649896901485739460, guid: a253aa0796ad24b198f65ca1795be823, type: 3}
+  - {fileID: 3225992526758807777, guid: 18dee77d1a59e4620818abc89596e8e5, type: 3}
+  - {fileID: 6649896901485739460, guid: 44d30228d58964d86a89aa3b513a1c92, type: 3}
+  - {fileID: 3225992526758807777, guid: e5be9585302814cadb674b04ed576d99, type: 3}
+  - {fileID: 6649896901485739460, guid: 201c35c9498814d8dadce4a0016bf24e, type: 3}
   chunkLoadSound: {fileID: 6273157275290195825}
+  singleChunk: 0
 --- !u!114 &3875847496752610500
 MonoBehaviour:
   m_ObjectHideFlags: 0

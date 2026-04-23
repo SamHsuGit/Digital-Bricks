@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 04 Savanna
   m_EditorClassIdentifier: 
   biomeName: Savanna
-  surfaceBlock: 7
+  surfaceBlock: 4
   smallStructures: []
   smallFlora:
   - name: Grass
@@ -52,34 +52,97 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   lodes:
-  - nodeName: Crystals
-    blockID: 16
-    minHeight: 12
+  - nodeName: Gold ore
+    blockID: 19
+    minHeight: 1
     maxHeight: 256
     scale: 2
-    threshold: 0.78
-    noiseOffset: 1
-  - nodeName: CrystalsDeep
+    threshold: 0.63
+    noiseOffset: 5
+  - nodeName: Crystal ore light green
     blockID: 16
     minHeight: 1
-    maxHeight: 11
+    maxHeight: 256
     scale: 2
     threshold: 0.68
     noiseOffset: 1
-  - nodeName: Gold
-    blockID: 19
-    minHeight: 12
+  - nodeName: Crystal light green
+    blockID: 22
+    minHeight: 1
     maxHeight: 256
     scale: 2
-    threshold: 0.65
-    noiseOffset: 5
-  - nodeName: GoldDeep
-    blockID: 19
-    minHeight: 1
-    maxHeight: 11
+    threshold: 0.68
+    noiseOffset: 2
+  - nodeName: Crystal ore Deep light green
+    blockID: 16
+    minHeight: 13
+    maxHeight: 15
     scale: 2
-    threshold: 0.78
-    noiseOffset: 5
+    threshold: 0.66
+    noiseOffset: 1
+  - nodeName: Crystal Deep light green
+    blockID: 22
+    minHeight: 13
+    maxHeight: 15
+    scale: 2
+    threshold: 0.66
+    noiseOffset: 2
+  - nodeName: Crystal ore dark green
+    blockID: 23
+    minHeight: 10
+    maxHeight: 12
+    scale: 2
+    threshold: 0.64
+    noiseOffset: 1
+  - nodeName: Crystal dark green
+    blockID: 24
+    minHeight: 10
+    maxHeight: 12
+    scale: 2
+    threshold: 0.64
+    noiseOffset: 2
+  - nodeName: Crystal ore blue
+    blockID: 25
+    minHeight: 7
+    maxHeight: 9
+    scale: 2
+    threshold: 0.65
+    noiseOffset: 1
+  - nodeName: Crystal blue
+    blockID: 26
+    minHeight: 7
+    maxHeight: 9
+    scale: 2
+    threshold: 0.65
+    noiseOffset: 2
+  - nodeName: Crystal ore orange
+    blockID: 27
+    minHeight: 4
+    maxHeight: 6
+    scale: 2
+    threshold: 0.66
+    noiseOffset: 1
+  - nodeName: Crystal orange
+    blockID: 28
+    minHeight: 4
+    maxHeight: 6
+    scale: 2
+    threshold: 0.66
+    noiseOffset: 2
+  - nodeName: Crystal ore red
+    blockID: 29
+    minHeight: 1
+    maxHeight: 3
+    scale: 2
+    threshold: 0.67
+    noiseOffset: 1
+  - nodeName: Crystal red
+    blockID: 30
+    minHeight: 1
+    maxHeight: 3
+    scale: 2
+    threshold: 0.67
+    noiseOffset: 2
   sprites:
   - {fileID: 21300000, guid: 965093db0469f4c479e5697a7cf742bb, type: 3}
   - {fileID: 21300000, guid: 88e3c91d37a01684fb5b75604995d2d6, type: 3}

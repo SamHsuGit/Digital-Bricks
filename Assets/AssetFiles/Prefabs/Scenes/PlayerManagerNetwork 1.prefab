@@ -25,12 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6240087710966741188}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6240087710966741190
 MonoBehaviour:
@@ -74,8 +75,8 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 1
   serverTickRate: 60
-  offlineScene: Assets/AssetFiles/Scenes/00 Main Menu.unity
-  onlineScene: Assets/AssetFiles/Scenes/03 Game.unity
+  offlineScene: 
+  onlineScene: 
   transport: {fileID: 6240087710966741190}
   networkAddress: localhost
   maxConnections: 4
@@ -88,5 +89,5 @@ MonoBehaviour:
   - {fileID: 4673335178978187722, guid: 2f468417da2e51e4c8196d49626f5dab, type: 3}
   - {fileID: 4673335178978187722, guid: 2d18a06036f305a499cff6e1c56f0544, type: 3}
   - {fileID: 267288310360540051, guid: 04bb5ef7f14330842b6b88d9be1ec42b, type: 3}
-  world: {fileID: 0}
+  worldOb: {fileID: 0}
   charPrefab: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
