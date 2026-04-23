@@ -898,6 +898,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: 031
+      rect:
+        serializedVersion: 2
+        x: 2637
+        y: 2771
+        width: 371
+        height: 375
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68808f3e65c5e4ae095e2500ea7313c8
+      internalID: -531773786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -944,6 +966,7 @@ TextureImporter:
       028: -378450115
       029: 842819126
       030: 1360677399
+      031: -531773786
       052: -6246070551821309166
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

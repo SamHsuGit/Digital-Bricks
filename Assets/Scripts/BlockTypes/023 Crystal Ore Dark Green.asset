@@ -16,7 +16,7 @@ MonoBehaviour:
   id: 23
   dropID: 23
   stackMax: 64
-  isDrawn: 0
+  isDrawn: 1
   isSolid: 1
   isTransparent: 1
   isWater: 0

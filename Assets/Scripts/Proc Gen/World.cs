@@ -1028,6 +1028,9 @@ public class World : MonoBehaviour
            return worldData.blockIDwater; // water
 
         if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 2))
+            voxelValue = 31; // dark grey core for all worlds
+
+        if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 3))
             voxelValue = 2; // black core for all worlds
 
         //return voxelValue; // for testing without LODES or SURFACE OBJECTS

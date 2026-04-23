@@ -191,6 +191,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 159fc12af56db4c7db996aa337299b0e, type: 2}
   - {fileID: 11400000, guid: 03278d0c14c404d81b007699db6b59df, type: 2}
   - {fileID: 11400000, guid: a7ae14965134647f582ac236c606262e, type: 2}
+  - {fileID: 11400000, guid: 6d444bd59c601445b92dd3afe4acf408, type: 2}
   placedBricks:
   - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
   - {fileID: 11400000, guid: c69ddb3e123724e23b67f5bbf17b9798, type: 2}
@@ -263,6 +264,7 @@ MonoBehaviour:
   - {fileID: 6649896901485739460, guid: 44d30228d58964d86a89aa3b513a1c92, type: 3}
   - {fileID: 3225992526758807777, guid: e5be9585302814cadb674b04ed576d99, type: 3}
   - {fileID: 6649896901485739460, guid: 201c35c9498814d8dadce4a0016bf24e, type: 3}
+  - {fileID: 5196350964378782657, guid: 4226afa4f22bb482daf078be3053e9c6, type: 3}
   chunkLoadSound: {fileID: 6273157275290195825}
   singleChunk: 0
 --- !u!114 &3875847496752610500
