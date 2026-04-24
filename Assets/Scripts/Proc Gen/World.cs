@@ -991,8 +991,8 @@ public class World : MonoBehaviour
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         terrainHeight = CalcTerrainHeight(xzCoords);
 
-        if(continentalness > 0.5f && yGlobalPos == 2)
-            return worldData.blockIDsubsurface; // stone at bottom of caves where there is land
+        // if(continentalness > 0.5f && yGlobalPos == 2)
+        //     return 2; // black rock at bottom of caves where there is land
 
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
@@ -1018,13 +1018,19 @@ public class World : MonoBehaviour
         isAir = GetIsAir(globalPos);
         if (isAir)
            voxelValue = 0; // air
+        // else if (yGlobalPos < terrainHeight)
+        //     voxelValue = 3; // stone
+        // //return voxelValue;
+
         else if (yGlobalPos < terrainHeight)
            voxelValue = worldData.blockIDsubsurface; // stone
+        // else if (weirdness > 0.6f && yGlobalPos >= terrainHeight - 5)
+        //     voxelValue = biome.surfaceBlock; // dirt
         else if (yGlobalPos == terrainHeight)
             voxelValue = biome.surfaceBlock; // dirt
         // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
         // voxelValue = biome.surfaceBlock; // dirt
-        if (voxelValue == 0 && continentalness < 0.5f && weirdness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
+        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
            return worldData.blockIDwater; // water
 
         if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 2))
@@ -1033,7 +1039,7 @@ public class World : MonoBehaviour
         if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 3))
             voxelValue = 2; // black core for all worlds
 
-        //return voxelValue; // for testing without LODES or SURFACE OBJECTS
+        // return voxelValue; // for testing without LODES or SURFACE OBJECTS
 
         /* CAVE PASS */
         //3D noise used for caves
@@ -1072,7 +1078,7 @@ public class World : MonoBehaviour
         // noise used to determine if to use cheese, spaghetti, or noodle caves
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
-        if (!isAir && voxelValue != 0 && drawLodes && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight) // lodes should not appear above sea level, must mine for them
+        if (drawLodes && voxelValue != 0 && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight) // lodes should not appear above sea level, must mine for them
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -1090,7 +1096,7 @@ public class World : MonoBehaviour
         // add structures like monoliths and flora like trees and plants and mushrooms
         // uses the tallest object height to limit the altitude at which objects can spawn
         int tallestStructureHeight = 25;
-        if (weirdness < 0.8f && drawSurfaceObjects && (yGlobalPos == terrainHeight && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+        if (!isAir && drawSurfaceObjects && (yGlobalPos == terrainHeight && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             // fertility adds random values to determine which surface object to generate and what height it will be
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
@@ -1238,7 +1244,7 @@ public class World : MonoBehaviour
         peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints);
         
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
-        weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.06f), weirdnessSplinePoints);
+        weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.5f), weirdnessSplinePoints);
         //weirdness = Noise.Get2DPerlin(xzCoords, 321, 2f);
 
         // for testing to individually visualize the effects of the spline points
@@ -1276,15 +1282,23 @@ public class World : MonoBehaviour
         // float x2 = terrainHeight; // position at terrainHeight
         // float y2 = 0; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
 
+        // density decreased higher from terrain height
+        // density increased lower from terrain height
+
         // MAIN ALGORITHM
-        float x1 = 0; // bottom of chunk
-        float y1 = 0.9f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
-        float x2 = terrainHeight; // position at terrainHeight
-        weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1 to keep y2 positive
-        float y2 = 1.0f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
+        //float x1 = 0; // bottom of chunk
+        //float y1 = 0.9f; // density at bottom of chunk (must be larger than y2 to have less density/air at surface)
+        //float x2 = VoxelData.ChunkHeight; // position at terrainHeight
+        //weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1 to keep y2 positive
+        //weirdness = 1f; // testing override
+        //float y2 = 1.0f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
+
+        if(weirdness < 0.2f || continentalness < 0.5f)
+            return false;
 
         // input elevation, output density (cannot be negative)
-        density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y);
+        //density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y);
+        density = -(1/VoxelData.ChunkHeight) * globalPos.y + 0.5f;
         density = Mathf.Clamp(Mathf.Abs(density), 0, 1); // must be positive value between 0 and 1
 
         // input 3d position, output true = air or false = block, high factor/threshold means more likely to be a block
