@@ -1033,11 +1033,18 @@ public class World : MonoBehaviour
         if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
            return worldData.blockIDwater; // water
 
+        // ceilings to separate rock layers for progression
+        if(yGlobalPos == Mathf.FloorToInt(terrainHeight / 2))
+            return 3;
+        if(yGlobalPos == Mathf.FloorToInt(terrainHeight / 3))
+            return 31;
+
         if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 2))
             voxelValue = 31; // dark grey core for all worlds
 
         if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 3))
             voxelValue = 2; // black core for all worlds
+        
 
         // return voxelValue; // for testing without LODES or SURFACE OBJECTS
 
