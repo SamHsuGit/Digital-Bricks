@@ -1300,6 +1300,9 @@ public class World : MonoBehaviour
         //weirdness = 1f; // testing override
         //float y2 = 1.0f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
 
+        // if(continentalness > 0.82f) // weirdness high for plateaus
+        //     weirdness = 0.7f;
+
         if(weirdness < 0.2f || continentalness < 0.5f)
             return false;
 
