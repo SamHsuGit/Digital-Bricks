@@ -52,96 +52,96 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   lodes:
-  - nodeName: Gold ore
+  - nodeName: Ore Gold
     blockID: 19
-    minHeight: 32
+    minHeight: 9
     maxHeight: 256
     scale: 2
     threshold: 0.63
     noiseOffset: 5
-  - nodeName: Crystal ore light green
+  - nodeName: Ore Crystal light green
     blockID: 16
-    minHeight: 32
+    minHeight: 9
     maxHeight: 256
     scale: 2
     threshold: 0.68
     noiseOffset: 1
-  - nodeName: Crystal light green
-    blockID: 22
-    minHeight: 32
-    maxHeight: 256
-    scale: 2
-    threshold: 0.68
-    noiseOffset: 78
-  - nodeName: Crystal ore Deep light green
+  - nodeName: Ore Crystal light green DEEP
     blockID: 16
-    minHeight: 32
+    minHeight: 9
     maxHeight: 256
     scale: 2
     threshold: 0.66
     noiseOffset: 12
-  - nodeName: Crystal Deep light green
-    blockID: 22
-    minHeight: 32
-    maxHeight: 256
-    scale: 2
-    threshold: 0.66
-    noiseOffset: 345
-  - nodeName: Crystal ore dark green
+  - nodeName: Ore Crystal dark green
     blockID: 23
-    minHeight: 1
+    minHeight: 15
     maxHeight: 32
     scale: 2
     threshold: 0.64
     noiseOffset: 123
-  - nodeName: Crystal dark green
-    blockID: 24
-    minHeight: 1
-    maxHeight: 32
-    scale: 2
-    threshold: 0.64
-    noiseOffset: 536
-  - nodeName: Crystal ore blue
+  - nodeName: Ore Crystal blue
     blockID: 25
-    minHeight: 1
+    minHeight: 15
     maxHeight: 22
     scale: 2
     threshold: 0.65
     noiseOffset: 322
-  - nodeName: Crystal blue
-    blockID: 26
-    minHeight: 1
-    maxHeight: 22
-    scale: 2
-    threshold: 0.65
-    noiseOffset: 123
-  - nodeName: Crystal ore orange
+  - nodeName: Ore Crystal orange
     blockID: 27
     minHeight: 1
     maxHeight: 14
     scale: 2
     threshold: 0.66
     noiseOffset: 321
+  - nodeName: Ore Crystal red
+    blockID: 29
+    minHeight: 1
+    maxHeight: 9
+    scale: 2
+    threshold: 0.67
+    noiseOffset: 32
+  - nodeName: Crystal light green
+    blockID: 22
+    minHeight: 9
+    maxHeight: 256
+    scale: 2
+    threshold: 0.69
+    noiseOffset: 78
+  - nodeName: Crystal light green DEEP
+    blockID: 22
+    minHeight: 9
+    maxHeight: 256
+    scale: 2
+    threshold: 0.67
+    noiseOffset: 345
+  - nodeName: Crystal dark green
+    blockID: 24
+    minHeight: 15
+    maxHeight: 32
+    scale: 2
+    threshold: 0.65
+    noiseOffset: 536
+  - nodeName: Crystal blue
+    blockID: 26
+    minHeight: 15
+    maxHeight: 22
+    scale: 2
+    threshold: 0.66
+    noiseOffset: 123
   - nodeName: Crystal orange
     blockID: 28
     minHeight: 1
     maxHeight: 14
     scale: 2
-    threshold: 0.66
-    noiseOffset: 22
-  - nodeName: Crystal ore red
-    blockID: 29
-    minHeight: 1
-    maxHeight: 3
-    scale: 2
     threshold: 0.67
-    noiseOffset: 32
+    noiseOffset: 22
   - nodeName: Crystal red
     blockID: 30
     minHeight: 1
-    maxHeight: 3
+    maxHeight: 9
     scale: 2
-    threshold: 0.67
+    threshold: 0.68
     noiseOffset: 45
   sprites:
   - {fileID: 21300000, guid: 4c72d451ed61cd04b970dd46d154b4ab, type: 3}

@@ -163,7 +163,7 @@ public class Health : NetworkBehaviour
             }
         }
 
-        if (transform.position.y < -20 && hp > 0) // hurt if falling below world
+        if (transform.position.y < -20) // hurt if falling below world
         {
             if (Settings.OnlinePlay && hasAuthority)
                 CmdEditSelfHealth(-1);

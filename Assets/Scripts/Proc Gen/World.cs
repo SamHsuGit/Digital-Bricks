@@ -1252,6 +1252,9 @@ public class World : MonoBehaviour
         
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
         weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.5f), weirdnessSplinePoints);
+        // if(continentalness > 0.82f) // weirdness high for plateaus
+        //     weirdness = 0.7f;
+
         //weirdness = Noise.Get2DPerlin(xzCoords, 321, 2f);
 
         // for testing to individually visualize the effects of the spline points
@@ -1299,9 +1302,6 @@ public class World : MonoBehaviour
         //weirdness = Mathf.Clamp(weirdness, 0, y1); // weirdness cannot be higher than y1 to keep y2 positive
         //weirdness = 1f; // testing override
         //float y2 = 1.0f - weirdness; // density at terrainHeight (must be smaller than y1 to have less density/air at surface)
-
-        // if(continentalness > 0.82f) // weirdness high for plateaus
-        //     weirdness = 0.7f;
 
         if(weirdness < 0.2f || continentalness < 0.5f)
             return false;

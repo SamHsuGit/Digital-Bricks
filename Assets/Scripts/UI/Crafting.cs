@@ -304,6 +304,13 @@ public class Crafting : MonoBehaviour
                         return;
                     }
 
+                    // if crystal give extra qty of items
+                    int outputQty = 0;
+                    if(isCrystal)
+                        outputQty = 9;
+                    else
+                        outputQty = recipe.outputQty;
+
                     // give output block but do some checks first
                     if(!recipe.isPlacedBrick) // if normal crafting recipe
                         PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
