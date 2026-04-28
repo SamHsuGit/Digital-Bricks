@@ -71,7 +71,7 @@ public class DragAndDropHandler : MonoBehaviour {
             if(slot != null && (slot.isCrafting || slot.isOutput))
                 crafting.CheckCraftingSlots(controller.inventoryUIMode);
         }
-        else if (clickedRMB) // if right clicked
+        else if (clickedRMB)// || controller.inputHandler.use) // if right clicked or holding use (buggy)
         {
             UIItemSlot slot = CheckForSlot();
 
@@ -320,7 +320,7 @@ public class DragAndDropHandler : MonoBehaviour {
             //     cursorSlot.itemSlot.InsertStack(oldSlot);
             // }
 
-            // if blockIDs and placedBrickIDs match, then try and add up items in clicked slot to stack maximum
+            // if blockIDs and placedBrickIDs match, then try and add up items in clicked slot to stack maximum, otherwise switch items
             if (cursorSlot.itemSlot.stack.id == clickedSlot.itemSlot.stack.id && cursorSlot.itemSlot.stack.placedBrickID == clickedSlot.itemSlot.stack.placedBrickID)
             {
                 int stackMax = World.Instance.blockTypes[clickedSlot.itemSlot.stack.id].stackMax; // cache max stack value for clicked slot
@@ -345,6 +345,16 @@ public class DragAndDropHandler : MonoBehaviour {
                     cursorSlot.itemSlot.EmptySlot();
 
                 controller.brickPlaceDown.Play();
+            }
+            else // switch cursor and clicked slot items if blockID does not match
+            {
+                ItemStack stackTemp = cursorSlot.itemSlot.stack; // cache stack in cursor slot to be overridden
+                cursorSlot.itemSlot.stack = clickedSlot.itemSlot.stack; // override cursor slot stack with clicked slot stack
+                clickedSlot.itemSlot.stack = stackTemp; // override clicked slot with cached stack
+
+                // update sprite images
+                clickedSlot.UpdateSlot();
+                cursorSlot.UpdateSlot();
             }
         }
 

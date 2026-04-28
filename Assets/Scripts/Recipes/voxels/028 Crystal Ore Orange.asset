@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 028 Crystal Orange
+  m_Name: 028 Crystal Ore Orange
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
   recipeShapes:
@@ -27,4 +27,4 @@ MonoBehaviour:
   outputID: 27
   outputPlacedBrickName: 0
   outputQty: 1
-  studs: 9
+  studs: 3
