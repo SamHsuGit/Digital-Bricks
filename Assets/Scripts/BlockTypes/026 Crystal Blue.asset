@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Crystal Blue
   id: 26
-  dropID: 25
+  dropID: 26
   stackMax: 64
   isDrawn: 0
   isSolid: 1

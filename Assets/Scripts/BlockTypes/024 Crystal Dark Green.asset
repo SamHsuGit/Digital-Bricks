@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Crystal Dark Green
   id: 24
-  dropID: 23
+  dropID: 24
   stackMax: 64
   isDrawn: 0
   isSolid: 1

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Crystal Orange
   id: 28
-  dropID: 27
+  dropID: 28
   stackMax: 64
   isDrawn: 0
   isSolid: 1
