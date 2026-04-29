@@ -81,6 +81,7 @@ public class Controller : NetworkBehaviour
     public AudioSource shootBricks;
     public AudioSource brickHit;
     public AudioSource brickMove;
+    public AudioSource pop;
     public GameObject playerCamera;
     public GameObject removePosPrefab;
     public GameObject shootPosPrefab;
@@ -1358,6 +1359,7 @@ public class Controller : NetworkBehaviour
                 if(canMine)
                 {
                     shootBricks.Play();
+                    pop.Play();
                     PlayerRemoveVoxel();
                     SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
 
@@ -1423,6 +1425,7 @@ public class Controller : NetworkBehaviour
                     //SpawnVoxelRbFromWorld(hit.transform.position, (byte)currentBrickMaterialIndex);
                 }
                 shootBricks.Play();
+                pop.Play();
                 Destroy(hit.transform.gameObject);
             }
         }
