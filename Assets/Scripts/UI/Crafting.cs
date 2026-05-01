@@ -306,22 +306,62 @@ public class Crafting : MonoBehaviour
 
                     // if crystal give extra qty of items
                     int outputQty = 0;
-                    if(isCrystal)
-                        outputQty = 9;
+                    if(isCrystal) // special code for crystals to output correct blockID and qty to allow for better progression and finding "rare" crystals
+                    {
+                        outputQty = 3;
+                        outputID = GetCrystalOutputID(color);
+                    }
                     else
                         outputQty = recipe.outputQty;
 
                     // give output block but do some checks first
                     if(!recipe.isPlacedBrick) // if normal crafting recipe
-                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
+                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, outputQty);
                     else if (!nonmatchingcolors) // if is a placed brick and colors all match can give an output block
-                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
+                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, outputQty);
                     return;
                 }
             }
         }
 
         outputSlot.itemSlot.EmptySlot(); // if made it here, no matching crafting recipe so empty the output slot
+    }
+
+    private byte GetCrystalOutputID(byte _color)
+    {
+        // temporary manual hard code override
+        // eventually add as feature to the scriptable object blockType so can set when setting up a new blocktype
+        byte _returnValue = 0;
+        switch(_color)
+        {
+            case 22:
+                {
+                    _returnValue = 16;
+                    break;
+                }
+            case 24:
+                {
+                    _returnValue = 23;
+                    break;
+                }
+            case 26:
+                {
+                    _returnValue = 25;
+                    break;
+                }
+            case 28:
+                {
+                    _returnValue = 27;
+                    break;
+                }
+            case 30:
+                {
+                    _returnValue = 29;
+                    break;
+                }
+        }
+
+        return _returnValue;
     }
 
     private int GetItemNumber(int _outputPlacedBrickName)

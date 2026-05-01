@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 002 Blackstone
+  m_Name: 002 Black Stone
   m_EditorClassIdentifier: 
-  blockName: Black
+  blockName: Black Stone
   id: 2
   dropID: 2
   stackMax: 64

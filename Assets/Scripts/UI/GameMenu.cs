@@ -110,6 +110,8 @@ public class GameMenu : MonoBehaviour
     {
         UpdateHP();
         CheckSplitscreenCanvasRenderMode();
+        //Debug.Log("visible = " + Cursor.visible);
+        //Debug.Log("lock state = " + Cursor.lockState);
 
         if (showControls)
         {
@@ -160,17 +162,26 @@ public class GameMenu : MonoBehaviour
         SettingsStatic.LoadedSettings = SettingsStatic.LoadSettings();
 
         uac.renderPostProcessing = false;
+
+        // show cursor
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        //optionsMenu.gameObject.SetActive(true);
+        //Debug.Log(Cursor.visible);
+        //Debug.Log(Cursor.lockState);
+
+        // turn on background
         backgroundMaskCanvasGroup.alpha = 1;
+
+        // turn off player HUD
         playerHUDCanvasGroup.alpha = 0;
         playerHUDCanvasGroup.interactable = false;
+
+        // turn on optionsMenu
         optionsMenuCanvasGroup.alpha = 1;
         optionsMenuCanvasGroup.interactable = true;
-        PlanetSeedWorldCoordText.text = "Seed: " + SettingsStatic.LoadedSettings.worldCoord;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        PlanetSeedWorldCoordText.text = "Seed: " + SettingsStatic.LoadedSettings.worldCoord;
 
         controller.RequestSaveWorld();
     }
@@ -189,6 +200,7 @@ public class GameMenu : MonoBehaviour
         playerHUDCanvasGroup.interactable = true;
         optionsMenuCanvasGroup.alpha = 0;
         optionsMenuCanvasGroup.interactable = false;
+        //optionsMenu.gameObject.SetActive(false);
 
         SaveSettings(); // save settings when exiting menu
     }

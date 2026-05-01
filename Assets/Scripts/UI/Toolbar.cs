@@ -53,7 +53,7 @@ public class Toolbar : MonoBehaviour
     private void ResetCreativeSlot()
     {
         creativeBlockID = 2;
-        ItemStack creativeStack = new ItemStack(creativeBlockID, creativePlacedBlockID, false, creativeBlockID);
+        ItemStack creativeStack = new ItemStack(creativeBlockID, creativePlacedBlockID, false, World.Instance.blockTypes[creativeBlockID].stackMax);
         controller.toolbar.slots[0].itemSlot.EmptySlot();
         controller.toolbar.slots[0].itemSlot.InsertStack(creativeStack);
     }
@@ -224,6 +224,7 @@ public class Toolbar : MonoBehaviour
 
                 slots[slotIndex].itemSlot.EmptySlot();
                 ItemStack stack = new ItemStack(creativeBlockID, creativePlacedBlockID, false, World.Instance.blockTypes[creativeBlockID].stackMax);
+                //Debug.Log("creative block id = " + stack.id + " with amount = " + stack.amount);
                 slots[slotIndex].itemSlot.InsertStack(stack);
             }
             

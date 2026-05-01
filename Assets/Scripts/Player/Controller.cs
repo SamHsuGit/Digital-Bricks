@@ -846,7 +846,7 @@ public class Controller : NetworkBehaviour
         
         if(inventoryUIMode != 0)
             dragAndDropHandler.OnInventory();
-        else if (inventoryUIMode == 0)
+        else if (inventoryUIMode == 0 && !options)
             dragAndDropHandler.ReturnToGame();
 
         if (holdingBuild || holdingGrab)

@@ -1780,16 +1780,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 33b7bad27bbe24745a10a06ebaac6157, type: 2}
   - {fileID: 11400000, guid: f6e12a3b0377c41719488c5e150c5afe, type: 2}
   - {fileID: 11400000, guid: 8c3e1f6184bd04795b971358ae907a9d, type: 2}
-  - {fileID: 11400000, guid: d3263cbc57de04da6ba8f16ca58b8b1e, type: 2}
-  - {fileID: 11400000, guid: 7efdab73447cd4a0cb2d5dffddf626cc, type: 2}
-  - {fileID: 11400000, guid: 2afda9badd938495e93665afcc2120ce, type: 2}
-  - {fileID: 11400000, guid: 26130c5810c4143df95151d47aaad5d2, type: 2}
-  - {fileID: 11400000, guid: fcdb3e6039cd44d3e8fcb5890c4bcc91, type: 2}
-  - {fileID: 11400000, guid: 3db3681ba6e1341988df07607f7ceab0, type: 2}
-  - {fileID: 11400000, guid: e22bb740e83e04202b574ce3b0c0dbe8, type: 2}
-  - {fileID: 11400000, guid: acc05f67737bd41d5a37effe173e7141, type: 2}
-  - {fileID: 11400000, guid: e64200a9877c64da082cc9fb3b55e1ab, type: 2}
-  - {fileID: 11400000, guid: 1fce319712da648ccac1ff94f618f644, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}

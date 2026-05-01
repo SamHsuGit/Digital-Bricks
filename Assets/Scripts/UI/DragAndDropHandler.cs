@@ -103,6 +103,9 @@ public class DragAndDropHandler : MonoBehaviour {
 
     public void ReturnToGame()
     {
+        if(controller.inventoryUIMode != 0) // do not do if already not inventory mode
+            return;
+
         // clear crafting
         if(crafting.outputSlot.itemSlot != null)
             crafting.outputSlot.itemSlot.EmptySlot();
@@ -125,7 +128,6 @@ public class DragAndDropHandler : MonoBehaviour {
             HandleStackQuickMove(cursorSlot);
             cursorSlot.itemSlot.EmptySlot();
         }
-            
 
         // hide all crafting slots (output slots, 2x2 crafting, 3x3 crafting, furnace)
         for(int i = 0; i < crafting.uiMenus.Length; i++)

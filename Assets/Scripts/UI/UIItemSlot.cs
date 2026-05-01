@@ -64,8 +64,9 @@ public class UIItemSlot : MonoBehaviour
             slotIcon.enabled = true;
             slotAmount.enabled = true;
         }
-        else if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length && itemSlot.stack.id >= 3) // IF VOXEL
+        else if (itemSlot != null && itemSlot.HasItem && itemSlot.stack.id <= World.Instance.blockTypes.Length && itemSlot.stack.id >= 2) // IF VOXEL
         {
+            //Debug.Log("stack.id = " + itemSlot.stack.id + " with amount = " + itemSlot.stack.amount.ToString());
             slotIcon.sprite = World.Instance.blockTypes[itemSlot.stack.id].icon;
             slotIcon.color = new Color32(255, 255, 255, 255); // set to white if voxel
             slotAmount.text = itemSlot.stack.amount.ToString();
