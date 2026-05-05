@@ -322,6 +322,7 @@ public class VoxelCollider : MonoBehaviour
         {
             if (
                 World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z + length / 2 + colliderOffset), true) || // center top front
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y, center.z + length / 2 + colliderOffset), true) || // center middle front
                 World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z + length / 2 + colliderOffset), true) // center bottom front
                 )
                 return true;
@@ -335,6 +336,7 @@ public class VoxelCollider : MonoBehaviour
         {
             if (
                 World.Instance.CheckForVoxel(new Vector3(center.x, center.y + halfColliderHeight, center.z - length / 2 - colliderOffset), true) || // center top back
+                World.Instance.CheckForVoxel(new Vector3(center.x, center.y, center.z - length / 2 - colliderOffset), true) || // center middle back
                 World.Instance.CheckForVoxel(new Vector3(center.x, center.y - halfColliderHeight, center.z - length / 2 - colliderOffset), true) // center bottom back
                 )
                 return true;
@@ -348,6 +350,7 @@ public class VoxelCollider : MonoBehaviour
         {
             if (
                 World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y + halfColliderHeight, center.z),true) || // left top center
+                World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y, center.z),true) || // left middle center
                 World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, center.y - halfColliderHeight, center.z), true) // left bottom center
                 )
                 return true;
@@ -361,6 +364,7 @@ public class VoxelCollider : MonoBehaviour
         {
             if (
                 World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y + halfColliderHeight, center.z), true) || // right top center
+                World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y, center.z), true) || // right middle center
                 World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, center.y - halfColliderHeight, center.z), true) // right bottom center
                 )
                 return true;
