@@ -831,7 +831,7 @@ MonoBehaviour:
   blockID: 0
   checkIncrement: 0.1
   sphereCastRadius: 0
-  grabDist: 6
+  grabDist: 5
   tpsDist: 0
   maxFocusDistance: 2
   focusDistanceIncrement: 0.03

@@ -49,7 +49,7 @@ public class Controller : NetworkBehaviour
     public byte blockID;
     public float checkIncrement = 0.1f;
     public float sphereCastRadius;
-    public float grabDist = 4f; // defines how far player can reach to use/use voxels (updated later to match player created models)
+    public float grabDist = 5f; // defines how far player can reach to use/use voxels (updated later to match player created models), minecraft uses 5 blocks
     public float tpsDist;
     public float maxFocusDistance = 2f;
     public float focusDistanceIncrement = 0.03f;
@@ -665,7 +665,7 @@ public class Controller : NetworkBehaviour
         nametag.transform.localPosition = new Vector3(0, colliderCenter.y + colliderHeight * 0.55f, 0);
 
         // set reach and mining range procedurally based on imported char model size
-        grabDist = cc.radius * 10f;
+        grabDist = (cc.radius * 10f) + 1f;
         tpsDist = -cc.radius * 16; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
     }
 
