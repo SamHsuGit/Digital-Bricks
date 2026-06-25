@@ -87,7 +87,7 @@ public class World : MonoBehaviour
     private float biomeScale;
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
-    //private int cloudHeight;
+    private int cloudHeight;
     private bool applyingModifications;
     private int loadDistance;
     private bool undrawVBO = false;
@@ -204,7 +204,7 @@ public class World : MonoBehaviour
         else
             _instance = this;
 
-        //cloudHeight = VoxelData.ChunkHeight - 15;
+        cloudHeight = VoxelData.ChunkHeight - 15;
         float mainlandElevationPercent = 0.10f;
         float plateauElevationPercent = 0.50f;
         float step = 0.05f;
@@ -965,6 +965,30 @@ public class World : MonoBehaviour
         //if (!IsGlobalPosInsideBorder(globalPos))
         //    return 0;
 
+
+
+        ///* AIR PASS */
+        //// Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
+        //if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
+        //{
+        //    if (!drawClouds)
+        //        return 0;
+        //    else if (yGlobalPos < cloudHeight || yGlobalPos > cloudHeight)
+        //        return 0;
+        //}
+
+        /* CLOUD PASS */
+        temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines cloud density and biome
+        humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines cloud density and biome
+        percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and surface ob type
+        if (yGlobalPos >= cloudHeight && Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f)) // determines cloud altitude
+        {
+            if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
+                return 4;
+            else
+                return 0;
+        }
+
         // reserve space for imported base file
         if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos))
             return 0;
@@ -975,8 +999,8 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes)
-        temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines biome
-        humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines biome
+        //temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines biome
+        //humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines biome
 
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
             biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
