@@ -845,6 +845,7 @@ MonoBehaviour:
   invertY: 0
   mined: 0
   orientation: 0
+  blocksMined: 0
   charModelDefault: {fileID: 1382797557371332204}
   charModelOrigin: {fileID: 6156733249479519148}
   gameMenu: {fileID: 5290477769798018415}

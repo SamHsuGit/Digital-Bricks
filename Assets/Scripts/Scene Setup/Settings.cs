@@ -53,6 +53,7 @@ public static class SettingsStatic
         settings.currentBrickRotation = 0;
         settings.showControls = true;
         settings.camMode = 2;
+        settings.blocksMined = 0;
 
         string path;
         if (Settings.Platform == 2)
@@ -113,6 +114,7 @@ public class Settings
     public int currentBrickRotation;
     public bool showControls;
     public int camMode;
+    public int blocksMined;
 
     public static bool WorldLoaded
     {

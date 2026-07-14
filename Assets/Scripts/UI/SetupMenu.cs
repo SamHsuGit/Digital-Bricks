@@ -131,6 +131,8 @@ public class SetupMenu : MonoBehaviour
 
     public void CreateNewWorld() // use input field value for seed
     {
+        SettingsStatic.LoadedSettings.blocksMined = 0; // reset every time play a new world
+
         // make world coord equal input field value
         //try to load the saved world coord, otherwise default to 1
         try

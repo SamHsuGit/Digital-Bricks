@@ -64,6 +64,7 @@ public class Controller : NetworkBehaviour
     public bool invertY = false;
     public bool mined = false;
     public byte orientation;
+    public int blocksMined;
 
     [Header("GameObject References")]
     public Player player;
@@ -125,11 +126,11 @@ public class Controller : NetworkBehaviour
         new int[] {2,                                          16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30, 31,}, // tool ID 1 = wood (allows to mine stone)
         new int[] {2,                                          16,                    22, 23, 24, 25, 26, 27, 28, 29, 30,    }, // tool ID 2 = stone (allows to mine gold)
         new int[] {2,                                                                     23, 24, 25, 26, 27, 28, 29, 30,    }, // tool ID 3 = gold (allows to mine crystal)
-        new int[] {                                                                               25, 26, 27, 28, 29, 30,    }, // tool ID 4 = crystal light green (allows to mine crystal dark green)
-        new int[] {                                                                                       27, 28, 29, 30,    }, // tool ID 5 = crystal dark green (allows to mine crystal blue)
-        new int[] {                                                                                               29, 30,    }, // tool ID 6 = crystal blue (allows to mine crystal orange)
-        new int[] {                                                                                                          }, // tool ID 7 = crystal orange (allows to mine crystal red)
-        new int[] {                                                                                                          }, // tool ID 8 = crystal red (allows instamine)
+        new int[] {                                                                                                          }, // tool ID 4 = crystal light green (mine any block)
+        new int[] {                                                                                                          }, // tool ID 5 = crystal dark green (mine any block)
+        new int[] {                                                                                                          }, // tool ID 6 = crystal blue (mine any block)
+        new int[] {                                                                                                          }, // tool ID 7 = crystal orange (mine any block)
+        new int[] {                                                                                                          }, // tool ID 8 = crystal red (mine any block)
     };
 
     public int[] ldrawHexValues = new int[]
@@ -408,6 +409,29 @@ public class Controller : NetworkBehaviour
             toolbar.EmptyAllSlots();
         else if(!Settings.WebGL)
             toolbar.SetInventoryFromSave();
+
+        blocksMined = SettingsStatic.LoadedSettings.blocksMined;
+    }
+
+    private void HideChunks()
+    {
+        // get array of child objects under world object and turn all off, then turn on Chunk 100, 100
+        foreach (Transform child in world.transform)
+        {
+            //Debug.Log(child.gameObject.name);
+            if (child.gameObject.name != "Chunk 100, 100")
+                child.gameObject.SetActive(false);
+        }
+    }
+
+    private void ShowChunks()
+    {
+        // show all chunks after mined first block
+        foreach (Transform child in world.transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+        world.drawVBO = true;
     }
 
     private string[] LoadBrickTypeFilenames()
@@ -825,9 +849,27 @@ public class Controller : NetworkBehaviour
         // }
     }
 
+    private void SingleChunkCheck()
+    {
+        //Debug.Log(transform.position.x);
+        if (blocksMined > 0 || transform.position.x > 1616 || transform.position.x < 1600 || transform.position.z > 1616 || transform.position.z < 1600)
+        {
+            world.singleChunk = false;
+            world.drawVBO = true;
+        }
+        else
+        {
+            world.singleChunk = true;
+            HideChunks();
+        }
+    }
+
     private void Update()
     {
         if (!Settings.WorldLoaded) return; // don't do anything until world is loaded
+
+        if(world.singleChunk)
+            SingleChunkCheck();
 
         // if (!mined && World.Instance.singleChunk) // broken
         // {
@@ -1363,9 +1405,13 @@ public class Controller : NetworkBehaviour
                     PlayerRemoveVoxel();
                     SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
 
+                    if (blocksMined == 0)
+                        ShowChunks();
+                    blocksMined++;
+
                     // spawn some particles when mining
-                    CmdSpawnObject(6, blockID, shootPos.transform.position);
-                    CmdSpawnObject(6, blockID, shootPos.transform.position);
+                    //CmdSpawnObject(6, blockID, shootPos.transform.position);
+                    //CmdSpawnObject(6, blockID, shootPos.transform.position);
 
                     mined = true; // used to stop turning off all chunks but first chunk
                 }
@@ -2260,7 +2306,7 @@ public class Controller : NetworkBehaviour
                     VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
                         vc.isItem = true; // set true to spin object
                     ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
-                    ob.transform.localScale = new Vector3(1, 1, 1) * 0.5f; // scale
+                    ob.transform.localScale = new Vector3(1, 1, 1) * 1.0f; // scale
                     ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
                     break;
                 }

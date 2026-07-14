@@ -74,7 +74,8 @@ public class World : MonoBehaviour
     public PlacedBrick[] placedBricks;
     public GameObject[] voxelPrefabs;
     public AudioSource chunkLoadSound;
-    public bool singleChunk;
+    public bool singleChunk = true;
+    public bool drawVBO = false;
 
     // public chunk update lists, dictionaries, queues used by Chunk script
     [HideInInspector] public Dictionary<ChunkCoord, Chunk> chunksDict = new Dictionary<ChunkCoord, Chunk>();
@@ -96,7 +97,6 @@ public class World : MonoBehaviour
     private bool useBiomes = true;
     private bool drawLodes = true;
     private bool drawSurfaceObjects = true;
-    private bool drawVBO = true;
 
     private int viewDistance;
     private int undrawDistance;
@@ -141,12 +141,16 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
-        if(Settings.WebGL) // settings for WebGL compatibility
+        singleChunk = true;
+        drawVBO = false;
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.blocksMined > 0)
+            drawVBO = true; // hides vbo upon first world load
+
+        if (Settings.WebGL) // settings for WebGL compatibility
         {
             useBiomes = true;
             drawLodes = true;
             drawSurfaceObjects = true;
-            drawVBO = false;
             viewDistance = 3;
             undrawDistance = viewDistance * 4;
             multithreading = false;
