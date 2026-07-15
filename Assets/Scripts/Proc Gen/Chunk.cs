@@ -315,7 +315,7 @@ public class Chunk
             VoxelState neighbor = CheckVoxel(neighborPos);
             //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // DOES NOT WORK. Chunks loaded from file do not have neighbors which causes chunk to not render
             // do not render if this voxel is water AND neighbor above is also water
-            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent)// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
+            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent)// || (World.Instance.singleChunk && pos.x >= 0 && pos.x < 17 && pos.z >= 0 && pos.z < 17))// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
                 int faceVertCount = 0;
                 
@@ -354,6 +354,8 @@ public class Chunk
                 vertexIndex += faceVertCount;
             }
         }
+
+        //if(World.Instance.singleChunk && pos.x > 0)
     }
 
     public void CreateMesh()

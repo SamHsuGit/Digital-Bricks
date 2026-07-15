@@ -83,6 +83,7 @@ public class Controller : NetworkBehaviour
     public AudioSource brickHit;
     public AudioSource brickMove;
     public AudioSource pop;
+    public AudioSource studioLogoAnimBrickSound;
     public GameObject playerCamera;
     public GameObject removePosPrefab;
     public GameObject shootPosPrefab;
@@ -432,6 +433,7 @@ public class Controller : NetworkBehaviour
             child.gameObject.SetActive(true);
         }
         world.drawVBO = true;
+        studioLogoAnimBrickSound.Play();
     }
 
     private string[] LoadBrickTypeFilenames()
@@ -855,7 +857,7 @@ public class Controller : NetworkBehaviour
         if (blocksMined > 0 || transform.position.x > 1616 || transform.position.x < 1600 || transform.position.z > 1616 || transform.position.z < 1600)
         {
             world.singleChunk = false;
-            world.drawVBO = true;
+            ShowChunks();
         }
         else
         {

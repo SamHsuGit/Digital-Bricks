@@ -965,11 +965,9 @@ public class World : MonoBehaviour
         if (!IsGlobalPosInWorld(globalPos))
             return 0;
 
-        //// for small worlds, return air outside world border to enable edges to render all faces and not block camera movement
-        //if (!IsGlobalPosInsideBorder(globalPos))
+        //// for first chunk before exploring, render all faces and not block camera movement (BROKEN)
+        //if (singleChunk && !IsGlobalPosInsideFirstChunk(globalPos))
         //    return 0;
-
-
 
         ///* AIR PASS */
         //// Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
@@ -1741,6 +1739,16 @@ public class World : MonoBehaviour
         // IMPORTANT: has to use SettingsStatic.LoadedSettings.worldSizeInChunks for world size instead of private local variable to put char at correct position (script timing issues?)
         ChunkCoord _newChunkCoord = GetChunkCoordFromVector3(pos);
         if (_newChunkCoord.x > 0 && _newChunkCoord.x < VoxelData.WorldSizeInChunks - 1 && _newChunkCoord.z > 0 && _newChunkCoord.z < VoxelData.WorldSizeInChunks - 1)
+            return true;
+        else
+            return false;
+    }
+
+    public bool IsGlobalPosInsideFirstChunk(Vector3 pos)
+    {
+        // IMPORTANT: has to use SettingsStatic.LoadedSettings.worldSizeInChunks for world size instead of private local variable to put char at correct position (script timing issues?)
+        ChunkCoord _newChunkCoord = GetChunkCoordFromVector3(pos);
+        if (_newChunkCoord.x == 0 && _newChunkCoord.z == 0)
             return true;
         else
             return false;
