@@ -1404,8 +1404,16 @@ public class Controller : NetworkBehaviour
                 {
                     shootBricks.Play();
                     pop.Play();
-                    PlayerRemoveVoxel();
-                    SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
+
+                    if(toolID < 8) // wood, stone, gold, crystal, dark green crystal, blue crystal
+                    {
+                        PlayerRemoveVoxel(0);
+                        SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
+                    }
+                    else if (toolID == 8) // red crystal
+                    {
+                        PlayerRemoveVoxel(2); // remove 3x3x1 square of blocks (remove larger face of cave wall)
+                    }
 
                     if (blocksMined == 0)
                         ShowChunks();
@@ -1538,6 +1546,7 @@ public class Controller : NetworkBehaviour
         if(toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
             return;
 
+        // creates a bug where uninentionally moves the block behind it
         if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
         {
             health.blockCounter++;
@@ -1794,13 +1803,13 @@ public class Controller : NetworkBehaviour
                 // store values for later if moving bricks
                     movingPlacedBrickUseStoredValues = true;
             }
-            // else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
-            // {
-            //     holdingGrab = true;
-            //     heldObjectIsBrick = false;
+             else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
+             {
+                 holdingGrab = true;
+                 heldObjectIsBrick = false;
 
-            //     PlayerRemoveVoxel();
-            // }
+                 PlayerRemoveVoxel(0);
+             }
             else
                 return; // do not spawn object if hit previously existing object
         }
@@ -1809,7 +1818,7 @@ public class Controller : NetworkBehaviour
             holdingGrab = true;
             heldObjectIsBrick = false;
 
-            PlayerRemoveVoxel();
+            PlayerRemoveVoxel(0);
         }
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
         {
@@ -1839,7 +1848,7 @@ public class Controller : NetworkBehaviour
         Destroy(ob);
     }
 
-    void PlayerRemoveVoxel()
+    void PlayerRemoveVoxel(int _mineType)
     {
         blockID = World.Instance.GetVoxelState(removePos.position).id;
         if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
@@ -1849,12 +1858,61 @@ public class Controller : NetworkBehaviour
             crystal.Play();
         else if (blockID == blockIDmushroom)
             mushroom.Play();
-
+        
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
         {
-            // remove voxel, play sound
-            RemoveVoxel(removePos.position);
-            brickPickUp.Play();
+            Vector3 positionToRemove = removePos.position;
+            switch (_mineType)
+            {
+            case 0:
+                {
+                    // remove voxel, play sound
+                    RemoveVoxel(positionToRemove);
+                    //SpawnVoxelRbFromWorld(positionToRemove, blockID); // drop voxel item
+                    brickPickUp.Play();
+                    break;
+                }
+            case 1:
+                {
+                    // remove in 1x3 tunnel
+                    RemoveVoxel(positionToRemove);
+                    SpawnVoxelRbFromWorld(positionToRemove, blockID); // drop voxel item
+                    positionToRemove = new Vector3(removePos.position.x, removePos.position.y + 1, removePos.position.z);
+                    RemoveVoxel(positionToRemove);
+                    SpawnVoxelRbFromWorld(positionToRemove, blockID); // drop voxel item
+                    positionToRemove = new Vector3(removePos.position.x, removePos.position.y - 1, removePos.position.z);
+                    RemoveVoxel(positionToRemove);
+                    SpawnVoxelRbFromWorld(positionToRemove, blockID); // drop voxel item
+                    brickPickUp.Play();
+                    break;
+                }
+            case 2:
+                {
+                    // remove 3x3x3 square of blocks (remove larger face of cave wall)
+
+                    int xOffset = 0;
+                    int yOffset = 0;
+                    int zOffset = 0;
+
+                    for(zOffset = -1; zOffset < 2; zOffset++)
+                    {
+                        for (yOffset = -1; yOffset < 2; yOffset++)
+                        {
+                            for (xOffset = -1; xOffset < 2; xOffset++)
+                            {
+                                positionToRemove = new Vector3(removePos.position.x + xOffset, removePos.position.y + yOffset, removePos.position.z + zOffset);
+                                RemoveVoxel(positionToRemove);
+
+                                // may consider not giving drops if too laggy
+                                blockID = World.Instance.GetVoxelState(positionToRemove).id; // lookup voxel position to create drop of exact voxel being removed not center voxel
+                                SpawnVoxelRbFromWorld(positionToRemove, blockID); // drop voxel item
+                            }
+                        }
+                    }
+                    brickPickUp.Play();
+                    break;
+                }
+            }
         }
 
         //reticle.SetActive(false);
@@ -2299,18 +2357,18 @@ public class Controller : NetworkBehaviour
                     BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                     VoxelBc.material = physicMaterial;
                     VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
-                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items?
+                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 1f; // set slightly larger to help players pick up items?
                     VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player
                     ob.tag = "voxelRb";
                     sceneObject.controller = this;
                     rb = ob.GetComponent<Rigidbody>();
-                    rb.useGravity = false;
-                    rb.isKinematic = false;
-                    VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
-                        vc.isItem = true; // set true to spin object
+                    rb.useGravity = true;
+                    rb.isKinematic = true;
+                    //VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
+                    //    vc.isItem = true; // set true to spin object
                     ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
                     ob.transform.localScale = new Vector3(1, 1, 1) * 1.0f; // scale
-                    ob.transform.position += new Vector3(1, 1, 1) * 0.25f; // move to center of voxel position
+                    ob.transform.position += new Vector3(0, 0, 0) * 0.25f; // move to center of voxel position
                     break;
                 }
             case 2: // IF PROJECTILE
