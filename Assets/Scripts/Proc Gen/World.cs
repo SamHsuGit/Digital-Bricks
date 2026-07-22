@@ -1266,7 +1266,19 @@ public class World : MonoBehaviour
         // use math operation to change continentScaleFactor from value between 0 and 1 to value between 0.08 and 0.0
 
         // 3 different Perlin Noise maps create 3 distinct modifiers that can interact when the noise is overlayed
-        continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast, spline points scaled for 0.08f noise scale
+
+
+        //continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast, spline points scaled for 0.08f noise scale
+
+        // continentalness = 0 (low land), dips below sea level
+        // continentalness = 1 (high land)
+        // want to create high continentalness near x = 0, z = 0 but perlin noise does not guarantee this. Want to use something more regular like sinusoid as a function of both x and z coords
+        // as distance from spawn increases continentalness decreases aka more ocean and then goes back up again in sinusoid
+        float amplitude = 0.4f; // heights of peaks (higher = higher)
+        float period = 0.02f; // size of islands (higher value = smaller island)
+        //float heightoffset = 0.5f;
+        continentalness = Mathf.Clamp(amplitude * (Mathf.Cos(xzCoords.x * period) + Mathf.Cos(xzCoords.y * period)), 0f, 1f); // spawn is somewhat off land everytime...
+        
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast)
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
 

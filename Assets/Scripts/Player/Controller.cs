@@ -1058,20 +1058,20 @@ public class Controller : NetworkBehaviour
         if (!holdingGrab && !holdingBuild && inputHandler.use)
             PressedPlaceBlock();
 
-        // // GRAB CONTROLS
-        // // IF PRESSED GRAB
-        // if (!holdingGrab && inputHandler.use)
-        //    PressedGrab();
+        // GRAB CONTROLS
+        // IF PRESSED GRAB
+        if (!holdingGrab && inputHandler.use)
+            PressedGrab();
 
-        // // IF HOLDING GRAB
-        // if (holdingGrab && inputHandler.use)
-        //    HoldingGrab();
+        // IF HOLDING GRAB
+        if (holdingGrab && inputHandler.use)
+            HoldingGrab();
 
-        // // IF RELEASED GRAB
-        // if (holdingGrab && !inputHandler.use)
-        //    ReleasedGrab();
+        // IF RELEASED GRAB
+        if (holdingGrab && !inputHandler.use)
+            ReleasedGrab();
 
-        if(!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
+        if (!Settings.WebGL) // DISABLED FOR WEBGL since wasn't working, also LDraw Importer is not enabled due to inability to reference ldraw files
         {
             // BUILD CONTROLS
             // IF PRESSED GRAB WHILE HOLDING BUILD
@@ -1804,13 +1804,13 @@ public class Controller : NetworkBehaviour
             else
                 return; // do not spawn object if hit previously existing object
         }
-        // else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
-        // {
-        //     holdingGrab = true;
-        //     heldObjectIsBrick = false;
+        else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
+        {
+            holdingGrab = true;
+            heldObjectIsBrick = false;
 
-        //     PlayerRemoveVoxel();
-        // }
+            PlayerRemoveVoxel();
+        }
         else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
         {
             holdingGrab = true;
@@ -1974,8 +1974,9 @@ public class Controller : NetworkBehaviour
             health.blockCounter++;
             PlaceVoxel(placePos.position);
         }
-        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
-            PutAwayBrick(blockID, placedBrickName);
+        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, PUT BACK (disabled to not break progression)
+            PlaceVoxel(placePos.position);
+        //    PutAwayBrick(blockID, placedBrickName);
 
         placedBrick = null;
         heldObjectIsBrick = false;
