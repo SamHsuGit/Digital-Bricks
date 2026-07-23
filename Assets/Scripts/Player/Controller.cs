@@ -1821,11 +1821,13 @@ public class Controller : NetworkBehaviour
 
             PlayerRemoveVoxel(0);
         }
-        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
+        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull voxel from inventory
         {
             holdingGrab = true;
             heldObjectIsBrick = false;
-            PlayerPickBrickFromInventory();
+
+            if(toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
+                PlayerPickBrickFromInventory();
         }
     }
 
@@ -2043,7 +2045,7 @@ public class Controller : NetworkBehaviour
         }
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, PUT BACK AT LAST POSITION
             PlaceVoxel(placePos.position);
-        //    PutAwayBrick(blockID, placedBrickName); // commented out to not break progression, should not be able to mine crystals without making gold tool
+        PutAwayBrick(blockID, placedBrickName); // commented out to not break progression, should not be able to mine crystals without making gold tool
 
         placedBrick = null;
         heldObjectIsBrick = false;
