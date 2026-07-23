@@ -1054,9 +1054,9 @@ public class Controller : NetworkBehaviour
         if (!holdingGrab && !holdingBuild && inputHandler.mine)
             PressedMine();
             
-        // NORMAL VOXEL BUILDING
-        if (!holdingGrab && !holdingBuild && inputHandler.use)
-            PressedPlaceBlock();
+        //// NORMAL VOXEL BUILDING
+        //if (!holdingGrab && !holdingBuild && inputHandler.use)
+        //    PressedPlaceBlock();
 
         // GRAB CONTROLS
         // IF PRESSED GRAB
@@ -2030,9 +2030,12 @@ public class Controller : NetworkBehaviour
         else if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
         {
             health.blockCounter++;
+
+            if(toolbar.slots[toolbar.slotIndex].itemSlot.HasItem)
+                blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
             PlaceVoxel(placePos.position);
         }
-        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, PUT BACK (disabled to not break progression)
+        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, PUT BACK AT LAST POSITION
             PlaceVoxel(placePos.position);
         //    PutAwayBrick(blockID, placedBrickName);
 
