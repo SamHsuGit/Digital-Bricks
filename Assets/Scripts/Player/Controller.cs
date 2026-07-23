@@ -47,6 +47,7 @@ public class Controller : NetworkBehaviour
     public bool heldObjectIsBrick = false;
     public bool movingPlacedBrickUseStoredValues = false;
     public byte blockID;
+    public byte grabbedBlockID;
     public float checkIncrement = 0.1f;
     public float sphereCastRadius;
     public float grabDist = 5f; // defines how far player can reach to use/use voxels (updated later to match player created models), minecraft uses 5 blocks
@@ -1969,6 +1970,7 @@ public class Controller : NetworkBehaviour
         else if(holdingGrab)
         {
             grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
+            grabbedBlockID = blockID; // cache for later use when releasing
             BoxCollider bc = grabbedPrefab.AddComponent<BoxCollider>(); //add a box collider to the grabbedPrefab voxel
             bc.center = new Vector3(0.5f, 0.5f, 0.5f);
             bc.material = physicMaterial;
@@ -2031,13 +2033,17 @@ public class Controller : NetworkBehaviour
         {
             health.blockCounter++;
 
-            if(toolbar.slots[toolbar.slotIndex].itemSlot.HasItem)
+            // causing bug where moving bricks placed bricks with id from toolbar
+            if(grabbedPrefab == null && toolbar.slots[toolbar.slotIndex].itemSlot.HasItem) // if not holding voxel, use from inventory
                 blockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
+            else if(grabbedPrefab != null)
+                blockID = grabbedBlockID;
+                
             PlaceVoxel(placePos.position);
         }
         else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, PUT BACK AT LAST POSITION
             PlaceVoxel(placePos.position);
-        //    PutAwayBrick(blockID, placedBrickName);
+        //    PutAwayBrick(blockID, placedBrickName); // commented out to not break progression, should not be able to mine crystals without making gold tool
 
         placedBrick = null;
         heldObjectIsBrick = false;

@@ -830,6 +830,7 @@ MonoBehaviour:
   heldObjectIsBrick: 0
   movingPlacedBrickUseStoredValues: 0
   blockID: 0
+  grabbedBlockID: 0
   checkIncrement: 0.1
   sphereCastRadius: 0
   grabDist: 5
