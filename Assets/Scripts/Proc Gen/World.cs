@@ -962,12 +962,13 @@ public class World : MonoBehaviour
 
         /* IMMUTABLE PASS */
         // If outside world, return air.
-        if (!IsGlobalPosInWorld(globalPos))
+        if (!IsGlobalPosInWorld(globalPos) || globalPos.y == 0) // y = 0 renders bottom of chunk if falling thru world
             return 0;
 
-        //// for first chunk before exploring, render all faces and not block camera movement (BROKEN)
-        //if (singleChunk && !IsGlobalPosInsideFirstChunk(globalPos))
+        // //for first chunk before exploring, render all faces and not block camera movement (works but chunks get saved as full of air)
+        // if (singleChunk && !IsGlobalPosInsideFirstChunk(globalPos))
         //    return 0;
+
 
         ///* AIR PASS */
         //// Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
@@ -1760,7 +1761,8 @@ public class World : MonoBehaviour
     {
         // IMPORTANT: has to use SettingsStatic.LoadedSettings.worldSizeInChunks for world size instead of private local variable to put char at correct position (script timing issues?)
         ChunkCoord _newChunkCoord = GetChunkCoordFromVector3(pos);
-        if (_newChunkCoord.x == 0 && _newChunkCoord.z == 0)
+        int worldSizeInChunksHalf = Mathf.FloorToInt(VoxelData.WorldSizeInChunks / 2);
+        if (_newChunkCoord.x == worldSizeInChunksHalf && _newChunkCoord.z == worldSizeInChunksHalf) // set chunk coord to middle chunk based on world size
             return true;
         else
             return false;
