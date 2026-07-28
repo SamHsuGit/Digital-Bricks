@@ -583,65 +583,6 @@ public class World : MonoBehaviour
         SetUndrawVoxels();
     }
 
-    public Vector3 SetValidSpawnPoint()
-    {
-        return defaultSpawnPosition;
-
-        // // function tries to find a spawn point on dry land if the current one is in the air or water
-        // int xPos = Mathf.FloorToInt(defaultSpawnPosition.x);
-        // int yPos = VoxelData.ChunkHeight - 1;
-        // int zPos = Mathf.FloorToInt(defaultSpawnPosition.z);
-
-        // int maxTries = VoxelData.ChunkHeight * 1000; // try at least 1000 times for full chunk height
-
-        // // iterate thru positions until continentalness is greater than 0.5f
-        // for(int i = 0; i < maxTries; i++) // try up to 1000 times to find a good spawn point (not air and on land)
-        // {
-        //     Vector3Int currentPos = new Vector3Int(xPos, yPos, zPos);
-
-        //     UnityEngine.Debug.Log("checking pos " + currentPos);
-        //     if(GetVoxelState(currentPos) == null)
-        //     {
-        //         // iterate thru y positions until block is not air
-        //         if(yPos - 1 >= 0)
-        //             yPos--;
-        //         else
-        //             yPos = VoxelData.ChunkHeight;
-
-        //         if(yPos == 0) // not finding valid points, need to increment zPos also?
-        //             xPos++;
-                
-        //         continue;
-        //     }
-                
-
-        //     byte currentPosBlockID = GetVoxelState(currentPos).id;
-        //     UnityEngine.Debug.Log("checking position " + currentPos + " with blockID = " + currentPosBlockID);
-
-        //     // check for valid position and
-        //     // exit if the block is not air or water
-        //     if(IsGlobalPosInsideBorder(currentPos) && currentPosBlockID != 0 && currentPosBlockID != worldData.blockIDwater)
-        //     {
-        //          // set spawn point to new position
-        //         //defaultSpawnPosition = currentPos;
-        //         UnityEngine.Debug.Log("new spawn point found at " + currentPos);
-        //         break;
-        //     }
-        //     else
-        //     {
-        //         // iterate thru y positions until block is not air
-        //         if(yPos - 1 >= 0)
-        //             yPos--;
-        //         else
-        //             yPos = VoxelData.ChunkHeight;
-
-        //         if(yPos == 0) // not finding valid points, need to increment zPos also?
-        //             xPos++;
-        //     }
-        // }
-        // UnityEngine.Debug.Log("No valid position found");
-    }
-
     public void SetUndrawVoxels()
     {
         undrawVoxels = true;
@@ -914,20 +855,6 @@ public class World : MonoBehaviour
             }
         }
 
-        // ChunkCoord _spawnChunkCoord = GetChunkCoordFromVector3(Settings.DefaultSpawnPosition);
-        // ChunkCoord thisChunkCoord = new ChunkCoord(_spawnChunkCoord.x, _spawnChunkCoord.z);
-
-        // // If the current chunk is in the world...
-        // if (IsChunkInWorld(thisChunkCoord))
-        // {
-        //     // Check if its in view distance, if not, mark it to be re-drawn.
-        //     if (chunks[thisChunkCoord.x, thisChunkCoord.z] == null) // if the chunks array is empty at thisChunkCoord
-        //     {
-        //         chunks[thisChunkCoord.x, thisChunkCoord.z] = new Chunk(thisChunkCoord); // adds this chunk to the array at this position
-        //     }
-        //     activeChunks.Add(thisChunkCoord); // sends chunks to thread to be re-drawn
-        // }
-
         for(int i = 0; i < chunksToUpdate.Count; i++)
             chunksToUpdate[i].UpdateChunk(); // draw previous chunks during first world draw
 
@@ -965,11 +892,6 @@ public class World : MonoBehaviour
         if (!IsGlobalPosInWorld(globalPos))
             return 0;
 
-        // //for first chunk before exploring, render all faces and not block camera movement (works but chunks get saved as full of air)
-        // if (singleChunk && !IsGlobalPosInsideFirstChunk(globalPos))
-        //    return 0;
-
-
         ///* AIR PASS */
         //// Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
         //if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
@@ -1001,10 +923,7 @@ public class World : MonoBehaviour
             return 2; // bedrock
 
         /* BIOME SELECTION PASS */
-        // Calculates biome (determines surface and subsurface blocktypes)
-        //temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines biome
-        //humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines biome
-
+        // Calculates biome (determines surface and subsurface blocktypes), must occur after temperature and humidity calculations
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
             biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
         else if (!useBiomes)
@@ -1018,23 +937,11 @@ public class World : MonoBehaviour
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         terrainHeight = CalcTerrainHeight(xzCoords);
 
-        // if(continentalness > 0.5f && yGlobalPos == 2)
-        //     return 2; // black rock at bottom of caves where there is land
-
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
         if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
         {
             voxelValue = biome.surfaceBlock; // dirt
-
-            // trouble setting player position to new spawn point
-            // if(!setSpawnPos)
-            // {   // do this once
-            //     int chunkWidth = VoxelData.ChunkWidth;
-            //     defaultSpawnPosition = new Vector3(globalPos.x * chunkWidth, globalPos.y + 5, globalPos.z * chunkWidth);
-            //     setSpawnPos = true;
-            //     //UnityEngine.Debug.Log("set Spawn Point to " + defaultSpawnPosition); 
-            // }
         }
         if (yGlobalPos == terrainHeight && yGlobalPos > 0.7 * VoxelData.ChunkHeight)
             voxelValue = worldData.blockIDsubsurface; // rocky mountains
