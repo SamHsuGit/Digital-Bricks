@@ -28,6 +28,7 @@ public class World : MonoBehaviour
     [HideInInspector] public float erosion = 0; // erosion, defines how mountainous the terrain is
     [HideInInspector] public float peaksAndValleys = 0; // peaks and valleys
     [HideInInspector] public float weirdness = 0; // weirdness
+    [HideInInspector] public float weirdnessLarge = 0; // weirdness large
     [HideInInspector] public float temperature = 0; // temperature, defines biome
     [HideInInspector] public float humidity = 0; // humidity, defines biome + cloud threshold
     [HideInInspector] public bool isAir = false; // used for 3D Perlin Noise pass
@@ -901,6 +902,14 @@ public class World : MonoBehaviour
         //    else if (yGlobalPos < cloudHeight || yGlobalPos > cloudHeight)
         //        return 0;
         //}
+
+
+        weirdnessLarge = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
+        if (weirdnessLarge > 0.5f && globalPos.y > 9) // quick check to see if should carve out large areas of air using 3D noise, should be rather rare
+        {
+            if (Noise.Get3DPerlin(globalPos, 0, 0.1f, terrainHeightPercentChunk * 0.5f + 0.35f))
+                return 0;
+        }
 
         /* CLOUD PASS */
         temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines cloud density and biome
