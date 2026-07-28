@@ -962,7 +962,7 @@ public class World : MonoBehaviour
 
         /* IMMUTABLE PASS */
         // If outside world, return air.
-        if (!IsGlobalPosInWorld(globalPos) || globalPos.y == 0) // y = 0 renders bottom of chunk if falling thru world
+        if (!IsGlobalPosInWorld(globalPos))
             return 0;
 
         // //for first chunk before exploring, render all faces and not block camera movement (works but chunks get saved as full of air)
