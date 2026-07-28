@@ -5915,13 +5915,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Options\t\t\t\tEsc (Start)\nMove\t\t\t\t\tWASD (Left Stick)\nLook\t\t\t\t\tMouse
-    (Right Stick)\nJump\t\t\t\t\tSpace (Xbox A)\nSprint\t\t\t\tLeft Shift (Left Stick
-    Press)\nScroll Inventory Slots\t\tScroll/Arrow Keys (D-Pad)\nChange Cam\t\t\tTab
-    (Y)\n\nVOXEL\nHold Brick \t\t\t\tHold Right Click (B) while looking at Brick\nStore
-    Brick In Toolbar\t\tRelease Grab while looking at air\nUse Brick From Toolbar\t\tHold
-    Grab while aimed at air\n\nLDRAW\nLDraw Brick From Toolbar\tHold Left Click (X)
-    with Stored Bricks\nConvert LDraw Brick\t\tPress Build while Holding LDraw Brick\nChange
-    LDraw Brick Type\tArrow Keys (D-Pad) While Holding Left Click (X)"
+    (Right Stick)\nJump\t\t\t\t\tSpace (Xbox A)\nScroll Inventory Slots\t\tScroll/Arrow
+    Keys (D-Pad)\nChange Cam\t\t\tTab (Y)\n\nVOXEL\nHold Brick \t\t\t\tHold Right
+    Click (B) while looking at Brick\nStore Brick In Toolbar\t\tRelease Grab while
+    looking at air\nUse Brick From Toolbar\t\tHold Grab while aimed at air\n\nLDRAW\nLDraw
+    Brick From Toolbar\tHold Left Click (X) with Stored Bricks\nConvert LDraw Brick\t\tPress
+    Build while Holding LDraw Brick\nChange LDraw Brick Type\tArrow Keys (D-Pad)
+    While Holding Left Click (X)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -7969,7 +7969,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7241781667188759218
 RectTransform:
   m_ObjectHideFlags: 0

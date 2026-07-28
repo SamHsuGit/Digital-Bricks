@@ -157,7 +157,7 @@ MonoBehaviour:
   worldPlayer: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
   blockMaterialLit: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
   blockMaterialUnlit: {fileID: 2100000, guid: c4fc2d828d2dcb44a8674b462e40fda5, type: 2}
-  blockMaterialTransparent: {fileID: 2100000, guid: b30f605d8d5c115428ab690dd5222b44, type: 2}
+  blockMaterialTransparent: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
   physicMaterial: {fileID: 13400000, guid: eb6c4df8f1ad7fb47bfe2e436a3df34f, type: 2}
   blockTypes:
   - {fileID: 11400000, guid: ba4c2a4cc072c39468fe1a20a2f74a0c, type: 2}
@@ -267,6 +267,7 @@ MonoBehaviour:
   - {fileID: 5196350964378782657, guid: 4226afa4f22bb482daf078be3053e9c6, type: 3}
   chunkLoadSound: {fileID: 6273157275290195825}
   singleChunk: 0
+  drawVBO: 0
 --- !u!114 &3875847496752610500
 MonoBehaviour:
   m_ObjectHideFlags: 0

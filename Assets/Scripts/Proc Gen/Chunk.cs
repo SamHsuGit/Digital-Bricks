@@ -352,7 +352,8 @@ public class Chunk
                 }
                 else
                 {
-                    if(World.Instance.blockTypes[voxel.id].isWater) // water blocks
+                    // Creates rendering issues when displaying oceans, sometimes water blocks are missing, likely overloading an array, for now set water voxel to isTransparent = 0
+                    if (World.Instance.blockTypes[voxel.id].isWater) // water blocks
                     {
                         for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
                             transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]); // need to apply the transparent material for water
