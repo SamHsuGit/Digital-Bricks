@@ -213,7 +213,7 @@ public class Controller : NetworkBehaviour
     //Initializers & Constants
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
-    private int blockIDcrystal = 16;
+    public int[] blockIDsProgression;
     private int blockIDmushroom = 18;
     private float colliderHeight;
     private float colliderRadius;
@@ -1421,6 +1421,8 @@ public class Controller : NetworkBehaviour
                     blocksMined++;
 
                     // spawn some particles when mining
+                    CmdSpawnObject(6, blockID, shootPos.transform.position);
+                    CmdSpawnObject(6, blockID, shootPos.transform.position);
                     //CmdSpawnObject(6, blockID, shootPos.transform.position);
                     //CmdSpawnObject(6, blockID, shootPos.transform.position);
 
@@ -1804,18 +1806,33 @@ public class Controller : NetworkBehaviour
                 // store values for later if moving bricks
                     movingPlacedBrickUseStoredValues = true;
             }
-             else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
-             {
-                 holdingGrab = true;
-                 heldObjectIsBrick = false;
+            else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
+            {
+                int removePosID = World.Instance.GetVoxelState(removePos.position).id;
+                for(int i = 0; i < blockIDsProgression.Length; i++)
+                {
+                    if(removePosID == blockIDsProgression[i])
+                        return; // do nothing if trying to grab crystals/cannot grab crystals
+                }
 
-                 PlayerRemoveVoxel(0);
-             }
+                holdingGrab = true;
+                heldObjectIsBrick = false;
+
+                PlayerRemoveVoxel(0);
+            }
             else
                 return; // do not spawn object if hit previously existing object
         }
         else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
         {
+            int removePosID = World.Instance.GetVoxelState(removePos.position).id;
+            for(int i = 0; i < blockIDsProgression.Length; i++)
+            {
+                //Debug.Log(blockIDsCrystal[i]);
+                if(removePosID == blockIDsProgression[i])
+                    return; // do nothing if trying to grab crystals/cannot grab crystals
+            }
+
             holdingGrab = true;
             heldObjectIsBrick = false;
 
@@ -1854,10 +1871,8 @@ public class Controller : NetworkBehaviour
         blockID = World.Instance.GetVoxelState(removePos.position).id;
         if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
             return;
-
-        if (blockID == blockIDcrystal)
-            crystal.Play();
-        else if (blockID == blockIDmushroom)
+        
+        if (blockID == blockIDmushroom)
             mushroom.Play();
         
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
@@ -2024,7 +2039,7 @@ public class Controller : NetworkBehaviour
 
         UpdateGrabObject((byte)currentBrickMaterialIndex);
 
-        if (heldObjectIsBrick)
+        if (heldObjectIsBrick) // IF HOLDING PLACEDBRICK
         {
             brickPlaceDown.Play();
             ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
@@ -2041,9 +2056,12 @@ public class Controller : NetworkBehaviour
                 
             PlaceVoxel(placePos.position);
         }
-        else // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, PUT BACK AT LAST POSITION
-            PlaceVoxel(placePos.position);
-        //    PutAwayBrick(blockID, placedBrickName); // commented out to not break progression, should not be able to mine crystals without making gold tool
+        else if(grabbedPrefab != null) // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
+        {
+            //PlaceVoxel(placePos.position); // caused game breaking cheat where placing voxel based off blockID in inventory could allow player to 'dupe' blocks
+            blockID = grabbedBlockID;
+            PutAwayBrick(blockID, placedBrickName);
+        }
 
         placedBrick = null;
         heldObjectIsBrick = false;
@@ -2156,9 +2174,13 @@ public class Controller : NetworkBehaviour
         // a switch function to call the correct function depending on online play or not
         if (!World.Instance.CheckForVoxel(placePos.position, false))
         {
-            if (blockID == blockIDcrystal)
-                crystal.Play();
-            else if (blockID == blockIDmushroom)
+            for(int i = 0; i < blockIDsProgression.Length; i++)
+            {
+                //Debug.Log(blockID);
+                if(blockID == blockIDsProgression[i])
+                    crystal.Play();
+            }
+            if (blockID == blockIDmushroom)
                 mushroom.Play();
 
             // replace voxel, play sound
@@ -2366,7 +2388,7 @@ public class Controller : NetworkBehaviour
                     BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                     VoxelBc.material = physicMaterial;
                     VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
-                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 1f; // set slightly larger to help players pick up items?
+                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 1.5f; // set slightly larger to help players pick up items
                     VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player
                     ob.tag = "voxelRb";
                     sceneObject.controller = this;
@@ -2418,6 +2440,7 @@ public class Controller : NetworkBehaviour
                     rb = ob.GetComponent<Rigidbody>();
                     rb.useGravity = false;
                     rb.isKinematic = false;
+                    //rb.linearVelocity = Vector3.up * 2f; // give some velocity up
                     VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
                         vc.isItem = true; // set true to spin object
                     ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
@@ -2437,7 +2460,7 @@ public class Controller : NetworkBehaviour
                     BoxCollider VoxelBc = ob.AddComponent<BoxCollider>();
                     VoxelBc.material = physicMaterial;
                     VoxelBc.center = new Vector3(0.5f, 0.5f, 0.5f);
-                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items?
+                    VoxelBc.size = new Vector3 (1f, 1f, 1f) * 2f; // set slightly larger to help players pick up items
                     VoxelBc.isTrigger = true; // if is trigger cannot collide with world but more easily picked up by player?
                     ob.tag = "voxelRb";
                     sceneObject.controller = this;
