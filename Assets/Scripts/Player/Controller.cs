@@ -1381,12 +1381,18 @@ public class Controller : NetworkBehaviour
         //     }
         //     heldObRb = null;
         // }
-        else if (shootPos.gameObject.activeSelf && camMode == 1) // IF MINE WORLD/VOXEL (can only destroy world in fps camMode)
+        else if (shootPos.gameObject.activeSelf && camMode != 3) // IF MINE WORLD/VOXEL (cannot destroy world in free cam mode)
         {
             brickHit.Play(); // if block detected, play sound of hitting block
+            
 
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id; // need current blockID to test if can mine
+
+            // spawn some particles as visual feedback
+            Vector3 spawnPos = new Vector3(shootPos.transform.position.x, shootPos.transform.position.y + 1, shootPos.transform.position.z);
+            CmdSpawnObject(6, blockID, spawnPos);
+            CmdSpawnObject(6, blockID, spawnPos);
 
             canMine = true; // set to true by default
             for (int i = 0; i < cannotMineDropMatrix[toolID].Length; i++) // for every block in matrix for given toolID
@@ -1426,8 +1432,8 @@ public class Controller : NetworkBehaviour
                     blocksMined++;
 
                     // spawn some particles when mining
-                    CmdSpawnObject(6, blockID, shootPos.transform.position);
-                    CmdSpawnObject(6, blockID, shootPos.transform.position);
+                    // CmdSpawnObject(6, blockID, shootPos.transform.position);
+                    // CmdSpawnObject(6, blockID, shootPos.transform.position);
                     //CmdSpawnObject(6, blockID, shootPos.transform.position);
                     //CmdSpawnObject(6, blockID, shootPos.transform.position);
 
