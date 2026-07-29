@@ -129,6 +129,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Spawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""e9bcbe81-0f86-4756-be5e-94901a332e07"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Mine"",
                     ""type"": ""Button"",
                     ""id"": ""84e9d2a5-a398-4561-8361-6870676ea35a"",
@@ -864,6 +873,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Slot9"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69866a2c-9b85-46b1-8b2c-ef92dc00d26e"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Spawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54098dbf-3713-49f7-a626-c4becdc915c7"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Spawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1486,6 +1517,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Actions_Look = m_Actions.FindAction("Look", throwIfNotFound: true);
         m_Actions_ScrollWheel = m_Actions.FindAction("ScrollWheel", throwIfNotFound: true);
         m_Actions_Use = m_Actions.FindAction("Use", throwIfNotFound: true);
+        m_Actions_Spawn = m_Actions.FindAction("Spawn", throwIfNotFound: true);
         m_Actions_Mine = m_Actions.FindAction("Mine", throwIfNotFound: true);
         m_Actions_Drop = m_Actions.FindAction("Drop", throwIfNotFound: true);
         m_Actions_Inventory = m_Actions.FindAction("Inventory", throwIfNotFound: true);
@@ -1606,6 +1638,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_Look;
     private readonly InputAction m_Actions_ScrollWheel;
     private readonly InputAction m_Actions_Use;
+    private readonly InputAction m_Actions_Spawn;
     private readonly InputAction m_Actions_Mine;
     private readonly InputAction m_Actions_Drop;
     private readonly InputAction m_Actions_Inventory;
@@ -1656,6 +1689,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Actions/Use".
         /// </summary>
         public InputAction @Use => m_Wrapper.m_Actions_Use;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Spawn".
+        /// </summary>
+        public InputAction @Spawn => m_Wrapper.m_Actions_Spawn;
         /// <summary>
         /// Provides access to the underlying input action "Actions/Mine".
         /// </summary>
@@ -1786,6 +1823,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Use.started += instance.OnUse;
             @Use.performed += instance.OnUse;
             @Use.canceled += instance.OnUse;
+            @Spawn.started += instance.OnSpawn;
+            @Spawn.performed += instance.OnSpawn;
+            @Spawn.canceled += instance.OnSpawn;
             @Mine.started += instance.OnMine;
             @Mine.performed += instance.OnMine;
             @Mine.canceled += instance.OnMine;
@@ -1878,6 +1918,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Use.started -= instance.OnUse;
             @Use.performed -= instance.OnUse;
             @Use.canceled -= instance.OnUse;
+            @Spawn.started -= instance.OnSpawn;
+            @Spawn.performed -= instance.OnSpawn;
+            @Spawn.canceled -= instance.OnSpawn;
             @Mine.started -= instance.OnMine;
             @Mine.performed -= instance.OnMine;
             @Mine.canceled -= instance.OnMine;
@@ -2275,6 +2318,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUse(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Spawn" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpawn(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Mine" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

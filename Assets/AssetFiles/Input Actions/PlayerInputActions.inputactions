@@ -43,6 +43,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Spawn",
+                    "type": "Button",
+                    "id": "e9bcbe81-0f86-4756-be5e-94901a332e07",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Mine",
                     "type": "Button",
                     "id": "84e9d2a5-a398-4561-8361-6870676ea35a",
@@ -776,6 +785,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Slot9",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "69866a2c-9b85-46b1-8b2c-ef92dc00d26e",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Spawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "54098dbf-3713-49f7-a626-c4becdc915c7",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Spawn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

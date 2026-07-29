@@ -1095,6 +1095,11 @@ public class Controller : NetworkBehaviour
         positionCursorBlocks();
     }
 
+    public void SpawnProjectile()
+    {
+        CmdSpawnObject(2, 0, holdPos.transform.position);
+    }
+
     void SetTPSDist()
     {
         //commented out since Third Person Cam is now default, and want to use scroll wheel for inventory

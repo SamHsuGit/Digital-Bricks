@@ -965,7 +965,7 @@ public class World : MonoBehaviour
             voxelValue = biome.surfaceBlock; // dirt
         // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
         // voxelValue = biome.surfaceBlock; // dirt
-        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos == Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water below sealevel
+        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water below sealevel
            return worldData.blockIDwater; // water
 
         // ceilings to separate rock layers for progression
@@ -1027,7 +1027,8 @@ public class World : MonoBehaviour
         // noise used to determine if to use cheese, spaghetti, or noodle caves
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
-        if (drawLodes && voxelValue != 0 && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight) // lodes should not appear above sea level, must mine for them
+        // lodes should not appear above sea level, must mine for them
+        if (drawLodes && voxelValue != 0 && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight)
         {
             foreach (Lode lode in biome.lodes)
             {
