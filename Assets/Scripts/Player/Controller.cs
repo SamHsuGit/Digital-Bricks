@@ -1731,6 +1731,9 @@ public class Controller : NetworkBehaviour
         if(isMoving)
             return;
 
+        if(toolID != 0) // do not allow player to accidentally drop tools
+            return;
+
         if (Time.time < mining.nextTimeToFire) // limit how fast can use this to avoid spamming
             return;
 
@@ -2185,12 +2188,12 @@ public class Controller : NetworkBehaviour
         // a switch function to call the correct function depending on online play or not
         if (!World.Instance.CheckForVoxel(placePos.position, false))
         {
-            for(int i = 0; i < blockIDsProgression.Length; i++)
-            {
-                //Debug.Log(blockID);
-                if(blockID == blockIDsProgression[i])
-                    crystal.Play();
-            }
+            // for(int i = 0; i < blockIDsProgression.Length; i++)
+            // {
+            //     //Debug.Log(blockID);
+            //     if(blockID == blockIDsProgression[i])
+            //         crystal.Play();
+            // }
             if (blockID == blockIDmushroom)
                 mushroom.Play();
 

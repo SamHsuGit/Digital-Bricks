@@ -328,7 +328,7 @@ public class Chunk
                 }
             }
 
-            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent || isInFirstChunkBorder || pos.y == 0)// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
+            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight)// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
                 int faceVertCount = 0;
                 
