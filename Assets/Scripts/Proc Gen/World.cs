@@ -903,14 +903,6 @@ public class World : MonoBehaviour
         //        return 0;
         //}
 
-
-        weirdnessLarge = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
-        if (weirdnessLarge > 0.5f && globalPos.y > 9) // quick check to see if should carve out large areas of air using 3D noise, should be rather rare
-        {
-            if (Noise.Get3DPerlin(globalPos, 0, 0.1f, terrainHeightPercentChunk * 0.5f + 0.35f))
-                return 0;
-        }
-
         /* CLOUD PASS */
         temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines cloud density and biome
         humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines cloud density and biome
@@ -973,7 +965,7 @@ public class World : MonoBehaviour
             voxelValue = biome.surfaceBlock; // dirt
         // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
         // voxelValue = biome.surfaceBlock; // dirt
-        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= seaLevelPercentChunk * VoxelData.ChunkHeight) // Generate water below sealevel
+        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos == Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water below sealevel
            return worldData.blockIDwater; // water
 
         // ceilings to separate rock layers for progression
@@ -988,6 +980,13 @@ public class World : MonoBehaviour
         if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 3))
             voxelValue = 2; // black core for all worlds
         
+        // LARGE 3D NOISE PASS
+        weirdnessLarge = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
+        if (weirdnessLarge > 0.6f && yGlobalPos > 9 && continentalness > 0.5f) // quick check to see if should carve out large areas of air using 3D noise, should be rather rare
+        {
+            if (Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.45f))
+                return 0;
+        }
 
         // return voxelValue; // for testing without LODES or SURFACE OBJECTS
 

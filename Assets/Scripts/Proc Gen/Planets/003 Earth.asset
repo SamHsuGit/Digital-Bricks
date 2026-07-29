@@ -32,7 +32,7 @@ MonoBehaviour:
   blockIDBiome07: 13
   blockIDBiome08: 14
   blockIDBiome09: 13
-  blockIDBiome10: 11
+  blockIDBiome10: 14
   blockIDBiome11: 2
   hasAtmosphere: 1
   isAlive: 1
@@ -44,8 +44,8 @@ MonoBehaviour:
   blockIDTreeLeavesFall2: 10
   blockIDTreeTrunk: 14
   blockIDCacti: 8
-  blockIDMushroomLargeCap: 14
-  blockIDMushroomLargeStem: 4
+  blockIDMushroomLargeCap: 11
+  blockIDMushroomLargeStem: 14
   blockIDMonolith: 2
   blockIDEvergreenLeaves: 15
   blockIDEvergreenTrunk: 14

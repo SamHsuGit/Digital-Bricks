@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 10 Swamp
   m_EditorClassIdentifier: 
   biomeName: Swamp
-  surfaceBlock: 11
+  surfaceBlock: 14
   smallStructures: []
   smallFlora:
   - name: Mushroom
