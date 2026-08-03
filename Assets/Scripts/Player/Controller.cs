@@ -402,7 +402,8 @@ public class Controller : NetworkBehaviour
             else
             {
                 LoadPlacedBricks();
-                camMode = SettingsStatic.LoadedSettings.camMode;
+                //camMode = SettingsStatic.LoadedSettings.camMode;
+                camMode = 1; // force first person cam every time upon start
             }
         }
         toolbar.InitSlots();
@@ -855,7 +856,7 @@ public class Controller : NetworkBehaviour
     private void SingleChunkCheck()
     {
         //Debug.Log(transform.position.x);
-        if (blocksMined > 0 || transform.position.x > 1616 || transform.position.x < 1600 || transform.position.z > 1616 || transform.position.z < 1600)
+        if (blocksMined > 0)
         {
             world.singleChunk = false;
             ShowChunks();
@@ -1426,10 +1427,6 @@ public class Controller : NetworkBehaviour
                     {
                         PlayerRemoveVoxel(2); // remove 3x3x1 square of blocks (remove larger face of cave wall)
                     }
-
-                    if (blocksMined == 0)
-                        ShowChunks();
-                    blocksMined++;
 
                     // spawn some particles when mining
                     // CmdSpawnObject(6, blockID, shootPos.transform.position);
@@ -2549,6 +2546,10 @@ public class Controller : NetworkBehaviour
     {
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
         {
+            if (blocksMined == 0)
+                ShowChunks();
+            blocksMined++;
+
             if (Settings.OnlinePlay && hasAuthority)
                 CmdEditVoxel(pos, 0, true);
             else
@@ -2727,8 +2728,28 @@ public class Controller : NetworkBehaviour
             inputHandler.jump = false;
         }
 
+        // MINING TUTORIAL forces players to explore controls to unlock more chunks once they do a single world edit
+        // do not move player outside of first chunk if world is in single chunk mode
+        bool canMove = true;
+        if (world.singleChunk)
+        {
+            Vector3 futurePosition = transform.position + (transform.right * inputHandler.move.x) + (transform.forward * inputHandler.move.y);
+
+            if (futurePosition.x > 1616)
+                canMove = false;
+            if (futurePosition.x < 1600)
+                canMove = false;
+            if (futurePosition.z > 1616)
+                canMove = false;
+            if (futurePosition.z < 1600)
+                canMove = false;
+        }
+
         // APPLY GRAVITY AND MOVE FORCES
-        velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, false, inputHandler.jump);
+        if(canMove)
+            velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, false, inputHandler.jump);
+        else
+            velocityPlayer = voxelCollider.CalculateVelocity(0, 0, false, inputHandler.jump);
 
         if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump && inventoryUIMode == 0)
         {
