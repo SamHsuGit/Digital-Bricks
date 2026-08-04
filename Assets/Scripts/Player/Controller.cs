@@ -577,6 +577,12 @@ public class Controller : NetworkBehaviour
             float rotw = float.Parse(strs[7]);
             string partName = strs[8];
 
+            
+            if(!partName.Contains("."))
+            {
+                //Debug.Log("skipping " + partName + " due to does not contain char '.'");
+                continue;
+            }
             string partNameCopy = partName.Substring(0,partName.IndexOf("."));
             int _partNameInt = 0;
             if(Int32.TryParse(partNameCopy, out _partNameInt))
