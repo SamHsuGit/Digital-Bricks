@@ -1084,11 +1084,11 @@ public class Controller : NetworkBehaviour
             // BUILD CONTROLS
             // IF PRESSED GRAB WHILE HOLDING BUILD
             if (holdingGrab && inputHandler.mine)
-               PressedBuildWhileGrab(); // CONVERT BRICK BACK INTO VOXEL
+               PressedBuildWhileGrab();
 
             // IF PRESSED BUILD (WHILE LOOKING IN AIR WITH VOXEL IN INVENTORY)
             if (!holdingBuild && inputHandler.mine)
-               PressedBuild(); // CONVERT INVENTORY VOXEL INTO BRICK
+               PressedBuild();
 
             // IF HOLDING BUILD
             if (holdingBuild && inputHandler.mine)
@@ -1185,7 +1185,7 @@ public class Controller : NetworkBehaviour
         if (Time.time < mining.nextTimeToFire) // limit how fast can use this
             return;
 
-        if (!toolbar.slots[toolbar.slotIndex].itemSlot.HasItem) // do not spawn object if no voxel in current inventory slot
+        if (!toolbar.slots[toolbar.slotIndex].itemSlot.HasItem) // do not spawn object if no item in current inventory slot
             return;
 
         if(!toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick) // do not do if item is not a placed brick, use normal placement for regular voxels
@@ -2079,7 +2079,7 @@ public class Controller : NetworkBehaviour
         {
             //PlaceVoxel(placePos.position); // caused game-breaking glitch where placing voxel based off blockID in inventory could allow player to 'dupe' blocks
             blockID = grabbedBlockID;
-            PutAwayBrick(blockID, placedBrickName);
+            PutAwayBrick(blockID, 0); // causing bug where gives a plate while releasing grab while holding voxel, set placedBrickName to 0 to tell to store voxel
         }
 
         placedBrick = null;
