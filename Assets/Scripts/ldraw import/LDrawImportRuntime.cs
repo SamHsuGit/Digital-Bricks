@@ -61,7 +61,8 @@ public class LDrawImportRuntime : MonoBehaviour
         charObRun = ImportLDrawLocal("charRun", importPosition, false); // char is not static (i.e. isStatic = false)
         projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
 
-        if(!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile)
+        // only load base file for display purposes in developer/creative mode since editing the base file causes issues when saving placedBricks.ldr
+        if(!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile && SettingsStatic.LoadedSettings.developerMode)
         {
             baseOb = ImportLDrawLocal("base", importPosition, true); // base is static (i.e. isStatic = true)
             CalcBaseObSize(baseOb);

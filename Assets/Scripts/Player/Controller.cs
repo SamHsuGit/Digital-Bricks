@@ -1800,7 +1800,7 @@ public class Controller : NetworkBehaviour
 
                 // save values from brick object
                 int brickMaterialIndex = GetMaterialIndex(hitObject);
-                if(brickMaterialIndex ==0) // non loaded colors, move object only
+                if(brickMaterialIndex == 0) // non loaded colors, move object only
                 {
                     // no loaded colors found so reset values to default
                     SetCurrentBrickMaterialIndex(2, 2);
@@ -2058,6 +2058,7 @@ public class Controller : NetworkBehaviour
 
         if (heldObjectIsBrick) // IF HOLDING PLACEDBRICK
         {
+            Debug.Log("Released Grab: Held Object is Brick");
             brickPlaceDown.Play();
             ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
         }
@@ -2075,7 +2076,7 @@ public class Controller : NetworkBehaviour
         }
         else if(grabbedPrefab != null) // IF HOLDING VOXEL AND NOT AIMED AT VOXEL, STORE IN INVENTORY
         {
-            //PlaceVoxel(placePos.position); // caused game breaking cheat where placing voxel based off blockID in inventory could allow player to 'dupe' blocks
+            //PlaceVoxel(placePos.position); // caused game-breaking glitch where placing voxel based off blockID in inventory could allow player to 'dupe' blocks
             blockID = grabbedBlockID;
             PutAwayBrick(blockID, placedBrickName);
         }
