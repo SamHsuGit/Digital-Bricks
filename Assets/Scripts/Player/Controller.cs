@@ -1992,12 +1992,13 @@ public class Controller : NetworkBehaviour
     {
         if (placedBrick != null && heldObjectIsBrick)
         {
-            Destroy(placedBrick);
-            //PlayerRemoveBrick(placedBrick); // does not work for multiplayer, does not properly destroy object
-            placedBrick = null;
-            SpawnTempBrick(blockID);
-            if(placedBrick != null)
-                MoveBrickToCursor(placedBrick);
+            // instead of destroying and creating placedBricks, simply move them to cursor (moving likely better for multiplayer anyways)
+            // Destroy(placedBrick);
+            // //PlayerRemoveBrick(placedBrick); // does not work for multiplayer, does not properly destroy object
+            // placedBrick = null;
+            // SpawnTempBrick(blockID);
+            // if(placedBrick != null)
+            //     MoveBrickToCursor(placedBrick);
         }
         else if(holdingGrab)
         {
@@ -2058,7 +2059,7 @@ public class Controller : NetworkBehaviour
 
         if (heldObjectIsBrick) // IF HOLDING PLACEDBRICK
         {
-            Debug.Log("Released Grab: Held Object is Brick");
+            //Debug.Log("Released Grab: Held Object is Brick");
             brickPlaceDown.Play();
             ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
         }
