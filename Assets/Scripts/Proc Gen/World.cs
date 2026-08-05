@@ -965,7 +965,7 @@ public class World : MonoBehaviour
             voxelValue = biome.surfaceBlock; // dirt
         // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
         // voxelValue = biome.surfaceBlock; // dirt
-        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos <= Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water below sealevel
+        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos == Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water at sealevel
            return worldData.blockIDwater; // water
 
         // ceilings to separate rock layers for progression

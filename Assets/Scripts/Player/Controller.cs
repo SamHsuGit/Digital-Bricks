@@ -1855,7 +1855,8 @@ public class Controller : NetworkBehaviour
 
             PlayerRemoveVoxel(0);
         }
-        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null) // if nothing targeted, pull brick from inventory
+        // if nothing targeted and brick in toolbar not placedbrick, pull brick from inventory
+        else if (toolbar.slots[toolbar.slotIndex].itemSlot.stack != null && !toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
         {
             holdingGrab = true;
             heldObjectIsBrick = false;
