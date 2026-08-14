@@ -14,6 +14,7 @@ public class InputHandler : MonoBehaviour
     public Vector2 scrollWheel;
     public bool jump = false;
     public bool crouch = false;
+    public bool sprint = false;
     public bool use = false;
     public bool mine = false;
 
@@ -28,6 +29,7 @@ public class InputHandler : MonoBehaviour
     public void OnScrollWheel(InputAction.CallbackContext ctx) => scrollWheel = ctx.ReadValue<Vector2>();
     public void OnJump(InputAction.CallbackContext ctx) => jump = ctx.performed;
     public void OnCrouch(InputAction.CallbackContext ctx) => crouch = ctx.performed;
+    public void OnSprint(InputAction.CallbackContext ctx) => sprint = ctx.performed;
     public void OnUse(InputAction.CallbackContext ctx) => use = ctx.performed;
     public void OnMine(InputAction.CallbackContext ctx) => mine = ctx.performed;
 }

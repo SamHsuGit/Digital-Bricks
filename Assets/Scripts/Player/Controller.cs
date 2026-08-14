@@ -39,6 +39,7 @@ public class Controller : NetworkBehaviour
     public bool isGrounded;
     [SyncVar(hook = nameof(SetIsMoving))] public bool isMoving = false;
     public bool isCrouching;
+    public bool holdingSprint;
     public bool dropButtonPressed;
     public bool options = false;
     public bool rotateBrick = false;
@@ -57,7 +58,7 @@ public class Controller : NetworkBehaviour
     public float baseAnimRate = 2; // health script overrides this
     public float animRate = 2; // health script overrides this
     public int camMode;
-    public bool setCamMode = false;
+    public bool toggleCamMode = false;
     public int inventoryUIMode = 0;
 
     public float lookVelocity = 0.1f;
@@ -402,7 +403,6 @@ public class Controller : NetworkBehaviour
             else
             {
                 LoadPlacedBricks();
-                //camMode = SettingsStatic.LoadedSettings.camMode;
                 camMode = 1; // force first person cam every time upon start
             }
         }
@@ -701,7 +701,7 @@ public class Controller : NetworkBehaviour
 
         // set reach and mining range procedurally based on imported char model size
         grabDist = (cc.radius * 10f) + 1f;
-        tpsDist = -cc.radius * 4f; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
+        tpsDist = -cc.radius * 16f; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
     }
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
@@ -917,8 +917,8 @@ public class Controller : NetworkBehaviour
             rotateBrick = false;
         }
 
-        if (setCamMode)
-            SetCamMode();
+        if (toggleCamMode)
+            SetCamMode(0);
 
         Vector3 XZDirection = transform.forward;
         XZDirection.y = 0;
@@ -939,7 +939,7 @@ public class Controller : NetworkBehaviour
         if (Settings.OnlinePlay)
             SetTimeOfDayServer();
 
-        if(dropButtonPressed && !inputHandler.drop)
+        if (dropButtonPressed && !inputHandler.drop)
             dropButtonPressed = false;
 
         //disable virtual camera and exit from FixedUpdate if this is not the local player
@@ -959,7 +959,22 @@ public class Controller : NetworkBehaviour
 
         if (!options) // Prevent moving/interacting with world during UI Menus
         {
-            if(camMode != 3)
+            if(inventoryUIMode == 0)
+            {
+                // PRESSED SPRINT
+                if (!holdingSprint && inputHandler.sprint)
+                    PressedSprint();
+
+                if (holdingSprint && inputHandler.sprint)
+                    HoldingSprint();
+
+                // RELEASED SPRINT
+                if (holdingSprint && !inputHandler.sprint)
+                    ReleasedSprint();
+            }
+            
+
+            if (camMode != 3)
             {
                 // IF DROP ITEM
                 if(!holdingBuild && !holdingGrab && inputHandler.drop && inventoryUIMode == 0) // added if inventoryUIMode == 0 due to duplication glitch
@@ -1038,6 +1053,23 @@ public class Controller : NetworkBehaviour
                     }
             }
         }
+    }
+
+    void PressedSprint()
+    {
+        SetCamMode(2);
+        holdingSprint = true;
+    }
+
+    void HoldingSprint()
+    {
+
+    }
+
+    void ReleasedSprint()
+    {
+        SetCamMode(1);
+        holdingSprint = false;
     }
 
     void CheckActiveHotbarSlot()
@@ -2731,7 +2763,7 @@ public class Controller : NetworkBehaviour
         // voxelCollider.height = cc.height;
         // voxelCollider.halfColliderHeight = voxelCollider.height / 2;
 
-        if(options || inventoryUIMode != 0)
+        if (options || inventoryUIMode != 0)
         {
             inputHandler.move.x = 0;
             inputHandler.move.y = 0;
@@ -2757,9 +2789,9 @@ public class Controller : NetworkBehaviour
 
         // APPLY GRAVITY AND MOVE FORCES
         if(canMove)
-            velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, false, inputHandler.jump);
+            velocityPlayer = voxelCollider.CalculateVelocity(inputHandler.move.x, inputHandler.move.y, inputHandler.sprint, inputHandler.jump);
         else
-            velocityPlayer = voxelCollider.CalculateVelocity(0, 0, false, inputHandler.jump);
+            velocityPlayer = voxelCollider.CalculateVelocity(0, 0, inputHandler.sprint, inputHandler.jump);
 
         if ((Settings.WebGL || !SettingsStatic.LoadedSettings.developerMode) && inputHandler.jump && inventoryUIMode == 0)
         {
@@ -2878,73 +2910,92 @@ public class Controller : NetworkBehaviour
         if (options) // cannot toggle while in options menu
             return;
 
-        setCamMode = !setCamMode; // checked for in update loop
+        toggleCamMode = !toggleCamMode; // checked for in update loop
     }
 
-    void SetCamMode()
+    void SetCamMode(int value)
     {
-        camMode++;
+        // toggle thru cam modes
+        if(value == 0)
+            camMode++;
+        else
+            camMode = value;
 
         if (camMode < 1 || camMode > 3)
             camMode = 1;
 
         switch (camMode)
         {
-            case 1: // FIRST PERSON CAMERA MODE
+            case 1: // FIRST PERSON CAMERA MODE (Best for voxel editing, third person cam hard to control)
                 {
-                    playerHUD.SetActive(true);
-                    CinematicBars.SetActive(false);
-
-                    if (Settings.OnlinePlay)
-                        nametag.SetActive(false);
-
-                    playerCameraBoxCollider.enabled = false;
-                    playerCameraVoxelCollider.enabled = false;
-                    charController.enabled = false;
-                    charController.enabled = true;
-
-                    playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f;
-                    playerCamera.transform.localPosition = Vector3.zero; // reset camera position
-                    playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face forwards
+                    CamModeFPS();
                     break;
                 }
             case 2: // THIRD PERSON CAMERA MODE
                 {
-                    playerHUD.SetActive(true);
-                    CinematicBars.SetActive(false);
-
-                    if (Settings.OnlinePlay)
-                        nametag.SetActive(true);
-
-                    playerCameraBoxCollider.enabled = false;
-                    playerCameraVoxelCollider.enabled = false;
-                    charController.enabled = false;
-                    charController.enabled = true;
-
-                    playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.2f; // + transform.right * colliderRadius * 1.1f; //cam origin walks
-
-                    playerCamera.transform.localPosition = new Vector3(0, colliderHeight, tpsDist); // move camera behind character over shoulder
-                    playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face fowards
+                    CamModeTPS();
                     break;
                 }
             case 3: // PHOTO MODE
                 {
-                    playerHUD.SetActive(false);
-                    CinematicBars.SetActive(true);
-
-                    if (Settings.OnlinePlay)
-                        nametag.SetActive(true);
-
-                    playerCameraBoxCollider.enabled = true;
-                    playerCameraVoxelCollider.enabled = true;
-                    charController.enabled = false;
-                    charController.enabled = true;
-
-                    playerCameraOrigin.transform.localEulerAngles = Vector3.zero; // reset camera origin rotation
+                    CamModePhoto();
                     break;
                 }
         }
-        setCamMode = false;
+        toggleCamMode = false;
+    }
+
+    void CamModeFPS()
+    {
+        playerHUD.SetActive(true);
+        CinematicBars.SetActive(false);
+
+        if (Settings.OnlinePlay)
+            nametag.SetActive(false);
+
+        playerCameraBoxCollider.enabled = false;
+        playerCameraVoxelCollider.enabled = false;
+        charController.enabled = false;
+        charController.enabled = true;
+
+        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f;
+        playerCamera.transform.localPosition = Vector3.zero; // reset camera position
+        playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face forwards
+    }
+
+    void CamModePhoto()
+    {
+        playerHUD.SetActive(false);
+        CinematicBars.SetActive(true);
+
+        if (Settings.OnlinePlay)
+            nametag.SetActive(true);
+
+        playerCameraBoxCollider.enabled = true;
+        playerCameraVoxelCollider.enabled = true;
+        charController.enabled = false;
+        charController.enabled = true;
+
+        playerCameraOrigin.transform.localEulerAngles = Vector3.zero; // reset camera origin rotation
+    }
+
+    void CamModeTPS()
+    {
+        playerHUD.SetActive(true);
+        CinematicBars.SetActive(false);
+
+        if (Settings.OnlinePlay)
+            nametag.SetActive(true);
+
+        playerCameraBoxCollider.enabled = false;
+        playerCameraVoxelCollider.enabled = false;
+        charController.enabled = false;
+        charController.enabled = true;
+
+        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.2f; // + transform.right * colliderRadius * 1.1f; //cam origin walks
+
+        playerCamera.transform.localPosition = new Vector3(0, colliderHeight, tpsDist); // move camera behind character over shoulder
+        playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face fowards
     }
 
     public void ToggleOptions()

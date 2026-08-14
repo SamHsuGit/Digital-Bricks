@@ -183,6 +183,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""9295aaaa-cf2b-483d-918f-e3f787bb3dc0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""ToggleOptions"",
                     ""type"": ""Button"",
                     ""id"": ""e48d9ee9-f7a2-4f57-8594-8e233bea0382"",
@@ -459,7 +468,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""fe4603cb-9706-4c62-bffa-4c5a45a7acad"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -470,7 +479,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""80e960ee-1754-4f35-9e2e-d60aeaebfdfa"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -893,6 +902,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""Spawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dda8c9d2-5a28-428a-a61e-b9be0f077cc5"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""59283b8d-9bcc-44a0-96f0-0c5ddaf451ad"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1523,6 +1554,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Actions_Inventory = m_Actions.FindAction("Inventory", throwIfNotFound: true);
         m_Actions_Jump = m_Actions.FindAction("Jump", throwIfNotFound: true);
         m_Actions_Crouch = m_Actions.FindAction("Crouch", throwIfNotFound: true);
+        m_Actions_Sprint = m_Actions.FindAction("Sprint", throwIfNotFound: true);
         m_Actions_ToggleOptions = m_Actions.FindAction("ToggleOptions", throwIfNotFound: true);
         m_Actions_ToggleCamMode = m_Actions.FindAction("ToggleCamMode", throwIfNotFound: true);
         m_Actions_ToggleControls = m_Actions.FindAction("ToggleControls", throwIfNotFound: true);
@@ -1644,6 +1676,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_Inventory;
     private readonly InputAction m_Actions_Jump;
     private readonly InputAction m_Actions_Crouch;
+    private readonly InputAction m_Actions_Sprint;
     private readonly InputAction m_Actions_ToggleOptions;
     private readonly InputAction m_Actions_ToggleCamMode;
     private readonly InputAction m_Actions_ToggleControls;
@@ -1713,6 +1746,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Actions/Crouch".
         /// </summary>
         public InputAction @Crouch => m_Wrapper.m_Actions_Crouch;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/Sprint".
+        /// </summary>
+        public InputAction @Sprint => m_Wrapper.m_Actions_Sprint;
         /// <summary>
         /// Provides access to the underlying input action "Actions/ToggleOptions".
         /// </summary>
@@ -1841,6 +1878,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Crouch.started += instance.OnCrouch;
             @Crouch.performed += instance.OnCrouch;
             @Crouch.canceled += instance.OnCrouch;
+            @Sprint.started += instance.OnSprint;
+            @Sprint.performed += instance.OnSprint;
+            @Sprint.canceled += instance.OnSprint;
             @ToggleOptions.started += instance.OnToggleOptions;
             @ToggleOptions.performed += instance.OnToggleOptions;
             @ToggleOptions.canceled += instance.OnToggleOptions;
@@ -1936,6 +1976,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Crouch.started -= instance.OnCrouch;
             @Crouch.performed -= instance.OnCrouch;
             @Crouch.canceled -= instance.OnCrouch;
+            @Sprint.started -= instance.OnSprint;
+            @Sprint.performed -= instance.OnSprint;
+            @Sprint.canceled -= instance.OnSprint;
             @ToggleOptions.started -= instance.OnToggleOptions;
             @ToggleOptions.performed -= instance.OnToggleOptions;
             @ToggleOptions.canceled -= instance.OnToggleOptions;
@@ -2360,6 +2403,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCrouch(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSprint(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "ToggleOptions" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
