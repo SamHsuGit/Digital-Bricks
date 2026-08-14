@@ -117,9 +117,9 @@ public class VoxelCollider : MonoBehaviour
             if (isGrounded || (isPlayer && controller.isGrounded) || PlayerIsTouchingBlockID(waterBlockID))
                 currentJumps = 0;
 
-            // can jump off sides of objects
-            // if (isPlayer && (front || back || left || right))
-            //     currentJumps = 0;
+            //can jump off sides of objects
+            if (isPlayer && (front || back || left || right))
+                currentJumps = 0;
 
             // apply jump force
             if (jumpRequest && currentJumps < maxJumps)

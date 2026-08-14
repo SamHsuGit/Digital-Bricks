@@ -691,8 +691,9 @@ public class Controller : NetworkBehaviour
         charController.radius = colliderRadius;
         charController.center = colliderCenter;
 
-        // position camera procedurally based on imported char model size
-        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f;
+        // position camera procedurally based on imported char model size at head height
+        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f; // + transform.right * colliderRadius * 1.1f; //cam origin walks
+
         playerCamera.GetComponent<Camera>().nearClipPlane = 0.01f;
 
         // position nametag procedurally based on imported char model size
@@ -700,7 +701,7 @@ public class Controller : NetworkBehaviour
 
         // set reach and mining range procedurally based on imported char model size
         grabDist = (cc.radius * 10f) + 1f;
-        tpsDist = -cc.radius * 16; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
+        tpsDist = -cc.radius * 4f; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
     }
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
@@ -2910,7 +2911,7 @@ public class Controller : NetworkBehaviour
             case 2: // THIRD PERSON CAMERA MODE
                 {
                     playerHUD.SetActive(true);
-                    CinematicBars.SetActive(true);
+                    CinematicBars.SetActive(false);
 
                     if (Settings.OnlinePlay)
                         nametag.SetActive(true);
@@ -2920,7 +2921,8 @@ public class Controller : NetworkBehaviour
                     charController.enabled = false;
                     charController.enabled = true;
 
-                    playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.2f;
+                    playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.2f; // + transform.right * colliderRadius * 1.1f; //cam origin walks
+
                     playerCamera.transform.localPosition = new Vector3(0, colliderHeight, tpsDist); // move camera behind character over shoulder
                     playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face fowards
                     break;
@@ -2978,12 +2980,12 @@ public class Controller : NetworkBehaviour
 
                 nextTimeToAnim = Time.time + 1f / animRate;
 
-                charObIdle.SetActive(false);
-                charObRun.SetActive(true);
+                // charObIdle.SetActive(false);
+                // charObRun.SetActive(true);
 
-                //// Toggles between run and idle state to simulate low fps animation
-                //charObIdle.SetActive(!charObIdle.activeSelf);
-                //charObRun.SetActive(!charObRun.activeSelf);
+                // Toggles between run and idle state to simulate low fps animation
+                charObIdle.SetActive(!charObIdle.activeSelf);
+                charObRun.SetActive(!charObRun.activeSelf);
             }
             else
             {
