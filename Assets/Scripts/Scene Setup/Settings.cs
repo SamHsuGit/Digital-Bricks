@@ -52,7 +52,6 @@ public static class SettingsStatic
         settings.currentBrickIndex = 0;
         settings.currentBrickRotation = 0;
         settings.showControls = true;
-        settings.camMode = 2;
         settings.blocksMined = 0;
 
         string path;
@@ -113,7 +112,6 @@ public class Settings
     public int currentBrickIndex;
     public int currentBrickRotation;
     public bool showControls;
-    public int camMode;
     public int blocksMined;
 
     public static bool WorldLoaded

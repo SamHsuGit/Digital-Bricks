@@ -3029,7 +3029,7 @@ public class Controller : NetworkBehaviour
                 else
                     animRate = baseAnimRate;
 
-                nextTimeToAnim = Time.time + 1f / animRate;
+                nextTimeToAnim = Time.time + 1f / animRate; // only advance animation if moving
 
                 // charObIdle.SetActive(false);
                 // charObRun.SetActive(true);
