@@ -856,7 +856,6 @@ MonoBehaviour:
   isMoving: 0
   isCrouching: 0
   holdingSprint: 0
-  wasSprinting: 0
   dropButtonPressed: 0
   options: 0
   rotateBrick: 0

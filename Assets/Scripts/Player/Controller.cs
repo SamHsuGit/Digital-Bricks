@@ -57,6 +57,7 @@ public class Controller : NetworkBehaviour
     public float focusDistanceIncrement = 0.03f;
     public float baseAnimRate = 2; // health script overrides this
     public float animRate = 2; // health script overrides this
+    public bool animStateInit;
     public int camMode;
     public bool toggleCamMode = false;
     public int inventoryUIMode = 0;
@@ -701,7 +702,7 @@ public class Controller : NetworkBehaviour
 
         // set reach and mining range procedurally based on imported char model size
         grabDist = (cc.radius * 10f) + 1f;
-        tpsDist = -cc.radius * 16f; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
+        tpsDist = -cc.radius * 10f; // Controls Cam distance from Model in third person mode, increased to create sense of mini scale
     }
 
     public void SetPlanetNumberServer(int oldValue, int newValue)
@@ -1057,8 +1058,12 @@ public class Controller : NetworkBehaviour
 
     void PressedSprint()
     {
-        SetCamMode(2);
         holdingSprint = true;
+
+        if(camMode != 3) // not in photo mode
+        {
+            SetCamMode(2); // change to TPS cam
+        }
     }
 
     void HoldingSprint()
@@ -1068,8 +1073,12 @@ public class Controller : NetworkBehaviour
 
     void ReleasedSprint()
     {
-        SetCamMode(1);
         holdingSprint = false;
+
+        if(camMode != 3) // not in photo mode
+        {
+            SetCamMode(1); // change to FPS
+        }
     }
 
     void CheckActiveHotbarSlot()
@@ -2817,7 +2826,7 @@ public class Controller : NetworkBehaviour
         }
         else if(camMode == 2 && inventoryUIMode == 0)
         {
-            if (isMoving)
+            if (isMoving || holdingSprint)
                 gameObject.transform.eulerAngles = new Vector3(0f, playerCameraOrigin.transform.rotation.eulerAngles.y, 0f); // rotate gameobject to face same y direction as camera
 
             // moves player object forwards
@@ -2828,8 +2837,9 @@ public class Controller : NetworkBehaviour
             Vector2 rotation = CalculateRotation();
             playerCameraOrigin.transform.eulerAngles = new Vector3(rotation.y, rotation.x, 0f);
 
-            if (isMoving) // if is moving
-                charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0); // rotate char model to face same y direction as camera
+            if (isMoving || holdingSprint)
+                // rotate char model to face same y direction as camera
+                charModelOrigin.transform.eulerAngles = new Vector3(0, playerCameraOrigin.transform.rotation.eulerAngles.y, 0);
         }
 
 
@@ -3035,8 +3045,9 @@ public class Controller : NetworkBehaviour
                 // charObRun.SetActive(true);
 
                 // Toggles between run and idle state to simulate low fps animation
-                charObIdle.SetActive(!charObIdle.activeSelf);
-                charObRun.SetActive(!charObRun.activeSelf);
+                charObIdle.SetActive(animStateInit);
+                charObRun.SetActive(!animStateInit);
+                animStateInit = !animStateInit;
             }
             else
             {
