@@ -873,6 +873,7 @@ MonoBehaviour:
   focusDistanceIncrement: 0.03
   baseAnimRate: 2
   animRate: 2
+  animStateInit: 0
   camMode: 1
   toggleCamMode: 0
   inventoryUIMode: 0

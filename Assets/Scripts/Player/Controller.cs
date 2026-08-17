@@ -1060,7 +1060,7 @@ public class Controller : NetworkBehaviour
     {
         holdingSprint = true;
 
-        if(camMode != 3) // not in photo mode
+        if(camMode != 3 && !SettingsStatic.LoadedSettings.developerMode) // not in photo mode or developer mode
         {
             SetCamMode(2); // change to TPS cam
         }
@@ -1075,7 +1075,7 @@ public class Controller : NetworkBehaviour
     {
         holdingSprint = false;
 
-        if(camMode != 3) // not in photo mode
+        if(camMode != 3 && !SettingsStatic.LoadedSettings.developerMode) // not in photo mode
         {
             SetCamMode(1); // change to FPS
         }
@@ -2782,7 +2782,7 @@ public class Controller : NetworkBehaviour
         // MINING TUTORIAL forces players to explore controls to unlock more chunks once they do a single world edit
         // do not move player outside of first chunk if world is in single chunk mode
         bool canMove = true;
-        if (world.singleChunk)
+        if (world.singleChunk && !SettingsStatic.LoadedSettings.developerMode)
         {
             Vector3 futurePosition = transform.position + (transform.right * inputHandler.move.x) + (transform.forward * inputHandler.move.y);
 
