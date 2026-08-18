@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Crystal Ore Light Green
   id: 16
-  dropID: 16
+  dropID: 22
   stackMax: 64
   isDrawn: 0
   isSolid: 1
