@@ -681,7 +681,8 @@ public class Controller : NetworkBehaviour
             scale = LDrawImportRuntime.Instance.scale;
 
         // position/size capsule collider procedurally based on imported char model size
-        colliderHeight = bc.size.y * scale;
+        colliderHeight = 2f;
+        //colliderHeight = bc.size.y * scale;
         colliderRadius = Mathf.Sqrt(Mathf.Pow(bc.size.x * scale, 2) + Mathf.Pow(bc.size.z * scale, 2)) * 0.25f;
         colliderCenter = new Vector3(0, -bc.center.y * scale, 0);
         cc.center = colliderCenter;
@@ -693,7 +694,7 @@ public class Controller : NetworkBehaviour
         charController.center = colliderCenter;
 
         // position camera procedurally based on imported char model size at head height
-        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f; // + transform.right * colliderRadius * 1.1f; //cam origin walks
+        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.1f; // + transform.right * colliderRadius * 1.1f; //cam origin walks
 
         playerCamera.GetComponent<Camera>().nearClipPlane = 0.01f;
 
@@ -2970,7 +2971,7 @@ public class Controller : NetworkBehaviour
         charController.enabled = false;
         charController.enabled = true;
 
-        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 0.8f;
+        playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.1f;
         playerCamera.transform.localPosition = Vector3.zero; // reset camera position
         playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face forwards
     }

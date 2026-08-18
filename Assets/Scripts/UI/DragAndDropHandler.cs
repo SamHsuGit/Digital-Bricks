@@ -218,24 +218,24 @@ public class DragAndDropHandler : MonoBehaviour {
         
         ItemStack clickedStack = clickedSlot.itemSlot.stack;
 
-        if(clickedSlot.isInventory)
+        if(clickedSlot.isInventory || clickedSlot.isOutput)
             slotArray = controller.toolbar.slots; // move to hotbar
         else
             slotArray = inventory.inventorySlots; // assumes move to inventory otherwise
         
-        // move entire stack to first empty slot in inventory slots
+        // move entire stack to first empty slot in inventory slots (If no available space found, do nothing)
         for(int i = 0; i < slotArray.Length; i++)
         {
             int stackMax = World.Instance.blockTypes[clickedStack.id].stackMax; // cache stack max value
 
-            // if the inventory slot does not have a stack
+            // INSERT STACK if the inventory slot does not have a stack
             if(!slotArray[i].itemSlot.HasItem)
             {
                 slotArray[i].itemSlot.InsertStack(clickedStack); // insert the stack at this position
                 clickedSlot.itemSlot.EmptySlot(); // empty slot
                 return;
             }
-            // only if blockIDs and placedBrickIDs match
+            // STACK ITEMS only if blockIDs and placedBrickIDs match
             else if (slotArray[i].itemSlot.stack.id == clickedStack.id && slotArray[i].itemSlot.stack.placedBrickID == clickedStack.placedBrickID)
             {
                 if(slotArray[i].itemSlot.stack.amount == stackMax) // if # of items already meets stack limit
@@ -249,7 +249,7 @@ public class DragAndDropHandler : MonoBehaviour {
                     clickedSlot.itemSlot.EmptySlot(); // empty slot
                     return;
                 }
-                else // IF OVERFLOW and adding the items would exceed stack limit, max slot and loop again to next slot[i] with reduced clicked stack amount
+                else // IF STACK WOULD OVERFLOW and adding the items would exceed stack limit, max slot and loop again to next slot[i] with reduced clicked stack amount
                 {
                     //calculate how many would take to max out stack
                     int numberItemsTillFull = stackMax - slotArray[i].itemSlot.stack.amount;
