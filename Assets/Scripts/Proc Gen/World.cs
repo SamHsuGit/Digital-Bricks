@@ -887,6 +887,7 @@ public class World : MonoBehaviour
         Vector2 xzCoords = new Vector2(Mathf.FloorToInt(globalPos.x), Mathf.FloorToInt(globalPos.z));
         int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x)/VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
         byte voxelValue = 0;
+        bool convertedFromAirToWater = false;
 
         /* IMMUTABLE PASS */
         // If outside world, return air.
@@ -965,8 +966,13 @@ public class World : MonoBehaviour
             voxelValue = biome.surfaceBlock; // dirt
         // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
         // voxelValue = biome.surfaceBlock; // dirt
-        if (voxelValue == 0 && continentalness < 0.5f && yGlobalPos == Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water at sealevel
-           return worldData.blockIDwater; // water
+        if(voxelValue == 0 && continentalness < 0.5f)
+        {
+            if (yGlobalPos == Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water at sealevel
+                return worldData.blockIDwater; // water
+            else if (yGlobalPos <= Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
+                convertedFromAirToWater = true;
+        }
 
         // ceilings to separate rock layers for progression
         if(yGlobalPos == Mathf.FloorToInt(terrainHeight / 2))
@@ -1028,7 +1034,7 @@ public class World : MonoBehaviour
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
         // lodes should not appear above sea level, must mine for them
-        if (drawLodes && voxelValue != 0 && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight)
+        if (drawLodes && voxelValue != 0 && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight && !convertedFromAirToWater)
         {
             foreach (Lode lode in biome.lodes)
             {
