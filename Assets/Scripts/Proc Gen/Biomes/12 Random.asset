@@ -31,14 +31,14 @@ MonoBehaviour:
     minHeight: 9
     maxHeight: 256
     scale: 2
-    threshold: 0.68
+    threshold: 0.65
     noiseOffset: 1
   - nodeName: Ore Crystal light green DEEP
     blockID: 16
     minHeight: 1
     maxHeight: 9
     scale: 2
-    threshold: 0.65
+    threshold: 0.64
     noiseOffset: 12
   sprites:
   - {fileID: 21300000, guid: d0c3614280bfa6446a597eefba3a395f, type: 3}

@@ -308,7 +308,7 @@ public class Crafting : MonoBehaviour
                     int outputQty = 0;
                     if(isCrystal) // special code for crystals to output correct blockID and qty to allow for better progression and finding "rare" crystals
                     {
-                        outputQty = 3;
+                        outputQty = 1;
                         outputID = GetCrystalOutputID(color);
                     }
                     else

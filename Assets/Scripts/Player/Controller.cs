@@ -114,8 +114,8 @@ public class Controller : NetworkBehaviour
         1, // tool ID 0 = punch
         2, // tool ID 1 = wood
         4, // tool ID 2 = stone
-        6, // tool ID 3 = gold
-        12, // tool ID 4 = crystal light green
+        12, // tool ID 3 = gold
+        78, // tool ID 4 = crystal light green
         16, // tool ID 5 = crystal dark green
         36, // tool ID 6 = crystal blue
         48, // tool ID 7 = crystal orange
@@ -1387,7 +1387,7 @@ public class Controller : NetworkBehaviour
 
     private void PressedMine()
     {
-        if (Time.time < mining.nextTimeToFire) // limit how fast can use this to avoid spamming
+        if (Time.time < mining.nextTimeToFire) // limit how fast can use this to avoid spamming, controls how fast particles are spawned from the block when mining
             return;
 
         if (SettingsStatic.LoadedSettings.developerMode && toolbar.slotIndex == 0) // cannot do this function from first slot if in creative mode
@@ -1867,11 +1867,12 @@ public class Controller : NetworkBehaviour
             }
             else if (removePos.gameObject.activeSelf) // in the case the world is using chunk Meshes, allows player to pickup voxels
             {
+                // do nothing if trying to grab crystals/cannot grab crystals in non-developermode
                 int removePosID = World.Instance.GetVoxelState(removePos.position).id;
                 for(int i = 0; i < blockIDsProgression.Length; i++)
                 {
-                    if(removePosID == blockIDsProgression[i])
-                        return; // do nothing if trying to grab crystals/cannot grab crystals
+                    if(removePosID == blockIDsProgression[i] && !SettingsStatic.LoadedSettings.developerMode)
+                        return; 
                 }
 
                 holdingGrab = true;
@@ -1884,12 +1885,13 @@ public class Controller : NetworkBehaviour
         }
         else if (removePos.gameObject.activeSelf) // if removePos is active from detecting a voxel
         {
+            // do nothing if trying to grab crystals/cannot grab crystals in non-developermode
             int removePosID = World.Instance.GetVoxelState(removePos.position).id;
             for(int i = 0; i < blockIDsProgression.Length; i++)
             {
                 //Debug.Log(blockIDsCrystal[i]);
-                if(removePosID == blockIDsProgression[i])
-                    return; // do nothing if trying to grab crystals/cannot grab crystals
+                if(removePosID == blockIDsProgression[i] && !SettingsStatic.LoadedSettings.developerMode)
+                    return;
             }
 
             holdingGrab = true;
@@ -2848,7 +2850,7 @@ public class Controller : NetworkBehaviour
         {
             if (charController.enabled && inputHandler.jump)
                 charController.Move(Vector3.up * 0.5f);
-            if (charController.enabled && inputHandler.crouch)
+            if (charController.enabled && inputHandler.sprint)
                 charController.Move(Vector3.down * 0.5f);
         }
     }
