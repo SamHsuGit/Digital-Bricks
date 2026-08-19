@@ -25,6 +25,8 @@ MonoBehaviour:
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 8874480006941658528, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: 
+  ldrawHexValueCodeNumber: 0
+  material: {fileID: 0}
   isActive: 0
   voxelBoundObject: {fileID: 0}
   backFaceTexture: 0
@@ -34,3 +36,7 @@ MonoBehaviour:
   leftFaceTexture: 0
   rightFaceTexture: 0
   topFaceSmoothTexture: 0
+  blockSounds:
+  - {fileID: 8300000, guid: 44361b2f35511294e8adda197494a42f, type: 3}
+  - {fileID: 8300000, guid: 44361b2f35511294e8adda197494a42f, type: 3}
+  - {fileID: 8300000, guid: 44361b2f35511294e8adda197494a42f, type: 3}

@@ -36,3 +36,7 @@ MonoBehaviour:
   leftFaceTexture: 0
   rightFaceTexture: 0
   topFaceSmoothTexture: 0
+  blockSounds:
+  - {fileID: 8300000, guid: 8bd09086464e27145913b1dbaa1663e1, type: 3}
+  - {fileID: 8300000, guid: 8bd09086464e27145913b1dbaa1663e1, type: 3}
+  - {fileID: 8300000, guid: 8bd09086464e27145913b1dbaa1663e1, type: 3}

@@ -31,6 +31,7 @@ public class BlockType : ScriptableObject
     public int leftFaceTexture;
     public int rightFaceTexture;
     public int topFaceSmoothTexture;
+    public AudioClip[] blockSounds;
 
     // Back, Front, Top, Bottom, Left, Right
 

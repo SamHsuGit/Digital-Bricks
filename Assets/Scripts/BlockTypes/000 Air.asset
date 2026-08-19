@@ -36,3 +36,4 @@ MonoBehaviour:
   leftFaceTexture: 0
   rightFaceTexture: 0
   topFaceSmoothTexture: 0
+  blockSounds: []

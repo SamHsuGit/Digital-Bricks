@@ -865,6 +865,7 @@ MonoBehaviour:
   movingPlacedBrickUseStoredValues: 0
   blockID: 0
   grabbedBlockID: 0
+  blockSoundNo: 0
   checkIncrement: 0.1
   sphereCastRadius: 0
   grabDist: 5
@@ -892,8 +893,7 @@ MonoBehaviour:
   brickPickUp: {fileID: 166922554488734142}
   brickPlaceDown: {fileID: 5380431484282571642}
   eat: {fileID: 1788483323922948149}
-  crystal: {fileID: 3781011122355421660}
-  mushroom: {fileID: 1630218556807955101}
+  brickAudioSource: {fileID: 3781011122355421660}
   shootBricks: {fileID: 4441129712410841954}
   brickHit: {fileID: 5196191081221553919}
   brickMove: {fileID: 5069932315359700247}

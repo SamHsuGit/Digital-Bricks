@@ -49,6 +49,7 @@ public class Controller : NetworkBehaviour
     public bool movingPlacedBrickUseStoredValues = false;
     public byte blockID;
     public byte grabbedBlockID;
+    public int blockSoundNo;
     public float checkIncrement = 0.1f;
     public float sphereCastRadius;
     public float grabDist = 5f; // defines how far player can reach to use/use voxels (updated later to match player created models), minecraft uses 5 blocks
@@ -80,8 +81,7 @@ public class Controller : NetworkBehaviour
     public AudioSource brickPickUp;
     public AudioSource brickPlaceDown;
     public AudioSource eat;
-    public AudioSource crystal;
-    public AudioSource mushroom;
+    public AudioSource brickAudioSource;
     public AudioSource shootBricks;
     public AudioSource brickHit;
     public AudioSource brickMove;
@@ -1434,7 +1434,8 @@ public class Controller : NetworkBehaviour
         else if (shootPos.gameObject.activeSelf && camMode != 3) // IF MINE WORLD/VOXEL (cannot destroy world in free cam mode)
         {
             brickHit.Play(); // if block detected, play sound of hitting block
-            
+            //PlayBlockSound(blockID);
+
 
             Vector3 position = shootPos.position;
             blockID = World.Instance.GetVoxelState(position).id; // need current blockID to test if can mine
@@ -1467,7 +1468,7 @@ public class Controller : NetworkBehaviour
                     shootBricks.Play();
                     pop.Play();
 
-                    if(toolID < 8) // wood, stone, gold, crystal, dark green crystal, blue crystal
+                    if (toolID < 8) // wood, stone, gold, crystal, dark green crystal, blue crystal
                     {
                         PlayerRemoveVoxel(0);
                         SpawnVoxelRbFromWorld(position, blockID); // drop voxel item
@@ -1929,15 +1930,23 @@ public class Controller : NetworkBehaviour
         Destroy(ob);
     }
 
+    void PlayBlockSound(byte blockID)
+    {
+        if (blockSoundNo > 2)
+            blockSoundNo = 0;
+
+        brickAudioSource.clip = World.Instance.blockTypes[blockID].blockSounds[blockSoundNo];
+        blockSoundNo++;
+        
+        brickAudioSource.Play();
+    }
+
     void PlayerRemoveVoxel(int _mineType)
     {
         blockID = World.Instance.GetVoxelState(removePos.position).id;
         if (blockID == blockIDprocGen || blockID == blockIDbase) // cannot pickup procGen.ldr or base.ldr (imported VBO)
             return;
-        
-        if (blockID == blockIDmushroom)
-            mushroom.Play();
-        
+
         if (blockID != 0 && blockID != 1) // if block is not air or barrier block
         {
             Vector3 positionToRemove = removePos.position;
@@ -2245,8 +2254,7 @@ public class Controller : NetworkBehaviour
             //     if(blockID == blockIDsProgression[i])
             //         crystal.Play();
             // }
-            if (blockID == blockIDmushroom)
-                mushroom.Play();
+            
 
             // replace voxel, play sound
             if (Settings.OnlinePlay && hasAuthority)
@@ -2625,7 +2633,8 @@ public class Controller : NetworkBehaviour
 
     void EditVoxel(Vector3 position, byte id, bool remove)
     {
-        
+        PlayBlockSound(blockID);
+
         byte oldBlockID = World.Instance.GetChunkFromVector3(position).GetVoxelFromGlobalVector3(position).id;
         if (oldBlockID == 1) // cannot use barrier blocks
             return;
