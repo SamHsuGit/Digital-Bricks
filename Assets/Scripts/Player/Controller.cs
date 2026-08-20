@@ -1840,7 +1840,7 @@ public class Controller : NetworkBehaviour
                 reticle.SetActive(false);
                 holdingGrab = true;
                 heldObjectIsBrick = true;
-                brickPickUp.Play();
+                //brickPickUp.Play(); // play block sound instead
 
                 // save values from brick object
                 int brickMaterialIndex = GetMaterialIndex(hitObject);
@@ -1957,7 +1957,7 @@ public class Controller : NetworkBehaviour
                     // remove voxel, play sound
                     RemoveVoxel(positionToRemove);
                     //SpawnVoxelRbFromWorld(positionToRemove, blockID); // drop voxel item
-                    brickPickUp.Play();
+                    //brickPickUp.Play(); // play block sound instead
                     break;
                 }
             case 1:
@@ -1971,8 +1971,8 @@ public class Controller : NetworkBehaviour
                     positionToRemove = new Vector3(removePos.position.x, removePos.position.y - 1, removePos.position.z);
                     RemoveVoxel(positionToRemove);
                     SpawnVoxelRbFromWorld(positionToRemove, blockID); // drop voxel item
-                    brickPickUp.Play();
-                    break;
+                    //brickPickUp.Play(); // play block sound instead
+                        break;
                 }
             case 2:
                 {
@@ -1997,7 +1997,7 @@ public class Controller : NetworkBehaviour
                             }
                         }
                     }
-                    brickPickUp.Play();
+                    // brickPickUp.Play(); // play block sound instead
                     break;
                 }
             }
@@ -2115,7 +2115,7 @@ public class Controller : NetworkBehaviour
         if (heldObjectIsBrick) // IF HOLDING PLACEDBRICK
         {
             //Debug.Log("Released Grab: Held Object is Brick");
-            brickPlaceDown.Play();
+            //brickPlaceDown.Play(); // play block sound instead
             ResetPlacedBrickMaterialsAndBoxColliders(currentBrickMaterialIndex);
         }
         else if (removePos.gameObject.activeSelf && placePos.position.y < VoxelData.ChunkHeight - 1) // IF VOXEL PRESENT, PLACE VOXEL
@@ -2261,7 +2261,7 @@ public class Controller : NetworkBehaviour
                 CmdEditVoxel(pos, blockID, false);
             else
                 EditVoxel(pos, blockID, false);
-            brickPlaceDown.Play();
+            //brickPlaceDown.Play(); // play block sound instead
         }
     }
 
