@@ -15,31 +15,31 @@ MonoBehaviour:
   biomeName: Volcano
   surfaceBlock: 2
   subsurfaceBlock: 5
-  smallStructures: []
-  smallFlora:
+  smallStructures:
   - name: Honeycomb
-    floraIndex: 4
+    floraIndex: 11
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.6
+    floraZoneThreshold: 0.8
     floraPlacementScale: 15
-    floraPlacementThreshold: 0.8
+    floraPlacementThreshold: 0.3
     placementOffset: 1
-    minHeight: 2
-    maxHeight: 15
-    minRadius: 1
-    maxRadius: 6
-  largeFlora:
+    minHeight: 13
+    maxHeight: 24
+    minRadius: 0
+    maxRadius: 0
   - name: Monolith
-    floraIndex: 4
-    floraZoneScale: 1.3
-    floraZoneThreshold: 0.6
-    floraPlacementScale: 15
-    floraPlacementThreshold: 0.8
+    floraIndex: 5
+    floraZoneScale: 1.2
+    floraZoneThreshold: 0.7
+    floraPlacementScale: 5
+    floraPlacementThreshold: 0.88
     placementOffset: 1
-    minHeight: 2
-    maxHeight: 15
-    minRadius: 1
-    maxRadius: 6
+    minHeight: 1
+    maxHeight: 24
+    minRadius: 0
+    maxRadius: 0
+  smallFlora: []
+  largeFlora: []
   XLFlora: []
   lodes:
   - nodeName: Ore Gold
