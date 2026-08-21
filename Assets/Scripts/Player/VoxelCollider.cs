@@ -122,7 +122,7 @@ public class VoxelCollider : MonoBehaviour
                 currentJumps = 0;
 
             // apply jump force
-            if (jumpRequest)// && currentJumps < maxJumps) // unlimited jumps
+            if (jumpRequest && currentJumps < maxJumps)
             {
                 verticalMomentum = baseJumpForce;
                 currentJumps++;
