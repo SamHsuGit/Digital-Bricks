@@ -1621,10 +1621,10 @@ public class Controller : NetworkBehaviour
         reticle.SetActive(true);
     }
 
-    private void SpawnTempBrick(int materialIndex)
+    Quaternion GetBrickRotQuaternion(int brickRotIndex)
     {
         Quaternion rot = Quaternion.identity;
-        switch (currentBrickRotation)
+        switch (brickRotIndex)
         {
             // ONLY ALLOW ROTATION OF BRICK NORTH SOUTH EAST WEST FOR NOW
             case 0:
@@ -1676,6 +1676,14 @@ public class Controller : NetworkBehaviour
             //    rot = Quaternion.Euler(new Vector3(90, 270, 0));
             //    break;
         }
+
+        return rot;
+    }
+
+
+    private void SpawnTempBrick(int materialIndex)
+    {
+        Quaternion rot = GetBrickRotQuaternion(currentBrickRotation);
 
         // while holding mine, spawn an object with current partname parented to cursor with light blue material
         string color = "43"; // spawns objects with trans light blue for temp color
@@ -2047,6 +2055,7 @@ public class Controller : NetworkBehaviour
     {
         if (placedBrick != null && heldObjectIsBrick)
         {
+            placedBrick.transform.rotation = GetBrickRotQuaternion(currentBrickRotation);
             // instead of destroying and creating placedBricks, simply move them to cursor (moving likely better for multiplayer anyways)
             // Destroy(placedBrick);
             // //PlayerRemoveBrick(placedBrick); // does not work for multiplayer, does not properly destroy object
