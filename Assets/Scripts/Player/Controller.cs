@@ -2707,6 +2707,9 @@ public class Controller : NetworkBehaviour
 
             if (world.CheckForVoxel(pos, false))
             {
+                if(inputHandler.use && placePos.position != lastPos)
+                    brickPickUp.Play();
+
                 removePos.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
                 placePos.position = lastPos;
                 shootPos.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
