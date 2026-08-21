@@ -140,6 +140,9 @@ public class VoxelCollider : MonoBehaviour
         else
             roadFactor = 1;
 
+        if (SettingsStatic.LoadedSettings.developerMode)
+            baseSprintSpeed = baseWalkSpeed * 4; // faster speed for developer mode
+
         // if we're sprinting, use the sprint multiplier
         if(!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode)
             velocityPlayer = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * baseSprintSpeed * 0.1f;

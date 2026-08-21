@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 07 Forest
+  m_Name: 07 Forest (unused)
   m_EditorClassIdentifier: 
   biomeName: Forest
   surfaceBlock: 13
+  subsurfaceBlock: 3
   smallStructures: []
   smallFlora:
   - name: Grass

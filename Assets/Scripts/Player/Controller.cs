@@ -126,8 +126,8 @@ public class Controller : NetworkBehaviour
     {
         // 2 = blackstone, 3 = stone, 19 = gold, 16/22 = crystal light green, 23/24 = crystal dark green, 25/26 = crystal blue, 27/28 = crystal orange, 29/30 = crystal red
         // defines blocks that the given tool cannot create a drop for
-        new int[] {2, 3,                                       16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30, 31,}, // tool ID 0 = punch (cannot create drop for blackstone, stone, crystal, or gold)
-        new int[] {2,                                          16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30, 31,}, // tool ID 1 = wood (allows to mine stone)
+        new int[] {2,                                          16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30, 31,}, // tool ID 0 = punch (cannot create drop for blackstone, stone, crystal, or gold)
+        new int[] {2,                                          16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30, 31,}, // tool ID 1 = wood (allows to mine stone faster)
         new int[] {2,                                          16,                    22, 23, 24, 25, 26, 27, 28, 29, 30,    }, // tool ID 2 = stone (allows to mine gold)
         new int[] {2,                                                                     23, 24, 25, 26, 27, 28, 29, 30,    }, // tool ID 3 = gold (allows to mine crystal)
         new int[] {                                                                                                          }, // tool ID 4 = crystal light green (mine any block)

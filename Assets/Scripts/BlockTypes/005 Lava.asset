@@ -18,7 +18,7 @@ MonoBehaviour:
   stackMax: 64
   isDrawn: 1
   isSolid: 1
-  isTransparent: 1
+  isTransparent: 0
   isWater: 1
   hardness: 0
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}

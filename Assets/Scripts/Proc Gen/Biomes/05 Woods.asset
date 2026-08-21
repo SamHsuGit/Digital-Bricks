@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Woods
   surfaceBlock: 13
+  subsurfaceBlock: 3
   smallStructures:
   - name: Grass
     floraIndex: 6

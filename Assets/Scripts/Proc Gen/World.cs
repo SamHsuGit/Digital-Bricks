@@ -862,6 +862,45 @@ public class World : MonoBehaviour
         worldLoaded = true;
     }
 
+    byte FarlandsPosX(Vector3Int globalPos)
+    {
+        byte voxelValue = 0;
+
+        int dist = 8;
+        if (globalPos.x % dist == 0 && globalPos.y % dist == 0)
+            voxelValue = 3;
+        else if (globalPos.z % dist == 0 && globalPos.y % dist == 0)
+            voxelValue = 3;
+        else if (globalPos.x % dist == 0 && globalPos.z % dist == 0)
+            voxelValue = 3;
+
+        return voxelValue;
+    }
+
+    byte FarlandsNegX(Vector3Int globalPos)
+    {
+        byte voxelValue = 0;
+
+        if (globalPos.x % 4 == 0 && globalPos.y % 4 == 0 && globalPos.z % 4 == 0)
+            voxelValue = 13;
+
+        return voxelValue;
+    }
+
+    byte FarlandsPosZ(Vector3Int globalPos)
+    {
+        byte voxelValue = 0;
+
+        return voxelValue;
+    }
+
+    byte FarlandsNegZ(Vector3Int globalPos)
+    {
+        byte voxelValue = 0;
+
+        return voxelValue;
+    }
+
     public byte GetVoxel(Vector3Int globalPos)
     {
 
@@ -892,18 +931,25 @@ public class World : MonoBehaviour
         /* IMMUTABLE PASS */
         // If outside world, return air.
         if (!IsGlobalPosInWorld(globalPos))
-            return 0;
+        {
+            if (yGlobalPos > 0 && yGlobalPos < VoxelData.ChunkHeight) // air above and below world
+                return 0;
+            else
+                return 1; // barriers at world border
+        }
+
+        // uses player transform coordinates (0 to 3200 for world size of 200)
+        if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+            return FarlandsPosX(globalPos);
+        else if (globalPos.x < -Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
+            return FarlandsNegX(globalPos);
+        else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+            return FarlandsPosZ(globalPos);
+        else if (globalPos.z < -Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
+            return FarlandsNegZ(globalPos);
 
         ///* AIR PASS */
         //// Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
-        //if (yGlobalPos > terrainHeightVoxels) // set all blocks above terrainHeight to 0 (air)
-        //{
-        //    if (!drawClouds)
-        //        return 0;
-        //    else if (yGlobalPos < cloudHeight || yGlobalPos > cloudHeight)
-        //        return 0;
-        //}
-
         /* CLOUD PASS */
         temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines cloud density and biome
         humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines cloud density and biome
@@ -946,7 +992,7 @@ public class World : MonoBehaviour
             voxelValue = biome.surfaceBlock; // dirt
         }
         if (yGlobalPos == terrainHeight && yGlobalPos > 0.7 * VoxelData.ChunkHeight)
-            voxelValue = worldData.blockIDsubsurface; // rocky mountains
+            voxelValue = biome.subsurfaceBlock; // rocky mountains
         if (yGlobalPos == terrainHeight && yGlobalPos > 0.8 * VoxelData.ChunkHeight)
             voxelValue = 4; // snow on mountain tops
 
@@ -959,7 +1005,7 @@ public class World : MonoBehaviour
         // //return voxelValue;
 
         else if (yGlobalPos < terrainHeight)
-           voxelValue = worldData.blockIDsubsurface; // stone
+           voxelValue = biome.subsurfaceBlock; // stone
         // else if (weirdness > 0.6f && yGlobalPos >= terrainHeight - 5)
         //     voxelValue = biome.surfaceBlock; // dirt
         else if (yGlobalPos == terrainHeight)
@@ -1346,49 +1392,49 @@ public class World : MonoBehaviour
         // // OLD ALGORITHM: Based on Minecraft, used temp and humidity from cloud calc...
         // // too often generates snowy biomes per minecraft youtube video
 
-        if (humidity > 0 && humidity < 0.25f) // (dry)
+        if (humidity > 0 && humidity < 0.25f) // (arid)
         {
             if (temperature > 0.75f && temperature < 1.0f) // (freezing)
                 return 3; // Tundra
             else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 6; // Taiga
+                return 1; // Mesa
             else if (temperature > 0.25f && temperature < 0.5f) // (warm)
                 return 0; // Desert
             else // assumes value is between 0f and 0.25f (hot)
+                return 11; // Volcano
+        }
+        else if (humidity > 0.25f && humidity < 0.5f) // (dry)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+                return 6; // Taiga
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 8; // Fall Forest
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 6; // Taiga
+            else // assumes value is between 0f and 0.25f (hot)
+                return 11; // Volcano
+        }
+        else if (humidity > 0.5f && humidity < 0.75f) // (temperate)
+        {
+            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
                 return 4; // Savanna
-        }
-        else if (humidity > 0.25f && humidity < 0.5f) // (temperate)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 8; // Fall Forest
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
                 return 5; // Woods
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 8; // Fall Forest
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+            else // assumes value is between 0f and 0.25f (hot)
                 return 2; // Grassland
-            else // assumes value is between 0f and 0.25f (hot)
-                return 1; // Mesa
-        }
-        else if (humidity > 0.5f && humidity < 0.75f) // (damp)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 7; // Forest
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 8; // Fall Forest
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 9; // Rainforest
-            else // assumes value is between 0f and 0.25f (hot)
-                return 10; // Swamp
         }
         else // assumes value is between 0.75f and 1f (wet)
         {
             if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 6; // Taiga
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 7; // Forest
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 9; // Rainforest
-            else // assumes value is between 0f and 0.25f (hot)
                 return 10; // Swamp
+            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
+                return 9; // Rainforest
+            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+                return 10; // Swamp
+            else // assumes value is between 0f and 0.25f (hot)
+                return 9; // Rainforest
         }
     }
 

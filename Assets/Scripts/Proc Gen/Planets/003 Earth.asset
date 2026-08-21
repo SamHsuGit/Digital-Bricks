@@ -32,7 +32,7 @@ MonoBehaviour:
   blockIDBiome07: 13
   blockIDBiome08: 14
   blockIDBiome09: 13
-  blockIDBiome10: 14
+  blockIDBiome10: 11
   blockIDBiome11: 2
   hasAtmosphere: 1
   isAlive: 1
