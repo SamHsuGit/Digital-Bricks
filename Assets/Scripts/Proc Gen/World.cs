@@ -904,9 +904,6 @@ public class World : MonoBehaviour
     public byte GetVoxel(Vector3Int globalPos)
     {
 
-        //// For performance testing
-        //return 0;
-
         // The main algorithm used in the procedural world generation
         // used to determine voxelID at each position in a chunk if not previously calculated.
         // Runs whenever voxel ids need to be calculated (only modified voxels are saved to the serialized file).
@@ -961,6 +958,12 @@ public class World : MonoBehaviour
             else
                 return 0;
         }
+
+        // // For performance testing
+        // if(yGlobalPos < VoxelData.ChunkHeight * 0.25f)
+        //     return 13;
+        // else
+        //     return 0;
 
         // reserve space for imported base file
         if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos))
