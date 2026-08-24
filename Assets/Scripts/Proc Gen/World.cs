@@ -881,7 +881,8 @@ public class World : MonoBehaviour
     {
         byte voxelValue = 0;
 
-        if (globalPos.x % 4 == 0 && globalPos.y % 4 == 0 && globalPos.z % 4 == 0)
+        int dist = 8;
+        if (globalPos.x % dist == 0 && globalPos.y % dist == 0 && globalPos.z % dist == 0)
             voxelValue = 13;
 
         return voxelValue;
@@ -890,6 +891,17 @@ public class World : MonoBehaviour
     byte FarlandsPosZ(Vector3Int globalPos)
     {
         byte voxelValue = 0;
+
+        // 3D noise aka swiss cheese top and bottom only
+        if(globalPos.y > VoxelData.ChunkHeight * 0.5f && globalPos.y < VoxelData.ChunkHeight * 0.7f)
+            voxelValue = 0;
+        else
+        {
+            if(Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f))
+            voxelValue = 3;
+            else
+                voxelValue = 0;
+        }
 
         return voxelValue;
     }
@@ -938,11 +950,11 @@ public class World : MonoBehaviour
         // uses player transform coordinates (0 to 3200 for world size of 200)
         if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
             return FarlandsPosX(globalPos);
-        else if (globalPos.x < -Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
+        else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
             return FarlandsNegX(globalPos);
         else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
             return FarlandsPosZ(globalPos);
-        else if (globalPos.z < -Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
+        else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
             return FarlandsNegZ(globalPos);
 
         ///* AIR PASS */
