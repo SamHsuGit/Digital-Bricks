@@ -37,6 +37,6 @@ MonoBehaviour:
   rightFaceTexture: 7
   topFaceSmoothTexture: 47
   blockSounds:
-  - {fileID: 8300000, guid: 0bce29cba9cd271449c62743051a6b27, type: 3}
-  - {fileID: 8300000, guid: fe1628cc6c3e8184da11095e631fad89, type: 3}
-  - {fileID: 8300000, guid: 0bce29cba9cd271449c62743051a6b27, type: 3}
+  - {fileID: 8300000, guid: 6a3b5854d8cc9bc47bc22f7ed49c039e, type: 3}
+  - {fileID: 8300000, guid: 5d4d1ecd858abeb499133af285cbf725, type: 3}
+  - {fileID: 8300000, guid: 6a3b5854d8cc9bc47bc22f7ed49c039e, type: 3}
