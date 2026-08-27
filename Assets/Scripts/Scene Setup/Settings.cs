@@ -53,6 +53,7 @@ public static class SettingsStatic
         settings.currentBrickRotation = 0;
         settings.showControls = true;
         settings.blocksMined = 0;
+        settings.bricksPlaced = 0;
 
         string path;
         if (Settings.Platform == 2)
@@ -113,6 +114,7 @@ public class Settings
     public int currentBrickRotation;
     public bool showControls;
     public int blocksMined;
+    public int bricksPlaced;
 
     public static bool WorldLoaded
     {

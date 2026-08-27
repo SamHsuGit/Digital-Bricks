@@ -90,6 +90,7 @@ public class World : MonoBehaviour
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
     private int cloudHeight;
+    private int floatingIslandHeight;
     private bool applyingModifications;
     private int loadDistance;
     private bool undrawVBO = false;
@@ -210,6 +211,7 @@ public class World : MonoBehaviour
             _instance = this;
 
         cloudHeight = VoxelData.ChunkHeight - 15;
+        floatingIslandHeight = VoxelData.ChunkHeight - 25;
         float mainlandElevationPercent = 0.10f;
         float plateauElevationPercent = 0.50f;
         float step = 0.05f;
@@ -1000,6 +1002,23 @@ public class World : MonoBehaviour
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         terrainHeight = CalcTerrainHeight(xzCoords);
 
+        // FLOATING ISLANDS
+        if (yGlobalPos > terrainHeight && yGlobalPos <= floatingIslandHeight)
+        {
+            if (Noise.Get3DPerlin(globalPos, 12f, 0.1f, 0.6f))
+            {
+                // using voxel values allows ores to generate?
+                voxelValue = 3;
+                if (yGlobalPos == floatingIslandHeight)
+                {
+                    voxelValue = biome.surfaceBlock;
+                    terrainHeight = floatingIslandHeight;
+                }
+            }
+            else
+                voxelValue = 0; // carve out air using 3D perlin noise
+        }
+
         /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
         // TERRAIN DIRT PASS
         if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
@@ -1094,8 +1113,8 @@ public class World : MonoBehaviour
         // noise used to determine if to use cheese, spaghetti, or noodle caves
         //add ores and underground caves
         // if object is below terrain, do not bother running code for surface objects
-        // lodes should not appear above sea level, must mine for them
-        if (drawLodes && voxelValue != 0 && yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight && !convertedFromAirToWater)
+        // lodes should not appear above terrainHeight, must mine for them
+        if (drawLodes && voxelValue != 0 && yGlobalPos < terrainHeight && !convertedFromAirToWater)
         {
             foreach (Lode lode in biome.lodes)
             {
@@ -1112,7 +1131,7 @@ public class World : MonoBehaviour
         // Larger items take priority and so are ordered last
         // add structures like monoliths and flora like trees and plants and mushrooms
         // uses the tallest object height to limit the altitude at which objects can spawn
-        int tallestStructureHeight = 25;
+        int tallestStructureHeight = 5;
         if (!isAir && drawSurfaceObjects && (yGlobalPos == terrainHeight && yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
         {
             // fertility adds random values to determine which surface object to generate and what height it will be
@@ -1288,6 +1307,7 @@ public class World : MonoBehaviour
         // multiplies by number of voxels to get height in voxels
         int maxHeight = VoxelData.ChunkHeight - 1;
         _terrainHeightVoxels = Mathf.Clamp(Mathf.FloorToInt(maxHeight * terrainHeightPercentChunk - 0), 0, maxHeight);
+
         return _terrainHeightVoxels;
     }
 
@@ -1425,7 +1445,7 @@ public class World : MonoBehaviour
             else if (temperature > 0.5f && temperature < 0.75f) // (cold)
                 return 8; // Fall Forest
             else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 6; // Taiga
+                return 5; // Woods
             else // assumes value is between 0f and 0.25f (hot)
                 return 11; // Volcano
         }

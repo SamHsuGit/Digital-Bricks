@@ -16,7 +16,7 @@ MonoBehaviour:
   id: 16
   dropID: 22
   stackMax: 64
-  isDrawn: 0
+  isDrawn: 1
   isSolid: 1
   isTransparent: 0
   isWater: 0
@@ -28,7 +28,7 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 42
   material: {fileID: 2100000, guid: 830691d9f7fe95e4eb42abe60abbc8eb, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 3225992526758807777, guid: 388ab21a301ce4f2390889211b5751db, type: 3}
+  voxelBoundObject: {fileID: 0}
   backFaceTexture: 44
   frontFaceTexture: 44
   topFaceTexture: 5

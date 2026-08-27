@@ -100,6 +100,7 @@ MonoBehaviour:
   erosion: 0
   peaksAndValleys: 0
   weirdness: 0
+  weirdnessLarge: 0
   temperature: 0
   humidity: 0
   isAir: 0
@@ -310,7 +311,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a04d52d1510f7a74895a2e19335ea64f, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 47715e399296e4145a88633b37800d56, type: 3}
+  m_Resource: {fileID: 8300000, guid: f9e8fef4af330c4409aa5de697ba9c27, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

@@ -69,6 +69,7 @@ public class Controller : NetworkBehaviour
     public bool mined = false;
     public byte orientation;
     public int blocksMined;
+    public int bricksPlaced;
 
     [Header("GameObject References")]
     public Player player;
@@ -415,6 +416,7 @@ public class Controller : NetworkBehaviour
             toolbar.SetInventoryFromSave();
 
         blocksMined = SettingsStatic.LoadedSettings.blocksMined;
+        bricksPlaced = SettingsStatic.LoadedSettings.bricksPlaced;
     }
 
     private void HideChunks()
@@ -865,7 +867,7 @@ public class Controller : NetworkBehaviour
     private void SingleChunkCheck()
     {
         //Debug.Log(transform.position.x);
-        if (blocksMined > 0)
+        if (bricksPlaced > 0)
         {
             world.singleChunk = false;
             ShowChunks();
@@ -1295,6 +1297,7 @@ public class Controller : NetworkBehaviour
         reticle.SetActive(false);
         holdingBuild = true;
         brickPickUp.Play();
+        bricksPlaced++;
         int brickMaterialIndex = System.Convert.ToInt32(blockID);
         SetCurrentBrickMaterialIndex(brickMaterialIndex, brickMaterialIndex);
         SpawnTempBrick(0);

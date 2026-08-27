@@ -129,9 +129,16 @@ public class SetupMenu : MonoBehaviour
         Play();
     }
 
+    public void ResetStats()
+    {
+        SettingsStatic.LoadedSettings.blocksMined = 0; 
+        SettingsStatic.LoadedSettings.bricksPlaced = 0;
+    }
+
     public void CreateNewWorld() // use input field value for seed
     {
-        SettingsStatic.LoadedSettings.blocksMined = 0; // reset every time play a new world
+        // reset every time play a new world
+        ResetStats();
 
         // make world coord equal input field value
         //try to load the saved world coord, otherwise default to 1
