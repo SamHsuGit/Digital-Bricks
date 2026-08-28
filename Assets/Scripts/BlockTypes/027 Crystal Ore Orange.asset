@@ -28,7 +28,7 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 38
   material: {fileID: 2100000, guid: d7310def111380841a7b6a033cf2926a, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 3225992526758807777, guid: 18dee77d1a59e4620818abc89596e8e5, type: 3}
+  voxelBoundObject: {fileID: 0}
   backFaceTexture: 60
   frontFaceTexture: 60
   topFaceTexture: 5

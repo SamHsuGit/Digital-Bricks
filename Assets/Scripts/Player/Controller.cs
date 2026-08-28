@@ -867,7 +867,7 @@ public class Controller : NetworkBehaviour
     private void SingleChunkCheck()
     {
         //Debug.Log(transform.position.x);
-        if (bricksPlaced > 0)
+        if (bricksPlaced > 0 || SettingsStatic.LoadedSettings.developerMode)
         {
             world.singleChunk = false;
             ShowChunks();
