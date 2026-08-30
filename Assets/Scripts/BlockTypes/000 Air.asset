@@ -29,8 +29,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
-  voxelPrefab: {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}
-  voxelBitPrefab: {fileID: 3563555514074976273, guid: 967547552de3f4c4eab1cca614c42484, type: 3}
+  voxelPrefab: {fileID: 6790755009815359434, guid: af7f26bdadedf954f8017d1c7d77cbf1, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 46699b8d6a96f0f4f830628638025316, type: 3}
   backFaceTexture: 0
   frontFaceTexture: 0
   topFaceTexture: 0

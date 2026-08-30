@@ -120,6 +120,7 @@ MonoBehaviour:
   - {fileID: 5196350964378782657, guid: 5bc93e2213fb6944fbc9724f8c129d9d, type: 3}
   - {fileID: 5196350964378782657, guid: ff35013b17105d6448242113b03ffe08, type: 3}
   - {fileID: 5196350964378782657, guid: cf2ed65a1d33d4b44bfcde3e4ca76b6b, type: 3}
+  - {fileID: 5196350964378782657, guid: d206107f0fd0448f1990684ff0ff279b, type: 3}
   tool:
   - {fileID: 1684644973282001674, guid: a47fd261cef04894b90dcaf9fd4ada92, type: 3}
   - {fileID: 704852059749648236, guid: 81adc6bf23045754eb5f5700f74819c0, type: 3}
@@ -260,6 +261,7 @@ MonoBehaviour:
   - {fileID: 3563555514074976273, guid: 5e930a492ff75724c991bc28edc6bd13, type: 3}
   - {fileID: 3563555514074976273, guid: 92e6ca69deb59614ba29e96ba36b4106, type: 3}
   - {fileID: 3563555514074976273, guid: fb819626c2438a94891ea53a395939f3, type: 3}
+  - {fileID: 3563555514074976273, guid: 844516e3b0a0343f18389a0e896b7187, type: 3}
   placedBrick: []
   undefinedPrefab: []
   controller: {fileID: 0}

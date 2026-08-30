@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 009 Trans Light Blue
+  m_Name: 009 Blue
   m_EditorClassIdentifier: 
   blockName: Water
   id: 9
@@ -24,9 +24,9 @@ MonoBehaviour:
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 4665620361206564391, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-  colorHexValue: '#AEE9EF'
-  ldrawHexValueCodeNumber: 43
-  material: {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
+  colorHexValue: '#1E5AA8'
+  ldrawHexValueCodeNumber: 1
+  material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
   voxelPrefab: {fileID: 692328156500310682, guid: 76ebcc5ec32518c419edd30675e9335f, type: 3}

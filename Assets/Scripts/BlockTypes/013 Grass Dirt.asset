@@ -30,7 +30,7 @@ MonoBehaviour:
   isActive: 0
   voxelBoundObject: {fileID: 0}
   voxelPrefab: {fileID: 2403187756237027020, guid: 38415eb0796cedb41b6f14f8f104949e, type: 3}
-  voxelBitPrefab: {fileID: 3563555514074976273, guid: 21369915c607f0c42b1d0038308b40ad, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: fba3e95cdc1f95a47af1c6c9370cddd0, type: 3}
   backFaceTexture: 28
   frontFaceTexture: 28
   topFaceTexture: 29

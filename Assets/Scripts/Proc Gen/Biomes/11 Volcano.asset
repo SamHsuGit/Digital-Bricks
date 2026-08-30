@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Volcano
   surfaceBlock: 2
-  subsurfaceBlock: 5
+  subsurfaceBlock: 36
   smallStructures:
   - name: Honeycomb
     floraIndex: 11
@@ -92,7 +92,7 @@ MonoBehaviour:
     threshold: 0.59
     noiseOffset: 29
   - nodeName: Lava
-    blockID: 5
+    blockID: 36
     minHeight: 1
     maxHeight: 256
     scale: 1

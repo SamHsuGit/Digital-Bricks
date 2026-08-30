@@ -192,13 +192,13 @@ public class World : MonoBehaviour
 
         playerCount = 0;
 
-        if(useBiomes && !SettingsStatic.LoadedSettings.developerMode)
+        // if(useBiomes && !SettingsStatic.LoadedSettings.developerMode)
+        // {
+        //     biomeScale = 0.09f; // same as normal to be able to see acurate world results, or can reduce back to 0.02 to see many biomes
+        // }
+        // else
         {
-            biomeScale = 0.02f;
-        }
-        else
-        {
-            biomeScale = 0.08f;
+            biomeScale = 0.09f;
         }
 
         // lowest acceptable drawDistance is 1
@@ -1016,6 +1016,8 @@ public class World : MonoBehaviour
         else
             biome = biomes[GetBiome(chunkXCoord)];
 
+        //biome = biomes[GetBiomeFromXCoord(chunkXCoord)];
+
         ///* ABOVE TERRAINHEIGHT *///
         if (yGlobalPos > terrainHeight)
         {
@@ -1521,6 +1523,39 @@ public class World : MonoBehaviour
         // 10 Swamp
 
         // 07 Forest (unused), use as ocean floor biome???
+    }
+
+    public int GetBiomeFromXCoord(int chunkXCoord)
+    {
+        int islandSizeInChunks = 20; // ea island is about 20 chunks wide...
+
+        //hard coded biomes based on lattitude
+        if (chunkXCoord >= 5 * islandSizeInChunks)
+            return 3; // Tundra
+        else if (chunkXCoord == 4 * islandSizeInChunks)
+            return 6; // Tiaga
+        else if (chunkXCoord == 3 * islandSizeInChunks)
+            return 7; // Forest
+        else if (chunkXCoord == 2 * islandSizeInChunks)
+            return 8; // Fall Forest
+        else if (chunkXCoord == 1 * islandSizeInChunks)
+            return 5; // Woods
+        else if (chunkXCoord == 0 * islandSizeInChunks)
+            return 2; // Grassland
+        else if (chunkXCoord == -1 * islandSizeInChunks)
+            return 9; // Rain Forest
+        else if (chunkXCoord == -2 * islandSizeInChunks)
+            return 10; // Swamp
+        else if (chunkXCoord == -3 * islandSizeInChunks)
+            return 4; // Savanna
+        else if (chunkXCoord == -4 * islandSizeInChunks)
+            return 1; // Mesa
+        else if(chunkXCoord == -5 * islandSizeInChunks)
+            return 0; // Desert
+        else if (chunkXCoord <= -6 * islandSizeInChunks)
+            return 11; // Volcano
+        else
+            return 5; // Woods
     }
 
     public int GetBiome(int chunkXCoord)

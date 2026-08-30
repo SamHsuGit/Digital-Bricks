@@ -197,6 +197,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 080a40e3743a8804ba7cc953aa0fb112, type: 2}
   - {fileID: 11400000, guid: 5f067a5bac9718047b0ced7eedea1b31, type: 2}
   - {fileID: 11400000, guid: 6055809be77003e4ca50b3bca5ed89cd, type: 2}
+  - {fileID: 11400000, guid: 5018fd20fc63f4daaa8af36bbaf4479f, type: 2}
+  voxelPrefabs: []
+  voxelBitPrefabs: []
   placedBricks:
   - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
   - {fileID: 11400000, guid: c69ddb3e123724e23b67f5bbf17b9798, type: 2}
@@ -237,7 +240,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dbaf2ec9c30044d38ba24e664130e324, type: 2}
   - {fileID: 11400000, guid: ddca672b0b09e45018ab738f3cb8754f, type: 2}
   - {fileID: 11400000, guid: 7f03954d14f44465aab070b9f945b7f2, type: 2}
-  voxelPrefabs: []
   chunkLoadSound: {fileID: 6273157275290195825}
   singleChunk: 0
   drawVBO: 0
