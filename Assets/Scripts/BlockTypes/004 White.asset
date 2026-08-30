@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 004 Snow
+  m_Name: 004 White
   m_EditorClassIdentifier: 
   blockName: Snow
   id: 4
@@ -29,6 +29,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
+  voxelPrefab: {fileID: 6379846309926437745, guid: a326ee464f85c2649a324d0ae027fe80, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 08301db808f8df6419def4f655635762, type: 3}
   backFaceTexture: 7
   frontFaceTexture: 7
   topFaceTexture: 8

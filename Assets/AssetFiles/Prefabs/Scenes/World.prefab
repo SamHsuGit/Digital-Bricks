@@ -193,6 +193,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 03278d0c14c404d81b007699db6b59df, type: 2}
   - {fileID: 11400000, guid: a7ae14965134647f582ac236c606262e, type: 2}
   - {fileID: 11400000, guid: 6d444bd59c601445b92dd3afe4acf408, type: 2}
+  - {fileID: 11400000, guid: eee764f7440c8f0439e1414e3d7d9d3e, type: 2}
+  - {fileID: 11400000, guid: 080a40e3743a8804ba7cc953aa0fb112, type: 2}
+  - {fileID: 11400000, guid: 5f067a5bac9718047b0ced7eedea1b31, type: 2}
+  - {fileID: 11400000, guid: 6055809be77003e4ca50b3bca5ed89cd, type: 2}
   placedBricks:
   - {fileID: 11400000, guid: 2f384c27235eb49cc9151476440207bf, type: 2}
   - {fileID: 11400000, guid: c69ddb3e123724e23b67f5bbf17b9798, type: 2}
@@ -233,39 +237,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dbaf2ec9c30044d38ba24e664130e324, type: 2}
   - {fileID: 11400000, guid: ddca672b0b09e45018ab738f3cb8754f, type: 2}
   - {fileID: 11400000, guid: 7f03954d14f44465aab070b9f945b7f2, type: 2}
-  voxelPrefabs:
-  - {fileID: 756824590394074418, guid: fa8f39bb0b3cc674f8c1886aed678a67, type: 3}
-  - {fileID: 8436909742428498496, guid: dbb5fd4476c044b419ca217aa0edfe12, type: 3}
-  - {fileID: 5196350964378782657, guid: c08ce0a181650a84f9216bd0b43b2cdb, type: 3}
-  - {fileID: 6790755009815359434, guid: af7f26bdadedf954f8017d1c7d77cbf1, type: 3}
-  - {fileID: 6379846309926437745, guid: a326ee464f85c2649a324d0ae027fe80, type: 3}
-  - {fileID: 5136295343476392080, guid: ec296f6f7a22e384caec80e80af7b565, type: 3}
-  - {fileID: 5136295343476392080, guid: 4f888babbcdb15f4ab2e1ee9e5b1fc55, type: 3}
-  - {fileID: 2420018717352147466, guid: 1909354961313794d8a20f1949819d11, type: 3}
-  - {fileID: 5136295343476392080, guid: 94db41d5058bf754582cfd0f5c2a7a26, type: 3}
-  - {fileID: 692328156500310682, guid: 76ebcc5ec32518c419edd30675e9335f, type: 3}
-  - {fileID: 5136295343476392080, guid: 7c42a5cd768a26e43abf59e3ceb4dfce, type: 3}
-  - {fileID: 756824590394074418, guid: eff43f24235a4ba4a8c20ca252e7df64, type: 3}
-  - {fileID: 756824590394074418, guid: 390fe447ccb6f2842b0ba22bd43865ad, type: 3}
-  - {fileID: 2403187756237027020, guid: 38415eb0796cedb41b6f14f8f104949e, type: 3}
-  - {fileID: 9144360978228567936, guid: aeee11861035ded4d8f5297fdebc66a9, type: 3}
-  - {fileID: 3225992526758807777, guid: 1ab76dc1823eb50429f749bef9dfbc07, type: 3}
-  - {fileID: 3225992526758807777, guid: 388ab21a301ce4f2390889211b5751db, type: 3}
-  - {fileID: 2630247148938265349, guid: 50205679261b18b48a2bf62f59cc3cd5, type: 3}
-  - {fileID: 6413844807415285134, guid: fee1129e358d38a4c9a075378d9ea333, type: 3}
-  - {fileID: 3225992526758807777, guid: 0be4eb7a3a7cb44958dcf7100be23755, type: 3}
-  - {fileID: 37570108828818984, guid: 349121dd2cf6def48acebf10f0f0170f, type: 3}
-  - {fileID: 3225992526758807777, guid: 243038b8ba1494ea385f04a3eb07a736, type: 3}
-  - {fileID: 6649896901485739460, guid: 1bd16d96cabde844d819dddf944f92af, type: 3}
-  - {fileID: 3225992526758807777, guid: 5f8ba38923ebd4314bf167457da29edc, type: 3}
-  - {fileID: 6649896901485739460, guid: fe54e4a7b30ee49c09cda086dc4c7a6d, type: 3}
-  - {fileID: 3225992526758807777, guid: 33f6f1dc842bf4b20b6f82689b381384, type: 3}
-  - {fileID: 6649896901485739460, guid: a253aa0796ad24b198f65ca1795be823, type: 3}
-  - {fileID: 3225992526758807777, guid: 18dee77d1a59e4620818abc89596e8e5, type: 3}
-  - {fileID: 6649896901485739460, guid: 44d30228d58964d86a89aa3b513a1c92, type: 3}
-  - {fileID: 3225992526758807777, guid: e5be9585302814cadb674b04ed576d99, type: 3}
-  - {fileID: 6649896901485739460, guid: 201c35c9498814d8dadce4a0016bf24e, type: 3}
-  - {fileID: 5196350964378782657, guid: 4226afa4f22bb482daf078be3053e9c6, type: 3}
+  voxelPrefabs: []
   chunkLoadSound: {fileID: 6273157275290195825}
   singleChunk: 0
   drawVBO: 0

@@ -74,11 +74,13 @@ public class SceneObject : NetworkBehaviour
     // and on the server from CmdDropItem in the PlayerEquip script.
     public void SetEquippedItem(int type, int typeItem)
     {
+        //GameObject[] array = controller.world.voxelPrefabs;  // tried to get from World but could not
         GameObject[] array = voxel;
         switch (type)
         {
             case 0:
                 {
+                    //array = controller.world.voxelPrefabs; // tried to get from World but could not
                     array = voxel;
                     break;
                 }
@@ -94,6 +96,7 @@ public class SceneObject : NetworkBehaviour
                 }
             case 3:
                 {
+                    //array = controller.world.voxelBitPrefabs;  // tried to get from World but could not
                     array = voxelBit;
                     break;
                 }

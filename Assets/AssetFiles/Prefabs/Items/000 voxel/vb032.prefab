@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1305347278273089577}
-  - component: {fileID: 4964080758830706322}
-  - component: {fileID: 6509526818116034756}
+  - component: {fileID: 9101519728101156310}
+  - component: {fileID: 4506929862798230630}
   m_Layer: 0
-  m_Name: vb019
+  m_Name: vb032
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 8848713571166467762}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4964080758830706322
+--- !u!114 &9101519728101156310
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bba8e84ae7a714ab04625d6873d7e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6509526818116034756
+--- !u!114 &4506929862798230630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,7 +141,7 @@ PrefabInstance:
     - target: {fileID: 3821010787410746257, guid: 87fa59c9dfdf02b4aa494fdcc510acef, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 759a0932dbc5db342b0eaaebee31944e, type: 2}
+      objectReference: {fileID: 2100000, guid: c961182ebac39234d932b9e624e306b9, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

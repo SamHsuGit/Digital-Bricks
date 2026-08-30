@@ -26,9 +26,11 @@ MonoBehaviour:
   icon: {fileID: 8874480006941658528, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: 
   ldrawHexValueCodeNumber: 0
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
+  voxelPrefab: {fileID: 756824590394074418, guid: 390fe447ccb6f2842b0ba22bd43865ad, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 0e69ee82044cb8a49bfc090ba3f68ae1, type: 3}
   backFaceTexture: 0
   frontFaceTexture: 0
   topFaceTexture: 0

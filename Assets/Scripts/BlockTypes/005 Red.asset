@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 005 Lava
+  m_Name: 005 Red
   m_EditorClassIdentifier: 
   blockName: Lava
   id: 5
@@ -29,6 +29,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
+  voxelPrefab: {fileID: 5136295343476392080, guid: ec296f6f7a22e384caec80e80af7b565, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 21f877e07826653488229d48314ee71f, type: 3}
   backFaceTexture: 10
   frontFaceTexture: 10
   topFaceTexture: 11

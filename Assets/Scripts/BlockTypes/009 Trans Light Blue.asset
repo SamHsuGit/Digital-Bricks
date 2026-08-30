@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 009 Water
+  m_Name: 009 Trans Light Blue
   m_EditorClassIdentifier: 
   blockName: Water
   id: 9
@@ -29,6 +29,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 01f063afc0ce7464a95f9b44b7c36748, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
+  voxelPrefab: {fileID: 692328156500310682, guid: 76ebcc5ec32518c419edd30675e9335f, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: d604a64868d379444a12675be524c768, type: 3}
   backFaceTexture: 22
   frontFaceTexture: 22
   topFaceTexture: 23

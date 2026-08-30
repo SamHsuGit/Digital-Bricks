@@ -21,7 +21,9 @@ public class BlockType : ScriptableObject
     public int ldrawHexValueCodeNumber;
     public Material material;
     public bool isActive;
-    public GameObject voxelBoundObject;
+    public GameObject voxelBoundObject; // what prefab should be rendered in place of this voxel?
+    public GameObject voxelPrefab; // what prefab should be displayed when grabbing this voxel?
+    public GameObject voxelBitPrefab; // what color bit should be shown when shoot this voxel? (not currently used, could not grab from sceneObject from World)
 
     [Header("Texture Values")]
     public int backFaceTexture;

@@ -72,8 +72,9 @@ public class World : MonoBehaviour
     public Material blockMaterialTransparent;
     public PhysicsMaterial physicMaterial;
     public BlockType[] blockTypes;
-    public PlacedBrick[] placedBricks;
     public GameObject[] voxelPrefabs;
+    public GameObject[] voxelBitPrefabs;
+    public PlacedBrick[] placedBricks;
     public AudioSource chunkLoadSound;
     public bool singleChunk = true;
     public bool drawVBO = false;
@@ -279,6 +280,16 @@ public class World : MonoBehaviour
 
     private void Start()
     {
+
+        //// Tried to set for SceneObject vs manually inputing into an array in inspector (doesn't work)
+        //voxelPrefabs = new GameObject[blockTypes.Length];
+        //voxelBitPrefabs = new GameObject[blockTypes.Length];
+        //for (int i = 0; i < blockTypes.Length; i++)
+        //{
+        //    voxelPrefabs[i] = blockTypes[i].voxelPrefab;
+        //    voxelBitPrefabs[i] = blockTypes[i].voxelBitPrefab;
+        //}
+
         setSpawnPos = false;
         worldLoaded = false;
         if (planetNumber == 3) // cache result for use in GetVoxel

@@ -25,10 +25,12 @@ MonoBehaviour:
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: -446597562, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#D67923'
-  ldrawHexValueCodeNumber: 0
+  ldrawHexValueCodeNumber: 25
   material: {fileID: 2100000, guid: a1604998bdc433742acb374239aaacdf, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
+  voxelPrefab: {fileID: 5196350964378782657, guid: 5bc93e2213fb6944fbc9724f8c129d9d, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 5e930a492ff75724c991bc28edc6bd13, type: 3}
   backFaceTexture: 73
   frontFaceTexture: 73
   topFaceTexture: 74

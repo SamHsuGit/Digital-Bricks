@@ -104,6 +104,8 @@ public class Controller : NetworkBehaviour
     public GameObject charObIdle;
     public GameObject charObRun;
     public World world;
+
+    // used to lookup a brick material when selecting a previously placed brick, derive from world not in Controller prefab
     public Material[] brickMaterials;
 
     public bool canMine = false;
@@ -138,41 +140,8 @@ public class Controller : NetworkBehaviour
         new int[] {                                                                                                          }, // tool ID 8 = crystal red (mine any block)
     };
 
-    public int[] ldrawHexValues = new int[]
-        {
-            43,
-            43,
-            0,
-            7,
-            15,
-            4,
-            6,
-            14,
-            2,
-            1,
-            5,
-            3,
-            43,
-            8,
-            6,
-            8,
-            42,
-            8,
-            4,
-            7,
-            8,
-            3,
-            42,
-            34,
-            34,
-            33,
-            33,
-            38,
-            38,
-            36,
-            36,
-            8,
-        };
+    // needed to load and export placedBricks, derived from blockTypes defined in world prefab
+    public int[] ldrawHexValues = new int[]{};
 
     [HideInInspector] public GameObject placedBrick;
 
@@ -235,6 +204,7 @@ public class Controller : NetworkBehaviour
     private bool obfuscateBRXFILE = true; // set to true to prevent cheaters from importing a base using ldraw file format
 
     private float originalColliderHeight;
+    private int blockTypesArraySize;
 
     // THE ORDER OF EVENTS IS CRITICAL FOR MULTIPLAYER!!!
     // Order of network events: https://docs.unity3d.com/Manual/NetworkBehaviourCallbacks.html
@@ -291,6 +261,20 @@ public class Controller : NetworkBehaviour
         shootPos = Instantiate(shootPosPrefab).transform;
         placePos = Instantiate(placePosPrefab).transform;
         holdPos = holdPosPrefab.transform;
+
+        // Define brick properties from world prefab not controller prefab
+        // get definition from blockTypes not manually input array
+        blockTypesArraySize = world.blockTypes.Length;
+
+        ldrawHexValues = new int[blockTypesArraySize];
+        brickMaterials = new Material[blockTypesArraySize];
+
+        for(int i = 0; i < blockTypesArraySize; i++)
+        {
+            ldrawHexValues[i] = world.blockTypes[i].ldrawHexValueCodeNumber;
+            brickMaterials[i] = world.blockTypes[i].material;
+        }
+            
 
         // if (SettingsStatic.LoadedSettings.developerMode) // set values if developer mode or not
         // {
@@ -2069,7 +2053,7 @@ public class Controller : NetworkBehaviour
         }
         else if(holdingGrab)
         {
-            grabbedPrefab = Instantiate(World.Instance.voxelPrefabs[blockID], holdPos.transform.position, Quaternion.identity);
+            grabbedPrefab = Instantiate(World.Instance.blockTypes[blockID].voxelPrefab, holdPos.transform.position, Quaternion.identity);
             grabbedBlockID = blockID; // cache for later use when releasing
             BoxCollider bc = grabbedPrefab.AddComponent<BoxCollider>(); //add a box collider to the grabbedPrefab voxel
             bc.center = new Vector3(0.5f, 0.5f, 0.5f);
