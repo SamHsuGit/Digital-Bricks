@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 032 Sand
+  m_EditorClassIdentifier: 
+  blockName: Sand
+  id: 32
+  dropID: 32
+  stackMax: 64
+  isDrawn: 1
+  isSolid: 1
+  isTransparent: 0
+  isWater: 0
+  hardness: 0.5
+  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
+  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
+  icon: {fileID: 770123, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: '#D7BA8C'
+  ldrawHexValueCodeNumber: 0
+  material: {fileID: 2100000, guid: c961182ebac39234d932b9e624e306b9, type: 2}
+  isActive: 0
+  voxelBoundObject: {fileID: 0}
+  backFaceTexture: 69
+  frontFaceTexture: 69
+  topFaceTexture: 70
+  bottomFaceTexture: 68
+  leftFaceTexture: 69
+  rightFaceTexture: 69
+  topFaceSmoothTexture: 71
+  blockSounds:
+  - {fileID: 8300000, guid: fbd49d0b946329646b11850af93234c8, type: 3}
+  - {fileID: 8300000, guid: 3f9424b36e888b04686e2ca1dc7d66ca, type: 3}
+  - {fileID: 8300000, guid: 6a5eb3982cd9e7941b69a89a8f22749e, type: 3}

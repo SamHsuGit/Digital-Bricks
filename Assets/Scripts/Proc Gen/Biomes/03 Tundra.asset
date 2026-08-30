@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 03 Tundra
   m_EditorClassIdentifier: 
   biomeName: Tundra
-  surfaceBlock: 4
+  surfaceBlock: 34
   subsurfaceBlock: 4
   smallStructures: []
   smallFlora:

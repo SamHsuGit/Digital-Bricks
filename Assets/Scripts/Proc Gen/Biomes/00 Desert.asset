@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 00 Desert
   m_EditorClassIdentifier: 
   biomeName: Desert
-  surfaceBlock: 4
+  surfaceBlock: 32
   subsurfaceBlock: 3
   smallStructures: []
   smallFlora:

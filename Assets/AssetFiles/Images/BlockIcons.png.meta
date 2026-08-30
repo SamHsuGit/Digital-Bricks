@@ -920,6 +920,94 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: 032
+      rect:
+        serializedVersion: 2
+        x: 3039
+        y: 2784
+        width: 342
+        height: 380
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2aad0a74cd3d6c4f9d207ab6b66041b
+      internalID: 770123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 033
+      rect:
+        serializedVersion: 2
+        x: 3381
+        y: 2803
+        width: 356
+        height: 376
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4f9d7f5287710c4ab6547df1f90438a
+      internalID: -446597562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 034
+      rect:
+        serializedVersion: 2
+        x: 3737
+        y: 2818
+        width: 332
+        height: 370
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 322a324c49b2b41469b81401f7f568c8
+      internalID: -2100503086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 035
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 2332
+        width: 351
+        height: 365
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7dd92799f7500ef41bf7f0712c668fdf
+      internalID: -1690674317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -967,6 +1055,10 @@ TextureImporter:
       029: 842819126
       030: 1360677399
       031: -531773786
+      032: 770123
+      033: -446597562
+      034: -2100503086
+      035: -1690674317
       052: -6246070551821309166
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

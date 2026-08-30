@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 08 Fall Forest
   m_EditorClassIdentifier: 
   biomeName: Fall Forest
-  surfaceBlock: 14
+  surfaceBlock: 6
   subsurfaceBlock: 3
   smallStructures: []
   smallFlora:

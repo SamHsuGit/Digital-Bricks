@@ -22,17 +22,17 @@ MonoBehaviour:
   blockIDsubsurface: 3
   blockIDcore: 5
   blockIDwater: 9
-  blockIDBiome00: 4
-  blockIDBiome01: 4
+  blockIDBiome00: 32
+  blockIDBiome01: 33
   blockIDBiome02: 13
-  blockIDBiome03: 4
-  blockIDBiome04: 4
+  blockIDBiome03: 34
+  blockIDBiome04: 32
   blockIDBiome05: 13
-  blockIDBiome06: 4
+  blockIDBiome06: 34
   blockIDBiome07: 13
-  blockIDBiome08: 14
+  blockIDBiome08: 6
   blockIDBiome09: 13
-  blockIDBiome10: 11
+  blockIDBiome10: 35
   blockIDBiome11: 2
   hasAtmosphere: 1
   isAlive: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 04 Savanna
   m_EditorClassIdentifier: 
   biomeName: Savanna
-  surfaceBlock: 4
+  surfaceBlock: 32
   subsurfaceBlock: 3
   smallStructures: []
   smallFlora:

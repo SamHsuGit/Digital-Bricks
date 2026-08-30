@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 06 Taiga
   m_EditorClassIdentifier: 
   biomeName: Taiga
-  surfaceBlock: 4
+  surfaceBlock: 34
   subsurfaceBlock: 4
   smallStructures:
   - name: Grass
