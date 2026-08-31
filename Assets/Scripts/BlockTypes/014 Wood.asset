@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Wood
   id: 14
-  dropID: 6
+  dropID: 14
   stackMax: 64
   isDrawn: 1
   isSolid: 1
@@ -23,20 +23,20 @@ MonoBehaviour:
   hardness: 2
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
-  icon: {fileID: -2610892883229420862, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  icon: {fileID: -1501523072523359806, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#543324'
   ldrawHexValueCodeNumber: 6
   material: {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
-  voxelPrefab: {fileID: 9144360978228567936, guid: aeee11861035ded4d8f5297fdebc66a9, type: 3}
+  voxelPrefab: {fileID: 5136295343476392080, guid: aeee11861035ded4d8f5297fdebc66a9, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: 5fcf9e60b5a87384ca44a300de346a4e, type: 3}
-  backFaceTexture: 32
-  frontFaceTexture: 31
-  topFaceTexture: 33
-  bottomFaceTexture: 30
-  leftFaceTexture: 32
-  rightFaceTexture: 31
+  backFaceTexture: 13
+  frontFaceTexture: 13
+  topFaceTexture: 14
+  bottomFaceTexture: 12
+  leftFaceTexture: 13
+  rightFaceTexture: 13
   topFaceSmoothTexture: 49
   blockSounds:
   - {fileID: 8300000, guid: 999d3f711a766b144b3d6cc80e5688d1, type: 3}

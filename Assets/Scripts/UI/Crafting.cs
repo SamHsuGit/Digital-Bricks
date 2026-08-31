@@ -232,7 +232,7 @@ public class Crafting : MonoBehaviour
 
                 // if colors all match, allow placed bricks to adapt to any color
                 // need to allow non matching colors and placedbrick recipes thru for special item crafting (e.g. pickaxe)
-                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors && isItem == 0) // if has placed bricks in slot
+                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !recipe.isItemRecipeFromVoxel && !nonmatchingcolors && isItem == 0) // if has placed bricks in slot
                 {
                     color = World.Instance.blockTypes[color].dropID;
                     if(slotsWithPlacedBricksCount == 0) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)

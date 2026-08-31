@@ -349,7 +349,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 006
+      name: 014
       rect:
         serializedVersion: 2
         x: 1571
@@ -481,7 +481,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 014
+      name: 006
       rect:
         serializedVersion: 2
         x: 3732
@@ -1039,7 +1039,7 @@ TextureImporter:
         width: 354
         height: 355
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1061,7 +1061,7 @@ TextureImporter:
         width: 359
         height: 359
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1083,7 +1083,7 @@ TextureImporter:
         width: 345
         height: 354
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1105,7 +1105,7 @@ TextureImporter:
         width: 355
         height: 350
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1127,7 +1127,7 @@ TextureImporter:
         width: 335
         height: 340
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1149,7 +1149,7 @@ TextureImporter:
         width: 374
         height: 369
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1184,14 +1184,14 @@ TextureImporter:
       003: 5392753449730437660
       004: -6943373833598557
       005: -7538633921802359561
-      006: -1501523072523359806
+      006: -2610892883229420862
       007: 1159639000735656762
       008: 6931913342542670997
       009: 4665620361206564391
       010: 6804417665525417643
       011: 8874480006941658528
       013: -1266807616821673123
-      014: -2610892883229420862
+      014: -1501523072523359806
       015: -4771556272078792200
       016: -1973033367
       017: 8627043524693180128

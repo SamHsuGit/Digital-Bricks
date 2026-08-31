@@ -6,6 +6,7 @@ using UnityEngine;
 public class Recipe : ScriptableObject
 {
     public bool isPlacedBrick;
+    public bool isItemRecipeFromVoxel;
     public RecipeShape[] recipeShapes;
     public byte outputID;
     public int outputPlacedBrickName;
