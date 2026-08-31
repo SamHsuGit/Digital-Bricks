@@ -41,7 +41,7 @@ MonoBehaviour:
   - nodeName: Ore Crystal light green
     blockID: 16
     minHeight: 9
-    maxHeight: 64
+    maxHeight: 12
     scale: 1
     threshold: 0.57
     noiseOffset: 16
