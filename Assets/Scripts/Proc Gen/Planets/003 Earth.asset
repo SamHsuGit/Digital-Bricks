@@ -21,7 +21,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
   blockIDsubsurface: 3
   blockIDcore: 5
-  blockIDwater: 37
+  blockIDwater: 9
   blockIDBiome00: 32
   blockIDBiome01: 33
   blockIDBiome02: 13
@@ -37,11 +37,11 @@ MonoBehaviour:
   hasAtmosphere: 1
   isAlive: 1
   biomes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
-  blockIDTreeLeavesWinter: 4
+  blockIDTreeLeavesWinter: 15
   blockIDTreeLeavesSpring: 15
   blockIDTreeLeavesSummer: 15
-  blockIDTreeLeavesFall1: 10
-  blockIDTreeLeavesFall2: 10
+  blockIDTreeLeavesFall1: 15
+  blockIDTreeLeavesFall2: 15
   blockIDTreeTrunk: 14
   blockIDCacti: 8
   blockIDMushroomLargeCap: 11
