@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 015 Leaves
+  m_Name: 040 Leaves_Red
   m_EditorClassIdentifier: 
-  blockName: Leaves
-  id: 15
+  blockName: Leaves_Red
+  id: 40
   dropID: 0
   stackMax: 64
   isDrawn: 1
@@ -24,20 +24,20 @@ MonoBehaviour:
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: -4771556272078792200, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-  colorHexValue: '#00852B'
-  ldrawHexValueCodeNumber: 2
-  material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
+  colorHexValue: '#B40000'
+  ldrawHexValueCodeNumber: 4
+  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
-  voxelPrefab: {fileID: 3225992526758807777, guid: 1ab76dc1823eb50429f749bef9dfbc07, type: 3}
-  voxelBitPrefab: {fileID: 3563555514074976273, guid: fba3e95cdc1f95a47af1c6c9370cddd0, type: 3}
-  backFaceTexture: 36
-  frontFaceTexture: 35
-  topFaceTexture: 37
-  bottomFaceTexture: 34
-  leftFaceTexture: 36
-  rightFaceTexture: 35
-  topFaceSmoothTexture: 51
+  voxelPrefab: {fileID: 3225992526758807777, guid: 576edab6dac86b1418c6b7321e3ef323, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 21f877e07826653488229d48314ee71f, type: 3}
+  backFaceTexture: 88
+  frontFaceTexture: 88
+  topFaceTexture: 11
+  bottomFaceTexture: 9
+  leftFaceTexture: 88
+  rightFaceTexture: 88
+  topFaceSmoothTexture: 48
   blockSounds:
   - {fileID: 8300000, guid: fc6b1d8be39c2c7459c630a847c6ac43, type: 3}
   - {fileID: 8300000, guid: 2d0dd4c5a6042db4aa99111ffb1831d3, type: 3}

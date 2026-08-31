@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 009 Blue
+  m_Name: 037 Water
   m_EditorClassIdentifier: 
   blockName: Water
-  id: 9
+  id: 37
   dropID: 9
   stackMax: 64
   isDrawn: 1
   isSolid: 1
   isTransparent: 1
   isWater: 1
-  hardness: 0.5
+  hardness: 0
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 4665620361206564391, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
@@ -29,15 +29,15 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
-  voxelPrefab: {fileID: 692328156500310682, guid: 6158662e55f68a14cbae4d68ad63d6d4, type: 3}
+  voxelPrefab: {fileID: 692328156500310682, guid: 76ebcc5ec32518c419edd30675e9335f, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: d604a64868d379444a12675be524c768, type: 3}
-  backFaceTexture: 22
-  frontFaceTexture: 22
-  topFaceTexture: 23
-  bottomFaceTexture: 21
-  leftFaceTexture: 22
-  rightFaceTexture: 22
-  topFaceSmoothTexture: 52
+  backFaceTexture: 83
+  frontFaceTexture: 83
+  topFaceTexture: 84
+  bottomFaceTexture: 82
+  leftFaceTexture: 83
+  rightFaceTexture: 83
+  topFaceSmoothTexture: 85
   blockSounds:
   - {fileID: 8300000, guid: 980f5f89bdd90014e967f60f923f73ab, type: 3}
   - {fileID: 8300000, guid: dd0c0de4f2ebbce449bcfd47f2aa58aa, type: 3}

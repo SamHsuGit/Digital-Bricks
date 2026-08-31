@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8508264440730295460}
   - component: {fileID: 6933909072885217044}
   m_Layer: 0
-  m_Name: v009
+  m_Name: v037
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,15 +149,15 @@ PrefabInstance:
     - target: {fileID: 1691787209538890649, guid: 65647e520646e5943a4ddb3e54a1e3fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
+      objectReference: {fileID: 2100000, guid: 4670f25f377687140a397cd0dfda87c6, type: 2}
     - target: {fileID: 1715742391344260061, guid: 65647e520646e5943a4ddb3e54a1e3fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
+      objectReference: {fileID: 2100000, guid: 4670f25f377687140a397cd0dfda87c6, type: 2}
     - target: {fileID: 2273539200141543991, guid: 65647e520646e5943a4ddb3e54a1e3fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 156c6ffa54027ea40812680652a641d0, type: 2}
+      objectReference: {fileID: 2100000, guid: 4670f25f377687140a397cd0dfda87c6, type: 2}
     - target: {fileID: 3934109138622526465, guid: 65647e520646e5943a4ddb3e54a1e3fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

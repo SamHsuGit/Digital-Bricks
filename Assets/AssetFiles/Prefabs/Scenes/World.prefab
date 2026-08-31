@@ -198,6 +198,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5f067a5bac9718047b0ced7eedea1b31, type: 2}
   - {fileID: 11400000, guid: 6055809be77003e4ca50b3bca5ed89cd, type: 2}
   - {fileID: 11400000, guid: 5018fd20fc63f4daaa8af36bbaf4479f, type: 2}
+  - {fileID: 11400000, guid: 9e2f162a0b25177448ee204ee28ff347, type: 2}
+  - {fileID: 11400000, guid: 6f37cafd16eb8a74bb2b8abaf5ca7c75, type: 2}
+  - {fileID: 11400000, guid: 353c504d6053dff41981fe217f789f22, type: 2}
+  - {fileID: 11400000, guid: 72f16fe6c034c86478ddae8c43612e8a, type: 2}
+  - {fileID: 11400000, guid: f5e14815c688eab4eb0014a50177272a, type: 2}
+  - {fileID: 11400000, guid: 1ee7c995b97043b469c46c266182ca28, type: 2}
   voxelPrefabs: []
   voxelBitPrefabs: []
   placedBricks:

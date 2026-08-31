@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 039 Black Cobblestone
+  m_EditorClassIdentifier: 
+  blockName: Black Cobblestone
+  id: 39
+  dropID: 2
+  stackMax: 64
+  isDrawn: 1
+  isSolid: 1
+  isTransparent: 0
+  isWater: 0
+  hardness: 50
+  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
+  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
+  icon: {fileID: 8675960657628198209, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: '#1B2A34'
+  ldrawHexValueCodeNumber: 0
+  material: {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}
+  isActive: 0
+  voxelBoundObject: {fileID: 0}
+  voxelPrefab: {fileID: 3225992526758807777, guid: 6ee0b54dfe11ddc45b279a358946be33, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 11830044acb23734fb3b692db73a7264, type: 3}
+  backFaceTexture: 87
+  frontFaceTexture: 87
+  topFaceTexture: 2
+  bottomFaceTexture: 0
+  leftFaceTexture: 87
+  rightFaceTexture: 87
+  topFaceSmoothTexture: 45
+  blockSounds:
+  - {fileID: 8300000, guid: f01760fb42113c949996d74515ae3393, type: 3}
+  - {fileID: 8300000, guid: 054d65b5029984540aff94826a3caf40, type: 3}
+  - {fileID: 8300000, guid: 87663015c6c2eb54285b229c5368b27c, type: 3}
