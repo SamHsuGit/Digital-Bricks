@@ -95,7 +95,7 @@ public class World : MonoBehaviour
     private bool undrawVBO = false;
     private bool undrawVoxels = true;
 
-    private bool useBiomes = true;
+    //private bool useBiomes = true;
     private bool drawLodes = true;
     private bool drawSurfaceObjects = true;
 
@@ -130,6 +130,7 @@ public class World : MonoBehaviour
     private Vector2[] erosionSplinePoints;
     private Vector2[] peaksAndValleysSplinePoints;
     private Vector2[] weirdnessSplinePoints;
+    private Vector2[] biomeSplinePoints;
 
     // hard coded values
     private const float seaLevelPercentChunk = 0.24f;
@@ -138,6 +139,7 @@ public class World : MonoBehaviour
     private const float mainlandElevationPercent = 0.25f;
     private const float plateauElevationPercent = 0.50f;
     private const float step = 0.05f;
+    private const float continentalnessFrequency = 0.02f; // size of islands (higher value = smaller island)
 
     //private const int LOD0threshold = 1;
 
@@ -155,7 +157,7 @@ public class World : MonoBehaviour
 
         if (Settings.WebGL) // settings for WebGL compatibility
         {
-            useBiomes = true;
+            //useBiomes = true;
             drawLodes = true;
             drawSurfaceObjects = true;
             viewDistance = 3;
@@ -197,9 +199,9 @@ public class World : MonoBehaviour
         //     biomeScale = 0.09f; // same as normal to be able to see acurate world results, or can reduce back to 0.02 to see many biomes
         // }
         // else
-        {
-            biomeScale = 0.09f;
-        }
+        //{
+        //    biomeScale = 0.09f;
+        //}
 
         // lowest acceptable drawDistance is 1
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.viewDistance < 1)
@@ -275,6 +277,22 @@ public class World : MonoBehaviour
             new Vector2(0.75f, 0.35f),
             new Vector2(0.76f, 0.99f), // large jump such that only smaller percentage of terrain is weird
             new Vector2(1.00f, 0.99f),
+        };
+
+        biomeSplinePoints = new Vector2[] // used to account for slope of sinusoid function
+        {
+            new Vector2(0.03f, 0.03f), // 00
+            new Vector2(0.05f, 0.05f), // 01
+            new Vector2(0.10f, 0.10f), // 02
+            new Vector2(0.20f, 0.20f), // 03
+            new Vector2(0.30f, 0.30f), // 04
+            new Vector2(0.40f, 0.40f), // 05
+            new Vector2(0.50f, 0.50f), // 06
+            new Vector2(0.60f, 0.60f), // 07
+            new Vector2(0.70f, 0.70f), // 08
+            new Vector2(0.80f, 0.80f), // 09
+            new Vector2(0.90f, 0.90f), // 10
+            new Vector2(1.00f, 1.00f), // 11
         };
     }
 
@@ -1004,19 +1022,19 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes), must occur after temperature and humidity calculations
-        temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines biome
-        humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines biome
+        //temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines biome
+        //humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines biome
         int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x) / VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
-        if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
-            biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
-        else if (!useBiomes)
-            biome = biomes[0];
-        else if (!worldData.isAlive)
-            biome = biomes[11];
-        else
-            biome = biomes[GetBiome(chunkXCoord)];
+        //if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
+        //    biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
+        //else if (!useBiomes)
+        //    biome = biomes[0];
+        //else if (!worldData.isAlive)
+        //    biome = biomes[11];
+        //else
+        //    biome = biomes[GetBiome(chunkXCoord)];
 
-        //biome = biomes[GetBiomeFromXCoord(chunkXCoord)];
+        biome = biomes[CalcBiome(xzCoords)];
 
         ///* ABOVE TERRAINHEIGHT *///
         if (yGlobalPos > terrainHeight)
@@ -1297,9 +1315,7 @@ public class World : MonoBehaviour
         // continentalness = 1 (high land)
         // want to create high continentalness near x = 0, z = 0 but perlin noise does not guarantee this. Want to use something more regular like sinusoid as a function of both x and z coords
         // as distance from spawn increases continentalness decreases aka more ocean and then goes back up again in sinusoid
-        float amplitude = 0.4f; // heights of peaks (higher = higher)
-        float period = 0.02f; // size of islands (higher value = smaller island)
-        continentalness = Mathf.Clamp(amplitude * (Mathf.Cos(xzCoords.x * period) + Mathf.Cos(xzCoords.y * period)), 0f, 1f);
+        continentalness = Mathf.Clamp(0.4f * (Mathf.Cos(xzCoords.x * continentalnessFrequency) + Mathf.Cos(xzCoords.y * continentalnessFrequency)), 0f, 1f);
 
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast)
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
@@ -1525,37 +1541,79 @@ public class World : MonoBehaviour
         // 07 Forest (unused), use as ocean floor biome???
     }
 
-    public int GetBiomeFromXCoord(int chunkXCoord)
+    public int CalcBiome(Vector2 _xzCoords)
     {
-        int islandSizeInChunks = 20; // ea island is about 20 chunks wide...
+        int biomeIndex = 5;
+        // 07 Forest (unused), use as ocean floor biome???
 
-        //hard coded biomes based on lattitude
-        if (chunkXCoord >= 5 * islandSizeInChunks)
-            return 3; // Tundra
-        else if (chunkXCoord == 4 * islandSizeInChunks)
-            return 6; // Tiaga
-        else if (chunkXCoord == 3 * islandSizeInChunks)
-            return 7; // Forest
-        else if (chunkXCoord == 2 * islandSizeInChunks)
-            return 8; // Fall Forest
-        else if (chunkXCoord == 1 * islandSizeInChunks)
-            return 5; // Woods
-        else if (chunkXCoord == 0 * islandSizeInChunks)
-            return 2; // Grassland
-        else if (chunkXCoord == -1 * islandSizeInChunks)
-            return 9; // Rain Forest
-        else if (chunkXCoord == -2 * islandSizeInChunks)
-            return 10; // Swamp
-        else if (chunkXCoord == -3 * islandSizeInChunks)
-            return 4; // Savanna
-        else if (chunkXCoord == -4 * islandSizeInChunks)
-            return 1; // Mesa
-        else if(chunkXCoord == -5 * islandSizeInChunks)
-            return 0; // Desert
-        else if (chunkXCoord <= -6 * islandSizeInChunks)
-            return 11; // Volcano
-        else
-            return 5; // Woods
+        // 06 Taiga (trees)
+        // 01 Mesa
+        // 04 Savanna (trees)
+        // 08 Fall Forest (trees)
+        // 05 Woods (trees)
+        // 00 Desert
+        // 09 Rainforest (trees)
+        // 11 Volcano
+        // 10 Swamp
+
+        // ERROR: the problem with this is the sinusoidal functions do not give even-biome distributions (long flat peaks)
+        // make biome map a 2D function of x and z coordinate with same size as continentalness so each island is its own biome
+        // each island should have an even chance of generating a procedurally picked biome out of the list
+        // use a cosine function similar to continentalness calculation (larger period) to generate a biomeIndex that is separated by ranges, each seed gives an offset to randomize the first biome
+        // use a cosine curve with period exactly (biomes.Length) times longer than continentalness cosine curve so that each peak has a different biome range that scales with # of biomes loaded
+        int offsetFactor = 0; // SettingsStatic.LoadedSettings.worldCoord;
+        int x = Mathf.FloorToInt(_xzCoords.x) + offsetFactor;
+        int y = Mathf.FloorToInt(_xzCoords.y) + offsetFactor;
+        int numberOfBiomes = biomes.Length;
+        int biomeScaleFactor = 6;
+        float frequency = continentalnessFrequency / biomeScaleFactor;
+        float biomeValue = Mathf.Clamp(0.5f * (Mathf.Cos(x * frequency) + 0.5f + Mathf.Cos(y * frequency) + 0.5f), 0f, 1f);
+
+        biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(biomeValue, biomeSplinePoints) * numberOfBiomes);
+
+        // out of bounds checking
+        if (biomeIndex > biomes.Length - 1)
+            biomeIndex = biomes.Length - 1;
+        else if (biomeIndex < 0)
+            biomeIndex = 0;
+
+        return biomeIndex;
+
+        //// continenalness calculation shown here as reference
+        //float continentalnessAmplitude = 0.40f; // heights of peaks (higher = higher)
+        //float continentalnessPeriod = 0.02f; // size of islands (higher value = smaller island)
+        //continentalness = Mathf.Clamp(continentalnessAmplitude * (Mathf.Cos(xzCoords.x * continentalnessPeriod) + Mathf.Cos(xzCoords.y * continentalnessPeriod)), 0f, 1f);
+
+
+        //// OLD METHOD
+        //int islandSizeInChunks = 20; // ea island is about 20 chunks wide...
+        ////hard coded biomes based on lattitude
+        //if (chunkXCoord >= 5 * islandSizeInChunks)
+        //    return 3; // Tundra
+        //else if (chunkXCoord == 4 * islandSizeInChunks)
+        //    return 6; // Tiaga
+        //else if (chunkXCoord == 3 * islandSizeInChunks)
+        //    return 7; // Forest
+        //else if (chunkXCoord == 2 * islandSizeInChunks)
+        //    return 8; // Fall Forest
+        //else if (chunkXCoord == 1 * islandSizeInChunks)
+        //    return 5; // Woods
+        //else if (chunkXCoord == 0 * islandSizeInChunks)
+        //    return 2; // Grassland
+        //else if (chunkXCoord == -1 * islandSizeInChunks)
+        //    return 9; // Rain Forest
+        //else if (chunkXCoord == -2 * islandSizeInChunks)
+        //    return 10; // Swamp
+        //else if (chunkXCoord == -3 * islandSizeInChunks)
+        //    return 4; // Savanna
+        //else if (chunkXCoord == -4 * islandSizeInChunks)
+        //    return 1; // Mesa
+        //else if(chunkXCoord == -5 * islandSizeInChunks)
+        //    return 0; // Desert
+        //else if (chunkXCoord <= -6 * islandSizeInChunks)
+        //    return 11; // Volcano
+        //else
+        //    return 5; // Woods
     }
 
     public int GetBiome(int chunkXCoord)

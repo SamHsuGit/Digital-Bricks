@@ -99,7 +99,7 @@ public class DebugText : MonoBehaviour
             debugText += "\n";
             if(World.Instance.biome != null)
             {
-                debugText += "t: " + World.Instance.temperature + " h: " + World.Instance.humidity + " Biome: " + World.Instance.biome.biomeName;
+                debugText += "t: " + World.Instance.temperature + " h: " + World.Instance.humidity + " Biome: " + World.Instance.CalcBiome(new Vector2(playerPos.x, playerPos.z));
                 debugText += "\n";
             }
             debugText += "f: " + World.Instance.fertility + " p: " + World.Instance.percolation + " SurfaceObType: " + World.Instance.surfaceObType;
