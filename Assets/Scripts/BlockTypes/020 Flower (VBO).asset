@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Flower
   id: 20
   dropID: 20
+  colorID: 8
   stackMax: 64
   isDrawn: 0
   isSolid: 1

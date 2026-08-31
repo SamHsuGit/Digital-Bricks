@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Black Cobblestone
   id: 39
   dropID: 2
+  colorID: 2
   stackMax: 64
   isDrawn: 1
   isSolid: 1

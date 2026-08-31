@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Gold
   id: 7
   dropID: 7
+  colorID: 7
   stackMax: 64
   isDrawn: 1
   isSolid: 1

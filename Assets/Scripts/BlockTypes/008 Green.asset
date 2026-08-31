@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Green
   id: 8
   dropID: 8
+  colorID: 8
   stackMax: 64
   isDrawn: 1
   isSolid: 1

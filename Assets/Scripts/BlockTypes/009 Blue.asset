@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Water
   id: 9
   dropID: 9
+  colorID: 9
   stackMax: 64
   isDrawn: 1
   isSolid: 1

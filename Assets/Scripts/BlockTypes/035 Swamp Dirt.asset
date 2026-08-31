@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Swamp Dirt
   id: 35
-  dropID: 11
+  dropID: 6
+  colorID: 6
   stackMax: 64
   isDrawn: 1
   isSolid: 1

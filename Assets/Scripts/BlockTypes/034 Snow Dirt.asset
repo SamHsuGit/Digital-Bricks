@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Snow Dirt
   id: 34
-  dropID: 4
+  dropID: 6
+  colorID: 6
   stackMax: 64
   isDrawn: 1
   isSolid: 1

@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Barrier
   id: 1
   dropID: 2
+  colorID: 2
   stackMax: 1
   isDrawn: 1
   isSolid: 1

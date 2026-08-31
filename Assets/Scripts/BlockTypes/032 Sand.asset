@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Sand
   id: 32
   dropID: 32
+  colorID: 32
   stackMax: 64
   isDrawn: 1
   isSolid: 1

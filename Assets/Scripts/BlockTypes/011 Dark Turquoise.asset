@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Swamp Dirt
   id: 11
   dropID: 11
+  colorID: 11
   stackMax: 64
   isDrawn: 1
   isSolid: 1

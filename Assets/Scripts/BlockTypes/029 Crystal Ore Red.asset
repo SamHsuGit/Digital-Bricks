@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Crystal Ore Red
   id: 29
   dropID: 29
+  colorID: 29
   stackMax: 64
   isDrawn: 1
   isSolid: 1

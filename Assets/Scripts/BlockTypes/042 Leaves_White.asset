@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Leaves_White
   id: 42
   dropID: 0
+  colorID: 4
   stackMax: 64
   isDrawn: 1
   isSolid: 1

@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: base
   id: 12
   dropID: 0
+  colorID: 0
   stackMax: 0
   isDrawn: 0
   isSolid: 0

@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Grass Decoration
   id: 17
   dropID: 17
+  colorID: 8
   stackMax: 64
   isDrawn: 0
   isSolid: 1

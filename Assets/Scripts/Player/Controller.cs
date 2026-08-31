@@ -269,7 +269,7 @@ public class Controller : NetworkBehaviour
         ldrawHexValues = new int[blockTypesArraySize];
         brickMaterials = new Material[blockTypesArraySize];
 
-        for(int i = 0; i < blockTypesArraySize; i++)
+        for (int i = 0; i < blockTypesArraySize; i++)
         {
             ldrawHexValues[i] = world.blockTypes[i].ldrawHexValueCodeNumber;
             brickMaterials[i] = world.blockTypes[i].material;
@@ -2331,6 +2331,13 @@ public class Controller : NetworkBehaviour
     {
         if (placedBrick == null)
             return;
+
+        string nameToCheck = brickMaterials[materialIndex].name;
+        for (int i = 0; i < blockTypesArraySize; i++)
+        {
+            if (brickMaterials[i].name == nameToCheck)
+                materialIndex = i; // use the first index with matching name to avoid placedBricks that appear as same color but don't stack bricks due to different material instances
+        }
 
         MeshRenderer[] mrs = placedBrick.transform.GetComponentsInChildren<MeshRenderer>();
         if (mrs.Length != 0)

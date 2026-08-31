@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Iron Ore
   id: 19
   dropID: 7
+  colorID: 3
   stackMax: 64
   isDrawn: 1
   isSolid: 1

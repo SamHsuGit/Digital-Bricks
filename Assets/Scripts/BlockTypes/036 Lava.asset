@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Lava
   id: 36
   dropID: 5
+  colorID: 5
   stackMax: 64
   isDrawn: 1
   isSolid: 1

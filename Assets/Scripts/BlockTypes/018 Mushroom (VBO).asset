@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Mushroom
   id: 18
   dropID: 18
+  colorID: 4
   stackMax: 64
   isDrawn: 0
   isSolid: 1

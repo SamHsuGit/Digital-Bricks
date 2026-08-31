@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Orange
   id: 33
   dropID: 33
+  colorID: 33
   stackMax: 64
   isDrawn: 1
   isSolid: 1

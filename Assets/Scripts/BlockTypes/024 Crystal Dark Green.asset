@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Crystal Dark Green
   id: 24
   dropID: 24
+  colorID: 23
   stackMax: 64
   isDrawn: 0
   isSolid: 1

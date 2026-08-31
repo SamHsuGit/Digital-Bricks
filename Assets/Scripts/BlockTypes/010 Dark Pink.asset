@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Pink Leaves
   id: 10
   dropID: 10
+  colorID: 10
   stackMax: 64
   isDrawn: 1
   isSolid: 1

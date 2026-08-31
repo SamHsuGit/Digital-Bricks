@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Grass
   id: 13
-  dropID: 8
+  dropID: 6
+  colorID: 6
   stackMax: 64
   isDrawn: 1
   isSolid: 1

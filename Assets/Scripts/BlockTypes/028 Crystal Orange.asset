@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Crystal Orange
   id: 28
   dropID: 28
+  colorID: 27
   stackMax: 64
   isDrawn: 0
   isSolid: 1

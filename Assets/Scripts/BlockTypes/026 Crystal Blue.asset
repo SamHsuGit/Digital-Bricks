@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Crystal Blue
   id: 26
   dropID: 26
+  colorID: 25
   stackMax: 64
   isDrawn: 0
   isSolid: 1

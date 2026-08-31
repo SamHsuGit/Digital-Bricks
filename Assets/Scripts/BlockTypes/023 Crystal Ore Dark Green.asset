@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Crystal Ore Dark Green
   id: 23
   dropID: 23
+  colorID: 23
   stackMax: 64
   isDrawn: 1
   isSolid: 1

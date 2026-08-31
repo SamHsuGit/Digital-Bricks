@@ -8,6 +8,7 @@ public class BlockType : ScriptableObject
     public string blockName;
     public byte id;
     public byte dropID;
+    public byte colorID;
     public int stackMax;
     public bool isDrawn;
     public bool isSolid;

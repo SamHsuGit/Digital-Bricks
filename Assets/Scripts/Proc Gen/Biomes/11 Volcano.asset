@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Volcano
   surfaceBlock: 2
-  subsurfaceBlock: 36
+  subsurfaceBlock: 2
   smallStructures:
   - name: Honeycomb
     floraIndex: 11

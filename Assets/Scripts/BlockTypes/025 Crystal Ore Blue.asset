@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Crystal Ore Blue
   id: 25
   dropID: 25
+  colorID: 25
   stackMax: 64
   isDrawn: 1
   isSolid: 1

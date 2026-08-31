@@ -15,6 +15,7 @@ MonoBehaviour:
   blockName: Wood
   id: 14
   dropID: 14
+  colorID: 6
   stackMax: 64
   isDrawn: 1
   isSolid: 1
