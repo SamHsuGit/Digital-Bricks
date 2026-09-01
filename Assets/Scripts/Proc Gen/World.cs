@@ -139,7 +139,8 @@ public class World : MonoBehaviour
     private const float mainlandElevationPercent = 0.25f;
     private const float plateauElevationPercent = 0.50f;
     private const float step = 0.05f;
-    private const float continentalnessFrequency = 0.02f; // size of islands (higher value = smaller island)
+    private const float continentalnessAmplitudeA = 0.04; // heights of peaks (higher = higher)
+    private const float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island)
 
     //private const int LOD0threshold = 1;
 
@@ -281,18 +282,18 @@ public class World : MonoBehaviour
 
         biomeSplinePoints = new Vector2[] // used to account for slope of sinusoid function
         {
-            new Vector2(0.03f, 0.03f), // 00
-            new Vector2(0.05f, 0.05f), // 01
-            new Vector2(0.10f, 0.10f), // 02
-            new Vector2(0.20f, 0.20f), // 03
-            new Vector2(0.30f, 0.30f), // 04
-            new Vector2(0.40f, 0.40f), // 05
-            new Vector2(0.50f, 0.50f), // 06
-            new Vector2(0.60f, 0.60f), // 07
-            new Vector2(0.70f, 0.70f), // 08
-            new Vector2(0.80f, 0.80f), // 09
-            new Vector2(0.90f, 0.90f), // 10
-            new Vector2(1.00f, 1.00f), // 11
+            new Vector2(0.03f, 0.03f), // 00 Desert
+            new Vector2(0.05f, 0.05f), // 01 Mesa
+            new Vector2(0.10f, 0.10f), // 02 Grassland
+            new Vector2(0.20f, 0.20f), // 03 Tundra
+            new Vector2(0.30f, 0.30f), // 04 Savanna
+            new Vector2(0.40f, 0.40f), // 05 Woods
+            new Vector2(0.50f, 0.50f), // 06 Taiga
+            new Vector2(0.60f, 0.60f), // 07 Forest
+            new Vector2(0.70f, 0.70f), // 08 Fall Forest
+            new Vector2(0.80f, 0.80f), // 09 Rain Forest
+            new Vector2(0.90f, 0.90f), // 10 Swamp
+            new Vector2(1.00f, 1.00f), // 11 Volcano
         };
     }
 
@@ -1315,7 +1316,7 @@ public class World : MonoBehaviour
         // continentalness = 1 (high land)
         // want to create high continentalness near x = 0, z = 0 but perlin noise does not guarantee this. Want to use something more regular like sinusoid as a function of both x and z coords
         // as distance from spawn increases continentalness decreases aka more ocean and then goes back up again in sinusoid
-        continentalness = Mathf.Clamp(0.4f * (Mathf.Cos(xzCoords.x * continentalnessFrequency) + Mathf.Cos(xzCoords.y * continentalnessFrequency)), 0f, 1f);
+        continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Cos(xzCoords.x * continentalnessFrequencyB) + Mathf.Cos(xzCoords.y * continentalnessFrequencyB)), 0f, 1f);
 
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast)
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
@@ -1543,7 +1544,12 @@ public class World : MonoBehaviour
 
     public int CalcBiome(Vector2 _xzCoords)
     {
-        int biomeIndex = 5;
+        // Use 2D noise functions that input an x and y and returns a float, the float determines what biome is selected (procedural, so same every time but unique to a given seed)
+        // dial in the scale factors to match island heights
+
+
+        int biomeIndex = 5; // woods as default
+
         // 07 Forest (unused), use as ocean floor biome???
 
         // 06 Taiga (trees)
@@ -1556,20 +1562,47 @@ public class World : MonoBehaviour
         // 11 Volcano
         // 10 Swamp
 
-        // ERROR: the problem with this is the sinusoidal functions do not give even-biome distributions (long flat peaks)
-        // make biome map a 2D function of x and z coordinate with same size as continentalness so each island is its own biome
-        // each island should have an even chance of generating a procedurally picked biome out of the list
-        // use a cosine function similar to continentalness calculation (larger period) to generate a biomeIndex that is separated by ranges, each seed gives an offset to randomize the first biome
-        // use a cosine curve with period exactly (biomes.Length) times longer than continentalness cosine curve so that each peak has a different biome range that scales with # of biomes loaded
-        int offsetFactor = 0; // SettingsStatic.LoadedSettings.worldCoord;
-        int x = Mathf.FloorToInt(_xzCoords.x) + offsetFactor;
-        int y = Mathf.FloorToInt(_xzCoords.y) + offsetFactor;
-        int numberOfBiomes = biomes.Length;
-        int biomeScaleFactor = 6;
-        float frequency = continentalnessFrequency / biomeScaleFactor;
-        float biomeValue = Mathf.Clamp(0.5f * (Mathf.Cos(x * frequency) + 0.5f + Mathf.Cos(y * frequency) + 0.5f), 0f, 1f);
+        //// ERROR: the problem with this is the sinusoidal functions do not give even-biome distributions (long flat peaks)
+        //// make biome map a 2D function of x and z coordinate with same size as continentalness so each island is its own biome
+        //// each island should have an even chance of generating a procedurally picked biome out of the list
+        //// use a cosine function similar to continentalness calculation (larger period) to generate a biomeIndex that is separated by ranges, each seed gives an offset to randomize the first biome
+        //// use a cosine curve with period exactly (biomes.Length) times longer than continentalness cosine curve so that each peak has a different biome range that scales with # of biomes loaded
+        //int offsetFactor = 0; // SettingsStatic.LoadedSettings.worldCoord;
+        //int x = Mathf.FloorToInt(_xzCoords.x) + offsetFactor;
+        //int y = Mathf.FloorToInt(_xzCoords.y) + offsetFactor;
+        //int numberOfBiomes = biomes.Length;
+        //int biomeScaleFactor = 6;
+        //float frequency = continentalnessFrequency / biomeScaleFactor;
+        //float biomeValue = Mathf.Clamp(0.5f * (Mathf.Cos(x * frequency) + 0.5f + Mathf.Cos(y * frequency) + 0.5f), 0f, 1f);
 
-        biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(biomeValue, biomeSplinePoints) * numberOfBiomes);
+        //biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(biomeValue, biomeSplinePoints) * numberOfBiomes);
+
+        // // REFERENCE CODE FROM FARLANDS EXPAND TO USE A RANGE
+        //    byte voxelValue = 0;
+        //    int dist = 8;
+        //    if (globalPos.x % dist == 0 && globalPos.y % dist == 0)
+        //        voxelValue = 3;
+        //    else if (globalPos.z % dist == 0 && globalPos.y % dist == 0)
+        //        voxelValue = 3;
+        //    else if (globalPos.x % dist == 0 && globalPos.z % dist == 0)
+        //        voxelValue = 3;
+        //    return voxelValue;
+
+        // use a 2D function to determine a factor that determines biome
+
+        //// continenalness calculation shown here as reference
+        //float continentalnessAmplitudeA = 0.40f; // heights of peaks (higher = higher)
+        //float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island)
+        //continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Cos(xzCoords.x * continentalnessFrequencyB) + Mathf.Cos(xzCoords.y * continentalnessFrequencyB)), 0f, 1f);
+        // continents have a known equation that we can use to back calculate where the division of an island occurs under the ocean
+        // y = Acos(Bx - C) + D
+        // solve for where y = 0, C = 0, D = 0
+        // 0 = Acos(Bx)
+        // cos-1(0) = Bx (knowing cos-1(0) = Mathf.PI / 2)
+        // (Mathf.PI/2) / B = x
+        //float islandUnits = (Mathf.PI / 2) / continentalnessFrequencyB;
+
+        //biomeIndex = Mathf.FloorToInt(_xzCoords.x / islandUnits);
 
         // out of bounds checking
         if (biomeIndex > biomes.Length - 1)
@@ -1578,12 +1611,6 @@ public class World : MonoBehaviour
             biomeIndex = 0;
 
         return biomeIndex;
-
-        //// continenalness calculation shown here as reference
-        //float continentalnessAmplitude = 0.40f; // heights of peaks (higher = higher)
-        //float continentalnessPeriod = 0.02f; // size of islands (higher value = smaller island)
-        //continentalness = Mathf.Clamp(continentalnessAmplitude * (Mathf.Cos(xzCoords.x * continentalnessPeriod) + Mathf.Cos(xzCoords.y * continentalnessPeriod)), 0f, 1f);
-
 
         //// OLD METHOD
         //int islandSizeInChunks = 20; // ea island is about 20 chunks wide...

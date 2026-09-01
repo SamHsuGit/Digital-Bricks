@@ -37,7 +37,7 @@ MonoBehaviour:
   hasAtmosphere: 1
   isAlive: 1
   biomes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
-  blockIDTreeLeavesWinter: 42
+  blockIDTreeLeavesWinter: 4
   blockIDTreeLeavesSpring: 15
   blockIDTreeLeavesSummer: 15
   blockIDTreeLeavesFall1: 40
@@ -47,7 +47,7 @@ MonoBehaviour:
   blockIDMushroomLargeCap: 11
   blockIDMushroomLargeStem: 14
   blockIDMonolith: 2
-  blockIDEvergreenLeaves: 42
+  blockIDEvergreenLeaves: 4
   blockIDEvergreenTrunk: 14
   blockIDHoneyComb: 2
   blockIDHugeTreeLeaves: 15
