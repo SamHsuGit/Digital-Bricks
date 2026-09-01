@@ -47,7 +47,7 @@ MonoBehaviour:
   blockIDMushroomLargeCap: 11
   blockIDMushroomLargeStem: 14
   blockIDMonolith: 2
-  blockIDEvergreenLeaves: 4
+  blockIDEvergreenLeaves: 15
   blockIDEvergreenTrunk: 14
   blockIDHoneyComb: 2
   blockIDHugeTreeLeaves: 15

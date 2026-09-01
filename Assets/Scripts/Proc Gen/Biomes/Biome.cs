@@ -35,6 +35,7 @@ public class SurfaceOb
 {
     public string name;
     public int floraIndex;
+    public byte leavesBlockID;
     public float floraZoneScale = 1.3f;
     [Range(0.1f, 1f)]
     public float floraZoneThreshold = 0.6f;

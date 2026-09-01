@@ -88,6 +88,8 @@ public class World : MonoBehaviour
 
     // PRIVATE VARIABLES
     private float biomeScale;
+    private float biomeOffset;
+    private int numberOfBiomes;
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
     private bool applyingModifications;
@@ -95,7 +97,7 @@ public class World : MonoBehaviour
     private bool undrawVBO = false;
     private bool undrawVoxels = true;
 
-    //private bool useBiomes = true;
+    private bool useBiomes = true;
     private bool drawLodes = true;
     private bool drawSurfaceObjects = true;
 
@@ -139,7 +141,7 @@ public class World : MonoBehaviour
     private const float mainlandElevationPercent = 0.25f;
     private const float plateauElevationPercent = 0.50f;
     private const float step = 0.05f;
-    private const float continentalnessAmplitudeA = 0.04; // heights of peaks (higher = higher)
+    private const float continentalnessAmplitudeA = 0.4f; // heights of peaks (higher = higher)
     private const float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island)
 
     //private const int LOD0threshold = 1;
@@ -158,7 +160,7 @@ public class World : MonoBehaviour
 
         if (Settings.WebGL) // settings for WebGL compatibility
         {
-            //useBiomes = true;
+            useBiomes = true;
             drawLodes = true;
             drawSurfaceObjects = true;
             viewDistance = 3;
@@ -195,14 +197,16 @@ public class World : MonoBehaviour
 
         playerCount = 0;
 
-        // if(useBiomes && !SettingsStatic.LoadedSettings.developerMode)
-        // {
-        //     biomeScale = 0.09f; // same as normal to be able to see acurate world results, or can reduce back to 0.02 to see many biomes
-        // }
-        // else
-        //{
-        //    biomeScale = 0.09f;
-        //}
+        numberOfBiomes = biomes.Length;
+        if (useBiomes && !SettingsStatic.LoadedSettings.developerMode)
+        {
+            biomeScale = 0.01f; // same as normal to be able to see acurate world results, or can reduce back to 0.02 to see more biomes (larger value = more frequent biome changes)
+        }
+        else
+        {
+            biomeScale = 0.01f;
+        }
+        biomeOffset = SettingsStatic.LoadedSettings.worldCoord;
 
         // lowest acceptable drawDistance is 1
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.viewDistance < 1)
@@ -280,10 +284,10 @@ public class World : MonoBehaviour
             new Vector2(1.00f, 0.99f),
         };
 
-        biomeSplinePoints = new Vector2[] // used to account for slope of sinusoid function
+        biomeSplinePoints = new Vector2[] // determines biome from input float
         {
-            new Vector2(0.03f, 0.03f), // 00 Desert
-            new Vector2(0.05f, 0.05f), // 01 Mesa
+            new Vector2(0.03f, 0.03f), // 00 Desert (rare)
+            new Vector2(0.05f, 0.05f), // 01 Mesa (rare)
             new Vector2(0.10f, 0.10f), // 02 Grassland
             new Vector2(0.20f, 0.20f), // 03 Tundra
             new Vector2(0.30f, 0.30f), // 04 Savanna
@@ -439,20 +443,13 @@ public class World : MonoBehaviour
             worldData.hasAtmosphere = planet.hasAtmosphere;
             worldData.isAlive = planet.isAlive; // controls if the world is hospitable to flora
             worldData.biomes = planet.biomes; // controls which biomes the world has
-            worldData.blockIDTreeLeavesWinter = planet.blockIDTreeLeavesWinter;
-            worldData.blockIDTreeLeavesSpring = planet.blockIDTreeLeavesSpring;
-            worldData.blockIDTreeLeavesSummer = planet.blockIDTreeLeavesSummer;
-            worldData.blockIDTreeLeavesFall1 = planet.blockIDTreeLeavesFall1;
-            worldData.blockIDTreeLeavesFall2 = planet.blockIDTreeLeavesFall2;
             worldData.blockIDTreeTrunk = planet.blockIDTreeTrunk;
             worldData.blockIDCacti = planet.blockIDCacti;
             worldData.blockIDMushroomLargeCap = planet.blockIDMushroomLargeCap;
             worldData.blockIDMushroomLargeStem = planet.blockIDMushroomLargeStem;
             worldData.blockIDMonolith = planet.blockIDMonolith;
-            worldData.blockIDEvergreenLeaves = planet.blockIDEvergreenLeaves;
             worldData.blockIDEvergreenTrunk = planet.blockIDEvergreenTrunk;
             worldData.blockIDHoneyComb = planet.blockIDHoneyComb;
-            worldData.blockIDHugeTreeLeaves = planet.blockIDHugeTreeLeaves;
             worldData.blockIDHugeTreeTrunk = planet.blockIDHugeTreeTrunk;
             worldData.blockIDColumn = planet.blockIDColumn;
         }
@@ -501,20 +498,13 @@ public class World : MonoBehaviour
                 worldData.isAlive = true; // world is hospitable to flora
             }
             worldData.biomes = new int[] {0, 1, 2, 3, 4, 5, 6}; // controls which biomes the world has
-            worldData.blockIDTreeLeavesWinter = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
-            worldData.blockIDTreeLeavesSpring = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
-            worldData.blockIDTreeLeavesSummer = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
-            worldData.blockIDTreeLeavesFall1 = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
-            worldData.blockIDTreeLeavesFall2 = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDCacti = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDMushroomLargeCap = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDMushroomLargeStem = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDMonolith = (byte)UnityEngine.Random.Range(minRandBlockID, 24);
-            worldData.blockIDEvergreenLeaves = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDEvergreenTrunk = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDHoneyComb = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDHugeTreeLeaves = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDHugeTreeTrunk = (byte)UnityEngine.Random.Range(minRandBlockIDFlora, maxRandBlockID);
             worldData.blockIDColumn = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
         }
@@ -1023,8 +1013,8 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes), must occur after temperature and humidity calculations
-        //temperature = Noise.Get2DPerlin(xzCoords, 6666, biomeScale); // determines biome
-        //humidity = Noise.Get2DPerlin(xzCoords, 2222, biomeScale); // determines biome
+        temperature = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
+        //humidity = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
         int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x) / VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
         //if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
         //    biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
@@ -1188,37 +1178,11 @@ public class World : MonoBehaviour
                                 if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.smallStructures[i].floraPlacementScale) > biome.smallStructures[i].floraPlacementThreshold)
                                 {
                                     modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallStructures[i].floraIndex, globalPos, biome.smallStructures[i].minHeight, +
-                                        biome.smallStructures[i].maxHeight, biome.smallStructures[i].minRadius, biome.smallStructures[i].maxRadius, fertility, isEarth));
+                                        biome.smallStructures[i].maxHeight, biome.smallStructures[i].minRadius, biome.smallStructures[i].maxRadius, fertility, isEarth, biome.smallStructures[i].leavesBlockID));
                                 }
                                 // }
                             }
                             break;
-                        // case 2:
-                        //     for (int i = 0; i < biome.mediumStructures.Length; i++) // for all mediumStructures
-                        //     {
-                        //         // if (Noise.Get2DPerlin(xzCoords, 0, biome.mediumStructures[i].floraZoneScale) > biome.mediumStructures[i].floraZoneThreshold)
-                        //         // {
-                        //             if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.mediumStructures[i].floraPlacementScale) > biome.mediumStructures[i].floraPlacementThreshold)
-                        //             {
-                        //                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.mediumStructures[i].floraIndex, globalPos, biome.mediumStructures[i].minHeight, +
-                        //                     biome.mediumStructures[i].maxHeight, biome.mediumStructures[i].minRadius, biome.mediumStructures[i].maxRadius, fertility, isEarth));
-                        //             }
-                        //         // }
-                        //     }
-                        //     break;
-                        // case 3:
-                        //     for (int i = 0; i < biome.largeStructures.Length; i++) // for all largeStructures
-                        //     {
-                        //         // if (Noise.Get2DPerlin(xzCoords, 0, biome.largeStructures[i].floraZoneScale) > biome.largeStructures[i].floraZoneThreshold)
-                        //         // {
-                        //             if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.largeStructures[i].floraPlacementScale) > biome.largeStructures[i].floraPlacementThreshold)
-                        //             {
-                        //                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.largeStructures[i].floraIndex, globalPos, biome.largeStructures[i].minHeight, +
-                        //                     biome.largeStructures[i].maxHeight, biome.largeStructures[i].minRadius, biome.largeStructures[i].maxRadius, fertility, isEarth));
-                        //             }
-                        //         // }
-                        //     }
-                        //     break;
                         case 4:
                             for (int i = 0; i < biome.smallFlora.Length; i++) // for all smallFlora
                             {
@@ -1228,24 +1192,11 @@ public class World : MonoBehaviour
                                 if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.smallFlora[i].floraPlacementScale) > biome.smallFlora[i].floraPlacementThreshold)
                                 {
                                     modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallFlora[i].floraIndex, globalPos, biome.smallFlora[i].minHeight, +
-                                        biome.smallFlora[i].maxHeight, biome.smallFlora[i].minRadius, biome.smallFlora[i].maxRadius, fertility, isEarth));
+                                        biome.smallFlora[i].maxHeight, biome.smallFlora[i].minRadius, biome.smallFlora[i].maxRadius, fertility, isEarth, biome.smallFlora[i].leavesBlockID));
                                 }
                                 // }
                             }
                             break;
-                        // case 5:
-                        //     for (int i = 0; i < biome.mediumFlora.Length; i++) // for all mediumFlora
-                        //     {
-                        //         // if (Noise.Get2DPerlin(xzCoords, 0, biome.mediumFlora[i].floraZoneScale) > biome.mediumFlora[i].floraZoneThreshold)
-                        //         // {
-                        //             if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.mediumFlora[i].floraPlacementScale) > biome.mediumFlora[i].floraPlacementThreshold)
-                        //             {
-                        //                 modifications.Enqueue(Structure.GenerateSurfaceOb(biome.mediumFlora[i].floraIndex, globalPos, biome.mediumFlora[i].minHeight, +
-                        //                     biome.mediumFlora[i].maxHeight, biome.mediumFlora[i].minRadius, biome.mediumFlora[i].maxRadius, fertility, isEarth));
-                        //             }
-                        //         // }
-                        //     }
-                        //     break;
                         case 6:
                             for (int i = 0; i < biome.largeFlora.Length; i++) // for all largeFlora
                             {
@@ -1255,7 +1206,7 @@ public class World : MonoBehaviour
                                 if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.largeFlora[i].floraPlacementScale) > biome.largeFlora[i].floraPlacementThreshold)
                                 {
                                     modifications.Enqueue(Structure.GenerateSurfaceOb(biome.largeFlora[i].floraIndex, globalPos, biome.largeFlora[i].minHeight, +
-                                        biome.largeFlora[i].maxHeight, biome.largeFlora[i].minRadius, biome.largeFlora[i].maxRadius, fertility, isEarth));
+                                        biome.largeFlora[i].maxHeight, biome.largeFlora[i].minRadius, biome.largeFlora[i].maxRadius, fertility, isEarth, biome.largeFlora[i].leavesBlockID));
                                 }
                                 // }
                             }
@@ -1269,7 +1220,7 @@ public class World : MonoBehaviour
                                 if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.XLFlora[i].floraPlacementScale) > biome.XLFlora[i].floraPlacementThreshold)
                                 {
                                     modifications.Enqueue(Structure.GenerateSurfaceOb(biome.XLFlora[i].floraIndex, globalPos, biome.XLFlora[i].minHeight, +
-                                        biome.XLFlora[i].maxHeight, biome.XLFlora[i].minRadius, biome.XLFlora[i].maxRadius, fertility, isEarth));
+                                        biome.XLFlora[i].maxHeight, biome.XLFlora[i].minRadius, biome.XLFlora[i].maxRadius, fertility, isEarth, biome.XLFlora[i].leavesBlockID));
                                 }
                                 // }
                             }
@@ -1290,7 +1241,7 @@ public class World : MonoBehaviour
 
         if (Settings.Platform != 2 && globalPos.y == baseTerrainHeight && globalPos.x == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && globalPos.z == Mathf.FloorToInt(worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
         {
-            modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, 0, isEarth)); // make base at center of first chunk at terrain height
+            modifications.Enqueue(Structure.GenerateSurfaceOb(0, globalPos, 0, 0, 0, 0, 0, isEarth, 0)); // make base at center of first chunk at terrain height
             return true;
         }
         else
@@ -1546,12 +1497,13 @@ public class World : MonoBehaviour
     {
         // Use 2D noise functions that input an x and y and returns a float, the float determines what biome is selected (procedural, so same every time but unique to a given seed)
         // dial in the scale factors to match island heights
-
+        // based off temperature, use spline points to split up which biome gets selected
 
         int biomeIndex = 5; // woods as default
+        biomeIndex = Mathf.FloorToInt(temperature * numberOfBiomes); // even chance for all 11 biomes, is not perfectly sized for islands
+        //biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(temperature, biomeSplinePoints) * numberOfBiomes); // uses biomeSpline Points for more rare biomes
 
-        // 07 Forest (unused), use as ocean floor biome???
-
+        // 07 Pine Forest
         // 06 Taiga (trees)
         // 01 Mesa
         // 04 Savanna (trees)
@@ -1567,42 +1519,19 @@ public class World : MonoBehaviour
         //// each island should have an even chance of generating a procedurally picked biome out of the list
         //// use a cosine function similar to continentalness calculation (larger period) to generate a biomeIndex that is separated by ranges, each seed gives an offset to randomize the first biome
         //// use a cosine curve with period exactly (biomes.Length) times longer than continentalness cosine curve so that each peak has a different biome range that scales with # of biomes loaded
-        //int offsetFactor = 0; // SettingsStatic.LoadedSettings.worldCoord;
+        //int offsetFactor = 0; //biomeOffset;
         //int x = Mathf.FloorToInt(_xzCoords.x) + offsetFactor;
         //int y = Mathf.FloorToInt(_xzCoords.y) + offsetFactor;
         //int numberOfBiomes = biomes.Length;
         //int biomeScaleFactor = 6;
-        //float frequency = continentalnessFrequency / biomeScaleFactor;
+        //float frequency = continentalnessFrequencyB / biomeScaleFactor;
         //float biomeValue = Mathf.Clamp(0.5f * (Mathf.Cos(x * frequency) + 0.5f + Mathf.Cos(y * frequency) + 0.5f), 0f, 1f);
-
         //biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(biomeValue, biomeSplinePoints) * numberOfBiomes);
-
-        // // REFERENCE CODE FROM FARLANDS EXPAND TO USE A RANGE
-        //    byte voxelValue = 0;
-        //    int dist = 8;
-        //    if (globalPos.x % dist == 0 && globalPos.y % dist == 0)
-        //        voxelValue = 3;
-        //    else if (globalPos.z % dist == 0 && globalPos.y % dist == 0)
-        //        voxelValue = 3;
-        //    else if (globalPos.x % dist == 0 && globalPos.z % dist == 0)
-        //        voxelValue = 3;
-        //    return voxelValue;
-
-        // use a 2D function to determine a factor that determines biome
 
         //// continenalness calculation shown here as reference
         //float continentalnessAmplitudeA = 0.40f; // heights of peaks (higher = higher)
         //float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island)
         //continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Cos(xzCoords.x * continentalnessFrequencyB) + Mathf.Cos(xzCoords.y * continentalnessFrequencyB)), 0f, 1f);
-        // continents have a known equation that we can use to back calculate where the division of an island occurs under the ocean
-        // y = Acos(Bx - C) + D
-        // solve for where y = 0, C = 0, D = 0
-        // 0 = Acos(Bx)
-        // cos-1(0) = Bx (knowing cos-1(0) = Mathf.PI / 2)
-        // (Mathf.PI/2) / B = x
-        //float islandUnits = (Mathf.PI / 2) / continentalnessFrequencyB;
-
-        //biomeIndex = Mathf.FloorToInt(_xzCoords.x / islandUnits);
 
         // out of bounds checking
         if (biomeIndex > biomes.Length - 1)
@@ -1612,38 +1541,10 @@ public class World : MonoBehaviour
 
         return biomeIndex;
 
-        //// OLD METHOD
-        //int islandSizeInChunks = 20; // ea island is about 20 chunks wide...
-        ////hard coded biomes based on lattitude
-        //if (chunkXCoord >= 5 * islandSizeInChunks)
-        //    return 3; // Tundra
-        //else if (chunkXCoord == 4 * islandSizeInChunks)
-        //    return 6; // Tiaga
-        //else if (chunkXCoord == 3 * islandSizeInChunks)
-        //    return 7; // Forest
-        //else if (chunkXCoord == 2 * islandSizeInChunks)
-        //    return 8; // Fall Forest
-        //else if (chunkXCoord == 1 * islandSizeInChunks)
-        //    return 5; // Woods
-        //else if (chunkXCoord == 0 * islandSizeInChunks)
-        //    return 2; // Grassland
-        //else if (chunkXCoord == -1 * islandSizeInChunks)
-        //    return 9; // Rain Forest
-        //else if (chunkXCoord == -2 * islandSizeInChunks)
-        //    return 10; // Swamp
-        //else if (chunkXCoord == -3 * islandSizeInChunks)
-        //    return 4; // Savanna
-        //else if (chunkXCoord == -4 * islandSizeInChunks)
-        //    return 1; // Mesa
-        //else if(chunkXCoord == -5 * islandSizeInChunks)
-        //    return 0; // Desert
-        //else if (chunkXCoord <= -6 * islandSizeInChunks)
-        //    return 11; // Volcano
-        //else
-        //    return 5; // Woods
+
     }
 
-    public int GetBiome(int chunkXCoord)
+    public int GetBiome()
     {
         // based on https://minecraft.fandom.com/wiki/Biome
         // From https://minecraft.fandom.com/wiki/Anvil_file_format

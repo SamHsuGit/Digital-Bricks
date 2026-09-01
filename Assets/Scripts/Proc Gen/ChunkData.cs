@@ -125,7 +125,7 @@ public class ChunkData
                         {
                             voxelType = 4;
                             if(Settings.Platform != 2 && voxelGlobalPos.x == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && voxelGlobalPos.z == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
-                                World.Instance.modifications.Enqueue(Structure.GenerateSurfaceOb(0, voxelGlobalPos, 0, 0, 0, 0, 0, true)); // make base at center of first chunk at terrain height
+                                World.Instance.modifications.Enqueue(Structure.GenerateSurfaceOb(0, voxelGlobalPos, 0, 0, 0, 0, 0, true, 0)); // make base at center of first chunk at terrain height
                         }
                         map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
                     }

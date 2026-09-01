@@ -18,6 +18,7 @@ MonoBehaviour:
   smallStructures:
   - name: Grass
     floraIndex: 6
+    leavesBlockID: 0
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
@@ -30,6 +31,7 @@ MonoBehaviour:
   smallFlora:
   - name: Grass
     floraIndex: 6
+    leavesBlockID: 0
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
@@ -40,8 +42,9 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   largeFlora:
-  - name: Evergreen
+  - name: Snowy Evergreen
     floraIndex: 10
+    leavesBlockID: 4
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
@@ -54,6 +57,7 @@ MonoBehaviour:
   XLFlora:
   - name: SmallMushroom
     floraIndex: 7
+    leavesBlockID: 0
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15

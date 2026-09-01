@@ -30,20 +30,13 @@ public class WorldData
     public bool hasAtmosphere;
     public bool isAlive; // controls if the world is hospitable to flora
     public int[] biomes;
-    public byte blockIDTreeLeavesWinter;
-    public byte blockIDTreeLeavesSpring;
-    public byte blockIDTreeLeavesSummer;
-    public byte blockIDTreeLeavesFall1;
-    public byte blockIDTreeLeavesFall2;
     public byte blockIDTreeTrunk;
     public byte blockIDCacti;
     public byte blockIDMushroomLargeCap;
     public byte blockIDMushroomLargeStem;
     public byte blockIDMonolith;
-    public byte blockIDEvergreenLeaves;
     public byte blockIDEvergreenTrunk;
     public byte blockIDHoneyComb;
-    public byte blockIDHugeTreeLeaves;
     public byte blockIDHugeTreeTrunk;
     public byte blockIDColumn;
 
