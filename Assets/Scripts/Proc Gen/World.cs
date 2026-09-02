@@ -52,6 +52,7 @@ public class World : MonoBehaviour
     [HideInInspector] public List<Player> players = new List<Player>();
     [HideInInspector] public List<GameObject> baseObPieces = new List<GameObject>();
     [HideInInspector] public Biome biome;
+    [HideInInspector] public int biomeID;
     [HideInInspector] public GameObject baseOb;
     [HideInInspector] public object ChunkUpdateThreadLock = new object();
     [HideInInspector] public object ChunkLoadThreadLock = new object();
@@ -200,11 +201,11 @@ public class World : MonoBehaviour
         numberOfBiomes = biomes.Length;
         if (useBiomes && !SettingsStatic.LoadedSettings.developerMode)
         {
-            biomeScale = 0.01f; // same as normal to be able to see acurate world results, or can reduce back to 0.02 to see more biomes (larger value = more frequent biome changes)
+            biomeScale = 0.01f; // same as normal to be able to see acurate world results, or can reduce back to 0.2 to see more biomes (larger value = more frequent biome changes)
         }
         else
         {
-            biomeScale = 0.01f;
+            biomeScale = 0.02f;
         }
         biomeOffset = SettingsStatic.LoadedSettings.worldCoord;
 
@@ -979,11 +980,6 @@ public class World : MonoBehaviour
         // else
         //     return 0;
 
-        /* TERRAIN HEIGHT CALC */
-        // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
-        // Separates code to more efficiently process voxels
-        terrainHeight = CalcTerrainHeight(xzCoords);
-
         ///* FARLANDS PASS */
         // uses player transform coordinates (0 to 3200 for world size of 200)
         if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
@@ -1014,18 +1010,25 @@ public class World : MonoBehaviour
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes), must occur after temperature and humidity calculations
         temperature = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
-        //humidity = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
+        humidity = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
         int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x) / VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
-        //if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
-        //    biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
-        //else if (!useBiomes)
-        //    biome = biomes[0];
-        //else if (!worldData.isAlive)
-        //    biome = biomes[11];
-        //else
-        //    biome = biomes[GetBiome(chunkXCoord)];
+        if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
+           biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
+        else if (!useBiomes)
+           biome = biomes[0];
+        else if (!worldData.isAlive)
+           biome = biomes[11];
+        else
+        {
+            biomeID = GetBiome();
+            //biomeID = CalcBiome(xzCoords); // cache for later to influence terrain shaping specific to certain biomes
+            biome = biomes[biomeID];
+        }
 
-        biome = biomes[CalcBiome(xzCoords)];
+        /* TERRAIN HEIGHT CALC */
+        // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
+        // Separates code to more efficiently process voxels
+        terrainHeight = CalcTerrainHeight(xzCoords);
 
         ///* ABOVE TERRAINHEIGHT *///
         if (yGlobalPos > terrainHeight)
@@ -1280,10 +1283,10 @@ public class World : MonoBehaviour
         
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
         weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.5f), weirdnessSplinePoints);
-        // if(continentalness > 0.82f) // weirdness high for plateaus
-        //     weirdness = 0.7f;
 
-        //weirdness = Noise.Get2DPerlin(xzCoords, 321, 2f);
+        // EXAMPLE: modification of terrain Shaping based on cached biomeID (not actual desired result so commented out)
+        // if(biomeID == 1)
+        //     erosionFactor += 0.2f; // increased erosion for mesa
 
         // for testing to individually visualize the effects of the spline points
         //terrainHeightPercentChunk = continentalnessFactor;
@@ -1500,8 +1503,8 @@ public class World : MonoBehaviour
         // based off temperature, use spline points to split up which biome gets selected
 
         int biomeIndex = 5; // woods as default
-        biomeIndex = Mathf.FloorToInt(temperature * numberOfBiomes); // even chance for all 11 biomes, is not perfectly sized for islands
-        //biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(temperature, biomeSplinePoints) * numberOfBiomes); // uses biomeSpline Points for more rare biomes
+        //biomeIndex = Mathf.FloorToInt(temperature * numberOfBiomes); // even chance for all 11 biomes, is not perfectly sized for islands
+        biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(temperature, biomeSplinePoints) * numberOfBiomes); // uses biomeSpline Points for more rare biomes
 
         // 07 Pine Forest
         // 06 Taiga (trees)

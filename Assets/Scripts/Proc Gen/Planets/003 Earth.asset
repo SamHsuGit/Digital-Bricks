@@ -22,11 +22,11 @@ MonoBehaviour:
   blockIDsubsurface: 3
   blockIDcore: 5
   blockIDwater: 9
-  blockIDBiome00: 32
-  blockIDBiome01: 33
+  blockIDBiome00: 42
+  blockIDBiome01: 43
   blockIDBiome02: 13
   blockIDBiome03: 34
-  blockIDBiome04: 32
+  blockIDBiome04: 42
   blockIDBiome05: 13
   blockIDBiome06: 34
   blockIDBiome07: 13

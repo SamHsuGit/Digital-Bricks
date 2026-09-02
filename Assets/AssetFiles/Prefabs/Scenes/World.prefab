@@ -74,20 +74,13 @@ MonoBehaviour:
     hasAtmosphere: 0
     isAlive: 1
     biomes: 
-    blockIDTreeLeavesWinter: 0
-    blockIDTreeLeavesSpring: 0
-    blockIDTreeLeavesSummer: 0
-    blockIDTreeLeavesFall1: 0
-    blockIDTreeLeavesFall2: 0
     blockIDTreeTrunk: 0
     blockIDCacti: 0
     blockIDMushroomLargeCap: 0
     blockIDMushroomLargeStem: 0
     blockIDMonolith: 0
-    blockIDEvergreenLeaves: 0
     blockIDEvergreenTrunk: 0
     blockIDHoneyComb: 0
-    blockIDHugeTreeLeaves: 0
     blockIDHugeTreeTrunk: 0
     blockIDColumn: 0
   multithreading: 1
@@ -204,6 +197,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 72f16fe6c034c86478ddae8c43612e8a, type: 2}
   - {fileID: 11400000, guid: f5e14815c688eab4eb0014a50177272a, type: 2}
   - {fileID: 11400000, guid: 1ee7c995b97043b469c46c266182ca28, type: 2}
+  - {fileID: 11400000, guid: bf075bef9bc654fef804bbe68e97ae89, type: 2}
   voxelPrefabs: []
   voxelBitPrefabs: []
   placedBricks:
