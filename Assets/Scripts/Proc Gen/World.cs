@@ -438,9 +438,6 @@ public class World : MonoBehaviour
             worldData.blockIDBiome06 = planet.blockIDBiome06;
             worldData.blockIDBiome07 = planet.blockIDBiome07;
             worldData.blockIDBiome08 = planet.blockIDBiome08;
-            worldData.blockIDBiome09 = planet.blockIDBiome09;
-            worldData.blockIDBiome10 = planet.blockIDBiome10;
-            worldData.blockIDBiome11 = planet.blockIDBiome11;
             worldData.hasAtmosphere = planet.hasAtmosphere;
             worldData.isAlive = planet.isAlive; // controls if the world is hospitable to flora
             worldData.biomes = planet.biomes; // controls which biomes the world has
@@ -485,9 +482,6 @@ public class World : MonoBehaviour
             worldData.blockIDBiome06 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDBiome07 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             worldData.blockIDBiome08 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome09 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome10 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
-            worldData.blockIDBiome11 = (byte)UnityEngine.Random.Range(minRandBlockID, maxRandBlockID);
             if (worldData.distToStar < 2 || worldData.distToStar > 5) // if distToStar is too close or far (too hot/cold)
             {
                 worldData.hasAtmosphere = false; // world has no atmosphere
@@ -519,9 +513,6 @@ public class World : MonoBehaviour
         biomes[6].surfaceBlock = worldData.blockIDBiome06;
         biomes[7].surfaceBlock = worldData.blockIDBiome07;
         biomes[8].surfaceBlock = worldData.blockIDBiome08;
-        biomes[9].surfaceBlock = worldData.blockIDBiome09;
-        biomes[10].surfaceBlock = worldData.blockIDBiome10;
-        biomes[11].surfaceBlock = worldData.blockIDBiome11;
     }
 
     public void LoadWorld()
@@ -889,11 +880,11 @@ public class World : MonoBehaviour
 
         int dist = 8;
         if (globalPos.x % dist == 0 && globalPos.y % dist == 0)
-            voxelValue = 3;
+            voxelValue = 13;
         else if (globalPos.z % dist == 0 && globalPos.y % dist == 0)
-            voxelValue = 3;
+            voxelValue = 13;
         else if (globalPos.x % dist == 0 && globalPos.z % dist == 0)
-            voxelValue = 3;
+            voxelValue = 13;
 
         return voxelValue;
     }
@@ -919,7 +910,7 @@ public class World : MonoBehaviour
         else
         {
             if(Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f))
-            voxelValue = 3;
+            voxelValue = 13;
             else
                 voxelValue = 0;
         }
@@ -929,7 +920,11 @@ public class World : MonoBehaviour
 
     byte FarlandsNegZ(Vector3Int globalPos)
     {
-        byte voxelValue = 0;
+        byte voxelValue = 13; // grass dirt as default, would be overridden later
+
+        Vector3Int newPos = new Vector3Int(globalPos.x, globalPos.y, 12);
+        if (Noise.Get3DPerlin(newPos, 0, 0.1f, 0.5f))
+            voxelValue = 0;
 
         return voxelValue;
     }
@@ -984,12 +979,16 @@ public class World : MonoBehaviour
         // uses player transform coordinates (0 to 3200 for world size of 200)
         if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
             return FarlandsPosX(globalPos);
-        else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
+        else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
             return FarlandsNegX(globalPos);
         else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
             return FarlandsPosZ(globalPos);
-        else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth) // BROKEN
-            return FarlandsNegZ(globalPos);
+        else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
+        {
+            voxelValue = FarlandsNegZ(globalPos);
+            if (voxelValue == 0)
+                return voxelValue;
+        }
 
         // reserve space for imported base file
         if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos))
@@ -1016,8 +1015,8 @@ public class World : MonoBehaviour
            biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
         else if (!useBiomes)
            biome = biomes[0];
-        else if (!worldData.isAlive)
-           biome = biomes[11];
+        //else if (!worldData.isAlive)
+        //   biome = biomes[11];
         else
         {
             biomeID = GetBiome();
@@ -1161,7 +1160,7 @@ public class World : MonoBehaviour
                 // add structures like monoliths and flora like trees and plants and mushrooms
                 // uses the tallest object height to limit the altitude at which objects can spawn
                 int tallestStructureHeight = 10;
-                if (!isAir && drawSurfaceObjects && (yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive) || biome == biomes[11]) // only place flora on worlds marked isAlive or if biome is monolith
+                if (!isAir && drawSurfaceObjects && (yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive)) // only place flora on worlds marked isAlive or if biome is monolith
                 {
                     // fertility adds random values to determine which surface object to generate and what height it will be
                     fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
@@ -1563,46 +1562,46 @@ public class World : MonoBehaviour
         if (humidity > 0 && humidity < 0.25f) // (arid)
         {
             if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 6; // Taiga
+                return 4; // Taiga
             else if (temperature > 0.5f && temperature < 0.75f) // (cold)
                 return 1; // Mesa
             else if (temperature > 0.25f && temperature < 0.5f) // (warm)
                 return 0; // Desert
             else // assumes value is between 0f and 0.25f (hot)
-                return 11; // Volcano
+                return 8; // Volcano
         }
         else if (humidity > 0.25f && humidity < 0.5f) // (dry)
         {
             if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 6; // Taiga
+                return 4; // Taiga
             else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 8; // Fall Forest
+                return 6; // Fall Forest
             else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 5; // Woods
+                return 3; // Woods
             else // assumes value is between 0f and 0.25f (hot)
-                return 11; // Volcano
+                return 8; // Volcano
         }
         else if (humidity > 0.5f && humidity < 0.75f) // (temperate)
         {
             if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 4; // Savanna
+                return 2; // Savanna
             else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 8; // Fall Forest
+                return 6; // Fall Forest
             else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 5; // Woods
+                return 3; // Woods
             else // assumes value is between 0f and 0.25f (hot)
-                return 5; // Woods
+                return 3; // Woods
         }
         else // assumes value is between 0.75f and 1f (wet)
         {
             if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 10; // Swamp
+                return 7; // Swamp
             else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 9; // Rainforest
+                return 3; // Woods
             else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 10; // Swamp
+                return 7; // Swamp
             else // assumes value is between 0f and 0.25f (hot)
-                return 9; // Rainforest
+                return 4; // Taiga
         }
     }
 

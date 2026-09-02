@@ -108,6 +108,7 @@ MonoBehaviour:
   baseObString: 
   baseObPieces: []
   biome: {fileID: 0}
+  biomeID: 0
   baseOb: {fileID: 0}
   blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
   mainCameraGameObject: {fileID: 0}
@@ -138,14 +139,11 @@ MonoBehaviour:
   biomes:
   - {fileID: 11400000, guid: ded51579f62eb3649b111ae5893355f7, type: 2}
   - {fileID: 11400000, guid: f877be86e53ede244bf49ee3ed657d1b, type: 2}
-  - {fileID: 11400000, guid: d0d70b4cc760084459d142b0b9f73f5a, type: 2}
-  - {fileID: 11400000, guid: 11ce2b544a934b84a9656e3c6ffead84, type: 2}
   - {fileID: 11400000, guid: 5fa0ec5829f5d6a4abac31e2c06b6f1f, type: 2}
   - {fileID: 11400000, guid: 4ef2e4af07c6f5740b4b4490bc4d4e61, type: 2}
   - {fileID: 11400000, guid: 8e73a1f6ca6be1a42b7b13b5c72e3536, type: 2}
   - {fileID: 11400000, guid: e695c40dc6c234e479ed41f5c7b84394, type: 2}
   - {fileID: 11400000, guid: 6c27e0c2668c4b84fb11f405be34a5c7, type: 2}
-  - {fileID: 11400000, guid: ec4e646aa2a44e643a56e5d85af0dcfe, type: 2}
   - {fileID: 11400000, guid: 1f79fc23f66fa9c48b216cef8c3ef390, type: 2}
   - {fileID: 11400000, guid: f7e9971761b16e441b2cb2465b306386, type: 2}
   worldPlayer: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}
