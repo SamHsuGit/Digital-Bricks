@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 00 Desert
+  m_Name: 03 Fall Forest
   m_EditorClassIdentifier: 
-  biomeName: Desert
+  biomeName: Fall Forest
   generateClouds: 1
-  surfaceBlock: 42
+  surfaceBlock: 6
   subsurfaceBlock: 3
   smallStructures: []
   smallFlora:
@@ -31,18 +31,18 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   largeFlora:
-  - name: Cactus
-    floraIndex: 3
-    leavesBlockID: 0
+  - name: TreeFall
+    floraIndex: 14
+    leavesBlockID: 40
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
     floraPlacementThreshold: 0.8
     placementOffset: 1
-    minHeight: 7
-    maxHeight: 13
-    minRadius: 1
-    maxRadius: 1
+    minHeight: 14
+    maxHeight: 24
+    minRadius: 4
+    maxRadius: 6
   XLFlora:
   - name: SmallMushroom
     floraIndex: 7
@@ -121,7 +121,7 @@ MonoBehaviour:
     threshold: 0.57
     noiseOffset: 9
   sprites:
-  - {fileID: 21300000, guid: d3abd930d6703e04caafbcc3bd89009d, type: 3}
-  - {fileID: 21300000, guid: e5f751edc3dc688418a032ef22435d8f, type: 3}
-  - {fileID: 21300000, guid: a09a4316bb0dcb946a9f923fd5354127, type: 3}
-  material: {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}
+  - {fileID: 21300000, guid: b4c4dd6b9c441514d93261a2e9c5a4e4, type: 3}
+  - {fileID: 21300000, guid: 6edd174d8e59c69439cbfdd2033f13bd, type: 3}
+  - {fileID: 21300000, guid: 1903123af32a38148884e106dc9166c2, type: 3}
+  material: {fileID: 2100000, guid: dc128da37257dfb4dbffc044eb5816cb, type: 2}

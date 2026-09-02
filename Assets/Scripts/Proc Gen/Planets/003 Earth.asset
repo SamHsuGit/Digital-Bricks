@@ -14,29 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToStar: 3
   planetName: Earth
-  sprites:
-  - {fileID: 21300000, guid: d0c3614280bfa6446a597eefba3a395f, type: 3}
-  - {fileID: 21300000, guid: dab9715a4c02f9343a8e7342b6e7a8c8, type: 3}
-  - {fileID: 21300000, guid: c5bcce1bf301964449014bfc3b4a19bb, type: 3}
   material: {fileID: 2100000, guid: 3c96c96a7f92bff4782fee36e0e988cd, type: 2}
   blockIDsubsurface: 3
   blockIDcore: 5
   blockIDwater: 9
   blockIDBiome00: 42
   blockIDBiome01: 43
-  blockIDBiome02: 13
-  blockIDBiome03: 34
-  blockIDBiome04: 42
-  blockIDBiome05: 13
-  blockIDBiome06: 34
-  blockIDBiome07: 13
-  blockIDBiome08: 6
-  blockIDBiome09: 13
-  blockIDBiome10: 35
-  blockIDBiome11: 2
+  blockIDBiome02: 42
+  blockIDBiome03: 6
+  blockIDBiome04: 13
+  blockIDBiome05: 34
+  blockIDBiome06: 6
+  blockIDBiome07: 35
+  blockIDBiome08: 2
   hasAtmosphere: 1
   isAlive: 1
-  biomes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
+  biomes: 000000000100000002000000030000000400000005000000060000000700000008000000
   blockIDTreeLeavesWinter: 4
   blockIDTreeLeavesSpring: 15
   blockIDTreeLeavesSummer: 15

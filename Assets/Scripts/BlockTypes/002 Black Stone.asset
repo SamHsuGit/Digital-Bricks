@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Black Stone
   id: 2
-  dropID: 2
-  colorID: 2
+  dropID: 39
+  colorID: 39
   stackMax: 64
   isDrawn: 1
   isSolid: 1

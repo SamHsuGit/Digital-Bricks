@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f69705be6989cf419d3fe0b9e15725d, type: 3}
-  m_Name: 00 Desert
+  m_Name: 02 Savanna
   m_EditorClassIdentifier: 
-  biomeName: Desert
+  biomeName: Savanna
   generateClouds: 1
   surfaceBlock: 42
   subsurfaceBlock: 3
@@ -31,16 +31,16 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   largeFlora:
-  - name: Cactus
-    floraIndex: 3
+  - name: TreeSavanna
+    floraIndex: 15
     leavesBlockID: 0
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
     floraPlacementThreshold: 0.8
     placementOffset: 1
-    minHeight: 7
-    maxHeight: 13
+    minHeight: 2
+    maxHeight: 10
     minRadius: 1
     maxRadius: 1
   XLFlora:
@@ -121,7 +121,7 @@ MonoBehaviour:
     threshold: 0.57
     noiseOffset: 9
   sprites:
-  - {fileID: 21300000, guid: d3abd930d6703e04caafbcc3bd89009d, type: 3}
-  - {fileID: 21300000, guid: e5f751edc3dc688418a032ef22435d8f, type: 3}
-  - {fileID: 21300000, guid: a09a4316bb0dcb946a9f923fd5354127, type: 3}
-  material: {fileID: 2100000, guid: b700c0d6a3c2ea74a93fac79733e55d1, type: 2}
+  - {fileID: 21300000, guid: 965093db0469f4c479e5697a7cf742bb, type: 3}
+  - {fileID: 21300000, guid: 88e3c91d37a01684fb5b75604995d2d6, type: 3}
+  - {fileID: 21300000, guid: a4e51ab2a20d70543b605d134b5f0254, type: 3}
+  material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 01 Mesa
   m_EditorClassIdentifier: 
   biomeName: Mesa
+  generateClouds: 1
   surfaceBlock: 43
   subsurfaceBlock: 33
   smallStructures: []

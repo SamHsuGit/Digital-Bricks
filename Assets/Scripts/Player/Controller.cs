@@ -68,8 +68,6 @@ public class Controller : NetworkBehaviour
     public bool invertY = false;
     public bool mined = false;
     public byte orientation;
-    public int blocksMined;
-    public int bricksPlaced;
 
     [Header("GameObject References")]
     public Player player;
@@ -202,6 +200,8 @@ public class Controller : NetworkBehaviour
     private string[][] ldrawPartsTypes;
     private string[] currentLDrawPartsListStringArray = new string[] { };
     private bool obfuscateBRXFILE = true; // set to true to prevent cheaters from importing a base using ldraw file format
+    private int blocksMined = 0;
+    private int bricksPlaced = 0;
 
     private float originalColliderHeight;
     private int blockTypesArraySize;
@@ -399,8 +399,8 @@ public class Controller : NetworkBehaviour
         else if(!Settings.WebGL)
             toolbar.SetInventoryFromSave();
 
-        blocksMined = SettingsStatic.LoadedSettings.blocksMined;
-        bricksPlaced = SettingsStatic.LoadedSettings.bricksPlaced;
+        blocksMined = 0; // reset upon each session
+        bricksPlaced = 0; // reset upon each session
     }
 
     private void HideChunks()
@@ -853,11 +853,13 @@ public class Controller : NetworkBehaviour
         //Debug.Log(transform.position.x);
         if (bricksPlaced > 0 || SettingsStatic.LoadedSettings.developerMode)
         {
+            world.worldData.singleChunk = false;
             world.singleChunk = false;
             ShowChunks();
         }
         else
         {
+            world.worldData.singleChunk = true;
             world.singleChunk = true;
             HideChunks();
         }

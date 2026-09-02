@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 12 Random
   m_EditorClassIdentifier: 
   biomeName: Random
+  generateClouds: 1
   surfaceBlock: 2
   subsurfaceBlock: 3
   smallStructures: []

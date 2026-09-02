@@ -468,7 +468,7 @@ public static class SaveSystem
             stream.Close();
             return new WorldData(worldData);
         }
-        else
+        else // NO FILE FOUND CREATE NEW WORLD
         {
             WorldData worldData = new WorldData(_planetSeed, _worldCoord);
             if (SettingsStatic.LoadedSettings.developerMode)

@@ -140,10 +140,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ded51579f62eb3649b111ae5893355f7, type: 2}
   - {fileID: 11400000, guid: f877be86e53ede244bf49ee3ed657d1b, type: 2}
   - {fileID: 11400000, guid: 5fa0ec5829f5d6a4abac31e2c06b6f1f, type: 2}
+  - {fileID: 11400000, guid: 6c27e0c2668c4b84fb11f405be34a5c7, type: 2}
   - {fileID: 11400000, guid: 4ef2e4af07c6f5740b4b4490bc4d4e61, type: 2}
   - {fileID: 11400000, guid: 8e73a1f6ca6be1a42b7b13b5c72e3536, type: 2}
   - {fileID: 11400000, guid: e695c40dc6c234e479ed41f5c7b84394, type: 2}
-  - {fileID: 11400000, guid: 6c27e0c2668c4b84fb11f405be34a5c7, type: 2}
   - {fileID: 11400000, guid: 1f79fc23f66fa9c48b216cef8c3ef390, type: 2}
   - {fileID: 11400000, guid: f7e9971761b16e441b2cb2465b306386, type: 2}
   worldPlayer: {fileID: 4673335178978187722, guid: 3845e21ad5f59fb4996c7fc759075f1a, type: 3}

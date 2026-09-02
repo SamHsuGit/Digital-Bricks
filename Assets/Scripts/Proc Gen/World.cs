@@ -97,6 +97,7 @@ public class World : MonoBehaviour
     private int loadDistance;
     private bool undrawVBO = false;
     private bool undrawVoxels = true;
+    private bool farlandsDetected = false;
 
     private bool useBiomes = true;
     private bool drawLodes = true;
@@ -156,8 +157,6 @@ public class World : MonoBehaviour
     {
         singleChunk = true;
         drawVBO = false;
-        if (!Settings.WebGL && SettingsStatic.LoadedSettings.blocksMined > 0)
-            drawVBO = true; // hides vbo upon first world load
 
         if (Settings.WebGL) // settings for WebGL compatibility
         {
@@ -199,13 +198,13 @@ public class World : MonoBehaviour
         playerCount = 0;
 
         numberOfBiomes = biomes.Length;
-        if (useBiomes && !SettingsStatic.LoadedSettings.developerMode)
+        if (useBiomes && !SettingsStatic.LoadedSettings.developerMode) // NORMAL
         {
-            biomeScale = 0.01f; // same as normal to be able to see acurate world results, or can reduce back to 0.2 to see more biomes (larger value = more frequent biome changes)
+            biomeScale = 0.03f; // same as normal to be able to see acurate world results, or can reduce back to 0.2 to see more biomes (larger value = more frequent biome changes)
         }
-        else
+        else // DEVELOPER MODE
         {
-            biomeScale = 0.02f;
+            biomeScale = 0.03f;
         }
         biomeOffset = SettingsStatic.LoadedSettings.worldCoord;
 
@@ -324,6 +323,7 @@ public class World : MonoBehaviour
         if(!Settings.WebGL)
         {
             worldData = SaveSystem.LoadWorld(planetNumber, seed); // sets the worldData to the value determined by planetNumber and seed which are both set in the GameManger Script
+            singleChunk = worldData.singleChunk;
         }
         WorldDataOverrides(planetNumber);
 
@@ -369,6 +369,11 @@ public class World : MonoBehaviour
         worldLoadStopWatch.Stop();
         TimeSpan ts = worldLoadStopWatch.Elapsed;
         worldLoadTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
+        if (!Settings.WebGL && !worldData.singleChunk)
+            drawVBO = true;
+        else
+            drawVBO = false;
     }
 
     public void LoadSpawnedPiecesOnlinePlay()
@@ -517,13 +522,16 @@ public class World : MonoBehaviour
 
     public void LoadWorld()
     {
-        // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times
+        // loadDistance must always be greater than viewDistance, the larger the multiplier, the less frequent load times but takes time to pre-compute
         if (!Settings.WebGL && worldSizeInChunks < 100)
             loadDistance = SettingsStatic.LoadedSettings.viewDistance;
         else if (!Settings.WebGL)
             loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); // optimal loadDistance provides enough world to hide edges with low load time (7 sec)
         else
             loadDistance = Mathf.CeilToInt(viewDistance * 1.333f);
+
+        if (!SettingsStatic.LoadedSettings.developerMode)
+            loadDistance = Mathf.CeilToInt(viewDistance * 2); // larger load distance for regular mode allows chunks to be pre-computed for better performance
 
         for (int x = (worldSizeInChunks / 2) - loadDistance; x < (worldSizeInChunks / 2) + loadDistance; x++)
         {
@@ -876,6 +884,7 @@ public class World : MonoBehaviour
 
     byte FarlandsPosX(Vector3Int globalPos)
     {
+        farlandsDetected = true;
         byte voxelValue = 0;
 
         int dist = 8;
@@ -891,6 +900,7 @@ public class World : MonoBehaviour
 
     byte FarlandsNegX(Vector3Int globalPos)
     {
+        farlandsDetected = true;
         byte voxelValue = 0;
 
         int dist = 8;
@@ -902,6 +912,7 @@ public class World : MonoBehaviour
 
     byte FarlandsPosZ(Vector3Int globalPos)
     {
+        farlandsDetected = true;
         byte voxelValue = 0;
 
         // 3D noise aka swiss cheese top and bottom only
@@ -920,6 +931,7 @@ public class World : MonoBehaviour
 
     byte FarlandsNegZ(Vector3Int globalPos)
     {
+        farlandsDetected = true;
         byte voxelValue = 13; // grass dirt as default, would be overridden later
 
         Vector3Int newPos = new Vector3Int(globalPos.x, globalPos.y, 12);
@@ -959,17 +971,8 @@ public class World : MonoBehaviour
         bool convertedFromAirToWater = false; // init
 
         /* IMMUTABLE PASS */
-        //// Commented out, since already checked in ChunkData > Populate method that only gets inside the chunkWidth and chunkHeight
-        //// If outside world, return air.
-        //if (!IsGlobalPosInWorld(globalPos))
-        //{
-        //    if (yGlobalPos > 0 && yGlobalPos < VoxelData.ChunkHeight)
-        //        return 0; // air above and below world
-        //    else
-        //        return 1; // barriers at world border
-        //}
 
-        // // For performance testing
+        // // testing shows for even simple terrain algorithms, only so many voxels can be processed at once...
         // if(yGlobalPos < VoxelData.ChunkHeight * 0.25f)
         //     return 3;
         // else
@@ -977,6 +980,7 @@ public class World : MonoBehaviour
 
         ///* FARLANDS PASS */
         // uses player transform coordinates (0 to 3200 for world size of 200)
+        farlandsDetected = false;
         if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
             return FarlandsPosX(globalPos);
         else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
@@ -998,7 +1002,7 @@ public class World : MonoBehaviour
         if (yGlobalPos == 0)
             return 2; // bedrock
 
-        //// LARGE 3D NOISE PASS (affects all height levels, breaks strata, already done by isAir)
+        //// LARGE 3D NOISE PASS (affects all height levels, breaks strata, already done by isAir so was commented out)
         //weirdnessLarge = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
         //if (weirdnessLarge > 0.6f && yGlobalPos > 9 && continentalness > 0.5f) // quick check to see if should carve out large areas of air using 3D noise, should be rather rare
         //{
@@ -1015,8 +1019,8 @@ public class World : MonoBehaviour
            biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
         else if (!useBiomes)
            biome = biomes[0];
-        //else if (!worldData.isAlive)
-        //   biome = biomes[11];
+        else if (!worldData.isAlive)
+           biome = biomes[7];
         else
         {
             biomeID = GetBiome();
@@ -1027,7 +1031,10 @@ public class World : MonoBehaviour
         /* TERRAIN HEIGHT CALC */
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         // Separates code to more efficiently process voxels
-        terrainHeight = CalcTerrainHeight(xzCoords);
+        if (farlandsDetected)
+            terrainHeight = VoxelData.ChunkHeight - 1;
+        else
+            terrainHeight = CalcTerrainHeight(xzCoords);
 
         ///* ABOVE TERRAINHEIGHT *///
         if (yGlobalPos > terrainHeight)
@@ -1037,7 +1044,7 @@ public class World : MonoBehaviour
             //// Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
             /* CLOUD PASS */
             percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and surface ob type
-            if (yGlobalPos >= cloudHeightPercent * VoxelData.ChunkHeight && Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f)) // determines cloud altitude
+            if (yGlobalPos >= cloudHeightPercent * VoxelData.ChunkHeight && yGlobalPos < VoxelData.ChunkHeight - 1 && Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f) && biome.generateClouds) // determines cloud altitude
             {
                 //if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
                 if(percolation > 0.5f && yGlobalPos < VoxelData.ChunkHeight)
@@ -1094,22 +1101,6 @@ public class World : MonoBehaviour
                 if (voxelValue == 0 && yGlobalPos <= Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
                     convertedFromAirToWater = true;
 
-                /* 3D NOISE BASE TERRAIN GENERATION (MAKE COPY DO NOT CHANGE) */
-                // TERRAIN DIRT PASS
-                //if (yGlobalPos == terrainHeight && yGlobalPos > 0.7 * VoxelData.ChunkHeight)
-                //    voxelValue = biome.subsurfaceBlock; // rocky mountains
-                //if (yGlobalPos == terrainHeight && yGlobalPos > 0.8 * VoxelData.ChunkHeight)
-                //    voxelValue = 4; // snow on mountain tops
-
-                //else if (yGlobalPos < terrainHeight)
-                //   voxelValue = biome.subsurfaceBlock; // stone
-                // else if (weirdness > 0.6f && yGlobalPos >= terrainHeight - 5)
-                //     voxelValue = biome.surfaceBlock; // dirt
-                //if (yGlobalPos == terrainHeight)
-                //    voxelValue = biome.surfaceBlock; // dirt
-                // if (yGlobalPos == terrainHeight && yGlobalPos > Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
-                // voxelValue = biome.surfaceBlock; // dirt
-
                 /* CAVE PASS */// (20% of blocks underground?)
                 //3D noise used for caves
                 // weirdness varies size of caves
@@ -1150,7 +1141,7 @@ public class World : MonoBehaviour
                 if (isAir)
                     return 0;
 
-                if (!isAir && yGlobalPos >= Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight) - 1)
+                if (yGlobalPos >= Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight) - 1)
                     voxelValue = biome.surfaceBlock; // dirt
 
                 /* SURFACE OBJECTS PASS */
@@ -1159,13 +1150,11 @@ public class World : MonoBehaviour
                 // Larger items take priority and so are ordered last
                 // add structures like monoliths and flora like trees and plants and mushrooms
                 // uses the tallest object height to limit the altitude at which objects can spawn
-                int tallestStructureHeight = 10;
-                if (!isAir && drawSurfaceObjects && (yGlobalPos < (VoxelData.ChunkHeight - tallestStructureHeight) && terrainHeightPercentChunk > seaLevelPercentChunk && worldData.isAlive)) // only place flora on worlds marked isAlive or if biome is monolith
+                if (terrainHeightPercentChunk > seaLevelPercentChunk && drawSurfaceObjects && worldData.isAlive) // only place flora on worlds marked isAlive or if biome is monolith
                 {
                     // fertility adds random values to determine which surface object to generate and what height it will be
                     fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
                     //fertility = StaticRandom.GetRandom(); // world must be deterministic for multiplayer, chose perlin noise instead
-                    // percolation = Noise.Get2DPerlin(xzCoords, 2222, .9f);
                     surfaceObType = GetSurfaceObType(0, fertility);
                     switch (surfaceObType) // ensures only one surface object is sampled (not sampled on top of each other)
                     {
@@ -1174,6 +1163,8 @@ public class World : MonoBehaviour
                         case 1:
                             for (int i = 0; i < biome.smallStructures.Length; i++) // for all smallStructures (rare game element for looting structure)
                             {
+                                if (biome.smallStructures[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
+                                    break;
                                 // if (Noise.Get2DPerlin(xzCoords, 0, biome.smallStructures[i].floraZoneScale) > biome.smallStructures[i].floraZoneThreshold)
                                 // {
                                 //if(StaticRandom.GetRandom() > 0.999f)
@@ -1188,6 +1179,8 @@ public class World : MonoBehaviour
                         case 4:
                             for (int i = 0; i < biome.smallFlora.Length; i++) // for all smallFlora
                             {
+                                if (biome.smallFlora[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
+                                    break;
                                 // if (Noise.Get2DPerlin(xzCoords, 0, biome.smallFlora[i].floraZoneScale) > biome.smallFlora[i].floraZoneThreshold)
                                 // {
                                 //if(StaticRandom.GetRandom() > 0.98f)
@@ -1202,6 +1195,8 @@ public class World : MonoBehaviour
                         case 6:
                             for (int i = 0; i < biome.largeFlora.Length; i++) // for all largeFlora
                             {
+                                if (biome.largeFlora[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
+                                    break;
                                 // if (Noise.Get2DPerlin(xzCoords, 0, biome.largeFlora[i].floraZoneScale) > biome.largeFlora[i].floraZoneThreshold)
                                 // {
                                 //if(StaticRandom.GetRandom() > 0.98f)
@@ -1216,6 +1211,8 @@ public class World : MonoBehaviour
                         case 7:
                             for (int i = 0; i < biome.XLFlora.Length; i++) // for all XLFlora (mushrooms, critical game element for health, therefore comes last in stack)
                             {
+                                if (biome.XLFlora[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
+                                    break;
                                 // if (Noise.Get2DPerlin(xzCoords, 0, biome.XLFlora[i].floraZoneScale) > biome.XLFlora[i].floraZoneThreshold)
                                 // {
                                 //if(StaticRandom.GetRandom() > 0.98f)
@@ -1360,141 +1357,6 @@ public class World : MonoBehaviour
         return _returnValue;
     }
 
-    public int GetBiomeFromHeight(int _yGlobalPos)
-    {
-        int _biome = 02;
-
-        // // NOT USED SINCE CREATES BORING REPETITIVE TERRAIN!
-
-        // first identify elevation, then specific biome from 1 set of perlin noise (humidity)
-        //plateauElevationPercent = 0.50f;
-        //mainlandElevationPercent = 0.25f;
-        //seaLevelPercentChunk = 0.24f;
-
-        int elevationType = 0;
-        if (_yGlobalPos < seaLevelPercentChunk * VoxelData.ChunkHeight)
-            elevationType = 0; // ocean
-        else if (_yGlobalPos < mainlandElevationPercent * VoxelData.ChunkHeight + 10)
-            elevationType = 1; // lowland
-        else if(_yGlobalPos < plateauElevationPercent * VoxelData.ChunkHeight + 10)
-            elevationType = 2; // mainland
-        else
-            elevationType = 3; // highland
-
-        switch (elevationType)
-        {
-            case 0:
-                {
-                    if (humidity > 0 && humidity < 0.25f)
-                        _biome = 0; // coral reef
-                    else if (humidity > 0.25f && humidity < 0.5f)
-                        _biome = 0; // warm ocean
-                    else if (humidity > 0.5f && humidity < 0.75f)
-                        _biome = 0; // cold ocean
-                    else
-                        _biome = 0; // frozen ocean
-
-                    break;
-                }
-            case 1: // lowlands
-                {
-                    if (humidity > 0 && humidity < 0.25f)
-                        _biome = 10; // swamp
-                    else if (humidity > 0.25f && humidity < 0.5f)
-                        _biome = 11; // volcano
-                    else if (humidity > 0.5f && humidity < 0.75f)
-                        _biome = 9; // rainforest
-                    else
-                        _biome = 0; // desert
-
-                    break;
-                }
-            case 2: // mainland
-                {
-                    if (humidity > 0 && humidity < 0.25f)
-                        _biome = 5; // woods
-                    else if (humidity > 0.25f && humidity < 0.5f)
-                        _biome = 8; // fall forest
-                    else if (humidity > 0.5f && humidity < 0.75f)
-                        _biome = 4; // savanna
-                    else
-                        _biome = 1; // mesa
-                    break;
-                }
-            case 3: // highlands
-                {
-                    if (humidity > 0 && humidity < 0.25f)
-                        _biome = 6; // taiga
-                    else if (humidity > 0.25f && humidity < 0.5f)
-                        _biome = 6; // taiga
-                    else if (humidity > 0.5f && humidity < 0.75f)
-                        _biome = 6; // taiga
-                    else
-                        _biome = 6; // taiga
-                    break;
-                }
-        }
-
-        //if (humidity > 0 && humidity < 0.25f) // (arid)
-        //{
-
-        //    if (_yGlobalPos < _mainlandHeight) // lowlands
-        //        _biome = 10; // swamp
-        //    else if (_yGlobalPos < _highlandHeight) // midlands
-        //        _biome = 5; // woods
-        //    else if (_yGlobalPos >= _highlandHeight) // highlands
-        //        _biome = 2; // grassland
-        //}
-        //else if (humidity > 0.25f && humidity < 0.5f) // (dry)
-        //{
-        //    if (_yGlobalPos < _mainlandHeight) // lowlands
-        //        _biome = 11; // volcano
-        //    else if (_yGlobalPos < _highlandHeight) // midlands
-        //        _biome = 8; // fall forest
-        //    else if (_yGlobalPos >= _highlandHeight) // highlands
-        //        _biome = 1; // mesa
-        //}
-        //else if (humidity > 0.5f && humidity < 0.75f) // lowlands
-        //{
-        //    if (_yGlobalPos < _mainlandHeight) // (warm)
-        //        _biome = 9; // rainforest
-        //    else if (_yGlobalPos < _highlandHeight) // midlands
-        //        _biome = 4; // savanna
-        //    else if (_yGlobalPos >= _highlandHeight) // highlands
-        //        _biome = 6; // taiga
-        //}
-        //else // assumes value is between 0.75f and 1f (wet)
-        //{
-        //    if (_yGlobalPos < _mainlandHeight) // lowlands
-        //        _biome = 0; // desert
-        //    else if (_yGlobalPos < _highlandHeight) // midlands
-        //        _biome = 5; // woods
-        //    else if (_yGlobalPos >= _highlandHeight) // highlands
-        //        _biome = 3; // tundra
-        //}
-
-        return _biome;
-
-        // PLATEAU
-        // 03 Tundra
-        // 06 Taiga (trees)
-        // 01 Mesa
-        // 02 Grassland
-
-        // MAINLANDS
-        // 04 Savanna (trees)
-        // 08 Fall Forest (trees)
-        // 05 Woods (trees)
-
-        // LOWLANDS
-        // 00 Desert
-        // 09 Rainforest (trees)
-        // 11 Volcano
-        // 10 Swamp
-
-        // 07 Forest (unused), use as ocean floor biome???
-    }
-
     public int CalcBiome(Vector2 _xzCoords)
     {
         // Use 2D noise functions that input an x and y and returns a float, the float determines what biome is selected (procedural, so same every time but unique to a given seed)
@@ -1548,6 +1410,9 @@ public class World : MonoBehaviour
 
     public int GetBiome()
     {
+        // OLD CODE but has best biome distribution
+        // computes based on previously calculated humidity and temperature perlin noise maps
+
         // based on https://minecraft.fandom.com/wiki/Biome
         // From https://minecraft.fandom.com/wiki/Anvil_file_format
         // Minecraft Biomes are saved per X,Z column, rather than being calculated on the fly, which means they can be altered by tools
@@ -1559,49 +1424,32 @@ public class World : MonoBehaviour
         // // OLD ALGORITHM: Based on Minecraft, used temp and humidity from cloud calc...
         // // too often generates snowy biomes per minecraft youtube video
 
-        if (humidity > 0 && humidity < 0.25f) // (arid)
+        if (humidity > 0 && humidity < 0.333f) // dry (somewhat rare)
         {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 4; // Taiga
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 1; // Mesa
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
+            if (temperature > 0.666f && temperature < 1.0f) // cold
                 return 0; // Desert
-            else // assumes value is between 0f and 0.25f (hot)
-                return 8; // Volcano
-        }
-        else if (humidity > 0.25f && humidity < 0.5f) // (dry)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
-                return 4; // Taiga
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 6; // Fall Forest
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 3; // Woods
-            else // assumes value is between 0f and 0.25f (hot)
-                return 8; // Volcano
-        }
-        else if (humidity > 0.5f && humidity < 0.75f) // (temperate)
-        {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+            else if (temperature > 0.333f && temperature < 0.666f)
+                return 1; // Mesa
+            else // assumes value is between 0f and 0.333f // warm
                 return 2; // Savanna
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 6; // Fall Forest
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 3; // Woods
-            else // assumes value is between 0f and 0.25f (hot)
-                return 3; // Woods
         }
-        else // assumes value is between 0.75f and 1f (wet)
+        else if (humidity > 0.333f && humidity < 0.8f) // temperate (common biomes)
         {
-            if (temperature > 0.75f && temperature < 1.0f) // (freezing)
+            if (temperature > 0.95f && temperature < 1.0f) // rare
+                return 3; // Fall Forest
+            else if (temperature > 0.50f && temperature < 0.95f) // common
+                return 4; // Woods
+            else if (temperature > 0.25f && temperature < 0.50f) // common
+                return 5; // Taiga
+            else // assumes value is between 0f and 0.25f // somewhat rare
+                return 6; // Pine Forest
+        }
+        else // assumes value is between 0.8f and 1f // rare biomes
+        {
+            if (temperature > 0.5f && temperature < 0.5f) // cold
                 return 7; // Swamp
-            else if (temperature > 0.5f && temperature < 0.75f) // (cold)
-                return 3; // Woods
-            else if (temperature > 0.25f && temperature < 0.5f) // (warm)
-                return 7; // Swamp
-            else // assumes value is between 0f and 0.25f (hot)
-                return 4; // Taiga
+            else
+                return 8; // volcano
         }
     }
 

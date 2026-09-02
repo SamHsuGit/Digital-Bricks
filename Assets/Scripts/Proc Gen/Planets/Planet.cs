@@ -6,7 +6,6 @@ public class Planet : ScriptableObject
     [Header("Planet Attributes")]
     public int distToStar;
     public string planetName;
-    public Sprite[] sprites;
     public Material material;
     [Header("Surface Attributes")]
     public byte blockIDsubsurface;
@@ -21,9 +20,6 @@ public class Planet : ScriptableObject
     public byte blockIDBiome06;
     public byte blockIDBiome07;
     public byte blockIDBiome08;
-    public byte blockIDBiome09;
-    public byte blockIDBiome10;
-    public byte blockIDBiome11;
     [Header("Flora Attributes")]
     public bool hasAtmosphere;
     public bool isAlive; // controls if the world is hospitable to flora

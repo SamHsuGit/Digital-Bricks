@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Dark_Grey Cobblestone
   id: 38
-  dropID: 31
-  colorID: 31
+  dropID: 38
+  colorID: 38
   stackMax: 64
   isDrawn: 1
   isSolid: 1
