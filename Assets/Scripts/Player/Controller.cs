@@ -2473,10 +2473,10 @@ public class Controller : NetworkBehaviour
                     rb = ob.GetComponent<Rigidbody>();
                     rb.useGravity = true;
                     rb.isKinematic = true;
-                    //VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
-                    //    vc.isItem = true; // set true to spin object
+                    VoxelCollider vc = ob.GetComponentInChildren<VoxelCollider>();
+                        vc.isItem = true; // set true to spin object
                     ob.transform.rotation = Quaternion.Euler(0, 0, 0); //zero rotation
-                    ob.transform.localScale = new Vector3(1, 1, 1) * 1.0f; // scale
+                    ob.transform.localScale = new Vector3(1, 1, 1) * 0.75f; // scale
                     ob.transform.position += new Vector3(0, 0, 0) * 0.25f; // move to center of voxel position
                     break;
                 }
