@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 3039 2x2s
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 1
+  isItemRecipeFromVoxel: 0
+  pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
     slot1: 3040

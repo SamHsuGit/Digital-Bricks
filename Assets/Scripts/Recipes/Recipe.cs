@@ -7,6 +7,7 @@ public class Recipe : ScriptableObject
 {
     public bool isPlacedBrick;
     public bool isItemRecipeFromVoxel;
+    public AudioClip pickupSound;
     public RecipeShape[] recipeShapes;
     public byte outputID;
     public int outputPlacedBrickName;
