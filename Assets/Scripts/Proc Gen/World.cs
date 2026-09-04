@@ -122,7 +122,7 @@ public class World : MonoBehaviour
     public Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
     private Dictionary<Vector3, GameObject> objectDictionary = new Dictionary<Vector3, GameObject>();
 
-    private Thread ChunkRedrawThread;
+    private Thread ChunkUpdateThread;
     private Camera mainCamera;
     private Stopwatch worldLoadStopWatch;
     private Stopwatch chunkDrawStopWatch;
@@ -343,14 +343,15 @@ public class World : MonoBehaviour
         }
 
         LoadWorld();
+        SaveSystem.SaveWorldDataToFile(worldData, this);
         worldPlayer.transform.position = defaultSpawnPosition;
 
         JoinPlayer(worldPlayer); // needed to load world before player joins?
 
         if (multithreading)
         {
-            ChunkRedrawThread = new Thread(new ThreadStart(ThreadedUpdate));
-            ChunkRedrawThread.Start();
+            ChunkUpdateThread = new Thread(new ThreadStart(ThreadedUpdate));
+            ChunkUpdateThread.Start();
         }
 
         globalLighting.gameObject.SetActive(true);
@@ -721,7 +722,7 @@ public class World : MonoBehaviour
         }
     }
 
-    public void AddChunkToUpdate(Chunk chunk)
+    public void AddChunkToUpdate(Chunk chunk) // used to force a chunk to update, maybe like when growing a tree?
     {
         AddChunkToUpdate(chunk, false);
     }
@@ -824,9 +825,44 @@ public class World : MonoBehaviour
         }
     }
 
-    void ThreadedUpdate() // the loop where the chunk draw occurs, this operation is threaded.
+    void ThreadedChunkSave()
     {
-        while (true)
+        // make a list of new chunks to be loaded, called chunksToSave, in the Update game loop
+        // this allows for new chunks to be saved in the background before the player reaches them
+
+        while (true) // infinite loop
+        {
+            // if (chunksToSave.Count > 0)
+            {
+               //SaveChunks();
+            }
+        }
+    }
+
+    void ThreadedChunkLoad()
+    {
+        // make a list of new chunks to be loaded, called chunksToLoad, in the Update game loop
+        // this allows for new chunks to be loaded in the background before the player reaches them
+        
+        // consider using c# tasks?
+        // Task task;
+        //Task = Task.Run(LoadChunk);
+
+        while (true) // infinite loop
+        {
+            // if (chunksToLoad.Count > 0)
+            {
+               //LoadChunks(); 
+            }
+        }
+    }
+
+    void ThreadedUpdate()
+    {
+        // the loop where the chunk draw occurs, this operation is on a separate thread from the main thread
+        // main thread does things like take input and move character, so we move this off the main thread to keep things smooth
+
+        while (true) // infinite loop
         {
             if (!applyingModifications)
                 ApplyModifications();
@@ -1652,7 +1688,7 @@ public class World : MonoBehaviour
         {
             if (multithreading)
             {
-                ChunkRedrawThread.Abort();
+                ChunkUpdateThread.Abort();
             }
         }
     }
