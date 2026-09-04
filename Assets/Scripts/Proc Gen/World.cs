@@ -32,6 +32,9 @@ public class World : MonoBehaviour
     [HideInInspector] public float temperature = 0; // temperature, defines biome
     [HideInInspector] public float humidity = 0; // humidity, defines biome + cloud threshold
     [HideInInspector] public bool isAir = false; // used for 3D Perlin Noise pass
+    [HideInInspector] public float continentalnessFactor = 0;
+    [HideInInspector] public float erosionFactor = 0;
+    [HideInInspector] public float peaksAndValleysFactor = 0;
 
     // eventually derive these values from original perlin noise samples
     private int terrainHeight = 32; // defines height of terrain in voxels (eventually derive from depth + peaks and valleys = terrainHeight like minecraft?)
@@ -952,14 +955,22 @@ public class World : MonoBehaviour
         byte voxelValue = 0;
 
         // 3D noise aka swiss cheese top and bottom only
-        if(globalPos.y > VoxelData.ChunkHeight * 0.5f && globalPos.y < VoxelData.ChunkHeight * 0.7f)
-            voxelValue = 0;
+        //if(globalPos.y > VoxelData.ChunkHeight * 0.5f && globalPos.y < VoxelData.ChunkHeight * 0.7f)
+        //    voxelValue = 0;
+        //else
+        //{
+        //    if(Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f))
+        //    voxelValue = 13;
+        //    else
+        //        voxelValue = 0;
+        //}
+
+        if (Noise.Get3DPerlin(globalPos, 12f, 0.1f, 0.45f))
+            return 0;
         else
         {
-            if(Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f))
-            voxelValue = 13;
-            else
-                voxelValue = 0;
+            terrainHeight = globalPos.y;
+            voxelValue = biome.surfaceBlock;
         }
 
         return voxelValue;
@@ -1014,22 +1025,6 @@ public class World : MonoBehaviour
         // else
         //     return 0;
 
-        ///* FARLANDS PASS */
-        // uses player transform coordinates (0 to 3200 for world size of 200)
-        farlandsDetected = false;
-        if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
-            return FarlandsPosX(globalPos);
-        else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
-            return FarlandsNegX(globalPos);
-        else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
-            return FarlandsPosZ(globalPos);
-        else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
-        {
-            voxelValue = FarlandsNegZ(globalPos);
-            if (voxelValue == 0)
-                return voxelValue;
-        }
-
         // reserve space for imported base file
         if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos))
             return 0;
@@ -1064,6 +1059,22 @@ public class World : MonoBehaviour
             biome = biomes[biomeID];
         }
 
+        ///* FARLANDS PASS */
+        // uses player transform coordinates (0 to 3200 for world size of 200)
+        farlandsDetected = false;
+        if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+            return FarlandsPosX(globalPos);
+        else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
+            return FarlandsNegX(globalPos);
+        else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+            return FarlandsPosZ(globalPos);
+        else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
+        {
+            voxelValue = FarlandsNegZ(globalPos);
+            if (voxelValue == 0)
+                return voxelValue;
+        }
+
         /* TERRAIN HEIGHT CALC */
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
         // Separates code to more efficiently process voxels
@@ -1071,6 +1082,19 @@ public class World : MonoBehaviour
             terrainHeight = VoxelData.ChunkHeight - 1;
         else
             terrainHeight = CalcTerrainHeight(xzCoords);
+
+        //// carve out overhangs
+        //if (continentalnessFactor > seaLevelPercentChunk && continentalnessFactor < (seaLevelPercentChunk + plateauElevationPercent - step))
+        //{
+        // //Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
+        //    if (Noise.Get3DPerlin(globalPos, 12f, 0.01f, 0.6f))
+        //        return 0;
+        //    else
+        //    {
+        //        //terrainHeight = Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight) + 1;
+        //        voxelValue = biome.surfaceBlock;
+        //    }
+        //}
 
         ///* ABOVE TERRAINHEIGHT *///
         if (yGlobalPos > terrainHeight)
@@ -1089,23 +1113,23 @@ public class World : MonoBehaviour
                     return 0;
             }
 
-            // FLOATING ISLANDS ABOVE OCEANS
-            int floatingIslandHeight = Mathf.FloorToInt(floatingIslandHeightPercent * VoxelData.ChunkHeight);
-            if (yGlobalPos <= floatingIslandHeight && yGlobalPos > floatingIslandHeight - 5 && continentalness < 0.5f)
-            {
-                if (Noise.Get3DPerlin(globalPos, 12f, 0.1f, 0.6f))
-                {
-                    // using voxel values allows ores to generate?
-                    voxelValue = 3;
-                    if (yGlobalPos == floatingIslandHeight)
-                    {
-                        voxelValue = biome.surfaceBlock;
-                        terrainHeight = floatingIslandHeight;
-                    }
-                }
-                else
-                    voxelValue = 0; // carve out air using 3D perlin noise
-            }
+            //// FLOATING ISLANDS ABOVE OCEANS
+            //int floatingIslandHeight = Mathf.FloorToInt(floatingIslandHeightPercent * VoxelData.ChunkHeight);
+            //if (yGlobalPos <= floatingIslandHeight && yGlobalPos > floatingIslandHeight - 5 && continentalness < 0.5f)
+            //{
+            //    if (Noise.Get3DPerlin(globalPos, 12f, 0.1f, 0.6f))
+            //    {
+            //        // using voxel values allows ores to generate?
+            //        voxelValue = 3;
+            //        if (yGlobalPos == floatingIslandHeight)
+            //        {
+            //            voxelValue = biome.surfaceBlock;
+            //            terrainHeight = floatingIslandHeight;
+            //        }
+            //    }
+            //    else
+            //        voxelValue = 0; // carve out air using 3D perlin noise
+            //}
 
             if (voxelValue == 0 && continentalness < 0.5f)
             {
@@ -1113,7 +1137,7 @@ public class World : MonoBehaviour
                     return worldData.blockIDwater; // water
             }
         }
-        else
+        else // BELOW OR AT TERRAIN HEIGHT
         {
             isAir = GetIsAir(globalPos); // base terrain generation used to determine how much 3d noise should be used to carve out terrain (higher density at lower elevations)
             if (isAir)
@@ -1186,6 +1210,9 @@ public class World : MonoBehaviour
                 // Larger items take priority and so are ordered last
                 // add structures like monoliths and flora like trees and plants and mushrooms
                 // uses the tallest object height to limit the altitude at which objects can spawn
+                if (terrainHeightPercentChunk < seaLevelPercentChunk)
+                    voxelValue = 32; // sand block for underwater at terrainHeight
+
                 if (terrainHeightPercentChunk > seaLevelPercentChunk && drawSurfaceObjects && worldData.isAlive) // only place flora on worlds marked isAlive or if biome is monolith
                 {
                     // fertility adds random values to determine which surface object to generate and what height it will be
@@ -1286,9 +1313,6 @@ public class World : MonoBehaviour
     public int CalcTerrainHeight(Vector2 xzCoords)
     {
         //float continentScaleFactor;
-        float continentalnessFactor;
-        float erosionFactor;
-        float peaksAndValleysFactor;
 
         //continentScaleFactor = Noise.Get2DPerlin(xzCoords, 4, 0.01f) * 0.1f; // scale of noise is 0.01 to sample large patches, determines continent size (large or islands) - was not used as screwed up terrain beaches
         // use math operation to change continentScaleFactor from value between 0 and 1 to value between 0.08 and 0.0
@@ -1460,27 +1484,27 @@ public class World : MonoBehaviour
         // // OLD ALGORITHM: Based on Minecraft, used temp and humidity from cloud calc...
         // // too often generates snowy biomes per minecraft youtube video
 
-        if (humidity > 0 && humidity < 0.333f) // dry (somewhat rare)
+        if (humidity > 0 && humidity < 0.333f) // dry
         {
-            if (temperature > 0.666f && temperature < 1.0f) // cold
+            if (temperature > 0.5f && temperature < 1.0f) // cold
                 return 0; // Desert
-            else if (temperature > 0.333f && temperature < 0.666f)
+            else if (temperature > 0.45f && temperature < 0.5f)
                 return 1; // Mesa
-            else // assumes value is between 0f and 0.333f // warm
+            else // assumes value is between 0f and 0.45f // warm
                 return 2; // Savanna
         }
-        else if (humidity > 0.333f && humidity < 0.8f) // temperate (common biomes)
+        else if (humidity > 0.333f && humidity < 0.7f) // temperate (common biomes)
         {
-            if (temperature > 0.95f && temperature < 1.0f) // rare
+            if (temperature > 0.78f && temperature < 1.0f)
                 return 3; // Fall Forest
-            else if (temperature > 0.50f && temperature < 0.95f) // common
+            else if (temperature > 0.50f && temperature < 0.78f) // common
                 return 4; // Woods
-            else if (temperature > 0.25f && temperature < 0.50f) // common
+            else if (temperature > 0.45f && temperature < 0.50f) // common
                 return 5; // Taiga
-            else // assumes value is between 0f and 0.25f // somewhat rare
+            else // assumes value is between 0f and 0.45f
                 return 6; // Pine Forest
         }
-        else // assumes value is between 0.8f and 1f // rare biomes
+        else // assumes value is between 0.7f and 1f // rare biomes
         {
             if (temperature > 0.5f && temperature < 0.5f) // cold
                 return 7; // Swamp

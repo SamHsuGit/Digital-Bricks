@@ -415,7 +415,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 009
+      name: 037
       rect:
         serializedVersion: 2
         x: 2650
@@ -1031,7 +1031,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 037
+      name: 009
       rect:
         serializedVersion: 2
         x: 795
@@ -1171,7 +1171,7 @@ TextureImporter:
         width: 336
         height: 380
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1209,7 +1209,7 @@ TextureImporter:
       006: -2610892883229420862
       007: 1159639000735656762
       008: 6931913342542670997
-      009: 4665620361206564391
+      009: 870625657
       010: 6804417665525417643
       011: 8874480006941658528
       013: -1266807616821673123
@@ -1236,7 +1236,7 @@ TextureImporter:
       034: -2100503086
       035: -1690674317
       036: 924901225
-      037: 870625657
+      037: 4665620361206564391
       038: -36127822
       039: 853488983
       040: -1497405908
