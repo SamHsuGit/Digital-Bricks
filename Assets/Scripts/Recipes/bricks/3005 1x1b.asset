@@ -17,36 +17,96 @@ MonoBehaviour:
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
-    slot1: 3024
+    slot1: 3001
     slot2: 0
     slot3: 0
-    slot4: 3024
+    slot4: 0
     slot5: 0
     slot6: 0
-    slot7: 3024
+    slot7: 0
     slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
-    slot2: 3024
+    slot2: 3001
     slot3: 0
     slot4: 0
-    slot5: 3024
+    slot5: 0
     slot6: 0
     slot7: 0
-    slot8: 3024
+    slot8: 0
     slot9: 0
   - is2x2: 0
     slot1: 0
     slot2: 0
-    slot3: 3024
+    slot3: 3001
     slot4: 0
     slot5: 0
-    slot6: 3024
+    slot6: 0
     slot7: 0
     slot8: 0
-    slot9: 3024
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 3001
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 3001
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 3001
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 3001
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 3001
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 3001
   outputID: 6
   outputPlacedBrickName: 3005
-  outputQty: 1
+  outputQty: 8
   studs: 3

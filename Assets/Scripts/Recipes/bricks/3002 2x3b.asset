@@ -96,6 +96,126 @@ MonoBehaviour:
     slot7: 3005
     slot8: 3005
     slot9: 3005
+  - is2x2: 0
+    slot1: 3003
+    slot2: 3004
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 3004
+    slot2: 3003
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 3003
+    slot3: 3004
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 3004
+    slot3: 3003
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 3003
+    slot5: 3004
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 3004
+    slot5: 3003
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 3003
+    slot6: 3004
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 3004
+    slot6: 3003
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 3003
+    slot8: 3004
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 3004
+    slot8: 3003
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 3003
+    slot9: 3004
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 3004
+    slot9: 3003
   outputID: 6
   outputPlacedBrickName: 3002
   outputQty: 1
