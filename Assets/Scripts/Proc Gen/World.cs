@@ -879,7 +879,7 @@ public class World : MonoBehaviour
     {
         lock (ChunkUpdateThreadLock)
         {
-            chunksToUpdate[0].UpdateChunk(); // draw previous chunks
+            chunksToUpdate[0].UpdateChunk(); // Update Chunk (draw previous chunks)
 
             if (!activeChunks.Contains(chunksToUpdate[0].coord)) // if the activeChunks does not contain the chunksToUpdate
                 activeChunks.Add(chunksToUpdate[0].coord); // add it to activeChunks at end of list

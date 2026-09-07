@@ -51,7 +51,7 @@ public class Chunk
         chunkObject.tag = "Chunk";
         position = chunkObject.transform.position;
 
-        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
+        chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true); // requests the chunkData when adding a new chunk (either loads from memory or calculates new data)
         chunkData.chunk = this;
 
         // when chunk is first created loop through all voxels in chunk and if they can be active, add to list
