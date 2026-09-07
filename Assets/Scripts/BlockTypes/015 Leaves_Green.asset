@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Leaves_Green
   id: 15
-  dropID: 0
+  dropID: 8
   colorID: 8
   stackMax: 64
   isDrawn: 1

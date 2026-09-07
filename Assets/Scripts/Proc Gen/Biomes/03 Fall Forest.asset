@@ -31,14 +31,26 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   largeFlora:
-  - name: TreeFall
+  - name: TreeFall Red
     floraIndex: 14
     leavesBlockID: 40
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.6
+    floraZoneThreshold: 0.8
     floraPlacementScale: 15
     floraPlacementThreshold: 0.8
     placementOffset: 1
+    minHeight: 14
+    maxHeight: 24
+    minRadius: 4
+    maxRadius: 6
+  - name: TreeFall Yellow
+    floraIndex: 14
+    leavesBlockID: 41
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.8
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.8
+    placementOffset: 41
     minHeight: 14
     maxHeight: 24
     minRadius: 4
