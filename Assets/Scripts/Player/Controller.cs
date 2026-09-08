@@ -1728,7 +1728,9 @@ public class Controller : NetworkBehaviour
             // remove temp piece
             if (!heldObjectIsBrick)
                 Destroy(placedBrick);
+            heldObjectIsBrick = false;
             placedBrick = null;
+            blockID = 0;
             return;
         }
 
@@ -1742,6 +1744,7 @@ public class Controller : NetworkBehaviour
             // remove temp piece
             if (!heldObjectIsBrick)
                 Destroy(placedBrick);
+            heldObjectIsBrick = false;
             placedBrick = null;
             blockID = 0;
             return;
@@ -2991,6 +2994,7 @@ public class Controller : NetworkBehaviour
         playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.1f;
         playerCamera.transform.localPosition = Vector3.zero; // reset camera position
         playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face forwards
+        playerCameraOrigin.transform.localEulerAngles = Vector3.zero; // reset camera origin rotation
     }
 
     void CamModePhoto()
@@ -3006,6 +3010,7 @@ public class Controller : NetworkBehaviour
         charController.enabled = false;
         charController.enabled = true;
 
+        playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face forwards
         playerCameraOrigin.transform.localEulerAngles = Vector3.zero; // reset camera origin rotation
     }
 
@@ -3025,6 +3030,8 @@ public class Controller : NetworkBehaviour
         playerCameraOrigin.transform.localPosition = transform.up * colliderHeight * 1.2f; // + transform.right * colliderRadius * 1.1f; //cam origin walks
 
         playerCamera.transform.localPosition = new Vector3(0, colliderHeight, tpsDist); // move camera behind character over shoulder
+
+        playerCameraOrigin.transform.localEulerAngles = Vector3.zero; // reset camera origin rotation
         playerCamera.transform.eulerAngles = Vector3.zero; // reset camera rotation to face fowards
     }
 
