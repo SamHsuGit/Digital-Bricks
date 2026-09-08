@@ -97,6 +97,7 @@ public class DragAndDropHandler : MonoBehaviour {
         Cursor.lockState = CursorLockMode.None;
         
         crafting.uiMenus[0].SetActive(true); // show output slot
+        crafting.uiMenus[4].SetActive(true); // show destroy slot
         crafting.uiMenus[controller.inventoryUIMode].SetActive(true); // turn on ui menu with associated inventoryUIMode
         
     }
@@ -153,8 +154,14 @@ public class DragAndDropHandler : MonoBehaviour {
         if(clickedSlot == null)
             return;
 
+        if (clickedSlot != null && clickedSlot.isDestroy)
+        {
+            crafting.RightClickedDestroySlot(cursorSlot);
+            return;
+        }
+
         // if right clicked empty slot and holding items
-        if(cursorSlot.itemSlot.HasItem && !clickedSlot.HasItem) 
+        if (cursorSlot.itemSlot.HasItem && !clickedSlot.HasItem) 
         {
             // drop 1 item into slot and subtract one from stack
             cursorSlot.itemSlot.Take(1);
@@ -276,6 +283,9 @@ public class DragAndDropHandler : MonoBehaviour {
         if(clickedSlot != null && clickedSlot.HasItem && clickedSlot.isOutput)
             crafting.ClickedOutputSlot();
 
+        if (clickedSlot != null && clickedSlot.isDestroy)
+            crafting.ClickedDestroySlot(cursorSlot);
+
         // if clicked air while holding block
         // disabled for placedBricks until placedBrick meshes can be drawn for drops
         if (clickedSlot == null && cursorSlot.HasItem && !cursorSlot.itemSlot.stack.isPlacedBrick) 
@@ -378,8 +388,8 @@ public class DragAndDropHandler : MonoBehaviour {
             //Debug.Log("found object " + result.gameObject.name + " of tag: " + result.gameObject.tag);
             if (result.gameObject.tag == "UIItemSlot")
             {
-                UIItemSlot returnSlot = result.gameObject.GetComponent<UIItemSlot>();
-                if(returnSlot.itemSlot.HasItem)
+                UIItemSlot returnSlot = result.gameObject.GetComponent<UIItemSlot>(); // destroy slot returning null?
+                if ( returnSlot != null && returnSlot.itemSlot.HasItem)
                 {
                     cursorSlotIsPlacedBlock = returnSlot.itemSlot.stack.isPlacedBrick;
                     cursorSlotPlacedBlockName = returnSlot.itemSlot.stack.placedBrickID;

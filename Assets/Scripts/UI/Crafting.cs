@@ -11,6 +11,7 @@ public class Crafting : MonoBehaviour
     public UIItemSlot fuelSlot;
     public UIItemSlot inputSlot;
     public UIItemSlot outputSlot;
+    public UIItemSlot destroySlot;
     public UIItemSlot craft3x3TopLeft;
     public UIItemSlot craft3x3TopMid;
     public UIItemSlot craft3x3TopRight;
@@ -394,6 +395,22 @@ public class Crafting : MonoBehaviour
                 if(slot.itemSlot.stack.amount <= 0)
                     slot.itemSlot.EmptySlot();
             }
+        }
+    }
+
+    public void ClickedDestroySlot(UIItemSlot slot)
+    {
+        if (slot.itemSlot.HasItem)
+            slot.itemSlot.EmptySlot();
+    }
+
+    public void RightClickedDestroySlot(UIItemSlot slot)
+    {
+        if (slot.itemSlot.HasItem)
+        {
+            slot.itemSlot.Take(1);
+            if (slot.itemSlot.stack.amount <= 0)
+                slot.itemSlot.EmptySlot();
         }
     }
 }

@@ -10,6 +10,7 @@ public class UIItemSlot : MonoBehaviour
 
     public bool isCrafting = false;
     public bool isOutput = false;
+    public bool isDestroy = false;
     public bool isInventory = false;
 
     public ItemSlot itemSlot;
