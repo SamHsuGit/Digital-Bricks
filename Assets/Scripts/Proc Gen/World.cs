@@ -148,6 +148,7 @@ public class World : MonoBehaviour
     private const float step = 0.05f;
     private const float continentalnessAmplitudeA = 0.4f; // heights of peaks (higher = higher)
     private const float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island)
+    private const float continentalnessOffset = 64f;
 
     //private const int LOD0threshold = 1;
 
@@ -1056,21 +1057,21 @@ public class World : MonoBehaviour
             biome = biomes[biomeID];
         }
 
-        ///* FARLANDS PASS */
-        // uses player transform coordinates (0 to 3200 for world size of 200)
-        farlandsDetected = false;
-        if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
-            return FarlandsPosX(globalPos);
-        else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
-            return FarlandsNegX(globalPos);
-        else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
-            return FarlandsPosZ(globalPos);
-        else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
-        {
-            voxelValue = FarlandsNegZ(globalPos);
-            if (voxelValue == 0)
-                return voxelValue;
-        }
+        /////* FARLANDS PASS */ // Removed
+        //// uses player transform coordinates (0 to 3200 for world size of 200)
+        //farlandsDetected = false;
+        //if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+        //    return FarlandsPosX(globalPos);
+        //else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
+        //    return FarlandsNegX(globalPos);
+        //else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+        //    return FarlandsPosZ(globalPos);
+        //else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
+        //{
+        //    voxelValue = FarlandsNegZ(globalPos);
+        //    if (voxelValue == 0)
+        //        return voxelValue;
+        //}
 
         /* TERRAIN HEIGHT CALC */
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
@@ -1323,7 +1324,7 @@ public class World : MonoBehaviour
         // continentalness = 1 (high land)
         // want to create high continentalness near x = 0, z = 0 but perlin noise does not guarantee this. Want to use something more regular like sinusoid as a function of both x and z coords
         // as distance from spawn increases continentalness decreases aka more ocean and then goes back up again in sinusoid
-        continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Cos(xzCoords.x * continentalnessFrequencyB) + Mathf.Cos(xzCoords.y * continentalnessFrequencyB)), 0f, 1f);
+        continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Sin((xzCoords.x - continentalnessOffset) * continentalnessFrequencyB) + Mathf.Sin((xzCoords.y - continentalnessOffset) * continentalnessFrequencyB)), 0f, 1f);
 
         erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast)
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
