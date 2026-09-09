@@ -772,7 +772,7 @@ public class World : MonoBehaviour
     {
         playerLastChunkCoords[player] = playerChunkCoord;
 
-        // if toggled, undraw chunks to save memory
+        // if toggled, delete unused chunks to save memory
         if (undrawVoxels)
         {
             previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
