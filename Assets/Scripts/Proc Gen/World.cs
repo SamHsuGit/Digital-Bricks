@@ -143,9 +143,9 @@ public class World : MonoBehaviour
     private const float seaLevelPercentChunk = 0.24f;
     private const float cloudHeightPercent = 0.76f;
     private const float floatingIslandHeightPercent = 0.60f;
-    private const float mainlandElevationPercent = 0.25f;
-    private const float plateauElevationPercent = 0.50f;
-    private const float step = 0.05f;
+    private const float mainlandElevationPercent = 0.05f;
+    private const float plateauElevationPercent = 0.25f;
+    private const float step = 0.01f;
     private const float continentalnessAmplitudeA = 0.4f; // heights of peaks (higher = higher)
     private const float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island)
     private const float continentalnessOffset = 64f;
@@ -530,7 +530,7 @@ public class World : MonoBehaviour
         else if (!Settings.WebGL)
             loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); // optimal loadDistance provides enough world to hide edges with low load time (7 sec)
         else
-            loadDistance = Mathf.CeilToInt(viewDistance * 1.333f);
+            loadDistance = Mathf.CeilToInt(viewDistance * 1.333f * 2);
 
         if (!SettingsStatic.LoadedSettings.developerMode)
             loadDistance = Mathf.CeilToInt(viewDistance * 2); // larger load distance for regular mode allows chunks to be pre-computed for better performance
