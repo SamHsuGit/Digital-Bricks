@@ -71,29 +71,29 @@ MonoBehaviour:
     minHeight: 1
     maxHeight: 9
     scale: 1
-    threshold: 0.59
-    noiseOffset: 23
+    threshold: 0.56
+    noiseOffset: 123
   - nodeName: Ore Crystal blue
     blockID: 25
     minHeight: 1
     maxHeight: 9
     scale: 1
-    threshold: 0.59
-    noiseOffset: 25
+    threshold: 0.56
+    noiseOffset: 225
   - nodeName: Ore Crystal orange
     blockID: 27
     minHeight: 1
     maxHeight: 9
     scale: 1
-    threshold: 0.59
-    noiseOffset: 27
+    threshold: 0.56
+    noiseOffset: 327
   - nodeName: Ore Crystal red
     blockID: 29
     minHeight: 1
     maxHeight: 9
     scale: 1
-    threshold: 0.59
-    noiseOffset: 29
+    threshold: 0.56
+    noiseOffset: 429
   - nodeName: Lava
     blockID: 36
     minHeight: 1

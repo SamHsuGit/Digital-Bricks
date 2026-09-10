@@ -93,12 +93,15 @@ public class World : MonoBehaviour
     // PRIVATE VARIABLES
     private float biomeScale;
     private float biomeOffset;
+    private float step;
+    private int upperWorldLimit;
+    private int lowerWorldLimit;
     private int numberOfBiomes;
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
     private bool applyingModifications;
     private int loadDistance;
-    private bool undrawVBO = false;
+    private bool undrawVBO = true;
     private bool undrawVoxels = true;
     private bool farlandsDetected = false;
 
@@ -138,16 +141,17 @@ public class World : MonoBehaviour
     private Vector2[] peaksAndValleysSplinePoints;
     private Vector2[] weirdnessSplinePoints;
     private Vector2[] biomeSplinePoints;
+    private Vector2[] continentSizeSplinePoints;
 
     // hard coded values
+    private const int airBorderInChunks = 2;
     private const float seaLevelPercentChunk = 0.24f;
     private const float cloudHeightPercent = 0.76f;
     private const float floatingIslandHeightPercent = 0.60f;
     private const float mainlandElevationPercent = 0.05f;
     private const float plateauElevationPercent = 0.25f;
-    private const float step = 0.01f;
     private const float continentalnessAmplitudeA = 0.4f; // heights of peaks (higher = higher)
-    private const float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island)
+    private float continentalnessFrequencyB = 0.02f; // size of islands (higher value = smaller island) varies with worldcoord from 0.01 to 0.1
     private const float continentalnessOffset = 64f;
 
     //private const int LOD0threshold = 1;
@@ -159,6 +163,11 @@ public class World : MonoBehaviour
 
     private void Awake()
     {
+        step = 1f / VoxelData.ChunkHeight;
+        worldSizeInChunks = VoxelData.WorldSizeInChunks;
+        upperWorldLimit = worldSizeInChunks - airBorderInChunks - 1;
+        lowerWorldLimit = airBorderInChunks + 1;
+
         singleChunk = true;
         drawVBO = false;
 
@@ -177,7 +186,6 @@ public class World : MonoBehaviour
             undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 4;
             multithreading = true;
         }
-        worldSizeInChunks = VoxelData.WorldSizeInChunks;
         debugTimer = "notMeasured";
 
         if(Settings.WebGL)
@@ -231,52 +239,37 @@ public class World : MonoBehaviour
         continentalnessSplinePoints = new Vector2[] // low continentalness = ocean
         {
             // rules: leave 0.2 between shelves, do not increase more than 0.3 between shelves
-            // earth's surface is 71% covered by water, for aesthetic gameplay purposes make 50% of world ocean
+            // for aesthetic gameplay purposes make 50% of world ocean
             // use noise to vary scale of continentalness to make large continents or small islands
-            // new Vector2(0.00f, seaLevelPercentChunk + mainlandElevationPercent * 2 + step), // cliffs (broken)
-            // new Vector2(0.10f, seaLevelPercentChunk + mainlandElevationPercent * 2), // cliffs (broken)
-            new Vector2(0.00f, seaLevelPercentChunk - 0.20f), // deep ocean
-            new Vector2(0.10f, seaLevelPercentChunk - 0.20f), // deep ocean only 10% to avoid interfering with caves
-            new Vector2(0.11f, seaLevelPercentChunk - 0.10f), // ocean
-            new Vector2(0.49f, seaLevelPercentChunk - 0.10f), // ocean is majority to create continents
-            new Vector2(0.50f, seaLevelPercentChunk), // beach 2% and has the chance to get eroded into cliff
-            new Vector2(0.51f, seaLevelPercentChunk),
-            new Vector2(0.58f, seaLevelPercentChunk),
-            new Vector2(0.586f, seaLevelPercentChunk + step),
-            new Vector2(0.589f, seaLevelPercentChunk + mainlandElevationPercent), // mainland 40%
-            new Vector2(0.80f, seaLevelPercentChunk + mainlandElevationPercent + step),
-            new Vector2(0.89f, seaLevelPercentChunk + plateauElevationPercent), // plateau 10%
-            new Vector2(1.00f, seaLevelPercentChunk + plateauElevationPercent + step),
+            new Vector2(0.000f, seaLevelPercentChunk - 0.20f), // deep ocean
+            new Vector2(0.100f, seaLevelPercentChunk - 0.18f), // deep ocean
+            new Vector2(0.110f, seaLevelPercentChunk - 0.06f), // ocean
+            new Vector2(0.490f, seaLevelPercentChunk - 0.05f), // ocean
+            new Vector2(0.500f, seaLevelPercentChunk), // mainland height
+            new Vector2(0.699f, seaLevelPercentChunk + step * 4),
+            new Vector2(0.700f, seaLevelPercentChunk + plateauElevationPercent), // plateau
+            new Vector2(1.000f, seaLevelPercentChunk + plateauElevationPercent + step),
         };
 
         // badlands, eroded badlands -  controlled by erosion
         // river - controlled by erosion
         erosionSplinePoints = new Vector2[] // high erosion = lowers terrain height to create rivers
         {
-            new Vector2(0.00f, 0.61f),
-            new Vector2(0.10f, 0.60f),
-            new Vector2(0.30f, 0.50f),
-            new Vector2(0.35f, 0.55f),
-            new Vector2(0.40f, 0.11f),
-            new Vector2(0.70f, 0.10f),
-            new Vector2(0.72f, 0.30f),
-            new Vector2(0.80f, 0.30f),
-            new Vector2(0.82f, 0.10f),
-            new Vector2(0.90f, 0.05f),
-            new Vector2(1.00f, 0.00f),
+            new Vector2(0.00f, 0.00f),
+            new Vector2(0.49f, 0.00f),
+            new Vector2(0.50f, step * 5f),
+            new Vector2(1.00f, step * 10f),
         };
 
         // jagged peaks - controlled by peaks and valleys
         peaksAndValleysSplinePoints = new Vector2[] // adds peaks
         {
             new Vector2(0.00f, 0.00f),
-            new Vector2(0.05f, 0.34f),
-            new Vector2(0.10f, 0.35f),
-            new Vector2(0.35f, 0.36f),
-            new Vector2(0.50f, 0.48f),
-            new Vector2(0.68f, 0.60f),
-            new Vector2(0.90f, 0.69f),
-            new Vector2(1.00f, 0.99f),
+            new Vector2(0.59f, 0.00f),
+            new Vector2(0.60f, 0.10f),
+            new Vector2(0.89f, 0.20f),
+            new Vector2(0.90f, 0.40f),
+            new Vector2(1.00f, 0.50f),
         };
 
         // weirdness - exposes 3d noise above terrain elevation
@@ -299,6 +292,16 @@ public class World : MonoBehaviour
             new Vector2(0.70f, 0.70f), // 06 Pine Forest
             new Vector2(0.80f, 0.80f), // 07 Swamp
             new Vector2(0.90f, 0.90f), // 08 Volcano
+        };
+
+        continentSizeSplinePoints = new Vector2[]
+        {
+            new Vector2(0.00f, 0.5f),
+            new Vector2(0.10f, 0.5f),
+            new Vector2(0.11f, 0.07f),
+            new Vector2(0.30f, 0.07f),
+            new Vector2(0.31f, 0.02f),
+            new Vector2(1.00f, 0.009f),
         };
     }
 
@@ -1023,6 +1026,18 @@ public class World : MonoBehaviour
         // else
         //     return 0;
 
+        
+
+        // Air border
+        if (globalPos.x > upperWorldLimit * VoxelData.ChunkWidth)
+            return 0;
+        else if (globalPos.x < lowerWorldLimit * VoxelData.ChunkWidth)
+            return 0;
+        else if (globalPos.z > upperWorldLimit * VoxelData.ChunkWidth)
+            return 0;
+        else if (globalPos.z < lowerWorldLimit * VoxelData.ChunkWidth)
+            return 0;
+
         // reserve space for imported base file
         if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos))
             return 0;
@@ -1324,17 +1339,18 @@ public class World : MonoBehaviour
         // continentalness = 1 (high land)
         // want to create high continentalness near x = 0, z = 0 but perlin noise does not guarantee this. Want to use something more regular like sinusoid as a function of both x and z coords
         // as distance from spawn increases continentalness decreases aka more ocean and then goes back up again in sinusoid
+        continentalnessFrequencyB = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 0, 0.08f), continentSizeSplinePoints);
         continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Sin((xzCoords.x - continentalnessOffset) * continentalnessFrequencyB) + Mathf.Sin((xzCoords.y - continentalnessOffset) * continentalnessFrequencyB)), 0f, 1f);
 
-        erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast)
+        //erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast) // broken
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
 
         // use spline points to determine terrainHeight for each component
         // from example https://www.youtube.com/watch?v=CSa5O6knuwI&t=1360s
-        continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints);
-        erosionFactor = GetValueFromSplinePoints(erosion, erosionSplinePoints);
-        peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys, peaksAndValleysSplinePoints) + continentalnessFactor * 0.125f; // high continentalness tends to have larger peaks and valleys
-        
+        continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints); // erosion pushes down terrain height
+        //erosionFactor = GetValueFromSplinePoints(erosion + continentalness, erosionSplinePoints); // broken
+        peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys + continentalnessFactor * 0.125f, peaksAndValleysSplinePoints); // high continentalness tends to have larger peaks and valleys
+
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
         weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.5f), weirdnessSplinePoints);
 
@@ -1348,7 +1364,9 @@ public class World : MonoBehaviour
         //terrainHeightPercentChunk = peaksAndValleysFactor;
 
         // THE TERRAIN GEN ALGORITHM (combines all factors)
-        terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor + peaksAndValleysFactor * erosionFactor), 0, 0.99f);
+        //terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor + peaksAndValleysFactor - erosionFactor), 0, 0.99f); // erosion factor broken
+        terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor + peaksAndValleysFactor), 0, 0.99f);
+        //terrainHeightPercentChunk = Mathf.Clamp(Mathf.Abs(continentalnessFactor), 0, 0.99f); // for testing
         int _terrainHeightVoxels;
         // multiplies by number of voxels to get height in voxels
         int maxHeight = VoxelData.ChunkHeight - 1;
