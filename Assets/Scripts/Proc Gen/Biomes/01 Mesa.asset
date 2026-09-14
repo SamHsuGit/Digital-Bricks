@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Mesa
   generateClouds: 1
+  peaksAndValleysMultiplier: 1.2
   surfaceBlock: 43
   subsurfaceBlock: 33
   smallStructures: []
@@ -120,8 +121,4 @@ MonoBehaviour:
     scale: 1
     threshold: 0.57
     noiseOffset: 9
-  sprites:
-  - {fileID: 21300000, guid: a2430459416e5924ca49d881daa4c333, type: 3}
-  - {fileID: 21300000, guid: a88b6c9f78f7bc64f9fb03df2ce330dd, type: 3}
-  - {fileID: 21300000, guid: 85178e8956e5f364c84e1d2426e0469f, type: 3}
   material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}

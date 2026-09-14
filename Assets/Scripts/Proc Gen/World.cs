@@ -296,8 +296,8 @@ public class World : MonoBehaviour
 
         continentSizeSplinePoints = new Vector2[]
         {
-            new Vector2(0.00f, 0.5f),
-            new Vector2(0.10f, 0.5f),
+            new Vector2(0.00f, 0.2f),
+            new Vector2(0.10f, 0.2f),
             new Vector2(0.11f, 0.07f),
             new Vector2(0.30f, 0.07f),
             new Vector2(0.31f, 0.02f),
@@ -1350,6 +1350,7 @@ public class World : MonoBehaviour
         continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints); // erosion pushes down terrain height
         //erosionFactor = GetValueFromSplinePoints(erosion + continentalness, erosionSplinePoints); // broken
         peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys + continentalnessFactor * 0.125f, peaksAndValleysSplinePoints); // high continentalness tends to have larger peaks and valleys
+        peaksAndValleysFactor *= biome.peaksAndValleysMultiplier; // biome specific peaks and valleys Factor
 
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
         weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.5f), weirdnessSplinePoints);

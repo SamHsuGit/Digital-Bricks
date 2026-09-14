@@ -6,6 +6,7 @@ public class Biome : ScriptableObject
     [Header("Biome Attributes")]
     public string biomeName;
     public bool generateClouds;
+    public float peaksAndValleysMultiplier; // increased slightly for mesa
     [HideInInspector] public byte surfaceBlock; // this value is changed by other scripts depending on planet
     public byte subsurfaceBlock; // used to generate ice caves in cold biomes
     public SurfaceOb[] smallStructures; // for best performance do not add more than 2 values
