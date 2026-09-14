@@ -34,11 +34,11 @@ MonoBehaviour:
   voxelBitPrefab: {fileID: 3563555514074976273, guid: 5ae69ce3183964f5686b3a2619692fa2, type: 3}
   backFaceTexture: 56
   frontFaceTexture: 56
-  topFaceTexture: 5
-  bottomFaceTexture: 3
+  topFaceTexture: 124
+  bottomFaceTexture: 123
   leftFaceTexture: 57
   rightFaceTexture: 57
-  topFaceSmoothTexture: 46
+  topFaceSmoothTexture: 124
   blockSounds:
   - {fileID: 8300000, guid: f01760fb42113c949996d74515ae3393, type: 3}
   - {fileID: 8300000, guid: 054d65b5029984540aff94826a3caf40, type: 3}

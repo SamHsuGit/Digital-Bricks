@@ -97,6 +97,9 @@ MonoBehaviour:
   temperature: 0
   humidity: 0
   isAir: 0
+  continentalnessFactor: 0
+  erosionFactor: 0
+  peaksAndValleysFactor: 0
   fertility: 0
   percolation: 0
   surfaceObType: 0
@@ -196,6 +199,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f5e14815c688eab4eb0014a50177272a, type: 2}
   - {fileID: 11400000, guid: 1ee7c995b97043b469c46c266182ca28, type: 2}
   - {fileID: 11400000, guid: bf075bef9bc654fef804bbe68e97ae89, type: 2}
+  - {fileID: 11400000, guid: 14f71c66f49ad4ccba163e068e964265, type: 2}
+  - {fileID: 11400000, guid: 7c88ac9ad526b404faa86da65a4f9985, type: 2}
+  - {fileID: 11400000, guid: f1aa9280777df488a8b18682eece0425, type: 2}
+  - {fileID: 11400000, guid: 0ee77f81452664fdd8bf14db66e20066, type: 2}
+  - {fileID: 11400000, guid: 2e1d395657b3c46278b03e6dfe00e824, type: 2}
+  - {fileID: 11400000, guid: 90d53eeb02d5c43ae9db7e9dc8a6e26d, type: 2}
+  - {fileID: 11400000, guid: 492011e7ec13c4ccb845722bb8d2595c, type: 2}
+  - {fileID: 11400000, guid: 34dfe9fce657b415f913c11eda7dc99f, type: 2}
+  - {fileID: 11400000, guid: 195b98fbebb9744869b9d1758e2d2c55, type: 2}
+  - {fileID: 11400000, guid: e8856e77378a2452fbd9fd54dc59043e, type: 2}
+  - {fileID: 11400000, guid: e8856e77378a2452fbd9fd54dc59043e, type: 2}
   voxelPrefabs: []
   voxelBitPrefabs: []
   placedBricks:
