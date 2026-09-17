@@ -161,7 +161,7 @@ Transform:
   m_GameObject: {fileID: 4673335178978187722}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 168, y: 129, z: 168}
+  m_LocalPosition: {x: 1608, y: 65, z: 1608}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -846,6 +846,7 @@ MonoBehaviour:
   playerCharIdle: 
   playerCharRun: 
   playerProjectile: 
+  playerFrame: 
   currentBrickType: 0
   currentBrickIndex: 0
   placedBrickName: 0
@@ -913,6 +914,7 @@ MonoBehaviour:
   sceneObjectPrefab: {fileID: 267288310360540051, guid: 04bb5ef7f14330842b6b88d9be1ec42b, type: 3}
   charObIdle: {fileID: 0}
   charObRun: {fileID: 0}
+  frameOb: {fileID: 0}
   world: {fileID: 0}
   brickMaterials: []
   canMine: 0
