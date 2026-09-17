@@ -1135,7 +1135,8 @@ public class World : MonoBehaviour
             // UPPER TERRAIN HEIGHT PASS
             if (yGlobalPos <= upperTerrainHeight && continentalness > 0.5f)
             {
-               if (Noise.Get3DPerlin(globalPos, 12f, 0.08f, 0.6f))
+               //if (Noise.Get2DPerlin(globalPos, 12f, 0.08f, 0.6f))
+               if(weirdness > 0.5f)
                {
                    // using voxel values allows ores to generate?
                    voxelValue = 3; // stone as default
@@ -1149,6 +1150,12 @@ public class World : MonoBehaviour
                    else if(yGlobalPos < upperTerrainHeight)
                     {
                         voxelValue = biome.subsurfaceBlock;
+
+                        if(yGlobalPos > terrainHeight) // carve out space below upper terrain
+                        {
+                            if (Noise.Get3DPerlin(globalPos, 30, 0.01f, 0.5f)) // large cave
+                                voxelValue = 0;
+                        }
 
                         /* LODE PASS */ // (1% of blocks underground)
                         //add ores and underground caves
