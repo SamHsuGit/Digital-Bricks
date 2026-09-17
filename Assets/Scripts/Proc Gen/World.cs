@@ -96,6 +96,7 @@ public class World : MonoBehaviour
     private float step;
     private int upperWorldLimit;
     private int lowerWorldLimit;
+    private int upperTerrainHeight;
     private int numberOfBiomes;
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
@@ -147,7 +148,7 @@ public class World : MonoBehaviour
     private const int airBorderInChunks = 2;
     private const float seaLevelPercentChunk = 0.24f;
     private const float cloudHeightPercent = 0.76f;
-    private const float floatingIslandHeightPercent = 0.60f;
+    private const float UpperTerrainHeightPercent = 0.60f;
     private const float mainlandElevationPercent = 0.05f;
     private const float plateauElevationPercent = 0.25f;
     private const float continentalnessAmplitudeA = 0.4f; // heights of peaks (higher = higher)
@@ -167,6 +168,7 @@ public class World : MonoBehaviour
         worldSizeInChunks = VoxelData.WorldSizeInChunks;
         upperWorldLimit = worldSizeInChunks - airBorderInChunks - 1;
         lowerWorldLimit = airBorderInChunks + 1;
+        upperTerrainHeight = Mathf.FloorToInt(UpperTerrainHeightPercent * VoxelData.ChunkHeight);
 
         singleChunk = true;
         drawVBO = false;
@@ -1130,23 +1132,43 @@ public class World : MonoBehaviour
                     return 0;
             }
 
-            //// FLOATING ISLANDS ABOVE OCEANS
-            //int floatingIslandHeight = Mathf.FloorToInt(floatingIslandHeightPercent * VoxelData.ChunkHeight);
-            //if (yGlobalPos <= floatingIslandHeight && yGlobalPos > floatingIslandHeight - 5 && continentalness < 0.5f)
-            //{
-            //    if (Noise.Get3DPerlin(globalPos, 12f, 0.1f, 0.6f))
-            //    {
-            //        // using voxel values allows ores to generate?
-            //        voxelValue = 3;
-            //        if (yGlobalPos == floatingIslandHeight)
-            //        {
-            //            voxelValue = biome.surfaceBlock;
-            //            terrainHeight = floatingIslandHeight;
-            //        }
-            //    }
-            //    else
-            //        voxelValue = 0; // carve out air using 3D perlin noise
-            //}
+            // UPPER TERRAIN HEIGHT PASS
+            if (yGlobalPos <= upperTerrainHeight && continentalness > 0.5f)
+            {
+               if (Noise.Get3DPerlin(globalPos, 12f, 0.08f, 0.6f))
+               {
+                   // using voxel values allows ores to generate?
+                   voxelValue = 3; // stone as default
+                   //AT TERRAIN HEIGHT
+                   if (yGlobalPos == upperTerrainHeight)
+                   {
+                       voxelValue = biome.surfaceBlock;
+                       terrainHeight = upperTerrainHeight; // allows trees to grow?
+                   }
+                   // BELOW TERRAIN HEIGHT
+                   else if(yGlobalPos < upperTerrainHeight)
+                    {
+                        voxelValue = biome.subsurfaceBlock;
+
+                        /* LODE PASS */ // (1% of blocks underground)
+                        //add ores and underground caves
+                        // if object is below terrain, do not bother running code for surface objects
+                        // lodes should not appear above terrainHeight, must mine for them
+                        if (drawLodes && voxelValue != 0)
+                        {
+                            foreach (Lode lode in biome.lodes)
+                            {
+                                if (yGlobalPos > lode.minHeight && yGlobalPos < lode.maxHeight) // if position is within allowable lode range
+                                    if (Noise.Get3DPerlin(globalPos, lode.noiseOffset, lode.scale, lode.threshold)) // look into spawning more ores if air block to sides
+                                        voxelValue = lode.blockID;
+                            }
+                            //return voxelValue;
+                        }
+                    }
+               }
+               else
+                   voxelValue = 0; // carve out air using 3D perlin noise
+            }
 
             if (voxelValue == 0 && continentalness < 0.5f)
             {
