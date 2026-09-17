@@ -294,14 +294,20 @@ public class World : MonoBehaviour
             new Vector2(0.90f, 0.90f), // 08 Volcano
         };
 
+        // not used with old terrain Gen, only used for islands which was commented out due to predictable nature of islands
         continentSizeSplinePoints = new Vector2[]
         {
-            new Vector2(0.00f, 0.2f),
-            new Vector2(0.10f, 0.2f),
-            new Vector2(0.11f, 0.07f),
-            new Vector2(0.30f, 0.07f),
-            new Vector2(0.31f, 0.02f),
-            new Vector2(1.00f, 0.009f),
+            // used for worldSize of 20
+            // new Vector2(0.00f, 0.2f),
+            // new Vector2(0.05f, 0.2f),
+            // new Vector2(0.06f, 0.07f),
+            // new Vector2(0.10f, 0.07f),
+            // new Vector2(0.11f, 0.02f),
+            // new Vector2(1.00f, 0.009f),
+
+            // // used for testing
+            new Vector2(0.00f, 0.02f),
+            new Vector2(1.00f, 0.02f),
         };
     }
 
@@ -1026,17 +1032,15 @@ public class World : MonoBehaviour
         // else
         //     return 0;
 
-        
-
-        // Air border
-        if (globalPos.x > upperWorldLimit * VoxelData.ChunkWidth)
-            return 0;
-        else if (globalPos.x < lowerWorldLimit * VoxelData.ChunkWidth)
-            return 0;
-        else if (globalPos.z > upperWorldLimit * VoxelData.ChunkWidth)
-            return 0;
-        else if (globalPos.z < lowerWorldLimit * VoxelData.ChunkWidth)
-            return 0;
+        // // Air border (testing) for small worlds only
+        // if (globalPos.x > upperWorldLimit * VoxelData.ChunkWidth)
+        //     return 0;
+        // else if (globalPos.x < lowerWorldLimit * VoxelData.ChunkWidth)
+        //     return 0;
+        // else if (globalPos.z > upperWorldLimit * VoxelData.ChunkWidth)
+        //     return 0;
+        // else if (globalPos.z < lowerWorldLimit * VoxelData.ChunkWidth)
+        //     return 0;
 
         // reserve space for imported base file
         if (SettingsStatic.LoadedSettings.loadLdrawBaseFile && !Settings.WebGL && CheckMakeBase(globalPos))
@@ -1072,21 +1076,21 @@ public class World : MonoBehaviour
             biome = biomes[biomeID];
         }
 
-        /////* FARLANDS PASS */ // Removed
-        //// uses player transform coordinates (0 to 3200 for world size of 200)
-        //farlandsDetected = false;
-        //if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
-        //    return FarlandsPosX(globalPos);
-        //else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
-        //    return FarlandsNegX(globalPos);
-        //else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
-        //    return FarlandsPosZ(globalPos);
-        //else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
-        //{
-        //    voxelValue = FarlandsNegZ(globalPos);
-        //    if (voxelValue == 0)
-        //        return voxelValue;
-        //}
+        ///* FARLANDS PASS */ // Removed
+        // uses player transform coordinates (0 to 3200 for world size of 200)
+        farlandsDetected = false;
+        if (globalPos.x > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+           return FarlandsPosX(globalPos);
+        else if (globalPos.x < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
+           return FarlandsNegX(globalPos);
+        else if (globalPos.z > Mathf.FloorToInt(worldSizeInChunks * 0.875f) * VoxelData.ChunkWidth)
+           return FarlandsPosZ(globalPos);
+        else if (globalPos.z < Mathf.FloorToInt(worldSizeInChunks * 0.125f) * VoxelData.ChunkWidth)
+        {
+           voxelValue = FarlandsNegZ(globalPos);
+           if (voxelValue == 0)
+               return voxelValue;
+        }
 
         /* TERRAIN HEIGHT CALC */
         // USE 2D PERLIN NOISE AND SPLINE POINTS TO CALCULATE TERRAINHEIGHT
@@ -1332,15 +1336,16 @@ public class World : MonoBehaviour
 
         // 3 different Perlin Noise maps create 3 distinct modifiers that can interact when the noise is overlayed
 
-        // OLD WORLD TERRAIN GEN
-        //continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast, spline points scaled for 0.08f noise scale
+        // ORIGINAL WORLD TERRAIN GEN (used for more variation in terrain, not guaranteed islands)
+        continentalness = Noise.Get2DPerlin(xzCoords, 0, 0.08f); // how far from coast, spline points scaled for 0.08f noise scale
 
+        // TEST ISLAND TERRAIN GEN (commented out due to predictable nature of terrain gen started looking too similar)
         // continentalness = 0 (low land), dips below sea level
         // continentalness = 1 (high land)
         // want to create high continentalness near x = 0, z = 0 but perlin noise does not guarantee this. Want to use something more regular like sinusoid as a function of both x and z coords
         // as distance from spawn increases continentalness decreases aka more ocean and then goes back up again in sinusoid
-        continentalnessFrequencyB = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 0, 0.08f), continentSizeSplinePoints);
-        continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Sin((xzCoords.x - continentalnessOffset) * continentalnessFrequencyB) + Mathf.Sin((xzCoords.y - continentalnessOffset) * continentalnessFrequencyB)), 0f, 1f);
+        //continentalnessFrequencyB = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 0, 0.08f), continentSizeSplinePoints);
+        //continentalness = Mathf.Clamp(continentalnessAmplitudeA * (Mathf.Sin((xzCoords.x - continentalnessOffset) * continentalnessFrequencyB) + Mathf.Sin((xzCoords.y - continentalnessOffset) * continentalnessFrequencyB)), 0f, 1f);
 
         //erosion = Noise.Get2DPerlin(xzCoords, 1, 0.1f); // how flat or mountainous (reduced values near coast) // broken
         peaksAndValleys = Noise.Get2DPerlin(xzCoords, 2, 0.5f); // determines biome variants (only in mainland and plateau)
@@ -1350,7 +1355,7 @@ public class World : MonoBehaviour
         continentalnessFactor = GetValueFromSplinePoints(continentalness, continentalnessSplinePoints); // erosion pushes down terrain height
         //erosionFactor = GetValueFromSplinePoints(erosion + continentalness, erosionSplinePoints); // broken
         peaksAndValleysFactor = GetValueFromSplinePoints(peaksAndValleys + continentalnessFactor * 0.125f, peaksAndValleysSplinePoints); // high continentalness tends to have larger peaks and valleys
-        peaksAndValleysFactor *= biome.peaksAndValleysMultiplier; // biome specific peaks and valleys Factor
+        peaksAndValleysFactor *= biome.peaksAndValleysMultiplier; // biome affects peaks and valleys Factor
 
         // larger values expose weird 3D noise terrain (larger noise gives larger patches of values)
         weirdness = GetValueFromSplinePoints(Noise.Get2DPerlin(xzCoords, 321, 0.5f), weirdnessSplinePoints);

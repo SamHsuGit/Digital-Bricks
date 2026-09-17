@@ -12,6 +12,7 @@ public class LDrawImportRuntime : MonoBehaviour
     public GameObject charObIdle;
     public GameObject charObRun;
     public GameObject baseOb;
+    public GameObject frameOb;
     public GameObject projectileOb;
     public PhysicsMaterial physicMaterial;
     public Mesh[] _meshArray;
@@ -60,6 +61,8 @@ public class LDrawImportRuntime : MonoBehaviour
         charObIdle = ImportLDrawLocal("charIdle", importPosition, false); // char is not static (i.e. isStatic = false)
         charObRun = ImportLDrawLocal("charRun", importPosition, false); // char is not static (i.e. isStatic = false)
         projectileOb = ImportLDrawLocal("projectile", importPosition, false); // projectile is not static (i.e. isStatic = false)
+
+        frameOb = ImportLDrawLocal("frame", importPosition, false);
 
         // only load base file for display purposes in developer/creative mode since editing the base file causes issues when saving placedBricks.ldr
         if(!Settings.WebGL && SettingsStatic.LoadedSettings.loadLdrawBaseFile && SettingsStatic.LoadedSettings.developerMode)

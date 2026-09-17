@@ -7,6 +7,7 @@ public struct ClientToServerMessage : NetworkMessage
     public string charIdle;
     public string charRun;
     public string projectile;
+    public string frame;
 }
 
 public class CustomNetworkManager : NetworkManager
@@ -45,6 +46,7 @@ public class CustomNetworkManager : NetworkManager
             charIdle = FileSystemExtension.ReadFileToString("charIdle.ldr"),
             charRun = FileSystemExtension.ReadFileToString("charRun.ldr"),
             projectile = FileSystemExtension.ReadFileToString("projectile.ldr"),
+            frame = FileSystemExtension.ReadFileToString("frame.ldr"),
         };
         conn.Send(clientMessage);
     }
@@ -65,6 +67,7 @@ public class CustomNetworkManager : NetworkManager
         controller.playerCharIdle = message.charIdle;
         controller.playerCharRun = message.charRun;
         controller.playerProjectile = message.projectile;
+        controller.playerFrame = message.frame;
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, playerGameObject);

@@ -17,6 +17,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
+    [SyncVar(hook = nameof(SetFrame))] public string playerFrame;
     [SyncVar(hook = nameof(SetCurrentBrickType))] public int currentBrickType;
     [SyncVar(hook = nameof(SetCurrentBrickIndex))] public int currentBrickIndex;
     [SyncVar(hook = nameof(SetCurrentBrickName))] public int placedBrickName;
@@ -101,6 +102,7 @@ public class Controller : NetworkBehaviour
     public GameObject sceneObjectPrefab;
     public GameObject charObIdle;
     public GameObject charObRun;
+    public GameObject frameOb;
     public World world;
 
     // used to lookup a brick material when selecting a previously placed brick, derive from world not in Controller prefab
@@ -787,6 +789,11 @@ public class Controller : NetworkBehaviour
     public void SetProjectile(string oldValue, string newValue)
     {
         projectile = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "projectile", newValue, projectile.transform.position, false);
+    }
+
+    public void SetFrame(string oldValue, string newValue)
+    {
+        frameOb = LDrawImportRuntime.Instance.ImportLDrawOnline(playerName + "frame", newValue, frameOb.transform.position, false);
     }
 
     public void SetTimeOfDayServer()
