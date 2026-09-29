@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 1, g: 1, b: 1, a: 1}
+  m_FogColor: {r: 0.7137255, g: 0.79607844, b: 0.8117647, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.02
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.9999065, g: 0.95219237, b: 0.13332973, a: 1}
@@ -2006,10 +2006,6 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1977116264940322366}
-    - target: {fileID: 7745206339451510717, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
-      propertyPath: maxFogDensity
-      value: 0.01
-      objectReference: {fileID: 0}
     - target: {fileID: 8640391040969436245, guid: a9998e00e4bd30747bb505f0974635bb, type: 3}
       propertyPath: m_Name
       value: GlobalLighting
