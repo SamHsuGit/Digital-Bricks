@@ -17,6 +17,7 @@ MonoBehaviour:
   peaksAndValleysMultiplier: 1
   surfaceBlock: 6
   subsurfaceBlock: 3
+  soilBlock: 6
   smallStructures: []
   smallFlora:
   - name: Grass

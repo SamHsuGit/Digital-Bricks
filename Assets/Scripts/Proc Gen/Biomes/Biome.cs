@@ -9,6 +9,7 @@ public class Biome : ScriptableObject
     public float peaksAndValleysMultiplier; // increased slightly for mesa
     [HideInInspector] public byte surfaceBlock; // this value is changed by other scripts depending on planet
     public byte subsurfaceBlock; // used to generate ice caves in cold biomes
+    public byte soilBlock; // used to put a soil layer between top layer and subsurface layer
     public SurfaceOb[] smallStructures; // for best performance do not add more than 2 values
     // public SurfaceOb[] mediumStructures; // for best performance do not add more than 2 values
     // public SurfaceOb[] largeStructures; // for best performance do not add more than 2 values

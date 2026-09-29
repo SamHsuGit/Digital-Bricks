@@ -16,7 +16,8 @@ MonoBehaviour:
   generateClouds: 0
   peaksAndValleysMultiplier: 1
   surfaceBlock: 34
-  subsurfaceBlock: 4
+  subsurfaceBlock: 3
+  soilBlock: 4
   smallStructures:
   - name: Grass
     floraIndex: 6

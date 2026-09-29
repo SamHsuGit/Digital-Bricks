@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 004 White
   m_EditorClassIdentifier: 
   blockName: Snow
+  uses: decorative
   id: 4
   dropID: 4
   colorID: 4

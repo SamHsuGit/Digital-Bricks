@@ -144,8 +144,9 @@ public class Chunk
         set
         {
             _isActive = value;
+
             if (chunkObject != null)
-                chunkObject.SetActive(value);
+                chunkObject.SetActive(value); // turn off gameObject (however, doesn't release from memory...)
         }
     }
 

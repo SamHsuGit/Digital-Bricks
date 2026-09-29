@@ -15,8 +15,9 @@ MonoBehaviour:
   biomeName: Desert
   generateClouds: 1
   peaksAndValleysMultiplier: 1
-  surfaceBlock: 42
+  surfaceBlock: 32
   subsurfaceBlock: 3
+  soilBlock: 32
   smallStructures: []
   smallFlora:
   - name: Grass

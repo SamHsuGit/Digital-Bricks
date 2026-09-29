@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 002 Black Stone
   m_EditorClassIdentifier: 
   blockName: Black Stone
+  uses: decorative
   id: 2
   dropID: 39
   colorID: 39

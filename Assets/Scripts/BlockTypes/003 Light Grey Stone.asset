@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 003 Light Grey Stone
   m_EditorClassIdentifier: 
   blockName: Light Grey Stone
+  uses: key crafting ingredient, present in all biomes
   id: 3
   dropID: 21
   colorID: 21

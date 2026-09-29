@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: 000 Air
   m_EditorClassIdentifier: 
   blockName: Air
+  uses: negative space
   id: 0
   dropID: 0
+  colorID: 0
   stackMax: 0
   isDrawn: 0
   isSolid: 0

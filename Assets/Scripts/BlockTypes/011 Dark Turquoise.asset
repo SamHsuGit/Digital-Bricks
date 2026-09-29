@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 011 Dark Turquoise
   m_EditorClassIdentifier: 
-  blockName: Swamp Dirt
+  blockName: Dark Turquoise
+  uses: decorative
   id: 11
   dropID: 11
   colorID: 11

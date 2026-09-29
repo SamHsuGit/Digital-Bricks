@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 005 Red
   m_EditorClassIdentifier: 
   blockName: Red
+  uses: decorative, iconic brick color
   id: 5
   dropID: 5
   colorID: 5

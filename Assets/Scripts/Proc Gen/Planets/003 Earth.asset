@@ -18,8 +18,8 @@ MonoBehaviour:
   blockIDsubsurface: 3
   blockIDcore: 5
   blockIDwater: 9
-  blockIDBiome00: 42
-  blockIDBiome01: 43
+  blockIDBiome00: 32
+  blockIDBiome01: 33
   blockIDBiome02: 45
   blockIDBiome03: 6
   blockIDBiome04: 13
@@ -30,19 +30,19 @@ MonoBehaviour:
   hasAtmosphere: 1
   isAlive: 1
   biomes: 000000000100000002000000030000000400000005000000060000000700000008000000
-  blockIDTreeLeavesWinter: 4
-  blockIDTreeLeavesSpring: 15
-  blockIDTreeLeavesSummer: 15
-  blockIDTreeLeavesFall1: 40
-  blockIDTreeLeavesFall2: 40
+  blockIDTreeLeavesWinter: 0
+  blockIDTreeLeavesSpring: 0
+  blockIDTreeLeavesSummer: 0
+  blockIDTreeLeavesFall1: 0
+  blockIDTreeLeavesFall2: 0
   blockIDTreeTrunk: 14
   blockIDCacti: 8
   blockIDMushroomLargeCap: 11
   blockIDMushroomLargeStem: 14
   blockIDMonolith: 2
-  blockIDEvergreenLeaves: 15
+  blockIDEvergreenLeaves: 0
   blockIDEvergreenTrunk: 14
   blockIDHoneyComb: 2
-  blockIDHugeTreeLeaves: 15
+  blockIDHugeTreeLeaves: 0
   blockIDHugeTreeTrunk: 14
   blockIDColumn: 3

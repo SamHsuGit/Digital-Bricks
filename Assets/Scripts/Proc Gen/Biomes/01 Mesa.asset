@@ -15,8 +15,9 @@ MonoBehaviour:
   biomeName: Mesa
   generateClouds: 1
   peaksAndValleysMultiplier: 1.2
-  surfaceBlock: 43
-  subsurfaceBlock: 33
+  surfaceBlock: 33
+  subsurfaceBlock: 3
+  soilBlock: 33
   smallStructures: []
   smallFlora:
   - name: Grass

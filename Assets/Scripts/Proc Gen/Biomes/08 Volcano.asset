@@ -16,7 +16,8 @@ MonoBehaviour:
   generateClouds: 1
   peaksAndValleysMultiplier: 1
   surfaceBlock: 2
-  subsurfaceBlock: 2
+  subsurfaceBlock: 3
+  soilBlock: 2
   smallStructures:
   - name: Honeycomb
     floraIndex: 11

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 013 Grass Dirt
   m_EditorClassIdentifier: 
   blockName: Grass
+  uses: decorative
   id: 13
   dropID: 6
   colorID: 6

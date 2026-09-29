@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 001 Barrier
   m_EditorClassIdentifier: 
   blockName: Barrier
+  uses: none
   id: 1
   dropID: 2
   colorID: 2

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 008 Green
   m_EditorClassIdentifier: 
   blockName: Green
+  uses: decorative
   id: 8
   dropID: 8
   colorID: 8

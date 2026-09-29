@@ -6,6 +6,7 @@ using UnityEngine;
 public class BlockType : ScriptableObject
 {
     public string blockName;
+    public string uses;
     public byte id;
     public byte dropID;
     public byte colorID;

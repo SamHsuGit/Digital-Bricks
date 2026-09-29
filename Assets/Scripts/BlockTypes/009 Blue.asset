@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 009 Blue
   m_EditorClassIdentifier: 
-  blockName: Water
+  blockName: Blue
+  uses: decorative
   id: 9
   dropID: 9
   colorID: 9
