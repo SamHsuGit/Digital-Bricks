@@ -248,8 +248,8 @@ public class World : MonoBehaviour
             new Vector2(0.110f, seaLevelPercentChunk - 0.06f), // ocean
             new Vector2(0.490f, seaLevelPercentChunk - 0.05f), // ocean
             new Vector2(0.500f, seaLevelPercentChunk), // mainland height
-            new Vector2(0.699f, seaLevelPercentChunk + step * 4),
-            new Vector2(0.700f, seaLevelPercentChunk + plateauElevationPercent), // plateau
+            new Vector2(0.599f, seaLevelPercentChunk + step * 4),
+            new Vector2(0.600f, seaLevelPercentChunk + plateauElevationPercent), // plateau
             new Vector2(1.000f, seaLevelPercentChunk + plateauElevationPercent + step),
         };
 
@@ -1021,7 +1021,13 @@ public class World : MonoBehaviour
 
         // bottom of world is bedrock (Must appear as first return value to override all others)
         if (yGlobalPos == 0)
-            return 2; // bedrock
+        {
+            if(Noise.Get2DPerlin(xzCoords, 1234, 0.8f) > 0.5f)
+                return 2; // bedrock
+            else
+                return 0; // air
+        }
+            
 
         //// LARGE 3D NOISE PASS (affects all height levels, breaks strata, already done by isAir so was commented out)
         //weirdnessLarge = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
@@ -1072,19 +1078,9 @@ public class World : MonoBehaviour
             terrainHeight = VoxelData.ChunkHeight - 1;
         else
             terrainHeight = CalcTerrainHeight(xzCoords);
-
-        //// carve out overhangs
-        //if (continentalnessFactor > seaLevelPercentChunk && continentalnessFactor < (seaLevelPercentChunk + plateauElevationPercent - step))
-        //{
-        // //Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
-        //    if (Noise.Get3DPerlin(globalPos, 12f, 0.01f, 0.6f))
-        //        return 0;
-        //    else
-        //    {
-        //        //terrainHeight = Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight) + 1;
-        //        voxelValue = biome.surfaceBlock;
-        //    }
-        //}
+        
+        // Re-Calc upper terrainHeight
+        upperTerrainHeight = Mathf.FloorToInt(terrainHeight * 0.5f) + Mathf.FloorToInt(UpperTerrainHeightPercent * VoxelData.ChunkHeight);
 
         ///* ABOVE TERRAINHEIGHT *///
         if (yGlobalPos > terrainHeight)
@@ -1162,11 +1158,12 @@ public class World : MonoBehaviour
             ///* BELOW TERRAIN HEIGHT *///
             if (yGlobalPos < terrainHeight)
             {
-                // ceilings to separate rock layers for progression (5% of blocks underground)
-                if (yGlobalPos == Mathf.FloorToInt(terrainHeight / 2))
-                    return 3;
-                if (yGlobalPos == Mathf.FloorToInt(terrainHeight / 3))
-                    return 31;
+                // // ceilings to separate rock layers for progression (5% of blocks underground) // commented out as makes large caves too small
+                // revise to use to make underground biome (mushrooms)
+                // if (yGlobalPos == Mathf.FloorToInt(terrainHeight / 2))
+                //     return 3;
+                // if (yGlobalPos == Mathf.FloorToInt(terrainHeight / 3))
+                //     return 31;
 
                 if (isAir)
                     return 0;
@@ -1191,7 +1188,7 @@ public class World : MonoBehaviour
                     if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 3))
                         voxelValue = 2; // black core for all worlds
 
-                    if (Noise.Get3DPerlin(globalPos, 30, 0.01f, 0.8f + 0.1f * weirdness)) // large cave (rare)
+                    if (Noise.Get3DPerlin(globalPos, 30, 0.04f, 0.6f + 0.1f * weirdness)) // large cave (rare)
                         voxelValue = 0;
                     if (Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f + 0.1f * weirdness)) // medium cave (somewhat rare)
                         voxelValue = 0;
