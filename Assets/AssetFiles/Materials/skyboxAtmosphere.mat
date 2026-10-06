@@ -129,6 +129,6 @@ Material:
     - _GroundColor: {r: 0.82961017, g: 0.9716981, b: 0.9677512, a: 1}
     - _SkyTint: {r: 0.83137256, g: 0.972549, b: 0.96862745, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Tint: {r: 0.71564615, g: 0.79482514, b: 0.8113208, a: 0.5}
+    - _Tint: {r: 1, g: 1, b: 1, a: 0.5}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
