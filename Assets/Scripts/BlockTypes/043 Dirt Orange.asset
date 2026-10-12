@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 043 Dirt Orange
   m_EditorClassIdentifier: 
-  blockName: Dirt Tan
+  blockName: Dirt Orange
+  blockProperties: {fileID: 11400000, guid: 94af7b4c62477d84e80aeeec7ca801f5, type: 2}
+  uses: 
   id: 43
   dropID: 33
   colorID: 33

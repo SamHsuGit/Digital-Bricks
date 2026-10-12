@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 021 Cobblestone
   m_EditorClassIdentifier: 
   blockName: Cobblestone
+  blockProperties: {fileID: 11400000, guid: cd5230ed405629d4da598de88b520f00, type: 2}
+  uses: 
   id: 21
   dropID: 21
   colorID: 21

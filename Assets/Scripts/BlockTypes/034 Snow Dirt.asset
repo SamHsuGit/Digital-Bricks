@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 034 Snow Dirt
   m_EditorClassIdentifier: 
   blockName: Snow Dirt
+  blockProperties: {fileID: 11400000, guid: 94af7b4c62477d84e80aeeec7ca801f5, type: 2}
+  uses: 
   id: 34
   dropID: 6
   colorID: 6

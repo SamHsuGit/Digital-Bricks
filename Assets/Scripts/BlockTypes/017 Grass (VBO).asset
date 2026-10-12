@@ -13,17 +13,12 @@ MonoBehaviour:
   m_Name: 017 Grass (VBO)
   m_EditorClassIdentifier: 
   blockName: Grass Decoration
+  blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
+  uses: 
   id: 17
   dropID: 17
   colorID: 8
-  stackMax: 64
-  isDrawn: 0
-  isSolid: 1
-  isTransparent: 1
-  isWater: 0
   hardness: 0
-  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
-  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
   icon: {fileID: 8627043524693180128, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#00852B'
   ldrawHexValueCodeNumber: 2
@@ -39,7 +34,3 @@ MonoBehaviour:
   leftFaceTexture: 0
   rightFaceTexture: 0
   topFaceSmoothTexture: 0
-  blockSounds:
-  - {fileID: 8300000, guid: fc6b1d8be39c2c7459c630a847c6ac43, type: 3}
-  - {fileID: 8300000, guid: 2d0dd4c5a6042db4aa99111ffb1831d3, type: 3}
-  - {fileID: 8300000, guid: f27cb1dca073f314fa571797764000c2, type: 3}

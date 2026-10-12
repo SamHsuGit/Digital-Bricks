@@ -6,18 +6,19 @@ using UnityEngine;
 public class BlockType : ScriptableObject
 {
     public string blockName;
+    public BlockProperties blockProperties;
     public string uses;
     public byte id;
     public byte dropID;
     public byte colorID;
-    public int stackMax;
-    public bool isDrawn;
-    public bool isSolid;
-    public bool isTransparent;
-    public bool isWater;
+    //public int stackMax;
+    //public bool isDrawn;
+    //public bool isSolid;
+    //public bool isTransparent;
+    //public bool isWater;
     public float hardness;
-    public VoxelMeshData standardMeshData;
-    public VoxelMeshData studsMeshData;
+    //public VoxelMeshData standardMeshData;
+    //public VoxelMeshData studsMeshData;
     public Sprite icon;
     public string colorHexValue;
     public int ldrawHexValueCodeNumber;
@@ -35,7 +36,7 @@ public class BlockType : ScriptableObject
     public int leftFaceTexture;
     public int rightFaceTexture;
     public int topFaceSmoothTexture;
-    public AudioClip[] blockSounds;
+    //public AudioClip[] blockSounds;
 
     // Back, Front, Top, Bottom, Left, Right
 

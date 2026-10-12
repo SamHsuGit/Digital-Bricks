@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 015 Leaves_Green
   m_EditorClassIdentifier: 
   blockName: Leaves_Green
+  blockProperties: {fileID: 11400000, guid: b597c56ebbd1f764a8dea7bf0d637e98, type: 2}
   uses: decorative
   id: 15
   dropID: 8

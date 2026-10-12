@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 048 Trans Light Green
   m_EditorClassIdentifier: 
   blockName: Trans Light Green
+  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  uses: 
   id: 48
   dropID: 22
   colorID: 22

@@ -86,6 +86,8 @@ public class Controller : NetworkBehaviour
     public AudioSource brickHit;
     public AudioSource brickMove;
     public AudioSource pop;
+    public AudioSource pickupSoundPlayer;
+    public AudioSource[] jumps;
     public AudioSource studioLogoAnimBrickSound;
     public GameObject playerCamera;
     public GameObject removePosPrefab;
@@ -133,11 +135,11 @@ public class Controller : NetworkBehaviour
         new int[] {2,                                          16,         19,        22, 23, 24, 25, 26, 27, 28, 29, 30, 31,}, // tool ID 1 = wood (allows to mine stone faster)
         new int[] {2,                                          16,                    22, 23, 24, 25, 26, 27, 28, 29, 30,    }, // tool ID 2 = stone (allows to mine gold)
         new int[] {2,                                                                     23, 24, 25, 26, 27, 28, 29, 30,    }, // tool ID 3 = gold (allows to mine crystal)
-        new int[] {                                                                                                          }, // tool ID 4 = crystal light green (mine any block)
-        new int[] {                                                                                                          }, // tool ID 5 = crystal dark green (mine any block)
-        new int[] {                                                                                                          }, // tool ID 6 = crystal blue (mine any block)
-        new int[] {                                                                                                          }, // tool ID 7 = crystal orange (mine any block)
-        new int[] {                                                                                                          }, // tool ID 8 = crystal red (mine any block)
+        new int[] {2,                                                                                                        }, // tool ID 4 = crystal light green (mine any block)
+        new int[] {2,                                                                                                        }, // tool ID 5 = crystal dark green (mine any block)
+        new int[] {2,                                                                                                        }, // tool ID 6 = crystal blue (mine any block)
+        new int[] {2,                                                                                                        }, // tool ID 7 = crystal orange (mine any block)
+        new int[] {2,                                                                                                        }, // tool ID 8 = crystal red (mine any block)
     };
 
     // needed to load and export placedBricks, derived from blockTypes defined in world prefab
@@ -1942,7 +1944,7 @@ public class Controller : NetworkBehaviour
         if (blockSoundNo > 2)
             blockSoundNo = 0;
 
-        brickAudioSource.clip = World.Instance.blockTypes[blockID].blockSounds[blockSoundNo];
+        brickAudioSource.clip = World.Instance.blockTypes[blockID].blockProperties.blockSounds[blockSoundNo];
         blockSoundNo++;
         
         brickAudioSource.Play();
@@ -2142,7 +2144,7 @@ public class Controller : NetworkBehaviour
         {
             //PlaceVoxel(placePos.position); // caused game-breaking glitch where placing voxel based off blockID in inventory could allow player to 'dupe' blocks
             blockID = grabbedBlockID;
-            PutAwayBrick(blockID, 0); // causing bug where gives a plate while releasing grab while holding voxel, set placedBrickName to 0 to tell to store voxel
+            PutAwayBrick(blockID, 0, false); // causing bug where gives a plate while releasing grab while holding voxel, set placedBrickName to 0 to tell to store voxel
         }
 
         placedBrick = null;
@@ -2162,7 +2164,7 @@ public class Controller : NetworkBehaviour
         holdingGrab = false;
         reticle.SetActive(true);
         brickPlaceDown.Play();
-        PutAwayBrick((byte)currentBrickMaterialIndex, placedBrickName);
+        PutAwayBrick((byte)currentBrickMaterialIndex, placedBrickName, false);
         Destroy(placedBrick);
 
         placedBrick = null;
@@ -2170,7 +2172,7 @@ public class Controller : NetworkBehaviour
         movingPlacedBrickUseStoredValues = false;
     }
 
-    public void PutAwayBrick(byte _blockID, int _placedBrickName)
+    public void PutAwayBrick(byte _blockID, int _placedBrickName, bool fromPickup)
     {
         int firstSlot;
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.developerMode) // determine first slot
@@ -2180,7 +2182,13 @@ public class Controller : NetworkBehaviour
 
         UIItemSlot[] slotsToCheck;
 
-        brickPickUp.Play();
+        if (fromPickup)
+        {
+            pickupSoundPlayer.clip = world.blockTypes[_blockID].blockProperties.pickupSound;
+            pickupSoundPlayer.Play();
+        }
+        else
+            brickPickUp.Play();
 
         for(int iteration = 0; iteration < 2; iteration++) // run code 2X, once for toolbar, then again for slots
         {
@@ -2210,7 +2218,7 @@ public class Controller : NetworkBehaviour
                     // if toolbar slot has a stack and toolbar stack id matches highlighted block id and current slot stack is not marked placedbrick
                     if (slotsToCheck[i].itemSlot.HasItem && slotsToCheck[i].itemSlot.stack.id == _blockID && !slotsToCheck[i].itemSlot.stack.isPlacedBrick)
                     {
-                        if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[_blockID].stackMax)
+                        if (slotsToCheck[i].itemSlot.stack.amount < World.Instance.blockTypes[_blockID].blockProperties.stackMax)
                         {
                             // edit voxel, give to toolbar, play sound
                             slotsToCheck[i].itemSlot.Give(1);

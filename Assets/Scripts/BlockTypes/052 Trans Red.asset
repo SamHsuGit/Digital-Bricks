@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 052 Trans Red
   m_EditorClassIdentifier: 
   blockName: Trans Red
+  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  uses: 
   id: 52
   dropID: 30
   colorID: 30

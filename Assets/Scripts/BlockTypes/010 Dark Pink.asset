@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 010 Dark Pink
   m_EditorClassIdentifier: 
   blockName: Dark Pink
+  blockProperties: {fileID: 11400000, guid: 94af7b4c62477d84e80aeeec7ca801f5, type: 2}
   uses: decorative
   id: 10
   dropID: 10

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 006 Brown
   m_EditorClassIdentifier: 
   blockName: Dirt
+  blockProperties: {fileID: 11400000, guid: 94af7b4c62477d84e80aeeec7ca801f5, type: 2}
   uses: soil layer
   id: 6
   dropID: 6

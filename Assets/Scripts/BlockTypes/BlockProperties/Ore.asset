@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6d7e26e1b1c1c4d84bbdbdabc94658, type: 3}
+  m_Name: Ore
+  m_EditorClassIdentifier: Assembly-CSharp::BlockProperties
+  stackMax: 64
+  isDrawn: 1
+  isSolid: 1
+  isTransparent: 0
+  isWater: 0
+  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
+  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
+  blockSounds:
+  - {fileID: 8300000, guid: f01760fb42113c949996d74515ae3393, type: 3}
+  - {fileID: 8300000, guid: 054d65b5029984540aff94826a3caf40, type: 3}
+  - {fileID: 8300000, guid: 87663015c6c2eb54285b229c5368b27c, type: 3}
+  pickupSound: {fileID: 8300000, guid: 44361b2f35511294e8adda197494a42f, type: 3}

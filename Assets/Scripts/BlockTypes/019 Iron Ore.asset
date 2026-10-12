@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 019 Iron Ore
   m_EditorClassIdentifier: 
   blockName: Iron Ore
+  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  uses: 
   id: 19
   dropID: 7
   colorID: 3

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 031 Dark Grey Stone
   m_EditorClassIdentifier: 
   blockName: Dark Grey Stone
+  blockProperties: {fileID: 11400000, guid: cd5230ed405629d4da598de88b520f00, type: 2}
+  uses: 
   id: 31
   dropID: 38
   colorID: 38

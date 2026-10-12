@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 001 Barrier
   m_EditorClassIdentifier: 
   blockName: Barrier
+  blockProperties: {fileID: 11400000, guid: 7d29d2c2df484cd419ab11492f955da3, type: 2}
   uses: none
   id: 1
   dropID: 2

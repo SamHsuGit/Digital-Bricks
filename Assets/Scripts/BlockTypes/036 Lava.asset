@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 036 Lava
   m_EditorClassIdentifier: 
   blockName: Lava
+  blockProperties: {fileID: 11400000, guid: 9c66d3bf9d0f7cd4894b81ee157928ec, type: 2}
+  uses: 
   id: 36
   dropID: 5
   colorID: 5

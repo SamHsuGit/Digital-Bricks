@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 014 Wood
   m_EditorClassIdentifier: 
   blockName: Wood
+  blockProperties: {fileID: 11400000, guid: 7793268563f363843aba43eb41b86103, type: 2}
   uses: key crafting resource, present in all biomes
   id: 14
   dropID: 14

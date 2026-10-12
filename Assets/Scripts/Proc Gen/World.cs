@@ -1021,9 +1021,15 @@ public class World : MonoBehaviour
 
         // bottom of world is bedrock (Must appear as first return value to override all others)
         if (yGlobalPos == 0)
+            return 2; // bedrock floor
+
+        if (yGlobalPos == 1)
+            return 36; // lava level
+
+        if (yGlobalPos == 2)
         {
             if(Noise.Get2DPerlin(xzCoords, 1234, 0.8f) > 0.5f)
-                return 2; // bedrock
+                return 31; // bedrock
             else
                 return 0; // air
         }
@@ -1183,10 +1189,10 @@ public class World : MonoBehaviour
                 if (yGlobalPos < terrainHeight - 10)
                 {
                     // STRATA PASS // (25% of blocks underground)
-                    if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 2))
-                        voxelValue = 31; // dark grey core for all worlds
+                    //if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 2))
+                    //    voxelValue = 31; // dark grey core for all worlds
                     if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 3))
-                        voxelValue = 2; // black core for all worlds
+                        voxelValue = 31; // black core for all worlds
 
                     if (Noise.Get3DPerlin(globalPos, 30, 0.04f, 0.6f + 0.1f * weirdness)) // large cave (rare)
                         voxelValue = 0;
@@ -1774,10 +1780,10 @@ public class World : MonoBehaviour
         if (voxel.id == blockIDprocGen || voxel.id == blockIDbase)
             return true; // VBO placeholder to prevent player from replacing with a voxel
 
-        if(forCollisionCheck && blockTypes[voxel.id].isWater) // a special case for water
+        if(forCollisionCheck && blockTypes[voxel.id].blockProperties.isWater) // a special case for water
             return false;
 
-        if (blockTypes[voxel.id].isSolid) // gives error if the player starts outside of the world
+        if (blockTypes[voxel.id].blockProperties.isSolid) // gives error if the player starts outside of the world
             return true;
         else
             return false;

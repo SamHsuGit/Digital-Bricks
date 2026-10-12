@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 051 Trans Orange
   m_EditorClassIdentifier: 
   blockName: Trans Orange
+  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  uses: 
   id: 51
   dropID: 28
   colorID: 28

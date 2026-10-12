@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 050 Trans Blue
   m_EditorClassIdentifier: 
   blockName: Trans Blue
+  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  uses: 
   id: 50
   dropID: 26
   colorID: 26

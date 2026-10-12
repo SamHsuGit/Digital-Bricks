@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 044 Dirt Dark Pink
   m_EditorClassIdentifier: 
   blockName: Dirt Dark Pink
+  blockProperties: {fileID: 11400000, guid: 94af7b4c62477d84e80aeeec7ca801f5, type: 2}
+  uses: 
   id: 44
   dropID: 10
   colorID: 10

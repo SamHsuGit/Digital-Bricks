@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 041 Leaves_Yellow
   m_EditorClassIdentifier: 
   blockName: Leaves_Yellow
+  blockProperties: {fileID: 11400000, guid: b597c56ebbd1f764a8dea7bf0d637e98, type: 2}
+  uses: 
   id: 41
   dropID: 7
   colorID: 7

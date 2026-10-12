@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 000 Air
   m_EditorClassIdentifier: 
   blockName: Air
+  blockProperties: {fileID: 11400000, guid: 2b89f10a5e0eff640aaf391f4281b8fa, type: 2}
   uses: negative space
   id: 0
   dropID: 0

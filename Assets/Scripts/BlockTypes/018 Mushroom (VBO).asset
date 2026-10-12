@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 018 Mushroom (VBO)
   m_EditorClassIdentifier: 
   blockName: Mushroom
+  blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
+  uses: 
   id: 18
   dropID: 18
   colorID: 4

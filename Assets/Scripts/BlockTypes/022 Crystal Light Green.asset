@@ -13,17 +13,12 @@ MonoBehaviour:
   m_Name: 022 Crystal Light Green
   m_EditorClassIdentifier: 
   blockName: Crystal Light Green
+  blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
+  uses: 
   id: 22
-  dropID: 16
+  dropID: 22
   colorID: 22
-  stackMax: 64
-  isDrawn: 0
-  isSolid: 1
-  isTransparent: 1
-  isWater: 0
-  hardness: 3
-  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
-  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
+  hardness: 0
   icon: {fileID: -6246070551821309166, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#C0FF00'
   ldrawHexValueCodeNumber: 42
@@ -39,7 +34,3 @@ MonoBehaviour:
   leftFaceTexture: 43
   rightFaceTexture: 43
   topFaceSmoothTexture: 46
-  blockSounds:
-  - {fileID: 8300000, guid: 67161a3642c04fe4783ba53d77f4345f, type: 3}
-  - {fileID: 8300000, guid: 67161a3642c04fe4783ba53d77f4345f, type: 3}
-  - {fileID: 8300000, guid: 67161a3642c04fe4783ba53d77f4345f, type: 3}

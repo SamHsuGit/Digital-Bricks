@@ -101,13 +101,13 @@ MonoBehaviour:
     minHeight: 1
     maxHeight: 256
     scale: 1
-    threshold: 0.57
+    threshold: 0.58
     noiseOffset: 5
   - nodeName: Water
     blockID: 9
     minHeight: 1
     maxHeight: 256
     scale: 1
-    threshold: 0.57
+    threshold: 0.58
     noiseOffset: 9
   material: {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}

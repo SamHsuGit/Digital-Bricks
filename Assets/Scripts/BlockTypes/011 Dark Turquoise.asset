@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 011 Dark Turquoise
   m_EditorClassIdentifier: 
   blockName: Dark Turquoise
+  blockProperties: {fileID: 11400000, guid: 94af7b4c62477d84e80aeeec7ca801f5, type: 2}
   uses: decorative
   id: 11
   dropID: 11

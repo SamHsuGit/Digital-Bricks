@@ -139,7 +139,7 @@ public class SceneObject : NetworkBehaviour
             //Debug.Log("collision");
             placedBrickName = 0;
             if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
-                controller.PutAwayBrick((byte)typeVoxel, placedBrickName); // put item into player toolbar
+                controller.PutAwayBrick((byte)typeVoxel, placedBrickName, true); // put item into player toolbar
             pickedUp = true;
             Destroy(gameObject);
         }
@@ -149,7 +149,7 @@ public class SceneObject : NetworkBehaviour
             placedBrickName = 3024;
 
             if(!pickedUp) // try to avoid putting into inventory 2x for same object collision
-                controller.PutAwayBrick((byte)typeVoxelBit, placedBrickName); // put item into player toolbar
+                controller.PutAwayBrick((byte)typeVoxelBit, placedBrickName, false); // put item into player toolbar
             pickedUp = true;
             Destroy(gameObject);
         }

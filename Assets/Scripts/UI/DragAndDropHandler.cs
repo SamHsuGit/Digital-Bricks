@@ -190,7 +190,7 @@ public class DragAndDropHandler : MonoBehaviour {
             ItemStack cursorStack = cursorSlot.itemSlot.stack;
             ItemStack clickedStack = clickedSlot.itemSlot.stack;
             // try and add one of the blocks to destination slot if blockIDs and placedBrickIDs match, do not do if would put over the maximum
-            if(cursorStack.id == clickedStack.id && cursorStack.placedBrickID == clickedStack.placedBrickID && clickedStack.amount + 1 <= World.Instance.blockTypes[clickedStack.id].stackMax)
+            if(cursorStack.id == clickedStack.id && cursorStack.placedBrickID == clickedStack.placedBrickID && clickedStack.amount + 1 <= World.Instance.blockTypes[clickedStack.id].blockProperties.stackMax)
             {
                 cursorSlot.itemSlot.Take(1); // drop off only one item
                 clickedSlot.itemSlot.Give(1);
@@ -233,7 +233,7 @@ public class DragAndDropHandler : MonoBehaviour {
         // move entire stack to first empty slot in inventory slots (If no available space found, do nothing)
         for(int i = 0; i < slotArray.Length; i++)
         {
-            int stackMax = World.Instance.blockTypes[clickedStack.id].stackMax; // cache stack max value
+            int stackMax = World.Instance.blockTypes[clickedStack.id].blockProperties.stackMax; // cache stack max value
 
             // INSERT STACK if the inventory slot does not have a stack
             if(!slotArray[i].itemSlot.HasItem)
@@ -335,7 +335,7 @@ public class DragAndDropHandler : MonoBehaviour {
             // if blockIDs and placedBrickIDs match, then try and add up items in clicked slot to stack maximum, otherwise switch items
             if (cursorSlot.itemSlot.stack.id == clickedSlot.itemSlot.stack.id && cursorSlot.itemSlot.stack.placedBrickID == clickedSlot.itemSlot.stack.placedBrickID)
             {
-                int stackMax = World.Instance.blockTypes[clickedSlot.itemSlot.stack.id].stackMax; // cache max stack value for clicked slot
+                int stackMax = World.Instance.blockTypes[clickedSlot.itemSlot.stack.id].blockProperties.stackMax; // cache max stack value for clicked slot
 
                 if(cursorSlot.itemSlot.stack.amount > stackMax - clickedSlot.itemSlot.stack.amount) // if adding would put over max
                 {

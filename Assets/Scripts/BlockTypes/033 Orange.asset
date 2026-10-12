@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 033 Orange
   m_EditorClassIdentifier: 
   blockName: Orange
+  blockProperties: {fileID: 11400000, guid: cd5230ed405629d4da598de88b520f00, type: 2}
+  uses: 
   id: 33
   dropID: 33
   colorID: 33

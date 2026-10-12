@@ -99,7 +99,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
-                    if (World.Instance.blockTypes[chunkData.map[x, y, z].id].isDrawn)
+                    if (World.Instance.blockTypes[chunkData.map[x, y, z].id].blockProperties.isDrawn)
                         UpdateMeshData(new Vector3(x, y, z)); // draw chunk by adding mesh data
                 }
             }
@@ -279,9 +279,9 @@ public class Chunk
         VoxelState neighborAbove = CheckVoxel(pos + VoxelData.faceChecks[2]); // if block above is transparent, use studs mesh data, otherwise leave as a standard block
         VoxelMeshData meshData;
         if(SettingsStatic.LoadedSettings.useStuds && voxel.hasStuds)
-            meshData = voxel.properties.studsMeshData; // use studs mesh data
+            meshData = voxel.properties.blockProperties.studsMeshData; // use studs mesh data
         else
-            meshData = voxel.properties.standardMeshData; // use regular mesh data
+            meshData = voxel.properties.blockProperties.standardMeshData; // use regular mesh data
 
         for (int p = 0; p < 6; p++)
         {
@@ -329,7 +329,7 @@ public class Chunk
                 }
             }
 
-            if (neighbor != null && World.Instance.blockTypes[neighbor.id].isTransparent || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight)// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
+            if (neighbor != null && World.Instance.blockTypes[neighbor.id].blockProperties.isTransparent || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight)// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
                 int faceVertCount = 0;
                 
@@ -346,7 +346,7 @@ public class Chunk
                     faceVertCount++;
                 }
                 
-                if (!World.Instance.blockTypes[voxel.id].isTransparent) // basic blocks not transparent
+                if (!World.Instance.blockTypes[voxel.id].blockProperties.isTransparent) // basic blocks not transparent
                 {
                     for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
                         triangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
@@ -354,7 +354,7 @@ public class Chunk
                 else
                 {
                     // Creates rendering issues when displaying oceans, sometimes water blocks are missing, likely overloading an array, for now set water voxel to isTransparent = 0
-                    if (World.Instance.blockTypes[voxel.id].isWater) // water blocks
+                    if (World.Instance.blockTypes[voxel.id].blockProperties.isWater) // water blocks
                     {
                         for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
                             transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]); // need to apply the transparent material for water

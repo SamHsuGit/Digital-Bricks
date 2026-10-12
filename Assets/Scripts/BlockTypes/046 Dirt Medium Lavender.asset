@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 046 Dirt Medium Lavender
   m_EditorClassIdentifier: 
   blockName: Dirt Medium Lavender
+  blockProperties: {fileID: 11400000, guid: 94af7b4c62477d84e80aeeec7ca801f5, type: 2}
+  uses: 
   id: 46
   dropID: 47
   colorID: 47

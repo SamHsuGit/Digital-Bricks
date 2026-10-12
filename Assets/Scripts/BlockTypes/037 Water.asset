@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 037 Water
   m_EditorClassIdentifier: 
   blockName: Blue
+  blockProperties: {fileID: 11400000, guid: 9c66d3bf9d0f7cd4894b81ee157928ec, type: 2}
+  uses: 
   id: 37
   dropID: 9
   colorID: 9

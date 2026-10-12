@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 039 Black Cobblestone
   m_EditorClassIdentifier: 
   blockName: Black Cobblestone
+  blockProperties: {fileID: 11400000, guid: cd5230ed405629d4da598de88b520f00, type: 2}
+  uses: 
   id: 39
   dropID: 39
   colorID: 39

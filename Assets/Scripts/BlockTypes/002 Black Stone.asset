@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
   m_Name: 002 Black Stone
   m_EditorClassIdentifier: 
-  blockName: Black Stone
-  uses: decorative
+  blockName: Bedrock
+  blockProperties: {fileID: 11400000, guid: a165cd207c08061439e3b12467240b5e, type: 2}
+  uses: lower border, cannot mine
   id: 2
   dropID: 39
   colorID: 39

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 032 Sand
   m_EditorClassIdentifier: 
   blockName: Sand
+  blockProperties: {fileID: 11400000, guid: 6ed32e1d0e5928143b87871e0f33797d, type: 2}
+  uses: 
   id: 32
   dropID: 32
   colorID: 32
