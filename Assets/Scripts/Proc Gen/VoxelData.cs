@@ -10,6 +10,19 @@ public static class VoxelData
 
 	public const int WorldSizeInChunks = 200; // binary data compression limits the # of chunks that can be stored to 256 (200 for full version, 8 for demo WebGL)
 
+	// Lighting Values
+    public static float minLightLevel = 0.1f;
+    public static float maxLightLevel = 0.9f;
+	public static float lightFalloff = 0.08f;
+
+	public static float unitOfLight {
+
+       // Light is handled as float (0-1) but Minecraft stores light as a byte (0-15), so we need to how much
+       // of that float a single light level represents.
+       get { return 1f / 16f; }
+
+    }
+
 	// get this value from Settings instead of setting a static readonly int
 	// Lego Worlds "Medium" world size = 100x100 chunks, 5000x16 = 80,000 bricks (meters) long / 25 mps = 3,200s to fly across world (1,600s from center to border)
 	//public static readonly int WorldSizeInChunks = 5;
@@ -44,15 +57,18 @@ public static class VoxelData
 		new Vector3(0.0f, voxelHeight, voxelWidth),
 	};
 
-	public static readonly Vector3[] faceChecks = new Vector3[6] {
-		// Updated to use voxelHeight and voxelWidth
-		new Vector3(0.0f, 0.0f, -voxelWidth),
-		new Vector3(0.0f, 0.0f, voxelWidth),
-		new Vector3(0.0f, voxelHeight, 0.0f),
-		new Vector3(0.0f, -voxelHeight, 0.0f),
-		new Vector3(-voxelWidth, 0.0f, 0.0f),
-		new Vector3(voxelWidth, 0.0f, 0.0f)
+	public static readonly Vector3Int[] faceChecks = new Vector3Int[6] {
+
+		new Vector3Int(0, 0, -1), // Back
+		new Vector3Int(0, 0, 1), // Front
+		new Vector3Int(0, 1, 0),
+		new Vector3Int(0, -1, 0),
+		new Vector3Int(-1, 0, 0),
+		new Vector3Int(1, 0, 0)
+
 	};
+
+	public static readonly int[] revFaceCheckIndex = new int[6] { 1, 0, 3, 2, 5, 4 };
 
 	public static readonly int[,] voxelTris = new int[6, 4] {
         // Back, Front, Top, Bottom, Left, Right
@@ -65,8 +81,6 @@ public static class VoxelData
 		{4, 7, 0, 3}, // Left Face
 		{1, 2, 5, 6} // Right Face
 	};
-
-	public static readonly int[] revFaceCheckIndex = new int[6] { 1, 0, 3, 2, 5, 4 };
 
 	public static readonly Vector2[] voxelUvs = new Vector2[4] {
 		new Vector2 (0.0f, 0.0f),

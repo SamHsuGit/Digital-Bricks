@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using UnityEngine;
+using System.Diagnostics;
 
 public class Chunk
 {
@@ -18,14 +19,21 @@ public class Chunk
     List<int> waterTriangles = new List<int>();
     Material[] materials = new Material[2];
     List<Vector2> uvs = new List<Vector2>();
+    List<Color> colors = new List<Color>();
     List<Vector3> normals = new List<Vector3>();
 
     public Vector3 position;
 
+    public VoxelState[,,] voxelMap = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+
     private bool _isInLoadDist;
     private bool _isInStructDrawDist;
     private bool _isInObDrawDist;
+
+    public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
     private bool _isActive;
+    private bool isVoxelMapPopulated = false;
+    private bool threadLocked = false;
 
     public ChunkData chunkData;
 
@@ -75,11 +83,13 @@ public class Chunk
             chunkObject.AddComponent<ChunkLoadAnimation>();
             World.Instance.chunkLoadSound.Play();
         }
+
+        PopulateVoxelMap();
     }
 
     public void TickUpdate()
     {
-        Debug.Log(chunkObject.name + " currently has " + activeVoxels.Count + " active blocks.");
+        UnityEngine.Debug.Log(chunkObject.name + " currently has " + activeVoxels.Count + " active blocks.");
         for (int i = activeVoxels.Count - 1; i > -1; i--)
         {
             if (!BlockBehavior.Active(activeVoxels[i]))
@@ -89,8 +99,48 @@ public class Chunk
         }
     }
 
+    void PopulateVoxelMap () {
+		
+        int posX = Mathf.FloorToInt(position.x);
+        int posY = Mathf.FloorToInt(position.y);
+        int posZ = Mathf.FloorToInt(position.z);
+        Vector3Int positionInt = new Vector3Int(posX, posY, posZ);
+
+		for (int y = 0; y < VoxelData.ChunkHeight; y++) {
+			for (int x = 0; x < VoxelData.ChunkWidth; x++) {
+				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
+
+                    //voxelMap[x,y,z] = chunkData.map[x,y,z];
+                    // what chunkData is used to initialize?
+                    voxelMap[x, y, z] = new VoxelState(World.Instance.GetVoxel(new Vector3Int(x, y, z) + positionInt), chunkData, new Vector3Int(x, y, z), 0);
+    
+				}
+			}
+		}
+
+        _updateChunk();
+        isVoxelMapPopulated = true;
+
+	}
+
     public void UpdateChunk() // are all references of this function locked to be threadsafe since they modify the array of vertices, triangles, normals?
     {
+        // threadLocked = true;
+
+        // if (world.enableThreading) {
+        //     Thread myThread = new Thread(new ThreadStart(_updateChunk));
+        //     myThread.Start();
+        // } else
+            _updateChunk();
+
+        while (modifications.Count > 0) {
+
+            VoxelMod v = modifications.Dequeue();
+            Vector3 pos = v.position -= position;
+            chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
+
+        }
+
         ClearMeshData();
 
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
@@ -100,12 +150,109 @@ public class Chunk
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
                     if (World.Instance.blockTypes[chunkData.map[x, y, z].id].blockProperties.isDrawn)
-                        UpdateMeshData(new Vector3(x, y, z)); // draw chunk by adding mesh data
+                        UpdateMeshData(new Vector3Int(x, y, z)); // draw chunk by adding mesh data
                 }
             }
         }
 
         World.Instance.chunksToDraw.Enqueue(this);
+
+        // lock (World.Instance.chunksToDraw) {
+        //     World.Instance.chunksToDraw.Enqueue(this);
+        // }
+
+        // threadLocked = false;
+    }
+
+    private void _updateChunk () {
+
+        threadLocked = true;
+
+        while (modifications.Count > 0) {
+
+            VoxelMod v = modifications.Dequeue();
+            Vector3 pos = v.position -= position;
+            chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
+
+        }
+
+        ClearMeshData();
+
+        CalculateLight();
+
+		for (int y = 0; y < VoxelData.ChunkHeight; y++) {
+			for (int x = 0; x < VoxelData.ChunkWidth; x++) {
+				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
+
+                    if (World.Instance.blockTypes[chunkData.map[x,y,z].id].blockProperties.isSolid)
+					    UpdateMeshData (new Vector3Int(x, y, z));
+
+				}
+			}
+		}
+
+        lock (World.Instance.chunksToDraw) {
+            World.Instance.chunksToDraw.Enqueue(this);
+        }
+
+        threadLocked = false;
+
+	}
+
+    void CalculateLight () {
+
+        Queue<Vector3Int> litVoxels = new Queue<Vector3Int>();
+
+        for (int x = 0; x < VoxelData.ChunkWidth; x++) {
+            for (int z = 0; z < VoxelData.ChunkWidth; z++) {
+
+                float lightRay = 1f;
+
+                for (int y = VoxelData.ChunkHeight - 1; y >= 0; y--) {
+
+                    VoxelState thisVoxel = chunkData.map[x, y, z];
+
+                    if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity < lightRay)
+                        lightRay = World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity;
+
+                    //thisVoxel.globalLightPercent = (byte)Mathf.FloorToInt(lightRay * 16);
+                    thisVoxel.globalLightPercent = lightRay;
+
+                    chunkData.map[x, y, z] = thisVoxel;
+
+                    if (lightRay > VoxelData.lightFalloff)
+                        litVoxels.Enqueue(new Vector3Int(x, y, z));
+
+                }
+            }
+        }
+
+        while (litVoxels.Count > 0) {
+
+            Vector3Int v = litVoxels.Dequeue();
+
+            for (int p = 0; p < 6; p++) {
+
+                Vector3 currentVoxel = v + VoxelData.faceChecks[p];
+                Vector3Int neighbor = new Vector3Int((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z);
+
+                if (IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.z)) {
+                    // if the neighbor voxel light value is less than the original voxel minus fall off
+                    if (chunkData.map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent < chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff) {
+                        // set neighbor light value to this voxel minus fall off
+                        chunkData.map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent = chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
+                        // if the neighbor light value is light enough could illuminate other voxels, then do this code again for neighbor
+                        if (chunkData.map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent > VoxelData.lightFalloff)
+                            litVoxels.Enqueue(neighbor);
+
+                    }
+
+                }
+
+            }
+
+        }
+
     }
 
     public void AddActiveVoxel (VoxelState voxel)
@@ -135,6 +282,7 @@ public class Chunk
         triangles.Clear();
         transparentTriangles.Clear();
         uvs.Clear();
+        colors.Clear();
         normals.Clear();
     }
 
@@ -148,6 +296,27 @@ public class Chunk
             if (chunkObject != null)
                 chunkObject.SetActive(value); // turn off gameObject (however, doesn't release from memory...)
         }
+    }
+
+    public bool isEditable {
+
+        get {
+
+            if (!isVoxelMapPopulated || threadLocked)
+                return false;
+            else
+                return true;
+
+        }
+
+    }
+
+    bool IsVoxelInChunk(int x, int y, int z)
+    {
+        if (x < 0 || x > VoxelData.ChunkWidth - 1 || y < 0 || y > VoxelData.ChunkHeight - 1 || z < 0 || z > VoxelData.ChunkWidth - 1)
+            return false;
+        else
+            return true;
     }
 
     public bool isInLoadDist // used for object pooling? Need to unload inactive chunks from memory to save RAM usage?
@@ -168,26 +337,16 @@ public class Chunk
         set { _isInObDrawDist = value; }
     }
 
-    bool IsVoxelInChunk(int x, int y, int z)
-    {
-        if (x < 0 || x > VoxelData.ChunkWidth - 1 || y < 0 || y > VoxelData.ChunkHeight - 1 || z < 0 || z > VoxelData.ChunkWidth - 1)
-            return false;
-        else
-            return true;
-    }
-
     public void EditVoxel(Vector3 pos, byte newID, Controller _player, ChunkData _chunkData)
     {
         if (!World.Instance.IsGlobalPosInWorld(pos))
             return;
 
         if (newID == 0)
-        {
-            World.Instance.RemoveVBOFromVoxel(pos); // removes objects if voxel below is replaced with air
-        }
+            World.Instance.RemoveVBOFromVoxel(pos); // removes VBO if voxel below is replaced with air
         else
         {
-            // add objects immediately whenever a new block is placed. Currently only objects are only replaced. Studs are replaced when update chunk is called.
+            // add VBO immediately whenever a new block is placed. Currently only objects are only replaced. Studs are replaced when update chunk is called.
             World.Instance.AddVBOToVoxel(pos, newID);
         }
 
@@ -203,13 +362,7 @@ public class Chunk
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
 
         //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
-        World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
-        
-        //lock (World.Instance.ChunkUpdateThreadLock)
-        //{
-        //    World.Instance.AddChunkToUpdate(this, true);
-        //    UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
-        //}
+        //World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
     }
 
     void UpdateSurroundingVoxels(int x, int y, int z)
@@ -220,38 +373,14 @@ public class Chunk
         {
             Vector3 currentVoxel = thisVoxel + VoxelData.faceChecks[p];
 
-            if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
+            if (!chunkData.IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
             {
                 World.Instance.AddChunkToUpdate(World.Instance.GetChunkFromVector3(currentVoxel + position), true);
             }
         }
     }
 
-    public VoxelState CheckVoxel(Vector3 pos)
-    {
-        int x = Mathf.FloorToInt(pos.x);
-        int y = Mathf.FloorToInt(pos.y);
-        int z = Mathf.FloorToInt(pos.z);
-
-        if (!IsVoxelInChunk(x, y, z))
-            return World.Instance.GetVoxelState(pos + position);
-
-        return chunkData.map[x, y, z];
-    }
-
-    public VoxelState GetVoxelFromGlobalVector3(Vector3 pos)
-    {
-        int xCheck = Mathf.FloorToInt(pos.x);
-        int yCheck = Mathf.FloorToInt(pos.y);
-        int zCheck = Mathf.FloorToInt(pos.z);
-
-        xCheck -= Mathf.FloorToInt(position.x);
-        zCheck -= Mathf.FloorToInt(position.z);
-
-        return chunkData.map[xCheck, yCheck, zCheck];
-    }
-
-    void UpdateMeshData(Vector3 pos)
+    void UpdateMeshData(Vector3Int pos)
     {
         int x = Mathf.FloorToInt(pos.x);
         int y = Mathf.FloorToInt(pos.y);
@@ -276,7 +405,6 @@ public class Chunk
                 break;
         }
 
-        VoxelState neighborAbove = CheckVoxel(pos + VoxelData.faceChecks[2]); // if block above is transparent, use studs mesh data, otherwise leave as a standard block
         VoxelMeshData meshData;
         if(SettingsStatic.LoadedSettings.useStuds && voxel.hasStuds)
             meshData = voxel.properties.blockProperties.studsMeshData; // use studs mesh data
@@ -312,11 +440,6 @@ public class Chunk
                 }
             }
 
-            Vector3 neighborPos = pos + VoxelData.faceChecks[translatedP];
-            VoxelState neighbor = CheckVoxel(neighborPos);
-            //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // DOES NOT WORK. Chunks loaded from file do not have neighbors which causes chunk to not render
-            // do not render if this voxel is water AND neighbor above is also water
-
             bool isInFirstChunkBorder = false; // initialize
             if(World.Instance.singleChunk) // only for singleChunk render mode
             {
@@ -329,8 +452,21 @@ public class Chunk
                 }
             }
 
-            if (neighbor != null && World.Instance.blockTypes[neighbor.id].blockProperties.isTransparent || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight)// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
+            //Vector3Int neighborPos = pos + VoxelData.faceChecks[translatedP];
+            //VoxelState neighbor = CheckVoxel(neighborPos);
+            //VoxelState neighbor = chunkData.map[neighborPos.x, neighborPos.y, neighborPos.z];
+            
+            //  if(chunkData.map[x, y, z].neighbors[p] != null)
+            //      neighbor = chunkData.map[x, y, z].neighbors[p];
+            //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // DOES NOT WORK. Chunks loaded from file do not have neighbors which causes chunk to not render
+            
+            VoxelState neighbor = chunkData.map[x, y, z].neighbors[translatedP];
+
+            // do not render if this voxel is water AND neighbor above is also water
+            if (neighbor != null && (World.Instance.blockTypes[neighbor.id].blockProperties.renderNeighborFaces || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight))// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
+
+                //float lightLevel = neighbor.lightAsFloat;
                 int faceVertCount = 0;
                 
                 for (int i = 0; i < meshData.faces[p].vertData.Length; i++)
@@ -338,15 +474,21 @@ public class Chunk
                     VertData vertData = meshData.faces[p].GetVertData(i);
                     vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
                     normals.Add(VoxelData.faceChecks[p]);
+                    
+                    float lightLevel = neighbor.globalLightPercent;
+
+                    colors.Add(new Color(0, 0, 0, lightLevel));
 
                     if(p == 2 && !voxel.hasStuds)
-                        AddTexture(voxel.properties.GetTextureID(6), vertData.uv);
+                        AddTexture(voxel.properties.GetTextureID(6), vertData.uv); // smooth top texture
                     else
-                        AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
+                        AddTexture(voxel.properties.GetTextureID(p), vertData.uv); // studs texture
+                    
                     faceVertCount++;
                 }
                 
-                if (!World.Instance.blockTypes[voxel.id].blockProperties.isTransparent) // basic blocks not transparent
+                // ADD TRIANGLES
+                if (!voxel.properties.blockProperties.renderNeighborFaces) // basic blocks not transparent
                 {
                     for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
                         triangles.Add(vertexIndex + meshData.faces[p].triangles[i]);
@@ -354,7 +496,7 @@ public class Chunk
                 else
                 {
                     // Creates rendering issues when displaying oceans, sometimes water blocks are missing, likely overloading an array, for now set water voxel to isTransparent = 0
-                    if (World.Instance.blockTypes[voxel.id].blockProperties.isWater) // water blocks
+                    if (voxel.properties.blockProperties.isWater) // water blocks
                     {
                         for (int i = 0; i < meshData.faces[p].triangles.Length; i++)
                             transparentTriangles.Add(vertexIndex + meshData.faces[p].triangles[i]); // need to apply the transparent material for water
@@ -371,6 +513,31 @@ public class Chunk
         }
     }
 
+    VoxelState CheckVoxel (Vector3 pos) {
+
+		int x = Mathf.FloorToInt (pos.x);
+		int y = Mathf.FloorToInt (pos.y);
+		int z = Mathf.FloorToInt (pos.z);
+
+        if (!IsVoxelInChunk(x, y, z))
+            return GetVoxelFromGlobalVector3(pos + position);
+
+		return chunkData.map[x, y, z];
+
+	}
+
+    public VoxelState GetVoxelFromGlobalVector3(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        xCheck -= Mathf.FloorToInt(position.x);
+        zCheck -= Mathf.FloorToInt(position.z);
+
+        return chunkData.map[xCheck, yCheck, zCheck];
+    }
+
     public void CreateMesh()
     {
         Mesh mesh = new Mesh();
@@ -380,7 +547,9 @@ public class Chunk
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.SetTriangles(waterTriangles.ToArray(), 2);
         mesh.uv = uvs.ToArray();
+        mesh.colors = colors.ToArray();
         mesh.normals = normals.ToArray();
+
         meshFilter.mesh = mesh;
 
         if (Settings.WebGL || SettingsStatic.LoadedSettings.drawChunkMeshes) // allows rigidbodies to collide with chunks

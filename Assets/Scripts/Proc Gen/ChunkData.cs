@@ -108,31 +108,31 @@ public class ChunkData
 
         World.Instance.StartProfileMarker();
 
-        // planetSeed 0, worldCoord 0 is a blank canvas for building around the imported ldraw file
-        if (World.Instance.worldData.planetSeed == 0 && World.Instance.worldData.worldCoord == 0)
-        {
+        // // planetSeed 0, worldCoord 0 is a blank canvas for building around the imported ldraw file
+        // if (World.Instance.worldData.planetSeed == 0 && World.Instance.worldData.worldCoord == 0)
+        // {
 
-            for (int z = 0; z < VoxelData.ChunkWidth; z++)
-            {
-                for (int x = 0; x < VoxelData.ChunkWidth; x++)
-                {
-                    for (int y = 0; y < VoxelData.ChunkHeight; y++)
-                    {
-                        Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
+        //     for (int z = 0; z < VoxelData.ChunkWidth; z++)
+        //     {
+        //         for (int x = 0; x < VoxelData.ChunkWidth; x++)
+        //         {
+        //             for (int y = 0; y < VoxelData.ChunkHeight; y++)
+        //             {
+        //                 Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
 
-                        byte voxelType = 0;
-                        if (y < 1)
-                        {
-                            voxelType = 4;
-                            if(Settings.Platform != 2 && voxelGlobalPos.x == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && voxelGlobalPos.z == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
-                                World.Instance.modifications.Enqueue(Structure.GenerateSurfaceOb(0, voxelGlobalPos, 0, 0, 0, 0, 0, true, 0)); // make base at center of first chunk at terrain height
-                        }
-                        map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
-                    }
-                }
-            }
-        }
-        else
+        //                 byte voxelType = 0;
+        //                 if (y < 1)
+        //                 {
+        //                     voxelType = 4;
+        //                     if(Settings.Platform != 2 && voxelGlobalPos.x == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2) && voxelGlobalPos.z == Mathf.FloorToInt(World.Instance.worldSizeInChunks * VoxelData.ChunkWidth / 2 + VoxelData.ChunkWidth / 2))
+        //                         World.Instance.modifications.Enqueue(Structure.GenerateSurfaceOb(0, voxelGlobalPos, 0, 0, 0, 0, 0, true, 0)); // make base at center of first chunk at terrain height
+        //                 }
+        //                 map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1); // FOR SEED = 0
+        //             }
+        //         }
+        //     }
+        // }
+        // else
         {
             //Debug.Log("ChunkData.Populate");
             // currently populates all voxel data, but only needs to populate voxels which are adjacent to air?
@@ -143,22 +143,23 @@ public class ChunkData
                     for (int y = 0; y < VoxelData.ChunkHeight; y++)
                     {
                         Vector3Int voxelGlobalPos = new Vector3Int(x + position.x, y, z + position.y);
-                        byte voxelType;
-                        if (voxelTypeMemo.TryGetValue(voxelGlobalPos, out voxelType)) // try to get voxel id from dictionary
+                        
+                        map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x, y, z), 0);
+
+                        // Loop through each of the voxels neighbours and attempt to set them.
+                        for (int p = 0; p < 6; p++)
                         {
-                            map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
-                        }
-                        else
-                        {
-                            voxelType = GetVoxel(voxelGlobalPos); // get block id from memorization function recommended as performance improvement by chatGPT
-                            voxelTypeMemo[voxelGlobalPos] = voxelType; // store block id to dictionary
-                            map[x, y, z] = new VoxelState(voxelType, this, new Vector3Int(x, y, z), 1);
+                            Vector3Int neighborV3 = new Vector3Int(x, y, z) + VoxelData.faceChecks[p];
+                            if (IsVoxelInChunk(neighborV3)) // If in chunk, get voxel straight from map.
+                                map[x, y, z].neighbors[p] = VoxelFromV3Int(neighborV3);
+                            else // Else see if we can get the neighbour from WorldData.
+                                map[x, y, z].neighbors[p] = World.Instance.worldData.GetVoxel(voxelGlobalPos + VoxelData.faceChecks[p]);
                         }
                     }
                 }
             }
         }
-        
+        LightingCrossChunk.RecalculateNaturaLight(this);
         World.Instance.StopProfileMarker();
     }
 
@@ -174,11 +175,20 @@ public class ChunkData
         BlockType newVoxel = World.Instance.blockTypes[_id];
 
         // Cache the old opacity value.
-        //byte oldOpacity = voxel.properties.opacity;
+        byte oldOpacity = voxel.properties.opacity;
 
         // Set voxel to new ID.
         voxel.id = _id;
         voxel.orientation = direction;
+
+        // If the opacity values of the voxel have changed and the voxel above is in direct sunlight
+        // (or is above the world) recast light from that voxel downwards.
+        if (voxel.properties.opacity != oldOpacity &&
+            (pos.y == VoxelData.ChunkHeight - 1 || map[pos.x, pos.y + 1, pos.z].light == 15)) {
+
+            LightingCrossChunk.CastNaturalLight(this, pos.x, pos.z, pos.y + 1);
+
+        }
 
         if (voxel.properties.isActive && BlockBehavior.Active(voxel))
             voxel.chunkData.chunk.AddActiveVoxel(voxel);
@@ -189,12 +199,33 @@ public class ChunkData
                     voxel.neighbors[i].chunkData.chunk.AddActiveVoxel(voxel.neighbors[i]);
         }
 
-        // Do not add this to list of chunks to be saved (do not want to save all chunks where surfaceObjects/structures/trees are created, only player edited chunks).
-        //World.Instance.worldData.AddToModifiedChunkList(this);
+        // Addds this to list of chunks to be saved (triggered when surface objects placed).
+        World.Instance.worldData.AddToModifiedChunkList(this);
 
         // If we have a chunk attached, add that for updating.
         if (chunk != null)
             World.Instance.AddChunkToUpdate(chunk);
+    }
+
+    public bool IsVoxelInChunk (int x, int y, int z) {
+
+        if (x < 0 || x > VoxelData.ChunkWidth - 1 || y < 0 || y > VoxelData.ChunkHeight - 1 || z < 0 || z > VoxelData.ChunkWidth - 1)
+            return false;
+        else
+            return true;
+
+    }
+
+    public bool IsVoxelInChunk (Vector3Int pos) {
+
+        return IsVoxelInChunk(pos.x, pos.y, pos.z);
+
+    }
+
+    public VoxelState VoxelFromV3Int(Vector3Int pos) {
+
+        return map[pos.x, pos.y, pos.z];
+
     }
 
     public string[] stringBlockIDs = new string[]

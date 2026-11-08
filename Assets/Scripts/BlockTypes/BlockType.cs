@@ -19,6 +19,7 @@ public class BlockType : ScriptableObject
     public float hardness;
     //public VoxelMeshData standardMeshData;
     //public VoxelMeshData studsMeshData;
+    public byte opacity;
     public Sprite icon;
     public string colorHexValue;
     public int ldrawHexValueCodeNumber;

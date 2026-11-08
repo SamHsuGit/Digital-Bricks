@@ -6,23 +6,90 @@ using UnityEngine;
 public class VoxelState
 {
     public byte id; // 1 byte = 2^8 (256) unique block IDs
+    [System.NonSerialized] private byte _light;
+    public float globalLightPercent = 0;
     public byte orientation; // 1 byte used to store block state into such as orientation
-    public bool hasStuds = false;
-    public float randFloat;
-    public static float studsThreshold = 0.90f;
+    [System.NonSerialized] public bool hasStuds = false;
+    [System.NonSerialized] public float randFloat;
+    [System.NonSerialized] public static float studsThreshold = 0.90f;
     [System.NonSerialized] public ChunkData chunkData;
     [System.NonSerialized] public VoxelNeighbors neighbors;
     [System.NonSerialized] public Vector3Int position;
+
+    public byte light {
+
+        get { return _light; }
+        set {
+
+            if (value != _light) {
+
+                // Cache the old light and castlight values before updating them.
+                byte oldLightValue = _light;
+                byte oldCastValue = castLight;
+
+                // Set light value to new value.
+                _light = value;
+
+                // If our new light value is darker than the old one, check our neighbouring voxels.
+                if (_light < oldLightValue) {
+
+                    List<int> neigboursToDarken = new List<int>();
+
+                    // Loop through each neighbour.
+                    for (int p = 0; p < 6; p++) {
+
+                        // Make sure we have a neigbour here before trying to do anything with it.
+                        if (neighbors[p] != null) {
+                            // If a neigbour is less than or equal to our old light value, that means
+                            // this voxel might have been lighting it up. We want to set it's light value
+                            // to zero and then it will run its own neighbour checks, but we don't want to
+                            // do that until we've finished here, so add it to our list and we'll do it
+                            // after.
+                            if (neighbors[p].light <= oldCastValue)
+                                neigboursToDarken.Add(p);
+                            // If the neighbour is brighter than our old value, then that voxel
+                            // is being lit from somewhere else. We then tell that voxel to propogate and, if it
+                            // is lighter than this voxel, light will be propogated to here.
+                            else {
+                                neighbors[p].PropogateLight();
+                            }
+
+
+                        }
+                    }
+
+                    // Loop through our neighbors for darkening and set their light to zero. They will then
+                    // perform their own neighbour checks and tell any brighter voxels (including this one)
+                    // to propogate.
+                    foreach (int i in neigboursToDarken) {
+
+                        neighbors[i].light = 0;
+
+                    }
+
+                    // If this voxel is part of an active chunk, add that chunk for updating.
+                    if (chunkData.chunk != null)
+                        World.Instance.AddChunkToUpdate(chunkData.chunk);
+
+                } else if (_light > 1)
+                    PropogateLight();
+
+            }
+
+        }
+
+    }
 
     public VoxelState(byte _id, ChunkData _chunkData, Vector3Int _position, byte _orientation)
     {
         // constructor
         id = _id;
         orientation = _orientation;
-        chunkData = _chunkData;
+        chunkData = _chunkData; // need to set before light
         neighbors = new VoxelNeighbors(this);
         position = _position;
-
+        globalLightPercent = 0f;
+        light = 0;
 
         if(SettingsStatic.LoadedSettings.useStuds)
         {
@@ -39,6 +106,53 @@ public class VoxelState
         get
         {
             return new Vector3Int(position.x + chunkData.position.x, position.y, position.z + chunkData.position.y);
+        }
+    }
+
+    public float lightAsFloat {
+
+        get { return (float)light * VoxelData.unitOfLight; }
+
+    }
+
+    public byte castLight {
+
+        get {
+
+            // Get the amount of light this voxel is spreading. Bytes rap around so we
+            // need to do this with an int so we can make sure it doesn't get below 0.
+            int lightLevel = _light - properties.opacity - 1;
+            if (lightLevel < 0) lightLevel = 0;
+            return (byte)lightLevel;
+
+        }
+
+    }
+
+    public void PropogateLight () {
+
+        // If we somehow added a null voxel or one that isn't bright enough to propogate, return.
+        if (light < 2)
+            return;
+
+        // Loop through each neighbour of this voxel.
+        for (int p = 0; p < 6; p++) {
+
+            // We can only propogate to voxels that exist so check there is one first.
+            if (neighbors[p] != null) {
+
+                // We can ONLY propogate light in one direction (lighter to darker). If
+                // we work in both direction, we will get recurssive loops.
+                // So any neighbors who are not darker than this voxel's lightCast value,
+                // we leave alone.
+                if (neighbors[p].light < castLight)
+                    neighbors[p].light = castLight;
+
+            }
+
+            if (chunkData.chunk != null)
+                World.Instance.AddChunkToUpdate(chunkData.chunk);
+
         }
     }
 

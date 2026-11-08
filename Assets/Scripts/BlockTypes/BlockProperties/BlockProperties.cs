@@ -8,7 +8,8 @@ public class BlockProperties : ScriptableObject
     public int stackMax;
     public bool isDrawn;
     public bool isSolid;
-    public bool isTransparent;
+    public bool renderNeighborFaces;
+    public float opacity;
     public bool isWater;
     public VoxelMeshData standardMeshData;
     public VoxelMeshData studsMeshData;

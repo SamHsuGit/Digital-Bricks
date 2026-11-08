@@ -13,7 +13,7 @@ public class World : MonoBehaviour
     [Header("Shown For Debug")]
     public int playerCount = 0;
     public WorldData worldData;
-    public bool multithreading = true;
+    public bool multithreading = false;
     public bool setSpawnPos = false;
 
     [Header("Public Referenced By Others")]
@@ -61,6 +61,11 @@ public class World : MonoBehaviour
     [HideInInspector] public object ChunkLoadThreadLock = new object();
     [HideInInspector] public object ChunkListThreadLock = new object();
     [HideInInspector] public Material blockMaterial;
+
+    [Range(0f, 1f)]
+    public float globalLightLevel;
+    public Color day;
+    public Color night;
 
     [Header("Public References")]
     public GameObject mainCameraGameObject;
@@ -354,7 +359,12 @@ public class World : MonoBehaviour
             }
         }
 
+        Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
+        Shader.SetGlobalFloat("maxGlobalLightLevel", VoxelData.maxLightLevel);
+
         LoadWorld();
+
+        //SetGlobalLightValue();
         SaveSystem.SaveWorldDataToFile(worldData, this);
         worldPlayer.transform.position = defaultSpawnPosition;
 
@@ -627,8 +637,17 @@ public class World : MonoBehaviour
         undrawVBO = undrawVoxels; // set same as undrawVoxels
     }
 
+    public void SetGlobalLightValue () {
+
+        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
+        Camera.main.backgroundColor = Color.Lerp(night, day, globalLightLevel);
+    }
+
     private void Update()
     {
+        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel); // for testing
+        Camera.main.backgroundColor = Color.Lerp(day, night, globalLightLevel); // for testing
+
         if (!Settings.WebGL && !worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
 
@@ -690,6 +709,14 @@ public class World : MonoBehaviour
                 chunkDrawTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
             }
         }
+
+        if (chunksToDraw.Count > 0)
+            lock (chunksToDraw) {
+
+                if (chunksToDraw.Peek().isEditable)
+                    chunksToDraw.Dequeue().CreateMesh();
+
+            }
 
         if (drawVBO)
         {
@@ -838,6 +865,34 @@ public class World : MonoBehaviour
                 }
             }
         }
+    }
+
+    // public bool CheckForVoxel (Vector3 pos) {
+
+    //     ChunkCoord thisChunk = new ChunkCoord(pos);
+
+    //     if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.ChunkHeight)
+    //         return false;
+
+    //     if (chunks[thisChunk.x, thisChunk.z] != null && chunks[thisChunk.x, thisChunk.z].isEditable)
+    //         return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos)].isSolid;
+
+    //     return blockTypes[GetVoxel(pos)].isSolid;
+
+    // }
+
+    public bool CheckIfVoxelTransparent (Vector3Int pos) {
+
+        ChunkCoord thisChunk = new ChunkCoord(pos);
+
+        if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.ChunkHeight)
+            return false;
+
+        if (chunks[thisChunk.x, thisChunk.z] != null && chunks[thisChunk.x, thisChunk.z].isEditable)
+            return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos).id].blockProperties.renderNeighborFaces;
+
+        return blockTypes[GetVoxel(pos)].blockProperties.renderNeighborFaces;
+
     }
 
     void ThreadedUpdate()
@@ -1770,6 +1825,7 @@ public class World : MonoBehaviour
         return chunks[x, z];
     }
 
+    // FUTURE: use to check if block is solid for collisions
     public bool CheckForVoxel(Vector3 pos, bool forCollisionCheck)
     {
         VoxelState voxel = worldData.GetVoxel(pos); // gets the voxel state from saved worldData
