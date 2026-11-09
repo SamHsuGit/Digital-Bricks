@@ -305,7 +305,7 @@ public class Crafting : MonoBehaviour
                         return;
                     }
 
-                    // if crystal give extra qty of items
+                    // if crystal give extra qty of items?
                     int outputQty = 0;
                     if(isCrystal) // special code for crystals to output correct blockID and qty to allow for better progression and finding "rare" crystals
                     {

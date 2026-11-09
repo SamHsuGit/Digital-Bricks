@@ -551,10 +551,10 @@ public class World : MonoBehaviour
         else if (!Settings.WebGL)
             loadDistance = Mathf.CeilToInt(SettingsStatic.LoadedSettings.viewDistance * 1.333f); // optimal loadDistance provides enough world to hide edges with low load time (7 sec)
         else
-            loadDistance = Mathf.CeilToInt(viewDistance * 1.333f * 2);
+            loadDistance = Mathf.CeilToInt(viewDistance * 1.333f * 1);
 
         if (!SettingsStatic.LoadedSettings.developerMode)
-            loadDistance = Mathf.CeilToInt(viewDistance * 2); // larger load distance for regular mode allows chunks to be pre-computed for better performance
+            loadDistance = Mathf.CeilToInt(viewDistance * 1); // larger load distance for regular mode allows chunks to be pre-computed for better performance
 
         for (int x = (worldSizeInChunks / 2) - loadDistance; x < (worldSizeInChunks / 2) + loadDistance; x++)
         {
@@ -713,8 +713,8 @@ public class World : MonoBehaviour
         if (chunksToDraw.Count > 0)
             lock (chunksToDraw) {
 
-                if (chunksToDraw.Peek().isEditable)
-                    chunksToDraw.Dequeue().CreateMesh();
+                //if (chunksToDraw.Peek().isEditable)
+                chunksToDraw.Dequeue().CreateMesh();
 
             }
 

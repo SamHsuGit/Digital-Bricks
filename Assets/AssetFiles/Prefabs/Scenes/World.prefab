@@ -114,6 +114,9 @@ MonoBehaviour:
   biomeID: 0
   baseOb: {fileID: 0}
   blockMaterial: {fileID: 2100000, guid: b6d6bb49e12b0aa42b47b718af208cff, type: 2}
+  globalLightLevel: 0
+  day: {r: 0, g: 0, b: 0, a: 0}
+  night: {r: 0, g: 0, b: 0, a: 0}
   mainCameraGameObject: {fileID: 0}
   globalLighting: {fileID: 0}
   loadingText: {fileID: 0}

@@ -237,6 +237,7 @@ public class Controller : NetworkBehaviour
             world.baseOb = LDrawImportRuntime.Instance.baseOb;
 
         voxelCollider = GetComponent<VoxelCollider>();
+        voxelCollider.jumpSoundsArrayLength = jumps.Length;
         voxelCollider.world = world;
         physicMaterial = world.physicMaterial;
         worldPPFXSetValues = world.GetComponent<PPFXSetValues>();

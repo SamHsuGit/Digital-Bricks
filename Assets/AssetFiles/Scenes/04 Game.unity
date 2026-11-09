@@ -3031,7 +3031,7 @@ PrefabInstance:
       objectReference: {fileID: 2529205028307385179}
     - target: {fileID: 6273157275290195827, guid: 2c138186b0263ea45a8eb9fad0660e99, type: 3}
       propertyPath: globalLightLevel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6273157275290195827, guid: 2c138186b0263ea45a8eb9fad0660e99, type: 3}
       propertyPath: loadingBackground

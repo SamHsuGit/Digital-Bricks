@@ -33,7 +33,7 @@ public class VoxelCollider : MonoBehaviour
     public float length;
     public float height;
     public bool playerChunkIsActive;
-    private int jumpSoundsArrayLength;
+    public int jumpSoundsArrayLength;
 
     private Vector3 originalPos;
     private Transform childTransform;
@@ -46,8 +46,6 @@ public class VoxelCollider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        jumpSoundsArrayLength = controller.jumps.Length;
-
         waterBlockID = World.Instance.worldData.blockIDwater;
         roadBlockID = World.Instance.worldData.blockIDsubsurface;
 

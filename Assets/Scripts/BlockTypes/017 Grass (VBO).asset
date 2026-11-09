@@ -19,6 +19,8 @@ MonoBehaviour:
   dropID: 17
   colorID: 8
   hardness: 0
+  opacity: 1
+  baseLightLevel: 0
   icon: {fileID: 8627043524693180128, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#00852B'
   ldrawHexValueCodeNumber: 2

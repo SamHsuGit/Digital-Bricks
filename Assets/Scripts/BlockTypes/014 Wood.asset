@@ -18,21 +18,15 @@ MonoBehaviour:
   id: 14
   dropID: 14
   colorID: 6
-  stackMax: 64
-  isDrawn: 1
-  isSolid: 1
-  isTransparent: 0
-  isWater: 0
   hardness: 2
-  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
-  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
+  baseLightLevel: 0
   icon: {fileID: -2610892883229420862, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#543324'
   ldrawHexValueCodeNumber: 6
   material: {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
-  voxelPrefab: {fileID: 9144360978228567936, guid: 4f888babbcdb15f4ab2e1ee9e5b1fc55, type: 3}
+  voxelPrefab: {fileID: 9144360978228567936, guid: aeee11861035ded4d8f5297fdebc66a9, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: 5fcf9e60b5a87384ca44a300de346a4e, type: 3}
   backFaceTexture: 32
   frontFaceTexture: 31
@@ -41,7 +35,3 @@ MonoBehaviour:
   leftFaceTexture: 32
   rightFaceTexture: 31
   topFaceSmoothTexture: 49
-  blockSounds:
-  - {fileID: 8300000, guid: 999d3f711a766b144b3d6cc80e5688d1, type: 3}
-  - {fileID: 8300000, guid: 7320be2b2204d4c44b2728763b6a6c06, type: 3}
-  - {fileID: 8300000, guid: 999d3f711a766b144b3d6cc80e5688d1, type: 3}

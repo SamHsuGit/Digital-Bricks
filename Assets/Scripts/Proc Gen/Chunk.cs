@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using UnityEngine;
 using System.Diagnostics;
+using System.Threading;
 
 public class Chunk
 {
@@ -127,35 +128,35 @@ public class Chunk
     {
         // threadLocked = true;
 
-        // if (world.enableThreading) {
-        //     Thread myThread = new Thread(new ThreadStart(_updateChunk));
-        //     myThread.Start();
-        // } else
+        if (World.Instance.multithreading) {
+            Thread myThread = new Thread(new ThreadStart(_updateChunk));
+            myThread.Start();
+        } else
             _updateChunk();
 
-        while (modifications.Count > 0) {
+        // while (modifications.Count > 0) {
 
-            VoxelMod v = modifications.Dequeue();
-            Vector3 pos = v.position -= position;
-            chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
+        //     VoxelMod v = modifications.Dequeue();
+        //     Vector3 pos = v.position -= position;
+        //     chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
 
-        }
+        // }
 
-        ClearMeshData();
+        // ClearMeshData();
 
-        for (int y = 0; y < VoxelData.ChunkHeight; y++)
-        {
-            for (int x = 0; x < VoxelData.ChunkWidth; x++)
-            {
-                for (int z = 0; z < VoxelData.ChunkWidth; z++)
-                {
-                    if (World.Instance.blockTypes[chunkData.map[x, y, z].id].blockProperties.isDrawn)
-                        UpdateMeshData(new Vector3Int(x, y, z)); // draw chunk by adding mesh data
-                }
-            }
-        }
+        // for (int y = 0; y < VoxelData.ChunkHeight; y++)
+        // {
+        //     for (int x = 0; x < VoxelData.ChunkWidth; x++)
+        //     {
+        //         for (int z = 0; z < VoxelData.ChunkWidth; z++)
+        //         {
+        //             if (World.Instance.blockTypes[chunkData.map[x, y, z].id].blockProperties.isDrawn)
+        //                 UpdateMeshData(new Vector3Int(x, y, z)); // draw chunk by adding mesh data
+        //         }
+        //     }
+        // }
 
-        World.Instance.chunksToDraw.Enqueue(this);
+        //World.Instance.chunksToDraw.Enqueue(this);
 
         // lock (World.Instance.chunksToDraw) {
         //     World.Instance.chunksToDraw.Enqueue(this);
@@ -216,7 +217,10 @@ public class Chunk
                         lightRay = World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity;
 
                     //thisVoxel.globalLightPercent = (byte)Mathf.FloorToInt(lightRay * 16);
-                    thisVoxel.globalLightPercent = lightRay;
+                    // if(World.Instance.blockTypes[thisVoxel.id].baseLightLevel > 0)
+                    //     thisVoxel.globalLightPercent = 100f;
+                    // else
+                        thisVoxel.globalLightPercent = lightRay;
 
                     chunkData.map[x, y, z] = thisVoxel;
 
@@ -361,7 +365,7 @@ public class Chunk
         chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData 
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
 
-        //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData
+        //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData (needed if using cross chunk lighting as this doesn't get set in calculate lighting)
         //World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
     }
 
@@ -465,7 +469,6 @@ public class Chunk
             // do not render if this voxel is water AND neighbor above is also water
             if (neighbor != null && (World.Instance.blockTypes[neighbor.id].blockProperties.renderNeighborFaces || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight))// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
-
                 //float lightLevel = neighbor.lightAsFloat;
                 int faceVertCount = 0;
                 
@@ -474,7 +477,7 @@ public class Chunk
                     VertData vertData = meshData.faces[p].GetVertData(i);
                     vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
                     normals.Add(VoxelData.faceChecks[p]);
-                    
+
                     float lightLevel = neighbor.globalLightPercent;
 
                     colors.Add(new Color(0, 0, 0, lightLevel));
