@@ -348,11 +348,8 @@ public class Chunk
 
         if (newID == 0)
             World.Instance.RemoveVBOFromVoxel(pos); // removes VBO if voxel below is replaced with air
-        else
-        {
-            // add VBO immediately whenever a new block is placed. Currently only objects are only replaced. Studs are replaced when update chunk is called.
+        else // add VBO immediately whenever a new block is placed. Currently only objects are only replaced. Studs are replaced when update chunk is called.
             World.Instance.AddVBOToVoxel(pos, newID);
-        }
 
         int xCheck = Mathf.FloorToInt(pos.x);
         int yCheck = Mathf.FloorToInt(pos.y);
@@ -470,6 +467,7 @@ public class Chunk
             if (neighbor != null && (World.Instance.blockTypes[neighbor.id].blockProperties.renderNeighborFaces || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight))// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
                 //float lightLevel = neighbor.lightAsFloat;
+                float lightLevel = neighbor.globalLightPercent;
                 int faceVertCount = 0;
                 
                 for (int i = 0; i < meshData.faces[p].vertData.Length; i++)
@@ -477,17 +475,13 @@ public class Chunk
                     VertData vertData = meshData.faces[p].GetVertData(i);
                     vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
                     normals.Add(VoxelData.faceChecks[p]);
-
-                    float lightLevel = neighbor.globalLightPercent;
-
                     colors.Add(new Color(0, 0, 0, lightLevel));
-
                     if(p == 2 && !voxel.hasStuds)
                         AddTexture(voxel.properties.GetTextureID(6), vertData.uv); // smooth top texture
                     else
                         AddTexture(voxel.properties.GetTextureID(p), vertData.uv); // studs texture
-                    
                     faceVertCount++;
+                    
                 }
                 
                 // ADD TRIANGLES
