@@ -87,20 +87,6 @@ public class ChunkData
 
     private Dictionary<Vector3Int, byte> voxelTypeMemo = new Dictionary<Vector3Int, byte>();
 
-    public byte GetVoxel(Vector3Int pos) //memorization function recommended as performance improvement by chatGPT
-    {
-        // checks if we already know the value of the voxel stored in voxelTypeMemo, if so return it
-        if (voxelTypeMemo.ContainsKey(pos))
-        {
-            return voxelTypeMemo[pos];
-        }
-
-        // if we do not know the value, calculated it normally with the GetVoxel function defined in the world class (slower)
-        byte voxelType = World.Instance.GetVoxel(pos);
-        voxelTypeMemo[pos] = voxelType;
-        return voxelType;
-    }
-
     public void Populate()
     {
         // Profiling Reveals this is the most resource intensive operation (takes a long time primarily due to the number of iterations 16x16x96)

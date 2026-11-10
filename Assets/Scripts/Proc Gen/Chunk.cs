@@ -186,6 +186,7 @@ public class Chunk
 				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
 
                     if (World.Instance.blockTypes[chunkData.map[x,y,z].id].blockProperties.isSolid)
+                    if (World.Instance.blockTypes[chunkData.map[x,y,z].id].blockProperties.isDrawn)
 					    UpdateMeshData (new Vector3Int(x, y, z));
 
 				}
@@ -216,11 +217,7 @@ public class Chunk
                     if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity < lightRay)
                         lightRay = World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity;
 
-                    //thisVoxel.globalLightPercent = (byte)Mathf.FloorToInt(lightRay * 16);
-                    // if(World.Instance.blockTypes[thisVoxel.id].baseLightLevel > 0)
-                    //     thisVoxel.globalLightPercent = 100f;
-                    // else
-                        thisVoxel.globalLightPercent = lightRay;
+                    thisVoxel.globalLightPercent = lightRay;
 
                     chunkData.map[x, y, z] = thisVoxel;
 
@@ -359,10 +356,12 @@ public class Chunk
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
         // Added in https://www.youtube.com/watch?v=DjQ6yFRuZ7Q but is broken, does not allow player to modify voxels so commented out, instead use old code below
-        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData 
-        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+        //chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData 
 
-        //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData (needed if using cross chunk lighting as this doesn't get set in calculate lighting)
+        chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData (needed if using cross chunk lighting as this doesn't get set in calculate lighting)
+        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+        _updateChunk();
+
         //World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
     }
 
@@ -540,7 +539,7 @@ public class Chunk
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
         mesh.subMeshCount = 3; // used for block and transBlock materials?
-        mesh.SetTriangles(triangles.ToArray(), 0);
+        mesh.SetTriangles(triangles.ToArray(), 0); // issues with this caused by multithreading issues?
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.SetTriangles(waterTriangles.ToArray(), 2);
         mesh.uv = uvs.ToArray();

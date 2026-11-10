@@ -13,7 +13,7 @@ public class World : MonoBehaviour
     [Header("Shown For Debug")]
     public int playerCount = 0;
     public WorldData worldData;
-    public bool multithreading = false;
+    public bool multithreading = true;
     public bool setSpawnPos = false;
 
     [Header("Public Referenced By Others")]
@@ -645,8 +645,8 @@ public class World : MonoBehaviour
 
     private void Update()
     {
-        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel); // for testing
-        Camera.main.backgroundColor = Color.Lerp(day, night, globalLightLevel); // for testing
+        //Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel); // for testing
+        //Camera.main.backgroundColor = Color.Lerp(day, night, globalLightLevel); // for testing
 
         if (!Settings.WebGL && !worldLoaded) // don't continue with main loop if world has not been loaded.
             return;
@@ -691,10 +691,10 @@ public class World : MonoBehaviour
         if (!multithreading)
         {
             if (!applyingModifications)
-                    ApplyModifications();
+                ApplyModifications();
 
-                if (chunksToUpdate.Count > 0)
-                    UpdateChunks();
+            if (chunksToUpdate.Count > 0)
+                UpdateChunks();
         }
 
         if (chunksToDraw.Count > 0)
@@ -702,21 +702,14 @@ public class World : MonoBehaviour
             {
                 chunkDrawStopWatch.Start();
 
-                chunksToDraw.Dequeue().CreateMesh();
+                if (chunksToDraw.Peek().isEditable)
+                    chunksToDraw.Dequeue().CreateMesh();
 
                 chunkDrawStopWatch.Stop();
                 TimeSpan ts = chunkDrawStopWatch.Elapsed;
                 chunkDrawTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
             }
         }
-
-        if (chunksToDraw.Count > 0)
-            lock (chunksToDraw) {
-
-                //if (chunksToDraw.Peek().isEditable)
-                chunksToDraw.Dequeue().CreateMesh();
-
-            }
 
         if (drawVBO)
         {
@@ -865,34 +858,6 @@ public class World : MonoBehaviour
                 }
             }
         }
-    }
-
-    // public bool CheckForVoxel (Vector3 pos) {
-
-    //     ChunkCoord thisChunk = new ChunkCoord(pos);
-
-    //     if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.ChunkHeight)
-    //         return false;
-
-    //     if (chunks[thisChunk.x, thisChunk.z] != null && chunks[thisChunk.x, thisChunk.z].isEditable)
-    //         return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos)].isSolid;
-
-    //     return blockTypes[GetVoxel(pos)].isSolid;
-
-    // }
-
-    public bool CheckIfVoxelTransparent (Vector3Int pos) {
-
-        ChunkCoord thisChunk = new ChunkCoord(pos);
-
-        if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.ChunkHeight)
-            return false;
-
-        if (chunks[thisChunk.x, thisChunk.z] != null && chunks[thisChunk.x, thisChunk.z].isEditable)
-            return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos).id].blockProperties.renderNeighborFaces;
-
-        return blockTypes[GetVoxel(pos)].blockProperties.renderNeighborFaces;
-
     }
 
     void ThreadedUpdate()
