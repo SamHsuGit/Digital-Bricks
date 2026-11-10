@@ -185,7 +185,6 @@ public class Chunk
 			for (int x = 0; x < VoxelData.ChunkWidth; x++) {
 				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
 
-                    if (World.Instance.blockTypes[chunkData.map[x,y,z].id].blockProperties.isSolid)
                     if (World.Instance.blockTypes[chunkData.map[x,y,z].id].blockProperties.isDrawn)
 					    UpdateMeshData (new Vector3Int(x, y, z));
 
