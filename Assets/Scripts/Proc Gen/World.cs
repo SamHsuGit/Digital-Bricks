@@ -364,7 +364,7 @@ public class World : MonoBehaviour
 
         LoadWorld();
 
-        //SetGlobalLightValue();
+        SetGlobalLightValue();
         SaveSystem.SaveWorldDataToFile(worldData, this);
         worldPlayer.transform.position = defaultSpawnPosition;
 

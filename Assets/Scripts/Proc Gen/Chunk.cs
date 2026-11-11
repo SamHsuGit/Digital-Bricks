@@ -219,6 +219,7 @@ public class Chunk
                     thisVoxel.globalLightPercent = lightRay;
 
                     chunkData.map[x, y, z] = thisVoxel;
+                    //chunkData.map[x, y, z].globalLightPercent = thisVoxel.globalLightPercent;
 
                     if (lightRay > VoxelData.lightFalloff)
                         litVoxels.Enqueue(new Vector3Int(x, y, z));
@@ -355,11 +356,12 @@ public class Chunk
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
         // Added in https://www.youtube.com/watch?v=DjQ6yFRuZ7Q but is broken, does not allow player to modify voxels so commented out, instead use old code below
-        //chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData 
+        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData (makes trees, but not threadsafe)
 
-        chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData (needed if using cross chunk lighting as this doesn't get set in calculate lighting)
+        //doesn't generate trees
+        //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData (needed if using cross chunk lighting as this doesn't get set in calculate lighting)
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
-        _updateChunk();
+        //_updateChunk();
 
         //World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
     }
