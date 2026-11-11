@@ -13,7 +13,7 @@ public class World : MonoBehaviour
     [Header("Shown For Debug")]
     public int playerCount = 0;
     public WorldData worldData;
-    public bool multithreading = false; // does not work with Minecraft lighting
+    public bool multithreading = false;
     public bool setSpawnPos = false;
 
     [Header("Public Referenced By Others")]

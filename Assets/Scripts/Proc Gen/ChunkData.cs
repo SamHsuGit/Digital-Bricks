@@ -160,21 +160,24 @@ public class ChunkData
         VoxelState voxel = map[pos.x, pos.y, pos.z];
         BlockType newVoxel = World.Instance.blockTypes[_id];
 
-        // Cache the old opacity value.
-        byte oldOpacity = voxel.properties.opacity;
+        //// Cache the old opacity value.
+        //byte oldOpacity = voxel.properties.opacity;
 
         // Set voxel to new ID.
         voxel.id = _id;
         voxel.orientation = direction;
 
-        // If the opacity values of the voxel have changed and the voxel above is in direct sunlight
-        // (or is above the world) recast light from that voxel downwards.
-        if (voxel.properties.opacity != oldOpacity &&
-            (pos.y == VoxelData.ChunkHeight - 1 || map[pos.x, pos.y + 1, pos.z].light == 15)) {
+        if (chunk != null)
+            chunk.voxelMap[pos.x, pos.y, pos.z].id = _id; // set copy of chunkData to new ID (only sets in first chunk?)
 
-            LightingCrossChunk.CastNaturalLight(this, pos.x, pos.z, pos.y + 1);
+        //// If the opacity values of the voxel have changed and the voxel above is in direct sunlight
+        //// (or is above the world) recast light from that voxel downwards.
+        //if (voxel.properties.opacity != oldOpacity &&
+        //    (pos.y == VoxelData.ChunkHeight - 1 || map[pos.x, pos.y + 1, pos.z].light == 15)) {
 
-        }
+        //    LightingCrossChunk.CastNaturalLight(this, pos.x, pos.z, pos.y + 1);
+
+        //}
 
         if (voxel.properties.isActive && BlockBehavior.Active(voxel))
             voxel.chunkData.chunk.AddActiveVoxel(voxel);
@@ -185,7 +188,7 @@ public class ChunkData
                     voxel.neighbors[i].chunkData.chunk.AddActiveVoxel(voxel.neighbors[i]);
         }
 
-        // Addds this to list of chunks to be saved (triggered when surface objects placed).
+        // Adds this to list of chunks to be saved (triggered when surface objects placed).
         World.Instance.worldData.AddToModifiedChunkList(this);
 
         // If we have a chunk attached, add that for updating.

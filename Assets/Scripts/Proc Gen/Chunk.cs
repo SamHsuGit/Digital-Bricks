@@ -169,13 +169,14 @@ public class Chunk
 
         threadLocked = true;
 
-        //while (modifications.Count > 0) {
+        while (modifications.Count > 0)
+        {
 
-        //    VoxelMod v = modifications.Dequeue();
-        //    Vector3 pos = v.position -= position;
-        //    voxelMap[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
+            VoxelMod v = modifications.Dequeue();
+            Vector3 pos = v.position -= position;
+            voxelMap[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
 
-        //}
+        }
 
         ClearMeshData();
 
@@ -355,15 +356,14 @@ public class Chunk
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
-        // Added in https://www.youtube.com/watch?v=DjQ6yFRuZ7Q but is broken, does not allow player to modify voxels so commented out, instead use old code below
-        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData (makes trees, but not threadsafe)
-
-        //doesn't generate trees
-        //voxelMap[xCheck, yCheck, zCheck].id = newID; // write new block ID
+        // write new block ID to chunkData.map and voxelMap
+        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation);
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+
+        //doesn't generate trees, causes rendering issue
         //_updateChunk();
 
-        //World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because chunks explored by player get modified for structures and marked to saved to file.
+        //World.Instance.worldData.AddToModifiedChunkList(_chunkData); // commented out because is done in ModifyVoxel
     }
 
     void UpdateSurroundingVoxels(int x, int y, int z)
@@ -540,7 +540,7 @@ public class Chunk
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
         mesh.subMeshCount = 3; // used for block and transBlock materials?
-        mesh.SetTriangles(triangles.ToArray(), 0); // issues with this caused by multithreading issues?
+        mesh.SetTriangles(triangles.ToArray(), 0); // issues when modifying same array with multiple functions is why need to separate voxelMap from underlying chunkData.map
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.SetTriangles(waterTriangles.ToArray(), 2);
         mesh.uv = uvs.ToArray();
