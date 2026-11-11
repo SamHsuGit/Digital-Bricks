@@ -169,13 +169,13 @@ public class Chunk
 
         threadLocked = true;
 
-        while (modifications.Count > 0) {
+        //while (modifications.Count > 0) {
 
-            VoxelMod v = modifications.Dequeue();
-            Vector3 pos = v.position -= position;
-            chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
+        //    VoxelMod v = modifications.Dequeue();
+        //    Vector3 pos = v.position -= position;
+        //    voxelMap[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
 
-        }
+        //}
 
         ClearMeshData();
 
@@ -185,8 +185,8 @@ public class Chunk
 			for (int x = 0; x < VoxelData.ChunkWidth; x++) {
 				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
 
-                    if (World.Instance.blockTypes[chunkData.map[x,y,z].id].blockProperties.isDrawn)
-					    UpdateMeshData (new Vector3Int(x, y, z));
+                    if (World.Instance.blockTypes[voxelMap[x,y,z].id].blockProperties.isSolid)
+					    UpdateMeshData (new Vector3(x, y, z)); // redraw chunk
 
 				}
 			}
@@ -211,14 +211,14 @@ public class Chunk
 
                 for (int y = VoxelData.ChunkHeight - 1; y >= 0; y--) {
 
-                    VoxelState thisVoxel = chunkData.map[x, y, z];
+                    VoxelState thisVoxel = voxelMap[x, y, z];
 
                     if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity < lightRay)
                         lightRay = World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity;
 
                     thisVoxel.globalLightPercent = lightRay;
 
-                    chunkData.map[x, y, z] = thisVoxel;
+                    voxelMap[x, y, z] = thisVoxel;
                     //chunkData.map[x, y, z].globalLightPercent = thisVoxel.globalLightPercent;
 
                     if (lightRay > VoxelData.lightFalloff)
@@ -239,11 +239,11 @@ public class Chunk
 
                 if (IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.z)) {
                     // if the neighbor voxel light value is less than the original voxel minus fall off
-                    if (chunkData.map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent < chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff) {
+                    if (voxelMap[neighbor.x, neighbor.y, neighbor.z].globalLightPercent < voxelMap[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff) {
                         // set neighbor light value to this voxel minus fall off
-                        chunkData.map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent = chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
+                        voxelMap[neighbor.x, neighbor.y, neighbor.z].globalLightPercent = voxelMap[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
                         // if the neighbor light value is light enough could illuminate other voxels, then do this code again for neighbor
-                        if (chunkData.map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent > VoxelData.lightFalloff)
+                        if (voxelMap[neighbor.x, neighbor.y, neighbor.z].globalLightPercent > VoxelData.lightFalloff)
                             litVoxels.Enqueue(neighbor);
 
                     }
@@ -359,7 +359,7 @@ public class Chunk
         chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, _player.orientation); // write new block ID to chunkData (makes trees, but not threadsafe)
 
         //doesn't generate trees
-        //chunkData.map[xCheck, yCheck, zCheck].id = newID; // write new block ID to chunkData (needed if using cross chunk lighting as this doesn't get set in calculate lighting)
+        //voxelMap[xCheck, yCheck, zCheck].id = newID; // write new block ID
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
         //_updateChunk();
 
@@ -381,13 +381,13 @@ public class Chunk
         }
     }
 
-    void UpdateMeshData(Vector3Int pos)
+    void UpdateMeshData(Vector3 pos)
     {
         int x = Mathf.FloorToInt(pos.x);
         int y = Mathf.FloorToInt(pos.y);
         int z = Mathf.FloorToInt(pos.z);
 
-        VoxelState voxel = chunkData.map[x, y, z];
+        VoxelState voxel = voxelMap[x, y, z];
 
         float rot = 0f;
         switch (voxel.orientation)
@@ -453,15 +453,15 @@ public class Chunk
                 }
             }
 
-            //Vector3Int neighborPos = pos + VoxelData.faceChecks[translatedP];
-            //VoxelState neighbor = CheckVoxel(neighborPos);
+            Vector3 neighborPos = pos + VoxelData.faceChecks[translatedP];
+            VoxelState neighbor = CheckVoxel(neighborPos);
             //VoxelState neighbor = chunkData.map[neighborPos.x, neighborPos.y, neighborPos.z];
             
             //  if(chunkData.map[x, y, z].neighbors[p] != null)
             //      neighbor = chunkData.map[x, y, z].neighbors[p];
             //VoxelState neighbor = chunkData.map[x, y, z].neighbors[p]; // DOES NOT WORK. Chunks loaded from file do not have neighbors which causes chunk to not render
             
-            VoxelState neighbor = chunkData.map[x, y, z].neighbors[translatedP];
+            //VoxelState neighbor = chunkData.map[x, y, z].neighbors[translatedP];
 
             // do not render if this voxel is water AND neighbor above is also water
             if (neighbor != null && (World.Instance.blockTypes[neighbor.id].blockProperties.renderNeighborFaces || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight))// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
@@ -517,9 +517,9 @@ public class Chunk
 		int z = Mathf.FloorToInt (pos.z);
 
         if (!IsVoxelInChunk(x, y, z))
-            return GetVoxelFromGlobalVector3(pos + position);
+            return World.Instance.GetVoxelState(pos + position);
 
-		return chunkData.map[x, y, z];
+		return voxelMap[x, y, z];
 
 	}
 
@@ -532,7 +532,7 @@ public class Chunk
         xCheck -= Mathf.FloorToInt(position.x);
         zCheck -= Mathf.FloorToInt(position.z);
 
-        return chunkData.map[xCheck, yCheck, zCheck];
+        return voxelMap[xCheck, yCheck, zCheck];
     }
 
     public void CreateMesh()
