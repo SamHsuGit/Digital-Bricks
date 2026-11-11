@@ -13,7 +13,7 @@ public class World : MonoBehaviour
     [Header("Shown For Debug")]
     public int playerCount = 0;
     public WorldData worldData;
-    public bool multithreading = true;
+    public bool multithreading = false;
     public bool setSpawnPos = false;
 
     [Header("Public Referenced By Others")]

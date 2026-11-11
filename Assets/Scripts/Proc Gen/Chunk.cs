@@ -466,7 +466,7 @@ public class Chunk
             // do not render if this voxel is water AND neighbor above is also water
             if (neighbor != null && (World.Instance.blockTypes[neighbor.id].blockProperties.renderNeighborFaces || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight))// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
-                //float lightLevel = neighbor.lightAsFloat;
+                //float lightLevel = neighbor.lightAsFloat; // DID NOT USE CROSS CHUNK LIGHTING, TOO MUCH PERFORMANCE COST
                 float lightLevel = neighbor.globalLightPercent;
                 int faceVertCount = 0;
                 
