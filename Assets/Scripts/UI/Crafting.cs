@@ -34,7 +34,7 @@ public class Crafting : MonoBehaviour
         1, // wood
         3, // stone
         21, // cobblestone
-        7, // gold
+        19, // steel ore
         16, // crystal light green ore
         24, // crystal dark green ore
         26, // crystal blue ore

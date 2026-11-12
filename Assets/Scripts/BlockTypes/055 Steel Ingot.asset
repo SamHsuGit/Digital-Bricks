@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 055 Steel Ingot
+  m_EditorClassIdentifier: 
+  blockName: Steel Ingot
+  blockProperties: {fileID: 11400000, guid: 2dc25493aa07bb64292a5af4fb65f65c, type: 2}
+  uses: 
+  id: 55
+  dropID: 55
+  colorID: 55
+  hardness: 3
+  opacity: 0
+  baseLightLevel: 0
+  icon: {fileID: -550077245, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: '#989B99'
+  ldrawHexValueCodeNumber: 150
+  material: {fileID: 2100000, guid: 1bf8c30331528d94bb878c9f95956276, type: 2}
+  isActive: 0
+  voxelBoundObject: {fileID: 5196350964378782657, guid: 34adea80255203d45803e169e8ee78f7, type: 3}
+  voxelPrefab: {fileID: 5196350964378782657, guid: 34adea80255203d45803e169e8ee78f7, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: df429bff3e0e541eb90528b4dbcb4714, type: 3}
+  backFaceTexture: 0
+  frontFaceTexture: 0
+  topFaceTexture: 0
+  bottomFaceTexture: 0
+  leftFaceTexture: 0
+  rightFaceTexture: 0
+  topFaceSmoothTexture: 0

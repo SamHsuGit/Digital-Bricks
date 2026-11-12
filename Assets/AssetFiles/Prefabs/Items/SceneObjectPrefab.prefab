@@ -139,6 +139,7 @@ MonoBehaviour:
   - {fileID: 5196350964378782657, guid: f3ddd53b59ba542f6a1c60f1e2f31e41, type: 3}
   - {fileID: 0}
   - {fileID: 5196350964378782657, guid: 04a8759af75ab48e28e5053dc7c95dfb, type: 3}
+  - {fileID: 5196350964378782657, guid: 34adea80255203d45803e169e8ee78f7, type: 3}
   tool:
   - {fileID: 1684644973282001674, guid: a47fd261cef04894b90dcaf9fd4ada92, type: 3}
   - {fileID: 704852059749648236, guid: 81adc6bf23045754eb5f5700f74819c0, type: 3}
@@ -297,6 +298,7 @@ MonoBehaviour:
   - {fileID: 3563555514074976273, guid: 3c39dba66cb1c4531a02222f2c282d55, type: 3}
   - {fileID: 3563555514074976273, guid: 3df256f72165a468691d9e9cbbc1aba3, type: 3}
   - {fileID: 0}
+  - {fileID: 3563555514074976273, guid: df429bff3e0e541eb90528b4dbcb4714, type: 3}
   - {fileID: 3563555514074976273, guid: df429bff3e0e541eb90528b4dbcb4714, type: 3}
   placedBrick: []
   undefinedPrefab: []

@@ -184,7 +184,7 @@ public class Chunk
 
                     VoxelState thisVoxel = voxelMap[x, y, z];
                     float baseLightLevel = World.Instance.blockTypes[thisVoxel.id].baseLightLevel;
-                    if (baseLightLevel > 0)
+                    if (baseLightLevel > 0) // example: lava blocks have base light value
                         lightRay = baseLightLevel;
                     else
                     {
@@ -445,7 +445,7 @@ public class Chunk
                 float lightLevel;
 
                 float baseLightLevel = World.Instance.blockTypes[voxel.id].baseLightLevel;
-                if (baseLightLevel > 0)
+                if (baseLightLevel > 0) // example lava blocks have base light value
                     lightLevel = baseLightLevel;
                 else
                     lightLevel = neighbor.globalLightPercent;
