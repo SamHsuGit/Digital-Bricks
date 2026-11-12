@@ -33,7 +33,7 @@ public class Chunk
 
     public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
     private bool _isActive;
-    private bool isVoxelMapPopulated = false;
+    public bool isVoxelMapPopulated = false;
     private bool threadLocked = false;
 
     public ChunkData chunkData;
@@ -133,36 +133,6 @@ public class Chunk
             myThread.Start();
         } else
             _updateChunk();
-
-        // while (modifications.Count > 0) {
-
-        //     VoxelMod v = modifications.Dequeue();
-        //     Vector3 pos = v.position -= position;
-        //     chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
-
-        // }
-
-        // ClearMeshData();
-
-        // for (int y = 0; y < VoxelData.ChunkHeight; y++)
-        // {
-        //     for (int x = 0; x < VoxelData.ChunkWidth; x++)
-        //     {
-        //         for (int z = 0; z < VoxelData.ChunkWidth; z++)
-        //         {
-        //             if (World.Instance.blockTypes[chunkData.map[x, y, z].id].blockProperties.isDrawn)
-        //                 UpdateMeshData(new Vector3Int(x, y, z)); // draw chunk by adding mesh data
-        //         }
-        //     }
-        // }
-
-        //World.Instance.chunksToDraw.Enqueue(this);
-
-        // lock (World.Instance.chunksToDraw) {
-        //     World.Instance.chunksToDraw.Enqueue(this);
-        // }
-
-        // threadLocked = false;
     }
 
     private void _updateChunk () {
@@ -186,7 +156,7 @@ public class Chunk
 			for (int x = 0; x < VoxelData.ChunkWidth; x++) {
 				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
 
-                    if (World.Instance.blockTypes[voxelMap[x,y,z].id].blockProperties.isSolid)
+                    if (World.Instance.blockTypes[voxelMap[x,y,z].id].blockProperties.isDrawn)
 					    UpdateMeshData (new Vector3(x, y, z)); // redraw chunk
 
 				}
@@ -213,14 +183,19 @@ public class Chunk
                 for (int y = VoxelData.ChunkHeight - 1; y >= 0; y--) {
 
                     VoxelState thisVoxel = voxelMap[x, y, z];
-
-                    if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity < lightRay)
-                        lightRay = World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity;
+                    float baseLightLevel = World.Instance.blockTypes[thisVoxel.id].baseLightLevel;
+                    if (baseLightLevel > 0)
+                        lightRay = baseLightLevel;
+                    else
+                    {
+                        if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity < lightRay)
+                            lightRay = World.Instance.blockTypes[thisVoxel.id].blockProperties.opacity;
+                    }
 
                     thisVoxel.globalLightPercent = lightRay;
 
                     voxelMap[x, y, z] = thisVoxel;
-                    //chunkData.map[x, y, z].globalLightPercent = thisVoxel.globalLightPercent;
+                    //chunkData.map[x, y, z].globalLightPercent = thisVoxel.globalLightPercent; // not threadsafe
 
                     if (lightRay > VoxelData.lightFalloff)
                         litVoxels.Enqueue(new Vector3Int(x, y, z));
@@ -467,7 +442,14 @@ public class Chunk
             if (neighbor != null && (World.Instance.blockTypes[neighbor.id].blockProperties.renderNeighborFaces || isInFirstChunkBorder || pos.y == 0 || pos.y == VoxelData.ChunkHeight))// && !(World.Instance.blockTypes[voxel.id].isWater && World.Instance.blockTypes[chunkData.map[x, y + 1, z].id].isWater))
             {
                 //float lightLevel = neighbor.lightAsFloat; // DID NOT USE CROSS CHUNK LIGHTING, TOO MUCH PERFORMANCE COST
-                float lightLevel = neighbor.globalLightPercent;
+                float lightLevel;
+
+                float baseLightLevel = World.Instance.blockTypes[voxel.id].baseLightLevel;
+                if (baseLightLevel > 0)
+                    lightLevel = baseLightLevel;
+                else
+                    lightLevel = neighbor.globalLightPercent;
+
                 int faceVertCount = 0;
                 
                 for (int i = 0; i < meshData.faces[p].vertData.Length; i++)

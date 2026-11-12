@@ -20,7 +20,7 @@ MonoBehaviour:
   colorID: 5
   hardness: 0
   opacity: 0
-  baseLightLevel: 1
+  baseLightLevel: 0.75
   icon: {fileID: 924901225, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#B40000'
   ldrawHexValueCodeNumber: 4

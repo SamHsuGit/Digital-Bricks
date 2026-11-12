@@ -83,7 +83,7 @@ MonoBehaviour:
     blockIDHoneyComb: 0
     blockIDHugeTreeTrunk: 0
     blockIDColumn: 0
-  multithreading: 1
+  multithreading: 0
   setSpawnPos: 0
   planetNumber: 0
   seed: 0

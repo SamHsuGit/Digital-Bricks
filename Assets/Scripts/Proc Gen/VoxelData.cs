@@ -11,8 +11,8 @@ public static class VoxelData
 	public const int WorldSizeInChunks = 200; // binary data compression limits the # of chunks that can be stored to 256 (200 for full version, 8 for demo WebGL)
 
 	// Lighting Values
-    public static float minLightLevel = 0.1f;
-    public static float maxLightLevel = 0.9f;
+    public static float minLightLevel = 0f;
+    public static float maxLightLevel = 1f;
 	public static float lightFalloff = 0.08f;
 
 	public static float unitOfLight {

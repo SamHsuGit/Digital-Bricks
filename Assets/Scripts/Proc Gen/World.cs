@@ -191,7 +191,6 @@ public class World : MonoBehaviour
         {
             viewDistance = SettingsStatic.LoadedSettings.viewDistance;
             undrawDistance = SettingsStatic.LoadedSettings.viewDistance * 4;
-            multithreading = true;
         }
         debugTimer = "notMeasured";
 
