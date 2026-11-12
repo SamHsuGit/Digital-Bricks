@@ -47,7 +47,7 @@ MonoBehaviour:
   largeFlora: []
   XLFlora: []
   lodes:
-  - nodeName: Ore Gold
+  - nodeName: Ore Steel
     blockID: 19
     minHeight: 9
     maxHeight: 64

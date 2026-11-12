@@ -24,7 +24,7 @@ public class VoxelCollider : MonoBehaviour
     public bool isItem = false;
     public int voxelID = 0;
 
-    public GameObject[] voxelBits;
+    //public GameObject[] voxelBits;
 
     CapsuleCollider cc;
     private float gravity = -9.8f * 3; // multiply to account for scaled geometry

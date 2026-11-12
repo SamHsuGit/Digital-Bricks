@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 019 Iron Ore
+  m_Name: 019 Coal Ore
   m_EditorClassIdentifier: 
-  blockName: Iron Ore
+  blockName: Steel Ore
   blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
   uses: 
   id: 19
-  dropID: 55
+  dropID: 19
   colorID: 19
   hardness: 3
   opacity: 0
   baseLightLevel: 0
   icon: {fileID: 646287831, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
-  colorHexValue: '#543324'
-  ldrawHexValueCodeNumber: 6
-  material: {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
+  colorHexValue: '#1B2A34'
+  ldrawHexValueCodeNumber: 0
+  material: {fileID: 2100000, guid: 99296ed922b3d6e4f830b8c630cc1dfb, type: 2}
   isActive: 0
   voxelBoundObject: {fileID: 0}
   voxelPrefab: {fileID: 3225992526758807777, guid: 0be4eb7a3a7cb44958dcf7100be23755, type: 3}
-  voxelBitPrefab: {fileID: 3563555514074976273, guid: 5fcf9e60b5a87384ca44a300de346a4e, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 11830044acb23734fb3b692db73a7264, type: 3}
   backFaceTexture: 42
   frontFaceTexture: 42
   topFaceTexture: 122

@@ -933,7 +933,7 @@ MonoBehaviour:
   placedBrick: {fileID: 0}
   inputHandler: {fileID: 0}
   worldPPFXSetValues: {fileID: 0}
-  blockIDsProgression: 0200000003000000360000001300000010000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000
+  blockIDsProgression: 0200000003000000130000001300000010000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000
 --- !u!114 &8694146929136081849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,7 +1066,6 @@ MonoBehaviour:
   isCamera: 0
   isItem: 0
   voxelID: 0
-  voxelBits: []
   width: 0
   length: 0
   height: 0

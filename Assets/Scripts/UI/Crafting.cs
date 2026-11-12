@@ -29,20 +29,20 @@ public class Crafting : MonoBehaviour
     public GameMenu gameMenu;
     public string craftSlotString;
 
-    public int[] toolBlockIDs = new int[]
+    private int[] toolBlockIDs = new int[]
     {
-        1, // wood
+        14, // wood
         3, // stone
         21, // cobblestone
         19, // steel ore
         16, // crystal light green ore
-        24, // crystal dark green ore
-        26, // crystal blue ore
-        28, // crystal orange ore
-        30, // crystal red ore
+        23, // crystal dark green ore
+        25, // crystal blue ore
+        27, // crystal orange ore
+        29, // crystal red ore
     };
 
-    public int[] crystalBlockIDs = new int[]
+    private int[] crystalBlockIDs = new int[]
     {
         16,
         22,

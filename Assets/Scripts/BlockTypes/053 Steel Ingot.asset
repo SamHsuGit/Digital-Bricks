@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 055 Steel Ingot
+  m_Name: 053 Steel Ingot
   m_EditorClassIdentifier: 
   blockName: Steel Ingot
   blockProperties: {fileID: 11400000, guid: 2dc25493aa07bb64292a5af4fb65f65c, type: 2}
   uses: 
-  id: 55
-  dropID: 55
-  colorID: 55
+  id: 53
+  dropID: 53
+  colorID: 53
   hardness: 3
   opacity: 0
   baseLightLevel: 0
@@ -26,8 +26,8 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 150
   material: {fileID: 2100000, guid: 1bf8c30331528d94bb878c9f95956276, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 5196350964378782657, guid: 34adea80255203d45803e169e8ee78f7, type: 3}
-  voxelPrefab: {fileID: 5196350964378782657, guid: 34adea80255203d45803e169e8ee78f7, type: 3}
+  voxelBoundObject: {fileID: 5196350964378782657, guid: 3b347149cb6a35d4f8a30971cc283279, type: 3}
+  voxelPrefab: {fileID: 5196350964378782657, guid: 3b347149cb6a35d4f8a30971cc283279, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: df429bff3e0e541eb90528b4dbcb4714, type: 3}
   backFaceTexture: 0
   frontFaceTexture: 0
