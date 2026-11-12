@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Steel
   m_EditorClassIdentifier: Assembly-CSharp::BlockProperties
   stackMax: 64
-  isDrawn: 1
+  isDrawn: 0
   isSolid: 1
-  renderNeighborFaces: 0
-  opacity: 0
+  renderNeighborFaces: 1
+  opacity: 1
   isWater: 0
   standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
   studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}

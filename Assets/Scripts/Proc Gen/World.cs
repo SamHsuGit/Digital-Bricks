@@ -1047,7 +1047,7 @@ public class World : MonoBehaviour
 
         if (yGlobalPos == 2)
         {
-            if(Noise.Get2DPerlin(xzCoords, 1234, 0.8f) > 0.5f)
+            if(Noise.Get2DPerlin(xzCoords, 1234, 0.8f) > 0.3f)
                 return 31; // bedrock
             else
                 return 0; // air

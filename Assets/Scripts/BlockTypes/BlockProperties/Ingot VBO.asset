@@ -24,4 +24,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f01760fb42113c949996d74515ae3393, type: 3}
   - {fileID: 8300000, guid: 054d65b5029984540aff94826a3caf40, type: 3}
   - {fileID: 8300000, guid: 87663015c6c2eb54285b229c5368b27c, type: 3}
-  pickupSound: {fileID: 8300000, guid: 44361b2f35511294e8adda197494a42f, type: 3}
+  pickupSound: {fileID: 8300000, guid: 6db0f082744944c72acd64a0da608860, type: 3}

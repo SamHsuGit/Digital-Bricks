@@ -65,28 +65,6 @@ MonoBehaviour:
   isCamera: 0
   isItem: 0
   voxelID: 2
-  voxelBits:
-  - {fileID: 3563555514074976273, guid: 967547552de3f4c4eab1cca614c42484, type: 3}
-  - {fileID: 3563555514074976273, guid: 41cb8f7264da0b8458a56507cdf7f5f2, type: 3}
-  - {fileID: 3563555514074976273, guid: 11830044acb23734fb3b692db73a7264, type: 3}
-  - {fileID: 3563555514074976273, guid: 46699b8d6a96f0f4f830628638025316, type: 3}
-  - {fileID: 3563555514074976273, guid: 08301db808f8df6419def4f655635762, type: 3}
-  - {fileID: 3563555514074976273, guid: 21f877e07826653488229d48314ee71f, type: 3}
-  - {fileID: 3563555514074976273, guid: 5fcf9e60b5a87384ca44a300de346a4e, type: 3}
-  - {fileID: 3563555514074976273, guid: 086ab1a452e6f82459d4b7ac47a141f9, type: 3}
-  - {fileID: 3563555514074976273, guid: fba3e95cdc1f95a47af1c6c9370cddd0, type: 3}
-  - {fileID: 3563555514074976273, guid: d604a64868d379444a12675be524c768, type: 3}
-  - {fileID: 3563555514074976273, guid: 1bd840c2417dbc74189ea696c7c5af0b, type: 3}
-  - {fileID: 3563555514074976273, guid: 1490f86ef295eb149afc65c9c6f36939, type: 3}
-  - {fileID: 3563555514074976273, guid: 0e69ee82044cb8a49bfc090ba3f68ae1, type: 3}
-  - {fileID: 3563555514074976273, guid: 21369915c607f0c42b1d0038308b40ad, type: 3}
-  - {fileID: 3563555514074976273, guid: 1cc5dc2957d1f614ba19a39aa87c58fd, type: 3}
-  - {fileID: 3563555514074976273, guid: 4cb292888044f804eaa377fbf6fe36de, type: 3}
-  - {fileID: 3563555514074976273, guid: a2445be0b2feb65459530b4e0f35ed6d, type: 3}
-  - {fileID: 3563555514074976273, guid: 7ee7aaf87649ced428e14815da036c24, type: 3}
-  - {fileID: 3563555514074976273, guid: 5666a0386e3c7e74ebf13a3c1707909f, type: 3}
-  - {fileID: 3563555514074976273, guid: 354831f06f3ba4b41ab23a6ca0b4edfe, type: 3}
-  - {fileID: 3563555514074976273, guid: 04e3903f8aabb6843970eac98697ae64, type: 3}
   width: 0
   length: 0
   height: 0
@@ -100,6 +78,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2376478732965929505}
     m_Modifications:
+    - target: {fileID: 1772498381376731586, guid: 34adea80255203d45803e169e8ee78f7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4c3f9c687b03441cab10bb31176cc525, type: 2}
     - target: {fileID: 2376478732965929505, guid: 34adea80255203d45803e169e8ee78f7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

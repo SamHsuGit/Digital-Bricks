@@ -44,6 +44,8 @@ public class Crafting : MonoBehaviour
 
     private int[] crystalBlockIDs = new int[]
     {
+        19, // steel ore
+        53, // ingot
         16,
         22,
         23,
@@ -358,6 +360,11 @@ public class Crafting : MonoBehaviour
             case 30:
                 {
                     _returnValue = 29;
+                    break;
+                }
+            case 53:
+                {
+                    _returnValue = 19;
                     break;
                 }
         }

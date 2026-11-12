@@ -1337,9 +1337,9 @@ public class Controller : NetworkBehaviour
                     {
                         return 2; // stone
                     }
-                case 7: // yellow
+                case 19: // steel
                     {
-                        return 3; // gold
+                        return 3; // steel
                     }
                 case 16: // crystal
                     {
