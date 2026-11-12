@@ -170,6 +170,7 @@ public class ChunkData
         if (chunk != null)
             chunk.voxelMap[pos.x, pos.y, pos.z].id = _id; // set copy of chunkData to new ID (only sets in first chunk?)
 
+        //CalculateLight(voxel);
         //// If the opacity values of the voxel have changed and the voxel above is in direct sunlight
         //// (or is above the world) recast light from that voxel downwards.
         //if (voxel.properties.opacity != oldOpacity &&
@@ -195,6 +196,62 @@ public class ChunkData
         if (chunk != null)
             World.Instance.AddChunkToUpdate(chunk);
     }
+
+    void CalculateLight(VoxelState _voxel)
+    {
+
+        Queue<Vector3Int> litVoxels = new Queue<Vector3Int>();
+
+        for (int x = 0; x < VoxelData.ChunkWidth; x++) {
+            for (int z = 0; z < VoxelData.ChunkWidth; z++) {
+
+                float lightRay = 1f;
+
+                for (int y = VoxelData.ChunkHeight - 1; y >= 0; y--)
+                {
+                    if (_voxel.id > 0 && World.Instance.blockTypes[_voxel.id].blockProperties.opacity < lightRay)
+                        lightRay = World.Instance.blockTypes[_voxel.id].blockProperties.opacity;
+
+                    _voxel.globalLightPercent = lightRay;
+
+                    if(chunk != null)
+                        chunk.voxelMap[x, y, z] = _voxel;
+                    //chunkData.map[x, y, z].globalLightPercent = thisVoxel.globalLightPercent;
+
+                    if (lightRay > VoxelData.lightFalloff)
+                        litVoxels.Enqueue(new Vector3Int(x, y, z));
+                }
+            }
+        }
+
+        while (litVoxels.Count > 0) {
+
+            Vector3Int v = litVoxels.Dequeue();
+
+            for (int p = 0; p < 6; p++) {
+
+                Vector3 currentVoxel = v + VoxelData.faceChecks[p];
+                Vector3Int neighbor = new Vector3Int((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z);
+
+                if (IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.z)) {
+                    // if the neighbor voxel light value is less than the original voxel minus fall off
+                    if (map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent < map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff) {
+                        // set neighbor light value to this voxel minus fall off
+                        map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent = map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
+                        // if the neighbor light value is light enough could illuminate other voxels, then do this code again for neighbor
+                        if (map[neighbor.x, neighbor.y, neighbor.z].globalLightPercent > VoxelData.lightFalloff)
+                            litVoxels.Enqueue(neighbor);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
 
     public bool IsVoxelInChunk (int x, int y, int z) {
 
