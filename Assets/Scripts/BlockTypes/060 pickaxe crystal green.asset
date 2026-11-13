@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 060 pickaxe crystal green
+  m_EditorClassIdentifier: 
+  blockName: 
+  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  uses: 
+  id: 60
+  dropID: 60
+  colorID: 22
+  hardness: 0
+  opacity: 0
+  baseLightLevel: 0
+  icon: {fileID: 21300000, guid: 9f129de8f8dbb43fa925a386838310eb, type: 3}
+  colorHexValue: '#C0FF00'
+  ldrawHexValueCodeNumber: 42
+  material: {fileID: 2100000, guid: 830691d9f7fe95e4eb42abe60abbc8eb, type: 2}
+  isActive: 0
+  voxelBoundObject: {fileID: 5196350964378782657, guid: 2fc5ac3e636d72943a3e0606e856d739, type: 3}
+  voxelPrefab: {fileID: 5196350964378782657, guid: 2fc5ac3e636d72943a3e0606e856d739, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: a2445be0b2feb65459530b4e0f35ed6d, type: 3}
+  backFaceTexture: 100
+  frontFaceTexture: 100
+  topFaceTexture: 101
+  bottomFaceTexture: 99
+  leftFaceTexture: 100
+  rightFaceTexture: 100
+  topFaceSmoothTexture: 102

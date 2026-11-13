@@ -216,14 +216,8 @@ public class World : MonoBehaviour
         playerCount = 0;
 
         numberOfBiomes = biomes.Length;
-        if (useBiomes && !SettingsStatic.LoadedSettings.developerMode) // NORMAL
-        {
-            biomeScale = 0.03f; // same as normal to be able to see acurate world results, or can reduce back to 0.2 to see more biomes (larger value = more frequent biome changes)
-        }
-        else // DEVELOPER MODE
-        {
-            biomeScale = 0.03f;
-        }
+        if (useBiomes)
+            biomeScale = 0.03f; // smaller value = larger biomes
         biomeOffset = SettingsStatic.LoadedSettings.worldCoord;
 
         // lowest acceptable drawDistance is 1
@@ -289,15 +283,15 @@ public class World : MonoBehaviour
 
         biomeSplinePoints = new Vector2[] // determines biome from input float (used to modify distribution)
         {
-            new Vector2(0.10f, 0.10f), // 00 Desert
-            new Vector2(0.20f, 0.20f), // 01 Mesa
-            new Vector2(0.30f, 0.30f), // 02 Savanna
+            new Vector2(0.10f, 0.20f), // 00 Desert
+            new Vector2(0.20f, 0.30f), // 01 Mesa
+            new Vector2(0.30f, 0.35f), // 02 Savanna
             new Vector2(0.40f, 0.40f), // 03 Fall Forest
             new Vector2(0.50f, 0.50f), // 04 Woods
             new Vector2(0.60f, 0.60f), // 05 Taiga
-            new Vector2(0.70f, 0.70f), // 06 Pine Forest
-            new Vector2(0.80f, 0.80f), // 07 Swamp
-            new Vector2(0.90f, 0.90f), // 08 Volcano
+            new Vector2(0.70f, 0.65f), // 06 Pine Forest
+            new Vector2(0.80f, 0.70f), // 07 Swamp
+            new Vector2(0.90f, 0.80f), // 08 Volcano
         };
 
         // not used with old terrain Gen, only used for islands which was commented out due to predictable nature of islands
@@ -1065,7 +1059,7 @@ public class World : MonoBehaviour
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes), must occur after temperature and humidity calculations
         temperature = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
-        //humidity = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
+        
         int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x) / VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
            biome = biomes[SettingsStatic.LoadedSettings.biomeOverride];
@@ -1075,6 +1069,7 @@ public class World : MonoBehaviour
            biome = biomes[7];
         else
         {
+            //humidity = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // needed for GetBiome function
             //biomeID = GetBiome();
             biomeID = CalcBiome(); // cache for later to influence terrain shaping specific to certain biomes
             biome = biomes[biomeID];
@@ -1475,7 +1470,7 @@ public class World : MonoBehaviour
         // based off temperature, use spline points to split up which biome gets selected
 
         int biomeIndex = 5; // woods as default
-        //biomeIndex = Mathf.FloorToInt(temperature * numberOfBiomes); // even chance for all 11 biomes, is not perfectly sized for islands
+        //biomeIndex = Mathf.FloorToInt(temperature * numberOfBiomes); // even chance for all biomes, is not perfectly sized for islands
         biomeIndex = Mathf.FloorToInt(GetValueFromSplinePoints(temperature, biomeSplinePoints) * numberOfBiomes); // uses biomeSpline Points for more rare biomes
 
         //// ERROR: the problem with this is the sinusoidal functions do not give even-biome distributions (long flat peaks)

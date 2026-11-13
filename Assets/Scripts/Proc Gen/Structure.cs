@@ -56,6 +56,8 @@ public static class Structure
                 return MakeShrub(position, fertility, leavesBlockID);
             case 19:
                 return MakeTestRainbow(position);
+            case 20:
+                return MakeGrassBrown(position); // only present on earth (green flora doesn't match on other planets)
         }
         return new Queue<VoxelMod>();
     }
@@ -316,6 +318,12 @@ public static class Structure
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
         queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 17)); // grass
+        return queue;
+    }
+    static Queue<VoxelMod> MakeGrassBrown(Vector3Int position)
+    {
+        Queue<VoxelMod> queue = new Queue<VoxelMod>();
+        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), 65)); // grass brown
         return queue;
     }
     static Queue<VoxelMod> MakeMushroomSmall(Vector3Int position)

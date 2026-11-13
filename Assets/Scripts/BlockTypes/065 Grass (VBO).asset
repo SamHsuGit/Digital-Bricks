@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 065 Grass (VBO)
+  m_EditorClassIdentifier: 
+  blockName: Grass Decoration
+  blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
+  uses: 
+  id: 65
+  dropID: 65
+  colorID: 6
+  hardness: 0
+  opacity: 1
+  baseLightLevel: 0
+  icon: {fileID: 8627043524693180128, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
+  colorHexValue: '#543324'
+  ldrawHexValueCodeNumber: 6
+  material: {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
+  isActive: 0
+  voxelBoundObject: {fileID: 2630247148938265349, guid: 55d0a3fd330cccf4b9f8178a77dd22dc, type: 3}
+  voxelPrefab: {fileID: 2630247148938265349, guid: 55d0a3fd330cccf4b9f8178a77dd22dc, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 5fcf9e60b5a87384ca44a300de346a4e, type: 3}
+  backFaceTexture: 0
+  frontFaceTexture: 0
+  topFaceTexture: 0
+  bottomFaceTexture: 0
+  leftFaceTexture: 0
+  rightFaceTexture: 0
+  topFaceSmoothTexture: 0

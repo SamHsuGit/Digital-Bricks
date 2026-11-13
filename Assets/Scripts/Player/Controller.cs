@@ -1432,8 +1432,8 @@ public class Controller : NetworkBehaviour
         // }
         else if (shootPos.gameObject.activeSelf && camMode != 3) // IF MINE WORLD/VOXEL (cannot destroy world in free cam mode)
         {
-            brickHit.Play(); // if block detected, play sound of hitting block
-            //PlayBlockSound(blockID);
+            //brickHit.Play(); // if block detected, play sound of hitting block
+            PlayBlockSound(blockID);
 
 
             Vector3 position = shootPos.position;
@@ -1942,7 +1942,7 @@ public class Controller : NetworkBehaviour
 
     void PlayBlockSound(byte blockID)
     {
-        if (blockSoundNo > 2)
+        if (blockSoundNo >= World.Instance.blockTypes[blockID].blockProperties.blockSounds.Length)
             blockSoundNo = 0;
 
         brickAudioSource.clip = World.Instance.blockTypes[blockID].blockProperties.blockSounds[blockSoundNo];

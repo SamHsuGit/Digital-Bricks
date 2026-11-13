@@ -16,16 +16,11 @@ MonoBehaviour:
   blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
   uses: 
   id: 48
-  dropID: 22
+  dropID: 48
   colorID: 22
-  stackMax: 64
-  isDrawn: 1
-  isSolid: 1
-  isTransparent: 0
-  isWater: 0
   hardness: 3
-  standardMeshData: {fileID: 11400000, guid: 8d770984d0db0f84d9032ce35fd6d89f, type: 2}
-  studsMeshData: {fileID: 11400000, guid: dceeca66f46d5d74fafb1d623da1bcb0, type: 2}
+  opacity: 0
+  baseLightLevel: 0
   icon: {fileID: -1717445505, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#C0FF00'
   ldrawHexValueCodeNumber: 42
@@ -41,7 +36,3 @@ MonoBehaviour:
   leftFaceTexture: 100
   rightFaceTexture: 100
   topFaceSmoothTexture: 102
-  blockSounds:
-  - {fileID: 8300000, guid: f01760fb42113c949996d74515ae3393, type: 3}
-  - {fileID: 8300000, guid: 054d65b5029984540aff94826a3caf40, type: 3}
-  - {fileID: 8300000, guid: 87663015c6c2eb54285b229c5368b27c, type: 3}

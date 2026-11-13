@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
+  m_Name: 056 Stick
+  m_EditorClassIdentifier: 
+  blockName: Stick
+  blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
+  uses: 
+  id: 56
+  dropID: 56
+  colorID: 6
+  hardness: 0
+  opacity: 0
+  baseLightLevel: 0
+  icon: {fileID: 21300000, guid: 1ec81b335a6fc437b9d47f2b0b3e8957, type: 3}
+  colorHexValue: '#543324'
+  ldrawHexValueCodeNumber: 6
+  material: {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
+  isActive: 0
+  voxelBoundObject: {fileID: 5196350964378782657, guid: 43e92f09e4a5f4647be722440b7122ab, type: 3}
+  voxelPrefab: {fileID: 5196350964378782657, guid: 43e92f09e4a5f4647be722440b7122ab, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 5fcf9e60b5a87384ca44a300de346a4e, type: 3}
+  backFaceTexture: 16
+  frontFaceTexture: 16
+  topFaceTexture: 17
+  bottomFaceTexture: 15
+  leftFaceTexture: 16
+  rightFaceTexture: 16
+  topFaceSmoothTexture: 50

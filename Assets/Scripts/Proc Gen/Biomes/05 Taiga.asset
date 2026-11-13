@@ -32,8 +32,8 @@ MonoBehaviour:
     minRadius: 0
     maxRadius: 0
   smallFlora:
-  - name: Grass
-    floraIndex: 6
+  - name: Grass Brown
+    floraIndex: 20
     leavesBlockID: 0
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
