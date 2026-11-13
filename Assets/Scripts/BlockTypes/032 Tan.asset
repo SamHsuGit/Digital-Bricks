@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 032 Sand
+  m_Name: 032 Tan
   m_EditorClassIdentifier: 
   blockName: Sand
   blockProperties: {fileID: 11400000, guid: 6ed32e1d0e5928143b87871e0f33797d, type: 2}

@@ -31,6 +31,7 @@ public class Crafting : MonoBehaviour
 
     private int[] toolBlockIDs = new int[]
     {
+        1, // wood
         14, // wood
         3, // stone
         21, // cobblestone
