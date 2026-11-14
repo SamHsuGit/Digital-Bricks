@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fd03cbbfa7b7fe4dbc3d7709b42d662, type: 3}
   m_Name: ScreenSpaceGlobalIlluminationVolume
   m_EditorClassIdentifier: SSGIURP::ScreenSpaceGlobalIlluminationVolume
-  active: 1
+  active: 0
   enable:
     m_OverrideState: 1
     m_Value: 1

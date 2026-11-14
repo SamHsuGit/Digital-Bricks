@@ -10,53 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 032 Tan
+  m_Name: 052 Trans Red Block
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
   isItemRecipeFromVoxel: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
-    slot1: 42
-    slot2: 42
-    slot3: 0
-    slot4: 42
-    slot5: 42
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 42
-    slot3: 42
-    slot4: 0
-    slot5: 42
-    slot6: 42
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 42
-    slot5: 42
-    slot6: 0
-    slot7: 42
-    slot8: 42
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 42
-    slot6: 42
-    slot7: 0
-    slot8: 42
-    slot9: 42
-  outputID: 32
+    slot1: 29
+    slot2: 29
+    slot3: 29
+    slot4: 29
+    slot5: 29
+    slot6: 29
+    slot7: 29
+    slot8: 29
+    slot9: 29
+  outputID: 52
   outputPlacedBrickName: 0
   outputQty: 1
   studs: 20

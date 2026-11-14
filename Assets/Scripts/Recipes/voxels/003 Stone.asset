@@ -19,44 +19,14 @@ MonoBehaviour:
   - is2x2: 0
     slot1: 21
     slot2: 21
-    slot3: 0
-    slot4: 21
-    slot5: 21
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 21
     slot3: 21
-    slot4: 0
-    slot5: 21
-    slot6: 21
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
     slot4: 21
     slot5: 21
-    slot6: 0
-    slot7: 21
-    slot8: 21
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 21
     slot6: 21
-    slot7: 0
+    slot7: 21
     slot8: 21
     slot9: 21
   outputID: 3
   outputPlacedBrickName: 0
-  outputQty: 1
+  outputQty: 9
   studs: 20

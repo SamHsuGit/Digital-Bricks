@@ -10,53 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 033 Orange
+  m_Name: 049 Trans Dark Green Block
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
   isItemRecipeFromVoxel: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
-    slot1: 43
-    slot2: 43
-    slot3: 0
-    slot4: 43
-    slot5: 43
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 43
-    slot3: 43
-    slot4: 0
-    slot5: 43
-    slot6: 43
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 43
-    slot5: 43
-    slot6: 0
-    slot7: 43
-    slot8: 43
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 43
-    slot6: 43
-    slot7: 0
-    slot8: 43
-    slot9: 43
-  outputID: 33
+    slot1: 23
+    slot2: 23
+    slot3: 23
+    slot4: 23
+    slot5: 23
+    slot6: 23
+    slot7: 23
+    slot8: 23
+    slot9: 23
+  outputID: 49
   outputPlacedBrickName: 0
   outputQty: 1
   studs: 20

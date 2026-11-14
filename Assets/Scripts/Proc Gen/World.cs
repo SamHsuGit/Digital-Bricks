@@ -1424,7 +1424,7 @@ public class World : MonoBehaviour
         // density is inversly proportional to height (smaller density at higher elevations)
         // input elevation, output density (cannot be negative)
         //density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y);
-        density = -(1/VoxelData.ChunkHeight) * globalPos.y + 0.5f;
+        density = -(1/VoxelData.ChunkHeight) * globalPos.y + 0.53f;
         density = Mathf.Clamp(Mathf.Abs(density), 0, 1); // must be positive value between 0 and 1
 
         // input 3d position, output true = air or false = block, high factor/threshold means more likely to be a block

@@ -10,53 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 004 White
+  m_Name: 054 Steel Block
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
   isItemRecipeFromVoxel: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
-    slot1: 34
-    slot2: 34
-    slot3: 0
-    slot4: 34
-    slot5: 34
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 34
-    slot3: 34
-    slot4: 0
-    slot5: 34
-    slot6: 34
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 34
-    slot5: 34
-    slot6: 0
-    slot7: 34
-    slot8: 34
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 34
-    slot6: 34
-    slot7: 0
-    slot8: 34
-    slot9: 34
-  outputID: 4
+    slot1: 53
+    slot2: 53
+    slot3: 53
+    slot4: 53
+    slot5: 53
+    slot6: 53
+    slot7: 53
+    slot8: 53
+    slot9: 53
+  outputID: 54
   outputPlacedBrickName: 0
   outputQty: 1
   studs: 20

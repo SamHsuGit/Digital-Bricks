@@ -10,64 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 006 Brown
+  m_Name: 99563 Ingot
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
-  isItemRecipeFromVoxel: 0
+  isItemRecipeFromVoxel: 1
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
-    slot1: 13
-    slot2: 13
-    slot3: 0
-    slot4: 13
-    slot5: 13
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 13
-    slot3: 13
-    slot4: 0
-    slot5: 13
-    slot6: 13
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 13
-    slot5: 13
-    slot6: 0
-    slot7: 13
-    slot8: 13
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 13
-    slot6: 13
-    slot7: 0
-    slot8: 13
-    slot9: 13
-  - is2x2: 0
-    slot1: 0
-    slot2: 14
-    slot3: 0
-    slot4: 0
-    slot5: 0
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 14
+    slot1: 54
     slot2: 0
     slot3: 0
     slot4: 0
@@ -78,8 +28,18 @@ MonoBehaviour:
     slot9: 0
   - is2x2: 0
     slot1: 0
+    slot2: 54
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
     slot2: 0
-    slot3: 14
+    slot3: 54
     slot4: 0
     slot5: 0
     slot6: 0
@@ -90,7 +50,7 @@ MonoBehaviour:
     slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 14
+    slot4: 54
     slot5: 0
     slot6: 0
     slot7: 0
@@ -101,7 +61,7 @@ MonoBehaviour:
     slot2: 0
     slot3: 0
     slot4: 0
-    slot5: 14
+    slot5: 54
     slot6: 0
     slot7: 0
     slot8: 0
@@ -112,7 +72,7 @@ MonoBehaviour:
     slot3: 0
     slot4: 0
     slot5: 0
-    slot6: 14
+    slot6: 54
     slot7: 0
     slot8: 0
     slot9: 0
@@ -123,7 +83,7 @@ MonoBehaviour:
     slot4: 0
     slot5: 0
     slot6: 0
-    slot7: 14
+    slot7: 54
     slot8: 0
     slot9: 0
   - is2x2: 0
@@ -134,7 +94,7 @@ MonoBehaviour:
     slot5: 0
     slot6: 0
     slot7: 0
-    slot8: 14
+    slot8: 54
     slot9: 0
   - is2x2: 0
     slot1: 0
@@ -145,8 +105,8 @@ MonoBehaviour:
     slot6: 0
     slot7: 0
     slot8: 0
-    slot9: 14
-  outputID: 6
-  outputPlacedBrickName: 0
-  outputQty: 1
-  studs: 20
+    slot9: 54
+  outputID: 53
+  outputPlacedBrickName: 99563
+  outputQty: 9
+  studs: 0
