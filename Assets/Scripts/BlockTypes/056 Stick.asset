@@ -21,7 +21,7 @@ MonoBehaviour:
   hardness: 0
   opacity: 0
   baseLightLevel: 0
-  icon: {fileID: 21300000, guid: 1ec81b335a6fc437b9d47f2b0b3e8957, type: 3}
+  icon: {fileID: 1574482541, guid: 3b4c7ae1aa4d9e84abed4f567cb3d43a, type: 3}
   colorHexValue: '#543324'
   ldrawHexValueCodeNumber: 6
   material: {fileID: 2100000, guid: f5dc2db740e56b44296808f14f2dde3f, type: 2}
@@ -29,10 +29,10 @@ MonoBehaviour:
   voxelBoundObject: {fileID: 5196350964378782657, guid: 43e92f09e4a5f4647be722440b7122ab, type: 3}
   voxelPrefab: {fileID: 5196350964378782657, guid: 43e92f09e4a5f4647be722440b7122ab, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: 5fcf9e60b5a87384ca44a300de346a4e, type: 3}
-  backFaceTexture: 16
-  frontFaceTexture: 16
-  topFaceTexture: 17
-  bottomFaceTexture: 15
-  leftFaceTexture: 16
-  rightFaceTexture: 16
-  topFaceSmoothTexture: 50
+  backFaceTexture: 0
+  frontFaceTexture: 0
+  topFaceTexture: 0
+  bottomFaceTexture: 0
+  leftFaceTexture: 0
+  rightFaceTexture: 0
+  topFaceSmoothTexture: 0

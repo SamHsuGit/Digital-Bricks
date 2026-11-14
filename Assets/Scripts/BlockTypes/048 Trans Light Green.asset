@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 048 Trans Light Green
   m_EditorClassIdentifier: 
   blockName: Trans Light Green
-  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
   uses: 
   id: 48
   dropID: 48
-  colorID: 48
+  colorID: 22
   hardness: 3
   opacity: 0
   baseLightLevel: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 42
   material: {fileID: 2100000, guid: 830691d9f7fe95e4eb42abe60abbc8eb, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 0}
+  voxelBoundObject: {fileID: 5196350964378782657, guid: 1eee23f6eea734bfb833ffdcd5a11cdf, type: 3}
   voxelPrefab: {fileID: 5196350964378782657, guid: 1eee23f6eea734bfb833ffdcd5a11cdf, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: a2445be0b2feb65459530b4e0f35ed6d, type: 3}
   backFaceTexture: 100

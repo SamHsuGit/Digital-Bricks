@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 053 Steel Ingot
   m_EditorClassIdentifier: 
   blockName: Steel Ingot
-  blockProperties: {fileID: 11400000, guid: 2dc25493aa07bb64292a5af4fb65f65c, type: 2}
+  blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
   uses: 
   id: 53
   dropID: 53

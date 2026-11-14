@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 055 Light Brick
+  m_Name: 055 Light Brick Yellow
   m_EditorClassIdentifier: 
-  blockName: Light Brick
+  blockName: Light Brick Yellow
   blockProperties: {fileID: 11400000, guid: 31acc5ad8b51de84d9fa1953661662eb, type: 2}
   uses: light
   id: 55
@@ -26,7 +26,7 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 14
   material: {fileID: 2100000, guid: 775b07fd891a96e488b69792dc5ed87a, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 2420018717352147466, guid: d8483245c8ab0b0468937175b22ae4b3, type: 3}
+  voxelBoundObject: {fileID: 0}
   voxelPrefab: {fileID: 2420018717352147466, guid: d8483245c8ab0b0468937175b22ae4b3, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: da543a15f4af7ce4f8b316fbc97cc5fe, type: 3}
   backFaceTexture: 16

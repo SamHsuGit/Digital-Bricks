@@ -17,15 +17,15 @@ MonoBehaviour:
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
-    slot1: 25
-    slot2: 25
-    slot3: 25
-    slot4: 25
-    slot5: 25
-    slot6: 25
-    slot7: 25
-    slot8: 25
-    slot9: 25
+    slot1: 26
+    slot2: 26
+    slot3: 26
+    slot4: 26
+    slot5: 26
+    slot6: 26
+    slot7: 26
+    slot8: 26
+    slot9: 26
   outputID: 50
   outputPlacedBrickName: 0
   outputQty: 1

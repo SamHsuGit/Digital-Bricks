@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 054 Steel Block
   m_EditorClassIdentifier: 
   blockName: Steel Block
-  blockProperties: {fileID: 11400000, guid: 36e17abd4f104294586c083f65af54fa, type: 2}
+  blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
   uses: 
   id: 54
   dropID: 54

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 050 Trans Blue
   m_EditorClassIdentifier: 
   blockName: Trans Blue
-  blockProperties: {fileID: 11400000, guid: 908fc73f3fb819c4faf8dc71aa316166, type: 2}
+  blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
   uses: 
   id: 50
   dropID: 50
-  colorID: 50
+  colorID: 26
   hardness: 3
   opacity: 0
   baseLightLevel: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 33
   material: {fileID: 2100000, guid: 4670f25f377687140a397cd0dfda87c6, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 0}
+  voxelBoundObject: {fileID: 5196350964378782657, guid: 4921ae7c26fa54cd49a48458f2c539cf, type: 3}
   voxelPrefab: {fileID: 5196350964378782657, guid: 4921ae7c26fa54cd49a48458f2c539cf, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: de3e6517c99f34ef89c31e76fa4d180f, type: 3}
   backFaceTexture: 108
