@@ -18,11 +18,24 @@ MonoBehaviour:
   surfaceBlock: 33
   subsurfaceBlock: 3
   soilBlock: 33
-  smallStructures: []
+  waterBlock: 37
+  underwaterStructures:
+  - name: Grass
+    floraIndex: 6
+    blockID: 0
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.9
+    placementOffset: 2
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
   smallFlora:
   - name: Grass Brown
     floraIndex: 20
-    leavesBlockID: 0
+    blockID: 0
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
@@ -35,7 +48,7 @@ MonoBehaviour:
   largeFlora:
   - name: Cactus
     floraIndex: 3
-    leavesBlockID: 0
+    blockID: 0
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
@@ -45,19 +58,31 @@ MonoBehaviour:
     maxHeight: 13
     minRadius: 1
     maxRadius: 1
-  XLFlora:
-  - name: SmallMushroom
-    floraIndex: 7
-    leavesBlockID: 0
+  undergroundStructures:
+  - name: Crystal Light Green
+    floraIndex: 21
+    blockID: 48
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.6
+    floraZoneThreshold: 0.992
     floraPlacementScale: 15
-    floraPlacementThreshold: 0.78
-    placementOffset: 1
+    floraPlacementThreshold: 0.9
+    placementOffset: 21563
     minHeight: 0
     maxHeight: 0
     minRadius: 0
     maxRadius: 0
+  - name: mushroom
+    floraIndex: 4
+    blockID: 4
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.8
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.8
+    placementOffset: 32165
+    minHeight: 2
+    maxHeight: 5
+    minRadius: 1
+    maxRadius: 3
   lodes:
   - nodeName: Ore Steel
     blockID: 19

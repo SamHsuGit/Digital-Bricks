@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd285b3bd0c4f024c8fc4bbbd15d276f, type: 3}
-  m_Name: 048 Trans Light Green
+  m_Name: 048 Trans Light Green Block
   m_EditorClassIdentifier: 
-  blockName: Trans Light Green
+  blockName: Trans Light Green Block
   blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
   uses: 
   id: 48
-  dropID: 48
+  dropID: 22
   colorID: 22
   hardness: 3
   opacity: 0

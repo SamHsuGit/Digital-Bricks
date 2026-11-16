@@ -18,34 +18,47 @@ MonoBehaviour:
   surfaceBlock: 2
   subsurfaceBlock: 3
   soilBlock: 2
-  smallStructures:
-  - name: Honeycomb
-    floraIndex: 11
-    leavesBlockID: 0
+  waterBlock: 37
+  underwaterStructures:
+  - name: Grass
+    floraIndex: 6
+    blockID: 0
     floraZoneScale: 1.3
-    floraZoneThreshold: 0.8
+    floraZoneThreshold: 0.6
     floraPlacementScale: 15
-    floraPlacementThreshold: 0.3
-    placementOffset: 1
-    minHeight: 13
-    maxHeight: 24
-    minRadius: 0
-    maxRadius: 0
-  - name: Monolith
-    floraIndex: 5
-    leavesBlockID: 0
-    floraZoneScale: 1.2
-    floraZoneThreshold: 0.7
-    floraPlacementScale: 5
-    floraPlacementThreshold: 0.88
-    placementOffset: 1
-    minHeight: 1
-    maxHeight: 24
+    floraPlacementThreshold: 0.9
+    placementOffset: 2
+    minHeight: 0
+    maxHeight: 0
     minRadius: 0
     maxRadius: 0
   smallFlora: []
   largeFlora: []
-  XLFlora: []
+  undergroundStructures:
+  - name: Crystal Light Green
+    floraIndex: 21
+    blockID: 48
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.992
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.9
+    placementOffset: 21563
+    minHeight: 0
+    maxHeight: 0
+    minRadius: 0
+    maxRadius: 0
+  - name: mushroom
+    floraIndex: 4
+    blockID: 4
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.8
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.8
+    placementOffset: 32165
+    minHeight: 2
+    maxHeight: 5
+    minRadius: 1
+    maxRadius: 3
   lodes:
   - nodeName: Ore Steel
     blockID: 19

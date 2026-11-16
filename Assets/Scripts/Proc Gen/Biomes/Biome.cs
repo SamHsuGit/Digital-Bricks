@@ -10,12 +10,13 @@ public class Biome : ScriptableObject
     [HideInInspector] public byte surfaceBlock; // this value is changed by other scripts depending on planet
     public byte subsurfaceBlock; // used to generate ice caves in cold biomes
     public byte soilBlock; // used to put a soil layer between top layer and subsurface layer
-    public SurfaceOb[] smallStructures; // for best performance do not add more than 2 values
+    public byte waterBlock;
+    public SurfaceOb[] underwaterStructures; // for best performance do not add more than 2 values
     // public SurfaceOb[] mediumStructures; // for best performance do not add more than 2 values
     // public SurfaceOb[] largeStructures; // for best performance do not add more than 2 values
     public SurfaceOb[] smallFlora; // for best performance do not add more than 2 values
     public SurfaceOb[] largeFlora; // for best performance do not add more than 2 values
-    public SurfaceOb[] XLFlora; // for best performance do not add more than 1 value
+    public SurfaceOb[] undergroundStructures; // for best performance do not add more than 1 value
     public Lode[] lodes;
     public Material material;
 }
@@ -37,7 +38,7 @@ public class SurfaceOb
 {
     public string name;
     public int floraIndex;
-    public byte leavesBlockID;
+    public byte blockID;
     public float floraZoneScale = 1.3f;
     [Range(0.1f, 1f)]
     public float floraZoneThreshold = 0.6f;

@@ -102,6 +102,7 @@ public class World : MonoBehaviour
     //private int upperWorldLimit;
     //private int lowerWorldLimit;
     private int upperTerrainHeight;
+    private int undergroundTerrainHeight;
     private int numberOfBiomes;
     private int blockIDprocGen = 1; // leftover, was 11, now set as barrier
     private int blockIDbase = 12;
@@ -1058,7 +1059,7 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes), must occur after temperature and humidity calculations
-        temperature = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
+        temperature = Noise.Get2DPerlin(xzCoords, biomeOffset + seed, biomeScale); // determines biome
         
         int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x) / VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
@@ -1103,7 +1104,7 @@ public class World : MonoBehaviour
         upperTerrainHeight = Mathf.FloorToInt(terrainHeight * 0.5f) + Mathf.FloorToInt(UpperTerrainHeightPercent * VoxelData.ChunkHeight);
 
         ///* ABOVE TERRAINHEIGHT *///
-        if (yGlobalPos > terrainHeight)
+        if (yGlobalPos > terrainHeight && yGlobalPos < VoxelData.ChunkHeight)
         {
             voxelValue = 0; // air above terrain
 
@@ -1113,7 +1114,7 @@ public class World : MonoBehaviour
             if (yGlobalPos >= cloudHeightPercent * VoxelData.ChunkHeight && yGlobalPos < VoxelData.ChunkHeight - 1 && Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f) && biome.generateClouds) // determines cloud altitude
             {
                 //if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
-                if(percolation > 0.5f && yGlobalPos < VoxelData.ChunkHeight)
+                if(percolation > 0.5f)
                     return 4;
                 else
                     return 0;
@@ -1166,7 +1167,7 @@ public class World : MonoBehaviour
             if (voxelValue == 0 && continentalness < 0.5f)
             {
                 if (yGlobalPos == Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight)) // Generate water at sealevel
-                    return worldData.blockIDwater; // water
+                    return biome.waterBlock; // water
             }
         }
         else // BELOW OR AT TERRAIN HEIGHT
@@ -1176,9 +1177,19 @@ public class World : MonoBehaviour
                 voxelValue = 0;
 
             ///* BELOW TERRAIN HEIGHT *///
-            if (yGlobalPos < terrainHeight)
+            if (yGlobalPos < terrainHeight && yGlobalPos > 0)
             {
-                // // ceilings to separate rock layers for progression (5% of blocks underground) // commented out as makes large caves too small
+                undergroundTerrainHeight = 3; //terrainHeight - 15;
+                if (yGlobalPos == undergroundTerrainHeight && yGlobalPos > 0)
+                {
+                    //voxelValue = biome.subsurfaceBlock;
+
+                    fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
+                    if (drawSurfaceObjects && worldData.isAlive)
+                        UndergroundStructures(globalPos, yGlobalPos, xzCoords); // underground crystals and mushrooms
+                }
+
+                // // ceilings to separate rock layers for progression (5% of blocks underground) // commented out as makes large caves too small?
                 // revise to use to make underground biome (mushrooms)
                 // if (yGlobalPos == Mathf.FloorToInt(terrainHeight / 2))
                 //     return 3;
@@ -1249,9 +1260,14 @@ public class World : MonoBehaviour
                 if (terrainHeightPercentChunk < seaLevelPercentChunk)
                     voxelValue = 32; // sand block for underwater at terrainHeight
 
-                if (terrainHeightPercentChunk > seaLevelPercentChunk && drawSurfaceObjects && worldData.isAlive) // only place flora on worlds marked isAlive or if biome is monolith
+                fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
+
+                if(drawSurfaceObjects && worldData.isAlive)
                 {
-                    Structures(globalPos, yGlobalPos, xzCoords);
+                    if (terrainHeightPercentChunk > seaLevelPercentChunk) // only place flora on worlds marked isAlive or if biome is monolith
+                        Structures(globalPos, yGlobalPos, xzCoords);
+                    else
+                        UnderWaterStructures(globalPos, yGlobalPos, xzCoords);
                 }
             }
         }
@@ -1259,32 +1275,99 @@ public class World : MonoBehaviour
         return voxelValue;
     }
 
+    public void UndergroundStructures(Vector3Int globalPos, int yGlobalPos, Vector2 xzCoords)
+    {
+        surfaceObType = GetSurfaceObType(0, fertility);
+
+        switch (surfaceObType) // ensures only one surface object is sampled (not sampled on top of each other)
+        {
+            case 0:
+                break;
+            case 4:
+                {
+                    int i = 0; // crystals
+                    if (Noise.Get2DPerlin(xzCoords, biome.undergroundStructures[i].placementOffset, biome.undergroundStructures[i].floraPlacementScale) > biome.undergroundStructures[i].floraPlacementThreshold)
+                    {
+                        if (biome.undergroundStructures[i].minHeight + yGlobalPos < VoxelData.ChunkHeight)
+                        {
+                            modifications.Enqueue(Structure.GenerateSurfaceOb(biome.undergroundStructures[i].floraIndex, globalPos, biome.undergroundStructures[i].minHeight, +
+                                                biome.undergroundStructures[i].maxHeight, biome.undergroundStructures[i].minRadius, biome.undergroundStructures[i].maxRadius, fertility, isEarth, biome.undergroundStructures[i].blockID));
+                        }
+                    }
+                    break;
+                }
+            case 6:
+                {
+                    int i = 1; // mushrooms
+                    if (Noise.Get2DPerlin(xzCoords, biome.undergroundStructures[i].placementOffset, biome.undergroundStructures[i].floraPlacementScale) > biome.undergroundStructures[i].floraPlacementThreshold)
+                    {
+                        if (biome.undergroundStructures[i].minHeight + yGlobalPos < VoxelData.ChunkHeight)
+                        {
+                            modifications.Enqueue(Structure.GenerateSurfaceOb(biome.undergroundStructures[i].floraIndex, globalPos, biome.undergroundStructures[i].minHeight, +
+                                                biome.undergroundStructures[i].maxHeight, biome.undergroundStructures[i].minRadius, biome.undergroundStructures[i].maxRadius, fertility, isEarth, biome.undergroundStructures[i].blockID));
+                        }
+                    }
+                    break;
+                }
+        }       
+    }
+
+    public void UnderWaterStructures(Vector3Int globalPos, int yGlobalPos, Vector2 xzCoords)
+    {
+        surfaceObType = GetSurfaceObType(0, fertility);
+
+        switch (surfaceObType) // ensures only one surface object is sampled (not sampled on top of each other)
+        {
+            case 0:
+                break;
+            case 4:
+                {
+                    for (int i = 0; i < biome.underwaterStructures.Length; i++) // for all underwaterStructures (rare game element for looting structure)
+                    {
+                        if (biome.underwaterStructures[i].minHeight + yGlobalPos < VoxelData.ChunkHeight)
+                        {
+                            if (Noise.Get2DPerlin(xzCoords, biome.underwaterStructures[i].placementOffset, biome.underwaterStructures[i].floraPlacementScale) > biome.underwaterStructures[i].floraPlacementThreshold)
+                            {
+                                modifications.Enqueue(Structure.GenerateSurfaceOb(biome.underwaterStructures[i].floraIndex, globalPos, biome.underwaterStructures[i].minHeight, +
+                                    biome.underwaterStructures[i].maxHeight, biome.underwaterStructures[i].minRadius, biome.underwaterStructures[i].maxRadius, fertility, isEarth, biome.underwaterStructures[i].blockID));
+                            }
+                        }
+                    }
+                    break;
+                }
+            case 6:
+                {
+                    break;
+                }
+        }
+                
+    }
+
     public void Structures(Vector3Int globalPos, int yGlobalPos, Vector2 xzCoords)
     {
         // fertility adds random values to determine which surface object to generate and what height it will be
-        fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
-        //fertility = StaticRandom.GetRandom(); // world must be deterministic for multiplayer, chose perlin noise instead
+        //fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f);
         surfaceObType = GetSurfaceObType(0, fertility);
         switch (surfaceObType) // ensures only one surface object is sampled (not sampled on top of each other)
         {
             case 0:
                 break;
-            case 1:
-                for (int i = 0; i < biome.smallStructures.Length; i++) // for all smallStructures (rare game element for looting structure)
-                {
-                    if (biome.smallStructures[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
-                        break;
-                    // if (Noise.Get2DPerlin(xzCoords, 0, biome.smallStructures[i].floraZoneScale) > biome.smallStructures[i].floraZoneThreshold)
-                    // {
-                    //if(StaticRandom.GetRandom() > 0.999f)
-                    if (Noise.Get2DPerlin(xzCoords, biome.smallStructures[i].placementOffset, biome.smallStructures[i].floraPlacementScale) > biome.smallStructures[i].floraPlacementThreshold)
-                    {
-                        modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallStructures[i].floraIndex, globalPos, biome.smallStructures[i].minHeight, +
-                            biome.smallStructures[i].maxHeight, biome.smallStructures[i].minRadius, biome.smallStructures[i].maxRadius, fertility, isEarth, biome.smallStructures[i].leavesBlockID));
-                    }
-                    // }
-                }
-                break;
+            //case 1:
+            //    for (int i = 0; i < biome.underwaterStructures.Length; i++) // for all underwaterStructures (rare game element for looting structure)
+            //    {
+            //        if (biome.underwaterStructures[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
+            //            break;
+            //        // if (Noise.Get2DPerlin(xzCoords, 0, biome.underwaterStructures[i].floraZoneScale) > biome.underwaterStructures[i].floraZoneThreshold)
+            //        // {
+            //        //if(StaticRandom.GetRandom() > 0.999f)
+            //        if (Noise.Get2DPerlin(xzCoords, biome.underwaterStructures[i].placementOffset, biome.underwaterStructures[i].floraPlacementScale) > biome.underwaterStructures[i].floraPlacementThreshold)
+            //        {
+            //            modifications.Enqueue(Structure.GenerateSurfaceOb(biome.underwaterStructures[i].floraIndex, globalPos, biome.underwaterStructures[i].minHeight, +
+            //                biome.underwaterStructures[i].maxHeight, biome.underwaterStructures[i].minRadius, biome.underwaterStructures[i].maxRadius, fertility, isEarth, biome.underwaterStructures[i].blockID));
+            //        }
+            //        // }
+            //    }
+            //    break;
             case 4:
                 for (int i = 0; i < biome.smallFlora.Length; i++) // for all smallFlora
                 {
@@ -1296,7 +1379,7 @@ public class World : MonoBehaviour
                     if (Noise.Get2DPerlin(xzCoords, biome.smallFlora[i].placementOffset, biome.smallFlora[i].floraPlacementScale) > biome.smallFlora[i].floraPlacementThreshold)
                     {
                         modifications.Enqueue(Structure.GenerateSurfaceOb(biome.smallFlora[i].floraIndex, globalPos, biome.smallFlora[i].minHeight, +
-                            biome.smallFlora[i].maxHeight, biome.smallFlora[i].minRadius, biome.smallFlora[i].maxRadius, fertility, isEarth, biome.smallFlora[i].leavesBlockID));
+                            biome.smallFlora[i].maxHeight, biome.smallFlora[i].minRadius, biome.smallFlora[i].maxRadius, fertility, isEarth, biome.smallFlora[i].blockID));
                     }
                     // }
                 }
@@ -1312,27 +1395,27 @@ public class World : MonoBehaviour
                     if (Noise.Get2DPerlin(xzCoords, biome.largeFlora[i].placementOffset, biome.largeFlora[i].floraPlacementScale) > biome.largeFlora[i].floraPlacementThreshold)
                     {
                         modifications.Enqueue(Structure.GenerateSurfaceOb(biome.largeFlora[i].floraIndex, globalPos, biome.largeFlora[i].minHeight, +
-                            biome.largeFlora[i].maxHeight, biome.largeFlora[i].minRadius, biome.largeFlora[i].maxRadius, fertility, isEarth, biome.largeFlora[i].leavesBlockID));
+                            biome.largeFlora[i].maxHeight, biome.largeFlora[i].minRadius, biome.largeFlora[i].maxRadius, fertility, isEarth, biome.largeFlora[i].blockID));
                     }
                     // }
                 }
                 break;
-            case 7:
-                for (int i = 0; i < biome.XLFlora.Length; i++) // for all XLFlora (mushrooms, critical game element for health, therefore comes last in stack)
-                {
-                    if (biome.XLFlora[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
-                        break;
-                    // if (Noise.Get2DPerlin(xzCoords, 0, biome.XLFlora[i].floraZoneScale) > biome.XLFlora[i].floraZoneThreshold)
-                    // {
-                    //if(StaticRandom.GetRandom() > 0.98f)
-                    if (Noise.Get2DPerlin(xzCoords, biome.XLFlora[i].placementOffset, biome.XLFlora[i].floraPlacementScale) > biome.XLFlora[i].floraPlacementThreshold)
-                    {
-                        modifications.Enqueue(Structure.GenerateSurfaceOb(biome.XLFlora[i].floraIndex, globalPos, biome.XLFlora[i].minHeight, +
-                            biome.XLFlora[i].maxHeight, biome.XLFlora[i].minRadius, biome.XLFlora[i].maxRadius, fertility, isEarth, biome.XLFlora[i].leavesBlockID));
-                    }
-                    // }
-                }
-                break;
+                //case 7:
+                //    for (int i = 0; i < biome.XLFlora.Length; i++) // for all XLFlora (mushrooms, critical game element for health, therefore comes last in stack)
+                //    {
+                //        if (biome.XLFlora[i].minHeight + yGlobalPos >= VoxelData.ChunkHeight)
+                //            break;
+                //        // if (Noise.Get2DPerlin(xzCoords, 0, biome.XLFlora[i].floraZoneScale) > biome.XLFlora[i].floraZoneThreshold)
+                //        // {
+                //        //if(StaticRandom.GetRandom() > 0.98f)
+                //        if (Noise.Get2DPerlin(xzCoords, biome.XLFlora[i].placementOffset, biome.XLFlora[i].floraPlacementScale) > biome.XLFlora[i].floraPlacementThreshold)
+                //        {
+                //            modifications.Enqueue(Structure.GenerateSurfaceOb(biome.XLFlora[i].floraIndex, globalPos, biome.XLFlora[i].minHeight, +
+                //                biome.XLFlora[i].maxHeight, biome.XLFlora[i].minRadius, biome.XLFlora[i].maxRadius, fertility, isEarth, biome.XLFlora[i].blockID));
+                //        }
+                //        // }
+                //    }
+                //    break;
         }
     }
 
