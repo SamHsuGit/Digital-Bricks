@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 066 Trans Very Light Blue
   m_EditorClassIdentifier: 
   blockName: Ice
-  blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
+  blockProperties: {fileID: 11400000, guid: 2b77a05cb203949098c28b0dbb75c0c1, type: 2}
   uses: 
   id: 52
   dropID: 52
@@ -26,13 +26,13 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 39
   material: {fileID: 2100000, guid: d7256a67c261a044b9e36d1143b6d870, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 5196350964378782657, guid: f3ddd53b59ba542f6a1c60f1e2f31e41, type: 3}
-  voxelPrefab: {fileID: 5196350964378782657, guid: f3ddd53b59ba542f6a1c60f1e2f31e41, type: 3}
-  voxelBitPrefab: {fileID: 3563555514074976273, guid: 3df256f72165a468691d9e9cbbc1aba3, type: 3}
-  backFaceTexture: 116
-  frontFaceTexture: 116
-  topFaceTexture: 117
-  bottomFaceTexture: 115
-  leftFaceTexture: 116
-  rightFaceTexture: 116
-  topFaceSmoothTexture: 118
+  voxelBoundObject: {fileID: 0}
+  voxelPrefab: {fileID: 5196350964378782657, guid: 1739d1e5a9a874ca28bf34a9d3868e9e, type: 3}
+  voxelBitPrefab: {fileID: 3563555514074976273, guid: 6485c3f7761a2425ab5e0135a962bb7c, type: 3}
+  backFaceTexture: 132
+  frontFaceTexture: 132
+  topFaceTexture: 133
+  bottomFaceTexture: 131
+  leftFaceTexture: 132
+  rightFaceTexture: 132
+  topFaceSmoothTexture: 134
