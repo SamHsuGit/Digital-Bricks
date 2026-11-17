@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e349e10b86cce994f86f61b81c6cbd62, type: 3}
+  m_Name: CreateOrJoinSessionConnector
+  m_EditorClassIdentifier: Unity.Services.Multiplayer::Unity.Services.Multiplayer.Components.SessionConnector
+  m_MultiplayerSession: {fileID: 11400000, guid: b6d73725320dd4747929d2b1f1ea9b10, type: 2}
+  m_ConnectorType: 0
+  m_CreateOrJoinSessionId: Casual_co-op_ID
+  m_CreateSessionOptions:
+    m_MaxPlayers: 2
+    m_SessionName: 
+    m_IsPrivate: 0
+    m_IsLocked: 0
+    m_Password: 
+  m_SessionNetworkSettings:
+    m_CreateNetwork: 1
+    m_Network: 2
+    m_DirectIPPort:
+      m_Ip: 127.0.0.1
+      m_Port: 0
+      m_ListenIp: 127.0.0.1
+    m_RelayOptions:
+      m_Protocol: 1
+      m_Region: 
+      m_PreserveRegion: 0
+  m_JoinSessionOptions:
+    m_JoinMode: 0
+    m_SessionId: 
+    m_SessionCode: 
+    m_Password: 
+  m_Events:
+    ExecutionStarted:
+      m_PersistentCalls:
+        m_Calls: []
+    SuccessfulExecution:
+      m_PersistentCalls:
+        m_Calls: []
+    FailedExecution:
+      m_PersistentCalls:
+        m_Calls: []

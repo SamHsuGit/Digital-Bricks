@@ -19,6 +19,8 @@ MonoBehaviour:
   subsurfaceBlock: 3
   soilBlock: 4
   waterBlock: 66
+  caveBlockID1: 4
+  caveBlockID2: 66
   underwaterStructures:
   - name: Grass
     floraIndex: 6

@@ -11,6 +11,8 @@ public class Biome : ScriptableObject
     public byte subsurfaceBlock; // used to generate ice caves in cold biomes
     public byte soilBlock; // used to put a soil layer between top layer and subsurface layer
     public byte waterBlock;
+    public byte caveBlockID1;
+    public byte caveBlockID2;
     public SurfaceOb[] underwaterStructures; // for best performance do not add more than 2 values
     // public SurfaceOb[] mediumStructures; // for best performance do not add more than 2 values
     // public SurfaceOb[] largeStructures; // for best performance do not add more than 2 values

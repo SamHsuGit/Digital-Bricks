@@ -1200,9 +1200,13 @@ public class World : MonoBehaviour
                     return 0;
 
                 // subsurface block pass (50% of blocks underground)
-                if (yGlobalPos < terrainHeight - 3)
+                if(yGlobalPos < terrainHeight - 13 && yGlobalPos > 0)
                     voxelValue = biome.subsurfaceBlock;
-                else
+                if(yGlobalPos < terrainHeight - 8 && yGlobalPos > 0)
+                    voxelValue = biome.caveBlockID2;
+                if(yGlobalPos < terrainHeight - 3 && yGlobalPos > 0)
+                    voxelValue = biome.caveBlockID1;
+                if(yGlobalPos >= terrainHeight - 3 && yGlobalPos > 0)
                     voxelValue = biome.soilBlock;
 
                 if (voxelValue == 0 && yGlobalPos <= Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))

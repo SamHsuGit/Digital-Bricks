@@ -1,0 +1,16 @@
+{
+	"name": "com.unity.multiplayer.getting-started.casual",
+	"displayName": "Multiplayer Casual Sample",
+	"description": "This sample demonstrates how developers can use the Multiplayer Services SDK APIs, ScriptableObjects and MonoBehaviour scripts to connect two players in a multiplayer session using the Relay service to obfuscate their connection information from each other.",
+	"version": "1.0.2",
+	"unity": "6000.6",
+	"author": {
+		"name": "Unity Multiplayer Getting Started"
+	},
+	"dependencies": {
+		"com.unity.netcode.gameobjects": "2.11.2",
+		"com.unity.services.multiplayer": "2.2.2",
+		"com.unity.multiplayer.playmode": "2.0.2",
+		"com.unity.inputsystem": "1.19.0"
+	}
+}
