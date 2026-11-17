@@ -1059,7 +1059,7 @@ public class World : MonoBehaviour
 
         /* BIOME SELECTION PASS */
         // Calculates biome (determines surface and subsurface blocktypes), must occur after temperature and humidity calculations
-        temperature = Noise.Get2DPerlin(xzCoords, biomeOffset + seed, biomeScale); // determines biome
+        temperature = Noise.Get2DPerlin(xzCoords, biomeOffset, biomeScale); // determines biome
         
         int chunkXCoord = Mathf.FloorToInt((globalPos.x - defaultSpawnPosition.x) / VoxelData.ChunkWidth * -0.375f); //scale factor controls biome sizes
         if (!Settings.WebGL && SettingsStatic.LoadedSettings.biomeOverride != 12)
@@ -1200,13 +1200,12 @@ public class World : MonoBehaviour
                     return 0;
 
                 // subsurface block pass (50% of blocks underground)
-                if(yGlobalPos < terrainHeight - 13 && yGlobalPos > 0)
-                    voxelValue = biome.subsurfaceBlock;
-                if(yGlobalPos < terrainHeight - 8 && yGlobalPos > 0)
+                voxelValue = biome.subsurfaceBlock;
+                if(yGlobalPos > terrainHeight - 20)
                     voxelValue = biome.caveBlockID2;
-                if(yGlobalPos < terrainHeight - 3 && yGlobalPos > 0)
+                if(yGlobalPos > terrainHeight - 10)
                     voxelValue = biome.caveBlockID1;
-                if(yGlobalPos >= terrainHeight - 3 && yGlobalPos > 0)
+                if(yGlobalPos >= terrainHeight - 3)
                     voxelValue = biome.soilBlock;
 
                 if (voxelValue == 0 && yGlobalPos <= Mathf.FloorToInt(seaLevelPercentChunk * VoxelData.ChunkHeight))
