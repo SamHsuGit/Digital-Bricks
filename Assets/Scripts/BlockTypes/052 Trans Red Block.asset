@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 052 Trans Red Block
   m_EditorClassIdentifier: 
   blockName: Trans Red Block
-  blockProperties: {fileID: 11400000, guid: dd5225ff6136f8946aa22ee8fadcb514, type: 2}
+  blockProperties: {fileID: 11400000, guid: d45b220654500d948a634afc85505d71, type: 2}
   uses: 
   id: 52
   dropID: 30
@@ -26,7 +26,7 @@ MonoBehaviour:
   ldrawHexValueCodeNumber: 36
   material: {fileID: 2100000, guid: 5614c425159eeeb4d857612406d89a70, type: 2}
   isActive: 0
-  voxelBoundObject: {fileID: 5196350964378782657, guid: f3ddd53b59ba542f6a1c60f1e2f31e41, type: 3}
+  voxelBoundObject: {fileID: 0}
   voxelPrefab: {fileID: 5196350964378782657, guid: f3ddd53b59ba542f6a1c60f1e2f31e41, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: 3df256f72165a468691d9e9cbbc1aba3, type: 3}
   backFaceTexture: 116
