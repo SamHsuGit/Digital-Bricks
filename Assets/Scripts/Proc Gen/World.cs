@@ -1047,7 +1047,6 @@ public class World : MonoBehaviour
             else
                 return 0; // air
         }
-            
 
         //// LARGE 3D NOISE PASS (affects all height levels, breaks strata, already done by isAir so was commented out)
         //weirdnessLarge = Noise.Get2DPerlin(xzCoords, 0, 0.08f);
@@ -1111,10 +1110,12 @@ public class World : MonoBehaviour
             //// Attempt to calculate all air blocks as voxelValue 0 since there are a lot of these and we want to return these quickly
             /* CLOUD PASS */
             percolation = Noise.Get2DPerlin(xzCoords, 2315, .9f); // determines cloud density and surface ob type
-            if (yGlobalPos >= cloudHeightPercent * VoxelData.ChunkHeight && yGlobalPos < VoxelData.ChunkHeight - 1 && Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f) && biome.generateClouds) // determines cloud altitude
+            if (biome.generateClouds && yGlobalPos >= cloudHeightPercent * VoxelData.ChunkHeight && yGlobalPos < VoxelData.ChunkHeight - 2) // determines cloud altitude
             {
                 //if (temperature < 0.75f && humidity > 0.25f && percolation > 0.5f) // low temp and high humidity ensure clouds only form in certain biomes, percolation creates scattered shape
-                if(percolation > 0.5f)
+                //if (percolation > 0.5f && yGlobalPos == VoxelData.ChunkHeight - 2)
+                //    return 4;
+                if (percolation < 0.5f && Noise.Get3DPerlin(globalPos, 0, 0.1f, 0.5f))
                     return 4;
                 else
                     return 0;
