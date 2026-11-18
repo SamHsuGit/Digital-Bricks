@@ -218,7 +218,7 @@ public class World : MonoBehaviour
 
         numberOfBiomes = biomes.Length;
         if (useBiomes)
-            biomeScale = 0.03f; // smaller value = larger biomes
+            biomeScale = 0.05f; // smaller value = larger biomes
         biomeOffset = SettingsStatic.LoadedSettings.worldCoord;
 
         // lowest acceptable drawDistance is 1
@@ -284,15 +284,15 @@ public class World : MonoBehaviour
 
         biomeSplinePoints = new Vector2[] // determines biome from input float (used to modify distribution)
         {
-            new Vector2(0.10f, 0.20f), // 00 Desert
-            new Vector2(0.20f, 0.30f), // 01 Mesa
-            new Vector2(0.30f, 0.35f), // 02 Savanna
+            new Vector2(0.10f, 0.10f), // 00 Desert
+            new Vector2(0.20f, 0.20f), // 01 Mesa
+            new Vector2(0.30f, 0.30f), // 02 Savanna
             new Vector2(0.40f, 0.40f), // 03 Fall Forest
             new Vector2(0.50f, 0.50f), // 04 Woods
             new Vector2(0.60f, 0.60f), // 05 Taiga
-            new Vector2(0.70f, 0.65f), // 06 Pine Forest
-            new Vector2(0.80f, 0.70f), // 07 Swamp
-            new Vector2(0.90f, 0.80f), // 08 Volcano
+            new Vector2(0.70f, 0.70f), // 06 Pine Forest
+            new Vector2(0.80f, 0.80f), // 07 Swamp
+            new Vector2(0.90f, 0.90f), // 08 Volcano
         };
 
         // not used with old terrain Gen, only used for islands which was commented out due to predictable nature of islands
