@@ -49,7 +49,7 @@ public static class Structure
             case 15:
                 return MakeTreeSavanna(position, minHeight, maxHeight, fertility);
             case 16:
-                return MakeRock(position);
+                return MakeBlock(position, _blockID);
             case 17:
                 return MakeBoulder(position, fertility);
             case 18:
@@ -60,22 +60,51 @@ public static class Structure
                 return MakeGrassBrown(position); // only present on earth (green flora doesn't match on other planets)
             case 21:
                 return MakeCrystal(position, _blockID);
+            case 22:
+                return MakeBox(position, _blockID, maxRadius, maxHeight);
         }
         return new Queue<VoxelMod>();
+    }
+
+    static Queue<VoxelMod> MakeBox(Vector3Int position, byte blockID, int _maxRadius, int _maxHeight)
+    {
+        Queue<VoxelMod> queue = new Queue<VoxelMod>();
+
+        for(int x = 0; x < _maxRadius; x++)
+        {
+            for(int y = 0; y < _maxHeight; y++) 
+            {
+                for(int z = 0; z < _maxRadius; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), blockID)); // make solid box
+                }
+            }
+        }
+
+        for (int x = 1; x < _maxRadius - 1; x++)
+        {
+            for (int y = 1; y < _maxHeight - 1; y++)
+            {
+                for (int z = 1; z < _maxRadius - 1; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), 0)); // carve out air inside box
+                }
+            }
+        }
+
+        return queue;
     }
 
     static Queue<VoxelMod> MakeCrystal(Vector3Int position, byte blockID)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
 
-        // 3 tall
+        // 2 tall
         queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y, position.z), blockID));
         queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), blockID));
-        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 2, position.z), blockID));
 
-        // 2 tall
+        // 1 tall
         queue.Enqueue(new VoxelMod(new Vector3Int(position.x + 1, position.y, position.z), blockID));
-        queue.Enqueue(new VoxelMod(new Vector3Int(position.x + 1, position.y + 1, position.z), blockID));
 
         // 1 tall
         queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y, position.z + 1), blockID));
@@ -234,10 +263,10 @@ public static class Structure
         return queue;
     }
 
-    static Queue<VoxelMod> MakeRock(Vector3Int position)
+    static Queue<VoxelMod> MakeBlock(Vector3Int position, byte _blockID)
     {
         Queue<VoxelMod> queue = new Queue<VoxelMod>();
-        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), World.Instance.worldData.blockIDsubsurface)); // small rock
+        queue.Enqueue(new VoxelMod(new Vector3Int(position.x, position.y + 1, position.z), _blockID));
         return queue;
     }
 

@@ -97,6 +97,18 @@ MonoBehaviour:
     maxHeight: 5
     minRadius: 1
     maxRadius: 3
+  - name: dungeon
+    floraIndex: 22
+    blockID: 21
+    floraZoneScale: 1.3
+    floraZoneThreshold: 0.6
+    floraPlacementScale: 15
+    floraPlacementThreshold: 0.98
+    placementOffset: 16586
+    minHeight: 0
+    maxHeight: 7
+    minRadius: 0
+    maxRadius: 11
   lodes:
   - nodeName: Ore Steel
     blockID: 19
