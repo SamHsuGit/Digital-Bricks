@@ -1176,7 +1176,7 @@ public class World : MonoBehaviour
             fertility = Noise.Get2DPerlin(xzCoords, 1111, .9f); // calculate for plants and structure determination
 
             isAir = GetIsAir(globalPos); // base terrain generation used to determine how much 3d noise should be used to carve out terrain (higher density at lower elevations)
-            if (isAir)
+            if (isAir && yGlobalPos < terrainHeight - 10)
                 voxelValue = 0;
 
             ///* BELOW TERRAIN HEIGHT *///
@@ -1214,17 +1214,17 @@ public class World : MonoBehaviour
                 /* CAVE PASS */// (20% of blocks underground?)
                 //3D noise used for caves
                 // weirdness varies size of caves
-                if (yGlobalPos < terrainHeight - 10)
+                if (yGlobalPos < terrainHeight - 10) // checks to keep caves underground to keep caves dark
                 {
                     // STRATA PASS // (25% of blocks underground)
                     //if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 2))
                     //    voxelValue = 31; // dark grey core for all worlds
                     if (yGlobalPos < Mathf.FloorToInt(terrainHeight / 3))
-                        voxelValue = 31; // black core for all worlds
+                        voxelValue = 31; // fill with dark grey stone as default (isAir carves first, then these caves)
 
-                    if (Noise.Get3DPerlin(globalPos, 30, 0.04f, 0.6f + 0.1f * weirdness)) // large cave (rare)
+                    if (yGlobalPos < 10 && Noise.Get3DPerlin(globalPos, 30, 0.04f, 0.6f + 0.1f * weirdness)) // large cave (rare)
                         voxelValue = 0;
-                    if (Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f + 0.1f * weirdness)) // medium cave (somewhat rare)
+                    if ( yGlobalPos < terrainHeight - 20 && Noise.Get3DPerlin(globalPos, 40, 0.01f, 0.6f + 0.1f * weirdness)) // medium cave (somewhat rare)
                         voxelValue = 0;
                     if (Noise.Get3DPerlin(globalPos, 30, 0.06f, 0.5f + 0.1f * weirdness)) // small cave (common)
                         voxelValue = 0;
@@ -1248,8 +1248,8 @@ public class World : MonoBehaviour
             ///* AT TERRAIN HEIGHT *///
             else if (yGlobalPos == terrainHeight)
             {
-                if (isAir)
-                    return 0;
+                //if (isAir)
+                //    return 0; // commented out to keep caves darker
 
                 if (yGlobalPos >= Mathf.RoundToInt(seaLevelPercentChunk * VoxelData.ChunkHeight) - 1)
                     voxelValue = biome.surfaceBlock; // dirt
@@ -1454,7 +1454,8 @@ public class World : MonoBehaviour
         // density is inversly proportional to height (smaller density at higher elevations)
         // input elevation, output density (cannot be negative)
         //density = GetValueBetweenPoints(new Vector2(x1, y1), new Vector2(x2, y2), globalPos.y);
-        density = -(1/VoxelData.ChunkHeight) * globalPos.y + 0.53f;
+        float yOffset = 0.4f + (1 - continentalness) * 0.25f; // y offset moves entire function up/down, high continentalness leads to lowering overall density aka more large caves where there is room under mountains
+        density = -(1/VoxelData.ChunkHeight) * globalPos.y + yOffset; // linear density function
         density = Mathf.Clamp(Mathf.Abs(density), 0, 1); // must be positive value between 0 and 1
 
         // input 3d position, output true = air or false = block, high factor/threshold means more likely to be a block

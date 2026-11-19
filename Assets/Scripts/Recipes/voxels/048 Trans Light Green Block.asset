@@ -17,15 +17,45 @@ MonoBehaviour:
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
-    slot1: 22
-    slot2: 22
-    slot3: 22
-    slot4: 22
-    slot5: 22
-    slot6: 22
-    slot7: 22
-    slot8: 22
-    slot9: 22
+    slot1: 16
+    slot2: 16
+    slot3: 0
+    slot4: 16
+    slot5: 16
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 16
+    slot3: 16
+    slot4: 0
+    slot5: 16
+    slot6: 16
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 16
+    slot5: 16
+    slot6: 0
+    slot7: 16
+    slot8: 16
+    slot9: 0
+  - is2x2: 0
+    slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 16
+    slot6: 16
+    slot7: 0
+    slot8: 16
+    slot9: 16
   outputID: 48
   outputPlacedBrickName: 0
   outputQty: 1

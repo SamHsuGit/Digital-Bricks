@@ -1317,50 +1317,46 @@ public class Controller : NetworkBehaviour
         int partNumber = toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID;
         byte _itemBlockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
 
-        if(partNumber == 3841)
+        if(partNumber == 3841 || _itemBlockID == 57 || _itemBlockID == 58 || _itemBlockID == 59 || _itemBlockID == 60 || _itemBlockID == 61 || _itemBlockID == 62 || _itemBlockID == 63 || _itemBlockID == 64)
         {
             switch(_itemBlockID)
             {
-                case 6: // wood
-                    {
-                        return 1; // wood
-                    }
+                case 6: // brown
+                    return 1;
                 case 14: // wood
-                    {
-                        return 1; // wood
-                    }
+                    return 1;
+                case 57: // wood pickaxe
+                    return 1;
                 case 3: // stone
-                    {
-                        return 2; // stone
-                    }
+                    return 2;
                 case 21: // cobblestone
-                    {
-                        return 2; // stone
-                    }
+                    return 2;
+                case 58: // stone pickaxe
+                    return 2;
                 case 19: // steel
-                    {
-                        return 3; // steel
-                    }
-                case 16: // crystal
-                    {
-                        return 4; // crystal light green
-                    }
-                case 23:
-                    {
-                        return 5; // crystal dark green
-                    }
-                case 25:
-                    {
-                        return 6; // crystal blue
-                    }
-                case 27:
-                    {
-                        return 7; // crystal orange
-                    }
-                case 29:
-                    {
-                        return 8; // crystal red
-                    }
+                    return 3;
+                case 59: // steel pickaxe
+                    return 3;
+                case 16: // crystal light green
+                    return 4;
+                case 60: // crystal light green pickaxe
+                    return 4;
+                case 23: // crystal dark green
+                    return 5;
+                case 61: // crystal dark green pickaxe
+                    return 5;
+                case 25: // crystal blue
+                    return 6;
+                case 62: // crystal blue pickaxe
+                    return 6;
+                case 27: // crystal orange
+                    return 7;
+                case 63: // crystal orange pickaxe
+                    return 7;
+                case 29: // crystal red
+                    return 8;
+                case 64: // crystal red pickaxe
+                    return 8;
             }
         }
 

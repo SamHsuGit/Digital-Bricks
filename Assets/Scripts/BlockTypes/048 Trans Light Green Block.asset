@@ -16,8 +16,8 @@ MonoBehaviour:
   blockProperties: {fileID: 11400000, guid: d45b220654500d948a634afc85505d71, type: 2}
   uses: 
   id: 48
-  dropID: 22
-  colorID: 22
+  dropID: 48
+  colorID: 16
   hardness: 3
   opacity: 0
   baseLightLevel: 0
