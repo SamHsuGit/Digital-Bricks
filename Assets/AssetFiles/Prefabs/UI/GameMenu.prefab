@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 00000000u
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1228,7 +1228,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1485,6 +1485,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1800,6 +1801,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 083771c333b8a754a80bf410c7d58ef2, type: 2}
   - {fileID: 11400000, guid: ab6c5807f7bd47d4088fb372c493b16c, type: 2}
   - {fileID: 11400000, guid: c500755f12361f34a8c10ae80558c9a8, type: 2}
+  - {fileID: 11400000, guid: aa929c90195001c43835f40d61d85694, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}
@@ -1808,7 +1810,7 @@ MonoBehaviour:
   - {fileID: 309434565178614294}
   gameMenu: {fileID: 2072762906999785829}
   craftSlotString: 
-  itemNames: 010f000034000000
+  itemNames: 010f000034000000i
 --- !u!1 &1391849460477524182
 GameObject:
   m_ObjectHideFlags: 0
@@ -1926,7 +1928,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2124,7 +2126,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2492,7 +2494,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2881,7 +2883,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -3167,7 +3169,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -3484,7 +3486,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -3621,7 +3623,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -5795,8 +5797,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "3rd Person Cam:\nZoom\t\tMouse Scroll Wheel\n\nFree Cam:\nDepth of Field\tL/R
-    Arrow Keys (D-Pad)\n\n"
+  m_text: "3rd Person Cam:\nZoom\t\tMouse Scroll Wheel\n\nFree Cam:\nDepth of Field\tL/R Arrow Keys (D-Pad)\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -5846,7 +5847,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -5933,14 +5934,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Options\t\t\t\tEsc (Start)\nMove\t\t\t\t\tWASD (Left Stick)\nLook\t\t\t\t\tMouse
-    (Right Stick)\nJump\t\t\t\t\tSpace (Xbox A)\nScroll Inventory Slots\t\tScroll/Arrow
-    Keys (D-Pad)\nChange Cam\t\t\tTab (Y)\n\nVOXEL\nHold Brick \t\t\t\tHold Right
-    Click (B) while looking at Brick\nStore Brick In Toolbar\t\tRelease Grab while
-    looking at air\nUse Brick From Toolbar\t\tHold Grab while aimed at air\n\nLDRAW\nLDraw
-    Brick From Toolbar\tHold Left Click (X) with Stored Bricks\nConvert LDraw Brick\t\tPress
-    Build while Holding LDraw Brick\nChange LDraw Brick Type\tArrow Keys (D-Pad)
-    While Holding Left Click (X)"
+  m_text: "Options\t\t\t\tEsc (Start)\nMove\t\t\t\t\tWASD (Left Stick)\nLook\t\t\t\t\tMouse (Right Stick)\nJump\t\t\t\t\tSpace (Xbox A)\nScroll Inventory Slots\t\tScroll/Arrow Keys (D-Pad)\nChange Cam\t\t\tTab (Y)\n\nVOXEL\nHold Brick \t\t\t\tHold Right Click (B) while looking at Brick\nStore Brick In Toolbar\t\tRelease Grab while looking at air\nUse Brick From Toolbar\t\tHold Grab while aimed at air\n\nLDRAW\nLDraw Brick From Toolbar\tHold Left Click (X) with Stored Bricks\nConvert LDraw Brick\t\tPress Build while Holding LDraw Brick\nChange LDraw Brick Type\tArrow Keys (D-Pad) While Holding Left Click (X)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -5990,7 +5984,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -6786,7 +6780,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -6998,7 +6992,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -7135,7 +7129,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -7222,9 +7216,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Rotate Brick \tHold Place + L/R Arrow  Keys (D-Pad)\nNext Brick \tHold
-    Place + Up/Down Arrow Keys (D-Pad)\nNext Brick Type\tHold Place + Q/E (Left/Right
-    Bumper)\nSpawn Brick\tE (Right Bumper)"
+  m_text: "Rotate Brick \tHold Place + L/R Arrow  Keys (D-Pad)\nNext Brick \tHold Place + Up/Down Arrow Keys (D-Pad)\nNext Brick Type\tHold Place + Q/E (Left/Right Bumper)\nSpawn Brick\tE (Right Bumper)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -7274,7 +7266,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -7659,7 +7651,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -8086,7 +8078,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -8237,7 +8229,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
