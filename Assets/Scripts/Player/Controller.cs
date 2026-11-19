@@ -955,7 +955,7 @@ public class Controller : NetworkBehaviour
         // player normally uses voxel collision in voxelCollider to check grounded, unless standing on imported ldraw parts which have physics collisions, then mark player as grounded
         isGrounded = CheckGroundedCollider();
 
-        toolID = GetToolID();
+        SetToolID();
 
         if (!options) // Prevent moving/interacting with world during UI Menus
         {
@@ -1307,78 +1307,117 @@ public class Controller : NetworkBehaviour
             TakeFromCurrentSlot(1);
     }
 
-    private int GetToolID()
+    private void SetToolID()
     {
+        byte _currentSlotID = 0;
+        int partNumber = 0;
         int returnValue = 0;
 
-        if(!toolbar.slots[toolbar.slotIndex].HasItem || !toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
-            return 0;
-        
-        int partNumber = toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID;
-        byte _itemBlockID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
-
-        if(partNumber == 3841 || _itemBlockID == 57 || _itemBlockID == 58 || _itemBlockID == 59 || _itemBlockID == 60 || _itemBlockID == 61 || _itemBlockID == 62 || _itemBlockID == 63 || _itemBlockID == 64)
+        if (toolbar.slots[toolbar.slotIndex].HasItem)
         {
-            switch(_itemBlockID)
-            {
-                case 6: // brown
-                    return 1;
-                case 14: // wood
-                    return 1;
-                case 57: // wood pickaxe
-                    return 1;
-                case 3: // stone
-                    return 2;
-                case 21: // cobblestone
-                    return 2;
-                case 58: // stone pickaxe
-                    return 2;
-                case 19: // steel
-                    return 3;
-                case 59: // steel pickaxe
-                    return 3;
-                case 16: // crystal light green
-                    return 4;
-                case 60: // crystal light green pickaxe
-                    return 4;
-                case 23: // crystal dark green
-                    return 5;
-                case 61: // crystal dark green pickaxe
-                    return 5;
-                case 25: // crystal blue
-                    return 6;
-                case 62: // crystal blue pickaxe
-                    return 6;
-                case 27: // crystal orange
-                    return 7;
-                case 63: // crystal orange pickaxe
-                    return 7;
-                case 29: // crystal red
-                    return 8;
-                case 64: // crystal red pickaxe
-                    return 8;
-            }
+            if (toolbar.slots[toolbar.slotIndex].itemSlot.stack.isPlacedBrick)
+                partNumber = toolbar.slots[toolbar.slotIndex].itemSlot.stack.placedBrickID;
+
+            _currentSlotID = toolbar.slots[toolbar.slotIndex].itemSlot.stack.id;
         }
 
-        // switch(partNumber)
-        // {
-        //     case 3841: // pickaxe
-        //         {
-                    
-        //             break;
-        //         }
-        //     case 3835: // axe
-        //         {
-
-        //             break;
-        //         }
-        //     case 3837: // shovel
-        //         {
-
-        //             break;
-        //         }
-        // }
-        return returnValue; // returns 0 if not found a tool
+        if(partNumber == 3841 || _currentSlotID == 57 || _currentSlotID == 58 || _currentSlotID == 59 || _currentSlotID == 60 || _currentSlotID == 61 || _currentSlotID == 62 || _currentSlotID == 63 || _currentSlotID == 64)
+        {
+            switch(_currentSlotID)
+            {
+                case 6: // brown
+                    {
+                        returnValue = 1;
+                        break;
+                    }
+                case 14: // wood
+                    {
+                        returnValue = 1;
+                        break;
+                    }
+                case 57: // wood pickaxe
+                    {
+                        returnValue = 1;
+                        break;
+                    }
+                case 3: // stone
+                    {
+                        returnValue = 2;
+                        break;
+                    }
+                case 21: // cobblestone
+                    {
+                        returnValue = 2;
+                        break;
+                    }
+                case 58: // stone pickaxe
+                    {
+                        returnValue = 2;
+                        break;
+                    }
+                case 19: // steel
+                    {
+                        returnValue = 3;
+                        break;
+                    }
+                case 59: // steel pickaxe
+                    {
+                        returnValue = 3;
+                        break;
+                    }
+                case 16: // crystal light green
+                    {
+                        returnValue = 4;
+                        break;
+                    }
+                case 60: // crystal light green pickaxe
+                    {
+                        returnValue = 4;
+                        break;
+                    }
+                case 23: // crystal dark green
+                    {
+                        returnValue = 5;
+                        break;
+                    }
+                case 61: // crystal dark green pickaxe
+                    {
+                        returnValue = 5;
+                        break;
+                    }
+                case 25: // crystal blue
+                    {
+                        returnValue = 6;
+                        break;
+                    }
+                case 62: // crystal blue pickaxe
+                    {
+                        returnValue = 6;
+                        break;
+                    }
+                case 27: // crystal orange
+                    {
+                        returnValue = 7;
+                        break;
+                    }
+                case 63: // crystal orange pickaxe
+                    {
+                        returnValue = 7;
+                        break;
+                    }
+                case 29: // crystal red
+                    {
+                        returnValue = 8;
+                        break;
+                    }
+                case 64: // crystal red pickaxe
+                    {
+                        returnValue = 8;
+                        break;
+                    }
+            }
+        }
+        toolID = returnValue; // returns 0 if not found a tool
     }
 
     private void PressedMine()
