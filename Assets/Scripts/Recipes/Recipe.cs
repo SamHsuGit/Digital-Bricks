@@ -18,7 +18,6 @@ public class Recipe : ScriptableObject
 [System.Serializable]
 public class RecipeShape
 {
-    public bool is2x2;
     public int slot1;
     public int slot2;
     public int slot3;
