@@ -17,7 +17,8 @@ MonoBehaviour:
   uses: 
   id: 53
   dropID: 53
-  colorID: 19
+  colorID: 53
+  craftPlacedBricks: 1
   hardness: 3
   opacity: 0
   baseLightLevel: 0

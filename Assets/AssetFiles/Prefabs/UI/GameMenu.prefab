@@ -1802,6 +1802,34 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ab6c5807f7bd47d4088fb372c493b16c, type: 2}
   - {fileID: 11400000, guid: c500755f12361f34a8c10ae80558c9a8, type: 2}
   - {fileID: 11400000, guid: aa929c90195001c43835f40d61d85694, type: 2}
+  - {fileID: 11400000, guid: 11e3de9b08e7e3e42ab859a0f05f2656, type: 2}
+  - {fileID: 11400000, guid: 58b34fbd9348e4d48a8eabdd6d5f132d, type: 2}
+  - {fileID: 11400000, guid: 3fd2e92156e6be84d9cdca371638778c, type: 2}
+  - {fileID: 11400000, guid: f2922cef9700fcc4386249181626ec6e, type: 2}
+  - {fileID: 11400000, guid: 6811b8d20baa87848b07eac826bb71f9, type: 2}
+  - {fileID: 11400000, guid: 9f68bc9439f580549bfbd4653484ae5d, type: 2}
+  - {fileID: 11400000, guid: e44f0cd0ba27d4a4084c88ff9688277e, type: 2}
+  - {fileID: 11400000, guid: c1902adc08db33349a111e05d8da31b9, type: 2}
+  - {fileID: 11400000, guid: fb06dac9b511b1c458cc366e1b86e68c, type: 2}
+  - {fileID: 11400000, guid: afa286da052847d42873e58b95b8029b, type: 2}
+  - {fileID: 11400000, guid: fd0215cc8ff53a64e9713e90477e596b, type: 2}
+  - {fileID: 11400000, guid: 79cdb435665edfa48a47bd0b2d03a124, type: 2}
+  - {fileID: 11400000, guid: e5e58d8c8690b6549bbd853fc5adaa83, type: 2}
+  - {fileID: 11400000, guid: 152d26c52ee84d646aedfadcf85d0204, type: 2}
+  - {fileID: 11400000, guid: 0a7fd28593e4fa84ebef28ec1c9ceaa4, type: 2}
+  - {fileID: 11400000, guid: fcd88e64cd5df724a801abe7469f17ca, type: 2}
+  - {fileID: 11400000, guid: 39251c85e80563e469b81f4caed71dbc, type: 2}
+  - {fileID: 11400000, guid: 092aad2edcb56e3438ba00c5059b9d59, type: 2}
+  - {fileID: 11400000, guid: 2a9b44c85e0f2f74aa94b32d3010cca4, type: 2}
+  - {fileID: 11400000, guid: 25ecc167edbec7e43bd250d84cd36c67, type: 2}
+  - {fileID: 11400000, guid: 0c9944791af9b374787eaa85df3bb165, type: 2}
+  - {fileID: 11400000, guid: 8c3e1f6184bd04795b971358ae907a9d, type: 2}
+  - {fileID: 11400000, guid: 30b4d04e7e293034fbbe74177466c4f1, type: 2}
+  - {fileID: 11400000, guid: b57441ae44668de4891aed4e155f9530, type: 2}
+  - {fileID: 11400000, guid: d077174a816a61944b20b93c1a09b15c, type: 2}
+  - {fileID: 11400000, guid: c1457b8f668f69141a4b0019e57d6b52, type: 2}
+  - {fileID: 11400000, guid: f63df6064d76ec24881301c5ff77b069, type: 2}
+  - {fileID: 11400000, guid: a5a025ad057327e469cd3055320ae3b5, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}
@@ -1809,7 +1837,8 @@ MonoBehaviour:
   - {fileID: 1515134558120941906}
   - {fileID: 309434565178614294}
   gameMenu: {fileID: 2072762906999785829}
-  craftSlotString: 
+  craftSlotStringColor: 
+  craftSlotStringID: 
   itemNames: 010f000034000000i
 --- !u!1 &1391849460477524182
 GameObject:

@@ -11,6 +11,7 @@ public class BlockType : ScriptableObject
     public byte id;
     public byte dropID;
     public byte colorID;
+    public bool craftPlacedBricks;
     //public int stackMax;
     //public bool isDrawn;
     //public bool isSolid;

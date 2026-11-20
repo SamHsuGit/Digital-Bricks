@@ -1355,7 +1355,7 @@ public class Controller : NetworkBehaviour
                         returnValue = 2;
                         break;
                     }
-                case 19: // steel
+                case 53: // steel
                     {
                         returnValue = 3;
                         break;
@@ -1365,7 +1365,7 @@ public class Controller : NetworkBehaviour
                         returnValue = 3;
                         break;
                     }
-                case 16: // crystal light green
+                case 22: // crystal light green
                     {
                         returnValue = 4;
                         break;
@@ -1375,7 +1375,7 @@ public class Controller : NetworkBehaviour
                         returnValue = 4;
                         break;
                     }
-                case 23: // crystal dark green
+                case 24: // crystal dark green
                     {
                         returnValue = 5;
                         break;
@@ -1385,7 +1385,7 @@ public class Controller : NetworkBehaviour
                         returnValue = 5;
                         break;
                     }
-                case 25: // crystal blue
+                case 26: // crystal blue
                     {
                         returnValue = 6;
                         break;
@@ -1395,7 +1395,7 @@ public class Controller : NetworkBehaviour
                         returnValue = 6;
                         break;
                     }
-                case 27: // crystal orange
+                case 28: // crystal orange
                     {
                         returnValue = 7;
                         break;
@@ -1405,7 +1405,7 @@ public class Controller : NetworkBehaviour
                         returnValue = 7;
                         break;
                     }
-                case 29: // crystal red
+                case 30: // crystal red
                     {
                         returnValue = 8;
                         break;

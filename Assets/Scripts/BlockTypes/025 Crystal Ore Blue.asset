@@ -17,7 +17,7 @@ MonoBehaviour:
   uses: 
   id: 25
   dropID: 26
-  colorID: 25
+  colorID: 26
   hardness: 4.5
   opacity: 0
   baseLightLevel: 0

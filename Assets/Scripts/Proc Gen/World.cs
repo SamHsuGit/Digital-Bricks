@@ -639,8 +639,7 @@ public class World : MonoBehaviour
 
     private void Update()
     {
-        //Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel); // for testing
-        //Camera.main.backgroundColor = Color.Lerp(day, night, globalLightLevel); // for testing
+        //SetGlobalLightValue(); // for testing
 
         if (!Settings.WebGL && !worldLoaded) // don't continue with main loop if world has not been loaded.
             return;

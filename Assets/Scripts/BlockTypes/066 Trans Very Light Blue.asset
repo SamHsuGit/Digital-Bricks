@@ -15,9 +15,10 @@ MonoBehaviour:
   blockName: Ice
   blockProperties: {fileID: 11400000, guid: 2b77a05cb203949098c28b0dbb75c0c1, type: 2}
   uses: 
-  id: 52
-  dropID: 52
-  colorID: 30
+  id: 66
+  dropID: 66
+  colorID: 66
+  craftPlacedBricks: 1
   hardness: 3
   opacity: 0
   baseLightLevel: 0

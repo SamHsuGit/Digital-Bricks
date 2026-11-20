@@ -18,6 +18,7 @@ MonoBehaviour:
   id: 30
   dropID: 30
   colorID: 30
+  craftPlacedBricks: 1
   hardness: 0
   opacity: 0
   baseLightLevel: 0

@@ -97,7 +97,7 @@ public class Lighting : MonoBehaviour
         sun.color = sunProperties.DirectionalColor.Evaluate(timePercent);
 
         skyTint = Color.HSVToRGB(0, 0, skyTintValue);
-        if (RenderSettings.skybox.HasProperty("_SkyTint"))
+        if (RenderSettings.skybox != null && RenderSettings.skybox.HasProperty("_SkyTint"))
             RenderSettings.skybox.SetColor("_SkyTint", skyTint);
 
         RenderSettings.ambientIntensity = ambientIntensity;
@@ -115,6 +115,8 @@ public class Lighting : MonoBehaviour
     void SetDay()
     {
         wasDaytime = true;
+        if(World.Instance.globalLightLevel != null)
+            World.Instance.globalLightLevel = 1f;
 
         sun.gameObject.SetActive(true);
         moon.gameObject.SetActive(false);
@@ -130,6 +132,8 @@ public class Lighting : MonoBehaviour
     void SetNight()
     {
         wasDaytime = false;
+        if (World.Instance.globalLightLevel != null)
+            World.Instance.globalLightLevel = 0.1f;
 
         sun.gameObject.SetActive(false);
         moon.gameObject.SetActive(true);

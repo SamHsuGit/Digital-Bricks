@@ -32,32 +32,30 @@ public class Crafting : MonoBehaviour
 
     private int[] toolBlockIDs = new int[]
     {
-        //1, // wood
-        14, // wood
-        3, // stone
+        6, // wood
         21, // cobblestone
-        19, // steel ore
-        16, // crystal light green ore
-        23, // crystal dark green ore
-        25, // crystal blue ore
-        27, // crystal orange ore
-        29, // crystal red ore
+        53, // steel
+        22, // crystal light green
+        24, // crystal dark green
+        26, // crystal blue
+        28, // crystal orange
+        30, // crystal red
     };
 
-    private int[] crystalBlockIDs = new int[]
+    private int[] crystalBlockIDs = new int[] // only crystal (not ore) can be used to craft since single instance used to craft placedBricks
     {
-        19, // steel ore
-        53, // ingot
-        16,
+        //16,
         22,
-        23,
+        //23,
         24,
-        25,
+        //25,
         26,
-        27,
+        //27,
         28,
-        29,
+        //29,
         30,
+        //19, // steel ore
+        53, // ingot
     };
 
     public int[] itemNames = new int[]
@@ -183,7 +181,8 @@ public class Crafting : MonoBehaviour
         {
             if(slotsToCheck[i].HasItem)
             {
-                color = World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].colorID; // updated to use color for placedBricks (multiple voxel ids can output same colored placedBricks)
+                color = slotsToCheck[i].itemSlot.stack.id;
+                //color = World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].colorID; // updated to use color for placedBricks (e.g. sticks, only flagged voxel ids can output colored placedbricks)
                 slotsWithItemsCount++;
                 if(slotsToCheck[i].itemSlot.stack.isPlacedBrick)
                     slotsWithPlacedBricksCount++;
@@ -248,11 +247,11 @@ public class Crafting : MonoBehaviour
 
                 // if colors all match, allow placed bricks to adapt to any color
                 // need to allow non matching colors and placedbrick recipes thru for special item crafting (e.g. pickaxe)
-                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !recipe.isItemRecipeFromVoxel && !nonmatchingcolors && isItem == 0) // if has placed bricks in slot
+                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors && isItem == 0) // if has placed bricks in slot
                 {
-                    color = World.Instance.blockTypes[color].colorID; // created a colorID for each blockType so that duplicate colors can be avoided, there are several solid colored blocks that should be referenced as the colorID
-                    if(slotsWithPlacedBricksCount == 0) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
-                        recipeString = recipeString.Replace("1",color.ToString()); // special case to craft 1x1 plates from voxels
+                    //color = World.Instance.blockTypes[color].colorID; // created a colorID for each blockType so that duplicate colors can be avoided, for crystals, voxel id should be referenced as the colorID
+                    if(slotsWithPlacedBricksCount == 0 && World.Instance.blockTypes[color].craftPlacedBricks) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
+                        recipeString = recipeString.Replace("1",color.ToString()); // special case to craft placedBricks from voxels
                     recipe.outputID = color;
                     //Debug.Log("replaced placedBrick values with " + color.ToString());
                 }
