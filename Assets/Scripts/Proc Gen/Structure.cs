@@ -92,6 +92,18 @@ public static class Structure
             }
         }
 
+        for (int x = 2; x < _maxRadius - 2; x++)
+        {
+            for (int y = 1; y < 3; y++) // only a few blocks high
+            {
+                for (int z = 2; z < _maxRadius - 2; z++)
+                {
+                    Vector3Int pos = new Vector3Int(position.x + x, position.y + y, position.z + z);
+                    queue.Enqueue(new VoxelMod(pos, GetMixedBlockID(pos, pos,0, 48, 0, 0))); // fill with solid crystal blocks
+                }
+            }
+        }
+
         return queue;
     }
 

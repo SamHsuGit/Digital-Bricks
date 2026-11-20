@@ -108,7 +108,7 @@ MonoBehaviour:
     minHeight: 0
     maxHeight: 5
     minRadius: 0
-    maxRadius: 5
+    maxRadius: 8
   lodes:
   - nodeName: Ore Steel
     blockID: 19

@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: 064 pickaxe crystal red
   m_EditorClassIdentifier: 
   blockName: Pickaxe Crystal Red
-  blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
+  blockProperties: {fileID: 11400000, guid: 8cef3c8d5b9308b419229065b8a5d061, type: 2}
   uses: 
   id: 64
   dropID: 64
   colorID: 30
+  craftPlacedBricks: 0
   hardness: 0
   opacity: 0
   baseLightLevel: 0

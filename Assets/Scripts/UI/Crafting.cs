@@ -27,43 +27,37 @@ public class Crafting : MonoBehaviour
     private UIItemSlot[] slotsToCheck;
     public GameObject[] uiMenus;
     public GameMenu gameMenu;
-    public string craftSlotStringColor;
+    //public string craftSlotStringColor;
     public string craftSlotStringID;
 
-    private int[] toolBlockIDs = new int[]
-    {
-        6, // wood
-        21, // cobblestone
-        53, // steel
-        22, // crystal light green
-        24, // crystal dark green
-        26, // crystal blue
-        28, // crystal orange
-        30, // crystal red
-    };
+    //private int[] toolBlockIDs = new int[]
+    //{
+    //    6, // wood
+    //    21, // cobblestone
+    //    22, // crystal light green
+    //    24, // crystal dark green
+    //    26, // crystal blue
+    //    28, // crystal orange
+    //    30, // crystal red
+    //    53, // steel ingot
+    //};
 
-    private int[] crystalBlockIDs = new int[] // only crystal (not ore) can be used to craft since single instance used to craft placedBricks
-    {
-        //16,
-        22,
-        //23,
-        24,
-        //25,
-        26,
-        //27,
-        28,
-        //29,
-        30,
-        //19, // steel ore
-        53, // ingot
-    };
+    //private int[] crystalBlockIDs = new int[] // only crystal (not ore) can be used to craft pickaxes since single instance used to craft placedBricks
+    //{
+    //    22, // crystal light green
+    //    24, // crystal dark green
+    //    26, // crystal blue
+    //    28, // crystal orange
+    //    30, // crystal red
+    //    53, // steel ingot
+    //};
 
-    public int[] itemNames = new int[]
-    {
-        3841, // pickaxe
-        52, // crystal
-        30374, // stick
-    };
+    //public int[] itemNames = new int[]
+    //{
+    //    3841, // pickaxe
+    //    //52, // crystal
+    //    //30374, // stick
+    //};
 
     private void Update()
     {
@@ -140,7 +134,7 @@ public class Crafting : MonoBehaviour
         byte lastSlotID = 0;
 
         // build an array of block ids that can be compared to the recipeShapes
-        craftSlotStringColor = ""; // reset every time check slots
+        //craftSlotStringColor = ""; // reset every time check slots
         craftSlotStringID = ""; // reset every time check slots
         for (int i = 0; i < slotsToCheck.Length; i++)
         {
@@ -149,19 +143,19 @@ public class Crafting : MonoBehaviour
                 lastSlotID = slotsToCheck[i].itemSlot.stack.id;
                 if(slotsToCheck[i].itemSlot.stack.placedBrickID != 0)
                 {
-                    craftSlotStringColor += slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() + ",";
+                    //craftSlotStringColor += slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() + ",";
                     craftSlotStringID += slotsToCheck[i].itemSlot.stack.placedBrickID.ToString() + ",";
                 }
                 else
                 {
-                    craftSlotStringColor += World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].colorID + ","; // build array of ids in crafting slots using colors
+                    //craftSlotStringColor += World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].colorID + ","; // build array of ids in crafting slots using colors
                     craftSlotStringID += World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].id + ","; // build array of ids in crafting slots using ids
                 }
                 craftingSlotsEmpty = false;
             }
             else
             {
-                craftSlotStringColor += "0,";
+                //craftSlotStringColor += "0,";
                 craftSlotStringID += "0,";
             }
         }
@@ -172,50 +166,39 @@ public class Crafting : MonoBehaviour
         // GATHER INFO ON CRAFTING SLOTS
         // flag non matching colors in crafting slots
         // since placedBricks must always use same color bricks to craft
-        bool nonmatchingcolors = false;
-        byte color = 0;
-        byte prevColor = 0;
+        bool nonmatchingBlockIDs = false;
+        byte _blockID = 0;
+        byte _prevBlockID = 0;
         int slotsWithItemsCount = 0;
         int slotsWithPlacedBricksCount = 0;
         for(int i = 0; i < slotsToCheck.Length; i++)
         {
             if(slotsToCheck[i].HasItem)
             {
-                color = slotsToCheck[i].itemSlot.stack.id;
+                _blockID = slotsToCheck[i].itemSlot.stack.id;
                 //color = World.Instance.blockTypes[slotsToCheck[i].itemSlot.stack.id].colorID; // updated to use color for placedBricks (e.g. sticks, only flagged voxel ids can output colored placedbricks)
                 slotsWithItemsCount++;
                 if(slotsToCheck[i].itemSlot.stack.isPlacedBrick)
                     slotsWithPlacedBricksCount++;
             }
-            if(color != prevColor && prevColor != 0 && color != 0)
-                nonmatchingcolors = true;
-            prevColor = color;
+            if(_blockID != _prevBlockID && _prevBlockID != 0 && _blockID != 0)
+                nonmatchingBlockIDs = true;
+            _prevBlockID = _blockID;
         }
         if(slotsWithItemsCount < 2) // if 0 or 1 items in all crafting slots, then nonmatching colors cannot be true
-            nonmatchingcolors = false;
+            nonmatchingBlockIDs = false;
         // if(nonmatchingcolors)
         //     Debug.Log("nonmatchingcolors = true");
-
-        bool isCrystal = false;
-        for(int i = 0; i < crystalBlockIDs.Length; i++)
-        {
-            if(color == crystalBlockIDs[i])
-            {
-                isCrystal = true;
-                break;
-            }
-        }
-        //Debug.Log(isCrystal);
 
         // LOOP THRU ALL LOADED RECIPES AND SHAPES
         // for all recipes in list, if checkIntArray matches one, then output the corresponding block in output slot
         foreach (Recipe recipe in recipes)
         {
-            int isItem = GetItemNumber(recipe.outputPlacedBrickName);
+            //int isItem = GetItemNumber(recipe.outputPlacedBrickName);
 
             // cannot craft placedbricks if the colors do not all match
             // allow non matching colors for special items crafting (e.g. pickaxe)
-            if(recipe.isPlacedBrick && nonmatchingcolors && isItem == 0)
+            if(recipe.isPlacedBrick && nonmatchingBlockIDs)// && isItem == 0)
                 continue;
             
             foreach (RecipeShape shape in recipe.recipeShapes)
@@ -247,12 +230,12 @@ public class Crafting : MonoBehaviour
 
                 // if colors all match, allow placed bricks to adapt to any color
                 // need to allow non matching colors and placedbrick recipes thru for special item crafting (e.g. pickaxe)
-                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingcolors && isItem == 0) // if has placed bricks in slot
+                if(slotsWithItemsCount > 0 && recipe.isPlacedBrick && !nonmatchingBlockIDs)// && isItem == 0) // if has placed bricks in slot
                 {
                     //color = World.Instance.blockTypes[color].colorID; // created a colorID for each blockType so that duplicate colors can be avoided, for crystals, voxel id should be referenced as the colorID
-                    if(slotsWithPlacedBricksCount == 0 && World.Instance.blockTypes[color].craftPlacedBricks) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
-                        recipeString = recipeString.Replace("1",color.ToString()); // special case to craft placedBricks from voxels
-                    recipe.outputID = color;
+                    if(slotsWithPlacedBricksCount == 0 && World.Instance.blockTypes[_blockID].craftPlacedBricks) // only apply to solid color voxels, not placedBricks (applying to placedBricks messes up recipe checks)
+                        recipeString = recipeString.Replace("1",_blockID.ToString()); // special case to craft placedBricks from voxels
+                    recipe.outputID = _blockID;
                     //Debug.Log("replaced placedBrick values with " + color.ToString());
                 }
 
@@ -260,87 +243,64 @@ public class Crafting : MonoBehaviour
                 //Debug.Log("checking " + recipe.name + " if " + craftSlotString + " matches " + recipeString);
                 string craftSlotStringToCheck;
 
-                if (recipe.isPlacedBrick)
-                    craftSlotStringToCheck = craftSlotStringColor;
-                else
+                //if (recipe.isPlacedBrick)
+                //    craftSlotStringToCheck = craftSlotStringColor;
+                //else
                     craftSlotStringToCheck = craftSlotStringID;
 
                 if (craftSlotStringToCheck == recipeString) // if match is found execute following code and exit the loop checking each recipe
                 {
                     byte outputID;
                     if (recipe.isPlacedBrick || recipe.outputPlacedBrickName == 1) // change output id to match if crafting placedbricks or voxel
-                        outputID = color;
+                        outputID = _blockID;
                     else // regular voxel recipe
                         outputID = recipe.outputID;
                     //Debug.Log("MATCH FOUND! " + craftSlotString + " matches recipe " + recipe.name + " " + recipeString + " which outputs " + recipe.outputID);
 
-                    if (isItem != 0) // if item is identified code for specific items
-                    {
-                        // Override for crafting certain items
-                        if (recipe.outputPlacedBrickName == itemNames[0]) // pickaxe = 3841 INDEX = 0
-                        {
-                            // can only craft pickaxe under certain conditions
-                            // top 3 slots must have items
-                            if (slotsToCheck[0].HasItem && slotsToCheck[1].HasItem && slotsToCheck[2].HasItem)
-                            {
-                                int firstSlotID = World.Instance.blockTypes[slotsToCheck[0].itemSlot.stack.id].colorID; // use first slot (top left) for definition of color
-                                int secondSlotID = World.Instance.blockTypes[slotsToCheck[1].itemSlot.stack.id].colorID;
-                                int thirdSlotID = World.Instance.blockTypes[slotsToCheck[2].itemSlot.stack.id].colorID;
+                    //if (isItem != 0) // if item is identified code for specific items
+                    //{
+                    //    // SPECIAL override for crafting with placedbricks
+                    //    // placedbricks not used for crafting
+                    //    // ANY items intended for crafting MUST be stored as a voxel with VBO to be able to get rid of the item
+                    //    if (recipe.outputPlacedBrickName == 3841) // pickaxe = 3841 INDEX = 0
+                    //    {
+                    //        // can only craft pickaxe under certain conditions
+                    //        // top 3 slots must have items
+                    //        if (slotsToCheck[0].HasItem && slotsToCheck[1].HasItem && slotsToCheck[2].HasItem)
+                    //        {
+                    //            int firstSlotID = World.Instance.blockTypes[slotsToCheck[0].itemSlot.stack.id].colorID; // use first slot (top left) for definition of color
+                    //            int secondSlotID = World.Instance.blockTypes[slotsToCheck[1].itemSlot.stack.id].colorID;
+                    //            int thirdSlotID = World.Instance.blockTypes[slotsToCheck[2].itemSlot.stack.id].colorID;
 
-                                bool matchingTopColors = false;
-                                if (firstSlotID == secondSlotID && secondSlotID == thirdSlotID)
-                                    matchingTopColors = true;
+                    //            bool matchingTopColors = false;
+                    //            if (firstSlotID == secondSlotID && secondSlotID == thirdSlotID)
+                    //                matchingTopColors = true;
 
-                                //bool matchesToolBlockID = false;
+                    //            //bool matchesToolBlockID = false;
 
-                                for (int i = 0; i < toolBlockIDs.Length; i++)
-                                {
-                                    // only output pickaxe for valid colors
-                                    if (firstSlotID == toolBlockIDs[i] && matchingTopColors)
-                                    {
-                                        //matchesToolBlockID = true;
-                                        //break;
-                                        PutInOutputSlot((byte)firstSlotID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty); // output pickaxe
-                                        return;
-                                    }
-                                }
-
-                                //// only output pickaxe for valid colors
-                                //if(matchingTopColors && matchesToolBlockID)
-                                //{
-                                //    PutInOutputSlot((byte)firstSlotID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
-                                //    return;
-                                //}
-                            }
-
-                            //if (!nonmatchingcolors && recipe.outputPlacedBrickName == itemNames[1] && !isCrystal) // crystal
-                            //    continue; // skip unless color is crystal
-                        }
-                    }
+                    //            for (int i = 0; i < toolBlockIDs.Length; i++)
+                    //            {
+                    //                // only output pickaxe for valid colors
+                    //                if (firstSlotID == toolBlockIDs[i] && matchingTopColors)
+                    //                {
+                    //                    //matchesToolBlockID = true;
+                    //                    //break;
+                    //                    PutInOutputSlot((byte)firstSlotID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty); // output pickaxe
+                    //                    return;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     // Override for crafting a voxel
                     if (recipe.outputPlacedBrickName == 1)
                     {
                         //Debug.Log("Crafting back into voxel with color " + outputID);
                         PutInOutputSlot(outputID, 0, false, recipe.outputQty); // force slot to turn into voxel by setting isPlacedBrick flag to false
-                        return;
-                    }
-
-                    // if crystal give extra qty of items?
-                    int outputQty = 0;
-                    if (isCrystal) // special code for crystals to output correct blockID and qty to allow for better progression and finding "rare" crystals
-                    {
-                        outputQty = 1;
-                        //outputID = OverrideBlockID(color);
                     }
                     else
-                        outputQty = recipe.outputQty;
-
-                    // give output block but do some checks first
-                    if (!recipe.isPlacedBrick) // if normal crafting recipe
-                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, outputQty);
-                    else if (!nonmatchingcolors) // if is a placed brick and colors all match can give an output block
-                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, outputQty);
+                        PutInOutputSlot(outputID, recipe.outputPlacedBrickName, recipe.isPlacedBrick, recipe.outputQty);
                     return;
                 }
             }
@@ -366,16 +326,16 @@ public class Crafting : MonoBehaviour
         return _returnValue;
     }
 
-    private int GetItemNumber(int _outputPlacedBrickName)
-    {
-        for(int i = 0; i < itemNames.Length; i++)
-        {
-            if(_outputPlacedBrickName == itemNames[i])
-                return itemNames[i];
-        }
+    //private int GetItemNumber(int _outputPlacedBrickName)
+    //{
+    //    for(int i = 0; i < itemNames.Length; i++)
+    //    {
+    //        if(_outputPlacedBrickName == itemNames[i])
+    //            return itemNames[i];
+    //    }
 
-        return 0;
-    }
+    //    return 0;
+    //}
 
     public void PutInOutputSlot(byte _stackID, int _stackPlacedBrickID, bool _isPlacedBrick, int _stackQty)
     {

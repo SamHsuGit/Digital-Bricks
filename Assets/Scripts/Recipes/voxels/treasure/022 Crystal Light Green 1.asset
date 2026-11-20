@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: 022 Crystal Light Green 1
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
-  isItemRecipeFromVoxel: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
@@ -108,5 +107,5 @@ MonoBehaviour:
     slot9: 48
   outputID: 22
   outputPlacedBrickName: 0
-  outputQty: 4
+  outputQty: 9
   studs: 20

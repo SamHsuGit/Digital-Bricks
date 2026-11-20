@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: 063 pickaxe crystal orange
   m_EditorClassIdentifier: 
   blockName: Pickaxe Crystal Orange
-  blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
+  blockProperties: {fileID: 11400000, guid: 8cef3c8d5b9308b419229065b8a5d061, type: 2}
   uses: 
   id: 63
   dropID: 63
   colorID: 28
+  craftPlacedBricks: 0
   hardness: 0
   opacity: 0
   baseLightLevel: 0

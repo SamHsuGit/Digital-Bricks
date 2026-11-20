@@ -13,50 +13,19 @@ MonoBehaviour:
   m_Name: 049 Trans Dark Green Block
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
-  isItemRecipeFromVoxel: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
   - is2x2: 0
     slot1: 24
     slot2: 24
-    slot3: 0
-    slot4: 24
-    slot5: 24
-    slot6: 0
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 24
     slot3: 24
-    slot4: 0
-    slot5: 24
-    slot6: 24
-    slot7: 0
-    slot8: 0
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
     slot4: 24
     slot5: 24
-    slot6: 0
-    slot7: 24
-    slot8: 24
-    slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 0
-    slot3: 0
-    slot4: 0
-    slot5: 24
     slot6: 24
-    slot7: 0
+    slot7: 24
     slot8: 24
     slot9: 24
   outputID: 49
   outputPlacedBrickName: 0
-  outputQty: 1
+  outputQty: 9
   studs: 20

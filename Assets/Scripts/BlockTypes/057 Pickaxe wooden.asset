@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: 057 Pickaxe wooden
   m_EditorClassIdentifier: 
   blockName: Pickaxe wooden
-  blockProperties: {fileID: 11400000, guid: 7793268563f363843aba43eb41b86103, type: 2}
+  blockProperties: {fileID: 11400000, guid: 8cef3c8d5b9308b419229065b8a5d061, type: 2}
   uses: 
   id: 57
   dropID: 57
   colorID: 6
+  craftPlacedBricks: 0
   hardness: 0
   opacity: 0
   baseLightLevel: 0

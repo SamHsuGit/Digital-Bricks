@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: 056 Stick
   m_EditorClassIdentifier: 
   blockName: Stick
-  blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
+  blockProperties: {fileID: 11400000, guid: 9c2d050371a5c4d4fbda170f9b46a989, type: 2}
   uses: 
   id: 56
   dropID: 56
   colorID: 6
+  craftPlacedBricks: 0
   hardness: 0
   opacity: 0
   baseLightLevel: 0
