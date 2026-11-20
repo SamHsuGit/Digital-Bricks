@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 30374 Stick
+  m_Name: 056 Stick
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
-  - is2x2: 0
-    slot1: 14
+  - slot1: 14
     slot2: 0
     slot3: 0
     slot4: 14
@@ -25,8 +24,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 14
     slot3: 0
     slot4: 0
@@ -35,8 +33,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 14
     slot4: 0
@@ -45,8 +42,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 14
@@ -55,8 +51,7 @@ MonoBehaviour:
     slot7: 14
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -65,8 +60,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 14
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -75,6 +69,87 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 14
+  - slot1: 65
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 65
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 65
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 65
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 65
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 65
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 65
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 65
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 65
   outputID: 56
   outputPlacedBrickName: 0
   outputQty: 4

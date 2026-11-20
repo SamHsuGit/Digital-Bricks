@@ -16,8 +16,8 @@ MonoBehaviour:
   blockProperties: {fileID: 11400000, guid: 3dd97cc754d5e3c479b2208b26726007, type: 2}
   uses: decoration
   id: 65
-  dropID: 65
-  colorID: 6
+  dropID: 56
+  craftPlacedBricks: 0
   hardness: 0
   opacity: 1
   baseLightLevel: 0
