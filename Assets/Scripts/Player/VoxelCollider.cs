@@ -118,9 +118,9 @@ public class VoxelCollider : MonoBehaviour
             if (isGrounded || (isPlayer && controller.isGrounded) || PlayerIsTouchingBlockID(waterBlockID))
                 currentJumps = 0;
 
-            //can jump off sides of objects
-            if (isPlayer && (front || back || left || right))
-                currentJumps = 0;
+            ////can jump off sides of objects
+            //if (isPlayer && (front || back || left || right))
+            //    currentJumps = 0;
 
             // apply jump force
             if (jumpRequest && currentJumps < maxJumps)
@@ -259,10 +259,11 @@ public class VoxelCollider : MonoBehaviour
         //    return false; // allow player to move below bottom of world chunks
 
         if (
-            World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, distToVoxelBelow, center.z), true) || // left bottom center
-            World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, distToVoxelBelow, center.z), true) || // right bottom center
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 - colliderOffset), true) || // center bottom back
-            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 + colliderOffset), true) // center bottom front
+            World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z), true) // bottom center
+            //World.Instance.CheckForVoxel(new Vector3(center.x - width / 2 - colliderOffset, distToVoxelBelow, center.z), true) || // left bottom center
+            //World.Instance.CheckForVoxel(new Vector3(center.x + width / 2 + colliderOffset, distToVoxelBelow, center.z), true) || // right bottom center
+            //World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z - length / 2 - colliderOffset), true) || // center bottom back
+            //World.Instance.CheckForVoxel(new Vector3(center.x, distToVoxelBelow, center.z + length / 2 + colliderOffset), true) // center bottom front
            )
         {
             //Debug.Log("landed on: " + center.x + ", " + (center.y - yOffset + downSpeed) + ", " + (center.z + width / 2 - colliderOffset));
