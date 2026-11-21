@@ -61,9 +61,51 @@ public static class Structure
             case 21:
                 return MakeCrystal(position, _blockID);
             case 22:
+                return MakeDungeon(position, _blockID, maxRadius, maxHeight);
+            case 23:
                 return MakeBox(position, _blockID, maxRadius, maxHeight);
         }
         return new Queue<VoxelMod>();
+    }
+
+    static Queue<VoxelMod> MakeDungeon(Vector3Int position, byte blockID, int _maxRadius, int _maxHeight)
+    {
+        Queue<VoxelMod> queue = new Queue<VoxelMod>();
+
+        for (int x = 0; x < _maxRadius; x++)
+        {
+            for (int y = 0; y < _maxHeight; y++)
+            {
+                for (int z = 0; z < _maxRadius; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), 21)); // make solid box of cobblestone
+                }
+            }
+        }
+
+        for (int x = 1; x < _maxRadius - 1; x++)
+        {
+            for (int y = 1; y < _maxHeight - 1; y++)
+            {
+                for (int z = 1; z < _maxRadius - 1; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), 0)); // carve out air inside box
+                }
+            }
+        }
+
+        for (int x = 2; x < _maxRadius - 2; x++)
+        {
+            for (int y = 1; y < 3; y++) // only a few blocks high
+            {
+                for (int z = 2; z < _maxRadius - 2; z++)
+                {
+                    Vector3Int pos = new Vector3Int(position.x + x, position.y + y, position.z + z);
+                    queue.Enqueue(new VoxelMod(pos, GetMixedBlockID(pos, pos, 0, blockID, 0, 0))); // fill with blocksID treasure
+                }
+            }
+        }
+        return queue;
     }
 
     static Queue<VoxelMod> MakeBox(Vector3Int position, byte blockID, int _maxRadius, int _maxHeight)
@@ -88,18 +130,6 @@ public static class Structure
                 for (int z = 1; z < _maxRadius - 1; z++)
                 {
                     queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), 0)); // carve out air inside box
-                }
-            }
-        }
-
-        for (int x = 2; x < _maxRadius - 2; x++)
-        {
-            for (int y = 1; y < 3; y++) // only a few blocks high
-            {
-                for (int z = 2; z < _maxRadius - 2; z++)
-                {
-                    Vector3Int pos = new Vector3Int(position.x + x, position.y + y, position.z + z);
-                    queue.Enqueue(new VoxelMod(pos, GetMixedBlockID(pos, pos,0, 48, 0, 0))); // fill with solid crystal blocks
                 }
             }
         }

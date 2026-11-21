@@ -115,7 +115,7 @@ public class Lighting : MonoBehaviour
     void SetDay()
     {
         wasDaytime = true;
-        if(World.Instance.globalLightLevel != null)
+        if(World.Instance != null)
             World.Instance.globalLightLevel = 1f;
 
         sun.gameObject.SetActive(true);
@@ -132,7 +132,7 @@ public class Lighting : MonoBehaviour
     void SetNight()
     {
         wasDaytime = false;
-        if (World.Instance.globalLightLevel != null)
+        if (World.Instance != null)
             World.Instance.globalLightLevel = 0.1f;
 
         sun.gameObject.SetActive(false);
