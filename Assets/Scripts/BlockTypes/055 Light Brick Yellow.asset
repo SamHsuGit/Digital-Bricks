@@ -17,7 +17,7 @@ MonoBehaviour:
   uses: light
   id: 55
   dropID: 55
-  colorID: 7
+  craftPlacedBricks: 0
   hardness: 0
   opacity: 0
   baseLightLevel: 1
@@ -29,10 +29,10 @@ MonoBehaviour:
   voxelBoundObject: {fileID: 0}
   voxelPrefab: {fileID: 2420018717352147466, guid: d8483245c8ab0b0468937175b22ae4b3, type: 3}
   voxelBitPrefab: {fileID: 3563555514074976273, guid: da543a15f4af7ce4f8b316fbc97cc5fe, type: 3}
-  backFaceTexture: 16
-  frontFaceTexture: 16
-  topFaceTexture: 17
-  bottomFaceTexture: 15
-  leftFaceTexture: 16
-  rightFaceTexture: 16
-  topFaceSmoothTexture: 50
+  backFaceTexture: 136
+  frontFaceTexture: 136
+  topFaceTexture: 137
+  bottomFaceTexture: 135
+  leftFaceTexture: 136
+  rightFaceTexture: 136
+  topFaceSmoothTexture: 138
