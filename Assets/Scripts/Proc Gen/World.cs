@@ -1247,6 +1247,14 @@ public class World : MonoBehaviour
             ///* AT TERRAIN HEIGHT *///
             else if (yGlobalPos == terrainHeight)
             {
+                if(globalPos.x == defaultSpawnPosition.x && globalPos.z == defaultSpawnPosition.z)
+                {
+
+                    // modifications.Enqueue(Structure.GenerateSurfaceOb(biome.undergroundStructures[i].floraIndex, globalPos, biome.undergroundStructures[i].minHeight, +
+                    //                     biome.undergroundStructures[i].maxHeight, biome.undergroundStructures[i].minRadius, biome.undergroundStructures[i].maxRadius, fertility, isEarth, biome.undergroundStructures[i].blockID));
+                
+                }
+
                 //if (isAir)
                 //    return 0; // commented out to keep caves darker
 
