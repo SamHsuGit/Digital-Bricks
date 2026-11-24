@@ -1120,6 +1120,22 @@ public class World : MonoBehaviour
                     return 0;
             }
 
+            // if(yGlobalPos == VoxelData.ChunkHeight - 15)//&& yGlobalPos <= VoxelData.ChunkHeight - 5) 
+            // {
+            //     // int size = 5;
+            //     // if(globalPos.x >= defaultSpawnPosition.x && globalPos.x < defaultSpawnPosition.x + size && globalPos.z >= defaultSpawnPosition.z && globalPos.z < defaultSpawnPosition.z + size)
+            //     // {
+            //     //     if(yGlobalPos == VoxelData.ChunkHeight - 5)
+            //     //         return 0;
+            //     //     else
+            //     //         return 2;
+            //     // }
+
+            //     if(globalPos.x == defaultSpawnPosition.x && globalPos.z == defaultSpawnPosition.z)
+            //         return 2;
+            //         //modifications.Enqueue(Structure.GenerateSurfaceOb(24, globalPos, 1, 5, 1, 5, fertility, isEarth, 5));
+            // }
+
             // UPPER TERRAIN HEIGHT PASS
             if (yGlobalPos <= upperTerrainHeight + 5 && continentalness > 0.6f)
             {
@@ -1247,14 +1263,6 @@ public class World : MonoBehaviour
             ///* AT TERRAIN HEIGHT *///
             else if (yGlobalPos == terrainHeight)
             {
-                if(globalPos.x == defaultSpawnPosition.x && globalPos.z == defaultSpawnPosition.z)
-                {
-
-                    // modifications.Enqueue(Structure.GenerateSurfaceOb(biome.undergroundStructures[i].floraIndex, globalPos, biome.undergroundStructures[i].minHeight, +
-                    //                     biome.undergroundStructures[i].maxHeight, biome.undergroundStructures[i].minRadius, biome.undergroundStructures[i].maxRadius, fertility, isEarth, biome.undergroundStructures[i].blockID));
-                
-                }
-
                 //if (isAir)
                 //    return 0; // commented out to keep caves darker
 

@@ -64,6 +64,8 @@ public static class Structure
                 return MakeDungeon(position, _blockID, maxRadius, maxHeight);
             case 23:
                 return MakeBox(position, _blockID, maxRadius, maxHeight);
+            case 24:
+                return MakeBoxOpenTop(position, _blockID, maxRadius, maxHeight);
         }
         return new Queue<VoxelMod>();
     }
@@ -133,6 +135,37 @@ public static class Structure
                 }
             }
         }
+
+        return queue;
+    }
+
+    static Queue<VoxelMod> MakeBoxOpenTop(Vector3Int position, byte blockID, int _maxRadius, int _maxHeight)
+    {
+        Queue<VoxelMod> queue = new Queue<VoxelMod>();
+
+        for(int x = 0; x < _maxRadius; x++)
+        {
+            for(int y = 0; y < _maxHeight; y++) 
+            {
+                for(int z = 0; z < _maxRadius; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), blockID)); // make solid box
+                }
+            }
+        }
+
+        for (int x = 1; x < _maxRadius - 1; x++)
+        {
+            for (int y = 1; y < _maxHeight; y++)
+            {
+                for (int z = 1; z < _maxRadius - 1; z++)
+                {
+                    queue.Enqueue(new VoxelMod(new Vector3Int(position.x + x, position.y + y, position.z + z), 0)); // carve out air inside box
+                }
+            }
+        }
+
+        // make black stone portal block id 2?
 
         return queue;
     }

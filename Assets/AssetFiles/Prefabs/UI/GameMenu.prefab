@@ -1836,6 +1836,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e49e754a785f10c49ada90e92e342946, type: 2}
   - {fileID: 11400000, guid: d103cb10c10f6934bbb70a3f7e29bd11, type: 2}
   - {fileID: 11400000, guid: b521330dbdc893842b4dfaf2044371cf, type: 2}
+  - {fileID: 11400000, guid: cb3787004f8df4c538829e195e8fcd47, type: 2}
   uiMenus:
   - {fileID: 1459825749197423707}
   - {fileID: 7700088744635102066}
@@ -1843,9 +1844,7 @@ MonoBehaviour:
   - {fileID: 1515134558120941906}
   - {fileID: 309434565178614294}
   gameMenu: {fileID: 2072762906999785829}
-  craftSlotStringColor: 
   craftSlotStringID: 
-  itemNames: 010f000034000000i
 --- !u!1 &1391849460477524182
 GameObject:
   m_ObjectHideFlags: 0
