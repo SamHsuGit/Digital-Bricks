@@ -17,7 +17,7 @@ public class Controller : NetworkBehaviour
     [SyncVar(hook = nameof(SetCharIdle))] public string playerCharIdle;
     [SyncVar(hook = nameof(SetCharRun))] public string playerCharRun;
     [SyncVar(hook = nameof(SetProjectile))] public string playerProjectile;
-    //[SyncVar(hook = nameof(SetFrame))] public string playerFrame;
+    //[SyncVar(hook = nameof(SetFrame))] public string playerFrame; // caused issues with network play
     [SyncVar(hook = nameof(SetCurrentBrickType))] public int currentBrickType;
     [SyncVar(hook = nameof(SetCurrentBrickIndex))] public int currentBrickIndex;
     [SyncVar(hook = nameof(SetCurrentBrickName))] public int placedBrickName;
