@@ -850,7 +850,6 @@ MonoBehaviour:
   playerCharIdle: 
   playerCharRun: 
   playerProjectile: 
-  playerFrame: 
   currentBrickType: 0
   currentBrickIndex: 0
   placedBrickName: 0
@@ -923,7 +922,6 @@ MonoBehaviour:
   sceneObjectPrefab: {fileID: 267288310360540051, guid: 04bb5ef7f14330842b6b88d9be1ec42b, type: 3}
   charObIdle: {fileID: 0}
   charObRun: {fileID: 0}
-  frameOb: {fileID: 0}
   world: {fileID: 0}
   brickMaterials: []
   canMine: 0
