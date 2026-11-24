@@ -1049,7 +1049,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseWalkSpeed: 1
   baseSprintSpeed: 2
-  baseJumpForce: 10
+  baseJumpForce: 12
   isMoving: 0
   isGrounded: 0
   maxJumps: 0
