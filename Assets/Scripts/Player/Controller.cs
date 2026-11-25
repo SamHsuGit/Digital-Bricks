@@ -1977,6 +1977,9 @@ public class Controller : NetworkBehaviour
 
     void PlayBlockSound(byte blockID)
     {
+        if (World.Instance.blockTypes[blockID].blockProperties.blockSounds.Length < 1)
+            return;
+
         if (blockSoundNo >= World.Instance.blockTypes[blockID].blockProperties.blockSounds.Length - 1)
             blockSoundNo = 0;
 

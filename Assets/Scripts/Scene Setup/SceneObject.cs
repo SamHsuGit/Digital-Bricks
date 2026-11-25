@@ -128,6 +128,11 @@ public class SceneObject : NetworkBehaviour
             ob.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         ob.transform.rotation = Quaternion.LookRotation(transform.forward); // orient forwards in direction of camera
         ob.transform.parent = transform;
+
+        if (type == 3)
+            Destroy(ob, 5); // voxel bits destroyed after 5 seconds
+        else
+            Destroy(ob, 300); // dropped items destroyed after 5 min
     }
 
     private void OnTriggerEnter(Collider collider) // DESTROY VOXEL RB AFTER CERTAIN NUMBER OF COLLISIONS (was OnCollisionEnter for Rb)

@@ -280,6 +280,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c0ad8a184dee747f1961ab91d6db5aa2, type: 2}
   - {fileID: 11400000, guid: 5cd40ef7bf75d40d6b51559679d42c7a, type: 2}
   - {fileID: 11400000, guid: 8e2f87ef2666e42c4b6f7c7149015796, type: 2}
+  - {fileID: 11400000, guid: 8e2f87ef2666e42c4b6f7c7149015796, type: 2}
+  - {fileID: 11400000, guid: d58c55f5707c2454fa6dce268ee46f04, type: 2}
   chunkLoadSound: {fileID: 6273157275290195825}
   singleChunk: 0
   drawVBO: 0

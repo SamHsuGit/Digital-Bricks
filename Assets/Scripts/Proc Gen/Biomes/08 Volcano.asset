@@ -73,9 +73,9 @@ MonoBehaviour:
     maxHeight: 0
     minRadius: 0
     maxRadius: 0
-  - name: Steel ore
+  - name: Light Brick
     floraIndex: 16
-    blockID: 19
+    blockID: 55
     floraZoneScale: 1.3
     floraZoneThreshold: 0.6
     floraPlacementScale: 15
@@ -96,7 +96,7 @@ MonoBehaviour:
     minHeight: 0
     maxHeight: 5
     minRadius: 0
-    maxRadius: 8
+    maxRadius: 6
   lodes:
   - nodeName: Ore Steel
     blockID: 19

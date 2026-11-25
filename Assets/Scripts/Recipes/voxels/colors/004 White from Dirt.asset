@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aa5e22c595c64606a494b45418420ba, type: 3}
-  m_Name: 004 White
+  m_Name: 004 White from Dirt
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
-  - is2x2: 0
-    slot1: 34
+  - slot1: 34
     slot2: 0
     slot3: 0
     slot4: 0
@@ -25,8 +24,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 34
     slot3: 0
     slot4: 0
@@ -35,8 +33,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 34
     slot4: 0
@@ -45,8 +42,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 34
@@ -55,8 +51,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -65,8 +60,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -75,8 +69,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -85,8 +78,7 @@ MonoBehaviour:
     slot7: 34
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -95,8 +87,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 34
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0

@@ -13,12 +13,10 @@ MonoBehaviour:
   m_Name: wa1x2x5 2454
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 1
-  isItemRecipeFromVoxel: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
-  - is2x2: 0
-    slot1: 2453
-    slot2: 2453
+  - slot1: 59349
+    slot2: 0
     slot3: 0
     slot4: 0
     slot5: 0
@@ -26,57 +24,79 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
-    slot2: 2453
-    slot3: 2453
+  - slot1: 0
+    slot2: 59349
+    slot3: 0
     slot4: 0
     slot5: 0
     slot6: 0
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
-    slot3: 0
-    slot4: 2453
-    slot5: 2453
+    slot3: 59349
+    slot4: 0
+    slot5: 0
     slot6: 0
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
-    slot4: 0
-    slot5: 2453
-    slot6: 2453
+    slot4: 59349
+    slot5: 0
+    slot6: 0
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 59349
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 59349
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
     slot5: 0
     slot6: 0
-    slot7: 2453
-    slot8: 2453
+    slot7: 59349
+    slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
     slot5: 0
     slot6: 0
     slot7: 0
-    slot8: 2453
-    slot9: 2453
-  outputID: 6
+    slot8: 59349
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 59349
+  outputID: 58
   outputPlacedBrickName: 2454
-  outputQty: 1
+  outputQty: 3
   studs: 30

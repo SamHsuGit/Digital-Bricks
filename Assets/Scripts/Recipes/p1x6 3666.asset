@@ -13,11 +13,9 @@ MonoBehaviour:
   m_Name: p1x6 3666
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   isPlacedBrick: 1
-  isItemRecipeFromVoxel: 0
   pickupSound: {fileID: 8300000, guid: ba465a935142c4ff6b706217e9b99988, type: 3}
   recipeShapes:
-  - is2x2: 0
-    slot1: 3710
+  - slot1: 3710
     slot2: 3023
     slot3: 0
     slot4: 0
@@ -26,8 +24,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 3023
+  - slot1: 3023
     slot2: 3710
     slot3: 0
     slot4: 0
@@ -36,8 +33,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 3023
     slot3: 3710
     slot4: 0
@@ -46,8 +42,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 3710
     slot3: 3023
     slot4: 0
@@ -56,8 +51,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 3710
@@ -66,8 +60,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 3023
@@ -76,8 +69,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -86,8 +78,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -96,8 +87,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -106,8 +96,7 @@ MonoBehaviour:
     slot7: 3710
     slot8: 3023
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -116,8 +105,7 @@ MonoBehaviour:
     slot7: 3023
     slot8: 3710
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -126,8 +114,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 3710
     slot9: 3023
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -136,8 +123,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 3023
     slot9: 3710
-  - is2x2: 0
-    slot1: 3623
+  - slot1: 3623
     slot2: 3623
     slot3: 0
     slot4: 0
@@ -146,8 +132,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 3623
     slot3: 3623
     slot4: 0
@@ -156,8 +141,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 3623
@@ -166,8 +150,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -176,8 +159,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -186,8 +168,7 @@ MonoBehaviour:
     slot7: 3623
     slot8: 3623
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -196,8 +177,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 3623
     slot9: 3623
-  - is2x2: 0
-    slot1: 3710
+  - slot1: 3710
     slot2: 3024
     slot3: 3024
     slot4: 0
@@ -206,8 +186,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 3024
+  - slot1: 3024
     slot2: 3710
     slot3: 3024
     slot4: 0
@@ -216,8 +195,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 3024
+  - slot1: 3024
     slot2: 3024
     slot3: 3710
     slot4: 0
@@ -226,8 +204,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 3710
@@ -236,8 +213,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 3024
@@ -246,8 +222,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 3024
@@ -256,8 +231,7 @@ MonoBehaviour:
     slot7: 0
     slot8: 0
     slot9: 0
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -266,8 +240,7 @@ MonoBehaviour:
     slot7: 3710
     slot8: 3024
     slot9: 3024
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -276,8 +249,7 @@ MonoBehaviour:
     slot7: 3024
     slot8: 3710
     slot9: 3024
-  - is2x2: 0
-    slot1: 0
+  - slot1: 0
     slot2: 0
     slot3: 0
     slot4: 0
@@ -286,6 +258,33 @@ MonoBehaviour:
     slot7: 3024
     slot8: 3024
     slot9: 3710
+  - slot1: 3023
+    slot2: 3023
+    slot3: 3023
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 3023
+    slot5: 3023
+    slot6: 3023
+    slot7: 0
+    slot8: 0
+    slot9: 0
+  - slot1: 0
+    slot2: 0
+    slot3: 0
+    slot4: 0
+    slot5: 0
+    slot6: 0
+    slot7: 3023
+    slot8: 3023
+    slot9: 3023
   outputID: 6
   outputPlacedBrickName: 3666
   outputQty: 1
