@@ -150,6 +150,8 @@ public class Chunk
 
         ClearMeshData();
 
+        voxelMap = chunkData.map; // copy data over from underlying chunk data structure to render correct blocks
+
         CalculateLight();
 
 		for (int y = 0; y < VoxelData.ChunkHeight; y++) {
