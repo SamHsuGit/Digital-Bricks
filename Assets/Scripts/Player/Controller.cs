@@ -1977,7 +1977,7 @@ public class Controller : NetworkBehaviour
 
     void PlayBlockSound(byte blockID)
     {
-        if (blockSoundNo >= World.Instance.blockTypes[blockID].blockProperties.blockSounds.Length)
+        if (blockSoundNo >= World.Instance.blockTypes[blockID].blockProperties.blockSounds.Length - 1)
             blockSoundNo = 0;
 
         brickAudioSource.clip = World.Instance.blockTypes[blockID].blockProperties.blockSounds[blockSoundNo];

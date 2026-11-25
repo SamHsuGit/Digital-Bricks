@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6d7e26e1b1c1c4d84bbdbdabc94658, type: 3}
   m_Name: Barrier
   m_EditorClassIdentifier: Assembly-CSharp::BlockProperties
-  stackMax: 0
+  stackMax: 64
   isDrawn: 1
   isSolid: 1
   renderNeighborFaces: 0
